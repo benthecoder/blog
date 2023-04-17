@@ -23,13 +23,11 @@ const PostPage = (props: any) => {
   const post = getPostContent(slug);
   return (
     <div>
-      <p className='font-bold font-serif text-left mb-10 text-lg'>
-        {post.data.title}
-      </p>
+      <p className='font-bold text-left mb-10 text-lg'>{post.data.title}</p>
       <article className='prose'>
         <Markdown>{post.content}</Markdown>
       </article>
-      <div className='flex flex-row space-x-2 mt-10'>
+      <div className='flex flex-row space-x-2 mt-10 text-slate-600'>
         {post.data.tags.split(', ').map((tag: string) => (
           <p className='underline'>{tag}</p>
         ))}

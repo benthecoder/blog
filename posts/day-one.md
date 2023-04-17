@@ -1,6 +1,6 @@
 ---
 title: 'Day One (of many)'
-tags: 'writing, blog, nextjs, tailwindcss'
+tags: 'writing, nextjs, tailwindcss'
 date: 'Apr 17, 2023'
 ---
 
