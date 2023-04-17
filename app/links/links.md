@@ -18,7 +18,7 @@
 
 ## AI/DS/ML
 
-Personal
+### Personal
 
 - [Sebastian Ruder](https://ruder.io/) — NLP
 - [Sebastian Raschka](https://sebastianraschka.com/blog/index.html) — Deep Learning, research, PyTorch
@@ -37,7 +37,7 @@ Personal
 - [Counting Stuff](https://counting.substack.com/archive?sort=top) — [Data Cleaning IS Analysis, Not Grunt Work](https://counting.substack.com/p/data-cleaning-is-analysis-not-grunt)
 - [Evan Miller](https://www.evanmiller.org/index.html) — A/B testing & programming
 
-Publications
+### Publications
 
 - [DataTalks.Club](https://datatalks.club/articles.html) — talks, tutorials, explanations on data careers
 - [InfoQ AI, ML & Data Engineering](https://www.infoq.com/ai-ml-data-eng/articles/)
