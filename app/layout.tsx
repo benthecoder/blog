@@ -1,7 +1,13 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import './globals.css';
 
 import { AnalyticsWrapper } from '../components/analytics';
+
+export const metadata: Metadata = {
+  title: 'benneo',
+  description: 'Developer, writer, data scientist',
+};
 
 export default function RootLayout({
   children,
