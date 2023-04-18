@@ -2,7 +2,7 @@ import fs from 'fs';
 import Markdown from 'markdown-to-jsx';
 import matter from 'gray-matter';
 
-const AboutPage = () => {
+const LinksPage = () => {
   const file = 'app/links/links.md';
   const content = fs.readFileSync(file, 'utf8');
   const about = matter(content);
@@ -16,4 +16,4 @@ const AboutPage = () => {
   );
 };
 
-export default AboutPage;
+export default LinksPage;
