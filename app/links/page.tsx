@@ -9,7 +9,7 @@ const AboutPage = () => {
 
   return (
     <div>
-      <article className='prose text-xs'>
+      <article className='prose prose-sm'>
         <Markdown>{about.content}</Markdown>
       </article>
     </div>
