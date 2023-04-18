@@ -1,13 +1,63 @@
-import getPostMetadata from '../components/getPostMetadata';
-import PostPreview from '../components/PostPreview';
+import fs from 'fs';
+import matter from 'gray-matter';
+import Markdown from 'markdown-to-jsx';
+import Link from 'next/link';
 
 const HomePage = () => {
-  const postMetadata = getPostMetadata();
-  const postPreviews = postMetadata.map((post) => (
-    <PostPreview key={post.slug} {...post} />
-  ));
+  const folder = 'posts/';
+  const files = fs.readdirSync(folder);
+  const markdownPosts = files.filter((file) => file.endsWith('.md'));
 
-  return <div className='grid grid-cols-1'>{postPreviews}</div>;
+  const getDate = (fileName: String) => {
+    const fileContents = fs.readFileSync(`posts/${fileName}`, 'utf8');
+    const matterResult = matter(fileContents);
+
+    return matterResult.data.date;
+  };
+
+  const sortedPosts = markdownPosts.sort((a, b) => {
+    if (getDate(a) < getDate(b)) {
+      return 1;
+    } else {
+      return -1;
+    }
+  });
+
+  const topPosts = sortedPosts.slice(0, 10);
+
+  const posts = topPosts.map((fileName) => {
+    const fileContents = fs.readFileSync(`posts/${fileName}`, 'utf8');
+    const matterResult = matter(fileContents);
+
+    return (
+      <div>
+        <p className='font-bold text-left mb-3 text-lg'>
+          {matterResult.data.title}
+        </p>
+        <article className='prose'>
+          <Markdown>{matterResult.content}</Markdown>
+        </article>
+        <div className='flex flex-row space-x-2 mt-10 text-slate-600'>
+          {matterResult.data.tags.split(', ').map((tag: any) => (
+            <Link href={`/tags/${tag}`} key={tag}>
+              #{tag}
+            </Link>
+          ))}
+        </div>
+        <p className='text-slate-400 mt-2'>{matterResult.data.date}</p>
+      </div>
+    );
+  });
+
+  return (
+    <div className='grid grid-cols-1 space-y-28'>
+      {posts}
+
+      <Link href='/posts' className='underline mt-10'>
+        View the archives
+      </Link>
+    </div>
+  );
 };
 
 export default HomePage;
