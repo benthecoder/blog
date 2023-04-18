@@ -3,7 +3,7 @@ import { PostMetadata } from './PostMetadata';
 
 const PostPreview = (props: PostMetadata) => {
   return (
-    <div className='flex justify-between max-w-md'>
+    <div className='flex justify-between max-w-sm'>
       <div>
         <Link href={`/posts/${props.slug}`}>
           <p className='hover:text-blue-600 underline items-start'>
