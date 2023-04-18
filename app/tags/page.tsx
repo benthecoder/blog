@@ -20,13 +20,13 @@ const TagPage = () => {
 
   const sortedTags = Object.keys(tags).sort((a, b) => tags[b] - tags[a]);
   const tagList = sortedTags.map((tag) => (
-    <div className='flex p-1 text-blue-800 space-x-1'>
+    <div className='flex text-blue-800 pr-2'>
       <Link href={`/tags/${tag}`}>{tag}</Link>
-      <p className='text-slate-500'>({tags[tag]})</p>
+      <p className='text-slate-500 pl-1'>({tags[tag]})</p>
     </div>
   ));
 
-  return <div className='flex flex-wrap'>{tagList}</div>;
+  return <div className='flex flex-wrap '>{tagList}</div>;
 };
 
 export default TagPage;
