@@ -34,7 +34,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className='max-w-3xl font-cormorant flex flex-col mb-40 mx-auto mt-4 md:flex-row md:mt-20'>
         {Sidebar}
-        <main className='flex-auto text-sm min-w-0 max-w-lg mt-10 md:mt-0 px-16'>
+        <main className='flex-auto text-sm min-w-0 max-w-lg mt-10 md:mt-0 px-8 md:pl-20'>
           {children}
         </main>
         <AnalyticsWrapper />
