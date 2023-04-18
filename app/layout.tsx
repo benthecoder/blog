@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import './globals.css';
-import { Analytics } from '@vercel/analytics/react';
 
 export default function RootLayout({
   children,
@@ -30,7 +29,6 @@ export default function RootLayout({
         <main className='flex-auto text-sm min-w-0 mx-3 mt-5 md:mt-0 flex flex-col px-10'>
           {children}
         </main>
-        <Analytics />
       </body>
     </html>
   );
