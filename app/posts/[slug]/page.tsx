@@ -1,15 +1,7 @@
-import fs from 'fs';
 import Markdown from 'markdown-to-jsx';
-import matter from 'gray-matter';
+import getPostContent from '../../../components/getPostContent';
 import getPostMetadata from '../../../components/getPostMetadata';
-
-const getPostContent = (slug: string) => {
-  const folder = 'posts/';
-  const file = `${folder}${slug}.md`;
-  const content = fs.readFileSync(file, 'utf8');
-  const matterResult = matter(content);
-  return matterResult;
-};
+import Link from 'next/link';
 
 export const generateStaticParams = async () => {
   const posts = getPostMetadata();
@@ -24,12 +16,14 @@ const PostPage = (props: any) => {
   return (
     <div>
       <p className='font-bold text-left mb-10 text-lg'>{post.data.title}</p>
-      <article className='prose'>
+      <article className='prose '>
         <Markdown>{post.content}</Markdown>
       </article>
       <div className='flex flex-row space-x-2 mt-10 text-slate-600'>
-        {post.data.tags.split(', ').map((tag: string) => (
-          <p className='underline'>{tag}</p>
+        {post.data.tags.split(', ').map((tag: any) => (
+          <Link href={`/tags/${tag}`} key={tag}>
+            #{tag}
+          </Link>
         ))}
       </div>
       <p className='text-slate-400 mt-2'>{post.data.date}</p>
