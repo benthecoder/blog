@@ -50,7 +50,7 @@ const HomePage = () => {
   });
 
   return (
-    <div className='grid grid-cols-1 space-y-28'>
+    <div className='grid grid-cols-1 space-y-32'>
       {posts}
 
       <Link href='/posts' className='underline mt-10'>
