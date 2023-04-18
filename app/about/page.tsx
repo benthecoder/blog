@@ -1,5 +1,19 @@
-function about() {
-  return <p>Challenging myself to write every day</p>;
-}
+import fs from 'fs';
+import Markdown from 'markdown-to-jsx';
+import matter from 'gray-matter';
 
-export default about;
+const AboutPage = () => {
+  const file = 'app/about/about.md';
+  const content = fs.readFileSync(file, 'utf8');
+  const about = matter(content);
+
+  return (
+    <div>
+      <article className='prose prose-sm'>
+        <Markdown>{about.content}</Markdown>
+      </article>
+    </div>
+  );
+};
+
+export default AboutPage;
