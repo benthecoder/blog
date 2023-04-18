@@ -11,3 +11,12 @@ body {
 .prose {
   color: #000000;
 }
+
+.prose h1 {
+  font-size: 1.125rem /* 18px */;
+  line-height: 1.75rem /* 28px */;
+}
+
+.prose h2 {
+  font-size: 1rem;
+}
