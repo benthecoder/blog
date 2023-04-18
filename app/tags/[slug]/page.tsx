@@ -1,6 +1,20 @@
 import getPostMetadata from '../../../components/getPostMetadata';
 import PostPreview from '../../../components/PostPreview';
 
+export const generateStaticParams = async () => {
+  const postMetadata = getPostMetadata();
+
+  const tags = new Set();
+
+  postMetadata.forEach((post) => {
+    post.tags.split(', ').forEach((tag) => tags.add(tag));
+  });
+
+  return Array.from(tags).map((tag: any) => ({
+    slug: tag,
+  }));
+};
+
 const TagPage = (props: any) => {
   const tag = props.params.slug;
   const postMetadata = getPostMetadata();
