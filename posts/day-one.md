@@ -1,7 +1,7 @@
 ---
-title: 'Day One (of many)'
+title: 'Day One'
 tags: 'writing, nextjs, tailwindcss'
-date: 'Apr 17, 2023'
+date: 'Apr 16, 2023'
 ---
 
 Working on this blog was hard, next.js and tailwindcss isn't easy lol.
