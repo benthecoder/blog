@@ -32,7 +32,7 @@ const HackerNews = () => {
     const endIndex = startIndex + postsPerPage;
     const currentStories = stories.slice(startIndex, endIndex);
     const fetchedStories = await Promise.all(
-      currentStories.map((storyId) => fetchStory(storyId))
+      currentStories.map((storyId: number) => fetchStory(storyId))
     );
     setTopStories(fetchedStories);
     setIsLoading(false);
