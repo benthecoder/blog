@@ -6,6 +6,9 @@ module.exports = {
       fontFamily: {
         cormorant: ['Cormorant Garamond', 'serif'],
       },
+      fontSize: {
+        xs: '0.2rem',
+      },
     },
   },
   plugins: [require('@tailwindcss/typography')],
