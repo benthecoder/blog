@@ -33,6 +33,12 @@ export default function RootLayout({
 
   return (
     <html lang='en'>
+      <head>
+        <link
+          rel='icon'
+          href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>"
+        />
+      </head>
       <body className='max-w-3xl font-cormorant flex flex-col mb-40 mx-auto mt-4 md:flex-row md:mt-20'>
         {Sidebar}
         <main className='flex-auto text-sm min-w-0 max-w-lg mt-10 md:mt-0 px-8 md:pl-20'>
