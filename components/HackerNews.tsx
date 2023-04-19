@@ -22,6 +22,11 @@ const HackerNews = () => {
       `https://hacker-news.firebaseio.com/v0/item/${id}.json`
     );
     const data = await response.json();
+
+    if (!data.url) {
+      data.url = `https://news.ycombinator.com/item?id=${data.id}`;
+    }
+
     return data;
   };
 
