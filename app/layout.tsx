@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const Sidebar = (
-    <div className='flex flex-col items-center md:items-end md:w-52'>
+    <div className='flex flex-col items-center md:items-end '>
       <div>
         <Link href='/'>
           <h2 className='text-black font-semibold'>BENEDICT NEO</h2>
@@ -40,9 +40,9 @@ export default function RootLayout({
           href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>"
         />
       </head>
-      <body className='max-w-3xl font-cormorant flex flex-col mb-40 mx-auto mt-4 md:flex-row md:mt-20'>
+      <body className='max-w-3xl font-cormorant flex flex-col space-x-1 mb-40 mx-auto mt-4 md:flex-row md:mt-20'>
         {Sidebar}
-        <main className='flex-auto text-sm min-w-0 max-w-lg mt-10 md:mt-0 px-8 md:pl-20'>
+        <main className='flex-auto text-md min-w-0 max-w-xl mt-10 md:mt-0 px-4 md:pl-20 '>
           {children}
         </main>
         <AnalyticsWrapper />
