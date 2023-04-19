@@ -24,7 +24,7 @@ export default async function GuestbookPage() {
   }
 
   // determine user timezone
-  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   return (
     <section>
@@ -36,14 +36,13 @@ export default async function GuestbookPage() {
               {/* format the date as 9:12 AM · Feb 17, 2023 */}
               <div className=' text-slate-400'>
                 {new Date(entry.created_at).toLocaleString('en-US', {
-                  timeZone: tz,
+                  timeZone: 'America/Chicago',
                   hour: 'numeric',
                   minute: 'numeric',
                   hour12: true,
                 })}
                 {' · '}
                 {new Date(entry.created_at).toLocaleString('en-US', {
-                  timeZone: tz,
                   month: 'short',
                   day: 'numeric',
                   year: 'numeric',
