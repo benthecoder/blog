@@ -11,3 +11,24 @@ Tutorial on how to build this blog can be found [here](https://www.youtube.com/w
 - Add some GPT functionalities like <https://github.com/jxnl/magic-text>
 - input article link, have it summarize for me, and then highlights allow me to search that term and redirect to perplexity.
 - in my /write page, highlights allow me to query chatGPT api to rewrite it given a prompt.
+
+## Setting up Planetscale for /t page
+
+```bash
+brew install planetscale/tap/pscale
+brew install mysql-client
+```
+
+```bash
+pscale shell <DB_NAME> main
+```
+
+Run this to create table
+
+```sql
+CREATE TABLE tweets (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
