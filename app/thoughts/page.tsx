@@ -25,6 +25,9 @@ export default async function GuestbookPage() {
   // determine user timezone
   // const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+  // get current year
+  const year = new Date().getFullYear();
+
   return (
     <section>
       <h1 className='font-bold text-left mb-10 text-lg'> Ben's Thoughts 💭</h1>
@@ -41,11 +44,19 @@ export default async function GuestbookPage() {
                   hour12: true,
                 })}
                 {' · '}
-                {new Date(entry.created_at).toLocaleString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  year: 'numeric',
-                })}
+                {/* if year is not current year, display, else don't */}
+                {new Date(entry.created_at).getFullYear() !== year
+                  ? new Date(entry.created_at).toLocaleString('en-US', {
+                      timeZone: 'America/Chicago',
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })
+                  : new Date(entry.created_at).toLocaleString('en-US', {
+                      timeZone: 'America/Chicago',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
               </div>
             </div>
           ))

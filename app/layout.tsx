@@ -22,7 +22,7 @@ export default function RootLayout({
         </Link>
       </div>
       <div className='text-slate-500 flex flex-row space-x-3 md:flex-col md:mt-10 md:items-end'>
-        <Link href='/t'>💭</Link>
+        <Link href='/thoughts'>💭</Link>
         <Link href='/hn'>hn</Link>
         <Link href='/tags'>tags</Link>
         <Link href='/links'>links</Link>
