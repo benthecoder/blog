@@ -35,6 +35,7 @@ export default function Form() {
       console.log(error);
     }
 
+    setRemainingChars(280);
     setIsFetching(false);
     startTransition(() => {
       // Refresh the current route and fetch new data from the server without
@@ -46,7 +47,7 @@ export default function Form() {
   return (
     <form
       style={{ opacity: !isMutating ? 1 : 0.7 }}
-      className='relative max-w-[500px] text-sm mb-20'
+      className='relative max-w-[500px] mb-20'
       onSubmit={onSubmit}
     >
       <input

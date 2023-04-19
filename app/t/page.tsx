@@ -1,5 +1,4 @@
 import { queryBuilder } from '../../lib/planetscale';
-import Form from './form';
 
 async function getGuestbook() {
   const data = await queryBuilder
@@ -28,13 +27,13 @@ export default async function GuestbookPage() {
 
   return (
     <section>
-      <Form />
+      <h1 className='font-bold text-left mb-10 text-lg'> Ben's Thoughts 💭</h1>
       {entries
         ? entries.map((entry: any) => (
             <div key={entry.id} className='flex flex-col mb-4'>
-              <div className='w-full text-sm break-words'>{entry.content}</div>
+              <div className='w-full  break-words'>{entry.content}</div>
               {/* format the date as 9:12 AM · Feb 17, 2023 */}
-              <div className=' text-slate-400'>
+              <div className=' text-slate-400 text-sm'>
                 {new Date(entry.created_at).toLocaleString('en-US', {
                   timeZone: 'America/Chicago',
                   hour: 'numeric',
