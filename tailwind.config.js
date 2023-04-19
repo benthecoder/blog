@@ -7,7 +7,7 @@ module.exports = {
         cormorant: ['Cormorant Garamond', 'serif'],
       },
       fontSize: {
-        xs: '0.2rem',
+        xs: '0.22rem',
       },
     },
   },

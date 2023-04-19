@@ -13,7 +13,7 @@ Tutorial on how to build this blog can be found [here](https://www.youtube.com/w
   - input article link, have it summarize for me (streaming the output with edge)
   - Store the summaries in planetscale and display them in the page
 
-## Setting up Planetscale for /t page
+## Setting up Planetscale for /thoughts page
 
 ```bash
 brew install planetscale/tap/pscale
