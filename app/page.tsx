@@ -30,7 +30,7 @@ const HomePage = () => {
     const matterResult = matter(fileContents);
 
     return (
-      <div>
+      <div key={fileName}>
         <p className='font-bold text-left mb-3 text-lg'>
           {matterResult.data.title}
         </p>
