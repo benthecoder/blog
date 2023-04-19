@@ -58,7 +58,7 @@ export default function Form() {
         name='entry'
         type='text'
         required
-        className='pl-4 pr-32 py-2 mt-1 focus:outline-none block w-full border-neutral-300 rounded-md bg-gray-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100'
+        className='pl-4 pr-20 py-2 mt-1 focus:outline-none block w-full border-neutral-300 rounded-md bg-gray-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100'
       />
       <span className=' text-gray-600'>
         {remainingChars} characters remaining
