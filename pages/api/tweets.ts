@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { queryBuilder } from 'lib/planetscale';
+import { queryBuilder } from '../../lib/planetscale';
 
 export default async function handler(
   req: NextApiRequest,

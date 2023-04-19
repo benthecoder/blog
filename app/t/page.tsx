@@ -1,4 +1,4 @@
-import { queryBuilder } from 'lib/planetscale';
+import { queryBuilder } from '../../lib/planetscale';
 import Form from './form';
 
 async function getGuestbook() {
