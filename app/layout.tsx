@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import './globals.css';
 
-import { AnalyticsWrapper } from '../components/Analytics';
+import { AnalyticsWrapper } from '../components/analytics';
 
 export const metadata: Metadata = {
   title: 'benneo',
