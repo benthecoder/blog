@@ -1,21 +1,25 @@
 # 👋 Howdy
 
-I'm Ben. I was born and raised in [Kuala Lumpur, Malaysia](https://en.wikipedia.org/wiki/Kuala_Lumpur) and am currently in my senior year of B.S. in statistics @ [Iowa State University](https://www.iastate.edu/).
+I'm Ben. I was born and raised in [Kuala Lumpur, Malaysia](https://en.wikipedia.org/wiki/Kuala_Lumpur).
 
-I like hacking and building stuff, my goal is to be a startup founder, or just have fun building something cool with friends.
+I'm currently in my senior year of B.S. in Statistics @ [ISU](https://www.iastate.edu/).
 
-I built this blog with Next.js and Tailwind CSS. Check out the [repo](https://github.com/benthecoder/blog)
+I like [hacking](https://github.com/benthecoder/hackathons) and [writing](https://benedictxneo.medium.com/).
 
-I also have a blog where I write about data science on [Medium](https://benedictxneo.medium.com/)
+My goal is to get into [YC](https://www.ycombinator.com/) and have fun building something cool.
 
-I'm also obsessed with the [Great wave of Kanagawa](/wave)
+I built this blog with Next.js and Tailwind CSS [[source code](https://github.com/benthecoder/blog)]
+
+My plan is to [write](http://localhost:3000/posts) about something everyday.
+
+I'm obsessed with [The Great Wave off Kanagawa](/wave).
 
 ## Connect with me
 
-I love connecting with people.
+I love meeting and having interesting conversations with new people!
 
-Email me at benedict.neo@outlook.com
+Email: benedict.neo@outlook.com
 
-Find me on the links below 👇
+Find me online 👇
 
-[LinkedIn](https://www.linkedin.com/in/benedictneo/) | [Twitter](https://twitter.com/benthecoder1) | [GitHub](https://github.com/benthecoder) | [Curius](https://curius.app/benedict-neo) | [VSCO](https://vsco.co/benxneo/gallery)
+[Twitter](https://twitter.com/benthecoder1) · [GitHub](https://github.com/benthecoder) · [Curius](https://curius.app/benedict-neo) · [Substack](https://substack.com/profile/19402046-benedict-neo) · [Medium](https://benedictxneo.medium.com/) · [VSCO](https://vsco.co/benxneo/gallery) · [Spotify](https://open.spotify.com/user/31w6rspp4fe5ihwoimt4of5tcwiu)
