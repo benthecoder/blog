@@ -18,7 +18,7 @@ I'm obsessed with [The Great Wave off Kanagawa](/wave).
 
 I love meeting and having interesting conversations with new people!
 
-Email: benedict.neo@outlook.com
+Email: [benedictneo@outlook.com](mailto:benedictneo@outlook.com)
 
 Find me online 👇
 
