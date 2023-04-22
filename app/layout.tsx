@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const Sidebar = (
-    <div className='flex flex-col items-center md:items-end '>
+    <div className='flex flex-col items-center md:items-end'>
       <div>
         <Link href='/'>
           <h2 className='text-black font-semibold'>BENEDICT NEO</h2>
