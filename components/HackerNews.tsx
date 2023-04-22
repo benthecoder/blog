@@ -67,14 +67,23 @@ const HackerNews = () => {
         <div>
           <ul className='pl-1 list-outside list-disc'>
             {topStories.map((story) => (
-              <li key={story.id} className='underline'>
+              <li key={story.id}>
                 <a
                   href={story.url}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='visited:text-purple-800'
+                  className='visited:text-purple-800 underline'
                 >
                   {story.title}
+                </a>
+
+                <a
+                  href={`https://news.ycombinator.com/item?id=${story.id}`}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='pl-1 '
+                >
+                  💬
                 </a>
               </li>
             ))}
