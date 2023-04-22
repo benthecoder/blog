@@ -1,6 +1,6 @@
 import fs from 'fs';
 import matter from 'gray-matter';
-import Markdown from 'markdown-to-jsx';
+import MarkdownRender from '../components/MarkdownRender';
 import Link from 'next/link';
 
 const HomePage = () => {
@@ -35,7 +35,7 @@ const HomePage = () => {
           {matterResult.data.title}
         </p>
         <article className='prose'>
-          <Markdown>{matterResult.content}</Markdown>
+          <MarkdownRender content={matterResult.content} />
         </article>
         <div className='flex flex-row space-x-2 mt-10 text-slate-600'>
           {matterResult.data.tags.split(', ').map((tag: any) => (

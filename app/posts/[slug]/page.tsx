@@ -1,6 +1,6 @@
-import Markdown from 'markdown-to-jsx';
 import getPostContent from '../../../components/getPostContent';
 import getPostMetadata from '../../../components/getPostMetadata';
+import MarkdownRender from '../../../components/MarkdownRender';
 import Link from 'next/link';
 
 export const generateStaticParams = async () => {
@@ -16,8 +16,9 @@ const PostPage = (props: any) => {
   return (
     <div>
       <p className='font-bold text-left mb-10 text-lg'>{post.data.title}</p>
-      <article className='prose '>
-        <Markdown>{post.content}</Markdown>
+      <article className='prose'>
+        <MarkdownRender content={post.content} />
+        {/*<Markdown>{post.content}</Markdown>*/}
       </article>
       <div className='flex flex-row space-x-2 mt-10 text-slate-600'>
         {post.data.tags.split(', ').map((tag: any) => (
