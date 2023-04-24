@@ -17,5 +17,3 @@ This made me recall of the idea that [a wandering mind is an unhappy one](https:
 The second way is to be intentional about your decisions.
 
 Everything that happens to you could be the best or the worst thing. It's all about your perception.
-
-This relates to turning suffering and moments of despair into opportunities for growth, and using negative emotions as fuel.
