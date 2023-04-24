@@ -4,7 +4,7 @@ tags: 'fear, gratitude'
 date: 'Apr 23, 2023'
 ---
 
-> Today can either be a best day or a worst day for my life. It just depend on my perception
+> Today can either be the best day or worst day of my life. It just depends on my perception
 
 [Robert E. Grant](https://youtu.be/1XDpa2HLXV0?t=596) shared in his TED Talk about two ways to overcome fear.
 
