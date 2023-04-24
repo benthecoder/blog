@@ -10,7 +10,7 @@ My goal is to get into [YC](https://www.ycombinator.com/) and have fun building 
 
 I built this blog with Next.js and Tailwind CSS [[source code](https://github.com/benthecoder/blog)]
 
-My plan is to [write](http://localhost:3000/posts) about something everyday.
+My plan is to [write](/posts) about something everyday.
 
 I'm obsessed with [The Great Wave off Kanagawa](/wave).
 
