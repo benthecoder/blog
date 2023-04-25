@@ -1,6 +1,6 @@
 ---
 title: 'Hardship is No Misfortune'
-tags: 'life, stoicism, philosophy'
+tags: 'GERD, stoicism, philosophy'
 date: 'Apr 19, 2023'
 ---
 
