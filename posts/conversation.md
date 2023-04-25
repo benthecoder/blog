@@ -1,6 +1,6 @@
 ---
 title: 'More Interesting Conversations'
-tags: 'conversations, talking, questions'
+tags: 'talking, questions, people'
 date: 'Apr 22, 2023'
 ---
 

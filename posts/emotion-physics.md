@@ -1,6 +1,6 @@
 ---
 title: 'The Physics of Emotions'
-tags: 'emotions, physics, science'
+tags: 'emotions, physics'
 date: 'Apr 20, 2023'
 ---
 
