@@ -12,7 +12,7 @@ Once I got out of high school and entered college, grades still mattered to me, 
 
 Now, when I'm about to graduate, my focus and value system shifted more towards career and startups. I see 16 year olds on Twitter selling their startups and high school students getting internships at startups and I get incredibly envious, but moments later I get this intense drive and motivation.
 
-A common advice is to stop comparing yourself to others, especially someone you only see on the surface and to only compare yourself to the you from yesterday.
+A [common advice](https://www.youtube.com/watch?v=jtpOYxsZj7o) is to stop comparing yourself to others, especially someone you only see on the surface and to only compare yourself to the you from yesterday.
 
 But I think you can extract some value by comparing yourself with others.
 
