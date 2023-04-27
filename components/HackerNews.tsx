@@ -60,7 +60,7 @@ const HackerNews = () => {
   };
 
   return (
-    <div className='font-sans'>
+    <div>
       {isLoading ? (
         <p>Loading...</p>
       ) : (

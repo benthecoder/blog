@@ -31,7 +31,7 @@ const HomePage = () => {
 
     return (
       <div key={fileName}>
-        <p className='font-bold text-left mb-3 text-lg'>
+        <p className='font-bold text-left mb-3 text-xl'>
           {matterResult.data.title}
         </p>
         <article className='prose'>

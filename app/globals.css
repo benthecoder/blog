@@ -1,15 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Averia+Serif+Libre:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500&display=swap');
-
 body {
-  background-color: #fffff4;
+  background-color: #f4ecd8;
 }
 
-.prose {
-  color: #000000;
+.prose a {
+  color: #107896;
 }
 
 .prose h1 {
@@ -17,10 +17,20 @@ body {
   line-height: 1.75rem /* 28px */;
 }
 
+.prose blockquote {
+  margin: 0 1em 0 0.25em;
+  padding: 0 0.75em 0 1em;
+  border-left: 2px solid #dadada;
+  quotes: none;
+  font-style: italic;
+  font-weight: light;
+  color: #676767;
+}
+
 .prose h2 {
   font-size: 1rem;
 }
 
 ::selection {
-  background: #fefcce;
+  background: #fdff32;
 }
