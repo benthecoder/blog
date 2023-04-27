@@ -32,5 +32,6 @@ body {
 }
 
 ::selection {
-  background: #fdff32;
+  background: #0b3f6a;
+  color: #fff;
 }
