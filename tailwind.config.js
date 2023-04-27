@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        cormorant: ['Cormorant Garamond', 'serif'],
+        serif: ['Averia Serif Libre', 'serif'],
       },
       fontSize: {
         xs: '0.22rem',

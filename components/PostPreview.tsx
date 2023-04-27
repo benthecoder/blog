@@ -12,7 +12,7 @@ const PostPreview = (props: PostMetadata) => {
         </Link>
       </div>
 
-      <div className='text-slate-400 '>{props.date}</div>
+      <div className='text-slate-400'>{props.date}</div>
     </div>
   );
 };
