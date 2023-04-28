@@ -8,13 +8,13 @@ I saw this comment on an [Ask HN](https://news.ycombinator.com/item?id=35728268)
 
 > When reading, I look for 2 or 3 key "aha moments" that stick with me. For Thinking Fast it was "two ways of thinking", "loss aversion". For Thinking in Systems it's "stocks + outflows + inflow", and "all systems reach an equilibrium
 
-Most Sundays after Church, my family would go to Publika, a Shopping Gallery nearby for lunch.
+Most Sundays after church, my family and I would go to Publika, a Shopping Gallery nearby for lunch.
 
 And while my mom explores the vendors stalls that sell trinkets, clothes, and food, I would be camping at the non-fiction bookshelves at bookstore with one goal.
 
-The objective was to fill my brain with as much new information as possible before my mom was done with her shopping.
+The objective was to fill my brain with as much new information as possible before my mom was done with shopping.
 
-I would pick a book that piqued my interest, start flipping through the pages and speedread, until something quoteworthy catches my attention. Then, I tweet it for future me to read it.
+I would pick a book that piqued my interest, start flipping through the pages and speedread, until something quoteworthy catches my attention. Then, I tweet it for future me to read.
 
 I liked that challenge because it allowed me to read books without the pressure of finishing it cover-to-cover. And to just cling on to a few ideas, and try to apply them to my life.
 
