@@ -6,12 +6,7 @@ Design inspired by [James Quiambao](https://www.jquiambao.com/) and [Lee Robinso
 
 Tutorial on how to build this blog can be found [here](https://www.youtube.com/watch?v=Hiabp1GY8fA).
 
-## Ideas
-
-- Add some GPT functionalities like <https://github.com/jxnl/magic-text>
-  - /magic page
-  - input article link, have it summarize for me (streaming the output with edge)
-  - Store the summaries in planetscale and display them in the page
+OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
 
 ## Setting up Planetscale for /thoughts page
 
