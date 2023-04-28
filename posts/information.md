@@ -1,6 +1,6 @@
 ---
 title: 'My Information Diet'
-tags: 'reading, writing, create'
+tags: 'reading, habits'
 date: 'Apr 26, 2023'
 ---
 
