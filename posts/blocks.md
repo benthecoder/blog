@@ -12,7 +12,7 @@ That leaves 16-17 hours of waking time.
 
 That's about 1000 minutes.
 
-Tim Urban's [idea](https://waitbutwhy.com/2016/10/100-blocks-day.html) of thinking 1000 minutes as 100 10-minute blocks.
+Tim Urban's [idea](https://waitbutwhy.com/2016/10/100-blocks-day.html) of thinking 1000 minutes as 100 10-minute blocks is a great way to visualization how you spent your day.
 
 My favorite blocks of the day is when I think deeply and try to write these blogs, code something fun, talking to friends, listening to podcasts, and reading good blogs on the internet.
 
