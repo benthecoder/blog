@@ -24,6 +24,7 @@ export default function RootLayout({
       <div className='flex flex-row space-x-3 md:flex-col md:mt-10 md:items-end'>
         <Link href='/thoughts'>💭</Link>
         <Link href='/hn'>hn</Link>
+        <Link href='/tldr'>tldr</Link>
         <Link href='/tags'>tags</Link>
         <Link href='/links'>links</Link>
         <Link href='/posts'>archive</Link>
@@ -42,7 +43,7 @@ export default function RootLayout({
       </head>
       <body className='font-serif max-w-3xl flex flex-col space-x-1 mb-40 mx-auto mt-4 md:flex-row md:mt-20'>
         {Sidebar}
-        <main className=' flex-auto text-md min-w-0 max-w-xl mt-10 md:mt-0 px-4 md:pl-20 '>
+        <main className=' flex-auto text-md min-w-0 max-w-xl mt-10 md:mt-0 px-4 md:pl-20'>
           {children}
         </main>
         <AnalyticsWrapper />

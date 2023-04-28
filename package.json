@@ -9,11 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mozilla/readability": "^0.4.4",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
     "@vercel/analytics": "^0.1.11",
+    "axios": "^1.3.6",
+    "eventsource-parser": "^1.0.0",
     "gray-matter": "^4.0.3",
+    "jsdom": "^21.1.1",
     "kysely": "^0.24.2",
     "kysely-planetscale": "^1.3.0",
     "markdown-to-jsx": "^7.1.7",
@@ -25,6 +29,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.8",
+    "@types/jsdom": "^21.1.1",
     "autoprefixer": "^10.4.13",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
