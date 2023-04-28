@@ -34,17 +34,23 @@ const Summarize: React.FC = () => {
         });
 
         if (summaryResponse.ok) {
-          const reader = summaryResponse.body.getReader();
-          const decoder = new TextDecoder();
-          let summary = '';
-          let done = false;
+          if (summaryResponse.status === 400) {
+            setContent('Article is too long, cannot summarize');
+            return;
+          }
+          if (summaryResponse.body) {
+            const reader = summaryResponse.body.getReader();
+            const decoder = new TextDecoder();
+            let summary = '';
+            let done = false;
 
-          while (!done) {
-            const { value, done: doneReading } = await reader.read();
-            done = doneReading;
-            summary += decoder.decode(value);
+            while (!done) {
+              const { value, done: doneReading } = await reader.read();
+              done = doneReading;
+              summary += decoder.decode(value);
 
-            setContent(summary);
+              setContent(summary);
+            }
           }
         } else {
           setContent(
