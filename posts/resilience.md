@@ -1,6 +1,6 @@
 ---
 title: 'Ingredients for Resiliency'
-tags: 'suffering, antifragility, GERD'
+tags: 'personal'
 date: 'Apr 21, 2023'
 ---
 
