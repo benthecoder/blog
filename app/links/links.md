@@ -1,6 +1,16 @@
 # Links
 
-## Favourites
+## Info Diet
+
+- [Bored Reading](https://boredreading.com/)
+- [The Brutalist Report](https://brutalist.report/)
+- [DAILY ROTATION](https://www.dailyrotation.com/)
+- [HackerNews](https://news.ycombinator.com/)
+- [Slashdot](https://slashdot.org/)
+- [Lobsters](https://lobste.rs/)
+- [Bear Blog](https://bearblog.dev/discover/)
+
+## Favs
 
 - [arcana.computer](https://www.arcana.computer/) — [Years in review](https://www.arcana.computer/years), [project ideas](https://www.arcana.computer/catalogs/project-ideas), [words](https://www.arcana.computer/catalogs/words)
 - [Gwern Branwen](https://gwern.net/) — [Spaced Repetition Learning](https://gwern.net/spaced-repetition), [Statistical Notes](https://gwern.net/note/statistic)
