@@ -1,6 +1,6 @@
 ---
 title: 'AI Aging'
-tags: 'ml, data-science, mlops'
+tags: 'machine-learning, mlops'
 date: 'Apr 17, 2023'
 ---
 
