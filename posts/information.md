@@ -14,7 +14,7 @@ Every morning while I'm still in bed, half-awake, I glance through the dozens of
 
 Then, I get up and open up YouTube on [Orion](https://browser.kagi.com/) on my iPhone 13 mini (to avoid the ads), and play videos on my feed that I find valuable and consumable in 10 minutes in the background, which actually inspired the last couple blog posts.
 
-While I'm waiting for my oatmeal to finish cooking in the microwave, I scroll Twitter for anything intriguing, which on Twitter has been 99% about GPT wrapper side projects I wish I built, the future of LLMs, and the latest updates on [LangChain](https://github.com/hwchase17/langchain) and [LlamaIndex](https://github.com/jerryjliu/llama_index), and 1% webdev and memes.
+While I'm waiting for my oatmeal to finish cooking in the microwave, I scroll Twitter for anything intriguing, which lately has been 99% GPT wrapper apps I wish I built and Generative AI news, and 1% webdev and memes.
 
 Then, on my way to class I listen to podcasts, I recently discovered [The Social Radars](https://thesocialradars.captivate.fm/), where startup founders like Steve Huffman (Reddit) and Tony Xu (Doordash) share their story about how it all began, what they've learned, and what they're doing now.
 
