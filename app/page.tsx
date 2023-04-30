@@ -1,36 +1,15 @@
-import fs from 'fs';
-import matter from 'gray-matter';
-import MarkdownRender from '../components/MarkdownRender';
+import MarkdownRender from '../components/RenderPost';
 import Link from 'next/link';
 import getPostMetadata from '../components/getPostMetadata';
+import getPostContent from '../components/getPostContent';
 
 const HomePage = () => {
   const posts = getPostMetadata();
-
   const topPosts = posts.slice(0, 10);
 
-  const postPreview = topPosts.map((post) => {
-    const fileContents = fs.readFileSync(`posts/${post.slug}.md`, 'utf8');
-    const matterResult = matter(fileContents);
-
-    return (
-      <div key={post.slug}>
-        <p className='font-bold text-left mb-3 text-xl'>
-          {matterResult.data.title}
-        </p>
-        <article className='prose'>
-          <MarkdownRender content={matterResult.content} />
-        </article>
-        <div className='flex flex-row space-x-2 mt-10 text-slate-600'>
-          {matterResult.data.tags.split(', ').map((tag: any) => (
-            <Link href={`/tags/${tag}`} key={tag}>
-              #{tag}
-            </Link>
-          ))}
-        </div>
-        <p className='text-slate-400 mt-2'>{matterResult.data.date}</p>
-      </div>
-    );
+  const postPreview = topPosts.map((p) => {
+    const post = getPostContent(p.slug);
+    return MarkdownRender(post);
   });
 
   return (
