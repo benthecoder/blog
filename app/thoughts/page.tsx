@@ -22,41 +22,23 @@ export default async function GuestbookPage() {
     console.error(err);
   }
 
-  // determine user timezone
-  // const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-  // get current year
-  const year = new Date().getFullYear();
-
   return (
     <section>
       <h1 className='font-bold text-left mb-10 text-lg'> Ben's Thoughts 💭</h1>
       {entries
         ? entries.map((entry: any) => (
             <div key={entry.id} className='flex flex-col mb-4'>
-              <div className='w-full  break-words'>{entry.content}</div>
-              {/* format the date as 9:12 AM · Feb 17, 2023 */}
+              <div className='w-full break-words'>{entry.content}</div>
               <div className=' text-slate-400 text-sm'>
-                {new Date(entry.created_at).toLocaleString('en-US', {
+                {new Date(entry.created_at).toLocaleString('en-GB', {
                   timeZone: 'America/Chicago',
                   hour: 'numeric',
+                  hour12: false,
                   minute: 'numeric',
-                  hour12: true,
+                  month: 'numeric',
+                  day: 'numeric',
+                  year: '2-digit',
                 })}
-                {' · '}
-                {/* if year is not current year, display, else don't */}
-                {new Date(entry.created_at).getFullYear() !== year
-                  ? new Date(entry.created_at).toLocaleString('en-US', {
-                      timeZone: 'America/Chicago',
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric',
-                    })
-                  : new Date(entry.created_at).toLocaleString('en-US', {
-                      timeZone: 'America/Chicago',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
               </div>
             </div>
           ))
