@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import './globals.css';
 
-import { AnalyticsWrapper } from '../components/analytics';
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: 'benneo',
@@ -48,7 +48,7 @@ export default function RootLayout({
         <main className=' flex-auto text-md min-w-0 max-w-xl mt-10 md:mt-0 px-4 md:pl-20'>
           {children}
         </main>
-        <AnalyticsWrapper />
+        <Analytics />
       </body>
     </html>
   );
