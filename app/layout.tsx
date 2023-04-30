@@ -15,22 +15,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const Sidebar = (
-    <div className='flex flex-col items-center md:items-end'>
-      <div>
-        <Link href='/'>
-          <h2 className='font-bold'>BENEDICT NEO</h2>
-        </Link>
+    <aside className='flex flex-col items-center md:w-[150px]'>
+      <div className='md:sticky md:top-20'>
+        <div className='font-bold text-center'>
+          <Link href='/'>
+            <h2>BENEDICT NEO</h2>
+          </Link>
+        </div>
+        <div className='flex flex-row space-x-3 md:flex-col md:mt-10 md:items-end'>
+          <Link href='/thoughts'>💭</Link>
+          <Link href='/hn'>hn</Link>
+          <Link href='/tldr'>tldr</Link>
+          <Link href='/tags'>tags</Link>
+          <Link href='/links'>links</Link>
+          <Link href='/posts'>archive</Link>
+          <Link href='/about'>whoami</Link>
+        </div>
       </div>
-      <div className='flex flex-row space-x-3 md:flex-col md:mt-10 md:items-end'>
-        <Link href='/thoughts'>💭</Link>
-        <Link href='/hn'>hn</Link>
-        <Link href='/tldr'>tldr</Link>
-        <Link href='/tags'>tags</Link>
-        <Link href='/links'>links</Link>
-        <Link href='/posts'>archive</Link>
-        <Link href='/about'>whoami</Link>
-      </div>
-    </div>
+    </aside>
   );
 
   return (
@@ -41,7 +43,7 @@ export default function RootLayout({
           href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌊</text></svg>"
         />
       </head>
-      <body className='font-serif max-w-3xl flex flex-col space-x-1 mb-40 mx-auto mt-4 md:flex-row md:mt-20'>
+      <body className='font-serif max-w-3xl flex flex-col mb-40 mx-auto mt-4 md:flex-row md:mt-20'>
         {Sidebar}
         <main className=' flex-auto text-md min-w-0 max-w-xl mt-10 md:mt-0 px-4 md:pl-20'>
           {children}
