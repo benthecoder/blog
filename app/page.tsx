@@ -2,35 +2,19 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import MarkdownRender from '../components/MarkdownRender';
 import Link from 'next/link';
+import getPostMetadata from '../components/getPostMetadata';
 
 const HomePage = () => {
-  const folder = 'posts/';
-  const files = fs.readdirSync(folder);
-  const markdownPosts = files.filter((file) => file.endsWith('.md'));
+  const posts = getPostMetadata();
 
-  const getDate = (fileName: String) => {
-    const fileContents = fs.readFileSync(`posts/${fileName}`, 'utf8');
-    const matterResult = matter(fileContents);
+  const topPosts = posts.slice(0, 10);
 
-    return matterResult.data.date;
-  };
-
-  const sortedPosts = markdownPosts.sort((a, b) => {
-    if (getDate(a) < getDate(b)) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
-
-  const topPosts = sortedPosts.slice(0, 10);
-
-  const posts = topPosts.map((fileName) => {
-    const fileContents = fs.readFileSync(`posts/${fileName}`, 'utf8');
+  const postPreview = topPosts.map((post) => {
+    const fileContents = fs.readFileSync(`posts/${post.slug}.md`, 'utf8');
     const matterResult = matter(fileContents);
 
     return (
-      <div key={fileName}>
+      <div key={post.slug}>
         <p className='font-bold text-left mb-3 text-xl'>
           {matterResult.data.title}
         </p>
@@ -51,7 +35,7 @@ const HomePage = () => {
 
   return (
     <div className='grid grid-cols-1 space-y-48'>
-      {posts}
+      {postPreview}
 
       <Link href='/posts' className='underline mt-10'>
         View the archives
