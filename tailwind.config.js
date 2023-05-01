@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['Averia Serif Libre', 'serif'],
+        serif: ['var(--font-averia)'],
       },
       fontSize: {
         xs: '0.22rem',
