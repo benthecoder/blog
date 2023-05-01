@@ -104,7 +104,7 @@ const handler = async (req: Request): Promise<Response> => {
     messages: [
       {
         role: 'user',
-        content: `${content} \n\ntl;dr this article in a paragraph, and then provide the key insights in quotes`,
+        content: `${content} \n\ntl;dr this to a friend using simple words and share some quotes:`,
       },
     ],
     temperature: 0.2,
