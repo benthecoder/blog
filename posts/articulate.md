@@ -1,5 +1,5 @@
 ---
-title: 'How To Communicate like Steve Jobs'
+title: 'How To Present like Steve Jobs'
 tags: 'talking, ideas'
 date: 'Apr 30, 2023'
 ---
