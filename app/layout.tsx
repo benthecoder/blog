@@ -1,13 +1,21 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import './globals.css';
-
+import { Averia_Serif_Libre } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: 'benneo',
   description: 'Developer, writer, data scientist',
 };
+
+const averia = Averia_Serif_Libre({
+  weight: ['300', '400', '700'],
+  subsets: ['latin'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+  variable: '--font-averia',
+});
 
 export default function RootLayout({
   children,
@@ -36,7 +44,7 @@ export default function RootLayout({
   );
 
   return (
-    <html lang='en'>
+    <html lang='en' className={`${averia.variable} font-serif`}>
       <head>
         <link
           rel='icon'
