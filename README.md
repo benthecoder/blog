@@ -12,7 +12,10 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
 
 ## TODO
 
-- [ ] improve SEO <https://nextjs.org/learn/seo/crawling-and-indexing/xml-sitemaps>
+- [ ] Switch to [contentlayer](https://github.com/leerob/leerob.io/blob/532e402af3bd1777ee1575a249a91f5d27f0c723/app/sitemap.ts#L4)
+- [ ] https://www.contentlayer.dev/docs/environments/nextjs
+- [ ] sitemap https://github.com/leerob/leerob.io/blob/532e402af3bd1777ee1575a249a91f5d27f0c723/app/sitemap.ts#L4
+- [ ] https://leerob.io/blog/nextjs-sitemap-robots
 
 ## Setting up Planetscale for /thoughts page
 
