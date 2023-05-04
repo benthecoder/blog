@@ -1,6 +1,6 @@
 ---
 title: '100 Blocks a Day'
-tags: 'time, plan'
+tags: 'time'
 date: 'Apr 25, 2023'
 ---
 
