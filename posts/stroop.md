@@ -14,7 +14,7 @@ It was just a simple one-step key change, from C to B-flat, so I could still man
 
 I was looking at every chord in the old key on my printed sheet music, and then translating it to the new key in real time.
 
-But at one point, my visual stimuli of seeing the C chord won over my brain's background process that was telling me to play B-fat, causing me to hit the wrong chords.
+But at one point, my visual stimuli of seeing the C chord won over my brain's background process that was telling my hands to play B-flat, causing me to hit the wrong chords.
 
 I thought about why that happens and it turns out I was experiencing the [stroop effect](https://en.wikipedia.org/wiki/Stroop_effect).
 
