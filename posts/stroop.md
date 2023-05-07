@@ -6,17 +6,19 @@ date: 'May 6, 2023'
 
 > In psychology, the Stroop effect is the delay in reaction time between congruent and incongruent stimuli.
 
-It is my turn to play the piano for the church worship session this Sunday.
+I had a practice session today for Sunday's praise and worship, and in one of the songs, the lead singer requested a key change.
 
-Today was the practice session, and in one of the songs, the lead singer requested a key change.
+Key changes mess up my flow, because I memorize a certain routine to minimize mistakes while playing.
 
-It was just a key change down one step, from C to B-flat, so I could still manage.
+It was just a simple one-step key change, from C to B-flat, so I could still manage.
 
-I was looking at every chord in the old key on my printed sheet music, and then translating it to the new key in real time. But at some point my visual stimuli of seeing the C chord would win over, and cause me to hit the wrong chords.
+I was looking at every chord in the old key on my printed sheet music, and then translating it to the new key in real time.
 
-I thought about why that happened and realized I was experiencing the [stroop effect](https://en.wikipedia.org/wiki/Stroop_effect?useskin=vector#In_popular_culture).
+But at one point, my visual stimuli of seeing the C chord won over my brain's background process that was telling me to play B-fat, causing me to hit the wrong chords.
 
-You've probably experienced this effect yourself in brain teasers.
+I thought about why that happens and it turns out I was experiencing the [stroop effect](https://en.wikipedia.org/wiki/Stroop_effect).
+
+You've probably experienced this effect yourself in a certain brain teaser.
 
 Known as the Stroop test, you're given a list of words that are printed in a different color than the meaning of the word. And your task is to name the color of the word, not the word itself, as fast as you can.
 
