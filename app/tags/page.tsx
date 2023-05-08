@@ -29,7 +29,7 @@ const TagPage = () => {
   return (
     <div>
       <h1 className='font-bold text-left mb-10 text-lg'> Tags</h1>
-      <div className='flex flex-wrap '>{tagList}</div>
+      <div className='flex flex-wrap'>{tagList}</div>
     </div>
   );
 };
