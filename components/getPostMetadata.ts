@@ -7,14 +7,15 @@ const getPostMetadata = (): PostMetadata[] => {
   const files = fs.readdirSync(folder);
   const markdownPosts = files.filter((file) => file.endsWith('.md'));
 
-  // Get gray-matter data from each file.
   const posts = markdownPosts.map((fileName) => {
     const fileContents = fs.readFileSync(`posts/${fileName}`, 'utf8');
     const matterResult = matter(fileContents);
+
     return {
       title: matterResult.data.title,
       date: matterResult.data.date,
       tags: matterResult.data.tags,
+      wordcount: (matterResult.content.match(/\b\w+\b/gu) || []).length,
       slug: fileName.replace('.md', ''),
     };
   });
