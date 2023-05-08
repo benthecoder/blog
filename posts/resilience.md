@@ -18,6 +18,6 @@ I especially like the idea of memory loss.
 
 I find I'm most unhappy when I replay my pre-GERD life, believing life used to be better before, and it holds me hostage. It feels like a nightmare that I'm still waiting to be woken out of.
 
-If acceptence is the precursor to use suffering to get stronger, perhaps the precursor to acceptance is forgetting.
+If acceptance is the precursor to use suffering to get stronger, perhaps the precursor to acceptance is forgetting.
 
 I need to stop reliving the past, and move on. Focus on the now. There is still good happening now. My past does not define my future.

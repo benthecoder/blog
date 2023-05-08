@@ -16,11 +16,11 @@ Then, I get up and open up YouTube on [Orion](https://browser.kagi.com/) on my i
 
 While I'm waiting for my oatmeal to finish cooking in the microwave, I scroll Twitter for anything intriguing, which lately has been 99% GPT wrapper apps I wish I built and Generative AI news, and 1% webdev and memes.
 
-Then, on my way to class I listen to podcasts, I recently discovered [The Social Radars](https://thesocialradars.captivate.fm/), where startup founders like Steve Huffman (Reddit) and Tony Xu (Doordash) share their story about how it all began, what they've learned, and what they're doing now.
+Then, on my way to class I listen to podcasts, I recently discovered [The Social Radars](https://thesocialradars.captivate.fm/), where startup founders like Steve Huffman (Reddit) and Tony Xu (DoorDash) share their story about how it all began, what they've learned, and what they're doing now.
 
 Throughout the day I check HackerNews on my phone for any cool stuff, and save anything long-form to [Matter](https://hq.getmatter.com/), my favourite read-it-later app.
 
-When I'm on my Macbook Air, I discover stuff through [Curius](https://curius.app/), a Chrome Extension that lets you see what your friends save and highlight on the interent. I follow a lot of smart people there (mostly UWaterloo students), and I'm finding it very valuable so far for expanding my worldview.
+When I'm on my MacBook Air, I discover stuff through [Curius](https://curius.app/), a Chrome Extension that lets you see what your friends save and highlight on the internet. I follow a lot of smart people there (mostly UWaterloo students), and I'm finding it very valuable so far for expanding my worldview.
 
 Before bed, I listen to [Our Daily Bread](https://odb.org/), which is my excuse for not having the time to read the Bible. It helps remind me of my faith and my values, which I have found to be important in difficult times.
 
