@@ -22,7 +22,7 @@ I see GERD as a misfortune. One day I was fine, and the next I was struck by thi
 
 AI Marcus Aurelius said in this [podcast](https://dkbshow.substack.com/p/marcus-aurelius-podcast-interview) that to endure hardship and prevail is good fortune.
 
-It's hard for me to accept that I have GERD. Christans say that God has a plan for everyone and my prayer will be answered at the right time, some days I feel like my messages to God are lost in the ether.
+It's hard for me to accept that I have GERD. Christians say that God has a plan for everyone and my prayer will be answered at the right time, some days I feel like my messages to God are lost in the ether.
 
 It's easy to say suffering builds endurance, and that I'm going to come out of this stronger than ever. But while you're going through that suffering, it's numbing to the brain and it's easy to succumb to what's easier, which is to continue wishing for things to be go back to the way it was, instead of accepting and acting.
 

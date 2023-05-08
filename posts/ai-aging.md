@@ -16,7 +16,7 @@ Key takeaway
 
 What are the solutions?
 
-The right solution is context-dependent, and investigation shuld be done to understand the cause of the degradation
+The right solution is context-dependent, and investigation should be done to understand the cause of the degradation
 
 The solutions are:
 
