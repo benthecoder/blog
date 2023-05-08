@@ -1,6 +1,6 @@
 ---
 title: 'Happiness Habits'
-tags: 'life, emotion'
+tags: 'happiness, emotion'
 date: 'May 3, 2023'
 ---
 
