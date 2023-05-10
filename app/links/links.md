@@ -9,6 +9,7 @@
 - [Slashdot](https://slashdot.org/)
 - [Lobsters](https://lobste.rs/)
 - [Bear Blog](https://bearblog.dev/discover/)
+- [Read Something Great](https://www.readsomethinggreat.com/)
 
 ## Favs
 
