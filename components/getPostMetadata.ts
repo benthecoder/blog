@@ -22,7 +22,10 @@ const getPostMetadata = (): PostMetadata[] => {
 
   // Sort posts by date.
   posts.sort((a, b) => {
-    if (a.date < b.date) {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+
+    if (dateA < dateB) {
       return 1;
     } else {
       return -1;
