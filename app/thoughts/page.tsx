@@ -24,7 +24,7 @@ export default async function GuestbookPage() {
 
   return (
     <section>
-      <h1 className='font-bold text-left mb-10 text-lg'> Ben's Thoughts 💭</h1>
+      <h1 className='font-bold text-left mb-10 text-2xl'> Ben's Thoughts 💭</h1>
       {entries
         ? entries.map((entry: any) => (
             <div key={entry.id} className='flex flex-col mb-4'>
