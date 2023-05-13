@@ -4,7 +4,7 @@ import Link from 'next/link';
 const RenderPost = ({ ...post }) => {
   return (
     <div key={post.data.title}>
-      <p className='font-bold text-left mb-3 text-xl'>{post.data.title}</p>
+      <p className='font-bold text-left mb-3 text-2xl'>{post.data.title}</p>
       <article className='prose'>
         <Markdown children={post.content} />
       </article>
