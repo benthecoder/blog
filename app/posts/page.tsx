@@ -14,7 +14,7 @@ const ArchivePage = () => {
 
   return (
     <div>
-      <h1 className='font-bold text-left mb-10 text-lg'> Archive</h1>
+      <h1 className='font-bold text-left mb-10 text-2xl'> Archive</h1>
       <div className='grid grid-cols-1 text-sm'>{postPreviews}</div>
       <p className='text-green-900 mt-10 text-sm'>
         Total: {totalBlogs} ({totalWordCount} words)
