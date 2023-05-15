@@ -1,10 +1,10 @@
 ---
-title: 'Coffee chat with Stefan Sai'
+title: 'Coffee chat with Stefan Mai'
 tags: 'AI'
 date: 'May 11, 2023'
 ---
 
-I had a 30-min chat today with [Stefan Sai](https://www.linkedin.com/in/stefanmai/), who's been at Amazon and Meta for 10 years.
+I had a 30-min chat today with [Stefan Mai](https://www.linkedin.com/in/stefanmai/), who's been at Amazon and Meta for 10 years.
 
 Here are some questions I asked and his response (poorly paraphrased from what I can recall).
 
