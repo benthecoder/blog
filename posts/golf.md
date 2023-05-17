@@ -6,14 +6,19 @@ date: 'May 15, 2023'
 
 It was my second time trying out golfing at Top Golf today.
 
-I hit some good shots today, but towards the end, my hands were starting to sore and all my shots were bad.
+I hit ~80 shots, and only a handful were good.
+
+Towards the end, my hands were starting to sore and all my shots were bad.
 
 You need a firm grip and a stable swing, and I don't think my arms are strong enough, my golf club kept moving around.
 
-I also think I'm not tall enough. I was using the hybrid club and hat to hold it in an awkward position, and it keeps hitting my arm.
+I also think I'm not tall enough. I was using the hybrid club and hat to hold it in an awkward position, and it kept hitting my arm.
+
+_Update: It's the day after I wrote this and arms and shoulders are sore and my grip is weak._
 
 Some good tips I got for golfing are:
 
+- don't look where the ball goes as you're hitting it
 - bend your knees, loosen your shoulders and relax, I found taking a breath before each shot helped
 - bend your club towards where you want to hit, it helps direct the shot
 - don't charge for the shot at the start and hit like an axe, it should be a single circular motion that flows like water
