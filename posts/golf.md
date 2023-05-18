@@ -12,7 +12,7 @@ Towards the end, my hands were starting to sore and all my shots were bad.
 
 You need a firm grip and a stable swing, and I don't think my arms are strong enough, my golf club kept moving around.
 
-I also think I'm not tall enough. I was using the hybrid club and hat to hold it in an awkward position, and it kept hitting my arm.
+I also think I'm not tall enough. I was using the hybrid club and had to hold it in an awkward position, and it kept hitting my arm.
 
 _Update: It's the day after I wrote this and arms and shoulders are sore and my grip is weak._
 
