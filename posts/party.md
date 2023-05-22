@@ -1,7 +1,7 @@
 ---
 title: 'First Party Experience'
 tags: 'personal'
-date: 'May 21, 2023'
+date: 'May 20, 2023'
 ---
 
 It's 1am, I just got back from a Tesla interns party.
