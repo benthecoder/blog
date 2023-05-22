@@ -1,7 +1,7 @@
 ---
 title: 'Talking to Strangers'
 tags: 'life'
-date: 'May 18, 2023'
+date: 'May 19, 2023'
 ---
 
 The friends I made last summer aren't back at Tesla yet, so it's a weird feeling being back again but not having them around.
