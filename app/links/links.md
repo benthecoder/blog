@@ -1,5 +1,12 @@
 # Links
 
+## Daily Writings
+
+- [Matt Rickard](https://matt-rickard.com/archive)
+- [James Quiambao](https://www.jquiambao.com/archives)
+- [Rishi Dhanaraj](https://www.rishi.io/)
+- [Rohan Rajiv](https://alearningaday.blog/archives/)
+
 ## Info Diet
 
 - [Bored Reading](https://boredreading.com/)
