@@ -1,5 +1,5 @@
 ---
-title: 'Meaning of life'
+title: 'A fable about life'
 tags: 'ideas'
 date: 'Jun 11, 2023'
 ---
