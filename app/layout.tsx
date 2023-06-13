@@ -33,9 +33,10 @@ export default function RootLayout({
         <div className='flex flex-row space-x-3 md:flex-col md:mt-10 md:items-end'>
           <Link href='/thoughts'>💭</Link>
           <Link href='/hn'>hn</Link>
-          <Link href='/tldr'>tldr</Link>
+          {/*<Link href='/tldr'>tldr</Link>*/}
           <Link href='/tags'>tags</Link>
           <Link href='/links'>links</Link>
+          <Link href='/goals'>goals</Link>
           <Link href='/posts'>archive</Link>
           <Link href='/about'>whoami</Link>
         </div>
