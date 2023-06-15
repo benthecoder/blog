@@ -1,7 +1,7 @@
 ---
 title: 'First KPop Concert'
 tags: 'life'
-date: 'Jun 14, 2023'
+date: 'Jun 13, 2023'
 ---
 
 I never was really into KPOP.
