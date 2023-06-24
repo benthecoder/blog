@@ -4,7 +4,9 @@ tags: 'ideas'
 date: 'Jun 22, 2023'
 ---
 
-The right [question](https://thoughtcatalog.com/ryan-holiday/2017/09/12-questions-that-will-change-your-life/) at the right time can change the course of a life, still a turbulent mind, or heal an angry heart.
+The right question at the right time can change the course of a life, still a turbulent mind, or heal an angry heart.
+
+Here are [12 questions](https://thoughtcatalog.com/ryan-holiday/2017/09/12-questions-that-will-change-your-life) that should be asked many times over the course of your life, or even throughout the day.
 
 > 1. Who Do You Spend Time With?
 > 2. Is This In My Control?
