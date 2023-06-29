@@ -1,22 +1,4 @@
-# Links
-
-## Daily Writings
-
-- [Matt Rickard](https://matt-rickard.com/archive)
-- [James Quiambao](https://www.jquiambao.com/archives)
-- [Rishi Dhanaraj](https://www.rishi.io/)
-- [Rohan Rajiv](https://alearningaday.blog/archives/)
-
-## Info Diet
-
-- [Bored Reading](https://boredreading.com/)
-- [The Brutalist Report](https://brutalist.report/)
-- [DAILY ROTATION](https://www.dailyrotation.com/)
-- [HackerNews](https://news.ycombinator.com/)
-- [Slashdot](https://slashdot.org/)
-- [Lobsters](https://lobste.rs/)
-- [Bear Blog](https://bearblog.dev/discover/)
-- [Read Something Great](https://www.readsomethinggreat.com/)
+# Blogroll
 
 ## Favs
 
