@@ -35,9 +35,9 @@ export default function RootLayout({
           <Link href='/hn'>hn</Link>
           {/*<Link href='/tldr'>tldr</Link>*/}
           <Link href='/tags'>tags</Link>
-          <Link href='/links'>links</Link>
-          <Link href='/goals'>goals</Link>
+          <Link href='/library'>library</Link>
           <Link href='/posts'>archive</Link>
+          <Link href='/blogroll'>blogroll</Link>
           <Link href='/about'>whoami</Link>
         </div>
       </div>
