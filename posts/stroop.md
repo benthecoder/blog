@@ -1,6 +1,6 @@
 ---
 title: 'Stroop effect'
-tags: 'life, neuroscience'
+tags: 'ideas, neuroscience'
 date: 'May 6, 2023'
 ---
 

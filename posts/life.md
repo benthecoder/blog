@@ -1,6 +1,6 @@
 ---
 title: 'What To Do With Your Life'
-tags: 'life'
+tags: 'personal'
 date: 'Jun 1, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Yosemite Day 1'
-tags: 'life'
+tags: 'personal'
 date: 'May 27, 2023'
 ---
 
