@@ -1,6 +1,6 @@
 ---
 title: 'First SF Meetup'
-tags: 'life'
+tags: 'personal'
 date: 'Jun 27, 2023'
 ---
 

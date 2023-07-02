@@ -1,6 +1,6 @@
 ---
 title: 'Talking to Strangers'
-tags: 'life'
+tags: 'personal'
 date: 'May 19, 2023'
 ---
 
