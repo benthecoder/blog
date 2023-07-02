@@ -1,6 +1,6 @@
 ---
 title: 'Change'
-tags: 'life'
+tags: 'personal'
 date: 'Jun 6, 2023'
 ---
 

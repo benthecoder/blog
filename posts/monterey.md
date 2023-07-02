@@ -1,6 +1,6 @@
 ---
 title: 'Monterey Trip'
-tags: 'life'
+tags: 'personal'
 date: 'Jun 3, 2023'
 ---
 

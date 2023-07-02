@@ -1,6 +1,6 @@
 ---
 title: 'Golfing Experience'
-tags: 'life'
+tags: 'personal'
 date: 'May 15, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'First KPop Concert'
-tags: 'life'
+tags: 'personal'
 date: 'Jun 13, 2023'
 ---
 

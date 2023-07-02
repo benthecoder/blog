@@ -1,6 +1,6 @@
 ---
 title: 'Hiking Yosemite Falls'
-tags: 'life'
+tags: 'personal'
 date: 'May 28, 2023'
 ---
 

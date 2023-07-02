@@ -1,6 +1,6 @@
 ---
 title: 'Top Five Regrets of the Dying'
-tags: 'life'
+tags: 'personal'
 date: 'Jun 2, 2023'
 ---
 

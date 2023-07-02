@@ -1,6 +1,6 @@
 ---
 title: 'Second Party experience'
-tags: 'life'
+tags: 'personal'
 date: 'Jun 23, 2023'
 ---
 
