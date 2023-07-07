@@ -45,7 +45,3 @@
 - [ ] A Confession
 - [ ] The Dream of a Ridiculous Man
 - [ ] The Picture of Dorian Gray
-
-## Courses
-
-- [ ]
