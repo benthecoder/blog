@@ -3,11 +3,12 @@
 @tailwind utilities;
 
 body {
-  background-color: #f4ecd8;
+  /*background-color: #e0e2dc; */ /* light grey */
+  background-color: #eeeeee;
 }
 
 .prose {
-  color: #333333;
+  color: #181010;
 }
 
 .prose a {
