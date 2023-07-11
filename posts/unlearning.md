@@ -22,14 +22,14 @@ The ideal algorithm will use the pre-trained model as a starting point, and **ef
 
 MU goes beyond protecting user privacy. It can:
 
-1. erase inaccurate/outdated information (dueu to errors in labelling or changes in environment)
+1. erase inaccurate/outdated information (due to errors in labelling or changes in environment)
 2. remove harmful, manipulated, or outlier data
 
 It's also related to other areas of ML
 
 - [Differential privacy](https://en.wikipedia.org/wiki/Differential_privacy?useskin=vector): guarantee no particular training example has too large an influence on model (stronger goal compared to unlearning)
 - [life-long learning](https://arxiv.org/abs/1802.07569): models that can learn continuously while maintaining previously-acquired skills
-- [fairness](<https://en.wikipedia.org/wiki/Fairness_(machine_learning)?useskin=vector>): correct unfair biases or disparate treatment of members belonging to different groups
+- [fairness](https://tinyurl.com/28g452mh): correct unfair biases or disparate treatment of members belonging to different groups
 
 ### Anatomy
 
@@ -68,7 +68,7 @@ A [starting kit](https://github.com/unlearning-challenge/starting-kit) and a sam
 
 How is forgetting evaluated?
 
-Tools inspired by Membership Inference Attacks (MIAs) such as [LiRA](https://arxiv.org/abs/2112.03570).
+Using tools inspired by Membership Inference Attacks (MIAs) such as [LiRA](https://arxiv.org/abs/2112.03570).
 
 They were first developed in privacy and security literature with the goal of inferring which **examples** were **part of the training set**.
 
