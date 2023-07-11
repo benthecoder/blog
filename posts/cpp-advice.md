@@ -1,7 +1,7 @@
 ---
 title: 'Advice for new programmers'
 tags: 'programming'
-date: 'Jul 10, 2023'
+date: 'Jul 9, 2023'
 ---
 
 Chris looked through files on his computer, deciding what to backup, found his Cpp code from 15 years ago.
