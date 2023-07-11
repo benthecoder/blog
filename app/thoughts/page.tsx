@@ -27,11 +27,16 @@ export default async function GuestbookPage() {
       <h1 className='font-bold text-left mb-10 text-2xl'> Ben's Thoughts 💭</h1>
       {entries
         ? entries.map((entry: any) => (
-            <div key={entry.id} className='flex flex-col mb-4'>
-              <div className='w-full break-words'>{entry.content}</div>
-              <div className=' text-slate-400 text-sm'>
+            <div
+              key={entry.id}
+              className='flex flex-col mb-6 p-2 bg-blue-100 border-2 border-black'
+            >
+              <div className='text-md text-gray-700 break-words'>
+                {entry.content}
+              </div>
+              <div className='text-gray-500 mt-2 text-sm'>
                 {new Date(entry.created_at).toLocaleString('en-GB', {
-                  timeZone: 'America/Chicago',
+                  timeZone: 'America/Los_Angeles',
                   hour: 'numeric',
                   hour12: false,
                   minute: 'numeric',
