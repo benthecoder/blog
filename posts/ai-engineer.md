@@ -8,7 +8,15 @@ A list of great [resources](https://news.ycombinator.com/item?id=36432598) for b
 
 ## Mathematics
 
-- [Mathematics for Machine Learning and Data Science](https://www.coursera.org/specializations/mathematics-for-machine-learning-and-data-science)
+- [Essence of calculus](https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr)
+- [Essence of linear algebra](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab)
+- [Neural networks](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)
+- [Mathematics for Machine Learning and Data Science Specialization](https://www.coursera.org/specializations/mathematics-for-machine-learning-and-data-science)
+
+## Machine Learning
+
+- [Machine Learning | Coursera](https://www.coursera.org/specializations/machine-learning-introduction)
+- [Introduction to Statistical Learning in Python](https://hastie.su.domains/ISLP/ISLP_website.pdf)
 
 ## PyTorch
 
@@ -17,8 +25,9 @@ A list of great [resources](https://news.ycombinator.com/item?id=36432598) for b
 
 ## Deep learning
 
-- [Neural Networks: Zero to Hero - YouTube](https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)
-- [Practical Deep Learning for Coders - Practical Deep Learning](https://course.fast.ai/)
+- [Neural Networks: Zero to Hero by Andrej Karpathy](https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ)
+- fast.ai [[p1]](https://course.fast.ai/), [[p2]](https://course.fast.ai/Lessons/part2.html)
+- [Deep Learning Fundamentals - Lightning AI](https://lightning.ai/courses/deep-learning-fundamentals/)
 
 ## Transformers
 
@@ -34,8 +43,23 @@ A list of great [resources](https://news.ycombinator.com/item?id=36432598) for b
 
 - [LLM Bootcamp - The Full Stack](https://fullstackdeeplearning.com/llm-bootcamp/)
 - [LLM University by Cohere](https://docs.cohere.com/docs/llmu)
-- [A Stage Review of Instruction Tuning](https://yaofu.notion.site/June-2023-A-Stage-Review-of-Instruction-Tuning-f59dbfc36e2d4e12a33443bd6b2012c2)
+
+Talks
+
+- [LLM in Production](https://www.youtube.com/playlist?list=PL3vkEKxWd-us5YvvuvYkjP_QGlgUq3tpA)
+- [LLM in Production - Part II](https://www.youtube.com/playlist?list=PL3vkEKxWd-uupBSWL-DbVJuCMqXO9Z3Z4)
+
+Agents
+
 - [LLM Powered Autonomous Agents | Lil'Log](https://lilianweng.github.io/posts/2023-06-23-agent/)
+
+Tuning
+
+- [A Stage Review of Instruction Tuning](https://yaofu.notion.site/June-2023-A-Stage-Review-of-Instruction-Tuning-f59dbfc36e2d4e12a33443bd6b2012c2)
+
+Articles
+
+- [Building LLM applications for production](https://huyenchip.com/2023/04/11/llm-engineering.html)
 
 ## Build
 
