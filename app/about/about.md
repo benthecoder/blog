@@ -8,7 +8,7 @@ I like [hacking](https://github.com/benthecoder/hackathons) and [writing](https:
 
 My goal is to get into [YC](https://www.ycombinator.com/) and have fun building something cool.
 
-I built this blog with Next.js and Tailwind CSS [[source code](https://github.com/benthecoder/blog)]
+I built this [blog](https://github.com/benthecoder/blog) with Next.js and Tailwind CSS
 
 My plan is to [write](/posts) about something everyday.
 
@@ -18,7 +18,7 @@ I'm obsessed with [The Great Wave off Kanagawa](/wave).
 
 I love meeting and having interesting conversations with new people!
 
-Email: [benedictneo@outlook.com](mailto:benedictneo@outlook.com)
+Email: [benedict.neo@outlook.com](mailto:benedict.neo@outlook.com)
 
 Find me online 👇
 
