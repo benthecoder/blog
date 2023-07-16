@@ -1,7 +1,7 @@
 ---
 title: 'Scale AI hackathon in SF'
 tags: 'personal'
-date: 'Jul 16, 2023'
+date: 'Jul 15, 2023'
 ---
 
 I attended my first ever in-person hackathon hosted by Scale AI in SF today at The Pearl.
