@@ -19,8 +19,9 @@
 - [Rishi Dhanaraj](https://www.rishi.io/)
 - [Rohan Rajiv](https://alearningaday.blog/archives/)
 
-## Articles
+## Ideas
 
+- [Evergreen notes](https://notes.andymatuschak.org/Evergreen_notes)
 - [Life is Short](http://www.paulgraham.com/vb.html)
 - [How to Do Great Work](http://paulgraham.com/greatwork.html)
 - [Ancient Rivers of Money](https://www.ribbonfarm.com/2010/11/05/ancient-rivers-of-money/)
