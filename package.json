@@ -24,6 +24,7 @@
     "langchain": "^0.0.112",
     "markdown-to-jsx": "^7.1.7",
     "next": "^13.4.11-canary.0",
+    "openai-edge": "^1.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "remark-gfm": "^3.0.1",
