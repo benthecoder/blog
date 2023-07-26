@@ -3,6 +3,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createRouter } from 'next-connect';
 import feed from './feed.json';
+import { marked } from 'marked';
 
 type BlogPost = any;
 
@@ -45,15 +46,14 @@ router.get(async (req: NextApiRequest, res: NextApiResponse) => {
         const url = `${
           process.env.NEXT_PUBLIC_ROOT_URL
         }/posts/${page.filePath.replace('.md', '')}`;
+        const contentHTML = marked.parse(page.content);
 
         return `<item>
         <title>${escapeXml(page.data.title)}</title>
         <link>${url}</link>
         <guid>${url}</guid>
         <pubDate>${page.data.date}</pubDate>
-        <content:encoded><![CDATA[${escapeXml(
-          page.content
-        )}]]></content:encoded>
+        <content:encoded><![CDATA[${escapeXml(contentHTML)}]]></content:encoded>
       </item>`;
       })
       .join('');

@@ -25,6 +25,7 @@
     "kysely-planetscale": "^1.3.0",
     "langchain": "^0.0.112",
     "markdown-to-jsx": "^7.1.7",
+    "marked": "^5.1.2",
     "next": "^13.4.11-canary.0",
     "next-connect": "^1.0.0",
     "openai-edge": "^1.2.0",
@@ -36,6 +37,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.8",
     "@types/jsdom": "^21.1.1",
+    "@types/marked": "^5.0.1",
     "autoprefixer": "^10.4.13",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
