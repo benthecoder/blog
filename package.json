@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "generate:rss": "node scripts/rss.mjs",
+    "prebuild": "npm run generate:rss"
   },
   "dependencies": {
     "@mozilla/readability": "^0.4.4",
@@ -24,6 +26,7 @@
     "langchain": "^0.0.112",
     "markdown-to-jsx": "^7.1.7",
     "next": "^13.4.11-canary.0",
+    "next-connect": "^1.0.0",
     "openai-edge": "^1.2.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
