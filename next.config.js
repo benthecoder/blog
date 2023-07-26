@@ -5,6 +5,12 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  rewrites: async () => [
+    {
+      source: '/rss.xml',
+      destination: '/api/rss',
+    },
+  ],
 };
 
 module.exports = nextConfig;
