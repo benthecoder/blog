@@ -49,11 +49,11 @@ router.get(async (req: NextApiRequest, res: NextApiResponse) => {
         const contentHTML = marked.parse(page.content);
 
         return `<item>
-        <title>${escapeXml(page.data.title)}</title>
+        <title><![CDATA[${escapeXml(page.data.title)}]]></title>
         <link>${url}</link>
         <guid>${url}</guid>
         <pubDate>${page.data.date}</pubDate>
-        <content:encoded><![CDATA[${escapeXml(contentHTML)}]]></content:encoded>
+        <description><![CDATA[${escapeXml(contentHTML)}]]></description>
       </item>`;
       })
       .join('');
