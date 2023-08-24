@@ -11,6 +11,7 @@
 - [Bear Blog](https://bearblog.dev/discover/)
 - [Read Something Great](https://www.readsomethinggreat.com/)
 - [Read Something Wonderful](https://readsomethingwonderful.com/)
+- [Hypertext as Literature](https://hypertext.joodaloop.com/)
 
 ## Daily Writers
 
