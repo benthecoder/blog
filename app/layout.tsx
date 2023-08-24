@@ -17,6 +17,16 @@ const averia = Averia_Serif_Libre({
   variable: '--font-averia',
 });
 
+const links = [
+  { path: '/thoughts', text: '💭' },
+  { path: '/hn', text: 'hn' },
+  { path: '/tags', text: 'tags' },
+  { path: '/chat', text: 'chat' },
+  { path: '/library', text: 'library' },
+  { path: '/posts', text: 'archive' },
+  { path: '/about', text: 'whoami' },
+];
+
 export default function RootLayout({
   children,
 }: {
@@ -31,13 +41,11 @@ export default function RootLayout({
           </Link>
         </div>
         <div className='flex flex-row space-x-3 md:flex-col md:mt-10 md:items-end'>
-          <Link href='/thoughts'>💭</Link>
-          <Link href='/hn'>hn</Link>
-          <Link href='/tags'>tags</Link>
-          <Link href='/chat'>chat</Link>
-          <Link href='/library'>library</Link>
-          <Link href='/posts'>archive</Link>
-          <Link href='/about'>whoami</Link>
+          {links.map(({ path, text }) => (
+            <Link key={path} href={path}>
+              {text}
+            </Link>
+          ))}
         </div>
       </div>
     </aside>
