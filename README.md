@@ -12,9 +12,13 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
 
 ## TODO
 
-- [ ] Switch to [contentlayer](https://www.contentlayer.dev/docs/environments/nextjs)
-- [ ] sitemap https://github.com/leerob/leerob.io/blob/532e402af3bd1777ee1575a249a91f5d27f0c723/app/sitemap.ts#L4
-- [ ] experiment with openAI embeddings using [pgvector](https://supabase.com/blog/openai-embeddings-postgres-vector#building-a-smarter-search-function)
+- [ ] Create a chat interface trained on my blog posts, have database for embeddings that allow daily insert on upload
+- [ ] build a map of favorite restaurants and places like [build your corner](https://twitter.com/buildyourcorner)
+
+## Inspirations
+
+- [cnnmon/tiffanywang](https://github.com/cnnmon/tiffanywang)
+- [quinnha/portfolio](https://github.com/quinnha/portfolio)
 
 ## Setting up Planetscale for /thoughts page
 
