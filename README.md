@@ -14,11 +14,18 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
 
 - [ ] Create a chat interface trained on my blog posts, have database for embeddings that allow daily insert on upload
 - [ ] build a map of favorite restaurants and places like [build your corner](https://twitter.com/buildyourcorner)
+- [ ] Add listening and reading updates
+  - [ ] https://dev.to/j471n/how-to-use-spotify-api-with-nextjs-50o5
+  - [ ] https://github.com/yihui-hu/yihui-work
+- [ ] add hover over highlights for notes feature and expanding sidebar
+  - [ ] https://linusrogge.com/about
 
 ## Inspirations
 
 - [cnnmon/tiffanywang](https://github.com/cnnmon/tiffanywang)
 - [quinnha/portfolio](https://github.com/quinnha/portfolio)
+- [yihui-hu/yihui-work](https://github.com/yihui-hu/yihui-work)
+- [Linus Rogge](https://linusrogge.com/)
 
 ## Setting up Planetscale for /thoughts page
 
