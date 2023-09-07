@@ -22,4 +22,4 @@ Email: [benedict.neo@outlook.com](mailto:benedict.neo@outlook.com)
 
 Find me online 👇
 
-[Twitter](https://twitter.com/benthecoder1) · [GitHub](https://github.com/benthecoder) · [Curius](https://curius.app/benedict-neo) · [Goodreads](https://www.goodreads.com/user/show/103179068-benedict-neo) · [Substack](https://substack.com/profile/19402046-benedict-neo) · [Medium](https://benedictxneo.medium.com/) · [VSCO](https://vsco.co/benxneo/gallery) · [Spotify](https://open.spotify.com/user/31w6rspp4fe5ihwoimt4of5tcwiu)
+[Twitter](https://twitter.com/benthecoder1) · [GitHub](https://github.com/benthecoder) · [Curius](https://curius.app/benedict-neo) · [Goodreads](https://goodreads.com/bneo) · [Substack](https://substack.com/profile/19402046-benedict-neo) · [Medium](https://benedictxneo.medium.com/) · [VSCO](https://vsco.co/benxneo/gallery) · [Spotify](https://open.spotify.com/user/31w6rspp4fe5ihwoimt4of5tcwiu)
