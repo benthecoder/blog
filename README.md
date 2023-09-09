@@ -19,6 +19,10 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
   - [ ] https://github.com/yihui-hu/yihui-work
 - [ ] add hover over highlights for notes feature and expanding sidebar
   - [ ] https://linusrogge.com/about
+- [ ] breadcrumb navigation
+  - [ ] https://jake.isnt.online/
+- [ ] expanding text
+  - [ ] https://www.spencerchang.me/
 
 ## Inspirations
 
