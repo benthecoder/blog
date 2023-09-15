@@ -1,6 +1,6 @@
 ---
 title: 'Stress is Good'
-tags: 'ideas'
+tags: 'stress'
 date: 'Aug 10, 2023'
 ---
 

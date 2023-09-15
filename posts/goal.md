@@ -1,6 +1,6 @@
 ---
 title: 'Every Great Conversation has a Goal'
-tags: 'ideas'
+tags: 'talking'
 date: 'Sep 1, 2023'
 ---
 

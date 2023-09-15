@@ -1,6 +1,6 @@
 ---
 title: 'Sermon on Money'
-tags: 'ideas'
+tags: 'bibile'
 date: 'Aug 6, 2023'
 ---
 

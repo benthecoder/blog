@@ -1,6 +1,6 @@
 ---
 title: 'Bias Towards Action'
-tags: 'ideas'
+tags: 'action'
 date: 'Jul 21, 2023'
 ---
 

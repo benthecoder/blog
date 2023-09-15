@@ -1,6 +1,6 @@
 ---
 title: 'Importance of Editing'
-tags: 'ideas'
+tags: 'film'
 date: 'Jul 31, 2023'
 ---
 

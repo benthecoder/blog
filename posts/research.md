@@ -1,6 +1,6 @@
 ---
 title: 'Most Important Traits for AI Research'
-tags: 'ideas'
+tags: 'AI'
 date: 'Jul 18, 2023'
 ---
 

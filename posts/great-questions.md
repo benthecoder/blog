@@ -1,6 +1,6 @@
 ---
 title: 'Great Questions'
-tags: 'ideas'
+tags: 'questions'
 date: 'Aug 9, 2023'
 ---
 

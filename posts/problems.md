@@ -1,6 +1,6 @@
 ---
 title: 'Be bigger than your problems'
-tags: 'ideas'
+tags: 'philosophy'
 date: 'Aug 31, 2023'
 ---
 

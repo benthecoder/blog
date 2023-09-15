@@ -1,6 +1,6 @@
 ---
 title: '12 Important Questions'
-tags: 'ideas'
+tags: 'questions'
 date: 'Jun 22, 2023'
 ---
 

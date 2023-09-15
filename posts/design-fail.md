@@ -1,6 +1,6 @@
 ---
 title: 'Design a part to fail'
-tags: 'ideas'
+tags: 'design, engineering'
 date: 'Jun 16, 2023'
 ---
 

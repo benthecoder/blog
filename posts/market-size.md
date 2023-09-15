@@ -1,6 +1,6 @@
 ---
 title: 'Market Size'
-tags: 'ideas'
+tags: 'AI, startup'
 date: 'Sep 8, 2023'
 ---
 

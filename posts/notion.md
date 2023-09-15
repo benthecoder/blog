@@ -1,6 +1,6 @@
 ---
 title: 'How to Side Project by Linus'
-tags: 'ideas'
+tags: 'coding'
 date: 'Aug 3, 2023'
 ---
 
