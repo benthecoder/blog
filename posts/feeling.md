@@ -1,6 +1,6 @@
 ---
 title: 'Pure and Simple Joy'
-tags: 'personal'
+tags: 'life, emotions'
 date: 'May 25, 2023'
 ---
 

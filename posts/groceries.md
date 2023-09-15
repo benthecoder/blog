@@ -1,6 +1,6 @@
 ---
 title: 'Grocery Stores'
-tags: 'personal'
+tags: 'journal, Iowa'
 date: 'Aug 21, 2023'
 ---
 

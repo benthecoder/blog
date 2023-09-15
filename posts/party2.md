@@ -1,6 +1,6 @@
 ---
 title: 'Second Party experience'
-tags: 'personal'
+tags: 'journal, talking'
 date: 'Jun 23, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Volleyball'
-tags: 'personal'
+tags: 'journal, sports'
 date: 'Aug 13, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Coming back to Tesla'
-tags: 'personal'
+tags: 'journal, work'
 date: 'May 17, 2023'
 ---
 

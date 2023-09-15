@@ -1,6 +1,6 @@
 ---
 title: 'What To Do With Your Life'
-tags: 'personal'
+tags: 'journal, fear, life'
 date: 'Jun 1, 2023'
 ---
 

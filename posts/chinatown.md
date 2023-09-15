@@ -1,6 +1,6 @@
 ---
 title: 'Dim Sum and sneakers'
-tags: 'personal'
+tags: 'journal, SF'
 date: 'May 29, 2023'
 ---
 

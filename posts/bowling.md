@@ -1,6 +1,6 @@
 ---
 title: 'Golf and bowling'
-tags: 'personal'
+tags: 'journal, sports'
 date: 'Aug 18, 2023'
 ---
 
