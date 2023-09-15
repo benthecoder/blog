@@ -1,6 +1,6 @@
 ---
 title: 'Allow yourself to be lost'
-tags: 'ideas'
+tags: 'life, advice'
 date: 'Jun 21, 2023'
 ---
 

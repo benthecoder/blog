@@ -1,6 +1,6 @@
 ---
 title: 'Noise vs Music'
-tags: 'ideas'
+tags: 'music'
 date: 'Jun 10, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Psyop Yourself'
-tags: 'ideas'
+tags: 'psychology'
 date: 'Jul 20, 2023'
 ---
 

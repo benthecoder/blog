@@ -1,6 +1,6 @@
 ---
 title: 'A fable about life'
-tags: 'ideas'
+tags: 'life'
 date: 'Jun 11, 2023'
 ---
 

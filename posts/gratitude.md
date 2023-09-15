@@ -1,6 +1,6 @@
 ---
 title: 'Gratitude'
-tags: 'ideas'
+tags: 'life, psychology'
 date: 'Aug 14, 2023'
 ---
 

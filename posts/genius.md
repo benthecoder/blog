@@ -1,6 +1,6 @@
 ---
 title: 'Peerless genius vs Ordinary genius'
-tags: 'ideas'
+tags: 'notes'
 date: 'Jun 9, 2023'
 ---
 

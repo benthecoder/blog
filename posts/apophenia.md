@@ -1,6 +1,6 @@
 ---
 title: 'Apophenia'
-tags: 'ideas'
+tags: 'life'
 date: 'Sep 4, 2023'
 ---
 

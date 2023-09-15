@@ -1,6 +1,6 @@
 ---
 title: 'Habits Control Us'
-tags: 'ideas'
+tags: 'productivity'
 date: 'Aug 15, 2023'
 ---
 

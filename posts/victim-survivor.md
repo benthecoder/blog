@@ -1,6 +1,6 @@
 ---
 title: 'Victim or Survivor'
-tags: 'ideas'
+tags: 'personal'
 date: 'Jul 2, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'How to Copy'
-tags: 'ideas'
+tags: 'work'
 date: 'Jul 23, 2023'
 ---
 

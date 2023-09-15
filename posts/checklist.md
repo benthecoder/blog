@@ -1,6 +1,6 @@
 ---
 title: 'Startup Checklist'
-tags: 'ideas'
+tags: 'startup'
 date: 'Aug 17, 2023'
 ---
 

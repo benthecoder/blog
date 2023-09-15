@@ -1,6 +1,6 @@
 ---
 title: 'Startup Advice for Students'
-tags: 'ideas'
+tags: 'startup'
 date: 'Jun 18, 2023'
 ---
 
