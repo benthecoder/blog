@@ -1,6 +1,6 @@
 ---
 title: 'First Party Experience'
-tags: 'personal'
+tags: 'journal'
 date: 'May 20, 2023'
 ---
 

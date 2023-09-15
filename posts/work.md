@@ -1,6 +1,6 @@
 ---
 title: 'Another day at work'
-tags: 'personal'
+tags: 'journal, work'
 date: 'May 22, 2023'
 ---
 

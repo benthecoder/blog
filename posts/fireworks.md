@@ -1,6 +1,6 @@
 ---
 title: 'Fireworks'
-tags: 'personal'
+tags: 'journal, SF'
 date: 'Jul 4, 2023'
 ---
 

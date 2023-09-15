@@ -1,6 +1,6 @@
 ---
 title: 'Golfing Experience'
-tags: 'personal'
+tags: 'journal, sports'
 date: 'May 15, 2023'
 ---
 

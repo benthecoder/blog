@@ -1,6 +1,6 @@
 ---
 title: 'Dinner with Kevin'
-tags: 'personal'
+tags: 'chats'
 date: 'May 23, 2023'
 ---
 

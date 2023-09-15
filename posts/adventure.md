@@ -1,6 +1,6 @@
 ---
 title: 'Every Day is an Adventure'
-tags: 'personal'
+tags: 'life, adventure'
 date: 'May 24, 2023'
 ---
 

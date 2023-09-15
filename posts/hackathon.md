@@ -1,6 +1,6 @@
 ---
 title: 'Scale AI hackathon in SF'
-tags: 'personal'
+tags: 'journal, coding'
 date: 'Jul 15, 2023'
 ---
 

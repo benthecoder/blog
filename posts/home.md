@@ -1,6 +1,6 @@
 ---
 title: 'Staying Home'
-tags: 'personal'
+tags: 'journal'
 date: 'Aug 25, 2023'
 ---
 

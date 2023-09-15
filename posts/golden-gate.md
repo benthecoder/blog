@@ -1,6 +1,6 @@
 ---
 title: 'SF Trip w Parents'
-tags: 'personal'
+tags: 'journal, SF'
 date: 'Jun 4, 2023'
 ---
 

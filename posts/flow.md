@@ -1,6 +1,6 @@
 ---
 title: 'Flow state'
-tags: 'personal'
+tags: 'psychology, work'
 date: 'Jul 27, 2023'
 ---
 

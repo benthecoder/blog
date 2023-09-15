@@ -1,6 +1,6 @@
 ---
 title: 'Meeting my Airbnb Host'
-tags: 'personal'
+tags: 'journal'
 date: 'May 18, 2023'
 ---
 
