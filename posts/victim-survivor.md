@@ -1,6 +1,6 @@
 ---
 title: 'Victim or Survivor'
-tags: 'personal'
+tags: 'personal, notes'
 date: 'Jul 2, 2023'
 ---
 

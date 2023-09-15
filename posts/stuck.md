@@ -1,6 +1,6 @@
 ---
 title: 'Getting stuck'
-tags: 'personal'
+tags: 'work'
 date: 'Aug 2, 2023'
 ---
 

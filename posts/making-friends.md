@@ -1,6 +1,6 @@
 ---
 title: 'Friendships in California'
-tags: 'personal'
+tags: 'journal, friends'
 date: 'Apr 18, 2023'
 ---
 

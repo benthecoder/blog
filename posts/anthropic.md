@@ -1,6 +1,6 @@
 ---
 title: 'Claude 2 Hackathon'
-tags: 'personal'
+tags: 'journal, coding'
 date: 'Jul 29, 2023'
 ---
 

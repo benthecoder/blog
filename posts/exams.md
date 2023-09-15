@@ -1,6 +1,6 @@
 ---
 title: 'On exams'
-tags: 'personal'
+tags: 'journal'
 date: 'May 10, 2023'
 ---
 

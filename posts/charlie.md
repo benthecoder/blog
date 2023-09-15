@@ -1,6 +1,6 @@
 ---
 title: 'Charlie Puth concert'
-tags: 'personal'
+tags: 'journal, music'
 date: 'Jul 6, 2023'
 ---
 

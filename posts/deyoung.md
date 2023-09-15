@@ -1,6 +1,6 @@
 ---
 title: 'Arts market and Museum'
-tags: 'personal'
+tags: 'journal, SF'
 date: 'Aug 5, 2023'
 ---
 

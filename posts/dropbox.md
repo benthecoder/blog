@@ -1,6 +1,6 @@
 ---
 title: 'Dropbox LLM meetup'
-tags: 'personal'
+tags: 'journal, SF'
 date: 'Jul 17, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'What is a Friend?'
-tags: 'personal'
+tags: 'friends'
 date: 'May 21, 2023'
 ---
 
