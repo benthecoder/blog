@@ -1,6 +1,6 @@
 ---
 title: 'Hard Work'
-tags: 'ideas'
+tags: 'work'
 date: 'Aug 8, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Learned Helplessness'
-tags: 'ideas'
+tags: 'personal'
 date: 'Jul 14, 2023'
 ---
 

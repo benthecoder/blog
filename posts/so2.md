@@ -1,6 +1,6 @@
 ---
 title: 'Geoengineering'
-tags: 'ideas'
+tags: 'climate, science'
 date: 'Aug 4, 2023'
 ---
 

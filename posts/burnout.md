@@ -1,6 +1,6 @@
 ---
 title: 'Signs of Burnout'
-tags: 'ideas'
+tags: 'work, life'
 date: 'Jun 19, 2023'
 ---
 

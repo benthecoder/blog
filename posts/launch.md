@@ -1,6 +1,6 @@
 ---
 title: 'Launch Side Projects'
-tags: 'ideas'
+tags: 'coding'
 date: 'Jun 26, 2023'
 ---
 

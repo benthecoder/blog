@@ -1,6 +1,6 @@
 ---
 title: 'Good Day'
-tags: 'ideas'
+tags: 'life'
 date: 'Jul 13, 2023'
 ---
 

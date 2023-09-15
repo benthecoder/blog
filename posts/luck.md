@@ -1,6 +1,6 @@
 ---
 title: 'Surface Area of Luck'
-tags: 'ideas'
+tags: 'luck'
 date: 'Sep 3, 2023'
 ---
 

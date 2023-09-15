@@ -1,6 +1,6 @@
 ---
 title: 'Effortful learning'
-tags: 'ideas'
+tags: 'learning'
 date: 'Jul 11, 2023'
 ---
 

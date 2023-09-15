@@ -1,6 +1,6 @@
 ---
 title: 'Live an Asymmetric Life'
-tags: 'ideas'
+tags: 'life'
 date: 'Jul 24, 2023'
 ---
 

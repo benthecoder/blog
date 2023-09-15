@@ -1,6 +1,6 @@
 ---
 title: 'Becoming Influential'
-tags: 'ideas'
+tags: 'life'
 date: 'Jul 12, 2023'
 ---
 

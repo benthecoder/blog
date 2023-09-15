@@ -1,6 +1,6 @@
 ---
 title: 'XY Problem'
-tags: 'ideas'
+tags: 'work'
 date: 'Aug 22, 2023'
 ---
 

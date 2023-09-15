@@ -1,6 +1,6 @@
 ---
 title: 'Ma 間'
-tags: 'ideas'
+tags: 'life'
 date: 'Sep 13, 2023'
 ---
 

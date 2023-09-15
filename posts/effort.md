@@ -1,6 +1,6 @@
 ---
 title: 'On Effort'
-tags: 'ideas'
+tags: 'work, philosophy'
 date: 'Aug 11, 2023'
 ---
 

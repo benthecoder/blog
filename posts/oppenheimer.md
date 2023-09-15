@@ -1,6 +1,6 @@
 ---
 title: 'Oppenheimer'
-tags: 'ideas'
+tags: 'movies'
 date: 'Jul 28, 2023'
 ---
 
