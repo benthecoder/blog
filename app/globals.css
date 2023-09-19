@@ -42,6 +42,10 @@ body {
 }
 
 .prose h2 {
+  font-size: 1.3rem;
+}
+
+.prose h3 {
   font-size: 1.2rem;
 }
 
