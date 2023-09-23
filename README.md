@@ -23,6 +23,8 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
   - [ ] https://jake.isnt.online/
 - [ ] expanding text
   - [ ] https://www.spencerchang.me/
+- [ ] Setup contentlayer
+  - [ ] https://youtu.be/nkGjob3q2GI?si=C-LTuMQNGydbxvPy&t=2847
 
 ## Inspirations
 
