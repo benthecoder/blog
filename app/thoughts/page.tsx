@@ -1,6 +1,6 @@
 import { queryBuilder } from '../../lib/planetscale';
 
-async function getGuestbook() {
+async function getTweets() {
   const data = await queryBuilder
     .selectFrom('tweets')
     .select(['id', 'content', 'created_at'])
@@ -17,7 +17,7 @@ export default async function GuestbookPage() {
   let entries;
 
   try {
-    entries = await getGuestbook();
+    entries = await getTweets();
   } catch (err) {
     console.error(err);
   }
