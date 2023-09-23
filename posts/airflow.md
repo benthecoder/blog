@@ -1,6 +1,6 @@
 ---
 title: 'What is Airflow?'
-tags: 'programming'
+tags: 'data, explained'
 date: 'Jun 29, 2023'
 ---
 
