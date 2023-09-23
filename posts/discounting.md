@@ -1,7 +1,7 @@
 ---
 title: 'Zero Discount Rate'
 tags: 'economics, productivity'
-date: 'Sep 23, 2023'
+date: 'Sep 22, 2023'
 ---
 
 > Do the most important things first in the day and don’t let anybody stop you. Estimate “most important” using a zero discount rate. Don’t make exceptions. The hours from 7 to 12 are your time to build for the future before the world descends on you.
