@@ -67,3 +67,8 @@ Articles
 - [buildspace](https://buildspace.so/)
 - [AI Templates – Vercel](https://vercel.com/templates/ai)
 - [openai/openai-cookbook: Examples and guides for using the OpenAI API](https://github.com/openai/openai-cookbook)
+
+## Other resources
+
+- [openai/syllabus.md](https://github.com/iconix/openai/blob/master/syllabus.md)
+- [Chris Olah on working at top AI labs without an undergrad degree - 80,000 Hours](https://80000hours.org/podcast/episodes/chris-olah-unconventional-career-path/)
