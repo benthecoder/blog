@@ -12,6 +12,8 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
 
 ## TODO
 
+- [ ] dark mode
+  - [ ] [Dark Mode in Next JS 13 App Directory with TailwindCSS (for beginners) - YouTube](https://www.youtube.com/watch?v=optD7ns4ISQ)
 - [ ] basic search
   - [jackyzha0/quartz](https://github.com/jackyzha0/quartz/blob/v4/quartz/components/scripts/search.inline.ts)
 - [ ] embeddings
