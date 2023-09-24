@@ -4,6 +4,8 @@ tags: 'travel, journal'
 date: 'Sep 18, 2023'
 ---
 
+![toronto](/images/toronto.jpeg)
+
 I'm flying to Toronto today.
 
 It's my first time going to Canada.
