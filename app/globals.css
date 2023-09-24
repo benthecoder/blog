@@ -3,8 +3,7 @@
 @tailwind utilities;
 
 body {
-  /*background-color: #e0e2dc; */ /* light grey */
-  background-color: #eeeeee;
+  background-color: #e0e0e0;
 }
 
 .prose ul {
@@ -52,11 +51,27 @@ body {
 .prose blockquote {
   margin: 0 1em 0 0.25em;
   padding: 0 0.75em 0 1em;
-  border-left: 2px solid #dadada;
+  border-left: 3px solid #b0afaf;
   quotes: none;
   font-style: italic;
   font-weight: light;
-  color: #676767;
+  color: #595959;
+}
+
+.prose img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 1.5rem;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  filter: grayscale(1); /* Apply grayscale and blur effect */
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.prose img:hover {
+  filter: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 ::selection {
