@@ -4,6 +4,8 @@ tags: 'tech, journal'
 date: 'Sep 20, 2023'
 ---
 
+![chinatown](/images/chinatown.jpeg)
+
 I woke up at 8:30 am.
 
 I decided to skip the sessions before lunch, I can just watch the recording anyways.

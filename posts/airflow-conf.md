@@ -4,6 +4,8 @@ tags: 'tech, journal'
 date: 'Sep 19, 2023'
 ---
 
+![airflow summit](/images/airflow-summit.jpeg)
+
 I woke up at 8 am.
 
 I walked to the street car station that goes into downtown Toronto.
