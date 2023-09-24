@@ -12,7 +12,13 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
 
 ## TODO
 
-- [ ] Create a chat interface trained on my blog posts, have database for embeddings that allow daily insert on upload
+- [ ] basic search
+  - [jackyzha0/quartz](https://github.com/jackyzha0/quartz/blob/v4/quartz/components/scripts/search.inline.ts)
+- [ ] embeddings
+  - [ ] semantic search
+    - [ ] https://focusreactive.com/ai-search-implementation/
+    - [ ] https://supabase.com/blog/openai-embeddings-postgres-vector
+  - [ ] Create a chat interface trained on my blog posts, have database for embeddings that allow daily insert on upload
 - [ ] build a map of favorite restaurants and places like [build your corner](https://twitter.com/buildyourcorner)
 - [ ] Add listening and reading updates
   - [ ] https://dev.to/j471n/how-to-use-spotify-api-with-nextjs-50o5
@@ -25,6 +31,8 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
   - [ ] https://www.spencerchang.me/
 - [ ] Setup contentlayer
   - [ ] https://youtu.be/nkGjob3q2GI?si=C-LTuMQNGydbxvPy&t=2847
+- [ ] improve SEO
+  - [ ] https://nextjs.org/learn/seo/introduction-to-seo
 
 ## Inspirations
 
