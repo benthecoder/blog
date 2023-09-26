@@ -3,13 +3,13 @@ import Markdown from 'markdown-to-jsx';
 import matter from 'gray-matter';
 
 const AboutPage = () => {
-  const file = 'app/about/about.md';
+  const file = 'app/now/now.md';
   const content = fs.readFileSync(file, 'utf8');
   const about = matter(content);
 
   return (
     <div>
-      <article className='prose '>
+      <article className='prose'>
         <Markdown>{about.content}</Markdown>
       </article>
     </div>
