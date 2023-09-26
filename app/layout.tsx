@@ -20,11 +20,12 @@ const averia = Averia_Serif_Libre({
 const links = [
   { path: '/thoughts', text: '💭' },
   { path: '/hn', text: 'hn' },
-  { path: '/tags', text: 'tags' },
   { path: '/chat', text: 'chat' },
+  { path: '/tags', text: 'tags' },
+  { path: '/now', text: 'now' },
   { path: '/library', text: 'library' },
   { path: '/posts', text: 'archive' },
-  { path: '/about', text: 'whoami' },
+  { path: '/contact', text: 'say hi' },
 ];
 
 export default function RootLayout({
