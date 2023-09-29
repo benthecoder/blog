@@ -65,3 +65,9 @@ CREATE TABLE tweets (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
+
+## Setting up Supabase for embedding search
+
+- [pgvector: Embeddings and vector similarity | Supabase Docs](https://supabase.com/docs/guides/database/extensions/pgvector?database-method=dashboard)
+- [supabase-community/nextjs-openai-doc-search: Template for building your own custom ChatGPT style doc search powered by Next.js, OpenAI, and Supabase.](https://github.com/supabase-community/nextjs-openai-doc-search)
+- [transformers.js/examples/next-server/next.config.js at main · xenova/transformers.js](https://github.com/xenova/transformers.js/blob/main/examples/next-server/next.config.js)
