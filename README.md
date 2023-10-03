@@ -12,8 +12,9 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
 
 ## TODO
 
+- [x] indicator for which page user is on like https://macwright.com/
 - [ ] A real time digital clock with seconds
-- [ ] I'm feeling luck feature, that randomly selects a blog
+- [ ] I'm feeling lucky feature, that randomly selects a blog
 - [ ] dark mode
   - [ ] [Dark Mode in Next JS 13 App Directory with TailwindCSS (for beginners) - YouTube](https://www.youtube.com/watch?v=optD7ns4ISQ)
 - [ ] basic search
