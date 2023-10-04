@@ -12,8 +12,21 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
 
 ## TODO
 
+Improvements
+
+- [ ] Optimize image loading https://macwright.com/2016/05/03/the-featherweight-website
+- [ ] Make thoughts page faster
+- [ ] improve SEO
+  - [ ] https://nextjs.org/learn/seo/introduction-to-seo
+
+New features
+
 - [x] indicator for which page user is on like https://macwright.com/
-- [ ] A real time digital clock with seconds
+- [ ] expanding text
+  - [ ] https://www.spencerchang.me/
+  - [ ] https://www.rishi.cx/
+- [ ] Create pop up notes like https://www.rishi.cx/
+- [ ] A real-time digital clock with seconds
 - [ ] I'm feeling lucky feature, that randomly selects a blog
 - [ ] dark mode
   - [ ] [Dark Mode in Next JS 13 App Directory with TailwindCSS (for beginners) - YouTube](https://www.youtube.com/watch?v=optD7ns4ISQ)
@@ -32,12 +45,8 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
   - [ ] https://linusrogge.com/about
 - [ ] breadcrumb navigation
   - [ ] https://jake.isnt.online/
-- [ ] expanding text
-  - [ ] https://www.spencerchang.me/
 - [ ] Setup contentlayer
   - [ ] https://youtu.be/nkGjob3q2GI?si=C-LTuMQNGydbxvPy&t=2847
-- [ ] improve SEO
-  - [ ] https://nextjs.org/learn/seo/introduction-to-seo
 
 ## Inspirations
 
