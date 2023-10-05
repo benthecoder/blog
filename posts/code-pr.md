@@ -1,7 +1,7 @@
 ---
 title: 'The Best PR title'
 tags: 'programming'
-date: 'Sep 29, 2023'
+date: 'Sep 28, 2023'
 ---
 
 > The average professional engineer (more than 200 PRs a year) authors nearly 600 PRs a year (590) with a median time to review of 1.34 days.
