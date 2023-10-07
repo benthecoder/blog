@@ -14,7 +14,7 @@ He views research as a skill that can be [practiced](https://www.jasonwei.net/bl
 
 The short answer is [grit](https://tinyurl.com/2qsxsajr), since grit enables practice.
 
-An underrated skill is [learning from feedback](<https://en.wikipedia.org/wiki/Grit_(personality_trait)?useskin=vector>).
+An underrated skill is learning from feedback.
 
 Take very seriously the feedback that others give, especially if it's coming from someone at the top of their game.
 
