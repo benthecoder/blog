@@ -37,6 +37,7 @@ New features
     - [ ] https://focusreactive.com/ai-search-implementation/
     - [ ] https://supabase.com/blog/openai-embeddings-postgres-vector
   - [ ] Create a chat interface trained on my blog posts, have database for embeddings that allow daily insert on upload
+  - [ ] refer to https://github.com/Swizec/swizbot-ui
 - [ ] build a map of favorite restaurants and places like [build your corner](https://twitter.com/buildyourcorner)
 - [ ] Add listening and reading updates
   - [ ] https://dev.to/j471n/how-to-use-spotify-api-with-nextjs-50o5
