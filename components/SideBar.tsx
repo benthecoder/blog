@@ -7,7 +7,6 @@ const links = [
   { path: '/thoughts', text: '💭' },
   { path: '/hn', text: 'hn' },
   { path: '/chat', text: 'chat' },
-  { path: '/tags', text: 'tags' },
   { path: '/now', text: 'now' },
   { path: '/library', text: 'library' },
   { path: '/posts', text: 'archive' },
