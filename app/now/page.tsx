@@ -26,7 +26,7 @@ const AboutPage = () => {
       minute: '2-digit',
       second: '2-digit',
       timeZone: timezone,
-      hour12: true,
+      hour12: false, // Use 24-hour format
     };
     return new Intl.DateTimeFormat('en-US', options).format(date);
   }
@@ -54,9 +54,12 @@ const AboutPage = () => {
           <li>Reading The Conquest of Happiness by Bertrand Russell</li>
           <li>Applying to grad school</li>
           <li>Thinking about ways to cure GERD</li>
+          <li>
+            Doing more <a href='https://devpost.com/benthecoder'>hackathons</a>
+          </li>
         </ul>
         <br></br>
-        <p>Last updated: Oct 4, 2023</p>
+        <p>Last updated: Oct 14, 2023</p>
       </article>
     </div>
   );
