@@ -16,7 +16,7 @@ Here is the [TL;DR](https://ncase.me/mental-health/#toc_18)
 - **All feelings are imperfect [signals](https://en.wikipedia.org/wiki/Functional_accounts_of_emotion) about met/unmet needs**
 - Our fundamental human needs are: physical needs, social needs, "becoming a better person" needs
 - **Healthy people don't "cope" with emotions, they collaborate with them. They use "negative emotions as clues, constructive criticism to improve their lives**
-- If you fear guard-dog is too hyperactive, don't shoot the dog! Retrain it by forming habits
+- If your fear guard-dog is too hyperactive, don't shoot the dog! Retrain it by forming habits
 - **[Habit](https://ncase.me/mental-health/#toc_3) = When X, Then Y**
 - To form [habits](https://bjgp.org/content/bjgp/62/605/664.full.pdf), have a consistent "[When](https://kops.uni-konstanz.de/server/api/core/bitstreams/14cc2a36-5f01-4dc1-b9ca-f2d0ca0c8930/content)" and simple "Then". Track your progress for ~66 days. One habit at a time.
 - Physical health affects mental health & vice versa. Hardware affects software, software affects hardware
