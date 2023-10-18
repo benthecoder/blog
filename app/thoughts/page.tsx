@@ -34,7 +34,7 @@ export default async function GuestbookPage() {
               </div>
               <div className='text-gray-500 mt-2 text-sm'>
                 {new Date(entry.created_at).toLocaleString('en-GB', {
-                  timeZone: 'America/Los_Angeles',
+                  timeZone: 'America/Chicago', // change this to your timezone
                   hour: 'numeric',
                   hour12: false,
                   minute: 'numeric',
