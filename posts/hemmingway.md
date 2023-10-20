@@ -1,6 +1,6 @@
 ---
 title: 'Ernest Hemingway'
-tags: 'journal'
+tags: 'life, biography'
 date: 'Oct 3, 2023'
 ---
 
