@@ -1,7 +1,7 @@
 import Markdown from 'markdown-to-jsx';
 import Link from 'next/link';
 
-const RenderPost = ({ ...post }) => {
+const RenderPost = ({ post, prev, next }: any) => {
   return (
     <div key={post.data.title}>
       <h2 className='font-bold text-left mb-4 text-2xl'>{post.data.title}</h2>
@@ -23,6 +23,24 @@ const RenderPost = ({ ...post }) => {
         <p className='text-gray-400'>
           {new Date(post.data.date).toLocaleDateString()}
         </p>
+      </div>
+      <div className='mt-32 flex flex-col'>
+        {next && (
+          <div className='flex items-center'>
+            <p className='w-24 text-gray-400'>Next:</p>
+            <Link href={`/posts/${next.slug}`} className='mr-4 underline'>
+              {next.title}
+            </Link>
+          </div>
+        )}
+        {prev && (
+          <div className='flex items-center'>
+            <p className='w-24 text-gray-400'>Previous:</p>
+            <Link href={`/posts/${prev.slug}`} className='mr-4 underline'>
+              {prev.title}
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

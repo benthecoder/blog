@@ -11,8 +11,16 @@ export const generateStaticParams = async () => {
 
 const PostPage = (props: any) => {
   const slug = props.params.slug;
-  const post = getPostContent(slug);
-  return RenderPost(post);
+  const metadata = getPostMetadata();
+  const post = metadata.find((p) => p.slug === slug);
+
+  if (!post) {
+    return <div>Post not found</div>;
+  }
+
+  const postContent = getPostContent(slug);
+
+  return <RenderPost post={postContent} prev={post.prev} next={post.next} />;
 };
 
 export default PostPage;
