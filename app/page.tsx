@@ -1,4 +1,4 @@
-import MarkdownRender from '../components/RenderPost';
+import RenderPost from '../components/RenderPost';
 import Link from 'next/link';
 import getPostMetadata from '../components/getPostMetadata';
 import getPostContent from '../components/getPostContent';
@@ -9,7 +9,7 @@ const HomePage = () => {
 
   const postPreview = topPosts.map((p) => {
     const post = getPostContent(p.slug);
-    return MarkdownRender(post);
+    return <RenderPost post={post} />;
   });
 
   return (
