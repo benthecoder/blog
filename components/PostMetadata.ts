@@ -4,4 +4,6 @@ export interface PostMetadata {
   tags: string;
   wordcount: number;
   slug: string;
+  prev?: PostMetadata | null;
+  next?: PostMetadata | null;
 }
