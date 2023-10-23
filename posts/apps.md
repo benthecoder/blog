@@ -15,7 +15,7 @@ This is a living post of useful apps/tools I use on MacOS.
 - [Shottr](https://shottr.cc/) \- better screenshots
 - [Stretchly](https://hovancik.net/stretchly/) \- break reminders
 - [Flow](https://flowapp.info/) \- a simple pomodoro timer in menu bar
-- [Folder Peek](https://sindresorhus.com/folder-peek) \- direct access to folders you want in your menu bar
+- [Folder Peek](https://sindresorhus.com/folder-peek) \- access files in menu bar
 - [f.lux](https://justgetflux.com/) \- bye bye blue light
 - [Brave Browser](https://brave.com/) \- current browser, trying to switch to [Arc](https://arc.net/)
 - [Karabiner Elements](https://karabiner-elements.pqrs.org/) \- remap keys
