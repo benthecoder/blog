@@ -46,3 +46,5 @@ _The numbers indicate the paragraph order._
 Paragraph 1-4 seems pretty reusable for all schools, but paragraph 5 is where you need to do your research.
 
 I want a platform where I can filter by school, by research area of interest, and it can show me the professors and their students, along with their contact info. Does this exist? Maybe I'll build one. Twitter seems to be a good way to source them, maybe metaphor.systems is a good tool to integrate here.
+
+For more in-depth resources, check out [Writing a Statement of Purpose | The Unicode Blog](https://djunicode.github.io/2018/10/16/writing-a-statement-of-purpose.html)
