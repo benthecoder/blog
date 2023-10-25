@@ -26,7 +26,7 @@ const AboutPage = () => {
       minute: '2-digit',
       second: '2-digit',
       timeZone: timezone,
-      hour12: false, // Use 24-hour format
+      hour12: true, // Use 24-hour format
     };
     return new Intl.DateTimeFormat('en-US', options).format(date);
   }
