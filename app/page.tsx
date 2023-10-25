@@ -9,7 +9,7 @@ const HomePage = () => {
 
   const postPreview = topPosts.map((p) => {
     const post = getPostContent(p.slug);
-    return <RenderPost post={post} />;
+    return <RenderPost post={post} key={p.title} />;
   });
 
   return (
