@@ -44,6 +44,7 @@ New features
   - [ ] https://github.com/yihui-hu/yihui-work
 - [ ] add hover over highlights for notes feature and expanding sidebar
   - [ ] https://linusrogge.com/about
+  - [ ] hover to preview like https://stephango.com/buy-wisely
 - [ ] breadcrumb navigation
   - [ ] https://jake.isnt.online/
 - [ ] Setup contentlayer
