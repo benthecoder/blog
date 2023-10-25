@@ -1,7 +1,7 @@
 ---
 title: 'Cost per use'
 tags: 'life, advice'
-date: 'Oct 25, 2023'
+date: 'Oct 24, 2023'
 ---
 
 Some takeaways from the article "[Buy wisely](https://stephango.com/buy-wisely)" by Steph Ango, founder of Obsidian
