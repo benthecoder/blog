@@ -1,10 +1,12 @@
 import Markdown from 'markdown-to-jsx';
 import Link from 'next/link';
 
-const RenderPost = ({ post, prev, next }: any) => {
+const RenderPost = ({ post, prev, next, slug }: any) => {
   return (
     <div key={post.data.title}>
-      <h2 className='font-bold text-left mb-4 text-2xl'>{post.data.title}</h2>
+      <Link href={`/posts/${slug}`} className='mr-0'>
+        <h2 className='font-bold text-2xl'>{post.data.title}</h2>
+      </Link>
       <article className='prose'>
         <Markdown children={post.content} />
       </article>
