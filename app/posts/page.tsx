@@ -25,6 +25,13 @@ const ArchivePage = () => {
               tags
             </Link>
           </div>
+          <div className='text-black-400'>•</div>
+          <div>
+            <Link href='/random' className='underline'>
+              random
+            </Link>{' '}
+            🎲
+          </div>
         </div>
 
         {postPreviews}
