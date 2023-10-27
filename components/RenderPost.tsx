@@ -4,9 +4,13 @@ import Link from 'next/link';
 const RenderPost = ({ post, prev, next, slug }: any) => {
   return (
     <div key={post.data.title}>
-      <Link href={`/posts/${slug}`} className='mr-0'>
+      {slug ? (
+        <Link href={`/posts/${slug}`} className='mr-0'>
+          <h2 className='font-bold text-2xl'>{post.data.title}</h2>
+        </Link>
+      ) : (
         <h2 className='font-bold text-2xl'>{post.data.title}</h2>
-      </Link>
+      )}
       <article className='prose'>
         <Markdown children={post.content} />
       </article>
