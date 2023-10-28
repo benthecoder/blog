@@ -22,12 +22,12 @@ Improvements
 New features
 
 - [x] indicator for which page user is on like https://macwright.com/
+- [x] I'm feeling lucky feature, that randomly selects a blog
 - [ ] expanding text
   - [ ] https://www.spencerchang.me/
   - [ ] https://www.rishi.cx/
 - [ ] Create pop up notes like https://www.rishi.cx/
 - [ ] A real-time digital clock with seconds
-- [ ] I'm feeling lucky feature, that randomly selects a blog
 - [ ] dark mode
   - [ ] [Dark Mode in Next JS 13 App Directory with TailwindCSS (for beginners) - YouTube](https://www.youtube.com/watch?v=optD7ns4ISQ)
 - [ ] basic search
