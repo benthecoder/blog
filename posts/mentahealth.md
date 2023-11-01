@@ -4,9 +4,7 @@ tags: 'health, notes'
 date: 'Oct 31, 2023'
 ---
 
-Here is a more detailed summary of the key points:
-
-The 6 Pillars for Mental Health and Mood Regulation:
+The “Big 6” core pillars for mood and mental health by [Andrew Huberman](https://www.youtube.com/watch?v=CJIXbibQ0jI)
 
 1. Sleep
    - Get 6-8 hours of quality sleep per night
