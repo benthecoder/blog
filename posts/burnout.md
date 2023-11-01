@@ -27,7 +27,7 @@ Questions to ask yourself
 
 1. Are you really, really exhausted? (emotionally)
 2. Are you embarrassed about the length of your fuse? (compassion fatigue)
-3. Is your sense of meaning go away?
+3. Did your sense of meaning go away?
 
 Treatment
 
