@@ -1,6 +1,6 @@
 ---
 title: 'DoorDash & Generative AI'
-tags: 'AI, machine-learning'
+tags: 'AI, ML'
 date: 'Apr 29, 2023'
 ---
 
