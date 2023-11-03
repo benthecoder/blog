@@ -1,6 +1,6 @@
 ---
 title: 'Machine Unlearning'
-tags: 'machine-learning'
+tags: 'ML'
 date: 'Jul 10, 2023'
 ---
 
