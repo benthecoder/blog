@@ -1,7 +1,7 @@
 ---
 title: 'Job Hunt as a PhD in AI'
 tags: 'AI, work'
-date: 'Nov 4, 2023'
+date: 'Nov 3, 2023'
 ---
 
 Some notes from [Nathan Lambert](https://www.natolambert.com/) on [job hunting](https://www.natolambert.com/writing/ai-phd-job-hunt) with a Ph.D. from Berkeley.
