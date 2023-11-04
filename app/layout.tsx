@@ -5,8 +5,28 @@ import { Sidebar } from '../components/SideBar';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://bneo.xyz'),
   title: 'benneo',
-  description: 'Developer, writer, data scientist',
+  description: 'writing daily',
+  openGraph: {
+    title: 'Benedict Neo',
+    description: 'writing daily',
+    url: 'https://bneo.xyz',
+    siteName: 'Benedict Neo',
+    locale: 'en_US',
+    type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 const averia = Averia_Serif_Libre({
