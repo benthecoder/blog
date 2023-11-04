@@ -14,6 +14,7 @@ OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
 
 Improvements
 
+- [x] Add sitemap using [next-sitemap](https://www.tanvi.dev/blog/2-how-to-add-a-sitemap-to-your-nextjs-app)
 - [ ] Optimize image loading https://macwright.com/2016/05/03/the-featherweight-website
 - [ ] Make thoughts page faster
 - [ ] improve SEO

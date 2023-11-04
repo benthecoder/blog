@@ -38,3 +38,6 @@ next-env.d.ts
 posts/drafts
 
 .vscode
+
+public/robots.txt
+public/sitemap*
