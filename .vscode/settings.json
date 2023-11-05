@@ -35,6 +35,14 @@
     "!vue",
     "markdown_latex_combined"
   ],
-  "cSpell.words": ["Doordash", "mlops", "Perceptron", "TLDR", "webdev"],
+  "cSpell.words": [
+    "Doordash",
+    "Elon",
+    "mlops",
+    "Perceptron",
+    "Thiel",
+    "TLDR",
+    "webdev"
+  ],
   "cSpell.language": "en,en-GB,en-US"
 }
