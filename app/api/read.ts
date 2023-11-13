@@ -1,4 +1,3 @@
-// pages/api/read.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 import { Readability } from '@mozilla/readability';

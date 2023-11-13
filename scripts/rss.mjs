@@ -27,7 +27,7 @@ const generateRss = async () => {
         new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
     );
 
-  fs.writeFileSync('pages/api/rss/feed.json', JSON.stringify(posts));
+  fs.writeFileSync('app/api/rss/feed.json', JSON.stringify(posts));
 };
 
 generateRss();
