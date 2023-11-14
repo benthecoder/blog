@@ -1,6 +1,8 @@
 import { getAllPostSlugs } from '../../../scripts/postUtils';
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export function GET(request: Request) {
   const slugs = getAllPostSlugs();
   const randomSlug = slugs[Math.floor(Math.random() * slugs.length)];
