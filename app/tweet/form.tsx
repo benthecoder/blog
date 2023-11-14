@@ -18,7 +18,7 @@ export default function Form() {
     const form = e.currentTarget;
     const input = form.elements.namedItem('entry') as HTMLInputElement;
 
-    const res = await fetch('/api/tweets', {
+    const res = await fetch('/api/tweet', {
       body: JSON.stringify({
         body: input.value,
       }),
