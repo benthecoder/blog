@@ -8,7 +8,7 @@ export function GET(request: Request) {
   return new NextResponse(JSON.stringify({ slug: randomSlug }), {
     headers: {
       'Content-Type': 'application/json',
-      'Cache-Control': 'no-store, max-age=0',
+      'Cache-Control': 'no-store', // Ensures no caching
     },
   });
 }

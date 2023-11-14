@@ -7,7 +7,7 @@ const RandomPost = () => {
 
   useEffect(() => {
     const fetchRandomPostSlug = async () => {
-      const response = await fetch('/api/random');
+      const response = await fetch('/api/random', { cache: 'no-store' });
       const data = await response.json();
       router.push(`/posts/${data.slug}`);
     };
