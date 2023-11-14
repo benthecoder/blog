@@ -25,7 +25,7 @@ const Summarize: React.FC = () => {
       if (response.ok) {
         const { text } = await response.json();
 
-        const summaryResponse = await fetch('/api/openai', {
+        const summaryResponse = await fetch('/api/ai', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

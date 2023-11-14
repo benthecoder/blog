@@ -6,7 +6,7 @@ import Link from 'next/link';
 const links = [
   { path: '/thoughts', text: '💭' },
   { path: '/hn', text: 'hn' },
-  { path: '/chat', text: 'chat' },
+  //{ path: '/chat', text: 'chat' },
   { path: '/now', text: 'now' },
   { path: '/library', text: 'library' },
   { path: '/posts', text: 'archive' },
