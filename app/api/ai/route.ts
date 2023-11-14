@@ -4,9 +4,7 @@ import {
   ReconnectInterval,
 } from 'eventsource-parser';
 
-export const config = {
-  runtime: 'edge',
-};
+export const runtime = 'edge';
 
 if (!process.env.OPENAI_API_KEY) {
   throw new Error('Missing env var from OpenAI');
