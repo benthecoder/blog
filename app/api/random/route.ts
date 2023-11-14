@@ -6,6 +6,9 @@ export function GET(request: Request) {
   const randomSlug = slugs[Math.floor(Math.random() * slugs.length)];
 
   return new NextResponse(JSON.stringify({ slug: randomSlug }), {
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-store, max-age=0',
+    },
   });
 }
