@@ -10,22 +10,20 @@ I read an [article](https://tech.instacart.com/the-economics-team-at-instacart-9
 
 ### Projects they worked on
 
-1. Optimized Bidding Feature for Advertising Partners:
-   - **Core Challenge**: Tackling the intricacies of ad auction dynamics.
-   - **Economic Principles Applied**: Ads incrementality, auction formats, and auction pressure.
-   - **Technical Environment**: High-volume, latency-sensitive.
-   - **Solution Characteristics**: Custom-built algorithms for flexible, effective bidding strategies.
-   - **Outcome**: Significantly improved performance for advertising partners, showcasing the power of blending economic insights with machine learning in a real-time, data-intensive environment.
-2. Contextual Bandit Algorithms for Incentive Targeting:
-   - **Economic Insight**: Utilization of econometrics for estimating heterogeneous treatment effects and optimizing business metric trade-offs.
-   - **Machine Learning Approach**: Traditional MLE skills applied to both batch and real-time inference models.
-   - **Integration**: Seamless embedding into production environments, demonstrating a fusion of economic theory with practical machine learning applications.
-   - **Anticipated Insight**: A future blog post will delve deeper, indicating ongoing refinement and evolution of this approach.
-3. Causal Inference Applications:
-   - **Methodological Innovation**: Use of surrogate models for long-term outcome measurement.
-   - **Experiment Design**: Leveraging natural experiments for more robust experiment designs.
-   - **Treatment Effect Analysis**: Estimating causal impacts of non-random treatments, like Instacart+ membership.
-   - **Data Segmentation**: Construction of customer segments for nuanced input into ML models and detailed analysis of experimental results, demonstrating the application of econometric techniques in data segmentation for enhanced predictive accuracy.
+The economists at Instacart, part of their Econ Team, work on a variety of challenging projects that blend economics with machine learning.
+
+1. **Optimized Bidding for Ad Auctions:**
+   - **Economic Understanding:** The team applied their knowledge of ads incrementality, auction formats, and auction pressure to develop a comprehensive understanding of the ads marketplace.
+   - **Technical Solution:** Developed an algorithm for optimized bidding, tailored for a high-volume, latency-sensitive environment, offering flexible and effective bidding options for advertising partners.
+   - **Impact and Collaboration:** Worked closely with the Ads team, achieving strong results and providing significant value to advertising partners through this initiative.
+2. **Contextual Bandit Algorithms for Incentive Targeting:**
+   - **Economic Analysis:** Utilized econometric methods to estimate heterogeneous treatment effects and optimize trade-offs between different business metrics.
+   - **Model Development:** Created both batch inference and real-time inference models, integrating them into the system for effective upsell placement.
+   - **Production Integration:** Ensured the models were production-ready, aligning them with Instacart's operational environment and achieving practical utility in a real-world setting.
+3. **Causal Inference and Experimental Design:**
+   - **Long-term Outcome Measurement:** Used surrogate models to measure long-run outcomes, demonstrating the capacity to understand and predict extended impacts of various initiatives.
+   - **Natural Experiments:** Leveraged natural experiments for experiment design, including treatments inspired by regression discontinuities, showcasing innovative approaches to problem-solving.
+   - **Non-randomized Treatment Effects:** Estimated causal effects of treatments like Instacart+ membership and developed customer segments for enhanced model inputs and experimental analysis, contributing significantly to understanding customer behavior and preferences.
 
 ### Their Value as Economists:
 
