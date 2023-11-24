@@ -1,16 +1,18 @@
 ---
-title: 'Boston Day 1'
+title: 'Boston Day 1: Quincy Market'
 tags: 'travel, journal'
 date: 'Nov 20, 2023'
 ---
+
+![Rowes Wharf](/images/boston1.jpeg)
 
 I woke up at 4:15 a.m. and slept for a little bit more to be ready for pastor to give us a ride to the airport.
 
 I'm going [Boston](https://www.corner.inc/list/1f088070-2928-41e0-a768-bb2a1aac45be) with A for 3 nights, and we have a lot [planned](https://benneo.notion.site/Boston-Trip-700e8bb81efa4c3799de7f1c0e57032b?pvs=4).
 
-On the way to the airport pastor shared
+In the car the pastor talked about how he was too worried to fall asleep, and stayed up watching rain man. And talked about how he goes back to Texas frequently, that he paid $600 for a ticket back during Christmas.
 
-I took a nap in the flight to Chicago
+I took a nap in the flight to Chicago.
 
 Arriving at O'Hare, we bought sandwiches at a bakery. I got a turkey and bacon sandwich and got heartburn from it.
 
@@ -44,15 +46,15 @@ Once we found our Airbnb, a middle aged white man with a beanie stopped and aske
 
 We left after warming up and settling in, and went for Quincy Market.
 
-I had high expectations for this place to be super crowded and Christmasy for some reason, but it was just a small marketplace with food and desserts, and then some shops outside. The entire area was pretty dead.
+I had high expectations for this place to be super crowded and Christmasy for some reason, but it was just a indoor marketplace with food and desserts, and then some shops outside. The entire area was pretty dead.
 
-We got were cold and disappointed, and went back to Chinatown.
+We were cold and disappointed, and went back to Chinatown.
 
 We walked around and came across Hong Kong eatery, which was on our list.
 
-We went in and ordered some takeaway. Some were standing and others were sitting at the small tables and chars, with Jay Chou was playing on the small tv on the wall. The restaurant was small but cozy.
+We went in and ordered some takeaway. Some were standing and others were sitting at the small tables and chairs, with Jay Chou was playing on the small tv on the wall. The restaurant was small but cozy.
 
-I got fish porridge, which reminds me of Malaysia.
+I got fish porridge, which reminded me of Malaysia.
 
 While waiting for our orders, we went around the multitudes of bakeries around, all selling similar pastries, mooncakes, and buns but with their own unique touch and branding.
 
@@ -62,7 +64,7 @@ We took our order and walked back to our airbnb.
 
 Ate the food and talked about our day.
 
-Planned the spots to hit in harvard and MIT the next day.
+Planned the spots to hit in Harvard and MIT the next day.
 
 Watched a bit of the movie Identity cause it just came up in our conversations.
 
