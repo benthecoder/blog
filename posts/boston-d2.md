@@ -8,7 +8,7 @@ date: 'Nov 21, 2023'
 
 I woke up too early, I always wake up early when I'm sleeping in hotels.
 
-Today we're visited both Harvard and MIT.
+Today we're visiting both Harvard and MIT.
 
 For anyone who plants to visit both in one day, here was our plan that maximizes the places you can explore.
 
@@ -60,6 +60,6 @@ The Art museum was really nice as well, although we spent ~45 min speedrunning t
 
 The Harvard book store, specifically the used section below ground, was kind of a let down, I didn't find any good books there. The new books were expensive and well, new. I'm feel strongly against buying new books nowadays, it feels weird. I'd rather buy a book that someone else used to leave at their coffee table to show off to their guests that they're book readers, folded in their hands burning under the sun while they read in the balcony, or books that sat in someone's shelf collecting dusts until the owners decided that it could be in better hands.
 
-The Great dome was cool, I never knew what was inside, and now I do. it was just 6 floors of classrooms, research labs, halls, etc. The interesting thing about MIT that A observed is all the buildings are connected really well. You could possible get from class to your dorm barely even stepping foot outside.
+The Great dome was cool, I never knew what was inside, and now I do. It was classrooms, research labs, lecture halls, study spaces, etc. The interesting thing about MIT that A observed is all the buildings are connected really well. You could possible get from class to your dorm barely even stepping foot outside.
 
 Newbury street is a great way to end the day. There are tons of shops and food places here. Also right by Prudential Center, which houses Eataly.
