@@ -6,9 +6,7 @@ date: 'Nov 18, 2023'
 
 Immersion in boredom is a universal in [biographies of exceptional people](https://www.henrikkarlsson.xyz/p/childhoods).
 
-Many of them were completely kept apart from other children, and by being alone and overdosing on boredom.
-
-They were overcome by **an obsession arising from within**, inducing interest and ideas in the area that would eventually give them fame.
+Many of them were completely kept apart from other children, and by being alone and overdosing on boredom, they were overcome by **an obsession arising from within**, inducing interest and ideas in the area that would eventually give them fame.
 
 Mozart made compositions on his own, his [first piece](https://www.britannica.com/question/How-old-was-Mozart-when-he-began-playing-music) at the age of five.
 
