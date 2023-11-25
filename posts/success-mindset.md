@@ -1,6 +1,6 @@
 ---
 title: 'Mindset of Successful People'
-tags: 'ideas'
+tags: 'psychology'
 date: 'Nov 23, 2023'
 ---
 
