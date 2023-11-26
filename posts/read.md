@@ -1,5 +1,5 @@
 ---
-title: 'Strategy reading'
+title: 'How to Read'
 tags: 'reading'
 date: 'Sep 17, 2023'
 ---
