@@ -6,8 +6,8 @@ import Link from 'next/link';
 const links = [
   { path: '/thoughts', text: '💭' },
   { path: '/hn', text: 'hn' },
-  //{ path: '/chat', text: 'chat' },
   { path: '/now', text: 'now' },
+  { path: '/curius', text: 'curius' },
   { path: '/library', text: 'library' },
   { path: '/posts', text: 'archive' },
   { path: '/contact', text: 'say hi' },
