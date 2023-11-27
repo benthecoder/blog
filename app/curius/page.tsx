@@ -1,9 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 
-const timeSince = (date) => {
+const timeSince = (date: string | Date) => {
   const now = new Date();
-  const diffInSeconds = Math.floor((now - new Date(date)) / 1000);
+  const dateObject = date instanceof Date ? date : new Date(date);
+  const diffInSeconds = Math.floor(
+    (now.getTime() - dateObject.getTime()) / 1000
+  );
   const days = Math.floor(diffInSeconds / (3600 * 24));
   const hours = Math.floor((diffInSeconds % (3600 * 24)) / 3600);
   const minutes = Math.floor((diffInSeconds % 3600) / 60);
