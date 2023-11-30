@@ -1,5 +1,5 @@
 ---
-title: 'Tiny Word Tweaks for Better Communication'
+title: 'Tiny Word Tweaks'
 tags: 'writing'
 date: 'Nov 30, 2023'
 ---
