@@ -1,7 +1,7 @@
 ---
 title: 'Speed Matters'
 tags: 'ideas, work'
-date: 'Dec 2, 2023'
+date: 'Dec 3, 2023'
 ---
 
 > Systems which eat items quickly are fed more items. Slow systems starve.
