@@ -1,19 +1,10 @@
-import fs from 'fs';
-import Markdown from 'markdown-to-jsx';
-import matter from 'gray-matter';
+import Image from 'next/image';
 
-const AboutPage = () => {
-  const file = 'app/wave/wave.md';
-  const content = fs.readFileSync(file, 'utf8');
-  const about = matter(content);
-
+const Wave = () => {
   return (
     <div>
-      <article className='prose text-xs max-w-full'>
-        <Markdown>{about.content}</Markdown>
-      </article>
+      <Image alt='wave' src='/images/wave.jpeg' width={1000} height={1000} />
     </div>
   );
 };
-
-export default AboutPage;
+export default Wave;
