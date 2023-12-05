@@ -8,8 +8,8 @@ function Sketches() {
 
   const imageList: string[] = [
     '/images/room.png',
-    '/images/wave.png',
     '/images/angel.png',
+    '/images/wave.png',
     '/images/howl.png',
   ];
   const openModal = (imageSrc: string) => {
@@ -23,18 +23,13 @@ function Sketches() {
   return (
     <div>
       <div className='columns-1 md:columns-2 space-y-1 space-x-0 rounded-md'>
-        {imageList.map((imageSrc, index) => (
+        {imageList.map((imageSrc) => (
           <div
-            key={index}
+            key={imageSrc}
             className='break-inside-avoid mb-0 cursor-crosshair'
             onClick={() => openModal(imageSrc)}
           >
-            <Image
-              src={imageSrc}
-              alt={`Sketch ${index + 1}`}
-              width={1000}
-              height={200}
-            />
+            <Image src={imageSrc} alt={imageSrc} width={1000} height={200} />
           </div>
         ))}
       </div>
