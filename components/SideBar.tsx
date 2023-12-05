@@ -8,6 +8,7 @@ const links = [
   { path: '/hn', text: 'hn' },
   { path: '/now', text: 'now' },
   { path: '/curius', text: 'curius' },
+  { path: '/sketch', text: 'sketch' },
   { path: '/library', text: 'library' },
   { path: '/posts', text: 'archive' },
   { path: '/contact', text: 'say hi' },
@@ -17,14 +18,14 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className='flex flex-col items-center md:w-[150px]'>
+    <div className='flex flex-col items-center mb-10'>
       <div className='md:sticky md:top-20'>
-        <div className='font-bold text-center'>
+        <div className='font-bold text-center md:text-left mt-4 md:mt-0'>
           <Link href='/'>
             <h2>BENEDICT NEO</h2>
           </Link>
         </div>
-        <div className='flex flex-row space-x-3 md:flex-col md:mt-10 md:items-end'>
+        <div className='flex flex-row space-x-3 md:flex-col md:mt-10 md:space-x-0'>
           {links.map(({ path, text }) => (
             <Link
               key={path}
@@ -38,6 +39,6 @@ export function Sidebar() {
           ))}
         </div>
       </div>
-    </aside>
+    </div>
   );
 }
