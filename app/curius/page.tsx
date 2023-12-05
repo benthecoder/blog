@@ -47,7 +47,7 @@ export default function Page() {
 
     return (
       <div>
-        <p className='mb-10'>
+        <p className='mb-5'>
           Links I saved on{' '}
           <a href='https://curius.app/benedict-neo' className='underline'>
             Curius

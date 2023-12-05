@@ -44,9 +44,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en' className={`${averia.variable} font-serif`}>
-      <body className='font-serif max-w-3xl flex flex-col mb-40 mx-auto mt-4 md:flex-row md:mt-20'>
+      <body className='flex flex-col mb-40 mx-2 md:mx-10 md:flex-row md:items-start md:mt-10'>
         <Sidebar />
-        <main className=' flex-auto text-md min-w-0 max-w-xl mt-10 md:mt-0 px-4 md:pl-20'>
+        <main className='flex-auto text-md md:mt-0 px-4 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full'>
           {children}
         </main>
         <Analytics />

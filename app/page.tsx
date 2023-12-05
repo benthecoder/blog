@@ -2,6 +2,7 @@ import RenderPost from '../components/RenderPost';
 import Link from 'next/link';
 import getPostMetadata from '../components/getPostMetadata';
 import getPostContent from '../components/getPostContent';
+import Image from 'next/image';
 
 const HomePage = () => {
   const posts = getPostMetadata();
@@ -9,13 +10,19 @@ const HomePage = () => {
 
   const postPreview = topPosts.map((p) => {
     const post = getPostContent(p.slug);
-    return <RenderPost post={post} slug={p.slug} key={p.slug} />;
+    return (
+      <>
+        <RenderPost post={post} slug={p.slug} key={p.slug} />
+        <div className='flex justify-center'>
+          <Image src='dots.svg' width={20} height={10} alt='dots' />
+        </div>
+      </>
+    );
   });
 
   return (
-    <div className='grid grid-cols-1 space-y-48'>
+    <div className='grid grid-cols-1 space-y-10'>
       {postPreview}
-
       <Link href='/posts' className='underline mt-10'>
         View the archives
       </Link>
