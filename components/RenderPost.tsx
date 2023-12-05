@@ -27,7 +27,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
             <Link
               href={`/tags/${tag}`}
               key={tag}
-              className='mr-2 px-1 py-0.5 border rounded-lg border-black hover:bg-black hover:text-white transition-all'
+              className='mr-2 px-1 py-0.5 border bg-gray-200 border-black hover:bg-black hover:text-white'
             >
               #{tag}
             </Link>
