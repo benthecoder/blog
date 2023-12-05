@@ -60,7 +60,8 @@ const HackerNews = () => {
   };
 
   return (
-    <div>
+    <div className='w-full'>
+      <h1 className='font-bold mb-6 text-2xl'>HackerNews</h1>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
