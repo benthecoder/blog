@@ -10,6 +10,12 @@ body {
   list-style: none; /* Remove default bullets */
 }
 
+.prose pre,
+.prose code {
+  padding: 0;
+  background: none;
+}
+
 .prose ul li::before {
   content: '\25E6'; /* Unicode for a small circle */
   color: slategrey; /* Change the color */
