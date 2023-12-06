@@ -11,12 +11,12 @@ const HomePage = () => {
   const postPreview = topPosts.map((p) => {
     const post = getPostContent(p.slug);
     return (
-      <>
-        <RenderPost post={post} slug={p.slug} key={p.slug} />
+      <div key={p.slug}>
+        <RenderPost post={post} slug={p.slug} />
         <div className='flex justify-center'>
           <Image src='dots.svg' width={20} height={10} alt='dots' />
         </div>
-      </>
+      </div>
     );
   });
 
