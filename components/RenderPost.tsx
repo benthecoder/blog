@@ -27,7 +27,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
             <Link
               href={`/tags/${tag}`}
               key={tag}
-              className='mr-2 px-1 py-0.5 border bg-gray-200 border-black hover:bg-black hover:text-white'
+              className='mr-2 px-1 py-0.5 border-2 bg-gray-200 border-black border-double hover:bg-black hover:text-white hover:border-white hover:border-2'
             >
               #{tag}
             </Link>
@@ -38,11 +38,11 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
         </p>
       </div>
       {next && (
-        <div className='mt-32 flex flex-col'>
+        <div className='mt-20 flex flex-col'>
           {next && (
             <div className='flex items-center'>
               <p className='text-gray-400'>Next:</p>
-              <Link href={`/posts/${next.slug}`} className='ml-2 underline'>
+              <Link href={`/posts/${next.slug}`} className='ml-1 underline'>
                 {next.title}
               </Link>
             </div>
@@ -50,7 +50,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
           {prev && (
             <div className='flex items-center'>
               <p className='text-gray-400'>Previous:</p>
-              <Link href={`/posts/${prev.slug}`} className='ml-2 underline'>
+              <Link href={`/posts/${prev.slug}`} className='ml-1 underline'>
                 {prev.title}
               </Link>
             </div>
