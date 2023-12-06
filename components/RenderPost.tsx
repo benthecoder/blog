@@ -12,6 +12,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
           style={vscDarkPlus}
           language={match[1]}
           PreTag='div'
+          className='rounded'
           {...props}
         >
           {String(children).replace(/\n$/, '')}
@@ -27,7 +28,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
   return (
     <div
       key={post.data.title}
-      className='border-black border-double border-4 p-4'
+      className='border-black border-double border-4 p-4 bg-stone-50'
     >
       {slug ? (
         <Link href={`/posts/${slug}`} className='mr-0'>
@@ -49,7 +50,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
             <Link
               href={`/tags/${tag}`}
               key={tag}
-              className='mr-2 px-1 py-0.5 border-2 bg-gray-200 border-black border-double hover:bg-black hover:text-white hover:border-white hover:border-2'
+              className='mr-2 px-1 py-0.5 border-2 bg-gray-100 border-black border-double hover:bg-black hover:text-white hover:border-white hover:border-2'
             >
               #{tag}
             </Link>
