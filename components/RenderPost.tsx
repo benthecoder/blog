@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import rehypeRaw from 'rehype-raw';
+import Image from 'next/image';
 
 const RenderPost = ({ post, prev, next, slug }: any) => {
   const components = {
@@ -23,6 +24,23 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
           {children}
         </code>
       );
+    },
+    p: ({ node, children }: any) => {
+      if (node.children[0].tagName === 'img') {
+        const image: any = node.children[0];
+        return (
+          <div className='text-center'>
+            <Image
+              src={`${image.properties.src}`}
+              alt={image.properties.alt}
+              width='800'
+              height='500'
+            />
+            <p className='text-gray-400 mt-0'>{image.properties.alt}</p>
+          </div>
+        );
+      }
+      return <p>{children}</p>;
     },
   };
 
