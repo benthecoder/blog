@@ -2,6 +2,7 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import rehypeRaw from 'rehype-raw';
 
 const RenderPost = ({ post, prev, next, slug }: any) => {
   const components = {
@@ -42,7 +43,9 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
         </h2>
       )}
       <article className='prose'>
-        <ReactMarkdown components={components}>{post.content}</ReactMarkdown>
+        <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]}>
+          {post.content}
+        </ReactMarkdown>
       </article>
       <div className='flex justify-between items-center mt-12'>
         <div className='flex flex-wrap'>
