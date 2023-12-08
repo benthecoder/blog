@@ -4,7 +4,7 @@ tags: 'travel, journal'
 date: 'Nov 22 2023'
 ---
 
-![isabella](/images/isabella.jpeg)
+![Isabella Stewart Gardner Museum](/images/isabella.jpeg)
 
 It's raining today.
 
