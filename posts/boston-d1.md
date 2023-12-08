@@ -4,7 +4,7 @@ tags: 'travel, journal'
 date: 'Nov 20, 2023'
 ---
 
-![Rowes Wharf](/images/boston1.jpeg)
+![Quincy market](/images/boston1.jpeg)
 
 I woke up at 4:15 a.m. and slept for a little bit more to be ready for pastor to give us a ride to the airport.
 
