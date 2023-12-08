@@ -95,11 +95,7 @@ Here's the process.
 
 During initial ingest, we delay compact and do one big run at the end, but then as index keeps up with incremental changes, compaction is run on shorter intervals to handle things like document deletion.
 
-![Alt text](https://github.blog/wp-content/uploads/2023/02/Canvas_1-1.png?w%253D1376)
-
 ## Life of a query
-
-![Alt text](https://github.blog/wp-content/uploads/2023/02/code-search.png?w%253D1376)
 
 Redis is used to **manage quotas** and **cache some access control data**.
 
