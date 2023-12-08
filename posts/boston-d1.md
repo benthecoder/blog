@@ -24,7 +24,7 @@ Our first reaction when leaving the gate was how cold it was, mostly because of 
 
 Our first hiccup was getting to James Hook & Co.
 
-Pro tip: if you're arriving at Boston Logan Airport. The airbnb will arrive at the departure, not baggage pickup, so go up one floor. Also the cars will not arrive at the first road, you have to cross the road into the garage, and they'll stop at numbered locations.
+Pro tip: if you're arriving at Boston Logan Airport. The Uber will arrive at the departure, not baggage pickup, so go up one floor. Also the cars will not arrive at the first road, you have to cross the road into the garage, and they'll stop at numbered locations.
 
 After getting cancelled the first time, we were brought to South Boston Waterfront instead of downtown, and had to order another ride to get there.
 

@@ -10,7 +10,7 @@ I woke up too early, I always wake up early when I'm sleeping in hotels.
 
 Today we're visiting both Harvard and MIT.
 
-For anyone who plants to visit both in one day, here was our plan that maximizes the places you can explore.
+For anyone who plans to visit both in one day, here was our plan that maximizes the places you can explore.
 
 ### Harvard
 
