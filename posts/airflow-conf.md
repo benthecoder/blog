@@ -4,7 +4,7 @@ tags: 'tech, journal'
 date: 'Sep 19, 2023'
 ---
 
-![airflow summit](/images/airflow-summit.jpeg)
+![Airflow summit main stage](/images/airflow-summit.jpeg)
 
 I woke up at 8 am.
 

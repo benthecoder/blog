@@ -4,7 +4,7 @@ tags: 'tech, journal'
 date: 'Sep 20, 2023'
 ---
 
-![chinatown](/images/chinatown.jpeg)
+![Kensington Chinatown](/images/chinatown.jpeg)
 
 I woke up at 8:30 am.
 

@@ -4,7 +4,7 @@ tags: 'travel, journal'
 date: 'Sep 18, 2023'
 ---
 
-![toronto](/images/toronto.jpeg)
+![The CN Tower](/images/toronto.jpeg)
 
 I'm flying to Toronto today.
 
