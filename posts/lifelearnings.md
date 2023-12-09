@@ -19,7 +19,7 @@ She wrote about [16 life-learnings](https://www.themarginalian.org/2022/10/23/16
    - with your time, resources, giving credit, and with your words.
    - to understand and be understood are among life's greatest gifts, every interaction is an opportunity to exchange them
 4. Build pockets of **stillness** into your life
-   - meditate, go for walks, [daydream](https://www.themarginalian.org/2013/10/09/mind-wandering-and-creativity/), overdone on [boredom](https://www.themarginalian.org/2012/10/26/susan-sontag-on-boredom/)
+   - meditate, go for walks, [daydream](https://www.themarginalian.org/2013/10/09/mind-wandering-and-creativity/), overdose on [boredom](https://www.themarginalian.org/2012/10/26/susan-sontag-on-boredom/)
    - be religious and disciplined about your sleep, it [regulates negative emotion](https://www.themarginalian.org/2012/08/13/the-twenty-four-hour-mind-rosalind-cartwright/)
 5. You are the only custodian of your own integrity
    - [Maya Angelou](https://www.themarginalian.org/tag/maya-angelou/): "When people tell you who they are, believe them. But when people try to tell you who you are, don't believe them.
