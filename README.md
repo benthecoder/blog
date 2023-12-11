@@ -1,6 +1,6 @@
 # Blog
 
-![screenshot](public/images/home.png)
+![home](public/images/home.jpeg)
 
 A minimalistic blog made with Next.js and Tailwind CSS.
 
