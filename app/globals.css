@@ -6,6 +6,13 @@ body {
   background-color: #fff8e7;
 }
 
+.prose {
+  color: #181010;
+  width: 100%;
+  min-width: 100%;
+  padding: 0 1rem;
+}
+
 .prose ul {
   list-style: none; /* Remove default bullets */
 }
@@ -22,13 +29,6 @@ body {
   display: inline-block; /* Needed to add space between the bullet and the text */
   width: 1em; /* Also needed for space (tweak if needed) */
   margin-left: -1em; /* Tweak as needed */
-}
-
-.prose {
-  color: #181010;
-  width: 100%;
-  min-width: 100%;
-  padding: 0 1rem;
 }
 
 .prose a {
