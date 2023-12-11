@@ -16,10 +16,9 @@ const links = [
 
 export function Sidebar() {
   const pathname = usePathname();
-
   return (
-    <div className='flex flex-col items-center mb-10'>
-      <div className='md:sticky md:top-20'>
+    <div className='md:sticky md:top-10 flex flex-col items-center mb-10'>
+      <div>
         <div className='font-bold text-center md:text-left mt-4 md:mt-0'>
           <Link href='/'>
             <h2>BENEDICT NEO</h2>
