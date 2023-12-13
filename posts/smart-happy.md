@@ -4,6 +4,8 @@ tags: 'intelligence, ideas'
 date: 'Dec 12, 2023'
 ---
 
+![Melancholy (c. 1892) by Edvard Munch](/images/melancholy.jpg)
+
 A definition of intelligence that a lot of psychologists [agree](https://sci-hub.se/10.1037/a0026699) on is:
 
 > Intelligence is a very general mental capability that, among other things, involves the ability to reason, plan, solve problems, think abstractly, comprehend complex ideas, learn quickly and learn from experience. It is not merely book learning, a narrow academic skill, or test-taking smarts. Rather, it reflects a broader and deeper capability for comprehending our surroundings-“catching on,” “making sense” of things, or “figuring out” what to do […] Intelligence, so defined, can be measured, and intelligence tests measure it well.
