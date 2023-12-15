@@ -33,13 +33,13 @@ I started classes at ISU from Malaysia, and I remember one of the labs was at 3 
 I flew in to ISU in this semester. Felt really free after being trapped in the house for a year.
 
 - STAT 110: Statistics Orientation
-  - I met some friendly people here. We would have weekly compulsory activities and had to take pictures of us meeting up. Never saw them since the class.
+  - I met some friendly people here. We would have weekly compulsory activities and had to take pictures of ourselves meeting up. Never saw them since the class.
 - STAT 301: Intermediate Statistical Concepts And Methods
   - This class was standard statistics stuff like regression, anova, hypo test, etc. I had to use JMP, a software for boomers to do statistics. I liked making the two page cheatsheets for the exams. I had to work some americans in a team for the project and labs.
 - STAT 342: Introduction To The Theory Of Probability And Statistics II
   - This class is supposed to be hard, but the professors made it easy in exams? I remember she gave us back the test papers to "correct our mistake" to give us more marks. As someone from Malaysia, this was funny, but also made me realize the quality of education here. It had topics like Method of Moments, MLE, bias and unbiased, factorization theorem, MVUE, sufficient statistics. All these heavy stats concepts. I remember this korean dude that always went to me for answers, and would swear in korean under his breath during the exams.
 - COM S 230: Discrete Computational Structures
-  - this is the most theoretical CS class I had to take for my minor. taught my a former MIT undergrad student. It's basically a math course but for cs. I remember getting a pretty low score in my first exam, which scared me into taking this class more seriously. The logic, proofs, sets, counting and graphs were fine, but relations and set cardinality were hard to grasp. The TA, Jonathan is the hard carry in helping my friends and I get through this course. I have major respect for good TAs.
+  - this is the most theoretical CS class I had to take for my minor. taught by a former MIT undergrad student. It's basically a math course but for cs. I remember getting a pretty low score in my first exam, which scared me into taking this class more seriously. The logic, proofs, sets, counting and graphs were fine, but relations and set cardinality were hard to grasp. The TA, Jonathan is the hard carry in helping my friends and I get through this course. I have major respect for good TAs.
 - ENGL 250: Written, Oral, Visual, And Electronic Composition
   - my first ever in person english class experience in the US. It was just me and J who were not americans and white and loud. I felt discriminated in this class, maybe it was just in my head, but it was hard to fit in. I went through my assignments and found that I wrote an interview piece with Harry Styles for his Fine Line album lol. The in-class and outdoors activities were a huge struggle to get out of my comfort zone, but it was a good experience nonetheless.
 - U ST 110 International First Year Seminar
@@ -91,4 +91,4 @@ Overall, was a statistics degree worth it? Am I now a statistician? Do I have mo
 
 Maybe majoring in software engineering/CS could've given me a better transition into a CS grad degree, and I could've hung out with my friends more in their classes, but hindsight is always 20/20.
 
-I can only move forward, and focus on going into the next stage in my life.
+I can only move forward, and focus on going into the next stage of my life.
