@@ -17,3 +17,8 @@ Coding
 - [Phind - AI Search Engine and Pair Programmer](https://www.phind.com/)
 - [CodiumAI - Meaningful Code Tests for Busy Devs](https://www.codium.ai/)
 - [Sweep - turn bugs and feature requests into code changes.](https://sweep.dev/)
+
+Search
+
+- [Metaphor - AI powered search](https://search.metaphor.systems/)
+- [Perplexity](https://www.perplexity.ai/)
