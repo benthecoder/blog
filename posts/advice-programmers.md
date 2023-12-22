@@ -4,7 +4,7 @@ tags: 'programming, advice'
 date: 'Dec 22, 2023'
 ---
 
-![Advice to Subscribers, published in Le Charivari, April 1, 1840](/images/advice-programmers.jpeg)
+![Advice to Subscribers, published in Le Charivari, April 1, 1840](/images/advice.jpeg)
 
 [Thirteen bits of advice](https://buttondown.email/hillelwayne/archive/advice-for-new-software-devs-whove-read-all-those/) for early-career programmers from the [Computer Things](https://buttondown.email/hillelwayne/archive/) newsletter.
 
