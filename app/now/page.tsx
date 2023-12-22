@@ -40,10 +40,13 @@ const AboutPage = () => {
           This is a <a href='https://sive.rs/nowff'>now</a> page
         </p>
         <ul className='list-disc'>
-          <li>In my last semester @ Iowa State University</li>
           <li>
-            Starting to write articles on{' '}
-            <a href='https://benedictxneo.medium.com/'>Medium</a> again
+            Recently graduated from Iowa State University, going back grad
+            school in the Fall of 2024 (location TBD)
+          </li>
+          <li>
+            Writing about LLMs and AI on{' '}
+            <a href='https://benedictxneo.medium.com/'>Medium</a>
           </li>
           <li>
             Learning C/C++ by building a{' '}
@@ -51,15 +54,12 @@ const AboutPage = () => {
               text editor
             </a>
           </li>
-          <li>Reading The Conquest of Happiness by Bertrand Russell</li>
-          <li>Applying to grad school</li>
-          <li>Thinking about ways to cure GERD</li>
-          <li>
-            Doing more <a href='https://devpost.com/benthecoder'>hackathons</a>
-          </li>
+          <li>Learning SwiftUI to build a MacOS tool</li>
+          <li>Reading The Secret History by Donna Tartt</li>
+          <li>Trying to build a startup</li>
         </ul>
         <br></br>
-        <p>Last updated: Oct 14, 2023</p>
+        <p>Last updated: Dec 21, 2023</p>
       </article>
     </div>
   );
