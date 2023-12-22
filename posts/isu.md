@@ -4,6 +4,8 @@ tags: 'life, journal'
 date: 'Dec 16, 2023'
 ---
 
+![Unknown artist](/images/hope.jpeg)
+
 Wow. I'm done. I finally get to leave Ames, Iowa.
 
 I remember back in INTI college in Malaysia when my friends and I were all applying for schools, I just went along with my friends and only applied for this school.
