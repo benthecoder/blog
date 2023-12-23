@@ -59,11 +59,13 @@ body {
 
 .prose blockquote {
   margin: 0 1em 0 0.25em;
-  padding: 0 0.75em 0 1em;
+  padding: 0 0em 0 1.5em;
   border-left: 3px solid #b0afaf;
+  border-left-width: 3px;
+  border-color: #000000;
   quotes: none;
-  font-style: italic;
-  font-weight: light;
+  font-style: normal;
+  font-weight: normal;
   color: #595959;
 }
 
