@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Averia_Serif_Libre } from 'next/font/google';
 import { Sidebar } from '../components/SideBar';
 import './globals.css';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://bneo.xyz'),
