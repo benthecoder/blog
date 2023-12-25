@@ -1,6 +1,6 @@
 ---
 title: 'Useful MacOS Apps'
-tags: 'productivity'
+tags: 'listicles'
 date: 'Oct 21, 2023'
 ---
 
