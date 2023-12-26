@@ -1,6 +1,6 @@
 ---
 title: 'Useful AI Tools'
-tags: 'resources'
+tags: 'listicles, AI'
 date: 'Oct 30, 2023'
 ---
 
@@ -20,5 +20,17 @@ Coding
 
 Search
 
-- [Metaphor - AI powered search](https://search.metaphor.systems/)
+- [Metaphor.systems](https://search.metaphor.systems/)
 - [Perplexity](https://www.perplexity.ai/)
+
+Art
+
+- [Visual Electric](https://visualelectric.com/)
+
+Video
+
+- [Pika.art](https://pika.art/)
+
+Music
+
+- [Suno.ai](https://www.suno.ai/)
