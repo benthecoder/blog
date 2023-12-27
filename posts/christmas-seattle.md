@@ -4,6 +4,8 @@ tags: 'journal'
 date: 'Dec 25, 2023'
 ---
 
+![The Nativity](/images/christ.png)
+
 We decided to stay home the whole day in the two-story modern airbnb apartment in Beacon Hill.
 
 My alarm woke me up at 7:30 a.m., I thought there would be a sunrise today. It was just clouds.
