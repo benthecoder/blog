@@ -10,7 +10,7 @@ Who you interact with shapes you irrevocably. What you engage with, you internal
 
 In Henrik's [piece](https://escapingflatland.substack.com/p/first-we-shape-our-social-graph-then) on _first we shape our social graphs, then it shapes us_:
 
-> You see the same pattern with top performers in many domains—researchers, programmers, painters. Often they spend a great deal of thought on how to structure their milieu: whom to interact with, and what work to study and learn from. You can do this for soft values too, training yourself to be generous by surrounding yourself with generosity
+> You see the same pattern with top performers in many domains—researchers, programmers, painters. Often <mark>they spend a great deal of thought on how to structure their milieu</mark>: whom to interact with, and what work to study and learn from. You can do this for soft values too, training yourself to be generous by surrounding yourself with generosity
 
 Inspired by Nix's piece on "[who do you admire?](https://www.startingfromnix.com/p/who-do-you-admire)".
 
@@ -20,7 +20,7 @@ Here's a good limus test from Nix for curating your own source of inspiration:
 
 > do your inspirations, online and offline, make you feel more **vital** (do they strive in a way that feels ambitious, dynamic and meaningful?), **conscious** (do they evoke reflection?), **free** (do they expand what you think is possible?)
 
-## Sparkly people
+## Inspirations
 
 some curius people
 
@@ -39,7 +39,7 @@ some substack people I admire
 
 - **Rabbit holes** – a beautiful [newsletter](https://open.substack.com/pub/curatedrabbitholes/p/the-rabbit-hole-issue-no34) with words and art for the soul
 - **bookbear express** – [how to avoid half-heartedness](https://www.avabear.xyz/p/how-to-avoid-half-heartedness), [making and keeping friends](https://www.avabear.xyz/p/making-and-keeping-friends), [effort](https://www.avabear.xyz/p/effort)
-- Escap**ing Flat**land – [childhoods of exceptional people](https://www.henrikkarlsson.xyz/p/childhoods), [looking for alice](https://www.henrikkarlsson.xyz/p/looking-for-alice), [A blog post is a very long and complex search query...](https://www.henrikkarlsson.xyz/p/search-query)
+- **Escaping Flatland** – [childhoods of exceptional people](https://www.henrikkarlsson.xyz/p/childhoods), [looking for alice](https://www.henrikkarlsson.xyz/p/looking-for-alice), [A blog post is a very long and complex search query...](https://www.henrikkarlsson.xyz/p/search-query)
 - **What Do We Do Now That We're Here?** – [the friendship problem](https://open.substack.com/pub/rojospinks/p/the-friendship-problem) & [how to be online](https://open.substack.com/pub/rojospinks/p/how-to-be-online-right-now)
 - **Experimental History** – [good conversations have a lot of doorknobs](https://www.experimental-history.com/p/good-conversations-have-lots-of-doorknobs), [why smart people aren't happier](https://www.experimental-history.com/p/why-arent-smart-people-happier)
 - **Griefbacon** – [movie night](https://griefbacon.substack.com/p/movie-night), [nothing stops](https://griefbacon.substack.com/p/nothing-stops)
@@ -84,3 +84,5 @@ Scientists
 Designers
 
 - Dieter Rams – [Braun design](https://www.braunhousehold.com/en-us/braun-100-years)
+
+> Last updated: Dec 29, 2023
