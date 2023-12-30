@@ -37,7 +37,6 @@ some curius people
 
 some substack people I admire
 
-- **Rabbit holes** – a beautiful [newsletter](https://open.substack.com/pub/curatedrabbitholes/p/the-rabbit-hole-issue-no34) with words and art for the soul
 - **bookbear express** – [how to avoid half-heartedness](https://www.avabear.xyz/p/how-to-avoid-half-heartedness), [making and keeping friends](https://www.avabear.xyz/p/making-and-keeping-friends), [effort](https://www.avabear.xyz/p/effort)
 - **Escaping Flatland** – [childhoods of exceptional people](https://www.henrikkarlsson.xyz/p/childhoods), [looking for alice](https://www.henrikkarlsson.xyz/p/looking-for-alice), [A blog post is a very long and complex search query...](https://www.henrikkarlsson.xyz/p/search-query)
 - **What Do We Do Now That We're Here?** – [the friendship problem](https://open.substack.com/pub/rojospinks/p/the-friendship-problem) & [how to be online](https://open.substack.com/pub/rojospinks/p/how-to-be-online-right-now)
@@ -51,6 +50,9 @@ some substack people I admire
 - **visa's voltaic verses** – [are you serious?](https://visakanv.substack.com/p/are-you-serious)
 - **sasha's newsletter** – [making normal conversations better](https://open.substack.com/pub/sashachapin/p/making-normal-conversations-better), [advice from smart people](https://open.substack.com/pub/sashachapin/p/some-advice-gathered-from-people), [what you learn dating Cate Hall](https://open.substack.com/pub/sashachapin/p/things-you-learn-dating-cate-hall)
 - **Noahpinion** – [homelessness](https://www.noahpinion.blog/p/everything-you-think-you-know-about), [Japan](https://www.noahpinion.blog/p/actually-japan-has-changed-a-lot), [Ireland](https://www.noahpinion.blog/p/how-ireland-got-so-rich), [Singapore](https://www.noahpinion.blog/p/singapore-urbanism)
+- **The Map is Mostly Water** – [agency](https://map.simonsarris.com/p/the-most-precious-resource-is-agency), [religion](https://map.simonsarris.com/p/in-praise-of-the-gods), [reading](https://map.simonsarris.com/p/reading-well), [creation](https://map.simonsarris.com/p/start-with-creation), [intimacy](https://map.simonsarris.com/p/patina-and-intimacy)
+- **Dynomight internet newsletter** – [taste](https://open.substack.com/pub/dynomight/p/class), reasons to be thankful ([I](https://open.substack.com/pub/dynomight/p/underrated-reasons-to-be-thankful), [II](https://open.substack.com/pub/dynomight/p/thanks-2), [III](https://open.substack.com/pub/dynomight/p/thanks-3)), [interacting with humans](https://dynomight.substack.com/p/humans), [feelings](https://open.substack.com/pub/dynomight/p/feelings?), [gratitude](https://open.substack.com/pub/dynomight/p/gratitude), [hotness](https://open.substack.com/pub/dynomight/p/you-your-parents-and-the-hotness)
+- **Rabbit holes** – a beautiful [newsletter](https://open.substack.com/pub/curatedrabbitholes/p/the-rabbit-hole-issue-no34) with words and art for the soul
 
 artists
 
@@ -85,4 +87,4 @@ Designers
 
 - Dieter Rams – [Braun design](https://www.braunhousehold.com/en-us/braun-100-years)
 
-> Last updated: Dec 29, 2023
+> Last updated: Dec 30, 2023
