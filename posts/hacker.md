@@ -36,3 +36,9 @@ So if you want to be a hacker, you have to repeat the following things until you
    - distrust attitude and **respect competence of every kind**
    - competence at demanding skills that few can master is especially good, and ones that involve mental acuteness, craft, and concentration is best.
    - if you revere competence, you'll enjoy developing it in yourself – the <mark>hard work and dedication will become a kind of intense play rather than drudgery</mark>
+
+More resources
+
+- PG's essay, [Great Hackers](http://www.paulgraham.com/gh.html) and [Undergraduation](http://www.paulgraham.com/college.html)
+- [Things Every Hacker Once Knew](http://catb.org/~esr/faqs/things-every-hacker-once-knew)
+- [How To Ask Smart Questions](http://catb.org/~esr/faqs/smart-questions.html)
