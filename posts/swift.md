@@ -60,7 +60,7 @@ ios devs
 ### Some ideas
 
 - a timer app 8 bits style
-- app to archive/pin emails
+- app to archive/check off emails, in order, with a big green center button to tap on, and two other buttons for pinning and expand to read?
 - search over open access met archive / one image daily (next one unlocks in ...), basically daily art app but nicer
 - store quotes from articles into app, and have daily widget that shows the quotes (like matter app), but add social features, basically curius but an app
 - an app where everyone can add notes to a specific location, so when you search for places, you see the person's notes + to visit places.
