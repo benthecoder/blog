@@ -54,6 +54,10 @@ some substack people I admire
 - **Dynomight internet newsletter** – [taste](https://open.substack.com/pub/dynomight/p/class), reasons to be thankful ([I](https://open.substack.com/pub/dynomight/p/underrated-reasons-to-be-thankful), [II](https://open.substack.com/pub/dynomight/p/thanks-2), [III](https://open.substack.com/pub/dynomight/p/thanks-3)), [interacting with humans](https://dynomight.substack.com/p/humans), [feelings](https://open.substack.com/pub/dynomight/p/feelings?), [gratitude](https://open.substack.com/pub/dynomight/p/gratitude), [hotness](https://open.substack.com/pub/dynomight/p/you-your-parents-and-the-hotness)
 - **Rabbit holes** – a beautiful [newsletter](https://open.substack.com/pub/curatedrabbitholes/p/the-rabbit-hole-issue-no34) with words and art for the soul
 
+---
+
+Some more inspirations off the top of my head as I write this. this list is very much non-exhaustive.
+
 artists
 
 - [Claude Monet](https://www.metmuseum.org/toah/hd/cmon/hd_cmon.htm) – his Garden and landscape paintings
