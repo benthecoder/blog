@@ -51,6 +51,7 @@ groups
 
 ios devs
 
+- [Sindre Sorhus](https://sindresorhus.com/)
 - [Andrew Zhang](https://twitter.com/andrewczhang?lang=en)
 - [Rishi Mody](https://twitter.com/rishmody) - [untitled](https://www.untitledpc.net/)
 - [Jordan Singer](https://twitter.com/jsngr)
