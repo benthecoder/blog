@@ -28,6 +28,10 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  twitter: {
+    title: 'Benedict Neo',
+    card: 'summary_large_image',
+  },
 };
 
 const averia = Averia_Serif_Libre({
