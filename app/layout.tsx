@@ -50,6 +50,7 @@ export default function RootLayout({
         <main className='flex-auto text-md md:mt-0 px-2 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full'>
           {children}
         </main>
+        <SpeedInsights />
         <Analytics />
       </body>
     </html>
