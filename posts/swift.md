@@ -69,6 +69,7 @@ ios devs
 
 - [SwiftLee](https://www.avanderlee.com/)
 - [Swift Developer News – Hacking with Swift](https://www.hackingwithswift.com/articles)
+- [iOS Dev Tools](https://iosdevtools.substack.com/)
 - [Sarunw - A weekly blog about iOS development](https://sarunw.com/)
 - [TestFlight forever: Developers are building a better world outside the App Store - Protocol](https://www.protocol.com/testflight-app-store#toggle-gdpr)
 - [iOS Feeds: Latest content from the iOS community](https://iosfeeds.com/)
