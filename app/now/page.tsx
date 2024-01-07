@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 
-const TIMEZONE = 'America/Chicago';
+const TIMEZONE = 'Asia/Singapore';
 
 const AboutPage = () => {
   const [time, setTime] = useState<string | null>(null);
@@ -35,7 +35,7 @@ const AboutPage = () => {
     <div>
       <article className='prose'>
         <h1>Now</h1>
-        <p>Based in Ames, Iowa, where it's currently {time}</p>
+        <p>Based in KL, Malaysia, where it's currently {time}</p>
         <p>
           This is a <a href='https://sive.rs/nowff'>now</a> page
         </p>
