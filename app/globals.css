@@ -13,14 +13,39 @@ body {
   padding: 0 1rem;
 }
 
+.dark .prose {
+  color: #fff;
+}
+
+.dark .prose strong {
+  color: #f8f8f2;
+  font-weight: bold;
+}
+
 .prose ul {
-  list-style: none; /* Remove default bullets */
+  list-style: none;
 }
 
 .prose pre,
 .prose code {
-  padding: 0;
-  background: none;
+  background: #d1d0d0;
+  word-wrap: break-word;
+  box-decoration-break: clone;
+  padding: 0.1rem 0.3rem 0.2rem;
+  border-radius: 0.2rem;
+}
+
+.prose code::before {
+  content: '';
+}
+
+.prose code::after {
+  content: '';
+}
+
+.dark .prose code {
+  color: #ffffff;
+  background-color: #000000;
 }
 
 .prose ul li::before {
@@ -40,6 +65,11 @@ body {
   text-decoration: none;
 }
 
+.dark .prose a {
+  text-decoration: underline;
+  color: #fff;
+}
+
 .prose a:hover {
   color: #d70a1b;
 }
@@ -57,6 +87,12 @@ body {
   font-size: 1.2rem;
 }
 
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3 {
+  color: #fff; /* set your preferred color for dark mode */
+}
+
 .prose blockquote {
   margin: 0 1em 0 0.25em;
   padding: 0 0em 0 1.5em;
@@ -67,6 +103,11 @@ body {
   font-style: normal;
   font-weight: normal;
   color: #595959;
+}
+
+.dark .prose blockquote {
+  border-color: #fff; /* set your preferred color for dark mode */
+  color: #b4b4b4;
 }
 
 .prose img {
@@ -92,6 +133,11 @@ body {
 ::selection {
   background: #0b3f6a;
   color: #fff;
+}
+
+.dark ::selection {
+  background: #fff49b;
+  color: #000;
 }
 
 .hover-container {
