@@ -27,9 +27,9 @@ export default async function GuestbookPage() {
         ? entries.map((entry: any) => (
             <div
               key={entry.id}
-              className='flex flex-col mb-6 p-2 bg-blue-100 border-2 border-black'
+              className='flex flex-col mb-6 p-2 bg-blue-100 border-2 border-black dark:bg-gray-900 dark:border-white'
             >
-              <div className='text-md text-gray-700 break-words'>
+              <div className='text-md text-gray-700 break-words dark:text-white'>
                 {entry.content}
               </div>
               <div className='text-gray-500 mt-2 text-sm'>
