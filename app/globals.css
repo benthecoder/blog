@@ -45,7 +45,7 @@ body {
 
 .dark .prose code {
   color: #ffffff;
-  background-color: #000000;
+  background-color: #505050;
 }
 
 .prose ul li::before {
@@ -66,7 +66,7 @@ body {
 }
 
 .dark .prose a {
-  text-decoration: underline;
+  background-image: url('../public/underline-dark.png');
   color: #fff;
 }
 
