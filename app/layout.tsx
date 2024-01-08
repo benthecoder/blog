@@ -4,6 +4,8 @@ import { Averia_Serif_Libre } from 'next/font/google';
 import { Sidebar } from '../components/SideBar';
 import './globals.css';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Providers } from './providers';
+import ThemeSwitch from '../components/ThemeSwitch';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://bneo.xyz'),
@@ -49,11 +51,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang='en' className={`${averia.variable} font-serif`}>
-      <body className='flex flex-col mb-40 mx-2 md:mx-10 md:flex-row md:items-start md:mt-10'>
-        <Sidebar />
-        <main className='flex-auto text-md md:mt-0 px-2 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full'>
-          {children}
-        </main>
+      <body className='flex flex-col mb-40 mx-2 md:mx-10 md:flex-row md:items-start md:mt-10 dark:bg-black'>
+        <Providers>
+          <Sidebar />
+          <main className='flex-auto text-md md:mt-0 px-2 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full'>
+            {children}
+          </main>
+        </Providers>
         <SpeedInsights />
         <Analytics />
       </body>

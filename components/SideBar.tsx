@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-
+import ThemeSwitch from './ThemeSwitch';
 const links = [
   { path: '/thoughts', text: '💭' },
   { path: '/hn', text: 'hn' },
@@ -24,6 +24,7 @@ export function Sidebar() {
             <h2>BENEDICT NEO</h2>
           </Link>
         </div>
+
         <div className='flex flex-row space-x-3 md:flex-col md:mt-10 md:space-x-0'>
           {links.map(({ path, text }) => (
             <Link
@@ -36,6 +37,7 @@ export function Sidebar() {
               {text}
             </Link>
           ))}
+          <ThemeSwitch />
         </div>
       </div>
     </div>
