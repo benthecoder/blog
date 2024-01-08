@@ -37,7 +37,7 @@ Official
 - [Swift Book by Apple](https://books.apple.com/us/book/the-swift-programming-language-swift-5-3/id881256329)
 - [Swift resources by Apple](https://developer.apple.com/swift/resources/)
 
-### communities
+### resources
 
 reddit
 
@@ -49,13 +49,32 @@ groups
 
 - [ios dev happy hour](https://links.iosdevhappyhour.com/)
 
-ios devs
+blogs/thoughts
 
-- [Sindre Sorhus](https://sindresorhus.com/)
-- [Andrew Zhang](https://twitter.com/andrewczhang?lang=en)
-- [Rishi Mody](https://twitter.com/rishmody) - [untitled](https://www.untitledpc.net/)
-- [Jordan Singer](https://twitter.com/jsngr)
-- [Yihui](https://twitter.com/_yihui) – [are.na app](https://arena-ios-app.vercel.app/)
+- [SwiftLee](https://www.avanderlee.com/)
+- [Swift Developer News – Hacking with Swift](https://www.hackingwithswift.com/articles)
+- [iOS Dev Tools](https://iosdevtools.substack.com/)
+- [Sarunw - A weekly blog about iOS development](https://sarunw.com/)
+- [TestFlight forever: Developers are building a better world outside the App Store - Protocol](https://www.protocol.com/testflight-app-store#toggle-gdpr)
+- [iOS Feeds: Latest content from the iOS community](https://iosfeeds.com/)
+
+ios twitter
+
+- [@sindresorhus](https://sindresorhus.com/)
+- [@aheze0](https://twitter.com/aheze0)
+- [@jsngr](https://twitter.com/jsngr)
+- [@seanallen_dev](https://twitter.com/seanallen_dev)
+- [@twannl](https://twitter.com/twannl)
+- [@Sommer](https://twitter.com/sommer)
+- [@mecid](https://twitter.com/mecid)
+- [@twostraws](https://twitter.com/twostraws)
+- [@DonnyWals](https://twitter.com/donnywals)
+
+apps I like
+
+- [untitled](https://www.untitledpc.net/) by [Rishi Mody](https://twitter.com/rishmody)
+- Cosmos
+- [are.na app](https://arena-ios-app.vercel.app/) by [Yihui](https://twitter.com/_yihui)
 
 ### Some ideas
 
@@ -64,12 +83,3 @@ ios devs
 - search over open access met archive / one image daily (next one unlocks in ...), basically daily art app but nicer
 - store quotes from articles into app, and have daily widget that shows the quotes (like matter app), but add social features, basically curius but an app
 - an app where everyone can add notes to a specific location, so when you search for places, you see the person's notes + to visit places.
-
-### blogs/thoughts
-
-- [SwiftLee](https://www.avanderlee.com/)
-- [Swift Developer News – Hacking with Swift](https://www.hackingwithswift.com/articles)
-- [iOS Dev Tools](https://iosdevtools.substack.com/)
-- [Sarunw - A weekly blog about iOS development](https://sarunw.com/)
-- [TestFlight forever: Developers are building a better world outside the App Store - Protocol](https://www.protocol.com/testflight-app-store#toggle-gdpr)
-- [iOS Feeds: Latest content from the iOS community](https://iosfeeds.com/)
