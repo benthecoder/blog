@@ -25,14 +25,15 @@ export function Sidebar() {
           </Link>
         </div>
 
-        <div className='flex flex-row space-x-3 md:flex-col md:mt-10 md:space-x-0'>
+        {/* Adjust the flex container to wrap items on smaller screens */}
+        <div className='flex flex-wrap justify-center md:flex-col md:mt-10 space-x-2 md:space-x-0 md:justify-start'>
           {links.map(({ path, text }) => (
             <Link
               key={path}
               href={path}
-              className={
+              className={`block ${
                 pathname === path ? 'text-gray-500' : 'hover:underline'
-              }
+              }`}
             >
               {text}
             </Link>
