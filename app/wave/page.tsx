@@ -2,16 +2,14 @@ import Image from 'next/image';
 
 const Wave = () => {
   return (
-    <div>
+    <div className='w-full'>
       <Image
         alt='wave'
         src='/images/wave.jpeg'
-        quality={100}
-        fill
-        sizes='100vw'
-        style={{
-          objectFit: 'cover',
-        }}
+        width={0}
+        height={0}
+        sizes='90vw'
+        style={{ width: '100%', height: 'auto' }}
       />
     </div>
   );
