@@ -5,7 +5,6 @@ import { Sidebar } from '../components/SideBar';
 import './globals.css';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Providers } from './providers';
-import ThemeSwitch from '../components/ThemeSwitch';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://bneo.xyz'),
