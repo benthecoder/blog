@@ -135,6 +135,11 @@ body {
   color: #fff;
 }
 
+mark {
+  background-color: #faec9b;
+  color: black;
+}
+
 .dark ::selection {
   background: #ff634b;
   color: #000;
