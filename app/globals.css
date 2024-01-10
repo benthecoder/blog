@@ -30,13 +30,21 @@ body {
   list-style: none;
 }
 
-.prose pre,
 .prose code {
-  background: #d1d0d0;
-  word-wrap: break-word;
-  box-decoration-break: clone;
-  padding: 0.1rem 0.3rem 0.2rem;
-  border-radius: 0.2rem;
+  background-color: #b3b3b3;
+  color: #050505;
+  padding: 0.2em 0.2em;
+  border-radius: 0.3em;
+  font-size: 0.85em;
+}
+
+.prose pre {
+  padding: 0;
+  border: none;
+}
+
+.prose pre code {
+  background-color: inherit;
 }
 
 .prose code::before {
@@ -45,11 +53,6 @@ body {
 
 .prose code::after {
   content: '';
-}
-
-.dark .prose code {
-  color: #ffffff;
-  background-color: #505050;
 }
 
 .prose ul li::before {
