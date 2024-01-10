@@ -17,6 +17,10 @@ body {
   color: #fff;
 }
 
+.prose strong {
+  font-weight: bolder;
+}
+
 .dark .prose strong {
   color: #93d2fd;
   font-weight: bold;
