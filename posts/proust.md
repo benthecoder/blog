@@ -33,9 +33,9 @@ Some notes and takeaways from reading this book, in quotes. I appreciated the fo
 ### Suffer Successfully
 
 - "Love is an incurable disease." In love, there is permanent suffering". Those who love and those who are happy are not the same"
-- pain is subjective: "we cannot allow ourselves to judge the legitimacy of another's pain simply on teh basis of the pain we would have suffered had we been similarly afflicted"
+- pain is subjective: "we cannot allow ourselves to judge the legitimacy of another's pain simply on the basis of the pain we would have suffered had we been similarly afflicted"
 - "feeling things (usually means feeling them painfully) is at some level linked to the acquisition of knowledge"
-  - "being jilted by a lover is a perfect introduction to teh mechanisms of emotional dependency"
+  - "being jilted by a lover is a perfect introduction to the mechanisms of emotional dependency"
 - "we don't really learn anything probably until there is a problem, until we are in pain, until something fails to go as we had hoped"
 - "we become properly inquisitive only wh ne distressed. We suffer, therefore we think, and we do so because thinking helps us to place pain in context. It helps us to understand its origins, plot its dimensions, and reconcile ourselves to its presence."
 - "we cannot be taught wisdom, we have to discover it for ourselves by a journey which no one can undertake for us, an effort which no one can spare us"
@@ -83,7 +83,7 @@ Some notes and takeaways from reading this book, in quotes. I appreciated the fo
 - "our sense of beauty was not immobile, and could be sensitized by painters, who would, through their canvases, inculcate in us an appreciation of once neglected aesthetic qualities"
 - "great painters possess such power to open our eyes because of the unusual receptivity of their own eyes to aspects of visual experience: the play of light on the end of a spoon, ..., pinkish tones on an old man's skin – qualities that can inspire our impressions of beauty"
 - happiness may emerge from taking a second look; our dissatisfactions may be the result of failing to look properly at our lives rather than the result of anything inherently deficient about them.
-- "it isn't his life that has been mediocre as much as teh image of it he possessed in memory" (images which preserve nothing of life)
+- "it isn't his life that has been mediocre as much as the image of it he possessed in memory" (images which preserve nothing of life)
 - "beauty is something to be found, rather than passively encountered, it requires us to pick up on certain details."
 - simple images provide certainties, ex: spending money makes you happier, aristocrats who are more educated and well-spoken have more class, that formal education, factual knowledge and university degree = intelligence
 
@@ -109,7 +109,7 @@ Some notes and takeaways from reading this book, in quotes. I appreciated the fo
 - all books can do is provide us with desires, "That is the value of reading, and also its inadequacy. To make it into a discipline is to give too large a role to what is only an incitement. Reading is on the threshold of the spiritual life; it can introduce us to it: it does not constitute it"
 - dangers of books "instead of awakening us to the personal life of the mind, reading tend to take its place, when the truth no longer appeals to us as an idea which we can realise only bt the intimate progress of our own thought and the efforts of our heart, but as something material, deposited between the leaves of books like honey fully prepared by others and which we only need to take the trouble to reach down from the shelves of libraries and then sample passively in a perfect repose of mind and body"
 - good books can silence people
-  - "his combination of the utmost sensibility with teh utmost tenacity. He searches out these butterfly shades to the last grain. He is as tough as catgut and as evanescent as a butterfly's bloom. And he will I suppose both influence me and make me out of temper with every sentence of my own"
+  - "his combination of the utmost sensibility with the utmost tenacity. He searches out these butterfly shades to the last grain. He is as tough as catgut and as evanescent as a butterfly's bloom. And he will I suppose both influence me and make me out of temper with every sentence of my own"
   - "So sick of Orlando I can write nothing" - Virginia Woolf
 - "artistic idolaters combined literal reverence for objects depicted in art with a neglect for the spirit of art" - "a picture's beauty does not depend on the things portrayed in it"
 - "look at our world through his eyes, not to look at his world through our eyes"
