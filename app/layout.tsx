@@ -49,7 +49,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang='en' className={`${averia.variable} font-serif`}>
+    <html
+      suppressHydrationWarning
+      lang='en'
+      className={`${averia.variable} font-serif`}
+    >
       <body className='flex flex-col mb-40 mx-2 md:mx-10 md:flex-row md:items-start md:mt-10 dark:bg-black'>
         <Providers>
           <Sidebar />
