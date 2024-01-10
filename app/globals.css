@@ -18,7 +18,7 @@ body {
 }
 
 .dark .prose strong {
-  color: #f8f8f2;
+  color: #93d2fd;
   font-weight: bold;
 }
 
@@ -72,6 +72,10 @@ body {
 
 .prose a:hover {
   color: #d70a1b;
+}
+
+.dark .prose a:hover {
+  color: #ff959e;
 }
 
 .prose h1 {
@@ -141,7 +145,7 @@ mark {
 }
 
 .dark ::selection {
-  background: #ff634b;
+  background: #93d2fd;
   color: #000;
 }
 
