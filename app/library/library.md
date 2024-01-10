@@ -57,5 +57,3 @@
 ## Insightful Videos
 
 - [LEADERSHIP LAB: The Craft of Writing Effectively](https://www.youtube.com/watch?app=desktop&v=vtIzMaLkCaM)
-
-## Blogroll
