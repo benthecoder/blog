@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import rehypeRaw from 'rehype-raw';
 import Image from 'next/image';
 
@@ -11,10 +11,10 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
       const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (
         <SyntaxHighlighter
-          style={vscDarkPlus}
+          style={dracula}
           language={match[1]}
+          customStyle={{ border: 'none' }}
           PreTag='div'
-          className='rounded dark:text-white'
           {...props}
         >
           {String(children).replace(/\n$/, '')}
