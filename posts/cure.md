@@ -6,17 +6,17 @@ date: 'Jan 11, 2024'
 
 Today, I visited the third specialist for my condition.
 
-The prior two times I did were to validate my condition, I did endoscopes. The first one didn't catch anything, it only confirmed I had GERD. The second showed something more, it gave me more information to work with. It said I have a hiatal hernia Hill III.
+The prior two specialists validated my condition. I two did endoscopes. The first one didn't catch anything, it only confirmed I had GERD. The second showed something more, it gave me more information to work with. It said I have a hiatal hernia Hill III.
 
 I was generating questions in the car with ChatGPT on my iPhone. So that I'm utilizing every second I have with him for the consultation, which later on I discovered costs RM 250 for just 15 min of his time.
 
-Being in a hospital again feels familiar now, when I was growing up I remember joking and being glad that I never had any serious health issues that required me to admit to hospitals. Oh how I was that could still be true.
+Being in a hospital again feels familiar now, when I was growing up I remember joking and being glad that I never had any serious health issues that required me to admit to hospitals. Oh how I wish that could still be true.
 
 After taking the measurements for my health records, I was asked to wait for the doctor outside. A nurse then said that he was to perform a scope, so I had to wait 45 minutes more.
 
 I went out to the courtyard to catch a breath. I forget Malaysia's weather was humid, I miss the weather in the US.
 
-I joked to my mom, people come back from overseas to travel, eat good food, and see old friends. My first visit was to a hospital, to see a doctor, but the bright side is I did get to eat good food after that.
+I joked to my mom, people come back from overseas to travel, eat good food, and see old friends. My first visit was to a hospital, to see a new doctor, but the bright side is I did get to eat good food after that.
 
 I was pacing myself around the courtyard, my thoughts mind kept oscillating between fear and gratitude, and I find myself internalizing the words "it's going to be okay Ben, be grateful that you even get the chance to fix this, that your dad can pay for this, imagine if you were poor and you had this disease, that's even more unfortunate, stop comparing unhealthy you and healthy others." I also took some photos because it was a nice courtyard, with a koi fish pond.
 
