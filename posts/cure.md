@@ -6,7 +6,7 @@ date: 'Jan 11, 2024'
 
 Today, I visited the third specialist for my condition.
 
-The prior two specialists validated my condition. I two did endoscopes. The first one didn't catch anything, it only confirmed I had GERD. The second showed something more, it gave me more information to work with. It said I have a hiatal hernia Hill III.
+The prior two specialists validated my condition. I did two endoscopes. The first one didn't catch anything, it only confirmed I had GERD. The second showed something more, it gave me more information to work with. It said I have a hiatal hernia Hill III.
 
 I was generating questions in the car with ChatGPT on my iPhone. So that I'm utilizing every second I have with him for the consultation, which later on I discovered costs RM 250 for just 15 min of his time.
 
