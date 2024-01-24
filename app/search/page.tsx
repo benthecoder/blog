@@ -40,6 +40,8 @@ const SearchPosts: React.FC = () => {
 
     try {
       console.log('Submitting search query:', query); // Log the query
+      console.log('NEON Database URL:', process.env.NEON_DATABASE_URL);
+
       const response = await fetch('/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
