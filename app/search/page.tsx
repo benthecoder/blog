@@ -39,9 +39,7 @@ const SearchPosts: React.FC = () => {
     setIsLoading(true);
 
     try {
-      console.log('Submitting search query:', query); // Log the query
-      console.log('NEON Database URL:', process.env.NEXT_PUBLIC_DATABASE_URL);
-      console.log('OPENAI', process.env.OPENAI_API_KEY);
+      console.log('Submitting search query:', query);
 
       const response = await fetch('/api/search', {
         method: 'POST',
