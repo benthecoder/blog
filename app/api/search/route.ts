@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { generateEmbedding } from '../../../utils';
 
 neonConfig.fetchConnectionCache = true;
+export const runtime = 'edge';
 
 export async function POST(request: Request) {
   try {
@@ -38,11 +39,11 @@ export async function POST(request: Request) {
 
     const result = await sql(sqlQuery);
     return NextResponse.json({ data: result });
-  } catch (error) {
-    console.error('Error searching blog posts:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+  } catch (e: unknown) {
+    if (!(e instanceof Error)) {
+      throw e;
+    }
+
+    return NextResponse.json({ error: e.message || '' }, { status: 500 });
   }
 }

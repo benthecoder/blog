@@ -26,7 +26,6 @@
     "ai": "^2.1.22",
     "axios": "^1.6.5",
     "crypto": "^1.0.1",
-    "dotenv": "^16.4.0",
     "eventsource-parser": "^1.0.0",
     "gray-matter": "^4.0.3",
     "jsdom": "^21.1.1",
