@@ -5,14 +5,14 @@ import { generateEmbedding } from '../../../utils';
 
 neonConfig.fetchConnectionCache = true;
 
-const sql = neon(process.env.NEON_DATABASE_URL!);
-
 export async function POST(request: Request) {
   try {
+    const sql = neon(process.env.NEON_DATABASE_URL!);
+
     const body = await request.json();
 
     const schema = z.object({
-      query: z.string().min(1, 'Query must be at least 5 character long.'),
+      query: z.string().min(4, 'Query must be at least 4 character long.'),
     });
 
     const validated = schema.safeParse(body);
