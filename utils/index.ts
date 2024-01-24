@@ -29,13 +29,17 @@ export const generateEmbedding = async (prompt: string) => {
     }
 
     return embeddings.data[0].embedding;
-  } catch (error) {
+  } catch (error: unknown) {
     // Log the error message and stack trace
-    console.error(
-      'Error during embedding generation:',
-      error.message,
-      error.stack
-    );
-    throw error; // Re-throw the error to be handled by the caller
+    if (error instanceof Error) {
+      console.error(
+        'Error during embedding generation:',
+        error.message,
+        error.stack
+      );
+    } else {
+      console.error('An unknown error occurred during search:', error);
+    }
+    throw error;
   }
 };
