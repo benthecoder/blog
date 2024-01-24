@@ -47,19 +47,22 @@ const SearchPosts: React.FC = () => {
         body: JSON.stringify({ query }),
       });
 
-      console.log('Response status:', response.status); // Log response status
-
       if (response.ok) {
         const data = await response.json();
-        console.log('Search results:', data); // Log search results
+        console.log(`Search results: ${data.data.length} posts found`, data);
         setResults(data.data);
       } else {
-        console.error('Search failed with status:', response.status); // Log error with status
-        const errorText = await response.text();
-        console.error('Error response body:', errorText); // Log error response body
+        let errorText = await response.text();
+        console.error(
+          `Search failed with status: ${response.status}, error response body: ${errorText}`
+        );
       }
-    } catch (error) {
-      console.error('Error during search:', error); // Log catched error
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Error during search:', error.message, error.stack);
+      } else {
+        console.error('An unknown error occurred during search:', error);
+      }
     } finally {
       setIsLoading(false);
     }
