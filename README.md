@@ -80,7 +80,32 @@ CREATE TABLE tweets (
 );
 ```
 
-## Setting up Supabase for embedding search
+## Setting up Neon for embedding search
+
+Create pgvector extension
+
+```sql
+CREATE EXTENSION vector;
+```
+
+```sql
+CREATE TABLE blog_posts (
+  id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  date TIMESTAMP NOT NULL,
+  tags TEXT,
+  wordcount INTEGER,
+  content TEXT,
+  embedding VECTOR(1536)
+);
+```
+
+Run generate embeddings
+
+```bash
+npm run generate:embeddings
+```
 
 - [pgvector: Embeddings and vector similarity | Supabase Docs](https://supabase.com/docs/guides/database/extensions/pgvector?database-method=dashboard)
 - [supabase-community/nextjs-openai-doc-search: Template for building your own custom ChatGPT style doc search powered by Next.js, OpenAI, and Supabase.](https://github.com/supabase-community/nextjs-openai-doc-search)
