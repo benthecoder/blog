@@ -1,21 +1,16 @@
-import axios from 'axios';
-import 'dotenv/config';
+export const generateEmbedding = async (prompt: string) => {
+  const res = await fetch('https://api.openai.com/v1/embeddings', {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    method: 'POST',
+    body: JSON.stringify({
+      model: 'text-embedding-ada-002',
+      input: prompt,
+    }),
+  });
+  const embeddings = await res.json();
 
-export async function generateEmbedding(text: string): Promise<number[]> {
-  try {
-    const response = await axios.post(
-      'https://api.openai.com/v1/embeddings',
-      { input: text, model: 'text-embedding-ada-002' },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    return response.data.data[0].embedding;
-  } catch (error) {
-    console.error('Error generating embedding:', error);
-    throw error;
-  }
-}
+  return embeddings.data[0].embedding;
+};
