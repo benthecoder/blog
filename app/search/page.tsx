@@ -16,7 +16,7 @@ const LoadingComponent: React.FC = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setLoadingText((prev) => prev + '🌊 ');
-    }, 200);
+    }, 777);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -39,23 +39,26 @@ const SearchPosts: React.FC = () => {
     setIsLoading(true);
 
     try {
+      console.log('Submitting search query:', query); // Log the query
       const response = await fetch('/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query }),
       });
 
+      console.log('Response status:', response.status); // Log response status
+
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        console.log('Search results:', data); // Log search results
         setResults(data.data);
       } else {
-        // show error message
-        console.log(response.status);
-        console.error('Search failed');
+        console.error('Search failed with status:', response.status); // Log error with status
+        const errorText = await response.text();
+        console.error('Error response body:', errorText); // Log error response body
       }
     } catch (error) {
-      console.error('Error during search:', error);
+      console.error('Error during search:', error); // Log catched error
     } finally {
       setIsLoading(false);
     }
