@@ -5,7 +5,7 @@ import getPostContent from '../utils/getPostContent';
 import { generateEmbedding } from '../utils';
 
 const client = new Client({
-  connectionString: process.env.NEON_DATABASE_URL,
+  connectionString: process.env.NEXT_PUBLIC_DATABASE_URL,
 });
 
 export async function storePost(
