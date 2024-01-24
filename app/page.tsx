@@ -1,7 +1,7 @@
 import RenderPost from '../components/RenderPost';
 import Link from 'next/link';
-import getPostMetadata from '../components/getPostMetadata';
-import getPostContent from '../components/getPostContent';
+import getPostMetadata from '../utils/getPostMetadata';
+import getPostContent from '../utils/getPostContent';
 import Image from 'next/image';
 
 const HomePage = () => {

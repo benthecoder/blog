@@ -1,5 +1,5 @@
-import getPostContent from '../../../components/getPostContent';
-import getPostMetadata from '../../../components/getPostMetadata';
+import getPostContent from '../../../utils/getPostContent';
+import getPostMetadata from '../../../utils/getPostMetadata';
 import RenderPost from '../../../components/RenderPost';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
