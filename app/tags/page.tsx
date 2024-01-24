@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import getPostMetadata from '../../components/getPostMetadata';
+import getPostMetadata from '../../utils/getPostMetadata';
 
 const TagPage = () => {
   const postMetadata = getPostMetadata();
