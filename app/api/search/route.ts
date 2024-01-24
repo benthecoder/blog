@@ -9,8 +9,8 @@ export const runtime = 'edge';
 export async function POST(request: Request) {
   try {
     console.log('Received search request');
-    const sql = neon(process.env.NEON_DATABASE_URL!);
-    console.log('NEON Database URL:', process.env.NEON_DATABASE_URL);
+    const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL!);
+    console.log('NEON Database URL:', process.env.NEXT_PUBLIC_DATABASE_URL);
 
     const body = await request.json();
     console.log('Request body:', body);
