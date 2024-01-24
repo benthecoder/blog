@@ -2,11 +2,12 @@
 
 ## Books I want to read in 2024
 
-- How Proust Can Change Your Life (Alain de Botton) ✅
+- [How Proust Can Change Your Life](https://bneo.xyz/posts/proust) (Alain de Botton) ✅
+- Man's Search for meaning (Viktor Frankl)
+- Lean Startup (Eric Ries)
 - The Secret History (Donna Tartt)
 - The Conquest of Happiness (Bertrand Russell)
 - Germinal (Emile Zola)
-- Man's Search for meaning (Viktor Frankl)
 - The Socrates Express (Eric Weiner)
 - 2001: A Space Odyssey (Arthur Clarke)
 - Pnin (Nabakov)
