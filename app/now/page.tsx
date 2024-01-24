@@ -45,21 +45,17 @@ const AboutPage = () => {
             school in the Fall of 2024 (location TBD)
           </li>
           <li>
-            Writing about LLMs and AI on{' '}
-            <a href='https://benedictxneo.medium.com/'>Medium</a>
+            Starting <a href='https://lu.ma/luminarykl'>Luminary</a> in KL
           </li>
+          <li>Learning SwiftUI to build cool iOS apps</li>
           <li>
-            Learning C/C++ by building a{' '}
-            <a href='https://viewsourcecode.org/snaptoken/kilo/index.html'>
-              text editor
-            </a>
+            Learning <a href='https://github.com/benthecoder/AI'>AI</a> from
+            scratch
           </li>
-          <li>Learning SwiftUI to build a MacOS tool</li>
-          <li>Reading The Secret History by Donna Tartt</li>
-          <li>Trying to build a startup</li>
+          <li>Reading Man's Search for Meaning</li>
         </ul>
         <br></br>
-        <p>Last updated: Dec 21, 2023</p>
+        <p>Last updated: Jan 24, 2024</p>
       </article>
     </div>
   );
