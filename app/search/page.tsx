@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 interface Post {
@@ -9,6 +9,20 @@ interface Post {
   content: string;
   // Add other properties as needed
 }
+
+const LoadingComponent: React.FC = () => {
+  const [loadingText, setLoadingText] = useState('🌊 ');
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setLoadingText((prev) => prev + '🌊 ');
+    }, 200);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  return <p className='text-gray-600'>{loadingText}</p>;
+};
 
 const SearchPosts: React.FC = () => {
   const [query, setQuery] = useState<string>('');
@@ -33,8 +47,11 @@ const SearchPosts: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         setResults(data.data);
       } else {
+        // show error message
+        console.log(response.status);
         console.error('Search failed');
       }
     } catch (error) {
@@ -55,7 +72,7 @@ const SearchPosts: React.FC = () => {
         />
       </form>
 
-      {isLoading && <p className='text-gray-600'>crunching the numbers...</p>}
+      {isLoading && <LoadingComponent />}
 
       <div className='grid grid-cols-1'>
         {results.map((post) => (

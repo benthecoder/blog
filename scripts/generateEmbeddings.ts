@@ -3,7 +3,6 @@ import { PostMetadata } from '../components/PostMetadata';
 import getPostMetadata from '../utils/getPostMetadata';
 import getPostContent from '../utils/getPostContent';
 import { generateEmbedding } from '../utils';
-import 'dotenv/config';
 
 const client = new Client({
   connectionString: process.env.NEON_DATABASE_URL,
