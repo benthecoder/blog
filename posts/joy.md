@@ -13,10 +13,11 @@ date: 'Jan 23, 2024'
 - reading and buying second-hand books
 - finding something good while thrifting
 - watching a good movie
-- listening to music
+- listening to music (old and new)
+  - making and sharing playlists
 - listening to podcasts
 - worship & serving God
-- putting on face masks
+- putting on cold facial masks
 - visiting art museums
 - exploring new cities
 - sunrise and sunsets
