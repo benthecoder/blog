@@ -10,10 +10,8 @@ export async function POST(request: Request) {
   try {
     console.log('Received search request');
     const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL!);
-    console.log('NEON Database URL:', process.env.NEXT_PUBLIC_DATABASE_URL);
 
     const body = await request.json();
-    console.log('Request body:', body);
 
     const schema = z.object({
       query: z.string().min(4, 'Query must be at least 4 character long.'),
@@ -31,9 +29,7 @@ export async function POST(request: Request) {
     }
 
     const { query } = validated.data;
-    console.log('Search query:', query);
     const embedding = await generateEmbedding(query);
-    console.log('Generated embedding:', embedding);
 
     const sqlQuery = `
       SELECT title, slug, date, tags, wordcount, content
@@ -43,7 +39,7 @@ export async function POST(request: Request) {
     `;
 
     const result = await sql(sqlQuery);
-    console.log('SQL query result:', result);
+
     return NextResponse.json({ data: result });
   } catch (e: unknown) {
     if (!(e instanceof Error)) {
