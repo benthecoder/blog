@@ -7,10 +7,11 @@ function Sketches() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const imageList: string[] = [
+    '/images/hummingbird.png',
+    '/images/christ.png',
     '/images/room.png',
     '/images/wave.png',
     '/images/howl.png',
-    '/images/christ.png',
     '/images/angel.png',
   ];
   const openModal = (imageSrc: string) => {
