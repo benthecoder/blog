@@ -13,6 +13,7 @@ Some websites I've found where you can download/discover art.
 Discover & Learn
 
 - [Google Arts & Culture](https://artsandculture.google.com/)
+- [WikiArt.org - Visual Art Encyclopedia](https://www.wikiart.org/)
 - [Art UK](https://artuk.org/)
 - [The Art Story](https://www.theartstory.org/)
 
