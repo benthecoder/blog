@@ -35,15 +35,16 @@ export async function GET(req: NextRequest) {
         const url = `${
           process.env.NEXT_PUBLIC_ROOT_URL
         }/posts/${page.filePath.replace('.md', '')}`;
-        const contentHTML = marked(page.content);
+        const contentHTML = marked(page.content); // Assumes marked does not encode HTML entities
+        const pubDate = new Date(page.data.date).toUTCString();
 
         return `<item>
-        <title><![CDATA[${escapeXml(page.data.title)}]]></title>
-        <link>${url}</link>
-        <guid>${url}</guid>
-        <pubDate>${page.data.date}</pubDate>
-        <description><![CDATA[${escapeXml(contentHTML)}]]></description>
-      </item>`;
+          <title><![CDATA[${page.data.title}]]></title>
+          <link>${url}</link>
+          <guid>${url}</guid>
+          <pubDate>${pubDate}</pubDate>
+          <description><![CDATA[${contentHTML}]]></description>
+        </item>`;
       })
       .join('');
 
