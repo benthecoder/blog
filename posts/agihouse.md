@@ -46,12 +46,11 @@ Here's a list of projects from the demo:
 - [Syntopica](https://vimeo.com/847680048?share=copy), [GitHub](https://github.com/Adityarai10101/readerProject): Chrome extension for personalized website summaries with Notion references
 - [Near me - a leisure agent](https://github.com/davidvi/near-me): Create a knowledge graph from a book and reader notes metadata. Link together the topics
 - [CampAIgn](https://github.com/gltanaka/donation_agent): The AI agent-powered political funding pipeline
-- [Lumos](https://github.com/Sivolc2/auto_wing_hacks): not_provided
+- [Lumos](https://github.com/Sivolc2/auto_wing_hacks)
 - [Relay](https://github.com/tmc/the-AIvengers), [Design](https://www.canva.com/design/DAFpadasi_8/3Y9Qy7EJt_aFjmalD-Sbbw/edit?utm_content=DAFpadasi_8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton): Multi-agent Product Development Teams
-- [Moonshot-Stock](not_provided): Agent for stock-trading
-- [Mr. Beast Bot](not_provided): not_provided
+- Moonshot-Stock: Agent for stock-trading
 - [Enhanced Tree-of-Thought Reasoning Agent](https://github.com/sockcymbal/enhanced-llm-reasoning-tree-of-thoughts), [Twitter](https://twitter.com/sockcymbal/status/1682594125273796609): Enhanced Tree-of-Thought reasoning agent. Implementing this technique.
-- [Domain Agent](not_provided): An agent that finds better domains + brands for you because GoDaddy sucks
+- Domain Agent: An agent that finds better domains + brands for you because GoDaddy sucks
 - [Create Your Own Food (dataset) for Your Own AI](https://github.com/QingyunSun/Create-your-Own-Dataset-AutoML/tree/main), [Presentation](https://docs.google.com/presentation/d/1SjkkemUhfUE1MJoW0emCATsmDwzS6I6K6X0i09sn3_E/edit?usp=sharing): Create Your Own Food (dataset) for Your Own Vertical AI to Be fine-tuned
 - [SyncMate](https://github.com/hamnaanaa/AGI-House-autonomous-agents-SyncMate): slack bot that autonomously collects the slack chats and publicly available digital footprint to prep for the upcoming meeting or even initiate chats with a person of interest.
-- [FormBlaster 🔫](not_provided): We help you fill more forms than you could.
+- FormBlaster 🔫: We help you fill more forms than you could.
