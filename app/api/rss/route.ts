@@ -30,7 +30,9 @@ const escapeXml = (unsafe: string) =>
 
 export async function GET(req: NextRequest) {
   try {
-    const rootUrl = process.env.NEXT_PUBLIC_ROOT_URL || 'https://bneo.xyz'; // Ensure this environment variable is set
+    const rootUrl = process.env.NEXT_PUBLIC_ROOT_URL;
+    const feedPath = '/rss.xml'; // Correct path to your feed
+    const feedUrl = `${rootUrl}${feedPath}`; // The full URL to your feed
 
     const postItems = feed
       .map((page: BlogPost) => {
@@ -46,30 +48,28 @@ export async function GET(req: NextRequest) {
         const pubDate = new Date(page.data.date).toUTCString();
 
         return `<item>
-          <title><![CDATA[${page.data.title}]]></title>
-          <link>${url}</link>
-          <guid>${url}</guid>
-          <pubDate>${pubDate}</pubDate>
-          <description><![CDATA[${contentHTML}]]></description>
-        </item>`;
+        <title><![CDATA[${page.data.title}]]></title>
+        <link>${url}</link>
+        <guid>${url}</guid>
+        <pubDate>${pubDate}</pubDate>
+        <description><![CDATA[${contentHTML}]]></description>
+      </item>`;
       })
       .join('');
 
-    const feedUrl = `${rootUrl}/feed.xml`; // The URL where your feed is accessible
-
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-      <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-        <channel>
-          <title>${metadata.title}</title>
-          <description>${metadata.description}</description>
-          <link>${metadata.link}</link>
-          <atom:link href="${feedUrl}" rel="self" type="application/rss+xml" />
-          <lastBuildDate>${new Date(
-            feed[0].data.date
-          ).toUTCString()}</lastBuildDate>
-          ${postItems}
-        </channel>
-      </rss>`;
+    <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+      <channel>
+        <title>${metadata.title}</title>
+        <description>${metadata.description}</description>
+        <link>${rootUrl}</link>
+        <atom:link href="${feedUrl}" rel="self" type="application/rss+xml" />
+        <lastBuildDate>${new Date(
+          feed[0].data.date
+        ).toUTCString()}</lastBuildDate>
+        ${postItems}
+      </channel>
+    </rss>`;
 
     const res = new NextResponse(sitemap, {
       headers: { 'Content-Type': 'text/xml' },
