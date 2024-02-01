@@ -35,10 +35,7 @@ export async function GET(req: NextRequest) {
         const url = `${
           process.env.NEXT_PUBLIC_ROOT_URL
         }/posts/${page.filePath.replace('.md', '')}`;
-        const contentHTML = marked.parse(page.content, {
-          headerIds: false,
-          mangle: false,
-        });
+        const contentHTML = marked(page.content);
 
         return `<item>
         <title><![CDATA[${escapeXml(page.data.title)}]]></title>
@@ -51,25 +48,28 @@ export async function GET(req: NextRequest) {
       .join('');
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-    <rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <rss version="2.0">
       <channel>
       <title>${metadata.title}</title>
       <description>${metadata.description}</description>
       <link>${metadata.link}</link>
-      <lastBuildDate>${feed[0].data.date}</lastBuildDate>
+      <lastBuildDate>${new Date(
+        feed[0].data.date
+      ).toUTCString()}</lastBuildDate>
       ${postItems}
       </channel>
-      </rss>`;
+    </rss>`;
 
-    const res = new NextResponse(sitemap);
-    res.headers.set('Content-Type', 'text/xml');
+    const res = new NextResponse(sitemap, {
+      headers: { 'Content-Type': 'text/xml' },
+    });
 
     return res;
-  } catch (e: unknown) {
-    if (!(e instanceof Error)) {
-      throw e;
-    }
-
-    return NextResponse.json({ error: e.message || '' }, { status: 500 });
+  } catch (e) {
+    return new NextResponse(null, {
+      status: 500,
+      statusText: 'Internal Server Error',
+      headers: { 'Content-Type': 'text/plain' },
+    });
   }
 }
