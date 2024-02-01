@@ -4,7 +4,7 @@ tags: 'ideas'
 date: 'Nov 25, 2023'
 ---
 
-Derek Sivers [shares](://sive.rs/relax) how he would go full-on, 100 percent, all-out for his bike rides, trying to beat his 43 minute mark.
+Derek Sivers [shares](https://sive.rs/relax) how he would go full-on, 100 percent, all-out for his bike rides, trying to beat his 43 minute mark.
 
 But one day he decided to chill, look around, looking at dolphins and pelicans, and noticed that the time was 45 minutes.
 
