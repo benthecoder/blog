@@ -3,8 +3,10 @@
 ## Books I want to read in 2024
 
 - [How Proust Can Change Your Life](https://bneo.xyz/posts/proust) (Alain de Botton) ✅
-- Man's Search for meaning (Viktor Frankl)
+- [Man's Search for meaning](https://www.bneo.xyz/posts/meaning) (Viktor Frankl) ✅
+- [The Elements of Style, Fourth Edition](https://www.bneo.xyz/posts/elementsofstyle) (Willian Strunk) ✅
 - Lean Startup (Eric Ries)
+- Zero to One (Peter Thiel)
 - The Secret History (Donna Tartt)
 - The Conquest of Happiness (Bertrand Russell)
 - Germinal (Emile Zola)
