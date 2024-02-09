@@ -1,6 +1,6 @@
 ---
 title: 'YouTube Archive'
-tags: 'listicle'
+tags: 'listicles'
 date: 'Feb 8, 2024'
 ---
 
@@ -59,3 +59,7 @@ A list of YouTube videos that I want to archive away in a dusty box in the attic
 
 - [Making Sense of God: An Invitation to the Skeptical | Tim Keller](https://www.youtube.com/watch?v=4uIvOniW8xA&t=162s)
 - [The Reason for God | Tim Keller](https://www.youtube.com/watch?v=Kxup3OS5ZhQ&t=492s)
+
+### Writing
+
+- [LEADERSHIP LAB: The Craft of Writing Effectively](https://www.youtube.com/watch&v=vtIzMaLkCaM)
