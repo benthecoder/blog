@@ -5,8 +5,9 @@
 - [How Proust Can Change Your Life](https://bneo.xyz/posts/proust) (Alain de Botton) ✅
 - [Man's Search for meaning](https://www.bneo.xyz/posts/meaning) (Viktor Frankl) ✅
 - [The Elements of Style, Fourth Edition](https://www.bneo.xyz/posts/elementsofstyle) (Willian Strunk) ✅
-- Lean Startup (Eric Ries)
+- [Letters to a Young Poet](https://www.bneo.xyz/posts/rilkeletters) (Rainer Maria Rilke) ✅
 - Zero to One (Peter Thiel)
+- Lean Startup (Eric Ries)
 - The Secret History (Donna Tartt)
 - The Conquest of Happiness (Bertrand Russell)
 - Germinal (Emile Zola)
@@ -50,13 +51,3 @@
 - [How to Do Great Work](http://paulgraham.com/greatwork.html)
 - [Ancient Rivers of Money](https://www.ribbonfarm.com/2010/11/05/ancient-rivers-of-money/)
 - [How to Pick a Career (That Actually Fits You) — Wait But Why](https://waitbutwhy.com/2018/04/picking-career.html)
-
-## Influential Papers
-
-- [The Netflix Recommender System](https://dl.acm.org/doi/pdf/10.1145/2843948)
-- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-- [XGBoost: A Scalable Tree Boosting System](https://arxiv.org/abs/1603.02754)
-
-## Insightful Videos
-
-- [LEADERSHIP LAB: The Craft of Writing Effectively](https://www.youtube.com/watch?app=desktop&v=vtIzMaLkCaM)
