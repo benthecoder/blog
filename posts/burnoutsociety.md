@@ -6,19 +6,29 @@ date: 'Feb 11, 2024'
 
 ![A Sunday on La Grande Jatte, Georges Seurat, 1884](/images/la_grande_jatte.jpg)
 
----
-
 > They are too alive to die, and too dead to live
 
 I finished reading this book sitting on a red, plastic chair at my aunt's house in Port Dickson, the town where my parents were born and raised. There's a Buddhist shrine to my left occupying most of the living room, Chinese New Year cookies neatly arranged in cylindrical containers with red caps were scattered across the coffee tables; my other cousins were in the room, still too young to understand what burnout is. Red packets were distributed today. It was a dangerously hot day, I was melting. The AC kept my body, and my mind calm.
 
 I learned about [The Burnout Society](https://www.goodreads.com/book/show/25490360-the-burnout-society?ref=nav_sb_ss_5_7) while watching a video on the [Overthink podcast](https://www.youtube.com/watch?v=_qikrYBd4tw) channel. I was intrigued by the ideas discussed by Prof. Ellie and felt impelled to read it. It also helped that it's only 60 pages long. I love reading short books.
 
-It was difficult to finish this book, a large portion of the book involved referencing other philosophical work, but later refutes its claims by providing counterarguments. It was also obfuscated with abstractions that made it to appreciate the ideas behind it, especially towards the end of the book.
+This was my first philosophical reading, so quickly got lost reading this book, especially towards the end. A large portion of the book involved referencing other philosophical work, with jargons like the Self as positive and the Other as negative, Homo Sacer, Ego and Superego, Vita Activa and Vita Contemplita, etc.
 
-Nonetheless, there were ideas that made me doubt my life philosophy and reorient my way of living. The constant thirst for achievement, for optimizing productivity, for maximizing time for "important" work. I've become a self-exploiting achievement-subject in an achievement society.
+Nonetheless, there were ideas in this book that made me doubt my life philosophy and shook me out of my current my way of living.
 
-For now, these are just quotes extracted from the book. I plan to generate and reshape these into my own words, my way of taking ownership of these ideas. To live in these ideas, to turn them into habit, into second nature.
+I was relentlessly pushing for achievement, constantly thirsting for productivity, for self-optimizing time and energy to maximize output, trying to complete (everything) now instead of later. This made me restless, I felt like I always had to be doing something. I felt an intense pressure to achieve. I fundamentally believed this was a necessary trait to be successful, if you're always doing, building, creating, that means you create more opportunities for your future self, and live a better (future) life. But I never realized I wasn't living the now, the present moment, the little things that make up my life. I was a self-exploiting achievement-subject in an achievement society.
+
+My biggest lesson from the book is **we lack the power not-to do something**. We're driven to always be doing, doing, doing. We yield to every stimulus and desire, we fill up the quiet moments of our lives with noise and activity, destroying any opportunity for deep contemplation, idleness and boredom. We deny ourselves freedom, action, and creativity. We've become exhausted animals who can do nothing but toil for mere survival. We are simultaneously perpetrator and victim, the master and the slave.
+
+We need to make more time to be [doing nothing](https://medium.com/@the_jennitaur/how-to-do-nothing-57e100f59bbb), and practice the ability to not-do. That means resisting the urge to escape boredom and reach for the stimulation of our devices; sit with the feeling of boredom, make friends with it, and it will show you the hidden secrets behind everything. We owe our cultural achievements to "deep boredom", which Walter Benjamin describes as a "dream bird that hatches the egg of experience".
+
+This ability to not-do leads to a contemplative life - [vita contemplativa](https://the-philosophers-shirt.com/blogs/philosophical-dictionary/vita-activa-versus-vita-contemplativa). Through contemplation, we marvel at the way things are. We step outside of ourselves, and immerse in the surroundings. What is fleeting and inconspicuous reveals itself to us. Without this contemplative composure, we find expression for nothing; and art is "expression action".
+
+Nietzsche knew that human life ends in deadly hyperactivity when very contemplative element is driven out.
+
+> "From lack of repose our civilization is turning into a new barbarism. At no time have the active, that is to say restless, counted for more. That is why one of the most necessary corrections to the character of mankind that have to be taken in hand is a **considerable strengthening of the contemplative element** in it."
+
+Below are quotes from the book I captured.
 
 ### excess positivity
 
@@ -62,7 +72,7 @@ For now, these are just quotes extracted from the book. I plan to generate and r
 - Cartesian doubt has taken the place of wonder
 - Whatever is floating, inconspicuous, or fleeting reveals itself only to deep, contemplative attention.
 - in a contemplative state, one steps outside oneself and immerses oneself in the surroundings
-- Paul Cezanne , master of deep, contemplative attention could "see the fragrance of things". His contemplative mode of observing a landscape as a kind of externalization or de-interiorization "The landscape thinks itself in me" "and I amn its consciousness"
+- Paul Cezanne, master of deep, contemplative attention could "see the fragrance of things". His contemplative mode of observing a landscape as a kind of externalization or de-interiorization "The landscape thinks itself in me" "and I amn its consciousness"
 - Without contemplative composure, the gaze errs restlessly and finds expression for nothing
 - art is "expressive action"
 - Nietzshe: human life ends in deadly hyperactivity when every contemplative element is driven out
