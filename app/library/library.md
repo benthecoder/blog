@@ -6,6 +6,7 @@
 - [Man's Search for meaning](https://www.bneo.xyz/posts/meaning) (Viktor Frankl) ✅
 - [The Elements of Style, Fourth Edition](https://www.bneo.xyz/posts/elementsofstyle) (Willian Strunk) ✅
 - [Letters to a Young Poet](https://www.bneo.xyz/posts/rilkeletters) (Rainer Maria Rilke) ✅
+- [Burnout Society](https://www.bneo.xyz/posts/burnoutsociety) (Byung-Chul Han) ✅
 - Zero to One (Peter Thiel)
 - Lean Startup (Eric Ries)
 - The Secret History (Donna Tartt)
