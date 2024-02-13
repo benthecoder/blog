@@ -16,9 +16,9 @@ I learned about [The Burnout Society](https://www.goodreads.com/book/show/254903
 
 It was difficult to finish this book, a large portion of the book involved referencing other philosophical work, but later refutes its claims by providing counterarguments. It was also obfuscated with abstractions that made it to appreciate the ideas behind it, especially towards the end of the book.
 
-Nonetheless, there were still important ideas and takeaways I want to capture and internalize.
+Nonetheless, there were ideas that made me doubt my life philosophy and reorient my way of living. The constant thirst for achievement, for optimizing productivity, for maximizing time for "important" work. I've become a self-exploiting achievement-subject in an achievement society.
 
-For now, these are just quotes extracted from the book. I plan to gene**rate and reshape these into my own words, my way of taking ownership of these ideas. To live in these ideas, to turn them into habit, into second nature.**
+For now, these are just quotes extracted from the book. I plan to generate and reshape these into my own words, my way of taking ownership of these ideas. To live in these ideas, to turn them into habit, into second nature.
 
 ### excess positivity
 
@@ -114,3 +114,10 @@ For now, these are just quotes extracted from the book. I plan to gene**rate and
 - Concern about living the good life yields to hysteria of surviving
 - The reduction of life to biological, vital processes makes life itself bare and strips it of all narrativity. It takes livingness from life, which is more complex than simple vitality and health.
 - Given the atonmization of society and the erosion of the social, all that remains is the body of the ego, which is to be kept healthy at any cost. The loss of ideal values leaves, other than the exhibition value of the ego, only health value behind. Nietzsche's last nam declares Health is the new goddess after the death of God "one honors health. "We invented happiness" say the last human beings, and they link"
+
+## Blogs covering this book
+
+- [The Burnout Society | A Working Library](https://aworkinglibrary.com/reading/burnout-society)
+- [The Burnout Society - by aj - Apposition](https://apposition.substack.com/p/the-burnout-society)
+- [Byung-Chul Han’s Burnout Society: Our Only Imperative is to Achieve | Philosophy Break](https://philosophybreak.com/articles/byung-chul-han-burnout-society-our-only-imperative-is-to-achieve/)
+- [Book: The Burnout Society by Byung-Chul Han — nutcroft](https://nutcroft.com/blog/book-the-burnout-society-by-byung-chul-han/)
