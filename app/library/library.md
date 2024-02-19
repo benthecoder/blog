@@ -2,12 +2,13 @@
 
 ## Books I want to read in 2024
 
-- [How Proust Can Change Your Life](https://bneo.xyz/posts/proust) (Alain de Botton) ✅
-- [Man's Search for meaning](https://www.bneo.xyz/posts/meaning) (Viktor Frankl) ✅
-- [The Elements of Style, Fourth Edition](https://www.bneo.xyz/posts/elementsofstyle) (Willian Strunk) ✅
-- [Letters to a Young Poet](https://www.bneo.xyz/posts/rilkeletters) (Rainer Maria Rilke) ✅
-- [Burnout Society](https://www.bneo.xyz/posts/burnoutsociety) (Byung-Chul Han) ✅
-- Zero to One (Peter Thiel)
+- [How Proust Can Change Your Life](/posts/proust) (Alain de Botton) ✅
+- [Man's Search for meaning](/posts/meaning) (Viktor Frankl) ✅
+- [The Elements of Style, Fourth Edition](/posts/elementsofstyle) (Willian Strunk) ✅
+- [Letters to a Young Poet](/posts/rilkeletters) (Rainer Maria Rilke) ✅
+- [Burnout Society](/posts/burnoutsociety) (Byung-Chul Han) ✅
+- [Zero to One](/posts/0to1) (Peter Thiel) ✅
+- Funny Weather: Art in an Emergency (Olivia Laing)
 - Lean Startup (Eric Ries)
 - The Secret History (Donna Tartt)
 - The Conquest of Happiness (Bertrand Russell)
