@@ -1,0 +1,15 @@
+---
+title: 'Live in the Present'
+tags: 'life'
+date: 'Feb 19, 2024'
+---
+
+![Luncheon of the Boating Party Painting by Pierre-Auguste Renoir](/images/party.jpg)
+
+I had a hard time [living in the present](https://x.com/benxneo/status/1759366170409570759?s=20) ever since coming back. The past was penetrating my present, gripping me tightly, refusing to let go. I was missing friends and other little objects and experiences that, together, shaped the narrative of my life for the past 2 years in the US. I couldn't appreciate the [little joys](http://bneo.xyz/posts/littlejoys) around me, the love of my family, even the treatments that I am receiving that is actually making my life better. I kept telling myself that my life in the US was better, but I realized [I couldn't trust that voice](http://bneo.xyz/posts/feelgood). It was not rational or logical. I was watching a movie playing in my head that wasn't real. I am not my thoughts. Recently, after meeting up with friends and spending more quality time with my family, I'm more in the present. I feel more grounded. I was drifting and weightless, but now I can feel the ground on under my feet.
+
+Virginia Woolf writes about the [slippery fluidity of past and present](https://www.themarginalian.org/2015/10/05/virginia-woolf-past-present-moments-of-being/) in one of her diary entries in [Moments of Being](https://www.goodreads.com/book/show/60885336-moments-of-being?from_search=true&from_srp=true&qid=1JwjzGB1yZ&rank=1).
+
+> The past only comes back when the present runs so smoothly that it is like the sliding surface of a deep river. Then one sees through the surface to the depths. In those moments I find one of my greatest satisfactions, not that I am thinking of the past; but that it is then that I am living most fully in the present. For the present when backed by the past is a thousand times deeper than the present when it presses so close that you can feel nothing else, when the film on the camera reaches only the eye. But to feel the present sliding over the depths of the past, peace is necessary. The present must be smooth, habitual. For this reason — that it destroys the fullness of life — any break causes me extreme distress; it breaks; it shallows; it turns the depth into hard thin splinters… I write this partly in order to recover my sense of the present by getting the past to shadow this broken surface. Let me then, like a child advancing with bare feet into a cold river, descend again into the stream.
+
+The awareness of past can add great depths and richness to the current present when we're at peace, when it flows smoothly like a river. If this smoothness is broken, when we're overwhelmed by immediate concerns and distractions, the river shallows. Our deep, meaningful engagement with life, enriched by layers and experiences of the past is lost. When this happens, we must approach the present with the openness and curiosity of a child stepping into a river, and immerse ourselves in the stream of life once again.
