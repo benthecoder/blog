@@ -40,22 +40,28 @@ const AboutPage = () => {
           This is a <a href='https://sive.rs/nowff'>now</a> page
         </p>
         <ul className='list-disc'>
-          <li>
-            Recently graduated from Iowa State University, going back grad
-            school in the Fall of 2024 (location TBD)
-          </li>
+          <li>graduated from Iowa State</li>
           <li>
             Starting <a href='https://lu.ma/luminarykl'>Luminary</a> in KL
           </li>
-          <li>Learning SwiftUI to build cool iOS apps</li>
+          <li>
+            Building{' '}
+            <a href='https://benneo.notion.site/project-ideas-63bc556d83a5405da1bcd89629da2a0e?pvs=4'>
+              cool iOS apps
+            </a>{' '}
+            with{' '}
+            <a href='https://twitter.com/benxneo/status/1743458106032488839'>
+              SwiftUI
+            </a>
+          </li>
           <li>
             Learning <a href='https://github.com/benthecoder/AI'>AI</a> from
             scratch
           </li>
-          <li>Reading Man's Search for Meaning</li>
+          <li>Reading Funny Weather: Art in an Emergency</li>
         </ul>
         <br></br>
-        <p>Last updated: Jan 24, 2024</p>
+        <p>Last updated: Feb 21, 2024</p>
       </article>
     </div>
   );
