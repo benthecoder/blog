@@ -1,6 +1,6 @@
 ---
 title: 'Internship Showcase'
-tags: 'personal'
+tags: 'journal'
 date: 'Aug 1, 2023'
 ---
 

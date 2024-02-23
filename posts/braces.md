@@ -1,6 +1,6 @@
 ---
 title: 'I got braces today'
-tags: 'personal'
+tags: 'journal'
 date: 'Feb 20, 2024'
 ---
 
