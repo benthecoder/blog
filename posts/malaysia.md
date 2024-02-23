@@ -1,6 +1,6 @@
 ---
 title: 'Why I Hate It Here'
-tags: 'personal'
+tags: 'journal'
 date: 'Feb 14, 2024'
 ---
 
