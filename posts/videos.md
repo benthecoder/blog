@@ -20,10 +20,12 @@ A list of YouTube videos that I want to archive away in a dusty box in the attic
 
 ### Movie Scenes
 
+- [:)](https://www.youtube.com/watch?v=M5VXCixTdEg)
 - [When did you know she was the one for you? (Good Will Hunting)](https://www.youtube.com/watch?v=8SxE_NfUX6w)
 - [Good Will Hunting | 'Your Move Chief'](https://www.youtube.com/watch?v=oRG2jlQWCsY)
 - [Sherlock Holmes Kills It With His "Best-Man Speech"](https://www.youtube.com/watch?v=xVVwNzx7elE)
 - [About Time - Happiness scene](https://www.youtube.com/watch?v=YVm8NnUzbXk)
+- [in another life...](https://www.youtube.com/watch?v=JjBYmLxmT_U)
 
 ### Artists
 
