@@ -75,11 +75,11 @@ Some quotes I like:
 
 The pressure and pain was travelling to my head so I started reading.
 
-The current book I'mr reading now is [Funny Weather: Art in an Emergency by Olivia Laing](https://www.goodreads.com/en/book/show/50755102)
+The current book I'm reading now is [Funny Weather: Art in an Emergency by Olivia Laing](https://www.goodreads.com/en/book/show/50755102)
 
 I liked this paragraph from the introduction.
 
-> We're so often told that aren't can't really change anything. But I think it can. It shapes our ethical landscapes; it opens us to the interior lives of others. It is a training ground for possibility. It makes plain inequalities, and it offers other ways of living.
+> We're so often told that art can't really change anything. But I think it can. It shapes our ethical landscapes; it opens us to the interior lives of others. It is a training ground for possibility. It makes plain inequalities, and it offers other ways of living.
 
 I also finished the chapter on [Jean Michel Basquiat](https://www.wikiart.org/en/jean-michel-basquiat/all-works#!/%23filterName:all-paintings-chronologically,resultType:masonry%23filterName:all-paintings-chronologically,resultType:masonry). It's interesting to read about his background, his rise to fame, the cultural and racism context behind his art, and his unfortunate end. I first discovered him from UNIQLO, I had a "Pez Dispenser" t-shirt that I really liked. The most surprising thing was how close he was with Andy Warhol. I didn't know they collaborated on over 140 paintings, and how Warhol's death accelerated the march to his own demise as well.
 
