@@ -46,48 +46,50 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
   };
 
   return (
-    <div
-      key={post.data.title}
-      className='border-black border-double border-4 p-4 bg-stone-50 dark:bg-gray-900 dark:border-white dark:text-gray-100'
-    >
-      {slug ? (
-        <Link href={`/posts/${slug}`} className='mr-0'>
+    <div>
+      <div
+        key={post.data.title}
+        className='border-black border-double border-4 p-4 bg-stone-50 dark:bg-gray-900 dark:border-white dark:text-gray-100'
+      >
+        {slug ? (
+          <Link href={`/posts/${slug}`} className='mr-0'>
+            <h2 className='font-bold text-2xl mb-12 text-center'>
+              {post.data.title}
+            </h2>
+          </Link>
+        ) : (
           <h2 className='font-bold text-2xl mb-12 text-center'>
             {post.data.title}
           </h2>
-        </Link>
-      ) : (
-        <h2 className='font-bold text-2xl mb-12 text-center'>
-          {post.data.title}
-        </h2>
-      )}
-      <article className='prose dark:text-white'>
-        <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]}>
-          {post.content}
-        </ReactMarkdown>
-      </article>
-      <div className='flex justify-between items-center mt-12'>
-        <div className='flex flex-wrap'>
-          {post.data.tags.split(', ').map((tag: any) => (
-            <Link
-              href={`/tags/${tag}`}
-              key={tag}
-              className='mr-2 px-1 py-0.5 border-2 bg-gray-200 border-black border-double hover:bg-black hover:text-white hover:border-white hover:border-2 dark:bg-gray-800 dark:text-white dark:hover:text-black dark:hover:bg-white dark:border-white'
-            >
-              #{tag}
-            </Link>
-          ))}
+        )}
+        <article className='prose dark:text-white'>
+          <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]}>
+            {post.content}
+          </ReactMarkdown>
+        </article>
+        <div className='flex justify-between items-center mt-12'>
+          <div className='flex flex-wrap'>
+            {post.data.tags.split(', ').map((tag: any) => (
+              <Link
+                href={`/tags/${tag}`}
+                key={tag}
+                className='mr-2 px-1 py-0.5 border-2 bg-gray-200 border-black border-double hover:bg-black hover:text-white hover:border-white hover:border-2 dark:bg-gray-800 dark:text-white dark:hover:text-black dark:hover:bg-white dark:border-white'
+              >
+                #{tag}
+              </Link>
+            ))}
+          </div>
+          <p className='text-gray-400'>
+            {new Date(post.data.date).toLocaleDateString()}
+          </p>
         </div>
-        <p className='text-gray-400'>
-          {new Date(post.data.date).toLocaleDateString()}
-        </p>
       </div>
       {next && (
-        <div className='mt-20 flex flex-col'>
+        <div className='mt-10 flex flex-col'>
           {next && (
             <div className='flex items-center'>
               <p className='text-gray-400'>Next:</p>
-              <Link href={`/posts/${next.slug}`} className='ml-1 underline'>
+              <Link href={`/posts/${next.slug}`} className='ml-2 underline'>
                 {next.title}
               </Link>
             </div>
@@ -95,7 +97,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
           {prev && (
             <div className='flex items-center'>
               <p className='text-gray-400'>Previous:</p>
-              <Link href={`/posts/${prev.slug}`} className='ml-1 underline'>
+              <Link href={`/posts/${prev.slug}`} className='ml-2 underline'>
                 {prev.title}
               </Link>
             </div>
