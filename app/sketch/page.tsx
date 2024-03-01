@@ -7,6 +7,7 @@ function Sketches() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const imageList: string[] = [
+    '/images/hokusai.png',
     '/images/hummingbird.png',
     '/images/christ.png',
     '/images/room.png',
