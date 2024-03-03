@@ -37,7 +37,7 @@ Some notes and takeaways from reading this book, in quotes. I appreciated the fo
 - "feeling things (usually means feeling them painfully) is at some level linked to the acquisition of knowledge"
   - "being jilted by a lover is a perfect introduction to the mechanisms of emotional dependency"
 - "we don't really learn anything probably until there is a problem, until we are in pain, until something fails to go as we had hoped"
-- "we become properly inquisitive only wh ne distressed. We suffer, therefore we think, and we do so because thinking helps us to place pain in context. It helps us to understand its origins, plot its dimensions, and reconcile ourselves to its presence."
+- "we become properly inquisitive only when distressed. We suffer, therefore we think, and we do so because thinking helps us to place pain in context. It helps us to understand its origins, plot its dimensions, and reconcile ourselves to its presence."
 - "we cannot be taught wisdom, we have to discover it for ourselves by a journey which no one can undertake for us, an effort which no one can spare us"
 - "... a relationship between the degree of pain a person experiences and the profundity of thought he or she may have as a result"
 - "It is grief which develops the strengths of the mind. These griefs put us through a form of mental gymnastics"
