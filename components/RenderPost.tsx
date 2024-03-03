@@ -49,20 +49,20 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
     <div>
       <div
         key={post.data.title}
-        className='border-black border-double border-4 p-4 bg-stone-50 dark:bg-gray-900 dark:border-white dark:text-gray-100'
+        className='border-black border-double border-4 p-3 bg-stone-50 dark:bg-gray-900 dark:border-white dark:text-gray-100'
       >
         {slug ? (
           <Link href={`/posts/${slug}`} className='mr-0'>
-            <h2 className='font-bold text-2xl mb-12 text-center'>
+            <h2 className='font-bold text-2xl mb-8 text-center'>
               {post.data.title}
             </h2>
           </Link>
         ) : (
-          <h2 className='font-bold text-2xl mb-12 text-center'>
+          <h2 className='font-bold text-lg md:text-2xl mb-8 text-center'>
             {post.data.title}
           </h2>
         )}
-        <article className='prose dark:text-white'>
+        <article className='prose dark:text-white text-sm  md:text-base'>
           <ReactMarkdown components={components} rehypePlugins={[rehypeRaw]}>
             {post.content}
           </ReactMarkdown>
@@ -73,19 +73,19 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
               <Link
                 href={`/tags/${tag}`}
                 key={tag}
-                className='mr-2 px-1 py-0.5 border-2 bg-gray-200 border-black border-double hover:bg-black hover:text-white hover:border-white hover:border-2 dark:bg-gray-800 dark:text-white dark:hover:text-black dark:hover:bg-white dark:border-white'
+                className='mr-2 px-1 py-0.5 border-2 bg-gray-200 text-sm md:text-base border-black border-double hover:bg-black hover:text-white hover:border-white hover:border-2 dark:bg-gray-800 dark:text-white dark:hover:text-black dark:hover:bg-white dark:border-white'
               >
                 #{tag}
               </Link>
             ))}
           </div>
-          <p className='text-gray-400'>
+          <p className='text-gray-400 text-sm  md:text-base'>
             {new Date(post.data.date).toLocaleDateString()}
           </p>
         </div>
       </div>
       {next && (
-        <div className='mt-10 flex flex-col'>
+        <div className='mt-10 flex flex-col text-sm  md:text-base'>
           {next && (
             <div className='flex items-center'>
               <p className='text-gray-400'>Next:</p>
