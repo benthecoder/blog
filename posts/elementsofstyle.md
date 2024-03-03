@@ -1,6 +1,6 @@
 ---
 title: 'The Elements Of Style'
-tags: 'book'
+tags: 'book, writing'
 date: 'Feb 1, 2024'
 ---
 
