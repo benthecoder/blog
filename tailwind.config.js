@@ -6,9 +6,6 @@ module.exports = {
       fontFamily: {
         serif: ['var(--font-averia)'],
       },
-      fontSize: {
-        xs: '0.22rem',
-      },
     },
   },
   plugins: [require('@tailwindcss/typography')],
