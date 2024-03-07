@@ -126,19 +126,10 @@ body {
   margin-bottom: 0;
   display: block;
   object-fit: cover;
-  border-radius: 0.5rem;
+  border-radius: 0.2rem;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  filter: grayscale(1); /* Apply grayscale and blur effect */
   transition: transform 0.1s ease, box-shadow 0.1s ease;
-}
-
-.prose img:hover {
-  filter: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='50' height='48' viewport='0 0 100 100' style='fill:black;font-size:24px;'><text y='50%'>🎨🖌️</text></svg>")
-      16 0,
-    auto;
 }
 
 ::selection {
