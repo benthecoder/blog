@@ -36,7 +36,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
               width='800'
               height='500'
             />
-            <p className='text-gray-400 mt-0'>{image.properties.alt}</p>
+            <p className='text-gray-400 text-xs mt-1'>{image.properties.alt}</p>
           </div>
         );
       }
