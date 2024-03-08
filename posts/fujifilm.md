@@ -20,10 +20,11 @@ I made an [instagram](https://www.instagram.com/bengotafujifilm/) page for the s
 
 I added a couple [X-Trans II recipes](https://fujixweekly.com/fujifilm-x-trans-ii-recipes/) to fully utilize what fujifilm has to offer.
 
-- Basic: [Provia/STD](https://fujixweekly.com/2023/08/17/provia-std-fujifilm-xf1-exr-cmos-film-simulation-recipe/)
-- C1: [Velvia](https://fujixweekly.com/2020/01/21/first-fujifilm-x-t1-film-simulation-recipes/)
-- C2: [Astia](https://fujixweekly.com/2020/08/22/fujifilm-x-trans-ii-film-simulation-recipe-astia/)
+- C1: [Provia/STD](https://fujixweekly.com/2020/08/02/fujifilm-xq1-x-trans-ii-film-simulation-recipe-kodachrome-without-classic-chrome/)
+- C2: [PRO Neg. Std](https://fujixweekly.com/2022/01/24/fujifilm-x-t1-x-trans-ii-film-simulation-recipe-scanned-negative/)
 - C3: [PRO Neg. Hi](https://fujixweekly.com/2023/08/08/pro-film-fujifilm-x70-x-trans-ii-film-simulation-recipe/)
+
+I tried setting a recipe for Basic but it just gets overwritten each time so I think it can only hold 3.
 
 I'm still confused about [what an ND filter does](https://www.dpreview.com/forums/thread/4142610).
 
