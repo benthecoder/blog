@@ -1,12 +1,12 @@
 ---
 title: '12 Favorite Problems'
-tags: 'research'
+tags: 'ideas'
 date: 'Mar 10, 2024'
 ---
 
 In Gian-Carlo Rota's _Ten Lessons I Wish I Had Been Taught_, he [shares](https://www.ams.org/notices/199701/comm-rota.pdf?curius=2790) the Feynman Method.
 
-It was Richard Feynman's advice on how to be a genius.
+It is Richard Feynman's advice on how to be a genius.
 
 > “You have to keep a dozen of your favorite problems constantly present in your mind, although by and large they will lay in a dormant state. Every time you hear or read a new trick or a new result, test it against each of your twelve problems to see whether it helps. Every once in a while there will be a hit, and people will say, “How did he do it? He must be a genius!”
 >
