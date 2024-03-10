@@ -12,7 +12,7 @@ It is Richard Feynman's advice on how to be a genius.
 >
 > – Richard Feynman
 
-Richard Hamming had the same idea too.
+Richard Hamming had the [same idea](https://www.cs.virginia.edu/~robins/YouAndYourResearch.html) too.
 
 > Most great scientists know many important problems. They have something between 10 and 20 important problems for which they are looking for an attack. And when they see a new idea come up, one hears them say "Well that bears on this problem." They drop all the other things and get after it.
 >
