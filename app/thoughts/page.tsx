@@ -1,5 +1,4 @@
-// Import necessary modules
-import { neon } from '@neondatabase/serverless';
+import { neon, neonConfig } from '@neondatabase/serverless';
 
 interface Tweet {
   id: number;
@@ -71,4 +70,5 @@ export default async function ThoughtsPage() {
   );
 }
 
+neonConfig.fetchConnectionCache = false;
 export const runtime = 'edge';
