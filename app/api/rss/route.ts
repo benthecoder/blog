@@ -4,8 +4,6 @@ import { marked } from 'marked';
 import { mangle } from 'marked-mangle';
 import { gfmHeadingId } from 'marked-gfm-heading-id';
 
-type BlogPost = any;
-
 const metadata = {
   title: 'Benedict Neo',
   description: 'Daily writing about learnings, thoughts, and ideas',
@@ -30,6 +28,7 @@ const escapeXml = (unsafe: string) =>
     }
   });
 
+// Ensure to initialize your extensions array
 marked.use({ extensions: [mangle(), gfmHeadingId()] });
 
 export async function GET(req: NextRequest) {
@@ -39,7 +38,7 @@ export async function GET(req: NextRequest) {
     const feedUrl = `${rootUrl}${feedPath}`; // The full URL to your feed
 
     const postItems = feed
-      .map((page: BlogPost) => {
+      .map((page) => {
         const url = `${rootUrl}/posts/${page.filePath.replace('.md', '')}`;
         let contentHTML = marked(page.content); // Assumes marked does not encode HTML entities
 
@@ -56,7 +55,7 @@ export async function GET(req: NextRequest) {
         <link>${url}</link>
         <guid>${url}</guid>
         <pubDate>${pubDate}</pubDate>
-        <description><![CDATA[${contentHTML}]]></description>
+        <description><![CDATA[${escapeXml(contentHTML)}]]></description>
       </item>`;
       })
       .join('');
