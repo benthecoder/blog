@@ -1,23 +1,32 @@
-import { queryBuilder } from '../../lib/planetscale';
+import { Pool } from 'pg';
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
 
 async function getTweets() {
-  const data = await queryBuilder
-    .selectFrom('tweets')
-    .select(['id', 'content', 'created_at'])
-    .orderBy('created_at', 'desc')
-    .limit(1000)
-    .execute();
-
-  return data;
+  const client = await pool.connect();
+  try {
+    const res = await client.query(
+      'SELECT id, content, created_at FROM tweets ORDER BY created_at DESC LIMIT 1000'
+    );
+    return res.rows;
+  } finally {
+    client.release();
+  }
 }
 
-export default async function GuestbookPage() {
+export default async function ThoughtsPage() {
   let entries;
 
   try {
     entries = await getTweets();
   } catch (err) {
     console.error(err);
+    entries = [];
   }
 
   return (
