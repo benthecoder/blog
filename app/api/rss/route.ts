@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import feed from './feed.json';
 import { marked } from 'marked';
+import { mangle } from 'marked-mangle';
+import { gfmHeadingId } from 'marked-gfm-heading-id';
 
 type BlogPost = any;
 
@@ -27,6 +29,8 @@ const escapeXml = (unsafe: string) =>
         return '';
     }
   });
+
+marked.use({ extensions: [mangle(), gfmHeadingId()] });
 
 export async function GET(req: NextRequest) {
   try {
