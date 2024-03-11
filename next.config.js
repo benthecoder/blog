@@ -12,6 +12,7 @@ const nextConfig = {
       destination: '/api/rss',
     },
   ],
+  staticPageGenerationTimeout: 1000,
 };
 
 module.exports = nextConfig;
