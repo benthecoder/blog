@@ -1,21 +1,45 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { queryBuilder } from '../../../lib/planetscale';
+import { Pool } from 'pg';
 
-export async function POST(request: NextRequest) {
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
+
+export async function POST(request) {
   const body = await request.json();
-  await queryBuilder
-    .insertInto('tweets')
-    .values({
-      content: (body.body || '').slice(0, 500),
-    })
-    .execute();
+  const content = (body.body || '').slice(0, 700);
 
-  return new NextResponse(JSON.stringify({ error: null }), { status: 200 });
+  try {
+    const client = await pool.connect();
+    const queryText = 'INSERT INTO tweets(content) VALUES($1) RETURNING *';
+    const res = await client.query(queryText, [content]);
+    client.release();
+    return new Response(JSON.stringify({ error: null, tweet: res.rows[0] }), {
+      status: 200,
+    });
+  } catch (err) {
+    console.error(err);
+    return new Response(JSON.stringify({ error: 'Error inserting tweet' }), {
+      status: 500,
+    });
+  }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(request) {
   const body = await request.json();
-  await queryBuilder.deleteFrom('tweets').where('id', '=', body.id).execute();
+  const id = body.id;
 
-  return new NextResponse(null, { status: 204 });
+  try {
+    const client = await pool.connect();
+    await client.query('DELETE FROM tweets WHERE id = $1', [id]);
+    client.release();
+    return new Response(null, { status: 204 });
+  } catch (err) {
+    console.error(err);
+    return new Response(JSON.stringify({ error: 'Error deleting tweet' }), {
+      status: 500,
+    });
+  }
 }
