@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import feed from './feed.json';
 import { marked } from 'marked';
-import { mangle } from 'marked-mangle';
-import { gfmHeadingId } from 'marked-gfm-heading-id';
 
 const metadata = {
   title: 'Benedict Neo',
@@ -28,8 +26,11 @@ const escapeXml = (unsafe: string) =>
     }
   });
 
-// Ensure to initialize your extensions array
-marked.use({ extensions: [mangle(), gfmHeadingId()] });
+// Set options
+marked.use({
+  mangle: false, // Disables the mangle feature
+  headerIds: false, // Disables automatic generation of header IDs
+});
 
 export async function GET(req: NextRequest) {
   try {
