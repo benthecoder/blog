@@ -7,7 +7,7 @@ const pool = new Pool({
   },
 });
 
-export async function POST(request) {
+export async function POST(request: Request) {
   const body = await request.json();
   const content = (body.body || '').slice(0, 700);
 
@@ -27,7 +27,7 @@ export async function POST(request) {
   }
 }
 
-export async function DELETE(request) {
+export async function DELETE(request: Request) {
   const body = await request.json();
   const id = body.id;
 
