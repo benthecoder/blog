@@ -1,29 +1,41 @@
-import { Pool } from 'pg';
+// Import necessary modules
+import { neon } from '@neondatabase/serverless';
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
+interface Tweet {
+  id: number;
+  content: string;
+  created_at: Date;
+}
 
-async function getTweets() {
-  const client = await pool.connect();
+// Assuming you've set NEON_DATABASE_URL in your environment variables
+const sql = neon(process.env.DATABASE_URL!);
+
+async function getTweets(): Promise<Tweet[]> {
+  // Construct your SQL query
+  const query = `
+    SELECT id, content, created_at 
+    FROM tweets 
+    ORDER BY created_at DESC 
+    LIMIT 1000
+  `;
+
+  // Execute the query using the Neon serverless driver
   try {
-    const res = await client.query(
-      'SELECT id, content, created_at FROM tweets ORDER BY created_at DESC LIMIT 1000'
-    );
-    return res.rows;
-  } finally {
-    client.release();
+    // Attempting a type assertion here. Note: This assumes that the sql function can return any.
+    const result = (await sql(query)) as unknown as Tweet[];
+    return result;
+  } catch (error) {
+    console.error('Error fetching tweets:', error);
+    throw error;
   }
 }
 
 export default async function ThoughtsPage() {
-  let entries;
+  let entries: Tweet[] = [];
 
   try {
-    entries = await getTweets();
+    const result = await getTweets();
+    entries = result; // Assuming the result is directly usable as your entries
   } catch (err) {
     console.error(err);
     entries = [];
@@ -32,8 +44,8 @@ export default async function ThoughtsPage() {
   return (
     <section>
       <h1 className='font-bold text-left mb-10 text-2xl'> Ben's Thoughts 💭</h1>
-      {entries
-        ? entries.map((entry: any) => (
+      {entries.length > 0
+        ? entries.map((entry) => (
             <div
               key={entry.id}
               className='flex flex-col mb-6 p-2 bg-blue-100 border-2 border-black dark:bg-gray-900 dark:border-white'
@@ -43,7 +55,7 @@ export default async function ThoughtsPage() {
               </div>
               <div className='text-gray-500 mt-2 text-sm'>
                 {new Date(entry.created_at).toLocaleString('en-GB', {
-                  timeZone: 'Asia/Kuala_Lumpur', // change this to your timezone
+                  timeZone: 'Asia/Kuala_Lumpur',
                   hour: 'numeric',
                   hour12: false,
                   minute: 'numeric',
@@ -58,3 +70,5 @@ export default async function ThoughtsPage() {
     </section>
   );
 }
+
+export const runtime = 'edge';
