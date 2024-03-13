@@ -1,7 +1,7 @@
 ---
 title: 'Daido Moriyama'
 tags: 'photography'
-date: 'Mar 13, 2024'
+date: 'Mar 12, 2024'
 ---
 
 ![Daido Moriyama. Stray Dog, Misawa. 1971](/images/dog.jpg)
