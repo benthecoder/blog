@@ -4,6 +4,8 @@ tags: 'photography'
 date: 'Mar 15, 2024'
 ---
 
+![Joaquín Sorolla y Bastida, Capturing the Moment, 1906](/images/capturemoment.jpeg)
+
 Ive been having a lot of fun taking pictures with my Fujifilm x100s, its become an extension of myself.
 
 I'm now hyperaware and conscious of my surroundings. I notice everything around me with greater detail and depth. This makes my environment more interesting, conjuring childlike wonder that makes me look at people, objects, architecture, and moments that make me go “I should capture this”.
