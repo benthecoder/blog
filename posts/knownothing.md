@@ -9,7 +9,7 @@ date: 'Mar 19, 2024'
 > "I know that I know nothing"
 > – Seneca
 
-[Michel de Montaigne](https://en.wikipedia.org/wiki/Michel_de_Montaigne?useskin=vector), one of the most significant philosophers of the French Renaissance.
+[Michel de Montaigne](https://en.wikipedia.org/wiki/Michel_de_Montaigne?useskin=vector) is one of the most significant philosophers of the French Renaissance.
 
 You'd think that the older he grew, he would be more certain of himself. But the more he studied, the more often he would find himself asking his most famous question.
 
