@@ -10,9 +10,9 @@ I've been using [curius](https://curius.app/benedict-neo) since March 2023, my f
 
 It's been a year now, and I've saved a total of 1723 articles as of today.
 
-I came across this [tweet](https://x.com/gd3kr/status/1758198206599455224?s=20) by [aarya](https://twitter.com/gd3kr) that embeds a person's twitter bookmarks and visualizes it on the [Embedding Projector](https://projector.tensorflow.org/).
+I came across this [tweet](https://x.com/gd3kr/status/1758198206599455224?s=20) by [aarya](https://twitter.com/gd3kr) where he embedded his twitter bookmarks and visualized it on the [Embedding Projector](https://projector.tensorflow.org/).
 
-Since I can get the data easily with the API, and he provided the [code](https://gist.github.com/gd3kr/c4c0687a5f7e91b1a84bcacea6500011) to do so. I thought it would be a fun half-day hack.
+This inspired me to embed my curius links. Since I can the data easily with the API, and he provided the [code](https://gist.github.com/gd3kr/c4c0687a5f7e91b1a84bcacea6500011) to compute the embeddings. I thought it would be a fun half-day hack.
 
 Using ChatGPT and Cursor, building this out was a lot of fun. It's one of those projects where I personally would use it and can see others using it as well. So I was building out of necessity.
 
