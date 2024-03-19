@@ -84,26 +84,24 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
           </p>
         </div>
       </div>
-      {next && (
-        <div className='mt-10 flex flex-col text-sm  md:text-base'>
-          {next && (
-            <div className='flex items-center'>
-              <p className='text-gray-400'>Next:</p>
-              <Link href={`/posts/${next.slug}`} className='ml-2 underline'>
-                {next.title}
-              </Link>
-            </div>
-          )}
-          {prev && (
-            <div className='flex items-center'>
-              <p className='text-gray-400'>Previous:</p>
-              <Link href={`/posts/${prev.slug}`} className='ml-2 underline'>
-                {prev.title}
-              </Link>
-            </div>
-          )}
-        </div>
-      )}
+      <div className='mt-10 flex flex-col text-sm  md:text-base'>
+        {next && (
+          <div className='flex items-center'>
+            <p className='text-gray-400'>Next:</p>
+            <Link href={`/posts/${next.slug}`} className='ml-2 underline'>
+              {next.title}
+            </Link>
+          </div>
+        )}
+        {prev && (
+          <div className='flex items-center'>
+            <p className='text-gray-400'>Previous:</p>
+            <Link href={`/posts/${prev.slug}`} className='ml-2 underline'>
+              {prev.title}
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
