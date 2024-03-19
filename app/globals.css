@@ -116,6 +116,12 @@ body {
   color: #595959;
 }
 
+.prose hr {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border-width: 0.1px;
+}
+
 .dark .prose blockquote {
   border-color: #fff; /* set your preferred color for dark mode */
   color: #b4b4b4;
