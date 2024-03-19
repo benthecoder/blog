@@ -30,7 +30,7 @@ The UN's IMO made a [new rule](https://zenodo.org/record/7864530) for [sulfur re
 
 Over the last few years, [scientist found](https://www.science.org/content/article/changing-clouds-unforeseen-test-geoengineering-fueling-record-ocean-warmth) the warming of the ocean is attributed to **new light hitting it** that wouldn't normally be hitting it because of **less ship tracks**, and less dust from sahara.
 
-Global warming is ** worse than we thought** it was because we were **shielded by the effects of other pollution** that we were throwing out in the air.
+Global warming is **worse than we thought** it was because we were **shielded by the effects of other pollution** that we were throwing out in the air.
 
 This is also good because it's a massive experiment that shows the effects of local geo-engineering on the atlantic ocean.
 
