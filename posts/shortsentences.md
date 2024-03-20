@@ -8,8 +8,7 @@ date: 'Mar 21, 2024'
 
 > Your job as a writer is making sentences.
 >
-> Your other jobs include fixing sentences, killing sentences,
-> and arranging sentences.
+> Your other jobs include fixing sentences, killing sentences, and arranging sentences.
 
 I enjoyed reading this book.
 
@@ -130,19 +129,6 @@ conscious of the sentence,
 
 Seeing it for what it is, word for word, as a shape, and in
 relation to all the other sentences in the piece.
-
-### how to revise?
-
-becoming a stranger to what you’ve written.
-
-Try reading your work aloud.
-
-The ear is much smarter than the eye,
-
-If only because it’s also slower
-
-And because the eye can’t see rhythm or hear unwanted
-repetition.
 
 ### how to read aloud?
 
@@ -308,6 +294,44 @@ the best work writing can do?
 The only sure test of your ideas is whether they interest you
 
 And arouse your own expectations
+
+### how to revise?
+
+- Work from the small-scale, start by fixing the sentences that need fixing
+- Explore the possibilities that open up.
+- Continue making small, incremental changes at the sentence level wherever you see problems, with no priority given to the beginning or end of the piece.
+- Listen for rhythm
+- Anything that strikes you — anything that causes a subtle, inward sensation of discomfort, an inner alarm, no matter how faint—stop there and figure out what’s going on.
+- there's often a better sentence hiding under a good sentence. don't just shift around with the same words, reimagine it, put effort into fixing it.
+- Curiosity, patience, and the ability to improvise are good tools for revising
+- So is the ability to remain open to the work and let it remain open to you.
+
+### how to know if a sentence is good?
+
+- you sense an inward difference, a subtle feeling telling you this sentence isn't the same as the others
+- learning this feeling is important. It's a guide and an incentive to making more good sentences.
+- it happens against the backdrop of your constant reading and unending exposure to superb sentences.
+
+### what is the foundation of writing?
+
+There's nothing linear in your growth as a writer.
+
+The moment you find yourself getting good at one thing, it's time to push on to unsafe terrain.
+
+To do this work requires a balance between:
+
+(1) your commitment to the sentences you're making  
+(2) and the knowledge that each of them could be otherwise.
+
+make that simple distinction again and again and you'll get good at making this distinction.
+
+This is the foundation of writing.
+
+Living somewhere between certainty and flux.
+
+Learning to remember that your sentences don't acquire their final inertia until you release them.
+
+That your sentences, written down, are in the condition of waiting to be examined.
 
 ### when to stop revising?
 
