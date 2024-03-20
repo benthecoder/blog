@@ -8,6 +8,7 @@
 - [Letters to a Young Poet](/posts/rilkeletters) (Rainer Maria Rilke) ✅
 - [Burnout Society](/posts/burnoutsociety) (Byung-Chul Han) ✅
 - [Zero to One](/posts/0to1) (Peter Thiel) ✅
+- [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn Klinkenborg) ✅
 - Funny Weather: Art in an Emergency (Olivia Laing)
 - Lean Startup (Eric Ries)
 - The Secret History (Donna Tartt)
