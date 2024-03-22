@@ -16,7 +16,7 @@ I like how the author describes writing as making sentences.
 
 It's a book I will come back to once in a while in my journey of writing, revising, and rewriting.
 
-It changed my outlook on what writing is all about. I like the fresh ideas of composing and revision is the same thing, the importance of thinking, noticing, notice what I notice, pay attention to my emotions, self-authorizing in writing, reading to examining the shape and rhythm of sentences and not to extract meaning, reading aloud to revise, not planning or outlining work, and many more.
+It changed my outlook on what writing is all about. I like the fresh ideas of composing and revision being the same thing, the importance of thinking, noticing, noticing what I notice, paying attention to my emotions, self-authorizing in writing, reading to examining the shape and rhythm of sentences and not to extract meaning, reading aloud to revise, not planning or outlining work, and many more.
 
 Below are some practical questions for writing that are answered from the book, for my reference.
 
