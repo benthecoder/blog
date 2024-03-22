@@ -228,7 +228,7 @@ But of its texture, pace, structure, actuality
 (1) it's keeping the rules from obtruding themselves upon the
 reader because you've Ignored them
 
-If a sentence oHers an ambiguous path—two ways of being
+If a sentence offers an ambiguous path—two ways of being
 read—this reader will always take the wrong one.
 
 (2) it's the precondition for being sure.
