@@ -46,12 +46,12 @@ He thus concludes that a work of art is the "climax of long work of preparation"
 
 Recounting his experience painting [In my Still Life with Magnolia](https://www.centrepompidou.fr/en/ressources/oeuvre/Y5BlJZ2), where he states that the secret of creation lies in the play and balance of colors and lines.
 
-And his [chapel at Vence](https://www.theartpilgrim.org/pilgrimages-2/the-chapelle-du-rosaire-de-vence), where he color and light, and every line and every detail, to give an impression of boundless space.
+And his [chapel at Vence](https://www.theartpilgrim.org/pilgrimages-2/the-chapelle-du-rosaire-de-vence), where the color and light, every line and every detail, gives an impression of boundless space.
 
-He believes this is how art imitates nature.
+This is how art imitates nature.
 
 > That is the sense, so it seems to me, in which <mark>art may be said to imitate nature, namely, by the life that the creative worker infuses into the work of art</mark>. The work will then appear as fertile and as possessed of the same power to thrill, the same resplendent beauty as we find in works of nature.
 
-And ends with the precondition of love for creation.
+He ends with the precondition of love for creation.
 
 > Great love is needed to achieve this effect, a love capable of inspiring and sustaining that patient striving towards truth, that glowing warmth and that analytic profundity that accompany the birth of any work of at. <mark>But is not love the origin of all creation?</mark>
