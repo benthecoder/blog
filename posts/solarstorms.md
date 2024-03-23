@@ -16,13 +16,13 @@ People feared the world would end, and would dedicated dances and prayers.
 
 Today, people travel to the northern parts of the world to see the aurora borealis.
 
-And we understand that this happens because of charged particles from the sun travelling down to Earth's magnetic field lines and interacting with the gases in our atmosphere.
+And we understand that this happens because of charged particles from the sun travelling down to Earth's magnetic field lines, interacting with the gases in our atmosphere.
 
 Green and red light is from interactions with oxygen; blue and purple by nitrogen.
 
 Usually auroras are only visible at the poles, but during severe geomagnetic storms, auroras can be seen closer to the equator.
 
-The 1859 event is most severe solar storm event observed in our time. It sparked fires at telegraph offices and shocked operators. And auroras were visible in low-altitude places like Hawaii.
+The 1859 event is the most severe solar storm event observed in our time. It sparked fires at telegraph offices and shocked operators. And auroras were visible in low-altitude places like Hawaii.
 
 A solar storm of that magnitude today would be a catastrophe. Satellites, communication networks, and the power grid could all be destroyed. And if this happens in winter, there wouldn't be any power at all.
 
