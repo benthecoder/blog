@@ -9,6 +9,12 @@
 - [Burnout Society](/posts/burnoutsociety) (Byung-Chul Han) ✅
 - [Zero to One](/posts/0to1) (Peter Thiel) ✅
 - [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn Klinkenborg) ✅
+- [How to Be a Friend: An Ancient Guide to True Friendship](/posts/truefriendship) (Marcus Tullius Cicero) ✅
+- The Wisdom of Insecurity: A Message for an Age of Anxiety (Alan W. Watts)
+- Four Thousand Weeks: Time Management for Mortals (Oliver Burkeman)
+- The Almanack of Naval Ravikant: A Guide to Wealth and Happiness (Eric Jorgenson)
+- Camera Lucida: Reflections on Photography (Roland Barthes)
+- Make Something Wonderful (Steve Jobs)
 - Funny Weather: Art in an Emergency (Olivia Laing)
 - Lean Startup (Eric Ries)
 - The Secret History (Donna Tartt)
