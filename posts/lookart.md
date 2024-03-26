@@ -6,7 +6,7 @@ date: 'Mar 26, 2024'
 
 ![The Night Watch, Rembrandt van Rijn, 1642](/images/nightwatch.jpg)
 
-Last year when I visited museums in Boston and Seattle, I was always in a time crunch since I was only in the city for a few days, so I never had the luxury to _really_ look at art. To deeply study an artwork and letting whatever emotion bubble up from within me, and sitting with that emotion.
+Last year when I visited museums in Boston and Seattle, I was always in a time crunch since I was only in the city for a few days, so I never had the luxury to _really_ look at art. To contemplate and deeply study an artwork, sitting with whatever emotion that bubbled up from within me, whether good or bad.
 
 Hopefully when I'm back in the U.S., I will have time to visit the museums there and take the time to appreciate art.
 
