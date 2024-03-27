@@ -11,9 +11,10 @@
 - [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn Klinkenborg) ✅
 - [How to Be a Friend: An Ancient Guide to True Friendship](/posts/truefriendship) (Marcus Tullius Cicero) ✅
 - The Wisdom of Insecurity: A Message for an Age of Anxiety (Alan W. Watts)
+- The Miracle of Morning Pages (Julia Cameron)
 - Four Thousand Weeks: Time Management for Mortals (Oliver Burkeman)
 - The Almanack of Naval Ravikant: A Guide to Wealth and Happiness (Eric Jorgenson)
-- Camera Lucida: Reflections on Photography (Roland Barthes)
+- The Little Prince (Antoine de Saint-Exupéry)
 - Make Something Wonderful (Steve Jobs)
 - Funny Weather: Art in an Emergency (Olivia Laing)
 - Lean Startup (Eric Ries)
