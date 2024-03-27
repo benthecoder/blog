@@ -20,7 +20,7 @@ But how should we look at art?
    - <mark>"There are no right or wrong ways of reading a piece, only ideas that can be expanded."</mark>
    - [Molly Ovenden](https://mollyovenden.com/): "It's more about an openness to a conversation... or an invitation to an experience"
 2. Be open to sitting with discomfort
-   - art can give rise to feelings we aren't in touch with everyday like
+   - art can give rise to feelings we aren't in touch with everyday like awe, melancholy, and transcendence
    - the role of an artist is to convey ideas with honesty, and truthful art can make people wildly uncomfortable
    - [Susanne K. Langer](https://doi.org/10.2307/3331349) on art and emotions
      > teaching art is an education in feeling; when art gives rise to emotions we do not always have access to, it can feel too tough to manage. Yet it is in grappling with those emotions that the connection to art – and, ultimately, understanding it – is forged.
