@@ -13,9 +13,7 @@ const HomePage = () => {
     return (
       <div key={p.slug}>
         <RenderPost post={post} slug={p.slug} />
-        <div className='flex justify-center my-10'>
-          <Image src='dots.svg' width={20} height={10} alt='dots' />
-        </div>
+        <div className='flex justify-center mb-10'>☼</div>
       </div>
     );
   });
