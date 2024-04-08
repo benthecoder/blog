@@ -28,6 +28,8 @@ I'm still learning how to break things done, and see these smaller tasks as achi
 
 An important factor to building this habit is by making it easy.
 
-I discovered an extension for [Obsidian](https://www.raycast.com/KevinBatdorf/obsidian) for Raycast that has a command for [appending to daily note](https://github.com/KevinBatdorf/obsidian-raycast#daily-note).
+I discovered a [Raycast](https://www.raycast.com/) [extension](https://www.raycast.com/KevinBatdorf/obsidian) for [Obsidian](https://obsidian.md/about) for Raycast that has a command for [appending to daily note](https://github.com/KevinBatdorf/obsidian-raycast#daily-note).
 
-This makes capturing my completed tasks, TILs, and thoughts super convenient. I'm going to start building a habit to do this, so it becomes second nature.
+This makes capturing my completed tasks, TILs, and thoughts super convenient.
+
+And also gives me an opportunity to finally start using Obsidian.
