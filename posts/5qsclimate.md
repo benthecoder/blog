@@ -1,7 +1,7 @@
 ---
 title: '5 Questions to Ask in Climate'
 tags: 'book, climate'
-date: 'Apr 10, 2024'
+date: 'Apr 9, 2024'
 ---
 
 I'm on Chapter 3 of Bill Gates' book on climate.
