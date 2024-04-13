@@ -1,6 +1,6 @@
 ---
 title: 'What is a Healthy Mind?'
-tags: 'psychology'
+tags: 'psychology, whatis'
 date: 'Feb 21, 2024'
 ---
 

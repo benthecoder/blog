@@ -1,6 +1,6 @@
 ---
 title: 'What is dbt?'
-tags: 'tech, explained'
+tags: 'tech, whatis'
 date: 'Sep 23, 2023'
 ---
 
