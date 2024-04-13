@@ -10,6 +10,7 @@
 - [Zero to One](/posts/0to1) (Peter Thiel) ✅
 - [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn Klinkenborg) ✅
 - [How to Be a Friend: An Ancient Guide to True Friendship](/posts/truefriendship) (Marcus Tullius Cicero) ✅
+- [The Almanack of Naval Ravikant](/posts/naval) (Naval Ravikant) ✅
 - The Wisdom of Insecurity: A Message for an Age of Anxiety (Alan W. Watts)
 - The Miracle of Morning Pages (Julia Cameron)
 - Four Thousand Weeks: Time Management for Mortals (Oliver Burkeman)
