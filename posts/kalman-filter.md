@@ -1,6 +1,6 @@
 ---
 title: 'What is a Kalman Filter?'
-tags: 'explained'
+tags: 'whatis'
 date: 'Nov 6, 2023'
 ---
 

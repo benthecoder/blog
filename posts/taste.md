@@ -1,6 +1,6 @@
 ---
 title: 'What is "taste"'
-tags: 'ideas'
+tags: 'ideas, whatis'
 date: 'Dec 9, 2023'
 ---
 
