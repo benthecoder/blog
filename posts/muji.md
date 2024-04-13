@@ -1,6 +1,6 @@
 ---
 title: 'What is MUJI?'
-tags: 'design'
+tags: 'design, whatis'
 date: 'Dec 28, 2023'
 ---
 
