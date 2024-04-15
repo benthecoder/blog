@@ -3,14 +3,15 @@ import * as fs from 'fs';
 import matter from 'gray-matter';
 import { PostMetadata } from '../components/PostMetadata';
 
-const getPostMetadata = (): PostMetadata[] => {
-  const folder = 'posts/';
+const getPostMetadata = (getDrafts: boolean = false): PostMetadata[] => {
+  const folder = getDrafts ? 'posts/drafts/' : 'posts/';
+  ('posts/');
   const files = fs.readdirSync(folder);
   const markdownPosts = files.filter((file) => file.endsWith('.md'));
 
   const posts: PostMetadata[] = markdownPosts.map(
     (fileName): Partial<PostMetadata> => {
-      const fileContents = fs.readFileSync(`posts/${fileName}`, 'utf8');
+      const fileContents = fs.readFileSync(`${folder}${fileName}`, 'utf8');
       const matterResult = matter(fileContents);
 
       return {
