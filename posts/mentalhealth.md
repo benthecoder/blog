@@ -1,6 +1,6 @@
 ---
 title: 'Practical Mental Health Tips'
-tags: 'psychology'
+tags: 'psychology, ✰'
 date: 'Oct 15, 2023'
 ---
 
