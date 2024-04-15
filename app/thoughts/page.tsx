@@ -72,3 +72,4 @@ export default async function ThoughtsPage() {
 
 neonConfig.fetchConnectionCache = false;
 export const runtime = 'edge';
+export const revalidate = 0;
