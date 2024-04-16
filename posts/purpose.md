@@ -1,6 +1,6 @@
 ---
 title: 'Finding Your Purpose'
-tags: 'life'
+tags: 'life, ✰'
 date: 'Mar 6, 2024'
 ---
 
