@@ -2,9 +2,9 @@ import getPostMetadata from '../../utils/getPostMetadata';
 import PostPreview from '../../components/PostPreview';
 
 const DraftsPage = () => {
-  const draftsMetadata = getPostMetadata(true);
+  const drafts = getPostMetadata(true);
 
-  const draftPreviews = draftsMetadata.map((draft) => {
+  const draftPreviews = drafts.map((draft) => {
     return <PostPreview key={draft.slug} {...draft} />;
   });
 
