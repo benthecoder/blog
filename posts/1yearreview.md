@@ -4,7 +4,7 @@ tags: 'journal, writing'
 date: 'Apr 16, 2024'
 ---
 
-![Claude Monet - Shadows on the Sea. The Cliffs at Pourville](/images/seacliff.jpg)
+![Claude Monet, Shadows on the Sea. The Cliffs at Pourville, 1882](/images/seacliff.jpg)
 
 Exactly [a year ago](/posts/day-one) I started blogging everyday.
 
