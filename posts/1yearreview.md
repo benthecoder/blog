@@ -10,7 +10,15 @@ Exactly [a year ago](/posts/day-one) I started blogging everyday.
 
 These blogs are mostly good ideas that I discover online that I want to compartmentalize and steal for myself, and collect them here in my own corner of the internet so I can revisit them from time to time.
 
-As for my reflective and introspective writings, they're an attempt to document my life and for making sense of my thoughts. Reading back my journal entries in this blog is almost like time travelling. I'm visiting different versions of my past selves, unpacking and resurfacing all their thoughts, ambitions, sufferings, fears, anxiety, and emotions. Some I've conquered, some I still harbor, but it's comforting to see growth and change happen. I'm optimistic for April 16, 2025: the kind of person I'll become and the people that will be in my life in SF.
+As for my reflective and introspective writings, they're an attempt to document my life and for making sense of my thoughts.
+
+> “Write hard and clear about what hurts. ― Ernest Hemingway
+
+Reading back my journal entries in this blog is almost like time travelling. I'm visiting different versions of my past selves, unpacking and resurfacing all their thoughts, ambitions, sufferings, fears, anxiety, and emotions.
+
+Some I've conquered, some I still harbor, but it's comforting to see growth and change happen. I'm optimistic for April 16, 2025: the kind of person I'll become and the people that will be in my life in SF.
+
+![](/images/memories.jpeg)
 
 Since it's been a year, I decided to distill some thoughts about my motivations for writing this blog below:
 
