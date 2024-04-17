@@ -12,3 +12,5 @@ You can find me on these platforms:
 🏛️🖼️: [Are.na](https://www.are.na/benedict-neo) · [Curius](https://curius.app/benedict-neo) · [cosmos](https://www.cosmos.so/benedictneo)  
 🎶📹: [Spotify](https://open.spotify.com/user/31w6rspp4fe5ihwoimt4of5tcwiu) · [YouTube](http://www.youtube.com/@benxneo) · [Letterboxd](https://letterboxd.com/benneo/)  
 ⌨️👨‍💻: [GitHub](https://github.com/benthecoder) · [Kaggle](https://www.kaggle.com/benthecoder/competitions)
+
+![niceday](/images/niceday.jpeg)
