@@ -17,7 +17,7 @@ I started reading [How to Avoid a Climate Disaster](https://www.goodreads.com/bo
 
 ### High-level plans
 
-- [Project Drawdown](https://drawdown.org/)
+- [Project Drawdown](https://drawdown.org/) ([solutions](https://drawdown.org/solutions))
 - [Speed & Scale: An Action Plan for Solving Our Climate Crisis Now](https://speedandscale.com/) ([tracker](https://speedandscale.com/tracker/))
 
 ### learn
@@ -71,6 +71,7 @@ I started reading [How to Avoid a Climate Disaster](https://www.goodreads.com/bo
 
 ### climate tech
 
+- [Climate Tech Startups by Emissions Sectors](https://airtable.com/appo5NAoybOWGpIvF/shrrdFh2xNAbRazbo/tblq3kzxc5VLdBDVv)
 - [Climate tech company list](https://docs.google.com/spreadsheets/d/12xd_rY-WJo_QDxTkD1BfxzX9P4CwWCV5tAic7ELp4fo/edit#gid=0)
 - [Request for Startups: Climate Tech](https://www.ycombinator.com/blog/rfs-climatetech/#energy-related)
 - [The YC Startup Directory | Climate](https://www.ycombinator.com/companies/?query=Climate%20)
@@ -82,6 +83,7 @@ I started reading [How to Avoid a Climate Disaster](https://www.goodreads.com/bo
 ### chat
 
 - [Expert Office Hours - Work on Climate](https://workonclimate.org/expert-office-hours/)
+- [Directory — #OpenDoorClimate](https://www.opendoorclimate.com/directory)
 
 ### podcast
 
@@ -89,11 +91,11 @@ I started reading [How to Avoid a Climate Disaster](https://www.goodreads.com/bo
 
 ### AI/ML
 
-- [Climate Change AI | Tackling Climate Change with Machine Learning](https://www.climatechange.ai/)
+- [Climate Change AI | Tackling Climate Change with Machine Learning](https://www.climatechange.ai/summaries)
+- [Climate Change AI Workshop Papers](https://www.climatechange.ai/papers?)
 - [Climate Tech ML companies](https://workonclimate.notion.site/Climate-Tech-ML-companies-aa7fb2d6fe7b4d9bad086a142c6838b2)
 - [How AI is improving climate forecasts](https://www.nature.com/articles/d41586-024-00780-8)
 - [These Are The Startups Applying AI To Tackle Climate Change](https://www.forbes.com/sites/robtoews/2021/06/20/these-are-the-startups-applying-ai-to-tackle-climate-change/?sh=7ffd39117b26)
-- [Climate Change AI Workshop Papers](https://www.climatechange.ai/papers?)
 
 ### resources
 
@@ -107,3 +109,7 @@ I started reading [How to Avoid a Climate Disaster](https://www.goodreads.com/bo
 - [watershed](https://watershed.com/careers) [(culture)](https://coda.io/@avi-itskovich/watersheds-personal-priorities-ritual) ([Environmental Data Scientist](https://watershed.com/careers/5147514004-environmental-data-scientist-financial-services))
 - [CarbonPlan](https://carbonplan.org/?curius=2790) ([Modeling extreme heat in a changing climate](https://carbonplan.org/research/extreme-heat-explainer))
 - [Our World in Data](https://ourworldindata.org/jobs)
+- [Equilibrium Energy](https://www.equilibriumenergy.com/careers)
+- [StreetLight Data](https://www.streetlightdata.com/jobs-join-us/)
+- [Dioxycle](https://dioxycle.com/career/)
+- [ClimateAi](https://climate.ai/careers/)
