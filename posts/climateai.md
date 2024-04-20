@@ -8,7 +8,7 @@ A few notes on [how AI is improving climate forecasts](https://www.nature.com/ar
 
 Conventional climate models are built manually from scratch by scientists using mathematical equations to describe the physical processes by which land, oceans, and air interact and affect the climate.
 
-They're important and are expected to work well enough to make climate projects because they help guide global policy.
+They're important and are expected to work well enough to make climate projections because they help guide global policy.
 
 The problem? They take weeks to run and are energy intensive. A typical model consumes up to 10 MW hours of energy to simulate a century of climate. (this is, on average, the amount of electricity used annually by a US household)
 
