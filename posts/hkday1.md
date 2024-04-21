@@ -4,11 +4,11 @@ tags: 'travel, journal'
 date: 'Apr 20, 2024'
 ---
 
-I'm writing this half-awake in a tiny rooms managed by one of the many hostels in Mirador Mansion, just a few steps away from the N5 subway exit for the Tsim Sha Tsui station.
+I'm writing this half-awake in a tiny room managed by one of the many hostels in Mirador Mansion, just a few steps away from the N5 subway exit for the Tsim Sha Tsui station.
 
 A quick and messy dump of impressions and thoughts of HK today, a lot of it is about the subway, cause we used it a lot to get around today.
 
-- maybe because it's a Saturday, the subways were chaotic and packed, it reminded me of 4th of July in SF and all the BART stations were flooded.
+- maybe because it's a Saturday, the subways were chaotic and packed, it reminded me of 4th of July in SF when all the BART stations were flooded.
 - it was confusing to navigate around the subway, I had to remember the station names and lines which were in romanized cantonese.
 - it feels familiar and almost comforting to be surrounded by Chinese people everywhere, it made me forget about other races at times which is not a good thing, diversity is important
   - on that note, I saw a lot of attractive chinese people of both genders and couples (its weekends), I felt a lot of mimetic desire to both be more like them.
