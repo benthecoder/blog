@@ -4,7 +4,7 @@ tags: 'travel, journal'
 date: 'Apr 21, 2024'
 ---
 
-![Bohemian Garden, Level 5F, K11 KREA mall](/images/hk.jpeg)
+![Bohemian Garden, Level 5F, K11 KREA mall](/images/hk2.jpeg)
 
 another thoughts dump for today
 
