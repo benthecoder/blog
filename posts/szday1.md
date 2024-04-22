@@ -22,8 +22,8 @@ Travelled to shenzhen from West Kowloon HK today. A few thoughts:
 - I had spicy and sour fish and I loved it, I think my body is beginning to accept it.
 - came to a more suburb part of shenzhen and it felt like Taiwan it was peaceful, I saw this nice street with a lot of trees, and old people with small kids holding hands
 - Motorcycles here are electric, very quiet and dangerous as they go on the sidewalks
-- Diaphragm crams are so scary I felt like I was gonna die
-- Saw a corgi poop on the subway
+- Diaphragm crams are so scary I felt like I was gonna die, I had one that lasted 20 minutes at this lanzhou noodles restaurant after eating some sour and spicy food and am now afraid
+- Saw a corgi poop on the subway tunnels
 - Shopping malls are mostly catered for females where are the clothing stores for men
 - It would be cool if I could read greek
 - Xiaomi is apple in China?
