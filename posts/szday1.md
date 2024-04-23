@@ -18,6 +18,7 @@ Travelled to shenzhen from West Kowloon HK today. A few thoughts:
 - Why can't I take pictures in customs is it a security law, I got called out lol
 - A young taxi driver did not help us with b ags but the old one did thought it would be reversed
 - It's so hard to find a hotel here, there are three hotels named T hotel, and ended up staying in the wrong one in the end
+  - lesson: check properly the next time I book hotels, note the location and the possibility of different branches
 - subway here is super cheap
 - I had spicy and sour fish and I loved it, I think my body is beginning to accept it.
 - came to a more suburb part of shenzhen and it felt like Taiwan it was peaceful, I saw this nice street with a lot of trees, and old people with small kids holding hands
@@ -34,4 +35,5 @@ Travelled to shenzhen from West Kowloon HK today. A few thoughts:
 - wish I can read a chinese book without feeling like I'm doing a test
 - I wanna sit in a bookstore all day
 - Wow they made Ghibli into books
-- How do people internet in China i cant dont know how to use the internet at all without a vpn
+- How do people internet in China i don't know how to use the internet at all without a vpn
+- china TV (Xiaomi) is very interesting, it's like tiktok their interface is very addictive
