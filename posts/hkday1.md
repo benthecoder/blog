@@ -4,6 +4,8 @@ tags: 'travel, journal'
 date: 'Apr 20, 2024'
 ---
 
+![rainy HK near temple street](/images/hk1.jpeg)
+
 I'm writing this half-awake in a tiny room managed by one of the many hostels in Mirador Mansion, just a few steps away from the N5 subway exit for the Tsim Sha Tsui station.
 
 A quick and messy dump of impressions and thoughts of HK today, a lot of it is about the subway, cause we used it a lot to get around today.
