@@ -4,7 +4,7 @@ tags: 'travel, journal'
 date: 'Apr 24, 2024'
 ---
 
-![Wave](/images/wave.jpg)
+![mom's (left), mine (right) with 美星艺术家 at Dafen](/images/wave.jpg)
 
 - 酷狗 60s previews played and 因为爱请 is stuck in my head now
 - Zhou Yongjiu – China’s Van Gogh
