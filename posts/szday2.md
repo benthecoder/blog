@@ -1,7 +1,7 @@
 ---
 title: 'Shenzhen Day 2'
 tags: 'travel, journal'
-date: 'Apr 24, 2024'
+date: 'Apr 23, 2024'
 ---
 
 ![mixC mall](/images/sz2.jpg)
