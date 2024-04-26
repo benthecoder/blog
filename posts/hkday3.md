@@ -43,7 +43,7 @@ back to HK
 - Got to experience the HK tram, only 3 HKD for any stop
 - Go to IFC mall with tram (north bound), and walk to the pier after claypot
 
-Some building names I can see from pier 9 near the HK observatory wheel
+Some building names I can see from pier no. 9 near the HK observation wheel in Star Ferry Pier.
 
 - AIA
 - FWD
