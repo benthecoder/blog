@@ -1,7 +1,7 @@
 ---
 title: 'Hong Kong Day 4'
 tags: 'travel, journal'
-date: 'Apr 27, 2024'
+date: 'Apr 26, 2024'
 ---
 
 ![Tsim Sha Tsui Ferry Pier](/images/hkday4.jpg)

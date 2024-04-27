@@ -1,7 +1,7 @@
 ---
 title: 'Make Something Wonderful'
 tags: 'book'
-date: 'Apr 28, 2024'
+date: 'Apr 27, 2024'
 ---
 
 ![Stay Hungry, Stay Foolish](/images/somethingwonderful.png)
