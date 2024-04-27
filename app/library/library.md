@@ -11,12 +11,12 @@
 - [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn Klinkenborg) ✅
 - [How to Be a Friend: An Ancient Guide to True Friendship](/posts/truefriendship) (Marcus Tullius Cicero) ✅
 - [The Almanack of Naval Ravikant](/posts/naval) (Naval Ravikant) ✅
+- [Make Something Wonderful](/posts/makesomethingwonderful) (Steve Jobs) ✅
 - The Wisdom of Insecurity: A Message for an Age of Anxiety (Alan W. Watts)
 - The Miracle of Morning Pages (Julia Cameron)
 - Four Thousand Weeks: Time Management for Mortals (Oliver Burkeman)
 - The Almanack of Naval Ravikant: A Guide to Wealth and Happiness (Eric Jorgenson)
 - The Little Prince (Antoine de Saint-Exupéry)
-- Make Something Wonderful (Steve Jobs)
 - Funny Weather: Art in an Emergency (Olivia Laing)
 - Lean Startup (Eric Ries)
 - The Secret History (Donna Tartt)
