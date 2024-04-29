@@ -64,7 +64,7 @@ Below are the artworks he featured in his book + some I added myself for each co
 
 ![Monet’s The Houses of Parliament, Seagulls is a pageant of purples](/images/parliament.jpeg)
 
-![view of Waterloo Bridge, city’s industrial skyline smothered with synthetic purple emissions](/images/waterloo.jpeg)
+![view of Waterloo Bridge, city’s industrial skyline smothered with synthetic purple emissions](/images/monetwaterloo.jpeg)
 
 ### Green
 
