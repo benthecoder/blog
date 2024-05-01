@@ -7,6 +7,7 @@ function Sketches() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const imageList: string[] = [
+    '/images/sunflowersketch.png',
     '/images/metro.png',
     '/images/howl.png',
     '/images/wave.png',
@@ -26,13 +27,13 @@ function Sketches() {
 
   return (
     <div>
-      <h1 className='font-bold text-left mb-10 text-2xl'> Sketches</h1>
-      <p className='mb-5'>Drawn with reMarkable 2 </p>
-      <div className='columns-1 md:columns-2 space-y-1 space-x-0 rounded-md'>
+      <h1 className="font-bold text-left mb-10 text-2xl"> Sketches</h1>
+      <p className="mb-5">Drawn with reMarkable 2 </p>
+      <div className="columns-1 md:columns-2 space-y-1 space-x-0 rounded-md">
         {imageList.map((imageSrc) => (
           <div
             key={imageSrc}
-            className='break-inside-avoid mb-0 cursor-crosshair'
+            className="break-inside-avoid mb-0 cursor-crosshair"
             onClick={() => openModal(imageSrc)}
           >
             <Image src={imageSrc} alt={imageSrc} width={1000} height={200} />
@@ -42,15 +43,15 @@ function Sketches() {
 
       {selectedImage && (
         <div
-          className='fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50'
+          className="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50"
           onClick={closeModal}
         >
-          <div className='bg-white p-4 max-h-full overflow-auto'>
+          <div className="bg-white p-4 max-h-full overflow-auto">
             <Image
               src={selectedImage}
-              alt='Selected Sketch'
-              layout='fill'
-              objectFit='contain'
+              alt="Selected Sketch"
+              layout="fill"
+              objectFit="contain"
             />
           </div>
         </div>
