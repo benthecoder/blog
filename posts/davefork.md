@@ -1,6 +1,6 @@
 ---
 title: 'A chat with a Renewable Energy Technologist'
-tags: 'climate'
+tags: 'climate, energy'
 date: 'May 2, 2024'
 ---
 
