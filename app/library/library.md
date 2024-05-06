@@ -62,3 +62,14 @@
 - [How to Do Great Work](http://paulgraham.com/greatwork.html)
 - [Ancient Rivers of Money](https://www.ribbonfarm.com/2010/11/05/ancient-rivers-of-money/)
 - [How to Pick a Career (That Actually Fits You) — Wait But Why](https://waitbutwhy.com/2018/04/picking-career.html)
+
+## List of Essays
+
+- [Hypertext as Literature](https://hypertext.joodaloop.com/#about)
+- [Great essays · Applied Cartography](https://jmduke.com/posts/catalogs/great-essays/)
+- [My favorite essays of life advice | benkuhn.net](https://www.benkuhn.net/weeklyessays/)
+- [My Favorite Essays | favorite_essays](https://vickiboykis.com/favorite_essays/)
+- [Read Something Wonderful](https://readsomethingwonderful.com/p/218/the-no-stats-all-star)
+- [Words That Matter](https://words.getmatter.com/)
+- [Lists — Joanne Peng](https://www.joannepeng.com/lists)
+- [Links | near.blog](https://near.blog/links/)
