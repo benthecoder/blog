@@ -19,7 +19,7 @@ To consume
 
 Actions
 
-- read this [post](/feelgood) and do the exercises
+- read this [post](/posts/feelgood) and do the exercises
 - write out my thoughts, anxieties, feelings, future scenarios in my head that don't exist
 - [sketch](/sketch)
 - call or meet friends & family
