@@ -16,7 +16,7 @@ If you're looking to start on Twitter, here's Henrik's [user manual](https://twi
 >
 > be friends
 
-I still find it hard to post my thoughts freely. I've been posting quotes, projects, and pretty images, but not any original thought. I'm insecure about my thoughts not being good enough to be shared. But my goal when I'm back in SF is to tweet more, engage more, and make more friends and meet them IRL to make use of every second there [^1].
+I still find it hard to post my thoughts freely. I've been posting quotes, projects, and pretty images, but not any original thought. I'm insecure about my thoughts not being good enough to be shared. But my goal when I'm back in SF is to tweet more, engage more, and make more friends and meet them IRL to make use of every second there $^{[1]}$.
 
 More useful links:
 
@@ -27,4 +27,4 @@ More useful links:
 
 ---
 
-[^1]: I've estimated that I will burn ~\$80k USD for a year, and that divides into \$0.0025/s and \$9/hr. If I ever find myself procrastinating, wasting time, or being too comfortable in my comfort zone. I will revisit this number.
+[1]: I've estimated that I will burn ~\$80k USD for a year, and that divides into \$0.0025/s and \$9/hr. If I ever find myself procrastinating, wasting time, or being too comfortable in my comfort zone. I will revisit this number.
