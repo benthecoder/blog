@@ -120,6 +120,7 @@ body {
   margin-top: 2em;
   margin-bottom: 2em;
   border-width: 0.1px;
+  border-color: #b0afaf;
 }
 
 .dark .prose blockquote {
