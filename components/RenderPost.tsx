@@ -70,6 +70,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
         <article className="prose dark:text-white text-sm  md:text-base">
           <ReactMarkdown
             components={components}
+            //@ts-expect-error
             remarkPlugins={[remarkMath, remarkGfm]}
             rehypePlugins={[rehypeRaw, rehypeKatex]}
           >
