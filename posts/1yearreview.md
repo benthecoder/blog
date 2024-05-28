@@ -72,3 +72,13 @@ I've also collected a few resources for people to get started.
 - [A blog post is a very long and complex search query to find fascinating people and make them route interesting stuff to your inbox](https://www.henrikkarlsson.xyz/p/search-query)
 - [Some blogging myths](https://jvns.ca/blog/2023/06/05/some-blogging-myths/)
 - [My checklist for publishing a blog post — LessWrong](https://www.lesswrong.com/posts/ETneBngxBamDPDLXJ/my-checklist-for-publishing-a-blog-post)
+
+### PG on writing
+
+- [Putting Ideas into Words](https://paulgraham.com/words.html)
+- [Writing, Briefly](https://www.paulgraham.com/writing44.html)
+- [Writing and Speaking](https://paulgraham.com/speak.html)
+- [Write Like You Talk](https://paulgraham.com/talk.html)
+- [The Best Essay](https://paulgraham.com/best.html)
+- [Write Simply](https://paulgraham.com/simply.html)
+- [How to Write Usefully](https://www.paulgraham.com/useful.html)
