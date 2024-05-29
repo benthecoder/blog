@@ -2,6 +2,8 @@
 
 I love meeting and having interesting conversations with new people!
 
+I also like learning about [art](/art) and reading [good books](https://www.goodreads.com/review/list/103179068-benedict-neo?shelf=to-read).
+
 email: benedict.neo[at]outlook[dot]com
 
 You can find me on these platforms:
