@@ -2,7 +2,7 @@
 
 I love meeting and having interesting conversations with new people!
 
-I also like learning about [art](/art) and reading [good books](https://www.goodreads.com/review/list/103179068-benedict-neo?shelf=to-read).
+I also like learning about [art](/tags/art) and reading [good books](https://www.goodreads.com/review/list/103179068-benedict-neo?shelf=to-read).
 
 email: benedict.neo[at]outlook[dot]com
 
