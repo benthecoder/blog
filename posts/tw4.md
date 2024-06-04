@@ -1,0 +1,61 @@
+---
+title: 'Taiwan Day 4'
+tags: 'journal, travel'
+date: 'Jun 4, 2024'
+---
+
+![Raohe Street Night Market](/images/twday4.jpeg)
+
+- step on poop = 发财 for taiwanese?
+- 山老鼠 = 小偷
+- So cool to work up in the mountains to capture thieves
+- 毕业树 a flower that blooms around June/July which is when students graduate
+- I look 高中 age according to 70 year old 王先生
+- Heard him talk about Jensen Huang, even he knows
+- 温开水
+- 办桌
+- 10 course meal for 5 people at a banquet hall, wish I could eat more
+- Chicken feet is pre good
+- Biting pork gave me tooth pain
+- He’s 70 years old and rides bike for 2 hours and walks an hour everyday that’s so admirable and is future goals when I'm old
+- 萝卜丝饼
+- we thought the wife passed away but she's working as a cleaning lady outside, old people voluntarily working to socialize
+- 什么都是假的， 健康才是真的
+- He says young adults in Taiwan now don’t marry and buy strollers for pets and not children lol
+- Still nauseous after eating and lethargic
+- Always so easy to fall asleep in cars
+- Kavalan single malt whiskey
+- Kavalan is the old name for Yilan
+- Yilan has rich volcanic soil, you can see wheat growing just beside streets in between buildings and houses
+- When taking photos, I'm going to say 你自己修图， 技术不太好 from now on
+- 老人 三分吃药，七分吃饭
+- 蓝绣花
+- 松萝
+- 拈花惹草 has lots of nice flowers
+- 望隆埤 air is fresh
+- Fish staring at us waiting for food
+- 红面鸭 never seen before a rooster looking duck
+- 手机干掉很多东西
+- God bless 王先生 and his hospitality, he said he's glad he got to bring us around or he'll get Alzhemiers at home which is so sad
+- There should be a program for old people who are locals to bring tourists around
+- This trip being unplanned and easygoing is so much nice
+- How did Yilan -> Songshan take 1hr 15min
+- Many homeless outside Taipei station
+- An old person and child holding hands is the sweetest thing, especially them only holding a few fingers cause their hands are small
+- An old couple holding hands also gives the same energy, how were they able to maintain that love and romance that long into the relationship?
+- Whereas a young couple holding hands just annoys me lol
+- Checked my email and I got an overdraft alert for my account and it gave me anxiety, reminder to not check emails while i’m still on my trip and its not end of the day
+- So many people dancing in front of mirrors at the station
+- Taipei main station is so confusing, everyone pointing us in different directions, asking us to go up or go down
+- Too many different kinds of trains
+- Wufenpu was not nice to shop and was pretty deserted according to sister and mom
+- Tooth pain is affecting my mood
+- Chicken meat is large and meat is too tough
+- Raohe night market is better, has good clothes
+- Wanted to play some of their games but we were all too tired
+- Capybara snoring plushie
+- So many cockroaches around
+- Yay bought two pants and a baggy shirt for 2970, Imma dress good in SF and not look like a software engineer
+- Taxi driver asked us what electricity malaysia uses
+- Dad’s response to Ghibli piano was “好听”
+- lightroom profile Vintage 07 is perfect
