@@ -114,3 +114,4 @@ I started reading [How to Avoid a Climate Disaster](https://www.goodreads.com/bo
 - [Dioxycle](https://dioxycle.com/career/)
 - [ClimateAi](https://climate.ai/careers/)
 - [Paces](https://www.paces.com/)
+- [Pioneer](https://pioneerclimate.notion.site/Meet-the-team-9ad636991a20436cbf0986ee13bed4e2#c0c920e6edda494b957df55007db859e)
