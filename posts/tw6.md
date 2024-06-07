@@ -19,7 +19,7 @@ date: 'Jun 6, 2024'
 - Can’t fall asleep on the plane, I keep playing back memories in my head, also dreaming new ones at the same time
 - don't look back in anger
 - Probably my first time not reading in a plane
-- Going back malaysia airport has to be in my top 10 most unpleasant events because its associated with not being able to stay in the US
+- Going back malaysia airport has to be in my top 10 most unpleasant events because its associated with not being able to stay in the US, this time it's TW
 - Is it racist to prefer your own race?
 - feels like I was stuck in a long dream and now I woke up
 - BACK TO REALITY
