@@ -71,5 +71,5 @@ thoughts while looking out the window from the hotel room
 
 - HK is like san francisco but you can build apartments, so it's hilly in central HK and you can find skyscrapers all cramped together, creating a cool effect.
 - house prices are definitely expensive, I saw a lot of foreigners while going out for claypot tonight, I wonder if they enjoy their life in HK, and why they chose to be here if it wasn't just for business
-- hard to buy anything here, my sister kept wishing to be back in shenzhen to buy more things, I'm still amazed by the $35 fake nike that I think costs >$1000 in StockX for the real one.
+- hard to buy anything here, my sister kept wishing to be back in shenzhen to buy more things, I'm still amazed by the \$35 fake nike that I think costs >\$1000 in StockX for the real one.
 - I checked my email after being blocked in China for a few days and I really didn't miss anything. It was a helpful detox from the things that filled up my time and helped me reflect on whether they added value to my life.
