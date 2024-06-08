@@ -4,8 +4,6 @@ tags: 'advice, art'
 date: 'Mar 13, 2024'
 ---
 
-![Rachel Ruysch, Flowers in a Glass Vase, 1704](/images/flowers.jpg)
-
 Some [advice](https://www.youtube.com/watch?v=qyKXw24JX5g) from 8 artists.
 
 ### [Marina Abramovich](https://en.wikipedia.org/wiki/Marina_Abramovi%C4%87)
