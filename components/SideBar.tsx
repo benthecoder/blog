@@ -5,28 +5,29 @@ import Link from 'next/link';
 import ThemeSwitch from './ThemeSwitch';
 const links = [
   { path: '/thoughts', text: '💭' },
-  { path: '/hn', text: 'hn' },
+  { path: '/hn', text: '📰' },
   { path: '/now', text: 'now' },
   { path: '/curius', text: 'curius' },
   { path: '/sketch', text: 'sketch' },
   { path: '/library', text: 'library' },
+  { path: '/contact', text: 'findme' },
   { path: '/posts', text: 'archive' },
-  { path: '/contact', text: 'say hi' },
+  { path: '/random', text: '🎲' },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
   return (
-    <div className='md:sticky md:top-10 flex flex-col items-center mb-10'>
+    <div className="md:sticky md:top-10 flex flex-col items-center mb-10">
       <div>
-        <div className='font-bold text-center md:text-left mt-4 md:mt-0'>
-          <Link href='/'>
+        <div className="font-bold text-center md:text-left mt-4 md:mt-0">
+          <Link href="/">
             <h2>BENEDICT NEO</h2>
           </Link>
         </div>
 
         {/* Adjust the flex container to wrap items on smaller screens */}
-        <div className='flex flex-wrap justify-center md:flex-col md:mt-10 space-x-2 md:space-x-0 md:justify-start'>
+        <div className="flex flex-wrap justify-center md:flex-col md:mt-10 space-x-2 md:space-x-0 md:justify-start">
           {links.map(({ path, text }) => (
             <Link
               key={path}
