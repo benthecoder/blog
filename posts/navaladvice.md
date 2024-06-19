@@ -39,3 +39,9 @@ everyone wants to be loved, everyone needs to be deeply loved
 it's not something you can buy, no amount of money can give you true unconditional love
 
 you can give love, it's free to give
+
+you don't necessarily get it, but if you just get in the mindset of "I'm just going to give it", eventually, on a long enough time scale, you get what you deserve
+
+just work on yourself and be ready, and then good things will happen
+
+"when the student is ready, the master appears"
