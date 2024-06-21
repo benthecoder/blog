@@ -72,6 +72,7 @@ I've also collected a few resources for people to get started.
 - [A blog post is a very long and complex search query to find fascinating people and make them route interesting stuff to your inbox](https://www.henrikkarlsson.xyz/p/search-query)
 - [Some blogging myths](https://jvns.ca/blog/2023/06/05/some-blogging-myths/)
 - [My checklist for publishing a blog post — LessWrong](https://www.lesswrong.com/posts/ETneBngxBamDPDLXJ/my-checklist-for-publishing-a-blog-post)
+- [steve yegge - you-should-write-blogs](https://sites.google.com/site/steveyegge2/you-should-write-blogs)
 
 ### PG on writing
 
