@@ -159,11 +159,11 @@ This blog is my curated collection of that collection.
 
 ### my favorite quote of his
 
-> Life can be much broader once you discover one simple fact—and that is： everything around you that you call life was made up by people that were no smarter than you.  
+> Life can be much broader once you discover one simple fact—and that is： everything around you that you call life was made up by people that were no smarter than you.
 > And you can change it.  
 > You can influence it.  
 > You can build your own things that other people can use.  
-> And the minute you can understand that you can poke life, and if you push in， then something will pop out the other side; that you can change it, you can mold it—that's maybe the most important thing: to shake off this erroneous notion that life is there, and you're just going to live in it versus embrace it， change it, improve it, make your mark upon it.  
-> I think that's very important, and however you learn that, once you learn it， you'll want to change life and make it better. Because it's kind of messed up in a lot of ways.  
+> And the minute you can understand that you can poke life, and if you push in, then something will pop out the other side; that you can change it, you can mold it—that's maybe the most important thing: to shake off this erroneous notion that life is there, and you're just going to live in it versus embrace it, change it, improve it, make your mark upon it.  
+> I think that's very important, and however you learn that, once you learn it, you'll want to change life and make it better. Because it's kind of messed up in a lot of ways.  
 > Once you learn that, you'll never be the same again.  
 > — Steve, 1994
