@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 
-const TIMEZONE = 'Asia/Singapore';
+const TIMEZONE = 'America/Los_Angeles';
 
 const AboutPage = () => {
   const [time, setTime] = useState<string | null>(null);
@@ -33,35 +33,43 @@ const AboutPage = () => {
 
   return (
     <div>
-      <article className='prose'>
+      <article className="prose">
         <h1>Now</h1>
-        <p>Based in KL, Malaysia, where it's currently {time}</p>
+        <p>Based in SF, California, where it's currently {time}</p>
         <p>
-          This is a <a href='https://sive.rs/nowff'>now</a> page
+          This is a <a href="https://sive.rs/nowff">now</a> page
         </p>
-        <ul className='list-disc'>
-          <li>graduated from Iowa State</li>
+        <ul className="list-disc">
           <li>
-            Starting <a href='https://lu.ma/luminarykl'>Luminary</a> in KL
+            data science masters @{' '}
+            <a href="https://www.usfca.edu/arts-sciences/programs/graduate/data-science">
+              USF
+            </a>
+          </li>
+          <li>at a talk or hackathon</li>
+          <li>walking a lot</li>
+          <li>
+            learning <a href="https://github.com/benthecoder/AI">AI</a> from
+            scratch
+          </li>
+          {/*<li>
+            Starting <a href="https://lu.ma/luminarykl">Luminary</a> in KL
           </li>
           <li>
             Building{' '}
-            <a href='https://benneo.notion.site/project-ideas-63bc556d83a5405da1bcd89629da2a0e?pvs=4'>
+            <a href="https://benneo.notion.site/project-ideas-63bc556d83a5405da1bcd89629da2a0e?pvs=4">
               cool iOS apps
             </a>{' '}
             with{' '}
-            <a href='https://twitter.com/benxneo/status/1743458106032488839'>
+            <a href="https://twitter.com/benxneo/status/1743458106032488839">
               SwiftUI
             </a>
           </li>
-          <li>
-            Learning <a href='https://github.com/benthecoder/AI'>AI</a> from
-            scratch
-          </li>
-          <li>Reading Funny Weather: Art in an Emergency</li>
+            <li>Reading Funny Weather: Art in an Emergency</li>
+          */}
         </ul>
         <br></br>
-        <p>Last updated: Feb 21, 2024</p>
+        <p>Last updated: Jul 1, 2024</p>
       </article>
     </div>
   );
