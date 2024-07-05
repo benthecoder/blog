@@ -1,6 +1,6 @@
 ---
 title: 'How to Be a Good Listener'
-tags: 'ideas'
+tags: 'people, talking'
 date: 'Mar 8, 2024'
 ---
 
