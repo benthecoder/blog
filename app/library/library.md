@@ -12,26 +12,13 @@
 - [How to Be a Friend: An Ancient Guide to True Friendship](/posts/truefriendship) (Marcus Tullius Cicero) ✅
 - [The Almanack of Naval Ravikant](/posts/naval) (Naval Ravikant) ✅
 - [Make Something Wonderful](/posts/makesomethingwonderful) (Steve Jobs) ✅
+- [The Art of Doing Science and Engineering](/posts/hamming) (Richard W. Hamming) ⏳
+- Mere Christianity (C.S. Lewis)
 - The Wisdom of Insecurity: A Message for an Age of Anxiety (Alan W. Watts)
-- The Miracle of Morning Pages (Julia Cameron)
 - Four Thousand Weeks: Time Management for Mortals (Oliver Burkeman)
-- The Almanack of Naval Ravikant: A Guide to Wealth and Happiness (Eric Jorgenson)
 - The Little Prince (Antoine de Saint-Exupéry)
-- Funny Weather: Art in an Emergency (Olivia Laing)
 - Lean Startup (Eric Ries)
-- The Secret History (Donna Tartt)
 - The Conquest of Happiness (Bertrand Russell)
-- Germinal (Emile Zola)
-- The Socrates Express (Eric Weiner)
-- 2001: A Space Odyssey (Arthur Clarke)
-- Pnin (Nabakov)
-- Dune (Frank Herbert)
-- Picture of Dorian Gray (Oscar Wilde)
-- To a God Unknown (John Steinbeck)
-- Neuromancer (William Gibson)
-- Plato and a Platypus Walk into a Bar (Thomas Cathcart)
-- The Bridge of San Luis Rey (Thornton Wilder)
-- Brave New World (Aldous Huxley)
 
 ## My Information Diet
 
