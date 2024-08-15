@@ -54,7 +54,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
     <div>
       <div
         key={post.data.title}
-        className="border-black border-double border-4 p-3 bg-[#f7f3e8] dark:bg-gray-900 dark:border-white dark:text-gray-100"
+        className="border-black border-double border-4 p-3 bg-[#f4f7fd] dark:bg-[#222222] dark:border-white dark:text-gray-100"
       >
         {slug ? (
           <Link href={`/posts/${slug}`} className="mr-0">
