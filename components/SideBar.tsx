@@ -22,7 +22,7 @@ export function Sidebar() {
       <div>
         <div className="font-bold text-center md:text-left mt-4 md:mt-0">
           <Link href="/">
-            <h2>BENEDICT NEO</h2>
+            <h2>BENEDICT NEO 梁耀恩</h2>
           </Link>
         </div>
 
