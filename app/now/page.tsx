@@ -35,23 +35,25 @@ const AboutPage = () => {
     <div>
       <article className="prose">
         <h1>Now</h1>
-        <p>Based in SF, California, where it's currently {time}</p>
         <p>
           This is a <a href="https://sive.rs/nowff">now</a> page
         </p>
+        <p>📌 SF, time is {time}</p>
         <ul className="list-disc">
           <li>
-            data science masters @{' '}
+            msds @{' '}
             <a href="https://www.usfca.edu/arts-sciences/programs/graduate/data-science">
               USF
             </a>
           </li>
-          <li>at a talk or hackathon</li>
-          <li>walking a lot</li>
+          <li>
+            at an <a href="https://lu.ma/sf"> event</a> or hackathon
+          </li>
           <li>
             learning <a href="https://github.com/benthecoder/AI">AI</a> from
             scratch
           </li>
+          <li>reading Mere Christianity & Surprised by Joy</li>
           {/*<li>
             Starting <a href="https://lu.ma/luminarykl">Luminary</a> in KL
           </li>
@@ -69,7 +71,7 @@ const AboutPage = () => {
           */}
         </ul>
         <br></br>
-        <p>Last updated: Jul 1, 2024</p>
+        <p>Last updated: Sep 8, 2024</p>
       </article>
     </div>
   );
