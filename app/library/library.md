@@ -22,6 +22,8 @@
 
 ## My Information Diet
 
+- [Asterisk](https://asteriskmag.com/issues)
+- [Works in Progress](https://worksinprogress.co/)
 - [Bored Reading](https://boredreading.com/)
 - [The Brutalist Report](https://brutalist.report/)
 - [DAILY ROTATION](https://www.dailyrotation.com/)
@@ -49,6 +51,7 @@
 - [How to Do Great Work](http://paulgraham.com/greatwork.html)
 - [Ancient Rivers of Money](https://www.ribbonfarm.com/2010/11/05/ancient-rivers-of-money/)
 - [How to Pick a Career (That Actually Fits You) — Wait But Why](https://waitbutwhy.com/2018/04/picking-career.html)
+- [Conviction is the Scarcest Resource: Dialogues About Conviction](https://blog.aayushg.com/conviction)
 
 ## List of Essays
 
