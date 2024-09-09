@@ -9,6 +9,7 @@ const links = [
   { path: '/now', text: 'now' },
   { path: '/curius', text: 'curius' },
   { path: '/sketch', text: 'sketch' },
+  { path: '/projects', text: 'projects' },
   { path: '/library', text: 'library' },
   { path: '/contact', text: 'findme' },
   { path: '/posts', text: 'archive' },
