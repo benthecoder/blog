@@ -7,7 +7,9 @@ in progress
 idea phase
 
 - graphrag over blog posts, create knowledge graphs from blogs
-- plain: chrome extension that converts any technical text into [plain language](https://en.wikipedia.org/wiki/Plain_language?useskin=vector) (refer to [smalltalk](https://github.com/varunshenoy/smalltalk))
+  - [AuvaLab/itext2kg](https://github.com/AuvaLab/itext2kg?tab=readme-ov-file)
+- plain: chrome extension that converts any technical text into [plain language](https://en.wikipedia.org/wiki/Plain_language?useskin=vector)
+  - [smalltalk](https://github.com/varunshenoy/smalltalk)
 - hackernews comment generator by popular users
 - bible study tool, graph based references to other verses
 - muni bus app live widget ios
@@ -21,6 +23,7 @@ other projects page
 - [Alicia Guo](https://www.aliciaguo.com/artifacts/)
 - [Kartik Agaram](https://akkartik.name/code)
 - [Ray Del Vecchio](https://raydelv.tech/technology)
+- [Alex Reichert](https://www.alexreichert.com/projects)
 
 ideas
 
