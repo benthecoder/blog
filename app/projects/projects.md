@@ -1,5 +1,9 @@
 # Projects
 
+shipped
+
+- [aha](https://github.com/benthecoder/aha): chrome extension that explains anything with llama 3.1 + exa.ai api
+
 in progress
 
 - tofu (ai that writes like you)
@@ -8,9 +12,6 @@ idea phase
 
 - graphrag over blog posts, create knowledge graphs from blogs
   - [AuvaLab/itext2kg](https://github.com/AuvaLab/itext2kg?tab=readme-ov-file)
-- plain: chrome extension that converts any technical text into [plain language](https://en.wikipedia.org/wiki/Plain_language?useskin=vector)
-  - [smalltalk](https://github.com/varunshenoy/smalltalk)
-- hackernews comment generator by popular users
 - bible study tool, graph based references to other verses
 - muni bus app live widget ios
 
@@ -24,6 +25,7 @@ other projects page
 - [Kartik Agaram](https://akkartik.name/code)
 - [Ray Del Vecchio](https://raydelv.tech/technology)
 - [Alex Reichert](https://www.alexreichert.com/projects)
+- [Keane Moraes](https://www.itskeane.info/projects)
 
 ideas
 
