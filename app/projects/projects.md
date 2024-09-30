@@ -7,12 +7,12 @@ shipped
 in progress
 
 - tofu (ai that writes like you)
+- genesis (knowledge graph of the entire bible)
 
 idea phase
 
 - graphrag over blog posts, create knowledge graphs from blogs
   - [AuvaLab/itext2kg](https://github.com/AuvaLab/itext2kg?tab=readme-ov-file)
-- bible study tool, graph based references to other verses
 - muni bus app live widget ios
 
 ---
