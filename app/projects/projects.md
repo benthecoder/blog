@@ -11,6 +11,7 @@ in progress
 
 idea phase
 
+- journal emotions with [hume.ai](https://www.hume.ai/)
 - graphrag over blog posts, create knowledge graphs from blogs
   - [AuvaLab/itext2kg](https://github.com/AuvaLab/itext2kg?tab=readme-ov-file)
 - muni bus app live widget ios
