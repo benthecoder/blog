@@ -38,7 +38,7 @@ const AboutPage = () => {
         <p>
           This is a <a href="https://sive.rs/nowff">now</a> page
         </p>
-        <p>📌 SF, time is {time}</p>
+        <p>based in SF, where it's currently {time}</p>
         <ul className="list-disc">
           <li>
             msds @{' '}
@@ -46,6 +46,7 @@ const AboutPage = () => {
               USF
             </a>
           </li>
+          <li>ai for cancer research @ UCSF Health</li>
           <li>
             at an <a href="https://lu.ma/sf"> event</a> or hackathon
           </li>
@@ -53,7 +54,6 @@ const AboutPage = () => {
             learning <a href="https://github.com/benthecoder/AI">AI</a> from
             scratch
           </li>
-          <li>reading Mere Christianity & Surprised by Joy</li>
           {/*<li>
             Starting <a href="https://lu.ma/luminarykl">Luminary</a> in KL
           </li>
@@ -71,7 +71,7 @@ const AboutPage = () => {
           */}
         </ul>
         <br></br>
-        <p>Last updated: Sep 8, 2024</p>
+        <p>Last updated: Nov 23, 2024</p>
       </article>
     </div>
   );
