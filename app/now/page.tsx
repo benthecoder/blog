@@ -38,7 +38,7 @@ const AboutPage = () => {
         <p>
           This is a <a href="https://sive.rs/nowff">now</a> page
         </p>
-        <p>based in SF, where it's currently {time}</p>
+        <p>📌 SF, time is {time}</p>
         <ul className="list-disc">
           <li>
             msds @{' '}
