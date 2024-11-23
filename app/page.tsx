@@ -7,9 +7,7 @@ import fs from 'fs';
 import path from 'path';
 
 const HomePage = () => {
-  const [currentImage, setCurrentImage] = useState<string>(
-    '/images/handrose.png'
-  );
+  const [currentImage, setCurrentImage] = useState<string>('');
   const [imageList, setImageList] = useState<string[]>([]);
 
   useEffect(() => {
@@ -18,6 +16,12 @@ const HomePage = () => {
       const response = await fetch('/api/images');
       const data = await response.json();
       setImageList(data.images);
+
+      // Set a random initial image
+      if (data.images.length > 0) {
+        const randomIndex = Math.floor(Math.random() * data.images.length);
+        setCurrentImage(data.images[randomIndex]);
+      }
     };
 
     fetchImages();
