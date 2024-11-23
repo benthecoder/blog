@@ -8,7 +8,6 @@ const links = [
   { path: '/hn', text: '📰' },
   { path: '/now', text: 'now' },
   { path: '/curius', text: 'curius' },
-  { path: '/sketch', text: 'sketch' },
   { path: '/projects', text: 'projects' },
   { path: '/library', text: 'library' },
   { path: '/contact', text: 'findme' },
