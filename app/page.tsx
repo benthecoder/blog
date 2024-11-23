@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 const HomePage = () => {
   const imageList = [
+    '/images/wave.png',
     '/images/handrose.png',
     '/images/sunflowersketch.png',
     '/images/peony.png',
@@ -14,14 +15,11 @@ const HomePage = () => {
     '/images/hokusai.png',
     '/images/christ.png',
     '/images/metro.png',
-    '/images/wave.png',
     '/images/room.png',
     '/images/angel.png',
   ];
 
-  const [currentImage, setCurrentImage] = useState<string>(
-    imageList[Math.floor(Math.random() * imageList.length)]
-  );
+  const [currentImage, setCurrentImage] = useState<string>(imageList[0]);
 
   const showRandomImage = () => {
     let nextImage = currentImage;
