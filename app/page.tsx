@@ -1,31 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import fs from 'fs';
-import path from 'path';
 
 const HomePage = () => {
-  const [currentImage, setCurrentImage] = useState<string>('');
-  const [imageList, setImageList] = useState<string[]>([]);
+  const imageList = [
+    '/images/handrose.png',
+    '/images/sunflowersketch.png',
+    '/images/peony.png',
+    '/images/hummingbird.png',
+    '/images/howl.png',
+    '/images/hokusai.png',
+    '/images/christ.png',
+    '/images/metro.png',
+    '/images/wave.png',
+    '/images/room.png',
+    '/images/angel.png',
+  ];
 
-  useEffect(() => {
-    // Fetch the list of images from the API
-    const fetchImages = async () => {
-      const response = await fetch('/api/images');
-      const data = await response.json();
-      setImageList(data.images);
-
-      // Set a random initial image
-      if (data.images.length > 0) {
-        const randomIndex = Math.floor(Math.random() * data.images.length);
-        setCurrentImage(data.images[randomIndex]);
-      }
-    };
-
-    fetchImages();
-  }, []);
+  const [currentImage, setCurrentImage] = useState<string>(
+    imageList[Math.floor(Math.random() * imageList.length)]
+  );
 
   const showRandomImage = () => {
     let nextImage = currentImage;
@@ -52,10 +48,6 @@ const HomePage = () => {
           priority={true}
         />
       </div>
-
-      <Link href="/posts" className="underline mt-10">
-        View the archives
-      </Link>
     </div>
   );
 };
