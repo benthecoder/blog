@@ -63,3 +63,13 @@
 - [Words That Matter](https://words.getmatter.com/)
 - [Lists — Joanne Peng](https://www.joannepeng.com/lists)
 - [Links | near.blog](https://near.blog/links/)
+
+## paris review interviews
+
+- [Vladimir Nabokov, The Art of Fiction No. 40](https://web.archive.org/web/20150101033217/https://www.theparisreview.org/interviews/4310/the-art-of-fiction-no-40-vladimir-nabokov)
+- [Philip Roth, The Art of Fiction No. 84](https://web.archive.org/web/20120119101149/https://www.theparisreview.org/interviews/2957/the-art-of-fiction-no-84-philip-roth)
+- [Toni Morrison, The Art of Fiction No. 134](https://web.archive.org/web/20140419010926/https://www.theparisreview.org/interviews/1888/the-art-of-fiction-no-134-toni-morrison)
+- [Don DeLillo, The Art of Fiction No. 135](https://web.archive.org/web/20120112155034/https://www.theparisreview.org/interviews/1887/the-art-of-fiction-no-135-don-delillo)
+- [Haruki Murakami, The Art of Fiction No. 182](https://www.theparisreview.org/interviews/2/the-art-of-fiction-no-182-haruki-murakami)
+- [David Mitchell, The Art of Fiction No. 204](https://web.archive.org/web/20120107072852/https://www.theparisreview.org/interviews/6034/the-art-of-fiction-no-204-david-mitchell)
+- [Ursula K. Le Guin, The Art of Fiction No. 221](https://web.archive.org/web/20150106213733/https://www.theparisreview.org/interviews/6253/the-art-of-fiction-no-221-ursula-k-le-guin)
