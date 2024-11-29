@@ -6,8 +6,7 @@ interface Tweet {
   created_at: Date;
 }
 
-// Assuming you've set NEON_DATABASE_URL in your environment variables
-const sql = neon(process.env.DATABASE_URL!);
+const sql = neon(process.env.TWEET_DATABASE_URL!);
 
 async function getTweets(): Promise<Tweet[]> {
   // Construct your SQL query
@@ -42,17 +41,17 @@ export default async function ThoughtsPage() {
 
   return (
     <section>
-      <h1 className='font-bold text-left mb-10 text-2xl'> Ben's Thoughts 💭</h1>
+      <h1 className="font-bold text-left mb-10 text-2xl"> Ben's Thoughts 💭</h1>
       {entries.length > 0
         ? entries.map((entry) => (
             <div
               key={entry.id}
-              className='flex flex-col mb-6 p-2 bg-blue-100 border-2 border-black dark:bg-gray-900 dark:border-white'
+              className="flex flex-col mb-6 p-2 bg-blue-100 border-2 border-black dark:bg-gray-900 dark:border-white"
             >
-              <div className='text-md text-gray-700 break-words dark:text-white'>
+              <div className="text-md text-gray-700 break-words dark:text-white">
                 {entry.content}
               </div>
-              <div className='text-gray-500 mt-2 text-sm'>
+              <div className="text-gray-500 mt-2 text-sm">
                 {new Date(entry.created_at).toLocaleString('en-GB', {
                   timeZone: 'Asia/Kuala_Lumpur',
                   hour: 'numeric',
@@ -70,6 +69,5 @@ export default async function ThoughtsPage() {
   );
 }
 
-neonConfig.fetchConnectionCache = false;
 export const runtime = 'edge';
 export const revalidate = 0;
