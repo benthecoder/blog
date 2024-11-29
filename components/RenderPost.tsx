@@ -54,7 +54,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
     <div>
       <div
         key={post.data.title}
-        className="p-8 bg-[#fffcf7] dark:bg-[#1a1b26] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 dark:text-[#c7cce1] border-l-4 border-[#e6c9a8] dark:border-[#7aa2f7]"
+        className="p-4 bg-[#fffcf7] dark:bg-[#1a1b26] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 dark:text-[#c7cce1] border-l-4 border-[#e6c9a8] dark:border-[#7aa2f7]"
       >
         {/* Title - centered with larger size */}
         <div className="text-center">
@@ -71,7 +71,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
           )}
 
           {/* Date  */}
-          <p className="text-[#927456] dark:text-[#7aa2f7] text-sm mt-3">
+          <p className="text-[#927456] dark:text-[#7aa2f7] text-sm mt-2">
             {new Date(post.data.date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
@@ -81,7 +81,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
         </div>
 
         {/* Tags  */}
-        <div className="mt-2 flex flex-wrap justify-center gap-2  mb-8">
+        <div className="mt-2 flex flex-wrap justify-center gap-2  mb-4">
           {post.data.tags.split(', ').map((tag: any) => (
             <Link
               href={`/tags/${tag}`}
@@ -92,6 +92,8 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
             </Link>
           ))}
         </div>
+
+        <hr className="border-[#e6c9a8] dark:border-[#7aa2f7] opacity-30 mb-3" />
 
         {/* Content */}
         <article className="prose dark:text-[#c7cce1] text-sm md:text-base leading-relaxed max-w-none">
@@ -106,7 +108,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
       </div>
 
       {/* Navigation - centered */}
-      <div className="mt-8 flex flex-col text-sm gap-3">
+      <div className="mt-8 flex flex-col text-sm gap-1">
         {next && (
           <div className="flex group">
             <p className="text-[#927456] dark:text-[#7aa2f7]">Next:</p>
