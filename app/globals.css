@@ -3,18 +3,54 @@
 @tailwind utilities;
 
 body {
-  background-color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    #fff8f3 0%,
+    /* Warm cream */ #fffcf7 50%,
+    /* Paper white */ #fff8f3 100% /* Warm cream */
+  );
+  min-height: 100vh;
+  background-attachment: fixed;
+}
+
+.dark body {
+  background: linear-gradient(
+    135deg,
+    #16161e 0%,
+    /* Deep navy */ #1a1b26 50%,
+    /* Tokyo Night */ #16161e 100% /* Deep navy */
+  );
+  min-height: 100vh;
+  background-attachment: fixed;
 }
 
 .prose {
-  color: #181010;
+  color: #334155;
   width: 100%;
   min-width: 100%;
-  padding: 0 1rem;
+  padding: 0 1.5rem;
+  position: relative;
+}
+
+/* Add subtle paper texture */
+.prose::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)' opacity='0.015'/%3E%3C/svg%3E");
+  opacity: 0.1;
+  pointer-events: none;
 }
 
 .dark .prose {
-  color: #fff;
+  color: #e2e8f0;
+}
+
+.dark body {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
 .prose strong {
@@ -124,7 +160,7 @@ body {
 }
 
 .dark .prose blockquote {
-  border-color: #fff; /* set your preferred color for dark mode */
+  border-color: #fff;
   color: #b4b4b4;
 }
 
@@ -140,8 +176,8 @@ body {
 }
 
 ::selection {
-  background: #0b3f6a;
-  color: #fff;
+  background: rgba(147, 197, 253, 0.3);
+  color: #1a1a2e;
 }
 
 mark {
@@ -150,8 +186,8 @@ mark {
 }
 
 .dark ::selection {
-  background: #93d2fd;
-  color: #000;
+  background: rgba(147, 197, 253, 0.2);
+  color: #fff;
 }
 
 .hover-container {
@@ -181,4 +217,20 @@ mark {
 
 .hover-container:hover .image-container {
   display: flex; /* Show when the container is hovered */
+}
+
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-loading-bar {
+  animation: loading-bar 1.5s ease-in-out infinite;
 }

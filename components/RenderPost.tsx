@@ -54,20 +54,47 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
     <div>
       <div
         key={post.data.title}
-        className="border-black border-double border-4 p-3 bg-[#f4f7fd] dark:bg-[#222222] dark:border-white dark:text-gray-100"
+        className="p-8 bg-[#fffcf7] dark:bg-[#1a1b26] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 dark:text-[#c7cce1] border-l-4 border-[#e6c9a8] dark:border-[#7aa2f7]"
       >
-        {slug ? (
-          <Link href={`/posts/${slug}`} className="mr-0">
-            <h2 className="font-bold text-2xl mb-8 text-center">
+        {/* Title - centered with larger size */}
+        <div className="text-center">
+          {slug ? (
+            <Link href={`/posts/${slug}`}>
+              <h2 className="font-bold text-xl md:text-2xl text-[#2c353d] dark:text-[#a9b1d6] hover:text-[#927456] dark:hover:text-[#7aa2f7] transition-colors duration-200">
+                {post.data.title}
+              </h2>
+            </Link>
+          ) : (
+            <h2 className="font-bold text-xl md:text-2xl text-[#2c353d] dark:text-[#a9b1d6]">
               {post.data.title}
             </h2>
-          </Link>
-        ) : (
-          <h2 className="font-bold text-lg md:text-2xl mb-8 text-center">
-            {post.data.title}
-          </h2>
-        )}
-        <article className="prose dark:text-white text-sm  md:text-base">
+          )}
+
+          {/* Date  */}
+          <p className="text-[#927456] dark:text-[#7aa2f7] text-sm mt-3">
+            {new Date(post.data.date).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </p>
+        </div>
+
+        {/* Tags  */}
+        <div className="mt-2 flex flex-wrap justify-center gap-2  mb-8">
+          {post.data.tags.split(', ').map((tag: any) => (
+            <Link
+              href={`/tags/${tag}`}
+              key={tag}
+              className="px-3 py-1 text-xs rounded-full bg-[#faf4eb] text-[#927456] hover:bg-[#927456] hover:text-white transition-colors duration-200 dark:bg-[#1e2030] dark:text-[#7aa2f7] dark:hover:bg-[#7aa2f7] dark:hover:text-[#1a1b26]"
+            >
+              #{tag}
+            </Link>
+          ))}
+        </div>
+
+        {/* Content */}
+        <article className="prose dark:text-[#c7cce1] text-sm md:text-base leading-relaxed max-w-none">
           <ReactMarkdown
             components={components}
             remarkPlugins={[remarkMath]}
@@ -76,36 +103,28 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
             {post.content}
           </ReactMarkdown>
         </article>
-        <div className="flex justify-between items-center mt-12">
-          <div className="flex flex-wrap">
-            {post.data.tags.split(', ').map((tag: any) => (
-              <Link
-                href={`/tags/${tag}`}
-                key={tag}
-                className="mr-2 px-1 py-0.5 border-2 bg-slate-100 text-sm md:text-base border-black border-double hover:bg-black hover:text-white hover:border-white hover:border-2 dark:bg-gray-800 dark:text-white dark:hover:text-black dark:hover:bg-white dark:border-white"
-              >
-                #{tag}
-              </Link>
-            ))}
-          </div>
-          <p className="text-gray-400 text-sm  md:text-base">
-            {new Date(post.data.date).toLocaleDateString()}
-          </p>
-        </div>
       </div>
-      <div className="mt-10 flex flex-col text-sm  md:text-base">
+
+      {/* Navigation - centered */}
+      <div className="mt-8 flex flex-col text-sm gap-3">
         {next && (
-          <div className="flex items-center">
-            <p className="text-gray-400">Next:</p>
-            <Link href={`/posts/${next.slug}`} className="ml-2 underline">
+          <div className="flex group">
+            <p className="text-[#927456] dark:text-[#7aa2f7]">Next:</p>
+            <Link
+              href={`/posts/${next.slug}`}
+              className="ml-2 text-[#2c353d] dark:text-[#c7cce1] hover:text-[#927456] dark:hover:text-[#7aa2f7] transition-colors duration-200"
+            >
               {next.title}
             </Link>
           </div>
         )}
         {prev && (
-          <div className="flex items-center">
-            <p className="text-gray-400">Previous:</p>
-            <Link href={`/posts/${prev.slug}`} className="ml-2 underline">
+          <div className="flex group">
+            <p className="text-[#927456] dark:text-[#7aa2f7]">Previous:</p>
+            <Link
+              href={`/posts/${prev.slug}`}
+              className="ml-2 text-[#2c353d] dark:text-[#c7cce1] hover:text-[#927456] dark:hover:text-[#7aa2f7] transition-colors duration-200"
+            >
               {prev.title}
             </Link>
           </div>
