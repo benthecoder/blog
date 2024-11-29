@@ -85,26 +85,36 @@ CREATE TABLE tweets (
 Create pgvector extension
 
 ```sql
-CREATE EXTENSION vector;
+CREATE EXTENSION IF NOT EXISTS vector;
 ```
 
 ```sql
-CREATE TABLE blog_posts (
-  id SERIAL PRIMARY KEY,
-  title TEXT NOT NULL,
-  slug TEXT NOT NULL UNIQUE,
-  date TIMESTAMP NOT NULL,
-  tags TEXT,
-  wordcount INTEGER,
-  content TEXT,
-  embedding VECTOR(1536)
+CREATE TABLE content_chunks (
+    id UUID PRIMARY KEY,
+    post_slug TEXT NOT NULL,
+    post_title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    chunk_type TEXT NOT NULL,
+    metadata JSONB NOT NULL,
+    sequence INTEGER NOT NULL,
+    embedding vector(1024),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Create a vector index for faster similarity search
+CREATE INDEX ON content_chunks
+USING ivfflat (embedding vector_cosine_ops)
+WITH (lists = 100);
+
+-- Create additional indexes for faster filtering
+CREATE INDEX idx_content_chunks_post_slug ON content_chunks(post_slug);
+CREATE INDEX idx_content_chunks_chunk_type ON content_chunks(chunk_type);
 ```
 
 Run generate embeddings
 
 ```bash
-npm run generate:embeddings
+npm run generate-embeddings
 ```
 
 - [pgvector: Embeddings and vector similarity | Supabase Docs](https://supabase.com/docs/guides/database/extensions/pgvector?database-method=dashboard)
