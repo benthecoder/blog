@@ -1,10 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
-  // Indicate that these packages should not be bundled by webpack
   experimental: {
-    serverComponentsExternalPackages: ['sharp', 'onnxruntime-node'],
+    //serverExternalPackages: ['sharp', 'onnxruntime-node'],
   },
   rewrites: async () => [
     {
@@ -13,6 +11,10 @@ const nextConfig = {
     },
   ],
   staticPageGenerationTimeout: 1000,
+  env: {
+    DATABASE_URL: process.env.DATABASE_URL,
+    POSTGRES_URL: process.env.DATABASE_URL,
+  },
 };
 
 module.exports = nextConfig;
