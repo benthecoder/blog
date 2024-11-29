@@ -26,7 +26,6 @@ export function Sidebar() {
           </Link>
         </div>
 
-        {/* Adjust the flex container to wrap items on smaller screens */}
         <div className="flex flex-wrap justify-center md:flex-col md:mt-10 space-x-2 md:space-x-0 md:justify-start">
           {links.map(({ path, text }) => (
             <Link
