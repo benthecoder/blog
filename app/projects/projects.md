@@ -3,6 +3,7 @@
 shipped
 
 - [aha](https://github.com/benthecoder/aha): chrome extension that explains anything with llama 3.1 + exa.ai api
+- [deeptalks](https://deeptalks.us): an app for introspective questions for you and your loved ones
 
 in progress
 
