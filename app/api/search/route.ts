@@ -1,51 +1,139 @@
+import { sql } from '@vercel/postgres';
+import { VoyageAIClient } from 'voyageai';
 import { NextResponse } from 'next/server';
-import { neon, neonConfig } from '@neondatabase/serverless';
-import { z } from 'zod';
-import { generateEmbedding } from '../../../utils';
 
-neonConfig.fetchConnectionCache = true;
-export const runtime = 'edge';
+const client = new VoyageAIClient({
+  apiKey: process.env.VOYAGE_AI_API_KEY!,
+});
 
 export async function POST(request: Request) {
   try {
-    console.log('Received search request');
-    const sql = neon(process.env.NEON_DATABASE_URL!);
+    console.log('Database URL:', !!process.env.DATABASE_URL); // Log if URL exists
 
-    const body = await request.json();
+    const { query } = await request.json();
+    console.log('Received search query:', query);
 
-    const schema = z.object({
-      query: z.string().min(4, 'Query must be at least 4 character long.'),
-    });
-
-    const validated = schema.safeParse(body);
-    if (!validated.success) {
-      console.error('Validation failed:', validated.error.message);
+    if (!query) {
       return NextResponse.json(
-        {
-          error: `Invalid request: ${validated.error.message}`,
-        },
+        { error: 'Query parameter is required' },
         { status: 400 }
       );
     }
 
-    const { query } = validated.data;
-    const embedding = await generateEmbedding(query);
+    // Generate embedding for the search query
+    console.log('Generating embedding...');
+    const queryEmbedding = await client.embed({
+      model: 'voyage-3-lite',
+      input: query,
+      inputType: 'document',
+    });
 
-    const sqlQuery = `
-      SELECT title, slug, date, tags, wordcount, content
-      FROM blog_posts
-      ORDER BY embedding::VECTOR <=> '[${embedding}]'
-      LIMIT 15;
+    if (!queryEmbedding?.data?.[0]?.embedding) {
+      console.error('Failed to generate embedding:', queryEmbedding);
+      return NextResponse.json(
+        { error: 'Failed to generate embedding for query' },
+        { status: 500 }
+      );
+    }
+
+    const embedding = queryEmbedding.data[0].embedding;
+    const formattedEmbedding = `[${embedding.join(',')}]`;
+
+    // Perform hybrid search combining vector similarity and text search
+    console.log('Executing hybrid search query...');
+    const results = await sql`
+      WITH RankedResults AS (
+        SELECT 
+          content,
+          post_slug,
+          post_title,
+          chunk_type,
+          metadata,
+          1 - (embedding <=> ${formattedEmbedding}::vector) as vector_similarity,
+          ts_rank(
+            to_tsvector('english', content || ' ' || post_title),
+            plainto_tsquery('english', ${query})
+          ) as text_rank
+        FROM content_chunks
+        WHERE 
+          -- Text search condition
+          to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', ${query})
+          OR
+          -- Vector similarity condition
+          1 - (embedding <=> ${formattedEmbedding}::vector) > 0.5
+      )
+      SELECT 
+        content,
+        post_slug,
+        post_title,
+        chunk_type,
+        metadata,
+        vector_similarity,
+        text_rank,
+        -- Combine both scores with weights
+        (vector_similarity * 0.7 + COALESCE(text_rank, 0) * 0.3) as hybrid_score
+      FROM RankedResults
+      ORDER BY hybrid_score DESC
+      LIMIT 25;
     `;
 
-    const result = await sql(sqlQuery);
+    console.log(`Found ${results.rows.length} results`);
 
-    return NextResponse.json({ data: result });
-  } catch (e: unknown) {
-    if (!(e instanceof Error)) {
-      throw e;
+    // If no results, fall back to a more lenient search
+    if (results.rows.length === 0) {
+      console.log('No results, trying fallback hybrid search...');
+      const fallbackResults = await sql`
+        WITH RankedResults AS (
+          SELECT 
+            content,
+            post_slug,
+            post_title,
+            chunk_type,
+            metadata,
+            1 - (embedding <=> ${formattedEmbedding}::vector) as vector_similarity,
+            ts_rank(
+              to_tsvector('english', content || ' ' || post_title),
+              plainto_tsquery('english', ${query})
+            ) as text_rank
+          FROM content_chunks
+        )
+        SELECT 
+          content,
+          post_slug,
+          post_title,
+          chunk_type,
+          metadata,
+          vector_similarity,
+          text_rank,
+          (vector_similarity * 0.7 + COALESCE(text_rank, 0) * 0.3) as hybrid_score
+        FROM RankedResults
+        ORDER BY hybrid_score DESC
+        LIMIT 15;
+      `;
+
+      return NextResponse.json({
+        results: fallbackResults.rows.map((row) => ({
+          ...row,
+          similarity: row.hybrid_score,
+        })),
+        fallback: true,
+      });
     }
-    console.error('Error in POST function:', e.message);
-    return NextResponse.json({ error: e.message || '' }, { status: 500 });
+
+    return NextResponse.json({
+      results: results.rows.map((row) => ({
+        ...row,
+        similarity: row.hybrid_score,
+      })),
+    });
+  } catch (error) {
+    console.error('Search error:', error);
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : 'Internal server error',
+        details: process.env.NODE_ENV === 'development' ? error : undefined,
+      },
+      { status: 500 }
+    );
   }
 }
