@@ -51,13 +51,13 @@ export default function RootLayout({
   return (
     <html
       suppressHydrationWarning
-      lang='en'
+      lang="en"
       className={`${averia.variable} font-serif`}
     >
-      <body className='flex flex-col mb-40 mx-2 md:mx-10 md:flex-row md:items-start md:mt-10 dark:bg-black'>
+      <body className="flex flex-col mb-40 mx-2 md:mx-10 md:flex-row md:items-start md:mt-10 dark:bg-black bg-gradient-to-br from-transparent via-light-phthalo-200 to-transparent dark:from-transparent dark:via-dark-phthalo-200 dark:to-transparent">
         <Providers>
           <Sidebar />
-          <main className='flex-auto text-md md:mt-0 px-2 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full'>
+          <main className="flex-auto text-md md:mt-0 px-2 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full selection:bg-light-phthalo-100/10 dark:selection:bg-dark-phthalo-100/20">
             {children}
           </main>
         </Providers>
