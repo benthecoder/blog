@@ -16,9 +16,9 @@ body {
 .dark body {
   background: linear-gradient(
     135deg,
-    #16161e 0%,
-    /* Deep navy */ #1a1b26 50%,
-    /* Tokyo Night */ #16161e 100% /* Deep navy */
+    #0a1f15 0%,
+    /* Darker phthalo green */ #0d2419 50%,
+    /* Deep phthalo green */ #0a1f15 100% /* Darker phthalo green */
   );
   min-height: 100vh;
   background-attachment: fixed;
@@ -47,10 +47,6 @@ body {
 
 .dark .prose {
   color: #e2e8f0;
-}
-
-.dark body {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
 .prose strong {
