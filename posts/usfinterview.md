@@ -6,7 +6,7 @@ date: 'Feb 27, 2024'
 
 I'm writing this after finishing the 20-minute technical interview for the University of San Francisco's (USF) Master of Science in Data Science (MSDS) program. My hands are shaky. My body overdosed on adrenaline.
 
-I believe it went well. I got linear algebra and statistics down. I was asked about concepts that I was expecting and had answers memorized. I only failed at a very easy Python function that I would easily get if I wasn't 2 a.m. and under immense amount of anxiety and pressure.
+I believe it went well. I got linear algebra and statistics down. I was asked about concepts that I was expecting and had answers memorized. I only failed at a very easy Python function that I would easily get if it wasn't 2 a.m. and under immense amount of anxiety and pressure.
 
 To prepare, I put everything aside and committed the past two days studying with ChatGPT, generating questions and answers, understanding the answers, rinse and repeat. To capitalize on my efforts, and to extrinsically motivate myself, I also wrote 3 Medium articles for each topic Linear Algebra, Statistics, and Python.
 
