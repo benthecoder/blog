@@ -1,24 +1,51 @@
 # Library
 
-## Books I want to read in 2024
+## Books I want to read in 2025
 
-- [How Proust Can Change Your Life](/posts/proust) (Alain de Botton) ✅
-- [Man's Search for meaning](/posts/meaning) (Viktor Frankl) ✅
-- [The Elements of Style, Fourth Edition](/posts/elementsofstyle) (Willian Strunk) ✅
-- [Letters to a Young Poet](/posts/rilkeletters) (Rainer Maria Rilke) ✅
-- [Burnout Society](/posts/burnoutsociety) (Byung-Chul Han) ✅
-- [Zero to One](/posts/0to1) (Peter Thiel) ✅
-- [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn Klinkenborg) ✅
-- [How to Be a Friend: An Ancient Guide to True Friendship](/posts/truefriendship) (Marcus Tullius Cicero) ✅
-- [The Almanack of Naval Ravikant](/posts/naval) (Naval Ravikant) ✅
-- [Make Something Wonderful](/posts/makesomethingwonderful) (Steve Jobs) ✅
-- [The Art of Doing Science and Engineering](/posts/hamming) (Richard W. Hamming) ⏳
+fiction
+
+- The Last Samurai (Helen DeWitt)
+- Outline (Rachel Cusk)
+- Transit (Rachel Cusk)
+- The Unbearable Lightness of Being (Milan Kundera)
+- The Brothers Karamazov (Fyodor Dostoevsky)
+
+spirituality
+
+- Confession (Leo Tolstoy)
+- Gospel in Brief (Leo Tolstoy)
+- Works of Love (Søren Kierkegaard)
+- Fear and Trembling (Søren Kierkegaard)
 - Mere Christianity (C.S. Lewis)
-- The Wisdom of Insecurity: A Message for an Age of Anxiety (Alan W. Watts)
-- Four Thousand Weeks: Time Management for Mortals (Oliver Burkeman)
-- The Little Prince (Antoine de Saint-Exupéry)
-- Lean Startup (Eric Ries)
+- Screwtape Letters (C.S. Lewis)
+- The Wisdom of Insecurity (Alan W. Watts)
+
+introspections
+
+- A Life of One's Own (Joanna Field)
 - The Conquest of Happiness (Bertrand Russell)
+- Daily Rituals (Mason Currey)
+- The Sense of Style (Steven Pinker)
+- Walden (Henry D. Thoreau)
+
+tech
+
+- Read Write Own: Building the Next Era of the Internet (Chris Dixon)
+- Boom: Bubbles and the End of Stagnation (Byrne Hobart and Tobias Huber)
+- The Art of Doing Science and Engineering (Richard W. Hamming)
+
+## Books in 2024
+
+1. [How Proust Can Change Your Life](/posts/proust) (Alain de Botton) ✅
+1. [Man's Search for meaning](/posts/meaning) (Viktor Frankl) ✅
+1. [The Elements of Style, Fourth Edition](/posts/elementsofstyle) (Willian Strunk) ✅
+1. [Letters to a Young Poet](/posts/rilkeletters) (Rainer Maria Rilke) ✅
+1. [Burnout Society](/posts/burnoutsociety) (Byung-Chul Han) ✅
+1. [Zero to One](/posts/0to1) (Peter Thiel) ✅
+1. [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn Klinkenborg) ✅
+1. [How to Be a Friend: An Ancient Guide to True Friendship](/posts/truefriendship) (Marcus Tullius Cicero) ✅
+1. [The Almanack of Naval Ravikant](/posts/naval) (Naval Ravikant) ✅
+1. [Make Something Wonderful](/posts/makesomethingwonderful) (Steve Jobs) ✅
 
 ## My Information Diet
 
@@ -38,11 +65,9 @@
 
 ## Fellow Daily Writers
 
-- [Matt Rickard](https://matt-rickard.com/archive)
 - [James Quiambao](https://www.jquiambao.com/archives)
 - [Rishi Dhanaraj](https://www.rishi.io/)
 - [Rohan Rajiv](https://alearningaday.blog/archives/)
-- [Wei Chun](https://weichun.xyz/)
 
 ## Ideas I want to revisit
 
