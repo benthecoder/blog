@@ -20,8 +20,9 @@ spirituality
 - Screwtape Letters (C.S. Lewis)
 - The Wisdom of Insecurity (Alan W. Watts)
 
-introspections
+self / art
 
+- [In Praise of Shadows](/posts/040125.md) (Jun’ichirō Tanizaki) ✅
 - A Life of One's Own (Joanna Field)
 - The Conquest of Happiness (Bertrand Russell)
 - Daily Rituals (Mason Currey)
