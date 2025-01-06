@@ -4,15 +4,18 @@
 
 fiction
 
+- Street Haunting (Virginia Woolf) ⏳
+- To The Lighthouse (Virginia Woolf)
 - The Last Samurai (Helen DeWitt)
 - Outline (Rachel Cusk)
 - Transit (Rachel Cusk)
 - The Unbearable Lightness of Being (Milan Kundera)
 - The Brothers Karamazov (Fyodor Dostoevsky)
+- White Nights (Fyodor Dostoevsky)
 
 spirituality
 
-- Confession (Leo Tolstoy)
+- Confession (Leo Tolstoy) ⏳
 - Gospel in Brief (Leo Tolstoy)
 - Works of Love (Søren Kierkegaard)
 - Fear and Trembling (Søren Kierkegaard)
