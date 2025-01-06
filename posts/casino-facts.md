@@ -8,7 +8,7 @@ Some [Casino Odds facts](https://www.youtube.com/watch?v=3kGlk1E_Cnw) from Yuchu
 
 **Strategies and Odds:**
 
-- In Baccarat, the game with the best odds for those without skills, you'll lose around $1.50-$3 per $100 that you bet. For skilled players, Blackjack offers the best odds, potentially allowing professional players to win $1.50 to $3 per $100 from the casino.
+- In Baccarat, the game with the best odds for those without skills, you'll lose around \$1.50-\$3 per \$100 that you bet. For skilled players, Blackjack offers the best odds, potentially allowing professional players to win \$1.50 to \$3 per \$100 from the casino.
 - Memorizing a basic strategy chart in Blackjack can minimize loss to around 60 cents per a hundred dollars.
 - Card counting in Blackjack involves tracking face cards and aces. More aces mean a higher chance of hitting blackjack, while more face cards increase the chance of the dealer busting.
 - The Martingale algorithm, which doubles your bet after every loss, is generally ineffective due to table limits.
