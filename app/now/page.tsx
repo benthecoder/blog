@@ -41,22 +41,21 @@ const AboutPage = () => {
         <p>📌 SF, time is {time}</p>
         <ul className="list-disc">
           <li>
-            msds @{' '}
+            paying an obscene amount of money for a{' '}
             <a href="https://www.usfca.edu/arts-sciences/programs/graduate/data-science">
-              USF
+              masters
             </a>
           </li>
           <li>ai for cancer research @ UCSF Health</li>
           <li>
-            at an <a href="https://lu.ma/sf"> event</a> or hackathon
-          </li>
-          <li>
             learning <a href="https://github.com/benthecoder/AI">AI</a> from
             scratch
           </li>
-          {/*<li>
-            Starting <a href="https://lu.ma/luminarykl">Luminary</a> in KL
+          <li>
+            trying to read 20 books this{' '}
+            <a href="https://www.goodreads.com/user/show/103179068">year</a>
           </li>
+          {/*
           <li>
             Building{' '}
             <a href="https://benneo.notion.site/project-ideas-63bc556d83a5405da1bcd89629da2a0e?pvs=4">
@@ -67,11 +66,10 @@ const AboutPage = () => {
               SwiftUI
             </a>
           </li>
-            <li>Reading Funny Weather: Art in an Emergency</li>
           */}
         </ul>
         <br></br>
-        <p>Last updated: Nov 23, 2024</p>
+        <p>Last updated: Jan 4, 2025</p>
       </article>
     </div>
   );
