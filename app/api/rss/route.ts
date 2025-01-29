@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
     const postItems = feed
       .map((page) => {
         const url = `${rootUrl}/posts/${page.filePath.replace('.md', '')}`;
-        let contentHTML = marked(page.content); // Assumes marked does not encode HTML entities
+        let contentHTML = marked(page.content);
 
         // Convert relative URLs to absolute URLs
         contentHTML = contentHTML.replace(
@@ -56,14 +56,18 @@ export async function GET(req: NextRequest) {
         <link>${url}</link>
         <guid>${url}</guid>
         <pubDate>${pubDate}</pubDate>
-        <description><![CDATA[${escapeXml(contentHTML)}]]></description>
+        <description><![CDATA[${contentHTML}]]></description>
+        <content:encoded><![CDATA[${contentHTML}]]></content:encoded>
       </item>`;
       })
       .join('');
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-    <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-      <channel>
+      <rss version="2.0" 
+        xmlns:content="http://purl.org/rss/1.0/modules/content/"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:atom="http://www.w3.org/2005/Atom">
+        <channel>
         <title>${metadata.title}</title>
         <description>${metadata.description}</description>
         <link>${rootUrl}</link>
