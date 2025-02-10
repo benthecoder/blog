@@ -1,6 +1,6 @@
 ---
 title: 'Reading on the plane'
-tags: 'links'
+tags: 'journal'
 date: 'May 13, 2023'
 ---
 
