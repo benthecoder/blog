@@ -1,0 +1,49 @@
+name: Generate Blog Post Embeddings
+
+on:
+  push:
+    paths:
+      - 'posts/*.md'
+    branches:
+      - main # or your default branch
+
+jobs:
+  generate-embeddings:
+    runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      VOYAGE_AI_API_KEY: ${{ secrets.VOYAGE_AI_API_KEY }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history to get changed files
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v41
+        with:
+          files: |
+            - 'posts/*.md'
+
+      - name: Generate embeddings for changed files
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "Processing: $file"
+            filename=$(basename "$file")
+            # Remove .md extension to get just the slug
+            slug="${filename%.md}"
+            npx tsx scripts/generateEmbeddings.ts "$slug"
+          done
