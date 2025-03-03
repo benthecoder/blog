@@ -19,6 +19,7 @@ interface SearchResult {
   vector_similarity?: number;
   text_rank?: number;
   hybrid_score?: number;
+  keyword_score?: number;
 }
 
 const LoadingComponent = () => {
@@ -66,8 +67,13 @@ const SearchResult = ({ result }: { result: SearchResult }) => {
           </h3>
           <div className="flex items-center gap-2">
             <span className="text-xs px-2 py-1 rounded-full bg-[#927456]/10 dark:bg-[#7aa2f7]/10 text-[#927456] dark:text-[#7aa2f7] font-medium">
-              {Math.round((result.hybrid_score ?? result.similarity) * 100)}%
-              match
+              {Math.round(
+                (result.hybrid_score ??
+                  result.keyword_score ??
+                  result.vector_similarity ??
+                  result.similarity) * 100
+              )}
+              % match
             </span>
           </div>
         </div>
@@ -88,26 +94,38 @@ const SearchResult = ({ result }: { result: SearchResult }) => {
   );
 };
 
+// Search type options
+type SearchType = 'hybrid' | 'semantic' | 'keyword';
+
 function SearchContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [query, setQuery] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return searchParams.get('q') || sessionStorage.getItem('lastQuery') || '';
-    }
-    return '';
-  });
+  // Initialize with empty defaults for server rendering
+  const [query, setQuery] = useState('');
+  const [searchType, setSearchType] = useState<SearchType>('hybrid');
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
 
-  const [results, setResults] = useState<SearchResult[]>(() => {
-    if (typeof window !== 'undefined') {
-      const cached = sessionStorage.getItem('searchResults');
-      return cached ? JSON.parse(cached) : [];
-    }
-    return [];
-  });
+  // Use useEffect to safely load from sessionStorage after mount
+  useEffect(() => {
+    const urlQuery = searchParams.get('q');
+    const urlType = searchParams.get('type') as SearchType;
+    
+    setQuery(urlQuery || sessionStorage.getItem('lastQuery') || '');
+    setSearchType(
+      urlType || 
+      (sessionStorage.getItem('lastSearchType') as SearchType) || 
+      'hybrid'
+    );
+    
+    const cached = sessionStorage.getItem('searchResults');
+    if (cached) setResults(JSON.parse(cached));
+    
+    setHasSearched(sessionStorage.getItem('hasSearched') === 'true');
+  }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,9 +137,13 @@ function SearchContent() {
     } else {
       params.delete('q');
     }
+    // Add search type to URL
+    params.set('type', searchType);
     replace(`${pathname}?${params.toString()}`);
 
+    // Store in session storage
     sessionStorage.setItem('lastQuery', query.trim());
+    sessionStorage.setItem('lastSearchType', searchType);
     setIsLoading(true);
     setError('');
 
@@ -129,7 +151,10 @@ function SearchContent() {
       const response = await fetch('/api/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: query.trim() }),
+        body: JSON.stringify({
+          query: query.trim(),
+          searchType,
+        }),
       });
 
       const data = await response.json();
@@ -146,27 +171,67 @@ function SearchContent() {
 
       setResults(data.results);
       sessionStorage.setItem('searchResults', JSON.stringify(data.results));
+      // Mark that a search has been performed
+      setHasSearched(true);
+      sessionStorage.setItem('hasSearched', 'true');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Search failed';
       setError(errorMessage);
+      // Still mark that a search was attempted even if it failed
+      setHasSearched(true);
+      sessionStorage.setItem('hasSearched', 'true');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSearchTypeChange = (type: SearchType) => {
+    setSearchType(type);
+    if (query.trim()) {
+      // Only update the URL without triggering immediate search
+      const params = new URLSearchParams(searchParams);
+      params.set('type', type);
+      if (query.trim()) {
+        params.set('q', query.trim());
+      }
+      replace(`${pathname}?${params.toString()}`);
+      sessionStorage.setItem('lastSearchType', type);
     }
   };
 
   useEffect(() => {
     if (searchParams) {
       const urlQuery = searchParams.get('q');
+      const urlType = searchParams.get('type') as SearchType;
+
+      // Only set the query and search type without auto-searching
       if (urlQuery && urlQuery !== query) {
         setQuery(urlQuery);
-        handleSearch(new Event('submit') as any);
       }
+
+      if (
+        urlType &&
+        urlType !== searchType &&
+        ['hybrid', 'semantic', 'keyword'].includes(urlType)
+      ) {
+        setSearchType(urlType);
+      }
+
+      // Don't auto-trigger search when params change
+      // Users must press Enter or click Search button
     }
   }, [searchParams]);
+  
+  // Clear hasSearched when query changes
+  useEffect(() => {
+    // When the user manually changes the query, reset the search state
+    setHasSearched(false);
+    sessionStorage.removeItem('hasSearched');
+  }, [query]);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <form onSubmit={handleSearch} className="mb-8">
+      <form onSubmit={handleSearch} className="mb-8 space-y-4">
         <input
           type="text"
           value={query}
@@ -174,17 +239,77 @@ function SearchContent() {
           placeholder="Search posts..."
           className="w-full p-2 bg-[#fffcf7] dark:bg-[#1a1b26] border border-[#e6c9a8] dark:border-[#1e2030] rounded-lg focus:ring-2 focus:ring-[#927456] dark:focus:ring-[#7aa2f7] focus:border-transparent text-[#2c353d] dark:text-[#c7cce1] placeholder-gray-400 dark:placeholder-gray-500"
         />
+
+        {/* Search Type Toggle */}
+        <div className="flex justify-center space-x-2 mt-2">
+          <button
+            type="button"
+            onClick={() => handleSearchTypeChange('hybrid')}
+            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+              searchType === 'hybrid'
+                ? 'bg-[#927456] dark:bg-[#7aa2f7] text-white'
+                : 'bg-[#e6c9a8]/20 dark:bg-[#1e2030] text-[#2c353d] dark:text-[#c7cce1] hover:bg-[#e6c9a8]/40 dark:hover:bg-[#1e2030]/70'
+            }`}
+          >
+            Hybrid
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSearchTypeChange('semantic')}
+            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+              searchType === 'semantic'
+                ? 'bg-[#927456] dark:bg-[#7aa2f7] text-white'
+                : 'bg-[#e6c9a8]/20 dark:bg-[#1e2030] text-[#2c353d] dark:text-[#c7cce1] hover:bg-[#e6c9a8]/40 dark:hover:bg-[#1e2030]/70'
+            }`}
+          >
+            Semantic
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSearchTypeChange('keyword')}
+            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+              searchType === 'keyword'
+                ? 'bg-[#927456] dark:bg-[#7aa2f7] text-white'
+                : 'bg-[#e6c9a8]/20 dark:bg-[#1e2030] text-[#2c353d] dark:text-[#c7cce1] hover:bg-[#e6c9a8]/40 dark:hover:bg-[#1e2030]/70'
+            }`}
+          >
+            Keyword
+          </button>
+        </div>
+
+        {/* Search Type Explanation */}
+        <div className="text-xs text-center text-[#2c353d]/60 dark:text-[#c7cce1]/60 italic mt-1">
+          {searchType === 'hybrid' &&
+            'Combines meaning and exact matches for balanced results'}
+          {searchType === 'semantic' &&
+            'Finds conceptually related content even with different wording'}
+          {searchType === 'keyword' &&
+            'Searches for exact word matches (like traditional search)'}
+        </div>
       </form>
 
       {isLoading && <LoadingComponent />}
       {error && (
         <div className="text-red-500 dark:text-red-400 mb-4">{error}</div>
       )}
-      <div className="space-y-6">
-        {results.map((result, index) => (
-          <SearchResult key={index} result={result} />
-        ))}
-      </div>
+
+      {results.length > 0 ? (
+        <div className="space-y-6">
+          {results.map((result, index) => (
+            <SearchResult key={index} result={result} />
+          ))}
+        </div>
+      ) : (
+        // Only show "no results" message if a search has been performed
+        !isLoading && hasSearched && query && (
+          <div className="text-center py-6 text-[#2c353d]/70 dark:text-[#c7cce1]/70">
+            <p>No results found for "{query}"</p>
+            <p className="text-sm mt-2">
+              Try a different search type or modify your query
+            </p>
+          </div>
+        )
+      )}
     </div>
   );
 }
