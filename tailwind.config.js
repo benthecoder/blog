@@ -34,6 +34,18 @@ module.exports = {
       fontFamily: {
         serif: ['var(--font-averia)'],
       },
+      keyframes: {
+        typing: {
+          '0%': { opacity: 0.3 },
+          '50%': { opacity: 1 },
+          '100%': { opacity: 0.3 },
+        },
+      },
+      animation: {
+        typing: 'typing 1.5s infinite',
+        'typing-middle': 'typing 1.5s infinite 0.2s',
+        'typing-last': 'typing 1.5s infinite 0.4s',
+      },
     },
   },
   plugins: [require('@tailwindcss/typography')],
