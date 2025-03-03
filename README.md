@@ -1,14 +1,52 @@
-# Blog
+# Personal Blog
 
 ![home](public/images/home.jpeg)
 
-A minimalistic blog made with Next.js and Tailwind CSS.
+A minimalistic blog built with Next.js, React, and TypeScript. It uses Markdown for content and features search functionality powered by vector embeddings.
 
-Design inspired by [James Quiambao](https://www.jquiambao.com/) and [Lee Robinson](https://github.com/leerob/leerob.io)
+Design inspired by [James Quiambao](https://www.jquiambao.com/) and [Lee Robinson](https://github.com/leerob/leerob.io).
 
-Tutorial on how to build this blog can be found [here](https://www.youtube.com/watch?v=Hiabp1GY8fA).
+## Features
 
-OpenAI code taken from [magic-text](https://github.com/jxnl/magic-text)
+- Markdown-based blog posts with frontmatter
+- Dark/light mode support
+- Three types of search:
+  - Keyword search (traditional text search)
+  - Semantic search (using vector embeddings)
+  - Hybrid search (combination of both)
+- RSS feed generation
+- Responsive design
+- Automated embedding generation via GitHub Actions
+
+## Development
+
+To run the development server:
+
+```bash
+npm run dev
+```
+
+To build for production:
+
+```bash
+npm run build
+```
+
+## Embedding Generation
+
+Post content is processed into semantic embeddings using VoyageAI's embedding model. New embeddings are generated automatically via GitHub Actions when posts are added or updated.
+
+To manually generate embeddings for a specific post:
+
+```bash
+npm run generate-embeddings [post-slug]
+```
+
+To generate embeddings for all posts:
+
+```bash
+npm run generate-embeddings
+```
 
 ## TODO
 
