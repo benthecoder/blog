@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
+import ChatInterface from '../components/ChatInterface';
+import { useState, useEffect, useCallback } from 'react';
 
 const HomePage = () => {
+  const [backgroundImage, setBackgroundImage] = useState(
+    '/images/sunflowersketch.png'
+  );
   const imageList = [
-    '/images/wave.png',
     '/images/handrose.png',
     '/images/sunflowersketch.png',
     '/images/peony.png',
@@ -14,47 +16,47 @@ const HomePage = () => {
     '/images/hokusai.png',
     '/images/christ.png',
     '/images/metro.png',
+    '/images/wave.png',
     '/images/room.png',
     '/images/angel.png',
   ];
 
-  const [currentImage, setCurrentImage] = useState<string>(imageList[0]);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const changeBackground = useCallback(() => {
+    let randomIndex;
+    let newImage;
+    do {
+      randomIndex = Math.floor(Math.random() * imageList.length);
+      newImage = imageList[randomIndex];
+    } while (newImage === backgroundImage && imageList.length > 1);
 
-  const navigateImage = () => {
-    const newIndex = (currentIndex + 1) % imageList.length;
-    setCurrentIndex(newIndex);
-    setCurrentImage(imageList[newIndex]);
+    setBackgroundImage(newImage);
+  }, [backgroundImage, imageList]);
+
+  // Just randomize background without showing gallery
+  const toggleGallery = () => {
+    // Instead of showing gallery, just change background
+    changeBackground();
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      changeBackground();
+    }, 45000); // Change every 45 seconds
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [changeBackground]);
+
   return (
-    <div className="grid grid-cols-1 min-h-screen select-none">
-      <div className="relative max-w-3xl mx-auto px-1 sm:px-4">
-        <div className="p-1 sm:p-8">
-          {/* Simple text prompt */}
-          <div className="text-center mb-2">
-            <span className="text-xs italic text-gray-400 tracking-wide">
-              click to view my sketches
-            </span>
-          </div>
-          <div className="relative">
-            <div className="bg-white rounded-lg shadow-lg">
-              <div
-                className="overflow-hidden rounded-md cursor-pointer hover:scale-[0.99] transition-transform"
-                onClick={navigateImage}
-              >
-                <Image
-                  src={currentImage}
-                  alt="Sequential artwork"
-                  width={0}
-                  height={0}
-                  sizes="100vw"
-                  style={{ width: '100%', height: 'auto' }}
-                  priority={true}
-                />
-              </div>
-            </div>
-          </div>
+    <div className="grid grid-cols-1 min-h-screen">
+      <div className="relative max-w-3xl mx-auto px-1 sm:px-4 w-full select-none">
+        <div className="p-1 sm:p-8 select-none">
+          {/* Chat Interface */}
+          <ChatInterface
+            backgroundImage={backgroundImage}
+            onChangeBackgroundAction={toggleGallery}
+          />
         </div>
       </div>
     </div>
