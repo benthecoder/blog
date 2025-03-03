@@ -2,19 +2,13 @@
 
 shipped
 
+- [scribesystem](https://scribesystem.vercel.app): retro writing assistant with custom styles
 - [aha](https://github.com/benthecoder/aha): chrome extension that explains anything with llama 3.1 + exa.ai api
 - [deeptalks](https://deeptalks.us): an app for introspective questions for you and your loved ones
 
-in progress
+ideas
 
-- tofu (ai that writes like you)
-- genesis (knowledge graph of the entire bible)
-
-idea phase
-
-- journal emotions with [hume.ai](https://www.hume.ai/)
-- graphrag over blog posts, create knowledge graphs from blogs
-  - [AuvaLab/itext2kg](https://github.com/AuvaLab/itext2kg?tab=readme-ov-file)
+- eink display desk accessory
 - muni bus app live widget ios
 
 ---
