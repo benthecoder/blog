@@ -163,7 +163,7 @@ export async function POST(request: Request) {
 
     // Stream response from Claude
     const response = await anthropic.messages.create({
-      model: 'claude-3-5-haiku-latest',
+      model: 'claude-3-7-sonnet-latest',
       max_tokens: 1024,
       temperature: 0.7,
       system: systemPrompt,
