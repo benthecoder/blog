@@ -215,10 +215,18 @@ export async function processMarkdownFile(filePath: string) {
     visit(tree, (node: any) => {
       switch (node.type) {
         case 'heading':
-          if (node.depth <= 2 && node.children?.[0]?.value) {
+          if (node.depth <= 3 && node.children?.[0]?.value) {
             flushBuffer();
             currentSection = node.children[0].value;
-            // Don't create separate chunks for headings, just track them
+            chunks.push({
+              type: 'heading',
+              content: node.children[0].value,
+              metadata: {
+                section: currentSection,
+                sequence: sequence++,
+                depth: node.depth,
+              },
+            });
           }
           break;
 
