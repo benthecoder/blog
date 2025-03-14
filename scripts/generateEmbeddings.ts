@@ -102,7 +102,10 @@ interface EmbeddingResponse {
   [key: string]: any;
 }
 
-async function embedWithRetry(texts: string[], retryCount = 0): Promise<EmbeddingResponse> {
+async function embedWithRetry(
+  texts: string[],
+  retryCount = 0
+): Promise<EmbeddingResponse> {
   try {
     // Set a timeout promise
     const timeoutPromise = new Promise<never>((_, reject) => {
@@ -116,7 +119,7 @@ async function embedWithRetry(texts: string[], retryCount = 0): Promise<Embeddin
         input: texts,
         inputType: 'document',
       }) as Promise<EmbeddingResponse>,
-      timeoutPromise
+      timeoutPromise,
     ]);
   } catch (error: any) {
     // Check if we still have retries left
@@ -131,26 +134,31 @@ async function embedWithRetry(texts: string[], retryCount = 0): Promise<Embeddin
         );
         await wait(delay);
         return embedWithRetry(texts, retryCount + 1);
-      } 
+      }
       // Handle timeouts and other transient errors
-      else if (error.message === 'Request timed out' || 
-               error.message?.includes('timeout') ||
-               error.message?.includes('network') ||
-               error.code === 'ECONNRESET' ||
-               error.code === 'ETIMEDOUT') {
+      else if (
+        error.message === 'Request timed out' ||
+        error.message?.includes('timeout') ||
+        error.message?.includes('network') ||
+        error.code === 'ECONNRESET' ||
+        error.code === 'ETIMEDOUT'
+      ) {
         const delay = INITIAL_RETRY_DELAY * Math.pow(2, retryCount);
         console.log(
-          `Request failed with error: ${error.message}. Waiting ${delay}ms before retry ${
-            retryCount + 1
-          }/${MAX_RETRIES}`
+          `Request failed with error: ${
+            error.message
+          }. Waiting ${delay}ms before retry ${retryCount + 1}/${MAX_RETRIES}`
         );
         await wait(delay);
         return embedWithRetry(texts, retryCount + 1);
       }
     }
-    
+
     // No more retries or non-retriable error
-    console.error(`Embedding failed after ${retryCount} retries:`, error.message);
+    console.error(
+      `Embedding failed after ${retryCount} retries:`,
+      error.message
+    );
     throw error;
   }
 }
@@ -165,33 +173,64 @@ function extractPostDate(filePath: string, frontmatter: any): Date {
     // Approach 1: Direct Date constructor (handles ISO formats and many common formats)
     const parsedDate = new Date(frontmatter.date);
     if (!isNaN(parsedDate.getTime())) {
-      console.log(`Date from frontmatter (direct): ${parsedDate.toISOString()} for ${filePath}`);
+      console.log(
+        `Date from frontmatter (direct): ${parsedDate.toISOString()} for ${filePath}`
+      );
       return parsedDate;
     }
-    
+
     // Approach 2: Handle month name formats like "Jun 1, 2024" or "June 1 2024"
-    const monthNameMatch = String(frontmatter.date).match(/([A-Za-z]+)\s+(\d{1,2})(?:,?\s+)?(\d{4})/);
+    const monthNameMatch = String(frontmatter.date).match(
+      /([A-Za-z]+)\s+(\d{1,2})(?:,?\s+)?(\d{4})/
+    );
     if (monthNameMatch) {
       const [_, month, day, year] = monthNameMatch;
-      const monthMap: {[key: string]: number} = {
-        jan: 0, january: 0, feb: 1, february: 1, mar: 2, march: 2, 
-        apr: 3, april: 3, may: 4, jun: 5, june: 5, jul: 6, july: 6, 
-        aug: 7, august: 7, sep: 8, september: 8, oct: 9, october: 9, 
-        nov: 10, november: 10, dec: 11, december: 11
+      const monthMap: { [key: string]: number } = {
+        jan: 0,
+        january: 0,
+        feb: 1,
+        february: 1,
+        mar: 2,
+        march: 2,
+        apr: 3,
+        april: 3,
+        may: 4,
+        jun: 5,
+        june: 5,
+        jul: 6,
+        july: 6,
+        aug: 7,
+        august: 7,
+        sep: 8,
+        september: 8,
+        oct: 9,
+        october: 9,
+        nov: 10,
+        november: 10,
+        dec: 11,
+        december: 11,
       };
-      
+
       const monthIndex = monthMap[month.toLowerCase()];
       if (monthIndex !== undefined) {
-        const formattedDate = new Date(parseInt(year), monthIndex, parseInt(day));
+        const formattedDate = new Date(
+          parseInt(year),
+          monthIndex,
+          parseInt(day)
+        );
         if (!isNaN(formattedDate.getTime())) {
-          console.log(`Date from frontmatter (month name): ${formattedDate.toISOString()} for ${filePath}`);
+          console.log(
+            `Date from frontmatter (month name): ${formattedDate.toISOString()} for ${filePath}`
+          );
           return formattedDate;
         }
       }
     }
-    
+
     // Log warning if we have a date field but couldn't parse it
-    console.warn(`Warning: Could not parse date '${frontmatter.date}' from frontmatter in ${filePath}`);
+    console.warn(
+      `Warning: Could not parse date '${frontmatter.date}' from frontmatter in ${filePath}`
+    );
   }
 
   // Try to parse from filename as fallback (e.g., MMDDYY.md format)
@@ -199,15 +238,23 @@ function extractPostDate(filePath: string, frontmatter: any): Date {
   if (filenameMatch) {
     const [_, month, day, year] = filenameMatch;
     const fullYear = parseInt(`20${year}`); // Assuming 20xx years
-    const dateFromFilename = new Date(fullYear, parseInt(month) - 1, parseInt(day));
-    console.log(`Date from filename: ${dateFromFilename.toISOString()} for ${filePath}`);
+    const dateFromFilename = new Date(
+      fullYear,
+      parseInt(month) - 1,
+      parseInt(day)
+    );
+    console.log(
+      `Date from filename: ${dateFromFilename.toISOString()} for ${filePath}`
+    );
     return dateFromFilename;
   }
 
   // Use a stable default date for posts with no date instead of current date
   // Using January 1, 2020 as a reasonable default that will still sort correctly
   const defaultDate = new Date(2020, 0, 1);
-  console.warn(`Warning: No date found for ${filePath}, using default date ${defaultDate.toISOString()}`);
+  console.warn(
+    `Warning: No date found for ${filePath}, using default date ${defaultDate.toISOString()}`
+  );
   return defaultDate;
 }
 
@@ -240,7 +287,7 @@ async function generateEmbeddingsForSingleFile(
   const { frontmatter, chunks } = post;
   let successfulChunks = 0;
   let failedChunks = 0;
-  
+
   // Create a chunk-level progress bar
   function updateChunkProgress() {
     const total = chunks.length;
@@ -341,7 +388,7 @@ async function generateEmbeddingsForSingleFile(
           } catch (error) {
             console.error('Error inserting whole post chunk:', error);
             failedChunks++;
-            
+
             // Update chunk progress after error
             console.log(updateChunkProgress());
           }
@@ -358,7 +405,11 @@ async function generateEmbeddingsForSingleFile(
     const batchChunks = chunks.slice(i, i + BATCH_SIZE);
     const batchEnd = Math.min(i + BATCH_SIZE, chunks.length);
 
-    console.log(`\nProcessing batch ${i}-${batchEnd} of ${chunks.length} (${Math.ceil((batchEnd - i) / BATCH_SIZE)}/${Math.ceil(chunks.length / BATCH_SIZE)} batches)`);
+    console.log(
+      `\nProcessing batch ${i}-${batchEnd} of ${chunks.length} (${Math.ceil(
+        (batchEnd - i) / BATCH_SIZE
+      )}/${Math.ceil(chunks.length / BATCH_SIZE)} batches)`
+    );
 
     try {
       // Format chunks with more context
@@ -383,38 +434,43 @@ async function generateEmbeddingsForSingleFile(
           message?: string;
           code?: string;
         };
-        
-        if (inputTexts.length > 3 && (
-          error.message?.includes('timeout') || 
-          error.message?.includes('network') ||
-          error.code === 'ECONNRESET' ||
-          error.code === 'ETIMEDOUT')) {
-          
+
+        if (
+          inputTexts.length > 3 &&
+          (error.message?.includes('timeout') ||
+            error.message?.includes('network') ||
+            error.code === 'ECONNRESET' ||
+            error.code === 'ETIMEDOUT')
+        ) {
           console.log(`Error processing full batch: ${error.message}`);
           console.log(`Splitting batch into smaller chunks and retrying...`);
-          
+
           // Split the batch in half
           const midpoint = Math.floor(inputTexts.length / 2);
           const firstHalf = inputTexts.slice(0, midpoint);
           const secondHalf = inputTexts.slice(midpoint);
-          
+
           // Process first half
           console.log(`Processing first half (${firstHalf.length} chunks)...`);
           const firstResponse = await embedWithRetry(firstHalf);
-          
+
           // Add delay between sub-batches
           await wait(DELAY_BETWEEN_BATCHES);
-          
+
           // Process second half
-          console.log(`Processing second half (${secondHalf.length} chunks)...`);
+          console.log(
+            `Processing second half (${secondHalf.length} chunks)...`
+          );
           const secondResponse = await embedWithRetry(secondHalf);
-          
+
           // Merge responses
           response = {
-            data: [...firstResponse.data, ...secondResponse.data]
+            data: [...firstResponse.data, ...secondResponse.data],
           };
-          
-          console.log(`Successfully processed split batch with ${response.data.length} embeddings`);
+
+          console.log(
+            `Successfully processed split batch with ${response.data.length} embeddings`
+          );
         } else {
           // If not a timeout or the batch is already small, rethrow
           throw embeddingError;
@@ -552,6 +608,10 @@ async function generateEmbeddingsForSingleFile(
       const results = await Promise.all(insertPromises);
       const successCount = results.filter(Boolean).length;
 
+      // Update counters based on results
+      successfulChunks += successCount;
+      failedChunks += batchChunks.length - successCount;
+
       // Process overlaps after all inserts completed
       if (successCount > 1) {
         // Only process overlaps if we have at least 2 chunks
@@ -561,7 +621,7 @@ async function generateEmbeddingsForSingleFile(
 
       // Update chunk progress
       console.log(updateChunkProgress());
-      
+
       console.log(
         `✅ Batch complete: ${successCount}/${batchChunks.length} chunks successful with sliding window overlaps`
       );
@@ -571,7 +631,7 @@ async function generateEmbeddingsForSingleFile(
     } catch (error) {
       console.error('Error processing batch:', error);
       failedChunks += batchChunks.length;
-      
+
       // Update chunk progress after error
       console.log(updateChunkProgress());
     }
@@ -579,14 +639,18 @@ async function generateEmbeddingsForSingleFile(
 
   return { successfulChunks, failedChunks };
 }
-
 /**
  * Creates a simple ASCII progress bar
  */
-function createProgressBar(current: number, total: number, width: number = 30): string {
+function createProgressBar(
+  current: number,
+  total: number,
+  width: number = 30
+): string {
   const percentage = Math.round((current / total) * 100);
   const progressChars = Math.round((current / total) * width);
-  const progressBar = '█'.repeat(progressChars) + '░'.repeat(width - progressChars);
+  const progressBar =
+    '█'.repeat(progressChars) + '░'.repeat(width - progressChars);
   return `[${progressBar}] ${percentage}% (${current}/${total})`;
 }
 
@@ -605,7 +669,9 @@ async function generateEmbeddingsForAllFiles() {
 
   for (let i = 0; i < nonDraftPosts.length; i++) {
     const post = nonDraftPosts[i];
-    console.log(`\n=== Processing file ${i+1}/${totalFiles}: ${post.filePath} ===`);
+    console.log(
+      `\n=== Processing file ${i + 1}/${totalFiles}: ${post.filePath} ===`
+    );
 
     const { successfulChunks, failedChunks } =
       await generateEmbeddingsForSingleFile(post.filePath);
@@ -614,8 +680,8 @@ async function generateEmbeddingsForAllFiles() {
     totalFailed += failedChunks;
 
     // Update progress bar
-    console.log(createProgressBar(i+1, totalFiles));
-    
+    console.log(createProgressBar(i + 1, totalFiles));
+
     // Add delay between files
     if (i < nonDraftPosts.length - 1) {
       console.log(`Waiting ${DELAY_BETWEEN_FILES}ms before next file...`);
