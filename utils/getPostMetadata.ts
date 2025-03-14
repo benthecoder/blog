@@ -11,16 +11,26 @@ const getPostMetadata = (getDrafts: boolean = false): PostMetadata[] => {
 
   const posts: PostMetadata[] = markdownPosts.map(
     (fileName): Partial<PostMetadata> => {
-      const fileContents = fs.readFileSync(`${folder}${fileName}`, 'utf8');
-      const matterResult = matter(fileContents);
+      try {
+        const fileContents = fs.readFileSync(`${folder}${fileName}`, 'utf8');
+        const matterResult = matter(fileContents);
 
-      return {
-        title: matterResult.data.title,
-        date: matterResult.data.date,
-        tags: matterResult.data.tags,
-        wordcount: (matterResult.content.match(/\b\w+\b/gu) || []).length,
-        slug: fileName.replace('.md', ''),
-      };
+        return {
+          title: matterResult.data.title,
+          date: matterResult.data.date,
+          tags: matterResult.data.tags,
+          wordcount: (matterResult.content.match(/\b\w+\b/gu) || []).length,
+          slug: fileName.replace('.md', ''),
+        };
+      } catch (error) {
+        console.error(`Error parsing frontmatter in file: ${fileName}`);
+        console.error(error);
+        // Return a minimal object to prevent the entire function from failing
+        return {
+          title: `Error in ${fileName}`,
+          slug: fileName.replace('.md', ''),
+        };
+      }
     }
   ) as PostMetadata[];
 
