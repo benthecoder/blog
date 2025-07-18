@@ -2,6 +2,8 @@
 
 ![home](public/images/home.jpeg)
 
+test
+
 A minimalistic blog built with Next.js, React, and TypeScript. It uses Markdown for content and features search functionality powered by vector embeddings.
 
 Design inspired by [James Quiambao](https://www.jquiambao.com/) and [Lee Robinson](https://github.com/leerob/leerob.io).
