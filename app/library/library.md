@@ -102,3 +102,7 @@ tech
 - [Haruki Murakami, The Art of Fiction No. 182](https://www.theparisreview.org/interviews/2/the-art-of-fiction-no-182-haruki-murakami)
 - [David Mitchell, The Art of Fiction No. 204](https://web.archive.org/web/20120107072852/https://www.theparisreview.org/interviews/6034/the-art-of-fiction-no-204-david-mitchell)
 - [Ursula K. Le Guin, The Art of Fiction No. 221](https://web.archive.org/web/20150106213733/https://www.theparisreview.org/interviews/6253/the-art-of-fiction-no-221-ursula-k-le-guin)
+
+## Bookmarks
+
+- [The Best Tacit Knowledge Videos on Every Subject — LessWrong](https://www.lesswrong.com/posts/SXJGSPeQWbACveJhs/the-best-tacit-knowledge-videos-on-every-subject)
