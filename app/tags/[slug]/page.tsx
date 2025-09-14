@@ -15,8 +15,9 @@ export const generateStaticParams = async () => {
   }));
 };
 
-const TagPage = (props: any) => {
-  const tag = decodeURIComponent(props.params.slug);
+const TagPage = async (props: any) => {
+  const params = await props.params;
+  const tag = decodeURIComponent(params.slug);
   const postMetadata = getPostMetadata();
 
   const filteredPosts = postMetadata.filter((post) =>
