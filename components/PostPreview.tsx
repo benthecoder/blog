@@ -6,17 +6,17 @@ const PostPreview = (props: PostMetadata) => {
 
   return (
     <Link href={`/posts/${props.slug}`}>
-      <div className="group relative flex justify-between items-center hover:bg-[#123524]/5 dark:hover:bg-[#1c4f36]/10 cursor-crosshair text-xs md:text-sm">
+      <div className="group relative flex justify-between items-center hover:bg-japanese-unoharairo dark:hover:bg-japanese-sumiiro/30 cursor-crosshair text-xs md:text-sm">
         {/* Title and optional star */}
         <div className="flex items-center gap-1">
           {isStarred && (
-            <span className="text-[#123524] dark:text-[#1c4f36]">✰</span>
+            <span className="text-light-accent dark:text-dark-accent">✰</span>
           )}
           <p
             className={`${
               isStarred
-                ? 'font-medium text-[#123524] dark:text-[#1c4f36]'
-                : 'text-black/90 dark:text-white/90'
+                ? 'font-medium text-light-accent dark:text-dark-accent'
+                : 'text-japanese-sumiiro dark:text-japanese-shironezu'
             }`}
           >
             {props.title}
@@ -24,7 +24,7 @@ const PostPreview = (props: PostMetadata) => {
         </div>
 
         {/* Date */}
-        <p className="text-slate-400">{props.date}</p>
+        <p className="text-japanese-nezumiiro dark:text-japanese-ginnezu">{props.date}</p>
       </div>
     </Link>
   );

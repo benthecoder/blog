@@ -178,8 +178,8 @@ export default function ChatInterface({
               <div
                 className={`max-w-[80%] rounded-lg px-3 py-2 ${
                   message.role === 'user'
-                    ? 'bg-[#0b93f6] text-white ml-auto'
-                    : 'bg-[#e5e5ea] dark:bg-[#303030] text-black dark:text-white'
+                    ? 'bg-japanese-soshoku text-japanese-sumiiro ml-auto'
+                    : 'bg-japanese-hakuji dark:bg-japanese-nezumiiro/30 text-japanese-sumiiro dark:text-japanese-nyuhakushoku'
                 }`}
               >
                 <div className="text-sm leading-relaxed break-words">
@@ -208,7 +208,7 @@ export default function ChatInterface({
             messages.length > 0 &&
             messages[messages.length - 1].role === 'user' && (
               <div className="flex justify-start">
-                <div className="bg-[#e5e5ea] dark:bg-[#303030] rounded-lg px-4 py-2.5 user-select-none">
+                <div className="bg-japanese-shiraumenezu dark:bg-dark-tag rounded-lg px-4 py-2.5 user-select-none">
                   <div className="flex space-x-1.5">
                     <div className="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-typing"></div>
                     <div className="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-typing-middle"></div>
@@ -237,7 +237,7 @@ export default function ChatInterface({
             type="submit"
             disabled={isLoading || !input.trim()}
             className={`${
-              input.trim() ? 'bg-[#0b93f6]' : 'bg-gray-200 dark:bg-gray-700'
+              input.trim() ? 'bg-light-accent' : 'bg-japanese-shiraumenezu dark:bg-dark-tag'
             } rounded-full p-2 disabled:opacity-50 transition-colors user-select-none`}
             aria-label="Send message"
           >
