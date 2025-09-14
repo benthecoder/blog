@@ -2,12 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .bg-japanese-kinairo { background-color: #FBFAF5; }
+  .bg-japanese-shironeri { background-color: #F3F3F2; }
+  .bg-japanese-hakuji { background-color: #F8FBFB; }
+  .bg-japanese-soshoku { background-color: #EAE5E3; }
+  .bg-japanese-shiraumenezu { background-color: #E5E4E6; }
+  .text-japanese-shironezu { color: #DCDDDD; }
+}
+
 body {
   background: linear-gradient(
     135deg,
-    #fff8f3 0%,
-    /* Warm cream */ #fffcf7 50%,
-    /* Paper white */ #fff8f3 100% /* Warm cream */
+    #F3F3F2 0%,
+    /* Silk white - shironeri */ #FBFAF5 50%,
+    /* Natural dough - kinairo */ #F8FBFB 100% /* White porcelain - hakuji */
   );
   min-height: 100vh;
   background-attachment: fixed;
@@ -16,16 +25,16 @@ body {
 .dark body {
   background: linear-gradient(
     135deg,
-    #0a1f15 0%,
-    /* Darker phthalo green */ #0d2419 50%,
-    /* Deep phthalo green */ #0a1f15 100% /* Darker phthalo green */
+    #1a1b26 0%,
+    /* Dark base */ #2a2b36 50%,
+    /* Slightly lighter */ #1a1b26 100% /* Dark base */
   );
   min-height: 100vh;
   background-attachment: fixed;
 }
 
 .prose {
-  color: #334155;
+  color: #595857; /* sumiiro - ink color */
   width: 100%;
   min-width: 100%;
   padding: 0 0.5rem;
@@ -46,7 +55,7 @@ body {
 }
 
 .dark .prose {
-  color: #e2e8f0;
+  color: #F3F3F3; /* nyuhakushoku - milky white */
 }
 
 .prose strong {
@@ -54,7 +63,7 @@ body {
 }
 
 .dark .prose strong {
-  color: #93d2fd;
+  color: #E7E7EB; /* murasakisuishiyou */
   font-weight: bold;
 }
 
@@ -63,8 +72,8 @@ body {
 }
 
 .prose code {
-  background-color: #b3b3b3;
-  color: #050505;
+  background-color: #F7FCFE; /* unoharairo */
+  color: #595857; /* sumiiro */
   padding: 0.2em 0.2em;
   border-radius: 0.3em;
   font-size: 0.85em;
@@ -106,15 +115,15 @@ body {
 
 .dark .prose a {
   background-image: url('../public/underline-dark.png');
-  color: #fff;
+  color: theme('colors.dark.text');
 }
 
 .prose a:hover {
-  color: #d70a1b;
+  color: #595857; /* sumiiro */
 }
 
 .dark .prose a:hover {
-  color: #ff959e;
+  color: #91989C; /* ginnezu */
 }
 
 .prose h1 {
@@ -133,31 +142,31 @@ body {
 .dark .prose h1,
 .dark .prose h2,
 .dark .prose h3 {
-  color: #fff; /* set your preferred color for dark mode */
+  color: #FFFFFC; /* gofuniro - chalk white */
 }
 
 .prose blockquote {
   margin: 0 0.1em 0 0.1em;
   padding: 0 0em 0 1em;
-  border-left: 3px solid #b0afaf;
+  border-left: 3px solid #E5E4E6; /* shiraumenezu */
   border-left-width: 3px;
-  border-color: #000000;
+  border-color: #E5E4E6;
   quotes: none;
   font-style: normal;
   font-weight: normal;
-  color: #595959;
+  color: #949495; /* nezumiiro */
 }
 
 .prose hr {
   margin-top: 2em;
   margin-bottom: 2em;
   border-width: 0.1px;
-  border-color: #b0afaf;
+  border-color: theme('colors.japanese.shiraumenezu');
 }
 
 .dark .prose blockquote {
-  border-color: #fff;
-  color: #b4b4b4;
+  border-color: #91989C; /* ginnezu */
+  color: #E7E7EB; /* murasakisuishiyou */
 }
 
 .prose img {
@@ -172,18 +181,18 @@ body {
 }
 
 ::selection {
-  background: rgba(147, 197, 253, 0.3);
-  color: #1a1a2e;
+  background: theme('colors.japanese.murasakisuishiyou / 30%');
+  color: theme('colors.light.text');
 }
 
 mark {
-  background-color: #faec9b;
+  background-color: theme('colors.japanese.unoharairo');
   color: black;
 }
 
 .dark ::selection {
-  background: rgba(147, 197, 253, 0.2);
-  color: #fff;
+  background: theme('colors.japanese.nyuhakushoku / 20%');
+  color: theme('colors.dark.text');
 }
 
 .hover-container {
