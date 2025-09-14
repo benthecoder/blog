@@ -59,6 +59,7 @@
     "tsx": "^4.19.2",
     "typescript": "4.9.3",
     "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0",
     "uuid": "^13.0.0",
     "voyageai": "^0.0.1-5"
   },
