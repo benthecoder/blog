@@ -14,7 +14,7 @@ const ArchivePage = () => {
   });
   return (
     <div>
-      <h1 className="font-bold text-left mb-6 text-2xl hover:text-[#123524] dark:hover:text-[#1c4f36] transition-colors">
+      <h1 className="font-bold text-left mb-6 text-2xl hover:text-light-accent dark:hover:text-dark-accent transition-colors">
         {' '}
         Archive
       </h1>
@@ -25,7 +25,7 @@ const ArchivePage = () => {
             Filter by{' '}
             <Link
               href="/tags"
-              className="underline hover:text-[#123524] dark:hover:text-[#1c4f36] transition-colors"
+              className="underline hover:text-light-accent dark:hover:text-dark-accent transition-colors"
             >
               tags
             </Link>
@@ -34,7 +34,7 @@ const ArchivePage = () => {
           <div>
             <Link
               href="/random"
-              className="underline hover:text-[#123524] dark:hover:text-[#1c4f36] transition-colors"
+              className="underline hover:text-light-accent dark:hover:text-dark-accent transition-colors"
             >
               random
             </Link>{' '}
@@ -44,7 +44,7 @@ const ArchivePage = () => {
           <div>
             <Link
               href="/search"
-              className="underline hover:text-[#123524] dark:hover:text-[#1c4f36] transition-colors"
+              className="underline hover:text-light-accent dark:hover:text-dark-accent transition-colors"
             >
               search
             </Link>{' '}
@@ -52,7 +52,7 @@ const ArchivePage = () => {
           </div>
         </div>
 
-        <p className="text-[#123524] dark:text-[#2f8259]/90 text-sm mb-10">
+        <p className="text-japanese-sumiiro dark:text-japanese-murasakisuishiyou text-sm mb-10 font-medium">
           Total: {totalBlogs} ({new Intl.NumberFormat().format(totalWordCount)}{' '}
           words)
         </p>
