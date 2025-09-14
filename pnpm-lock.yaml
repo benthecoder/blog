@@ -157,6 +157,9 @@ importers:
       '@types/marked':
         specifier: ^5.0.1
         version: 5.0.2
+      '@types/pg':
+        specifier: ^8.15.5
+        version: 8.15.5
       '@types/react-syntax-highlighter':
         specifier: ^15.5.11
         version: 15.5.13
@@ -750,6 +753,9 @@ packages:
 
   '@types/pg@8.11.6':
     resolution: {integrity: sha512-/2WmmBXHLsfRqzfHW7BNZ8SbYzE8OSk7i3WjFYvfgRHj7S1xj+16Je5fUKv3lVdVzk/zn9TXOqf+avFCFIE0yQ==}
+
+  '@types/pg@8.15.5':
+    resolution: {integrity: sha512-LF7lF6zWEKxuT3/OR8wAZGzkg4ENGXFNyiV/JeOt9z5B+0ZVwbql9McqX5c/WStFq1GaGso7H1AzP/qSzmlCKQ==}
 
   '@types/prop-types@15.7.15':
     resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
@@ -4389,6 +4395,12 @@ snapshots:
       '@types/node': 18.11.9
       pg-protocol: 1.10.3
       pg-types: 4.1.0
+
+  '@types/pg@8.15.5':
+    dependencies:
+      '@types/node': 18.11.9
+      pg-protocol: 1.10.3
+      pg-types: 2.2.0
 
   '@types/prop-types@15.7.15': {}
 
