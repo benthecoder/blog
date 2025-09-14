@@ -25,10 +25,10 @@ interface SearchResult {
 const LoadingComponent = () => {
   return (
     <div className="flex flex-col items-center space-y-4 py-8">
-      <div className="w-48 h-1 bg-[#e6c9a8]/20 dark:bg-[#1e2030] rounded-full overflow-hidden">
-        <div className="w-full h-full bg-[#927456] dark:bg-[#7aa2f7] animate-loading-bar" />
+      <div className="w-48 h-1 bg-light-border/20 dark:bg-dark-tag rounded-full overflow-hidden">
+        <div className="w-full h-full bg-light-accent dark:bg-dark-accent animate-loading-bar" />
       </div>
-      <span className="text-sm text-[#927456]/70 dark:text-[#7aa2f7]/70">
+      <span className="text-sm text-light-accent/70 dark:text-dark-accent/70">
         Searching posts...
       </span>
     </div>
@@ -46,27 +46,27 @@ const SearchResult = ({ result }: { result: SearchResult }) => {
     const truncatedContent = truncateText(content);
     if (result.chunk_type === 'code') {
       return (
-        <pre className="bg-[#faf4eb] dark:bg-[#1e2030] p-2 rounded text-sm overflow-x-auto mt-2">
+        <pre className="bg-light-tag dark:bg-dark-tag p-2 rounded text-sm overflow-x-auto mt-2">
           <code>{truncatedContent}</code>
         </pre>
       );
     }
     return (
-      <p className="text-[#2c353d]/70 dark:text-[#c7cce1]/70 mt-2 text-sm">
+      <p className="text-light-text/70 dark:text-dark-text/70 mt-2 text-sm">
         {truncatedContent}
       </p>
     );
   };
 
   return (
-    <div className="group border-l-2 border-[#e6c9a8] dark:border-[#1e2030] pl-4 py-3 mb-4 hover:border-[#927456] dark:hover:border-[#7aa2f7] transition-colors hover:bg-[#faf4eb]/50 dark:hover:bg-[#1e2030]/50 rounded-r">
+    <div className="group border-l-2 border-light-border dark:border-dark-tag pl-4 py-3 mb-4 hover:border-light-accent dark:hover:border-dark-accent transition-colors hover:bg-light-tag/50 dark:hover:bg-dark-tag/50 rounded-r">
       <Link href={`/posts/${result.post_slug}`} className="block space-y-2">
         <div className="flex items-center justify-between">
-          <h3 className="font-medium text-[#2c353d] dark:text-[#a9b1d6] group-hover:text-[#927456] dark:group-hover:text-[#7aa2f7] transition-colors">
+          <h3 className="font-medium text-light-text dark:text-dark-text group-hover:text-light-accent dark:group-hover:text-dark-accent transition-colors">
             {result.post_title}
           </h3>
           <div className="flex items-center gap-2">
-            <span className="text-xs px-2 py-1 rounded-full bg-[#927456]/10 dark:bg-[#7aa2f7]/10 text-[#927456] dark:text-[#7aa2f7] font-medium">
+            <span className="text-xs px-2 py-1 rounded-full bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent font-medium">
               {Math.round(
                 (result.hybrid_score ??
                   result.keyword_score ??
@@ -80,7 +80,7 @@ const SearchResult = ({ result }: { result: SearchResult }) => {
         <div className="prose prose-sm max-w-none">
           {formatContent(result.content)}
         </div>
-        <div className="text-xs text-[#927456]/70 dark:text-[#7aa2f7]/70 font-medium">
+        <div className="text-xs text-light-accent/70 dark:text-dark-accent/70 font-medium">
           <span className="capitalize">{result.chunk_type}</span>
           {result.metadata.section && (
             <>
@@ -237,7 +237,7 @@ function SearchContent() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search posts..."
-          className="w-full p-2 bg-[#fffcf7] dark:bg-[#1a1b26] border border-[#e6c9a8] dark:border-[#1e2030] rounded-lg focus:ring-2 focus:ring-[#927456] dark:focus:ring-[#7aa2f7] focus:border-transparent text-[#2c353d] dark:text-[#c7cce1] placeholder-gray-400 dark:placeholder-gray-500"
+          className="w-full p-2 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-tag rounded-lg focus:ring-2 focus:ring-light-accent dark:focus:ring-dark-accent focus:border-transparent text-light-text dark:text-dark-text placeholder-gray-400 dark:placeholder-gray-500"
         />
 
         {/* Search Type Toggle */}
@@ -247,8 +247,8 @@ function SearchContent() {
             onClick={() => handleSearchTypeChange('hybrid')}
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
               searchType === 'hybrid'
-                ? 'bg-[#927456] dark:bg-[#7aa2f7] text-white'
-                : 'bg-[#e6c9a8]/20 dark:bg-[#1e2030] text-[#2c353d] dark:text-[#c7cce1] hover:bg-[#e6c9a8]/40 dark:hover:bg-[#1e2030]/70'
+                ? 'bg-light-accent dark:bg-dark-accent text-white'
+                : 'bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70'
             }`}
           >
             Hybrid
@@ -258,8 +258,8 @@ function SearchContent() {
             onClick={() => handleSearchTypeChange('semantic')}
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
               searchType === 'semantic'
-                ? 'bg-[#927456] dark:bg-[#7aa2f7] text-white'
-                : 'bg-[#e6c9a8]/20 dark:bg-[#1e2030] text-[#2c353d] dark:text-[#c7cce1] hover:bg-[#e6c9a8]/40 dark:hover:bg-[#1e2030]/70'
+                ? 'bg-light-accent dark:bg-dark-accent text-white'
+                : 'bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70'
             }`}
           >
             Semantic
@@ -269,8 +269,8 @@ function SearchContent() {
             onClick={() => handleSearchTypeChange('keyword')}
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
               searchType === 'keyword'
-                ? 'bg-[#927456] dark:bg-[#7aa2f7] text-white'
-                : 'bg-[#e6c9a8]/20 dark:bg-[#1e2030] text-[#2c353d] dark:text-[#c7cce1] hover:bg-[#e6c9a8]/40 dark:hover:bg-[#1e2030]/70'
+                ? 'bg-light-accent dark:bg-dark-accent text-white'
+                : 'bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70'
             }`}
           >
             Keyword
@@ -278,7 +278,7 @@ function SearchContent() {
         </div>
 
         {/* Search Type Explanation */}
-        <div className="text-xs text-center text-[#2c353d]/60 dark:text-[#c7cce1]/60 italic mt-1">
+        <div className="text-xs text-center text-light-text/60 dark:text-dark-text/60 italic mt-1">
           {searchType === 'hybrid' &&
             'Combines meaning and exact matches for balanced results'}
           {searchType === 'semantic' &&
@@ -302,7 +302,7 @@ function SearchContent() {
       ) : (
         // Only show "no results" message if a search has been performed
         !isLoading && hasSearched && query && (
-          <div className="text-center py-6 text-[#2c353d]/70 dark:text-[#c7cce1]/70">
+          <div className="text-center py-6 text-light-text/70 dark:text-dark-text/70">
             <p>No results found for "{query}"</p>
             <p className="text-sm mt-2">
               Try a different search type or modify your query
@@ -320,10 +320,10 @@ export default function SearchPage() {
       fallback={
         <div className="max-w-3xl mx-auto px-4 py-8">
           <div className="flex flex-col items-center space-y-4 py-8">
-            <div className="w-48 h-1 bg-[#e6c9a8]/20 dark:bg-[#1e2030] rounded-full overflow-hidden">
-              <div className="w-full h-full bg-[#927456] dark:bg-[#7aa2f7] animate-loading-bar" />
+            <div className="w-48 h-1 bg-light-border/20 dark:bg-dark-tag rounded-full overflow-hidden">
+              <div className="w-full h-full bg-light-accent dark:bg-dark-accent animate-loading-bar" />
             </div>
-            <span className="text-sm text-[#927456]/70 dark:text-[#7aa2f7]/70">
+            <span className="text-sm text-light-accent/70 dark:text-dark-accent/70">
               Loading search...
             </span>
           </div>
