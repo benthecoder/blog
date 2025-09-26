@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 
-const TIMEZONE = 'America/Los_Angeles';
+const TIMEZONE = 'America/Chicago';
 
 const AboutPage = () => {
   const [time, setTime] = useState<string | null>(null);
@@ -38,38 +38,24 @@ const AboutPage = () => {
         <p>
           This is a <a href="https://sive.rs/nowff">now</a> page
         </p>
-        <p>📌 SF, time is {time}</p>
+        <p>📌 Austin, TX, time is {time}</p>
         <ul className="list-disc">
           <li>
-            paying an obscene amount of money for a{' '}
-            <a href="https://www.usfca.edu/arts-sciences/programs/graduate/data-science">
-              masters
-            </a>
-          </li>
-          <li>ai for cancer research @ UCSF Health</li>
-          <li>
-            learning <a href="https://github.com/benthecoder/AI">AI</a> from
-            scratch
+            building cool stuff for AI in healthcare @{' '}
+            <a href="https://openevidence.com">OpenEvidence</a>
           </li>
           <li>
-            trying to read 20 books this{' '}
-            <a href="https://www.goodreads.com/user/show/103179068">year</a>
+            finding balance in life and work and trying to sleep more
           </li>
-          {/*
           <li>
-            Building{' '}
-            <a href="https://benneo.notion.site/project-ideas-63bc556d83a5405da1bcd89629da2a0e?pvs=4">
-              cool iOS apps
-            </a>{' '}
-            with{' '}
-            <a href="https://twitter.com/benxneo/status/1743458106032488839">
-              SwiftUI
-            </a>
+            experimenting with <a href="https://pubmed.ncbi.nlm.nih.gov/38309304/">photobiomodulation</a>
           </li>
-          */}
+          <li>
+            trying to <a href="https://www.goodreads.com/user/show/103179068">read</a> more this year
+          </li>
         </ul>
         <br></br>
-        <p>Last updated: Jan 4, 2025</p>
+        <p>Last updated: Sep 26, 2025</p>
       </article>
     </div>
   );
