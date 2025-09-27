@@ -18,7 +18,7 @@ const getPostMetadata = (getDrafts: boolean = false): PostMetadata[] => {
         return {
           title: matterResult.data.title,
           date: matterResult.data.date,
-          tags: matterResult.data.tags,
+          tags: matterResult.data.tags || '',
           wordcount: (matterResult.content.match(/\b\w+\b/gu) || []).length,
           slug: fileName.replace('.md', ''),
         };
