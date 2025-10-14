@@ -196,32 +196,37 @@ mark {
 }
 
 .hover-container {
-  display: inline-block; /* Only take up necessary space */
-  position: relative; /* Context for absolute positioning */
+  display: inline-block;
+  position: relative;
 }
 
 .image-container {
-  position: fixed; /* Fixed to the viewport */
-  top: 50%;
+  position: absolute;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90vw;
-  height: 80vh;
-  display: none; /* Initially hidden */
+  transform: translateX(-50%);
+  bottom: calc(100% + 12px);
+  display: none;
   justify-content: center;
   align-items: center;
-  pointer-events: none; /* Ignore pointer events when not visible */
+  pointer-events: none;
+  z-index: 50;
 }
 
 .image-hover {
-  max-width: 100%;
-  max-height: 100%;
+  max-width: 500px;
+  max-height: 350px;
   object-fit: contain;
-  pointer-events: auto; /* Reactivate pointer events for the image */
+  pointer-events: auto;
+  border-radius: 0.125rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.dark .image-hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .hover-container:hover .image-container {
-  display: flex; /* Show when the container is hovered */
+  display: flex;
 }
 
 @keyframes loading-bar {
