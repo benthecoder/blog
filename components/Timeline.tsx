@@ -1,12 +1,19 @@
-import React from 'react';
+'use client';
+
+import React, { useState, useRef } from 'react';
+
+type ImageLink = {
+  text: string;
+  imagePath: string;
+  altText?: string;
+};
 
 type TimelineEvent = {
   year: string;
   month?: string;
   day?: string;
   description: string;
-  imagePath?: string;
-  altText?: string;
+  imageLinks?: ImageLink[];
 };
 
 type TimelineProps = {
@@ -23,11 +30,129 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
     return acc;
   }, {} as Record<string, TimelineEvent[]>);
 
+  // Helper component for image link with smart positioning
+  const ImageLinkComponent: React.FC<{ link: ImageLink; idx: number }> = ({ link, idx }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+    const spanRef = useRef<HTMLSpanElement>(null);
+
+    const handleMouseEnter = () => {
+      if (spanRef.current) {
+        const rect = spanRef.current.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        // Image dimensions (max)
+        const imageMaxWidth = Math.min(1200, viewportWidth * 0.9);
+        const imageMaxHeight = Math.min(800, viewportHeight * 0.8);
+
+        // Calculate center position
+        const centerX = rect.left + rect.width / 2;
+
+        // Calculate left position (centered on word, but constrained to viewport)
+        let left = centerX - imageMaxWidth / 2;
+        const rightEdge = left + imageMaxWidth;
+
+        // Adjust if going off screen
+        if (left < 10) {
+          left = 10; // 10px padding from left edge
+        } else if (rightEdge > viewportWidth - 10) {
+          left = viewportWidth - imageMaxWidth - 10; // 10px padding from right edge
+        }
+
+        // Calculate vertical position
+        const spaceAbove = rect.top;
+        const spaceBelow = viewportHeight - rect.bottom;
+
+        let top;
+        if (spaceAbove > imageMaxHeight + 20 || spaceAbove > spaceBelow) {
+          // Show above
+          top = rect.top - imageMaxHeight - 8;
+        } else {
+          // Show below
+          top = rect.bottom + 8;
+        }
+
+        // Ensure image doesn't go off top or bottom
+        if (top < 10) {
+          top = 10;
+        } else if (top + imageMaxHeight > viewportHeight - 10) {
+          top = viewportHeight - imageMaxHeight - 10;
+        }
+
+        setPosition({ top, left });
+        setIsHovered(true);
+      }
+    };
+
+    const handleMouseLeave = () => {
+      setIsHovered(false);
+    };
+
+    return (
+      <>
+        <span
+          className="underline decoration-solid decoration-1 cursor-pointer decoration-[#91989C]/40 dark:decoration-[#91989C]/40 underline-offset-2 transition-all hover:decoration-[#91989C] hover:dark:decoration-[#91989C]"
+          ref={spanRef}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {link.text}
+        </span>
+        {isHovered && (
+          <div
+            className="fixed z-50 pointer-events-none"
+            style={{
+              top: `${position.top}px`,
+              left: `${position.left}px`,
+            }}
+          >
+            <img
+              src={link.imagePath}
+              alt={link.altText || link.text}
+              className="image-hover"
+            />
+          </div>
+        )}
+      </>
+    );
+  };
+
+  // Helper to render description with image links
+  const renderDescription = (event: TimelineEvent) => {
+    if (!event.imageLinks || event.imageLinks.length === 0) {
+      return event.description;
+    }
+
+    let remainingText = event.description;
+    const parts: React.ReactNode[] = [];
+
+    event.imageLinks.forEach((link, idx) => {
+      const index = remainingText.indexOf(link.text);
+      if (index !== -1) {
+        // Add text before the link
+        if (index > 0) {
+          parts.push(remainingText.substring(0, index));
+        }
+        // Add the image link
+        parts.push(<ImageLinkComponent key={idx} link={link} idx={idx} />);
+        remainingText = remainingText.substring(index + link.text.length);
+      }
+    });
+
+    // Add any remaining text
+    if (remainingText.length > 0) {
+      parts.push(remainingText);
+    }
+
+    return <>{parts}</>;
+  };
+
   return (
     <div className="space-y-10">
       {Object.entries(groupedEvents).map(([year, yearEvents]) => (
         <div key={year} className="group/year">
-          <div className="flex gap-6 text-[#595857] dark:text-[#F3F3F3]">
+          <div className="flex gap-4 text-[#595857] dark:text-[#F3F3F3]">
             <div className="min-w-[70px] pt-0.5">
               <span className="text-sm opacity-50 tracking-wide transition-opacity group-hover/year:opacity-70">
                 {year}
@@ -42,7 +167,7 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
                   : null;
 
                 return (
-                  <div key={index} className="flex gap-4 group/event">
+                  <div key={index} className="flex gap-3 group/event">
                     {dateDetail ? (
                       <>
                         <div className="min-w-[90px] pt-0.5">
@@ -51,38 +176,12 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
                           </span>
                         </div>
                         <div className="flex-1 leading-relaxed">
-                          {event.imagePath ? (
-                            <span className="hover-container">
-                              <span className="relative group">
-                                <span className="underline decoration-dotted cursor-pointer hover:decoration-solid decoration-[#E5E4E6] dark:decoration-[#91989C] underline-offset-4">
-                                  {event.description}
-                                </span>
-                                <div className="absolute hidden group-hover:block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 z-10 image-container">
-                                  <img src={event.imagePath} alt={event.altText || event.description} className="image-hover" />
-                                </div>
-                              </span>
-                            </span>
-                          ) : (
-                            event.description
-                          )}
+                          {renderDescription(event)}
                         </div>
                       </>
                     ) : (
                       <div className="flex-1 leading-relaxed">
-                        {event.imagePath ? (
-                          <span className="hover-container">
-                            <span className="relative group">
-                              <span className="underline decoration-dotted cursor-pointer hover:decoration-solid decoration-[#E5E4E6] dark:decoration-[#91989C] underline-offset-4">
-                                {event.description}
-                              </span>
-                              <div className="absolute hidden group-hover:block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 z-10 image-container">
-                                <img src={event.imagePath} alt={event.altText || event.description} className="image-hover" />
-                              </div>
-                            </span>
-                          </span>
-                        ) : (
-                          event.description
-                        )}
+                        {renderDescription(event)}
                       </div>
                     )}
                   </div>
