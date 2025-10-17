@@ -32,11 +32,11 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
 
   // Helper component for image link with smart positioning
   const ImageLinkComponent: React.FC<{ link: ImageLink; idx: number }> = ({ link, idx }) => {
-    const [isHovered, setIsHovered] = useState(false);
+    const [isVisible, setIsVisible] = useState(false);
     const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
     const spanRef = useRef<HTMLSpanElement>(null);
 
-    const handleMouseEnter = () => {
+    const calculatePosition = () => {
       if (spanRef.current) {
         const rect = spanRef.current.getBoundingClientRect();
         const viewportWidth = window.innerWidth;
@@ -81,12 +81,25 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
         }
 
         setPosition({ top, left });
-        setIsHovered(true);
+        setIsVisible(true);
       }
     };
 
+    const handleMouseEnter = () => {
+      calculatePosition();
+    };
+
     const handleMouseLeave = () => {
-      setIsHovered(false);
+      setIsVisible(false);
+    };
+
+    const handleClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (isVisible) {
+        setIsVisible(false);
+      } else {
+        calculatePosition();
+      }
     };
 
     return (
@@ -96,10 +109,11 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
           ref={spanRef}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
+          onClick={handleClick}
         >
           {link.text}
         </span>
-        {isHovered && (
+        {isVisible && (
           <div
             className="fixed z-50 pointer-events-none"
             style={{
@@ -149,16 +163,16 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
   };
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-6 sm:space-y-10">
       {Object.entries(groupedEvents).map(([year, yearEvents]) => (
         <div key={year} className="group/year">
-          <div className="flex gap-4 text-[#595857] dark:text-[#F3F3F3]">
-            <div className="min-w-[70px] pt-0.5">
+          <div className="flex gap-2 sm:gap-4 text-[#595857] dark:text-[#F3F3F3]">
+            <div className="min-w-[50px] sm:min-w-[70px] pt-0.5">
               <span className="text-sm opacity-50 tracking-wide transition-opacity group-hover/year:opacity-70">
                 {year}
               </span>
             </div>
-            <div className="flex-1 space-y-4 -mt-0.5">
+            <div className="flex-1 space-y-2 sm:space-y-4 -mt-0.5">
               {yearEvents.map((event, index) => {
                 const dateDetail = event.day && event.month
                   ? `${event.month} ${event.day}`
@@ -167,10 +181,10 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
                   : null;
 
                 return (
-                  <div key={index} className="flex gap-3 group/event">
+                  <div key={index} className="flex gap-1.5 sm:gap-3 group/event">
                     {dateDetail ? (
                       <>
-                        <div className="min-w-[90px] pt-0.5">
+                        <div className="min-w-[70px] sm:min-w-[90px] pt-0.5">
                           <span className="text-sm opacity-30 transition-opacity group-hover/event:opacity-50">
                             {dateDetail}
                           </span>
