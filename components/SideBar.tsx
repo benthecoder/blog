@@ -18,7 +18,7 @@ const links = [
 export function Sidebar() {
   const pathname = usePathname();
   return (
-    <div className="md:sticky md:top-10 flex flex-col items-center mb-10">
+    <div className="md:sticky md:top-10 flex flex-col items-center mb-10 relative z-10">
       <div>
         <div className="font-bold text-center md:text-left mt-4 md:mt-0">
           <Link href="/">
