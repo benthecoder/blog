@@ -1,5 +1,7 @@
 # Reach out!
 
+![havetea](/images/havetea.jpeg)
+
 I love meeting and having interesting conversations with new people!
 
 I also like learning about [art](/tags/art) and reading [good books](https://www.goodreads.com/review/list/103179068-benedict-neo?shelf=to-read).
@@ -15,4 +17,3 @@ You can find me on these platforms:
 🎶📹: [Spotify](https://open.spotify.com/user/31w6rspp4fe5ihwoimt4of5tcwiu) · [YouTube](http://www.youtube.com/@benxneo) · [Letterboxd](https://letterboxd.com/benneo/)  
 ⌨️👨‍💻: [GitHub](https://github.com/benthecoder) · [Kaggle](https://www.kaggle.com/benthecoder/competitions)
 
-![niceday](/images/niceday.jpeg)
