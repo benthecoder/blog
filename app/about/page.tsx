@@ -245,7 +245,7 @@ const ChronologyPage = () => {
     <div className="min-h-screen">
       <div className="max-w-2xl mx-auto px-6 py-12">
         <div className="mb-12">
-          <h1 className="text-2xl font-normal text-[#595857] dark:text-[#F3F3F3] mb-2">
+          <h1 className="text-md font-normal text-[#595857] dark:text-[#F3F3F3] mb-2">
             my life made up of small, meaningful moments
           </h1>
         </div>
