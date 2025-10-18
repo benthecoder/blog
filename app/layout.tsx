@@ -54,10 +54,10 @@ export default function RootLayout({
       lang="en"
       className={`${averia.variable} font-serif`}
     >
-      <body className="flex flex-col mb-40 mx-2 md:mx-10 md:flex-row md:items-start md:mt-10">
+      <body className="flex flex-col mx-2 md:mx-10 md:flex-row md:items-start md:mt-10">
         <Providers>
           <Sidebar />
-          <main className="flex-auto text-md md:mt-0 px-2 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full selection:bg-japanese-murasakisuishiyou/20 dark:selection:bg-japanese-nyuhakushoku/20">
+          <main className="flex-auto text-md md:mt-0 px-2 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full selection:bg-japanese-murasakisuishiyou/20 dark:selection:bg-japanese-nyuhakushoku/20 mb-40">
             {children}
           </main>
         </Providers>
