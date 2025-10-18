@@ -98,9 +98,9 @@ const ChronologyPage = () => {
       year: '2022',
       month: 'may',
       day: '23',
-      description: 'joined Tesla',
+      description: 'summer intern @ tesla',
       imageLinks: [
-        { text: 'Tesla', imagePath: '/images/tesla2022.jpg', altText: 'Tesla 2022' }
+        { text: 'tesla', imagePath: '/images/tesla2022.jpg', altText: 'Tesla 2022' }
       ]
     },
     {
@@ -124,7 +124,7 @@ const ChronologyPage = () => {
     {
       year: '2023',
       month: 'may',
-      description: 'second summer internship at Tesla'
+      description: 'second summer @ tesla'
     },
     {
       year: '2023',
@@ -152,7 +152,7 @@ const ChronologyPage = () => {
     {
       year: '2023',
       month: 'december',
-      description: 'graduated from Iowa State University'
+      description: 'graduated from isu'
     },
     {
       year: '2024',
@@ -181,9 +181,9 @@ const ChronologyPage = () => {
     {
       year: '2024',
       month: 'august',
-      description: 'moved to sf for masters @ usf',
+      description: 'started masters @ usf',
       imageLinks: [
-        { text: 'sf', imagePath: '/images/transamerica.jpeg', altText: 'USF' }
+        { text: 'usf', imagePath: '/images/transamerica.jpeg', altText: 'USF' }
       ]
     },
     {
