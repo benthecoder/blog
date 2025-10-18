@@ -34,10 +34,20 @@ const HomePage = () => {
     };
   }, []);
 
+  useEffect(() => {
+    // Prevent scrolling on homepage
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 md:left-64 flex flex-col items-center justify-center overflow-hidden">
-      {/* Image container */}
-      <div className="w-full max-w-6xl px-8 py-16">
+    <div className="fixed inset-0 md:left-64 flex items-center justify-center overflow-hidden">
+      <div className="relative w-full h-full max-w-6xl px-8 flex items-center justify-center">
         <div className="relative w-full h-[75vh] select-none">
           <Image
             src={SKETCH_PATHS[currentIndex]}
@@ -51,7 +61,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* About link */}
       <Link
         href="/about"
         className="absolute bottom-8 right-8 text-sm text-japanese-sumiiro dark:text-japanese-shironezu hover:underline"
