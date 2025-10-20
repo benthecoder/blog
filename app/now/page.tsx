@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import SpotifyNowPlaying from "@/components/SpotifyNowPlaying";
 
 const TIMEZONE = "America/Chicago";
 
@@ -57,9 +58,12 @@ const AboutPage = () => {
             more this year
           </li>
         </ul>
-        <br></br>
-        <p>Last updated: Sep 26, 2025</p>
+        <p className="text-sm text-[#595857]/60 dark:text-[#DCDDDD]/60 mt-6">
+          Last updated: Sep 26, 2025
+        </p>
       </article>
+
+      <SpotifyNowPlaying />
     </div>
   );
 };
