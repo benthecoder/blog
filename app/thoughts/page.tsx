@@ -41,7 +41,7 @@ export default async function ThoughtsPage() {
 
   return (
     <section>
-      <h1 className="font-bold text-left mb-10 text-2xl"> Ben's Thoughts 💭</h1>
+      <h1 className="font-bold text-left mb-10 text-2xl">unfiltered thoughts</h1>
       {entries.length > 0
         ? entries.map((entry) => (
             <div

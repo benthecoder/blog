@@ -1,6 +1,6 @@
-# Library
+# library
 
-## Books I want to read in 2025
+## books i want to read in 2025
 
 fiction
 
