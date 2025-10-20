@@ -1,6 +1,6 @@
-# Library
+# library
 
-## Books I want to read in 2025
+## books i want to read in 2025
 
 fiction
 
@@ -25,12 +25,11 @@ spirituality
 
 self / art
 
-- [In Praise of Shadows](/posts/040125.md) (Jun’ichirō Tanizaki) ✅
+- [In Praise of Shadows](/posts/040125) (Jun’ichirō Tanizaki) ✅
 - A Life of One's Own (Joanna Field)
 - The Conquest of Happiness (Bertrand Russell)
 - Daily Rituals (Mason Currey)
 - The Sense of Style (Steven Pinker)
-- Walden (Henry D. Thoreau)
 
 tech
 

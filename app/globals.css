@@ -3,20 +3,32 @@
 @tailwind utilities;
 
 @layer utilities {
-  .bg-japanese-kinairo { background-color: #FBFAF5; }
-  .bg-japanese-shironeri { background-color: #F3F3F2; }
-  .bg-japanese-hakuji { background-color: #F8FBFB; }
-  .bg-japanese-soshoku { background-color: #EAE5E3; }
-  .bg-japanese-shiraumenezu { background-color: #E5E4E6; }
-  .text-japanese-shironezu { color: #DCDDDD; }
+  .bg-japanese-kinairo {
+    background-color: #fbfaf5;
+  }
+  .bg-japanese-shironeri {
+    background-color: #f3f3f2;
+  }
+  .bg-japanese-hakuji {
+    background-color: #f8fbfb;
+  }
+  .bg-japanese-soshoku {
+    background-color: #eae5e3;
+  }
+  .bg-japanese-shiraumenezu {
+    background-color: #e5e4e6;
+  }
+  .text-japanese-shironezu {
+    color: #dcdddd;
+  }
 }
 
 body {
   background: linear-gradient(
     135deg,
-    #F3F3F2 0%,
-    /* Silk white - shironeri */ #FBFAF5 50%,
-    /* Natural dough - kinairo */ #F8FBFB 100% /* White porcelain - hakuji */
+    #f3f3f2 0%,
+    /* Silk white - shironeri */ #fbfaf5 50%,
+    /* Natural dough - kinairo */ #f8fbfb 100% /* White porcelain - hakuji */
   );
   min-height: 100vh;
   background-attachment: fixed;
@@ -43,7 +55,7 @@ body {
 
 /* Add subtle paper texture */
 .prose::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -55,7 +67,7 @@ body {
 }
 
 .dark .prose {
-  color: #F3F3F3; /* nyuhakushoku - milky white */
+  color: #f3f3f3; /* nyuhakushoku - milky white */
 }
 
 .prose strong {
@@ -63,7 +75,7 @@ body {
 }
 
 .dark .prose strong {
-  color: #E7E7EB; /* murasakisuishiyou */
+  color: #e7e7eb; /* murasakisuishiyou */
   font-weight: bold;
 }
 
@@ -72,7 +84,7 @@ body {
 }
 
 .prose code {
-  background-color: #F7FCFE; /* unoharairo */
+  background-color: #f7fcfe; /* unoharairo */
   color: #595857; /* sumiiro */
   padding: 0.2em 0.2em;
   border-radius: 0.3em;
@@ -81,23 +93,79 @@ body {
 
 .prose pre {
   padding: 0;
-  border: none;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .prose pre code {
   background-color: inherit;
+  color: inherit;
+  border: none !important;
+}
+
+.prose pre > div {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .prose code::before {
-  content: '';
+  content: "";
 }
 
 .prose code::after {
-  content: '';
+  content: "";
+}
+
+.dark .prose code {
+  background-color: #2a2b36;
+  color: #dcdddd; /* shironezu - light grey */
+}
+
+.dark .prose pre {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.dark .prose pre > div {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Nuclear option: target all possible code block elements */
+.prose pre[class*="language-"],
+.prose div[class*="language-"],
+.prose code[class*="language-"] {
+  border: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  ring: none !important;
+  border-radius: 0 !important;
+}
+
+.dark .prose pre[class*="language-"],
+.dark .prose div[class*="language-"],
+.dark .prose code[class*="language-"] {
+  border: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  ring: none !important;
+  border-radius: 0 !important;
 }
 
 .prose ul li::before {
-  content: '\25E6'; /* Unicode for a small circle */
+  content: "\25E6"; /* Unicode for a small circle */
   color: slategrey; /* Change the color */
   display: inline-block; /* Needed to add space between the bullet and the text */
   width: 1em; /* Also needed for space (tweak if needed) */
@@ -105,7 +173,7 @@ body {
 }
 
 .prose a {
-  background-image: url('../public/underline.svg');
+  background-image: url("../public/underline.svg");
   background-size: 100% 4px;
   background-position: bottom;
   background-repeat: no-repeat;
@@ -114,8 +182,8 @@ body {
 }
 
 .dark .prose a {
-  background-image: url('../public/underline-dark.png');
-  color: theme('colors.dark.text');
+  background-image: url("../public/underline-dark.png");
+  color: theme("colors.dark.text");
 }
 
 .prose a:hover {
@@ -123,7 +191,7 @@ body {
 }
 
 .dark .prose a:hover {
-  color: #91989C; /* ginnezu */
+  color: #91989c; /* ginnezu */
 }
 
 .prose h1 {
@@ -142,15 +210,15 @@ body {
 .dark .prose h1,
 .dark .prose h2,
 .dark .prose h3 {
-  color: #FFFFFC; /* gofuniro - chalk white */
+  color: #fffffc; /* gofuniro - chalk white */
 }
 
 .prose blockquote {
   margin: 0 0.1em 0 0.1em;
   padding: 0 0em 0 1em;
-  border-left: 3px solid #E5E4E6; /* shiraumenezu */
+  border-left: 3px solid #e5e4e6; /* shiraumenezu */
   border-left-width: 3px;
-  border-color: #E5E4E6;
+  border-color: #e5e4e6;
   quotes: none;
   font-style: normal;
   font-weight: normal;
@@ -161,67 +229,90 @@ body {
   margin-top: 2em;
   margin-bottom: 2em;
   border-width: 0.1px;
-  border-color: theme('colors.japanese.shiraumenezu');
+  border-color: theme("colors.japanese.shiraumenezu");
 }
 
 .dark .prose blockquote {
-  border-color: #91989C; /* ginnezu */
-  color: #E7E7EB; /* murasakisuishiyou */
+  border-color: #91989c; /* ginnezu */
+  color: #e7e7eb; /* murasakisuishiyou */
 }
 
-.prose img {
+.prose img:not(.not-prose) {
   width: 100%;
   margin-bottom: 0;
   display: block;
   object-fit: cover;
   border-radius: 0.2rem;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 1px 10px 0 rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 1px 10px 0 rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
+}
+
+/* Spotify images - exclude from prose styles */
+img.not-prose {
+  width: auto !important;
+  height: auto !important;
 }
 
 ::selection {
-  background: theme('colors.japanese.murasakisuishiyou / 30%');
-  color: theme('colors.light.text');
+  background: theme("colors.japanese.murasakisuishiyou / 30%");
+  color: theme("colors.light.text");
 }
 
 mark {
-  background-color: theme('colors.japanese.unoharairo');
+  background-color: theme("colors.japanese.unoharairo");
   color: black;
 }
 
 .dark ::selection {
-  background: theme('colors.japanese.nyuhakushoku / 20%');
-  color: theme('colors.dark.text');
+  background: theme("colors.japanese.nyuhakushoku / 20%");
+  color: theme("colors.dark.text");
 }
 
 .hover-container {
-  display: inline-block; /* Only take up necessary space */
-  position: relative; /* Context for absolute positioning */
+  display: inline-block;
+  position: relative;
 }
 
 .image-container {
-  position: fixed; /* Fixed to the viewport */
-  top: 50%;
+  position: absolute;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90vw;
-  height: 80vh;
-  display: none; /* Initially hidden */
+  transform: translateX(-50%);
+  bottom: calc(100% + 12px);
+  display: none;
   justify-content: center;
   align-items: center;
-  pointer-events: none; /* Ignore pointer events when not visible */
+  pointer-events: none;
+  z-index: 50;
 }
 
 .image-hover {
-  max-width: 100%;
-  max-height: 100%;
+  max-width: min(1200px, 90vw);
+  max-height: min(800px, 80vh);
   object-fit: contain;
-  pointer-events: auto; /* Reactivate pointer events for the image */
+  pointer-events: none;
+  border-radius: 0.125rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  animation: fadeInImage 200ms ease-out;
+  transform-origin: center;
 }
 
-.hover-container:hover .image-container {
-  display: flex; /* Show when the container is hovered */
+.dark .image-hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.group:hover .image-container {
+  display: flex;
+}
+
+@media (hover: hover) {
+  .group {
+    transition: none;
+  }
 }
 
 @keyframes loading-bar {
@@ -238,4 +329,15 @@ mark {
 
 .animate-loading-bar {
   animation: loading-bar 1.5s ease-in-out infinite;
+}
+
+@keyframes fadeInImage {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
