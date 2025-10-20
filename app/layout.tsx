@@ -1,22 +1,22 @@
-import { Analytics } from '@vercel/analytics/react';
-import type { Metadata } from 'next';
-import { Averia_Serif_Libre } from 'next/font/google';
-import { Sidebar } from '../components/SideBar';
-import './globals.css';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Providers } from './providers';
+import { Analytics } from "@vercel/analytics/react";
+import type { Metadata } from "next";
+import { Averia_Serif_Libre } from "next/font/google";
+import { Sidebar } from "@/components/SideBar";
+import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://bneo.xyz'),
-  title: 'benneo',
-  description: 'writing daily',
+  metadataBase: new URL("https://bneo.xyz"),
+  title: "benneo",
+  description: "writing daily",
   openGraph: {
-    title: 'Benedict Neo',
-    description: 'writing daily',
-    url: 'https://bneo.xyz',
-    siteName: 'Benedict Neo',
-    locale: 'en_US',
-    type: 'website',
+    title: "Benedict Neo",
+    description: "writing daily",
+    url: "https://bneo.xyz",
+    siteName: "Benedict Neo",
+    locale: "en_US",
+    type: "website",
   },
   robots: {
     index: true,
@@ -24,23 +24,23 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   twitter: {
-    title: 'Benedict Neo',
-    card: 'summary_large_image',
+    title: "Benedict Neo",
+    card: "summary_large_image",
   },
 };
 
 const averia = Averia_Serif_Libre({
-  weight: ['300', '400', '700'],
-  subsets: ['latin'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-  variable: '--font-averia',
+  weight: ["300", "400", "700"],
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  display: "swap",
+  variable: "--font-averia",
 });
 
 export default function RootLayout({
@@ -54,10 +54,10 @@ export default function RootLayout({
       lang="en"
       className={`${averia.variable} font-serif`}
     >
-      <body className="flex flex-col mb-40 mx-2 md:mx-10 md:flex-row md:items-start md:mt-10">
+      <body className="flex flex-col mx-2 md:mx-10 md:flex-row md:items-start md:mt-10">
         <Providers>
           <Sidebar />
-          <main className="flex-auto text-md md:mt-0 px-2 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full selection:bg-japanese-murasakisuishiyou/20 dark:selection:bg-japanese-nyuhakushoku/20">
+          <main className="flex-auto text-md md:mt-0 px-2 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full selection:bg-japanese-murasakisuishiyou/20 dark:selection:bg-japanese-nyuhakushoku/20 mb-40">
             {children}
           </main>
         </Providers>
