@@ -1,18 +1,20 @@
 import * as fs from 'fs';
+import path from 'path';
 
 import matter from 'gray-matter';
 import { PostMetadata } from '../components/PostMetadata';
 
 const getPostMetadata = (getDrafts: boolean = false): PostMetadata[] => {
-  const folder = getDrafts ? 'posts/drafts/' : 'posts/';
-  ('posts/');
+  const folder = getDrafts
+    ? path.join(process.cwd(), 'posts', 'drafts')
+    : path.join(process.cwd(), 'posts');
   const files = fs.readdirSync(folder);
   const markdownPosts = files.filter((file) => file.endsWith('.md'));
 
   const posts: PostMetadata[] = markdownPosts.map(
     (fileName): Partial<PostMetadata> => {
       try {
-        const fileContents = fs.readFileSync(`${folder}${fileName}`, 'utf8');
+        const fileContents = fs.readFileSync(path.join(folder, fileName), 'utf8');
         const matterResult = matter(fileContents);
 
         return {
