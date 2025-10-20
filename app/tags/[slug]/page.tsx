@@ -1,5 +1,5 @@
-import getPostMetadata from '../../../utils/getPostMetadata';
-import PostPreview from '../../../components/PostPreview';
+import getPostMetadata from "@/utils/getPostMetadata";
+import PostPreview from "@/components/PostPreview";
 
 export const generateStaticParams = async () => {
   const postMetadata = getPostMetadata();
@@ -7,7 +7,7 @@ export const generateStaticParams = async () => {
   const tags = new Set();
 
   postMetadata.forEach((post) => {
-    post.tags.split(', ').forEach((tag) => tags.add(tag));
+    post.tags.split(", ").forEach((tag) => tags.add(tag));
   });
 
   return Array.from(tags).map((tag: any) => ({
@@ -21,7 +21,7 @@ const TagPage = async (props: any) => {
   const postMetadata = getPostMetadata();
 
   const filteredPosts = postMetadata.filter((post) =>
-    post.tags.split(', ').includes(tag)
+    post.tags.split(", ").includes(tag)
   );
 
   const postPreviews = filteredPosts.map((post) => (
@@ -30,8 +30,8 @@ const TagPage = async (props: any) => {
 
   return (
     <div>
-      <h1 className='font-bold text-left mb-10 text-lg'> Tag: {tag}</h1>
-      <div className='grid grid-cols-1 text-sm'>{postPreviews}</div>
+      <h1 className="font-bold text-left mb-10 text-lg"> Tag: {tag}</h1>
+      <div className="grid grid-cols-1 text-sm">{postPreviews}</div>
     </div>
   );
 };

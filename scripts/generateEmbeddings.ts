@@ -1,10 +1,28 @@
-import { processAllPosts } from '../utils/processAllPosts';
-import { sql } from '@vercel/postgres';
-import { v4 as uuidv4 } from 'uuid';
-import { VoyageAIClient } from 'voyageai';
-import * as dotenv from 'dotenv';
-import * as fs from 'fs';
-import matter from 'gray-matter';
+import { processAllPosts } from "@/utils/processAllPosts";
+import { sql } from "@vercel/postgres";
+import { v4 as uuidv4 } from "uuid";
+import * as dotenv from "dotenv";
+import * as fs from "fs";
+import matter from "gray-matter";
+
+// Import shared utilities
+import { getVoyageClient } from "@/utils/clients";
+import { formatEmbeddingForPostgres } from "@/utils/embeddingUtils";
+import { withEmbeddingRetry, wait } from "@/utils/retry";
+import { extractPostDate, toISODateString } from "@/utils/dateUtils";
+import { extractTags } from "@/utils/postUtils";
+import { POSTS_DIR } from "@/config/paths";
+import {
+  EMBEDDING_DIMENSIONS,
+  EMBEDDING_BATCH_SIZE,
+  DELAY_BETWEEN_BATCHES,
+  DELAY_BETWEEN_FILES,
+  MAX_WHOLE_POST_LENGTH,
+  OVERLAP_DETECTION_THRESHOLD,
+} from "@/config/constants";
+
+// Import types
+import { PostFrontmatter } from "@/types/post";
 
 dotenv.config();
 
@@ -13,30 +31,8 @@ interface EmbeddingResult {
   failedChunks: number;
 }
 
-// Define frontmatter interface to access properties safely
-interface PostFrontmatter {
-  title?: string;
-  tags?: string[] | string;
-  date?: string;
-  [key: string]: any;
-}
-
-process.env.POSTGRES_URL = process.env.DATABASE_URL;
-
-const client = new VoyageAIClient({
-  apiKey: process.env.VOYAGE_AI_API_KEY!,
-});
-
-// Constants for rate limiting and batching
-const BATCH_SIZE = 15; // Reduced batch size to avoid timeouts
-const DELAY_BETWEEN_BATCHES = 500; // Increased delay between batches to avoid rate limits
-const DELAY_BETWEEN_FILES = 1500; // Increased delay between files
-const MAX_RETRIES = 5; // Increased number of retries for failed API calls
-const INITIAL_RETRY_DELAY = 2000; // Increased starting delay for exponential backoff
-// Maximum chunk size for whole-post embedding
-const MAX_WHOLE_POST_LENGTH = 8000;
-// Constants for overlapping detection
-const OVERLAP_THRESHOLD = 100; // Minimum characters to consider as overlapping content
+// Get VoyageAI client singleton
+const client = getVoyageClient();
 
 // Check if table exists and create it if it doesn't
 const setupTable = async () => {
@@ -54,7 +50,7 @@ const setupTable = async () => {
 
     // Only create table if it doesn't exist
     if (!tableExists.rows[0].exists) {
-      console.log('Table does not exist, creating new one...');
+      console.log("Table does not exist, creating new one...");
 
       // Create table with simpler schema, keeping everything in metadata
       await sql`
@@ -66,7 +62,7 @@ const setupTable = async () => {
           chunk_type TEXT,
           metadata JSONB,
           sequence INTEGER,
-          embedding vector(512),
+          embedding vector(1024),
           overlaps_with UUID[], /* Array of chunk IDs this chunk overlaps with */
           overlap_score FLOAT[], /* Corresponding overlap percentage/score */
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -79,21 +75,17 @@ const setupTable = async () => {
       await sql`CREATE INDEX idx_content_chunks_published_date ON content_chunks((metadata->>'published_date'));`; // JSON path index
       await sql`CREATE INDEX idx_overlaps_with ON content_chunks USING GIN(overlaps_with);`;
 
-      console.log('✅ Table created successfully with all indexes');
+      console.log("✅ Table created successfully with all indexes");
     } else {
-      console.log('✅ Table already exists, skipping creation');
+      console.log("✅ Table already exists, skipping creation");
     }
   } catch (error) {
-    console.error('Error setting up table:', error);
+    console.error("Error setting up table:", error);
     throw error;
   }
 };
 
-async function wait(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-// Define a type for the API response
+// Type definition for the API response
 interface EmbeddingResponse {
   data: Array<{
     embedding: number[];
@@ -102,167 +94,29 @@ interface EmbeddingResponse {
   [key: string]: any;
 }
 
-async function embedWithRetry(
-  texts: string[],
-  retryCount = 0
-): Promise<EmbeddingResponse> {
-  try {
-    // Set a timeout promise
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error('Request timed out')), 60000); // 60 second timeout
-    });
-
-    // Race between the actual request and timeout
-    return await Promise.race([
-      client.embed({
-        model: 'voyage-3-lite',
-        input: texts,
-        inputType: 'document',
-      }) as Promise<EmbeddingResponse>,
-      timeoutPromise,
-    ]);
-  } catch (error: any) {
-    // Check if we still have retries left
-    if (retryCount < MAX_RETRIES) {
-      // Handle rate limits (status 429)
-      if (error?.response?.status === 429) {
-        const delay = INITIAL_RETRY_DELAY * Math.pow(2, retryCount);
-        console.log(
-          `Rate limited. Waiting ${delay}ms before retry ${
-            retryCount + 1
-          }/${MAX_RETRIES}`
-        );
-        await wait(delay);
-        return embedWithRetry(texts, retryCount + 1);
-      }
-      // Handle timeouts and other transient errors
-      else if (
-        error.message === 'Request timed out' ||
-        error.message?.includes('timeout') ||
-        error.message?.includes('network') ||
-        error.code === 'ECONNRESET' ||
-        error.code === 'ETIMEDOUT'
-      ) {
-        const delay = INITIAL_RETRY_DELAY * Math.pow(2, retryCount);
-        console.log(
-          `Request failed with error: ${
-            error.message
-          }. Waiting ${delay}ms before retry ${retryCount + 1}/${MAX_RETRIES}`
-        );
-        await wait(delay);
-        return embedWithRetry(texts, retryCount + 1);
-      }
-    }
-
-    // No more retries or non-retriable error
-    console.error(
-      `Embedding failed after ${retryCount} retries:`,
-      error.message
-    );
-    throw error;
-  }
-}
-
 /**
- * Extract date from frontmatter with improved parsing
+ * Wrapper for embedding with retry using VoyageAI
  */
-function extractPostDate(filePath: string, frontmatter: any): Date {
-  // Always prioritize frontmatter date if available
-  if (frontmatter?.date) {
-    // Try multiple date parsing approaches
-    // Approach 1: Direct Date constructor (handles ISO formats and many common formats)
-    const parsedDate = new Date(frontmatter.date);
-    if (!isNaN(parsedDate.getTime())) {
-      console.log(
-        `Date from frontmatter (direct): ${parsedDate.toISOString()} for ${filePath}`
-      );
-      return parsedDate;
-    }
-
-    // Approach 2: Handle month name formats like "Jun 1, 2024" or "June 1 2024"
-    const monthNameMatch = String(frontmatter.date).match(
-      /([A-Za-z]+)\s+(\d{1,2})(?:,?\s+)?(\d{4})/
-    );
-    if (monthNameMatch) {
-      const [_, month, day, year] = monthNameMatch;
-      const monthMap: { [key: string]: number } = {
-        jan: 0,
-        january: 0,
-        feb: 1,
-        february: 1,
-        mar: 2,
-        march: 2,
-        apr: 3,
-        april: 3,
-        may: 4,
-        jun: 5,
-        june: 5,
-        jul: 6,
-        july: 6,
-        aug: 7,
-        august: 7,
-        sep: 8,
-        september: 8,
-        oct: 9,
-        october: 9,
-        nov: 10,
-        november: 10,
-        dec: 11,
-        december: 11,
-      };
-
-      const monthIndex = monthMap[month.toLowerCase()];
-      if (monthIndex !== undefined) {
-        const formattedDate = new Date(
-          parseInt(year),
-          monthIndex,
-          parseInt(day)
-        );
-        if (!isNaN(formattedDate.getTime())) {
-          console.log(
-            `Date from frontmatter (month name): ${formattedDate.toISOString()} for ${filePath}`
-          );
-          return formattedDate;
-        }
-      }
-    }
-
-    // Log warning if we have a date field but couldn't parse it
-    console.warn(
-      `Warning: Could not parse date '${frontmatter.date}' from frontmatter in ${filePath}`
-    );
-  }
-
-  // Try to parse from filename as fallback (e.g., MMDDYY.md format)
-  const filenameMatch = filePath.match(/(\d{2})(\d{2})(\d{2})\.md$/);
-  if (filenameMatch) {
-    const [_, month, day, year] = filenameMatch;
-    const fullYear = parseInt(`20${year}`); // Assuming 20xx years
-    const dateFromFilename = new Date(
-      fullYear,
-      parseInt(month) - 1,
-      parseInt(day)
-    );
-    console.log(
-      `Date from filename: ${dateFromFilename.toISOString()} for ${filePath}`
-    );
-    return dateFromFilename;
-  }
-
-  // Use a stable default date for posts with no date instead of current date
-  // Using January 1, 2020 as a reasonable default that will still sort correctly
-  const defaultDate = new Date(2020, 0, 1);
-  console.warn(
-    `Warning: No date found for ${filePath}, using default date ${defaultDate.toISOString()}`
-  );
-  return defaultDate;
+async function embedWithRetry(texts: string[]): Promise<EmbeddingResponse> {
+  return withEmbeddingRetry(async () => {
+    return (await client.embed({
+      model: "voyage-3-lite",
+      input: texts,
+      inputType: "document",
+    })) as Promise<EmbeddingResponse>;
+  });
 }
+
+// Note: extractPostDate is now imported from utils/dateUtils
+// Note: extractTags is now imported from utils/postUtils
+// Note: wait() is now imported from utils/retry
+// Note: formatEmbeddingForPostgres is now imported from utils/embeddingUtils
 
 async function generateEmbeddingsForSingleFile(
   filePath: string
 ): Promise<EmbeddingResult> {
   // Remove .md extension if it exists
-  const normalizedFilePath = filePath.endsWith('.md')
+  const normalizedFilePath = filePath.endsWith(".md")
     ? filePath.substring(0, filePath.length - 3)
     : filePath;
 
@@ -280,7 +134,7 @@ async function generateEmbeddingsForSingleFile(
     await sql`DELETE FROM content_chunks WHERE post_slug = ${normalizedFilePath}`;
     console.log(`✅ Previous embeddings removed`);
   } catch (error) {
-    console.error('Error removing previous embeddings:', error);
+    console.error("Error removing previous embeddings:", error);
     // Continue with embedding generation even if deletion fails
   }
 
@@ -304,18 +158,17 @@ async function generateEmbeddingsForSingleFile(
 
   // Extract post date
   const publishedDate = extractPostDate(filePath, frontmatter);
-  const formattedPublishedDate = publishedDate.toISOString().split('T')[0];
+  const formattedPublishedDate = toISODateString(publishedDate);
 
   // Create a whole-post context for better document-level embedding
   let wholePostEmbeddingDone = false;
 
   // Get the full content of the post
   try {
-    const postsDirectory = process.cwd() + '/posts/';
-    const fullFilePath = `${postsDirectory}${filePath}.md`;
+    const fullFilePath = `${POSTS_DIR}/${filePath}.md`;
 
     if (fs.existsSync(fullFilePath)) {
-      const fileContent = fs.readFileSync(fullFilePath, 'utf8');
+      const fileContent = fs.readFileSync(fullFilePath, "utf8");
       const { content } = matter(fileContent);
 
       // Only embed whole post if it's not too long
@@ -325,7 +178,7 @@ async function generateEmbeddingsForSingleFile(
 
         if (wholePostResponse?.data?.length) {
           const embedding = wholePostResponse.data[0].embedding;
-          const formattedEmbedding = `[${embedding.join(',')}]`;
+          const formattedEmbedding = formatEmbeddingForPostgres(embedding);
 
           // Enhanced metadata (non-date/tag specific info remains in metadata)
           interface WholePostMetadata {
@@ -345,15 +198,8 @@ async function generateEmbeddingsForSingleFile(
           // Treat frontmatter as proper type
           const typedFrontmatter = frontmatter as PostFrontmatter;
 
-          // Extract tags as array for dedicated column
-          const tagValue = typedFrontmatter?.tags;
-          const tagsArray = tagValue
-            ? Array.isArray(tagValue)
-              ? tagValue
-              : typeof tagValue === 'string'
-              ? tagValue.split(',').map((tag: string) => tag.trim())
-              : []
-            : [];
+          // Extract tags as array using shared utility
+          const tagsArray = extractTags(typedFrontmatter);
 
           try {
             // Add published_date to metadata
@@ -371,10 +217,10 @@ async function generateEmbeddingsForSingleFile(
                 ${frontmatter?.title || filePath},
                 ${
                   content.length > 2000
-                    ? content.substring(0, 2000) + '...'
+                    ? content.substring(0, 2000) + "..."
                     : content
                 },
-                ${'full-post'},
+                ${"full-post"},
                 ${JSON.stringify(enhancedMetadata)},
                 ${0}, /* Whole post is always first */
                 ${formattedEmbedding},
@@ -384,9 +230,9 @@ async function generateEmbeddingsForSingleFile(
             `;
             successfulChunks++;
             wholePostEmbeddingDone = true;
-            console.log('✅ Whole post embedding complete');
+            console.log("✅ Whole post embedding complete");
           } catch (error) {
-            console.error('Error inserting whole post chunk:', error);
+            console.error("Error inserting whole post chunk:", error);
             failedChunks++;
 
             // Update chunk progress after error
@@ -396,19 +242,19 @@ async function generateEmbeddingsForSingleFile(
       }
     }
   } catch (error) {
-    console.error('Error processing whole post:', error);
+    console.error("Error processing whole post:", error);
     // Continue with chunk processing even if whole post fails
   }
 
   // Process chunks in batches
-  for (let i = 0; i < chunks.length; i += BATCH_SIZE) {
-    const batchChunks = chunks.slice(i, i + BATCH_SIZE);
-    const batchEnd = Math.min(i + BATCH_SIZE, chunks.length);
+  for (let i = 0; i < chunks.length; i += EMBEDDING_BATCH_SIZE) {
+    const batchChunks = chunks.slice(i, i + EMBEDDING_BATCH_SIZE);
+    const batchEnd = Math.min(i + EMBEDDING_BATCH_SIZE, chunks.length);
 
     console.log(
       `\nProcessing batch ${i}-${batchEnd} of ${chunks.length} (${Math.ceil(
-        (batchEnd - i) / BATCH_SIZE
-      )}/${Math.ceil(chunks.length / BATCH_SIZE)} batches)`
+        (batchEnd - i) / EMBEDDING_BATCH_SIZE
+      )}/${Math.ceil(chunks.length / EMBEDDING_BATCH_SIZE)} batches)`
     );
 
     try {
@@ -417,7 +263,7 @@ async function generateEmbeddingsForSingleFile(
         const typePrefix = chunk.type.toUpperCase();
         const sectionPrefix = chunk.metadata?.section
           ? `[SECTION: ${chunk.metadata.section}] `
-          : '';
+          : "";
         return `${typePrefix}: ${sectionPrefix}${chunk.content.trim()}`;
       });
 
@@ -437,10 +283,10 @@ async function generateEmbeddingsForSingleFile(
 
         if (
           inputTexts.length > 3 &&
-          (error.message?.includes('timeout') ||
-            error.message?.includes('network') ||
-            error.code === 'ECONNRESET' ||
-            error.code === 'ETIMEDOUT')
+          (error.message?.includes("timeout") ||
+            error.message?.includes("network") ||
+            error.code === "ECONNRESET" ||
+            error.code === "ETIMEDOUT")
         ) {
           console.log(`Error processing full batch: ${error.message}`);
           console.log(`Splitting batch into smaller chunks and retrying...`);
@@ -478,7 +324,7 @@ async function generateEmbeddingsForSingleFile(
       }
 
       if (!response?.data?.length) {
-        console.error('No embeddings data in response');
+        console.error("No embeddings data in response");
         failedChunks += batchChunks.length;
         continue;
       }
@@ -492,17 +338,10 @@ async function generateEmbeddingsForSingleFile(
       // First pass: Insert all chunks
       const insertPromises = batchChunks.map(async (chunk, j) => {
         const embedding = response.data[j]?.embedding;
-        const formattedEmbedding = `[${embedding.join(',')}]`;
+        const formattedEmbedding = formatEmbeddingForPostgres(embedding);
 
-        // Extract tags as array for dedicated column
-        const tagValue = typedFrontmatter?.tags;
-        const tagsArray = tagValue
-          ? Array.isArray(tagValue)
-            ? tagValue
-            : typeof tagValue === 'string'
-            ? tagValue.split(',').map((tag: string) => tag.trim())
-            : []
-          : [];
+        // Extract tags as array using shared utility
+        const tagsArray = extractTags(typedFrontmatter);
 
         // Define a proper interface for chunk metadata
         interface ChunkMetadata {
@@ -520,7 +359,7 @@ async function generateEmbeddingsForSingleFile(
           post_title: frontmatter?.title || filePath,
           // Add sliding window metadata
           isOverlapping: chunk.metadata?.isOverlapping || false,
-          positionInSequence: chunk.metadata?.positionInSequence || 'unknown',
+          positionInSequence: chunk.metadata?.positionInSequence || "unknown",
         };
 
         try {
@@ -551,7 +390,7 @@ async function generateEmbeddingsForSingleFile(
           `;
           return true;
         } catch (error) {
-          console.error('Error inserting chunk:', error);
+          console.error("Error inserting chunk:", error);
           return false;
         }
       });
@@ -570,7 +409,7 @@ async function generateEmbeddingsForSingleFile(
         // Simple overlap detection
         // Check if end of previous chunk is in current chunk
         const prevChunkEnd = prevChunk.substring(
-          Math.max(0, prevChunk.length - OVERLAP_THRESHOLD)
+          Math.max(0, prevChunk.length - OVERLAP_DETECTION_THRESHOLD)
         );
         if (currentChunk.includes(prevChunkEnd)) {
           overlapScore = prevChunkEnd.length / currentChunk.length;
@@ -597,7 +436,7 @@ async function generateEmbeddingsForSingleFile(
               WHERE id = ${chunkIds[j - 1]}
             `;
           } catch (error) {
-            console.error('Error updating overlap:', error);
+            console.error("Error updating overlap:", error);
           }
         }
 
@@ -629,7 +468,7 @@ async function generateEmbeddingsForSingleFile(
       // Add delay between batches to avoid rate limits
       await wait(DELAY_BETWEEN_BATCHES);
     } catch (error) {
-      console.error('Error processing batch:', error);
+      console.error("Error processing batch:", error);
       failedChunks += batchChunks.length;
 
       // Update chunk progress after error
@@ -650,14 +489,14 @@ function createProgressBar(
   const percentage = Math.round((current / total) * 100);
   const progressChars = Math.round((current / total) * width);
   const progressBar =
-    '█'.repeat(progressChars) + '░'.repeat(width - progressChars);
+    "█".repeat(progressChars) + "░".repeat(width - progressChars);
   return `[${progressBar}] ${percentage}% (${current}/${total})`;
 }
 
 async function generateEmbeddingsForAllFiles() {
   const posts = await processAllPosts();
   const nonDraftPosts = posts.filter(
-    (post) => !post.filePath.includes('/drafts/')
+    (post) => !post.filePath.includes("/drafts/")
   );
 
   let totalSuccessful = 0;
@@ -705,7 +544,7 @@ async function main() {
       const { successfulChunks, failedChunks } =
         await generateEmbeddingsForSingleFile(specificFile);
 
-      console.log('\n=== Embedding Generation Summary ===');
+      console.log("\n=== Embedding Generation Summary ===");
       console.log(`Successful chunks: ${successfulChunks}`);
       console.log(`Failed chunks: ${failedChunks}`);
       console.log(
@@ -719,7 +558,7 @@ async function main() {
       const { totalSuccessful, totalFailed } =
         await generateEmbeddingsForAllFiles();
 
-      console.log('\n=== Final Embedding Generation Summary ===');
+      console.log("\n=== Final Embedding Generation Summary ===");
       console.log(
         `Total successful chunks across all files: ${totalSuccessful}`
       );
@@ -734,7 +573,7 @@ async function main() {
 
     process.exit(0);
   } catch (error) {
-    console.error('❌ Fatal error:', error);
+    console.error("❌ Fatal error:", error);
     process.exit(1);
   }
 }
