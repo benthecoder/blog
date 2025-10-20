@@ -237,7 +237,7 @@ body {
   color: #e7e7eb; /* murasakisuishiyou */
 }
 
-.prose img {
+.prose img:not(.not-prose) {
   width: 100%;
   margin-bottom: 0;
   display: block;
@@ -250,6 +250,12 @@ body {
   transition:
     transform 0.1s ease,
     box-shadow 0.1s ease;
+}
+
+/* Spotify images - exclude from prose styles */
+img.not-prose {
+  width: auto !important;
+  height: auto !important;
 }
 
 ::selection {
