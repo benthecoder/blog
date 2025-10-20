@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Image from 'next/image';
+import { useState } from "react";
+import Image from "next/image";
 
 function Sketches() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const imageList: string[] = [
-    '/images/handrose.png',
-    '/images/sunflowersketch.png',
-    '/images/peony.png',
-    '/images/hummingbird.png',
-    '/images/howl.png',
-    '/images/hokusai.png',
-    '/images/christ.png',
-    '/images/metro.png',
-    '/images/wave.png',
-    '/images/room.png',
-    '/images/angel.png',
+    "/images/handrose.png",
+    "/images/sunflowersketch.png",
+    "/images/peony.png",
+    "/images/hummingbird.png",
+    "/images/howl.png",
+    "/images/hokusai.png",
+    "/images/christ.png",
+    "/images/metro.png",
+    "/images/wave.png",
+    "/images/room.png",
+    "/images/angel.png",
   ];
   const openModal = (imageSrc: string) => {
     setSelectedImage(imageSrc);

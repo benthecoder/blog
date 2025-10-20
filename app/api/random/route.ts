@@ -1,7 +1,7 @@
-import { getAllPostSlugs } from '../../../scripts/postUtils';
-import { NextResponse } from 'next/server';
+import { getAllPostSlugs } from "@/scripts/postUtils";
+import { NextResponse } from "next/server";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export function GET(request: Request) {
   const slugs = getAllPostSlugs();
@@ -9,8 +9,8 @@ export function GET(request: Request) {
 
   return new NextResponse(JSON.stringify({ slug: randomSlug }), {
     headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-store', // Ensures no caching
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store", // Ensures no caching
     },
   });
 }

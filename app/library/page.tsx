@@ -1,10 +1,10 @@
-import fs from 'fs';
-import Markdown from 'markdown-to-jsx';
-import matter from 'gray-matter';
+import fs from "fs";
+import Markdown from "markdown-to-jsx";
+import matter from "gray-matter";
 
 const LibraryPage = () => {
-  const file = 'app/library/library.md';
-  const content = fs.readFileSync(file, 'utf8');
+  const file = "app/library/library.md";
+  const content = fs.readFileSync(file, "utf8");
   const library = matter(content);
 
   return (

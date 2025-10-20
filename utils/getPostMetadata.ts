@@ -1,26 +1,32 @@
-import * as fs from 'fs';
+import * as fs from "fs";
+import path from "path";
+import matter from "gray-matter";
 
-import matter from 'gray-matter';
-import { PostMetadata } from '../components/PostMetadata';
+// Import shared utilities and types
+import { POSTS_DIR, DRAFTS_DIR } from "@/config/paths";
+import { PostMetadata } from "@/types/post";
+import { calculateWordCount } from "./postUtils";
 
 const getPostMetadata = (getDrafts: boolean = false): PostMetadata[] => {
-  const folder = getDrafts ? 'posts/drafts/' : 'posts/';
-  ('posts/');
+  const folder = getDrafts ? DRAFTS_DIR : POSTS_DIR;
   const files = fs.readdirSync(folder);
-  const markdownPosts = files.filter((file) => file.endsWith('.md'));
+  const markdownPosts = files.filter((file) => file.endsWith(".md"));
 
   const posts: PostMetadata[] = markdownPosts.map(
     (fileName): Partial<PostMetadata> => {
       try {
-        const fileContents = fs.readFileSync(`${folder}${fileName}`, 'utf8');
+        const fileContents = fs.readFileSync(
+          path.join(folder, fileName),
+          "utf8"
+        );
         const matterResult = matter(fileContents);
 
         return {
           title: matterResult.data.title,
           date: matterResult.data.date,
-          tags: matterResult.data.tags || '',
-          wordcount: (matterResult.content.match(/\b\w+\b/gu) || []).length,
-          slug: fileName.replace('.md', ''),
+          tags: matterResult.data.tags || "",
+          wordcount: calculateWordCount(matterResult.content),
+          slug: fileName.replace(".md", ""),
         };
       } catch (error) {
         console.error(`Error parsing frontmatter in file: ${fileName}`);
@@ -28,7 +34,7 @@ const getPostMetadata = (getDrafts: boolean = false): PostMetadata[] => {
         // Return a minimal object to prevent the entire function from failing
         return {
           title: `Error in ${fileName}`,
-          slug: fileName.replace('.md', ''),
+          slug: fileName.replace(".md", ""),
         };
       }
     }
