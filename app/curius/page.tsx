@@ -48,7 +48,7 @@ export default function Page() {
     return (
       <div>
         <p className='mb-5'>
-          Links I saved on{' '}
+          my bookmarks on{' '}
           <a href='https://curius.app/benedict-neo' className='underline'>
             Curius
           </a>{' '}
@@ -80,7 +80,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1 className='font-bold text-left mb-10 text-2xl'> Links</h1>
+      <h1 className='font-bold text-left mb-10 text-2xl'> saved links</h1>
       <Curius />
     </div>
   );
