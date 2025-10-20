@@ -7,10 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "generate:rss": "node scripts/rss.mjs",
     "prebuild": "npm run generate:rss",
     "postbuild": "next-sitemap",
-    "generate-embeddings": "tsx scripts/generateEmbeddings.ts"
+    "generate-embeddings": "tsx scripts/generateEmbeddings.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
@@ -73,7 +76,15 @@
     "autoprefixer": "^10.4.13",
     "eslint": "8.38.0",
     "eslint-config-next": "^15.0.3",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.5",
     "postcss": "^8.4.31",
+    "prettier": "^3.6.2",
     "tailwindcss": "^3.2.4"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": [
+      "prettier --write"
+    ]
   }
 }

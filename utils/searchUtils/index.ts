@@ -1,6 +1,18 @@
-import { sql } from '@vercel/postgres';
-import { VoyageAIClient } from 'voyageai';
-import { Anthropic } from '@anthropic-ai/sdk';
+import { sql } from "@vercel/postgres";
+import { VoyageAIClient } from "voyageai";
+import { Anthropic } from "@anthropic-ai/sdk";
+
+// Import shared utilities
+import { formatEmbeddingForPostgres } from "@/utils/embeddingUtils";
+import { toISODateString } from "@/utils/dateUtils";
+import {
+  CHAT_SIMILARITY_THRESHOLD,
+  TIME_QUERY_LIMIT,
+  CLAUDE_CHAT_MODEL,
+  CLAUDE_DATE_EXTRACTION_MAX_TOKENS,
+  CLAUDE_DATE_EXTRACTION_TEMPERATURE,
+  VOYAGE_MODEL,
+} from "@/config/constants";
 
 /**
  * Extract date references from a user query using Claude
@@ -11,17 +23,17 @@ export async function extractDatesWithLLM(
   anthropic: Anthropic
 ) {
   const response = await anthropic.messages.create({
-    model: 'claude-3-7-sonnet-latest',
-    max_tokens: 150,
-    temperature: 0,
+    model: CLAUDE_CHAT_MODEL,
+    max_tokens: CLAUDE_DATE_EXTRACTION_MAX_TOKENS,
+    temperature: CLAUDE_DATE_EXTRACTION_TEMPERATURE,
     system:
       "You are a date extraction tool. Extract any date references from the user's query. Return ONLY a JSON object with these fields: hasDateReference (boolean), startDate (ISO string or null), endDate (ISO string or null), query (the non-date part of the query, or null if there's no specific topic). Do not include markdown formatting, code blocks, or any explanatory text.",
     messages: [
       {
-        role: 'user',
-        content: `Extract date information from this query: "${query}". Today's date is ${
-          currentDate.toISOString().split('T')[0]
-        }.`,
+        role: "user",
+        content: `Extract date information from this query: "${query}". Today's date is ${toISODateString(
+          currentDate
+        )}.`,
       },
     ],
   });
@@ -31,23 +43,23 @@ export async function extractDatesWithLLM(
     const contentBlock = response.content[0];
     // Cast to any to handle different API versions
     const anyBlock = contentBlock as any;
-    
+
     // Check for text property
-    let contentText = '';
-    
-    if ('text' in anyBlock) {
+    let contentText = "";
+
+    if ("text" in anyBlock) {
       contentText = anyBlock.text;
-    } else if (anyBlock.type === 'text' && 'text' in anyBlock) {
+    } else if (anyBlock.type === "text" && "text" in anyBlock) {
       // For newer Anthropic API versions
       contentText = anyBlock.text;
     } else {
       // Fallback for other content types
       contentText = JSON.stringify(anyBlock);
-      console.warn('Unexpected content block format:', anyBlock);
+      console.warn("Unexpected content block format:", anyBlock);
     }
 
     // Remove any markdown code block formatting if present
-    contentText = contentText.replace(/```json\n|\n```|```/g, '');
+    contentText = contentText.replace(/```json\n|\n```|```/g, "");
 
     // Trim any whitespace
     contentText = contentText.trim();
@@ -60,12 +72,13 @@ export async function extractDatesWithLLM(
 
     return dateInfo;
   } catch (error) {
-    console.error('Error parsing date extraction response:', error);
+    console.error("Error parsing date extraction response:", error);
     // Safely log the content
     const contentBlock = response.content[0];
     const anyBlock = contentBlock as any;
-    const contentText = 'text' in anyBlock ? anyBlock.text : 'Content unavailable';
-    console.log('Raw response:', contentText);
+    const contentText =
+      "text" in anyBlock ? anyBlock.text : "Content unavailable";
+    console.log("Raw response:", contentText);
     // Return default object if parsing fails
     return {
       hasDateReference: false,
@@ -80,23 +93,23 @@ export async function extractDatesWithLLM(
  * Format description of the user's time-based intent
  */
 export function describeDateIntent(dateInfo: any): string {
-  if (!dateInfo.hasDateReference) return '';
+  if (!dateInfo.hasDateReference) return "";
 
   const startDateStr = dateInfo.startDate
     ? dateInfo.startDate.toLocaleDateString()
-    : '';
+    : "";
   const endDateStr = dateInfo.endDate
     ? dateInfo.endDate.toLocaleDateString()
-    : '';
+    : "";
 
-  let timeframe = '';
+  let timeframe = "";
   if (startDateStr && endDateStr && startDateStr !== endDateStr) {
     timeframe = `content from ${startDateStr} to ${endDateStr}`;
   } else if (startDateStr) {
     timeframe = `content from ${startDateStr}`;
   }
 
-  const topic = dateInfo.query ? ` about "${dateInfo.query}"` : '';
+  const topic = dateInfo.query ? ` about "${dateInfo.query}"` : "";
 
   return `${timeframe}${topic}`;
 }
@@ -110,39 +123,41 @@ export async function performSemanticSearch(
 ) {
   // Generate embedding for query
   const queryEmbedding = await voyageClient.embed({
-    model: 'voyage-3-lite',
+    model: VOYAGE_MODEL,
     input: query,
-    inputType: 'document',
+    inputType: "document",
   });
 
   if (!queryEmbedding?.data?.[0]?.embedding) {
-    throw new Error('Failed to generate embedding for query');
+    throw new Error("Failed to generate embedding for query");
   }
 
   const embedding = queryEmbedding.data[0].embedding;
-  const formattedEmbedding = `[${embedding.join(',')}]`;
+  const formattedEmbedding = formatEmbeddingForPostgres(embedding);
 
   // Simplified search to isolate potential issues
   // Using direct vector similarity with a lower threshold
   try {
     console.log("Running simplified semantic search...");
-    
+
     // First, try a simple query to check if the table exists and has data
     const tableCheck = await sql`SELECT COUNT(*) as count FROM content_chunks;`;
-    console.log(`Table check: ${tableCheck.rows[0]?.count || 0} total chunks found`);
-    
+    console.log(
+      `Table check: ${tableCheck.rows[0]?.count || 0} total chunks found`
+    );
+
     // Use simple vector search with lower threshold
     return await sql`
-      SELECT 
+      SELECT
         content,
         post_slug,
         post_title,
-        metadata->>'published_date' as published_date, 
+        metadata->>'published_date' as published_date,
         metadata->>'tags' as tags,
         chunk_type,
         1 - (embedding <=> ${formattedEmbedding}::vector) as similarity
       FROM content_chunks
-      WHERE 1 - (embedding <=> ${formattedEmbedding}::vector) > 0.3
+      WHERE 1 - (embedding <=> ${formattedEmbedding}::vector) > ${CHAT_SIMILARITY_THRESHOLD}
       ORDER BY similarity DESC
       LIMIT 15;
     `;
@@ -160,13 +175,13 @@ export async function executeTimeBasedQuery(
   voyageClient: VoyageAIClient
 ) {
   if (!dateInfo.hasDateReference || !dateInfo.startDate) {
-    throw new Error('Invalid date information for time-based query');
+    throw new Error("Invalid date information for time-based query");
   }
 
   // Format dates for SQL query
-  const startDateStr = dateInfo.startDate.toISOString().split('T')[0];
+  const startDateStr = toISODateString(dateInfo.startDate);
   const endDateStr = dateInfo.endDate
-    ? dateInfo.endDate.toISOString().split('T')[0]
+    ? toISODateString(dateInfo.endDate)
     : startDateStr;
 
   console.log(
@@ -177,33 +192,35 @@ export async function executeTimeBasedQuery(
   if (dateInfo.query) {
     // If we have both time and a specific query, perform a hybrid search
     const queryEmbedding = await voyageClient.embed({
-      model: 'voyage-3-lite',
+      model: VOYAGE_MODEL,
       input: dateInfo.query,
-      inputType: 'document',
+      inputType: "document",
     });
 
     if (!queryEmbedding?.data?.[0]?.embedding) {
-      throw new Error('Failed to generate embedding for query');
+      throw new Error("Failed to generate embedding for query");
     }
 
     const embedding = queryEmbedding.data[0].embedding;
-    const formattedEmbedding = `[${embedding.join(',')}]`;
+    const formattedEmbedding = formatEmbeddingForPostgres(embedding);
 
     // Simplified search for debugging
     try {
       console.log("Running simplified date-based search...");
-      
+
       // First, check if we have any date-based data
       const dateCheck = await sql`
         SELECT COUNT(*) as count 
         FROM content_chunks 
         WHERE metadata->>'published_date' BETWEEN ${startDateStr} AND ${endDateStr};
       `;
-      console.log(`Date check: ${dateCheck.rows[0]?.count || 0} chunks found in date range`);
-      
+      console.log(
+        `Date check: ${dateCheck.rows[0]?.count || 0} chunks found in date range`
+      );
+
       // Use simpler query with existing metadata field instead of dedicated column
       return await sql`
-        SELECT 
+        SELECT
           content,
           post_slug,
           post_title,
@@ -212,11 +229,11 @@ export async function executeTimeBasedQuery(
           chunk_type,
           1 - (embedding <=> ${formattedEmbedding}::vector) as similarity
         FROM content_chunks
-        WHERE 
+        WHERE
           metadata->>'published_date' BETWEEN ${startDateStr} AND ${endDateStr}
-          AND 1 - (embedding <=> ${formattedEmbedding}::vector) > 0.3
+          AND 1 - (embedding <=> ${formattedEmbedding}::vector) > ${CHAT_SIMILARITY_THRESHOLD}
         ORDER BY similarity DESC
-        LIMIT 12;
+        LIMIT ${TIME_QUERY_LIMIT};
       `;
     } catch (error) {
       console.error("Date-based query error:", error);
@@ -226,10 +243,10 @@ export async function executeTimeBasedQuery(
     // Simplified pure date-based query for debugging
     try {
       console.log("Running pure date-based search...");
-      
+
       // Simple query using metadata fields
       return await sql`
-        SELECT 
+        SELECT
           content,
           post_slug,
           post_title,
