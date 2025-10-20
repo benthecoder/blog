@@ -81,11 +81,21 @@ body {
 
 .prose pre {
   padding: 0;
-  border: none;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .prose pre code {
   background-color: inherit;
+  color: inherit;
+  border: none !important;
+}
+
+.prose pre > div {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .prose code::before {
@@ -94,6 +104,52 @@ body {
 
 .prose code::after {
   content: '';
+}
+
+.dark .prose code {
+  background-color: #2a2b36;
+  color: #DCDDDD; /* shironezu - light grey */
+}
+
+.dark .prose pre {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.dark .prose pre > div {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* Nuclear option: target all possible code block elements */
+.prose pre[class*="language-"],
+.prose div[class*="language-"],
+.prose code[class*="language-"] {
+  border: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  ring: none !important;
+  border-radius: 0 !important;
+}
+
+.dark .prose pre[class*="language-"],
+.dark .prose div[class*="language-"],
+.dark .prose code[class*="language-"] {
+  border: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  ring: none !important;
+  border-radius: 0 !important;
 }
 
 .prose ul li::before {
