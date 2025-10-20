@@ -1,8 +1,8 @@
-import getPostContent from '../../../utils/getPostContent';
-import getPostMetadata from '../../../utils/getPostMetadata';
-import RenderPost from '../../../components/RenderPost';
-import { notFound } from 'next/navigation';
-import type { Metadata } from 'next';
+import getPostContent from "@/utils/getPostContent";
+import getPostMetadata from "@/utils/getPostMetadata";
+import RenderPost from "@/components/RenderPost";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 // Update Params type to be a Promise
 type Params = Promise<{ slug: string }>;
@@ -28,13 +28,13 @@ export async function generateMetadata({
     title,
     openGraph: {
       title,
-      type: 'article',
+      type: "article",
       publishedTime,
       url: `https://bneo.xyz/posts/${slug}`,
       images: [{ url: ogImage }],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       images: [ogImage],
     },

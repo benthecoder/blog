@@ -1,43 +1,52 @@
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm';
-import { visit } from 'unist-util-visit';
-import matter from 'gray-matter';
-import fs from 'fs';
-import path from 'path';
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import { visit } from "unist-util-visit";
+import matter from "gray-matter";
+import fs from "fs";
+import path from "path";
 
-interface ChunkMetadata {
-  type: string;
-  content: string;
-  metadata?: Record<string, any>;
-}
+// Import shared constants
+import {
+  MIN_STANDALONE_CHUNK,
+  TARGET_CHUNK_LENGTH,
+  CHUNK_OVERLAP_PERCENTAGE,
+  CHUNK_OVERLAP_MIN_CHARS,
+  CHUNK_OVERLAP_MAX_CHARS,
+  MIN_BULLET_POINTS,
+  MIN_WORD_COUNT,
+} from "@/config/constants";
 
-// Chunking configuration
-const MIN_CHUNK_LENGTH = 10; // Minimum size for a standalone chunk
-const MAX_CHUNK_LENGTH = 200; // Target size for chunks (reduced for more granularity)
-const OVERLAP_PERCENTAGE = 0.3; // 30% overlap between sliding windows
-const OVERLAP_MIN_CHARS = 100; // Minimum overlap in characters
-const OVERLAP_MAX_CHARS = 200; // Maximum overlap in characters
-const MIN_BULLET_POINTS = 3; // Minimum bullet points for a list chunk
+// Import types
+import { ChunkMetadata } from "@/types/post";
+
+// Local constants used in this file
+const MIN_CHUNK_LENGTH = MIN_STANDALONE_CHUNK;
+const MAX_CHUNK_LENGTH = TARGET_CHUNK_LENGTH;
+const OVERLAP_PERCENTAGE = CHUNK_OVERLAP_PERCENTAGE;
+const OVERLAP_MIN_CHARS = CHUNK_OVERLAP_MIN_CHARS;
+const OVERLAP_MAX_CHARS = CHUNK_OVERLAP_MAX_CHARS;
+const MIN_WORD_COUNT_LOCAL = MIN_WORD_COUNT;
 
 function shouldBeSeparateChunk(
   content: string | undefined,
-  type: string = 'text'
+  type: string = "text"
 ): boolean {
   if (!content) return false;
 
   // Always keep these as separate chunks
-  if (type === 'code' || type === 'quote') return true;
-  if (type === 'heading' && content.length > 30) return true; // Keep meaningful headers
-  if (type === 'bullet-list') return true; // Always keep lists separate
+  if (type === "code" || type === "quote") return true;
+  if (type === "heading" && content.length > 30) return true; // Keep meaningful headers
+  if (type === "bullet-list") return true; // Always keep lists separate
 
   // Check word count AND character length for text content
   const wordCount = content.trim().split(/\s+/).length;
-  const MIN_WORD_COUNT = 3; // Minimum words to consider a chunk worthwhile
 
   // For text/paragraph content, ensure it has enough words and characters
-  if (type === 'text' || type === 'paragraph') {
-    return content.length >= MIN_CHUNK_LENGTH && wordCount >= MIN_WORD_COUNT;
+  if (type === "text" || type === "paragraph") {
+    return (
+      content.length >= MIN_CHUNK_LENGTH && wordCount >= MIN_WORD_COUNT_LOCAL
+    );
   }
 
   // For other content types, use length requirement only
@@ -67,7 +76,7 @@ function splitIntoParagraphs(content: string): string[] {
     }
 
     // Use sentence-based sliding window
-    let currentChunk = '';
+    let currentChunk = "";
     let lastChunkEndSentences: string[] = [];
     const maxOverlapSentences = 2; // Number of sentences to overlap
 
@@ -82,7 +91,7 @@ function splitIntoParagraphs(content: string): string[] {
           .slice(Math.max(0, i - maxOverlapSentences), i)
           .filter((s) => s.trim().length > 0);
 
-        currentChunk = lastChunkEndSentences.join('');
+        currentChunk = lastChunkEndSentences.join("");
       }
 
       currentChunk += sentence;
@@ -135,7 +144,7 @@ function countWords(str: string): number {
 function combineContent(contents: string[]): string {
   return contents
     .filter((content) => content && content.trim().length > 0)
-    .join('\n\n')
+    .join("\n\n")
     .trim();
 }
 
@@ -145,9 +154,9 @@ function combineContent(contents: string[]): string {
  */
 export async function processMarkdownFile(filePath: string) {
   try {
-    const content = fs.readFileSync(filePath, 'utf8');
+    const content = fs.readFileSync(filePath, "utf8");
     const { data: frontmatter, content: markdownContent } = matter(content);
-    const slug = path.basename(filePath, '.md');
+    const slug = path.basename(filePath, ".md");
 
     const processor = unified()
       .use(remarkParse as any) // Type assertion to bypass strict typing
@@ -155,7 +164,7 @@ export async function processMarkdownFile(filePath: string) {
 
     const tree = await processor.parse(markdownContent);
     const chunks: ChunkMetadata[] = [];
-    let currentSection = '';
+    let currentSection = "";
     let sequence = 0;
 
     // Track paragraph context for improved overlapping
@@ -168,9 +177,9 @@ export async function processMarkdownFile(filePath: string) {
       contents: string[];
       section: string;
     } = {
-      type: 'mixed',
+      type: "mixed",
       contents: [],
-      section: '',
+      section: "",
     };
 
     const flushBuffer = () => {
@@ -192,8 +201,8 @@ export async function processMarkdownFile(filePath: string) {
 
         // Update context tracking
         if (
-          contentBuffer.type === 'paragraph' ||
-          contentBuffer.type === 'text'
+          contentBuffer.type === "paragraph" ||
+          contentBuffer.type === "text"
         ) {
           updateLastProcessedParagraphs(combinedContent);
         }
@@ -214,12 +223,12 @@ export async function processMarkdownFile(filePath: string) {
 
     visit(tree, (node: any) => {
       switch (node.type) {
-        case 'heading':
+        case "heading":
           if (node.depth <= 3 && node.children?.[0]?.value) {
             flushBuffer();
             currentSection = node.children[0].value;
             chunks.push({
-              type: 'heading',
+              type: "heading",
               content: node.children[0].value,
               metadata: {
                 section: currentSection,
@@ -230,11 +239,11 @@ export async function processMarkdownFile(filePath: string) {
           }
           break;
 
-        case 'paragraph':
+        case "paragraph":
           flushBuffer();
           const paragraphContent = node.children
-            .map((child: any) => child.value || '')
-            .join('')
+            .map((child: any) => child.value || "")
+            .join("")
             .trim();
 
           if (paragraphContent) {
@@ -258,7 +267,7 @@ export async function processMarkdownFile(filePath: string) {
                 }
 
                 // Add a small contextual lead-in from the previous paragraph
-                const contextPrefix = '...';
+                const contextPrefix = "...";
                 return content;
               }
               return content;
@@ -272,10 +281,10 @@ export async function processMarkdownFile(filePath: string) {
               }
 
               // Enhanced validation to prevent tiny chunks
-              if (shouldBeSeparateChunk(content, 'paragraph')) {
+              if (shouldBeSeparateChunk(content, "paragraph")) {
                 const wordCount = content.trim().split(/\s+/).length;
                 chunks.push({
-                  type: 'paragraph',
+                  type: "paragraph",
                   content: content,
                   metadata: {
                     section: currentSection,
@@ -285,10 +294,10 @@ export async function processMarkdownFile(filePath: string) {
                     // Track position in sequence for context awareness
                     positionInSequence:
                       index === 0
-                        ? 'start'
+                        ? "start"
                         : index === paragraphs.length - 1
-                        ? 'end'
-                        : 'middle',
+                          ? "end"
+                          : "middle",
                     wordCount: wordCount, // Track word count for debugging
                   },
                 });
@@ -299,7 +308,7 @@ export async function processMarkdownFile(filePath: string) {
                   // At least a few words to be worth buffering
                   contentBuffer.contents.push(content);
                   contentBuffer.section = currentSection;
-                  contentBuffer.type = 'text';
+                  contentBuffer.type = "text";
                 } else {
                   // Silently ignore tiny content without logging
                   // (content is too small to be meaningful)
@@ -309,16 +318,16 @@ export async function processMarkdownFile(filePath: string) {
           }
           break;
 
-        case 'blockquote':
+        case "blockquote":
           flushBuffer();
           const quoteContent = node.children
             .map((child: any) => child.children[0].value)
-            .join('\n')
+            .join("\n")
             .trim();
 
           if (quoteContent) {
             chunks.push({
-              type: 'quote',
+              type: "quote",
               content: quoteContent,
               metadata: {
                 section: currentSection,
@@ -328,12 +337,12 @@ export async function processMarkdownFile(filePath: string) {
           }
           break;
 
-        case 'list':
+        case "list":
           const listItems = node.children
             .map((listItem: any) =>
               listItem.children
                 .map((child: any) => child.children[0].value)
-                .join('')
+                .join("")
                 .trim()
             )
             .filter(Boolean);
@@ -341,8 +350,8 @@ export async function processMarkdownFile(filePath: string) {
           if (listItems.length >= MIN_BULLET_POINTS) {
             flushBuffer();
             chunks.push({
-              type: 'bullet-list',
-              content: listItems.join('\n'),
+              type: "bullet-list",
+              content: listItems.join("\n"),
               metadata: {
                 section: currentSection,
                 sequence: sequence++,
@@ -357,11 +366,11 @@ export async function processMarkdownFile(filePath: string) {
           }
           break;
 
-        case 'code':
+        case "code":
           flushBuffer();
           if (node.value?.trim()) {
             chunks.push({
-              type: 'code',
+              type: "code",
               content: node.value.trim(),
               metadata: {
                 language: node.lang,
@@ -386,7 +395,7 @@ export async function processMarkdownFile(filePath: string) {
     };
   } catch (error) {
     // Normalize the file path to match the expected format in the database
-    const normalizedPath = path.basename(filePath, '.md');
+    const normalizedPath = path.basename(filePath, ".md");
     console.error(`Error processing ${normalizedPath}:`, error);
     return {
       frontmatter: { title: normalizedPath },

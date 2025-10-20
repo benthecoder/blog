@@ -1,8 +1,8 @@
-import Link from 'next/link';
-import { PostMetadata } from './PostMetadata';
+import Link from "next/link";
+import { PostMetadata } from "@/types/post";
 
 const PostPreview = (props: PostMetadata) => {
-  const isStarred = props.tags.includes('✰');
+  const isStarred = props.tags.includes("✰");
 
   return (
     <Link href={`/posts/${props.slug}`}>
@@ -15,8 +15,8 @@ const PostPreview = (props: PostMetadata) => {
           <p
             className={`${
               isStarred
-                ? 'font-medium text-light-accent dark:text-dark-accent'
-                : 'text-japanese-sumiiro dark:text-japanese-shironezu'
+                ? "font-medium text-light-accent dark:text-dark-accent"
+                : "text-japanese-sumiiro dark:text-japanese-shironezu"
             }`}
           >
             {props.title}
@@ -24,7 +24,9 @@ const PostPreview = (props: PostMetadata) => {
         </div>
 
         {/* Date */}
-        <p className="text-japanese-nezumiiro dark:text-japanese-ginnezu">{props.date}</p>
+        <p className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
+          {props.date}
+        </p>
       </div>
     </Link>
   );

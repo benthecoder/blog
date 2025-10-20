@@ -1,14 +1,14 @@
-import Link from 'next/link';
-import ReactMarkdown from 'react-markdown';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import rehypeRaw from 'rehype-raw';
-import remarkMath from 'remark-math';
-import rehypeKatex from 'rehype-katex';
-import Image from 'next/image';
-import remarkGfm from 'remark-gfm';
+import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import rehypeRaw from "rehype-raw";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import Image from "next/image";
+import remarkGfm from "remark-gfm";
 
-import 'katex/dist/katex.min.css';
+import "katex/dist/katex.min.css";
 
 // Override dracula theme to remove borders
 const customDracula = {
@@ -16,34 +16,34 @@ const customDracula = {
   'pre[class*="language-"]': {
     ...dracula['pre[class*="language-"]'],
     borderRadius: 0,
-    border: 'none',
-    borderImage: 'none',
+    border: "none",
+    borderImage: "none",
     borderWidth: 0,
     marginTop: 0,
     marginBottom: 0,
-    marginLeft: '-1.5rem',  // break out of prose (0.5rem) + parent (1rem) padding
-    marginRight: '-1.5rem',
-    padding: '1rem',
+    marginLeft: "-1.5rem", // break out of prose (0.5rem) + parent (1rem) padding
+    marginRight: "-1.5rem",
+    padding: "1rem",
   },
 };
 
 const RenderPost = ({ post, prev, next, slug }: any) => {
   const components = {
     code({ node, inline, className, children, ...props }: any) {
-      const match = /language-(\w+)/.exec(className || '');
+      const match = /language-(\w+)/.exec(className || "");
       return !inline && match ? (
         <SyntaxHighlighter
           style={customDracula}
           language={match[1]}
           customStyle={{
-            border: 'none',
-            boxShadow: 'none',
-            outline: 'none',
+            border: "none",
+            boxShadow: "none",
+            outline: "none",
           }}
           PreTag="div"
           {...props}
         >
-          {String(children).replace(/\n$/, '')}
+          {String(children).replace(/\n$/, "")}
         </SyntaxHighlighter>
       ) : (
         <code className={className} {...props}>
@@ -52,7 +52,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
       );
     },
     p: ({ node, children }: any) => {
-      if (node.children[0].tagName === 'img') {
+      if (node.children[0].tagName === "img") {
         const image: any = node.children[0];
         return (
           <div className="text-center">
@@ -93,17 +93,17 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
 
           {/* Date */}
           <p className="text-japanese-nezumiiro/80 dark:text-japanese-murasakisuishiyou/60 text-sm mt-2 font-light tracking-wide">
-            {new Date(post.data.date).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
+            {new Date(post.data.date).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
             })}
           </p>
         </div>
 
         {/* Tags */}
         <div className="mt-2 flex flex-wrap justify-center gap-2 mb-4">
-          {post.data.tags.split(', ').map((tag: any) => (
+          {post.data.tags.split(", ").map((tag: any) => (
             <Link
               href={`/tags/${tag}`}
               key={tag}
@@ -132,7 +132,9 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
       <div className="mt-8 flex flex-col text-base gap-2">
         {next && (
           <div className="flex group">
-            <p className="text-japanese-sumiiro dark:text-japanese-shironezu font-semibold">Next:</p>
+            <p className="text-japanese-sumiiro dark:text-japanese-shironezu font-semibold">
+              Next:
+            </p>
             <Link
               href={`/posts/${next.slug}`}
               className="ml-2 text-japanese-sumiiro dark:text-japanese-nyuhakushoku hover:text-japanese-nezumiiro dark:hover:text-japanese-murasakisuishiyou transition-colors duration-200 underline"
@@ -143,7 +145,9 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
         )}
         {prev && (
           <div className="flex group">
-            <p className="text-japanese-sumiiro dark:text-japanese-shironezu font-semibold">Previous:</p>
+            <p className="text-japanese-sumiiro dark:text-japanese-shironezu font-semibold">
+              Previous:
+            </p>
             <Link
               href={`/posts/${prev.slug}`}
               className="ml-2 text-japanese-sumiiro dark:text-japanese-nyuhakushoku hover:text-japanese-nezumiiro dark:hover:text-japanese-murasakisuishiyou transition-colors duration-200 underline"

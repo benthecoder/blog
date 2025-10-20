@@ -1,4 +1,4 @@
-import { neon, neonConfig } from '@neondatabase/serverless';
+import { neon, neonConfig } from "@neondatabase/serverless";
 
 interface Tweet {
   id: number;
@@ -23,7 +23,7 @@ async function getTweets(): Promise<Tweet[]> {
     const result = (await sql(query)) as unknown as Tweet[];
     return result;
   } catch (error) {
-    console.error('Error fetching tweets:', error);
+    console.error("Error fetching tweets:", error);
     throw error;
   }
 }
@@ -41,7 +41,9 @@ export default async function ThoughtsPage() {
 
   return (
     <section>
-      <h1 className="font-bold text-left mb-10 text-2xl">unfiltered thoughts</h1>
+      <h1 className="font-bold text-left mb-10 text-2xl">
+        unfiltered thoughts
+      </h1>
       {entries.length > 0
         ? entries.map((entry) => (
             <div
@@ -52,22 +54,22 @@ export default async function ThoughtsPage() {
                 {entry.content}
               </div>
               <div className="text-gray-500 mt-2 text-sm">
-                {new Date(entry.created_at).toLocaleString('en-GB', {
-                  timeZone: 'Asia/Kuala_Lumpur',
-                  hour: 'numeric',
+                {new Date(entry.created_at).toLocaleString("en-GB", {
+                  timeZone: "Asia/Kuala_Lumpur",
+                  hour: "numeric",
                   hour12: false,
-                  minute: 'numeric',
-                  month: 'numeric',
-                  day: 'numeric',
-                  year: '2-digit',
+                  minute: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  year: "2-digit",
                 })}
               </div>
             </div>
           ))
-        : 'None'}
+        : "None"}
     </section>
   );
 }
 
-export const runtime = 'edge';
+export const runtime = "edge";
 export const revalidate = 0;
