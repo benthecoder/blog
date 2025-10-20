@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, Suspense } from 'react';
-import Link from 'next/link';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import React, { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 interface SearchResult {
   content: string;
@@ -44,7 +44,7 @@ const SearchResult = ({ result }: { result: SearchResult }) => {
 
   const formatContent = (content: string) => {
     const truncatedContent = truncateText(content);
-    if (result.chunk_type === 'code') {
+    if (result.chunk_type === "code") {
       return (
         <pre className="bg-light-tag dark:bg-dark-tag p-2 rounded text-sm overflow-x-auto mt-2">
           <code>{truncatedContent}</code>
@@ -95,36 +95,36 @@ const SearchResult = ({ result }: { result: SearchResult }) => {
 };
 
 // Search type options
-type SearchType = 'hybrid' | 'semantic' | 'keyword';
+type SearchType = "hybrid" | "semantic" | "keyword";
 
 function SearchContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   // Initialize with empty defaults for server rendering
-  const [query, setQuery] = useState('');
-  const [searchType, setSearchType] = useState<SearchType>('hybrid');
+  const [query, setQuery] = useState("");
+  const [searchType, setSearchType] = useState<SearchType>("hybrid");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
 
   // Use useEffect to safely load from sessionStorage after mount
   useEffect(() => {
-    const urlQuery = searchParams.get('q');
-    const urlType = searchParams.get('type') as SearchType;
-    
-    setQuery(urlQuery || sessionStorage.getItem('lastQuery') || '');
+    const urlQuery = searchParams.get("q");
+    const urlType = searchParams.get("type") as SearchType;
+
+    setQuery(urlQuery || sessionStorage.getItem("lastQuery") || "");
     setSearchType(
-      urlType || 
-      (sessionStorage.getItem('lastSearchType') as SearchType) || 
-      'hybrid'
+      urlType ||
+        (sessionStorage.getItem("lastSearchType") as SearchType) ||
+        "hybrid"
     );
-    
-    const cached = sessionStorage.getItem('searchResults');
+
+    const cached = sessionStorage.getItem("searchResults");
     if (cached) setResults(JSON.parse(cached));
-    
-    setHasSearched(sessionStorage.getItem('hasSearched') === 'true');
+
+    setHasSearched(sessionStorage.getItem("hasSearched") === "true");
   }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -133,24 +133,24 @@ function SearchContent() {
 
     const params = new URLSearchParams(searchParams);
     if (query.trim()) {
-      params.set('q', query.trim());
+      params.set("q", query.trim());
     } else {
-      params.delete('q');
+      params.delete("q");
     }
     // Add search type to URL
-    params.set('type', searchType);
+    params.set("type", searchType);
     replace(`${pathname}?${params.toString()}`);
 
     // Store in session storage
-    sessionStorage.setItem('lastQuery', query.trim());
-    sessionStorage.setItem('lastSearchType', searchType);
+    sessionStorage.setItem("lastQuery", query.trim());
+    sessionStorage.setItem("lastSearchType", searchType);
     setIsLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('/api/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: query.trim(),
           searchType,
@@ -164,22 +164,22 @@ function SearchContent() {
       }
 
       if (!data.results || !Array.isArray(data.results)) {
-        console.warn('Unexpected response format:', data);
+        console.warn("Unexpected response format:", data);
         setResults([]);
         return;
       }
 
       setResults(data.results);
-      sessionStorage.setItem('searchResults', JSON.stringify(data.results));
+      sessionStorage.setItem("searchResults", JSON.stringify(data.results));
       // Mark that a search has been performed
       setHasSearched(true);
-      sessionStorage.setItem('hasSearched', 'true');
+      sessionStorage.setItem("hasSearched", "true");
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Search failed';
+      const errorMessage = err instanceof Error ? err.message : "Search failed";
       setError(errorMessage);
       // Still mark that a search was attempted even if it failed
       setHasSearched(true);
-      sessionStorage.setItem('hasSearched', 'true');
+      sessionStorage.setItem("hasSearched", "true");
     } finally {
       setIsLoading(false);
     }
@@ -190,19 +190,19 @@ function SearchContent() {
     if (query.trim()) {
       // Only update the URL without triggering immediate search
       const params = new URLSearchParams(searchParams);
-      params.set('type', type);
+      params.set("type", type);
       if (query.trim()) {
-        params.set('q', query.trim());
+        params.set("q", query.trim());
       }
       replace(`${pathname}?${params.toString()}`);
-      sessionStorage.setItem('lastSearchType', type);
+      sessionStorage.setItem("lastSearchType", type);
     }
   };
 
   useEffect(() => {
     if (searchParams) {
-      const urlQuery = searchParams.get('q');
-      const urlType = searchParams.get('type') as SearchType;
+      const urlQuery = searchParams.get("q");
+      const urlType = searchParams.get("type") as SearchType;
 
       // Only set the query and search type without auto-searching
       if (urlQuery && urlQuery !== query) {
@@ -212,7 +212,7 @@ function SearchContent() {
       if (
         urlType &&
         urlType !== searchType &&
-        ['hybrid', 'semantic', 'keyword'].includes(urlType)
+        ["hybrid", "semantic", "keyword"].includes(urlType)
       ) {
         setSearchType(urlType);
       }
@@ -221,12 +221,12 @@ function SearchContent() {
       // Users must press Enter or click Search button
     }
   }, [searchParams]);
-  
+
   // Clear hasSearched when query changes
   useEffect(() => {
     // When the user manually changes the query, reset the search state
     setHasSearched(false);
-    sessionStorage.removeItem('hasSearched');
+    sessionStorage.removeItem("hasSearched");
   }, [query]);
 
   return (
@@ -244,33 +244,33 @@ function SearchContent() {
         <div className="flex justify-center space-x-2 mt-2">
           <button
             type="button"
-            onClick={() => handleSearchTypeChange('hybrid')}
+            onClick={() => handleSearchTypeChange("hybrid")}
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-              searchType === 'hybrid'
-                ? 'bg-light-accent dark:bg-dark-accent text-white'
-                : 'bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70'
+              searchType === "hybrid"
+                ? "bg-light-accent dark:bg-dark-accent text-white"
+                : "bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70"
             }`}
           >
             Hybrid
           </button>
           <button
             type="button"
-            onClick={() => handleSearchTypeChange('semantic')}
+            onClick={() => handleSearchTypeChange("semantic")}
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-              searchType === 'semantic'
-                ? 'bg-light-accent dark:bg-dark-accent text-white'
-                : 'bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70'
+              searchType === "semantic"
+                ? "bg-light-accent dark:bg-dark-accent text-white"
+                : "bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70"
             }`}
           >
             Semantic
           </button>
           <button
             type="button"
-            onClick={() => handleSearchTypeChange('keyword')}
+            onClick={() => handleSearchTypeChange("keyword")}
             className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-              searchType === 'keyword'
-                ? 'bg-light-accent dark:bg-dark-accent text-white'
-                : 'bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70'
+              searchType === "keyword"
+                ? "bg-light-accent dark:bg-dark-accent text-white"
+                : "bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70"
             }`}
           >
             Keyword
@@ -279,12 +279,12 @@ function SearchContent() {
 
         {/* Search Type Explanation */}
         <div className="text-xs text-center text-light-text/60 dark:text-dark-text/60 italic mt-1">
-          {searchType === 'hybrid' &&
-            'Combines meaning and exact matches for balanced results'}
-          {searchType === 'semantic' &&
-            'Finds conceptually related content even with different wording'}
-          {searchType === 'keyword' &&
-            'Searches for exact word matches (like traditional search)'}
+          {searchType === "hybrid" &&
+            "Combines meaning and exact matches for balanced results"}
+          {searchType === "semantic" &&
+            "Finds conceptually related content even with different wording"}
+          {searchType === "keyword" &&
+            "Searches for exact word matches (like traditional search)"}
         </div>
       </form>
 
@@ -301,7 +301,9 @@ function SearchContent() {
         </div>
       ) : (
         // Only show "no results" message if a search has been performed
-        !isLoading && hasSearched && query && (
+        !isLoading &&
+        hasSearched &&
+        query && (
           <div className="text-center py-6 text-light-text/70 dark:text-dark-text/70">
             <p>No results found for "{query}"</p>
             <p className="text-sm mt-2">

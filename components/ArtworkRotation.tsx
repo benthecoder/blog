@@ -1,21 +1,21 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import { useState, useEffect } from "react";
 
 const SKETCH_PATHS = [
-  '/images/sunflowersketch.png',
-  '/images/handrose.png',
-  '/images/peony.png',
-  '/images/hummingbird.png',
-  '/images/howl.png',
-  '/images/hokusai.png',
-  '/images/christ.png',
-  '/images/metro.png',
-  '/images/wave.png',
-  '/images/room.png',
-  '/images/angel.png',
+  "/images/sunflowersketch.png",
+  "/images/handrose.png",
+  "/images/peony.png",
+  "/images/hummingbird.png",
+  "/images/howl.png",
+  "/images/hokusai.png",
+  "/images/christ.png",
+  "/images/metro.png",
+  "/images/wave.png",
+  "/images/room.png",
+  "/images/angel.png",
 ] as const;
 
 const ROTATION_INTERVAL = 3000;

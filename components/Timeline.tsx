@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from "react";
 
 type ImageLink = {
   text: string;
@@ -22,18 +22,27 @@ type TimelineProps = {
 
 const Timeline: React.FC<TimelineProps> = ({ events }) => {
   // Group events by year
-  const groupedEvents = events.reduce((acc, event) => {
-    if (!acc[event.year]) {
-      acc[event.year] = [];
-    }
-    acc[event.year].push(event);
-    return acc;
-  }, {} as Record<string, TimelineEvent[]>);
+  const groupedEvents = events.reduce(
+    (acc, event) => {
+      if (!acc[event.year]) {
+        acc[event.year] = [];
+      }
+      acc[event.year].push(event);
+      return acc;
+    },
+    {} as Record<string, TimelineEvent[]>
+  );
 
   // Helper component for image link with smart positioning
-  const ImageLinkComponent: React.FC<{ link: ImageLink; idx: number }> = ({ link, idx }) => {
+  const ImageLinkComponent: React.FC<{ link: ImageLink; idx: number }> = ({
+    link,
+    idx,
+  }) => {
     const [isVisible, setIsVisible] = useState(false);
-    const [position, setPosition] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+    const [position, setPosition] = useState<{ top: number; left: number }>({
+      top: 0,
+      left: 0,
+    });
     const spanRef = useRef<HTMLSpanElement>(null);
 
     const calculatePosition = () => {
@@ -174,14 +183,18 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
             </div>
             <div className="flex-1 space-y-2 sm:space-y-4 -mt-0.5">
               {yearEvents.map((event, index) => {
-                const dateDetail = event.day && event.month
-                  ? `${event.month} ${event.day}`
-                  : event.month
-                  ? event.month
-                  : null;
+                const dateDetail =
+                  event.day && event.month
+                    ? `${event.month} ${event.day}`
+                    : event.month
+                      ? event.month
+                      : null;
 
                 return (
-                  <div key={index} className="flex gap-1.5 sm:gap-3 group/event">
+                  <div
+                    key={index}
+                    className="flex gap-1.5 sm:gap-3 group/event"
+                  >
                     {dateDetail ? (
                       <>
                         <div className="min-w-[70px] sm:min-w-[90px] pt-0.5">
