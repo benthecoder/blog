@@ -1,28 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-import feed from './feed.json';
-import { marked } from 'marked';
+import { NextRequest, NextResponse } from "next/server";
+import feed from "./feed.json";
+import { marked } from "marked";
 
 const metadata = {
-  title: 'Benedict Neo',
-  description: 'Daily writing about learnings, thoughts, and ideas',
-  link: 'https://bneo.xyz',
+  title: "Benedict Neo",
+  description: "Daily writing about learnings, thoughts, and ideas",
+  link: "https://bneo.xyz",
 };
 
 const escapeXml = (unsafe: string) =>
   unsafe.replace(/[<>&'"]/g, (c) => {
     switch (c) {
-      case '<':
-        return '&lt;';
-      case '>':
-        return '&gt;';
-      case '&':
-        return '&amp;';
+      case "<":
+        return "&lt;";
+      case ">":
+        return "&gt;";
+      case "&":
+        return "&amp;";
       case "'":
-        return '&apos;';
+        return "&apos;";
       case '"':
-        return '&quot;';
+        return "&quot;";
       default:
-        return '';
+        return "";
     }
   });
 
@@ -35,12 +35,12 @@ marked.use({
 export async function GET(req: NextRequest) {
   try {
     const rootUrl = process.env.NEXT_PUBLIC_ROOT_URL;
-    const feedPath = '/rss.xml'; // Correct path to your feed
+    const feedPath = "/rss.xml"; // Correct path to your feed
     const feedUrl = `${rootUrl}${feedPath}`; // The full URL to your feed
 
     const postItems = feed
       .map((page) => {
-        const url = `${rootUrl}/posts/${page.filePath.replace('.md', '')}`;
+        const url = `${rootUrl}/posts/${page.filePath.replace(".md", "")}`;
         let contentHTML = marked(page.content);
 
         // Convert relative URLs to absolute URLs
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
         <content:encoded><![CDATA[${contentHTML}]]></content:encoded>
       </item>`;
       })
-      .join('');
+      .join("");
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
       <rss version="2.0" 
@@ -80,15 +80,15 @@ export async function GET(req: NextRequest) {
     </rss>`;
 
     const res = new NextResponse(sitemap, {
-      headers: { 'Content-Type': 'text/xml' },
+      headers: { "Content-Type": "text/xml" },
     });
 
     return res;
   } catch (e) {
     return new NextResponse(null, {
       status: 500,
-      statusText: 'Internal Server Error',
-      headers: { 'Content-Type': 'text/plain' },
+      statusText: "Internal Server Error",
+      headers: { "Content-Type": "text/plain" },
     });
   }
 }

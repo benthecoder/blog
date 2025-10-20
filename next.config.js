@@ -6,8 +6,8 @@ const nextConfig = {
   },
   rewrites: async () => [
     {
-      source: '/rss.xml',
-      destination: '/api/rss',
+      source: "/rss.xml",
+      destination: "/api/rss",
     },
   ],
   staticPageGenerationTimeout: 1000,
