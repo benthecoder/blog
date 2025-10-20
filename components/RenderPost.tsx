@@ -10,15 +10,36 @@ import remarkGfm from 'remark-gfm';
 
 import 'katex/dist/katex.min.css';
 
+// Override dracula theme to remove borders
+const customDracula = {
+  ...dracula,
+  'pre[class*="language-"]': {
+    ...dracula['pre[class*="language-"]'],
+    borderRadius: 0,
+    border: 'none',
+    borderImage: 'none',
+    borderWidth: 0,
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: '-1.5rem',  // break out of prose (0.5rem) + parent (1rem) padding
+    marginRight: '-1.5rem',
+    padding: '1rem',
+  },
+};
+
 const RenderPost = ({ post, prev, next, slug }: any) => {
   const components = {
     code({ node, inline, className, children, ...props }: any) {
       const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (
         <SyntaxHighlighter
-          style={dracula}
+          style={customDracula}
           language={match[1]}
-          customStyle={{ border: 'none' }}
+          customStyle={{
+            border: 'none',
+            boxShadow: 'none',
+            outline: 'none',
+          }}
           PreTag="div"
           {...props}
         >
@@ -108,13 +129,13 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
       </div>
 
       {/* Navigation */}
-      <div className="mt-8 flex flex-col text-sm gap-1">
+      <div className="mt-8 flex flex-col text-base gap-2">
         {next && (
           <div className="flex group">
-            <p className="text-japanese-soshoku dark:text-japanese-murasakisuishiyou">Next:</p>
+            <p className="text-japanese-sumiiro dark:text-japanese-shironezu font-semibold">Next:</p>
             <Link
               href={`/posts/${next.slug}`}
-              className="ml-2 text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-sumiiro/70 dark:hover:text-japanese-murasakisuishiyou transition-colors duration-200"
+              className="ml-2 text-japanese-sumiiro dark:text-japanese-nyuhakushoku hover:text-japanese-nezumiiro dark:hover:text-japanese-murasakisuishiyou transition-colors duration-200 underline"
             >
               {next.title}
             </Link>
@@ -122,10 +143,10 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
         )}
         {prev && (
           <div className="flex group">
-            <p className="text-japanese-soshoku dark:text-japanese-murasakisuishiyou">Previous:</p>
+            <p className="text-japanese-sumiiro dark:text-japanese-shironezu font-semibold">Previous:</p>
             <Link
               href={`/posts/${prev.slug}`}
-              className="ml-2 text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-sumiiro/70 dark:hover:text-japanese-murasakisuishiyou transition-colors duration-200"
+              className="ml-2 text-japanese-sumiiro dark:text-japanese-nyuhakushoku hover:text-japanese-nezumiiro dark:hover:text-japanese-murasakisuishiyou transition-colors duration-200 underline"
             >
               {prev.title}
             </Link>
