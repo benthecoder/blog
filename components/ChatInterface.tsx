@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useChat } from 'ai/react';
-import { useEffect, useRef, ReactNode } from 'react';
-import Image from 'next/image';
+import { useChat } from "ai/react";
+import { useEffect, useRef, ReactNode } from "react";
+import Image from "next/image";
 
 interface ChatInterfaceProps {
   backgroundImage: string;
@@ -12,7 +12,7 @@ interface ChatInterfaceProps {
 // Helper function to render Markdown links as React elements
 function renderMarkdownLinks(
   text: string,
-  role: 'user' | 'assistant'
+  role: "user" | "assistant"
 ): ReactNode[] {
   // Regular expression to match Markdown links: [text](url)
   const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
@@ -39,9 +39,9 @@ function renderMarkdownLinks(
             key={`link-${i}`}
             href={linkUrl}
             className={`${
-              role === 'user'
-                ? 'text-white underline'
-                : 'text-blue-600 dark:text-blue-400 underline'
+              role === "user"
+                ? "text-white underline"
+                : "text-blue-600 dark:text-blue-400 underline"
             } pointer-events-auto`}
             target="_blank"
             rel="noopener noreferrer"
@@ -77,13 +77,13 @@ export default function ChatInterface({
   useEffect(() => {
     if (messagesEndRef.current && messages.length > 0) {
       // No smooth behavior to avoid scroll jacking
-      messagesEndRef.current.scrollIntoView({ block: 'end' });
+      messagesEndRef.current.scrollIntoView({ block: "end" });
     }
   }, [messages.length]);
 
   const formatTime = () => {
     const now = new Date();
-    return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
   const handleClear = () => {
@@ -172,29 +172,29 @@ export default function ChatInterface({
             <div
               key={message.id}
               className={`flex ${
-                message.role === 'user' ? 'justify-end' : 'justify-start'
+                message.role === "user" ? "justify-end" : "justify-start"
               }`}
             >
               <div
                 className={`max-w-[80%] rounded-lg px-3 py-2 ${
-                  message.role === 'user'
-                    ? 'bg-japanese-soshoku text-japanese-sumiiro ml-auto'
-                    : 'bg-japanese-hakuji dark:bg-japanese-nezumiiro/30 text-japanese-sumiiro dark:text-japanese-nyuhakushoku'
+                  message.role === "user"
+                    ? "bg-japanese-soshoku text-japanese-sumiiro ml-auto"
+                    : "bg-japanese-hakuji dark:bg-japanese-nezumiiro/30 text-japanese-sumiiro dark:text-japanese-nyuhakushoku"
                 }`}
               >
                 <div className="text-sm leading-relaxed break-words">
                   {renderMarkdownLinks(
                     message.content,
-                    message.role === 'user' || message.role === 'assistant'
+                    message.role === "user" || message.role === "assistant"
                       ? message.role
-                      : 'assistant'
-                  )}{' '}
+                      : "assistant"
+                  )}{" "}
                 </div>
                 <div
                   className={`text-xs mt-1 ${
-                    message.role === 'user'
-                      ? 'text-white/90'
-                      : 'text-gray-500 dark:text-gray-400'
+                    message.role === "user"
+                      ? "text-white/90"
+                      : "text-gray-500 dark:text-gray-400"
                   }`}
                 >
                   {formatTime()}
@@ -206,7 +206,7 @@ export default function ChatInterface({
           {/* Typing indicator - only show between user message and assistant response */}
           {isLoading &&
             messages.length > 0 &&
-            messages[messages.length - 1].role === 'user' && (
+            messages[messages.length - 1].role === "user" && (
               <div className="flex justify-start">
                 <div className="bg-japanese-shiraumenezu dark:bg-dark-tag rounded-lg px-4 py-2.5 user-select-none">
                   <div className="flex space-x-1.5">
@@ -237,7 +237,9 @@ export default function ChatInterface({
             type="submit"
             disabled={isLoading || !input.trim()}
             className={`${
-              input.trim() ? 'bg-light-accent' : 'bg-japanese-shiraumenezu dark:bg-dark-tag'
+              input.trim()
+                ? "bg-light-accent"
+                : "bg-japanese-shiraumenezu dark:bg-dark-tag"
             } rounded-full p-2 disabled:opacity-50 transition-colors user-select-none`}
             aria-label="Send message"
           >

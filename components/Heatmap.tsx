@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { PostMetadata } from './PostMetadata';
+import { useState } from "react";
+import Link from "next/link";
+import { PostMetadata } from "@/types/post";
 
 interface HeatmapProps {
   posts: PostMetadata[];
@@ -18,7 +18,12 @@ interface DayData {
   dateKey: string;
 }
 
-const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calendar' }: HeatmapProps) => {
+const Heatmap = ({
+  posts,
+  year,
+  showNavigation = true,
+  navigationPath = "/calendar",
+}: HeatmapProps) => {
   const [hoveredDay, setHoveredDay] = useState<DayData | null>(null);
 
   // Calculate min and max years from actual posts
@@ -34,7 +39,7 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
   const postsByDate: { [key: string]: PostMetadata[] } = {};
   posts.forEach((post) => {
     const date = new Date(post.date);
-    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
     if (!postsByDate[dateKey]) {
       postsByDate[dateKey] = [];
     }
@@ -58,9 +63,10 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
   let currentDate = new Date(startDate);
 
   while (currentDate <= endDate) {
-    const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+    const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(currentDate.getDate()).padStart(2, "0")}`;
     // Only show posts for dates in the current calendar year
-    const dayPosts = currentDate.getFullYear() === year ? (postsByDate[dateKey] || []) : [];
+    const dayPosts =
+      currentDate.getFullYear() === year ? postsByDate[dateKey] || [] : [];
 
     currentWeek.push({
       date: new Date(currentDate),
@@ -83,7 +89,20 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
 
   // Month labels - find first day of each month
   const monthLabels: { month: string; weekIndex: number }[] = [];
-  const monthNames = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  const monthNames = [
+    "jan",
+    "feb",
+    "mar",
+    "apr",
+    "may",
+    "jun",
+    "jul",
+    "aug",
+    "sep",
+    "oct",
+    "nov",
+    "dec",
+  ];
 
   weeks.forEach((week, weekIndex) => {
     week.forEach((day) => {
@@ -98,11 +117,17 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
 
   // Get color based on total word count for the day
   const getColor = (posts: PostMetadata[]) => {
-    const totalWords = posts.reduce((sum, post) => sum + (post.wordcount || 0), 0);
-    if (totalWords === 0) return 'bg-japanese-shiraumenezu/20 dark:bg-gray-800/20';
-    if (totalWords <= 300) return 'bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30';
-    if (totalWords <= 800) return 'bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60';
-    return 'bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90';
+    const totalWords = posts.reduce(
+      (sum, post) => sum + (post.wordcount || 0),
+      0
+    );
+    if (totalWords === 0)
+      return "bg-japanese-shiraumenezu/20 dark:bg-gray-800/20";
+    if (totalWords <= 300)
+      return "bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30";
+    if (totalWords <= 800)
+      return "bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60";
+    return "bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90";
   };
 
   const handleDayClick = (day: DayData) => {
@@ -124,9 +149,13 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
               ← {year - 1}
             </Link>
           ) : (
-            <span className="text-sm text-japanese-nezumiiro/30 dark:text-japanese-ginnezu/30">← {year - 1}</span>
+            <span className="text-sm text-japanese-nezumiiro/30 dark:text-japanese-ginnezu/30">
+              ← {year - 1}
+            </span>
           )}
-          <h1 className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu">{year}</h1>
+          <h1 className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu">
+            {year}
+          </h1>
           {year < effectiveMaxYear ? (
             <Link
               href={`${navigationPath}?year=${year + 1}&month=0`}
@@ -135,7 +164,9 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
               {year + 1} →
             </Link>
           ) : (
-            <span className="text-sm text-japanese-nezumiiro/30 dark:text-japanese-ginnezu/30">{year + 1} →</span>
+            <span className="text-sm text-japanese-nezumiiro/30 dark:text-japanese-ginnezu/30">
+              {year + 1} →
+            </span>
           )}
         </div>
       ) : null}
@@ -160,7 +191,9 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
               <div
                 key={label.month}
                 className="absolute text-[9px] md:text-[10px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60"
-                style={{ left: `calc((100% / ${weeks.length}) * ${label.weekIndex})` }}
+                style={{
+                  left: `calc((100% / ${weeks.length}) * ${label.weekIndex})`,
+                }}
               >
                 {label.month}
               </div>
@@ -168,12 +201,18 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
           </div>
 
           {/* Grid */}
-          <div className="grid gap-[1px] md:gap-[2px] min-w-[467px] md:min-w-0" style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}>
+          <div
+            className="grid gap-[1px] md:gap-[2px] min-w-[467px] md:min-w-0"
+            style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}
+          >
             {weeks.map((week, weekIndex) => (
-              <div key={weekIndex} className="flex flex-col gap-[1px] md:gap-[2px]">
+              <div
+                key={weekIndex}
+                className="flex flex-col gap-[1px] md:gap-[2px]"
+              >
                 {week.map((day, dayIndex) => {
                   const isToday =
-                  day.date.getDate() === new Date().getDate() &&
+                    day.date.getDate() === new Date().getDate() &&
                     day.date.getMonth() === new Date().getMonth() &&
                     day.date.getFullYear() === new Date().getFullYear();
 
@@ -181,9 +220,13 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
                     <div
                       key={dayIndex}
                       className={`w-full aspect-square rounded-[1px] ${getColor(day.posts)} ${
-                        day.posts.length > 0 ? 'cursor-pointer hover:ring-1 hover:ring-japanese-sumiiro dark:hover:ring-japanese-shironezu' : ''
-                      } ${isToday ? 'ring-1 ring-japanese-sumiiro dark:ring-japanese-shironezu' : ''} transition-all`}
-                      onMouseEnter={() => day.posts.length > 0 && setHoveredDay(day)}
+                        day.posts.length > 0
+                          ? "cursor-pointer hover:ring-1 hover:ring-japanese-sumiiro dark:hover:ring-japanese-shironezu"
+                          : ""
+                      } ${isToday ? "ring-1 ring-japanese-sumiiro dark:ring-japanese-shironezu" : ""} transition-all`}
+                      onMouseEnter={() =>
+                        day.posts.length > 0 && setHoveredDay(day)
+                      }
                       onMouseLeave={() => setHoveredDay(null)}
                       onClick={() => handleDayClick(day)}
                       title={day.date.toDateString()}
@@ -201,11 +244,15 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
         {hoveredDay ? (
           <div className="text-xs">
             <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
-              {hoveredDay.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} ·{' '}
+              {hoveredDay.date.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })}{" "}
+              ·{" "}
             </span>
             {hoveredDay.posts.map((post, idx) => (
               <span key={idx}>
-                {idx > 0 && ', '}
+                {idx > 0 && ", "}
                 <Link
                   href={`/posts/${post.slug}`}
                   className="text-japanese-sumiiro dark:text-japanese-shironezu hover:underline"
@@ -215,18 +262,28 @@ const Heatmap = ({ posts, year, showNavigation = true, navigationPath = '/calend
               </span>
             ))}
             <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
-              {' '}· {hoveredDay.posts.reduce((sum, post) => sum + (post.wordcount || 0), 0)} words
+              {" "}
+              ·{" "}
+              {hoveredDay.posts.reduce(
+                (sum, post) => sum + (post.wordcount || 0),
+                0
+              )}{" "}
+              words
             </span>
           </div>
         ) : (
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
-                <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[10px]">Less</span>
+                <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[10px]">
+                  Less
+                </span>
                 <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30"></div>
                 <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60"></div>
                 <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90"></div>
-                <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[10px]">More</span>
+                <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[10px]">
+                  More
+                </span>
               </div>
             </div>
             {!showNavigation && (

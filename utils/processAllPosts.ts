@@ -1,5 +1,5 @@
-import { getAllPosts } from './getAllPosts';
-import { processMarkdownFile } from './processMarkdownChunks';
+import { getAllPosts } from "./getAllPosts";
+import { processMarkdownFile } from "./processMarkdownChunks";
 
 export async function processAllPosts() {
   const postFiles = getAllPosts();
