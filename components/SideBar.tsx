@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import ThemeSwitch from './ThemeSwitch';
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import ThemeSwitch from "./ThemeSwitch";
 const links = [
-  { path: '/thoughts', text: '💭' },
-  { path: '/hn', text: '📰' },
-  { path: '/now', text: 'now' },
-  { path: '/curius', text: 'curius' },
-  { path: '/projects', text: 'projects' },
-  { path: '/library', text: 'library' },
-  { path: '/contact', text: 'findme' },
-  { path: '/posts', text: 'archive' },
-  { path: '/random', text: '🎲' },
+  { path: "/thoughts", text: "💭" },
+  { path: "/hn", text: "📰" },
+  { path: "/now", text: "now" },
+  { path: "/curius", text: "curius" },
+  { path: "/projects", text: "projects" },
+  { path: "/library", text: "library" },
+  { path: "/contact", text: "findme" },
+  { path: "/posts", text: "archive" },
+  { path: "/random", text: "🎲" },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
   return (
-    <div className="md:sticky md:top-10 flex flex-col items-center mb-10">
+    <div className="md:sticky md:top-10 flex flex-col items-center mb-10 relative z-10">
       <div>
         <div className="font-bold text-center md:text-left mt-4 md:mt-0">
           <Link href="/">
@@ -32,7 +32,7 @@ export function Sidebar() {
               key={path}
               href={path}
               className={`block ${
-                pathname === path ? 'text-gray-500' : 'hover:underline'
+                pathname === path ? "text-gray-500" : "hover:underline"
               }`}
             >
               {text}

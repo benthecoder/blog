@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+build
+dist
+*.min.js
+package-lock.json
+pnpm-lock.yaml
+.env
+.env.local
+public
+*.md

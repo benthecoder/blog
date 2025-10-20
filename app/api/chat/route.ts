@@ -1,26 +1,22 @@
-import { sql } from '@vercel/postgres';
-import { VoyageAIClient } from 'voyageai';
-import { AnthropicStream, StreamingTextResponse } from 'ai';
-import { Anthropic } from '@anthropic-ai/sdk';
+import { AnthropicStream, StreamingTextResponse } from "ai";
 
-// Import search utilities
+// Import shared utilities and clients
+import { getVoyageClient, getAnthropicClient } from "@/utils/clients";
+import {
+  CHAT_CONTEXT_LIMIT,
+  CLAUDE_CHAT_MODEL,
+  CLAUDE_MAX_TOKENS,
+  CLAUDE_TEMPERATURE,
+} from "@/config/constants";
 import {
   performSemanticSearch,
   executeTimeBasedQuery,
   extractDatesWithLLM,
   describeDateIntent,
-} from '../../../utils/searchUtils';
+} from "@/utils/searchUtils";
 
-// Define the row type to avoid any type errors
-interface ContentChunkRow {
-  post_slug: string;
-  post_title: string;
-  content: string;
-  chunk_type: string;
-  similarity: number;
-  published_date?: string;
-  tags?: string[];
-}
+// Import types
+import { ContentChunkRow } from "@/types/post";
 
 // Function to handle overlapping chunks and improve context
 function processOverlappingChunks(rows: ContentChunkRow[]): ContentChunkRow[] {
@@ -48,7 +44,7 @@ function processOverlappingChunks(rows: ContentChunkRow[]): ContentChunkRow[] {
     );
     // Take the top chunks from each post, favoring full-post chunks if available
     const fullPostChunk = chunks.find(
-      (c: ContentChunkRow) => c.chunk_type === 'full-post'
+      (c: ContentChunkRow) => c.chunk_type === "full-post"
     );
     if (fullPostChunk) {
       processedRows.push(fullPostChunk);
@@ -64,19 +60,15 @@ function processOverlappingChunks(rows: ContentChunkRow[]): ContentChunkRow[] {
   );
 
   // Limit to a reasonable number of chunks for context
-  return processedRows.slice(0, 8);
+  return processedRows.slice(0, CHAT_CONTEXT_LIMIT);
 }
-
-const voyageClient = new VoyageAIClient({
-  apiKey: process.env.VOYAGE_AI_API_KEY!,
-});
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-});
 
 export async function POST(request: Request) {
   try {
+    // Get shared client instances
+    const voyageClient = getVoyageClient();
+    const anthropic = getAnthropicClient();
+
     // Get messages from request
     const { messages } = await request.json();
     const lastMessage = messages[messages.length - 1].content;
@@ -92,7 +84,7 @@ export async function POST(request: Request) {
     );
 
     let results;
-    let intentDescription = '';
+    let intentDescription = "";
 
     if (dateInfo.hasDateReference) {
       // Execute time-based query with LLM-extracted dates
@@ -103,7 +95,7 @@ export async function POST(request: Request) {
       results = await performSemanticSearch(lastMessage, voyageClient);
     }
 
-    console.log('Query results:', results);
+    console.log("Query results:", results);
 
     // Process results to handle overlapping chunks better
     const processedRows =
@@ -122,21 +114,21 @@ export async function POST(request: Request) {
                 row.published_date && `Published: ${row.published_date}`,
                 row.tags?.length &&
                   `Tags: ${
-                    Array.isArray(row.tags) ? row.tags.join(', ') : row.tags
+                    Array.isArray(row.tags) ? row.tags.join(", ") : row.tags
                   }`,
                 row.chunk_type && `Type: ${row.chunk_type}`,
                 `Link: /posts/${row.post_slug}`,
               ]
                 .filter(Boolean)
-                .join(' | ');
+                .join(" | ");
 
               return `[${row.post_title}] ${metadata}\n${row.content}`;
             })
-            .join('\n\n')}`
+            .join("\n\n")}`
         : "I don't have specific blog content about this, but I'll try to help based on my general knowledge."
     }
     
-    ${intentDescription ? `\nQuery intent: ${intentDescription}` : ''}
+    ${intentDescription ? `\nQuery intent: ${intentDescription}` : ""}
     
     Core Personality:
     - Write as Benedict Neo in first person
@@ -163,26 +155,27 @@ export async function POST(request: Request) {
 
     // Stream response from Claude
     const response = await anthropic.messages.create({
-      model: 'claude-3-7-sonnet-latest',
-      max_tokens: 1024,
-      temperature: 0.7,
+      model: CLAUDE_CHAT_MODEL,
+      max_tokens: CLAUDE_MAX_TOKENS,
+      temperature: CLAUDE_TEMPERATURE,
       system: systemPrompt,
       messages: messages,
       stream: true,
     });
+
     // Convert the response to a readable stream
-    // @ts-ignore - Type inconsistency between Anthropic SDK and AI package
+    // @ts-expect-error - Type incompatibility between Anthropic SDK and AI package streaming types
     const stream = AnthropicStream(response);
 
     // Return the stream
     return new StreamingTextResponse(stream);
   } catch (error) {
-    console.error('Chat error:', error);
+    console.error("Chat error:", error);
     return new Response(
-      JSON.stringify({ error: 'There was an error processing your request' }),
+      JSON.stringify({ error: "There was an error processing your request" }),
       {
         status: 500,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       }
     );
   }

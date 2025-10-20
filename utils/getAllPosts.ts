@@ -1,8 +1,11 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
+
+// Import shared paths
+import { POSTS_DIR } from "@/config/paths";
 
 export function getAllPosts() {
-  const postsDirectory = path.join(process.cwd(), 'posts');
+  const postsDirectory = POSTS_DIR;
 
   // Get all markdown files recursively
   function getMarkdownFiles(dir: string): string[] {
@@ -12,7 +15,7 @@ export function getAllPosts() {
       const fullPath = path.join(dir, entry.name);
       if (entry.isDirectory()) {
         return [...files, ...getMarkdownFiles(fullPath)];
-      } else if (entry.name.endsWith('.md')) {
+      } else if (entry.name.endsWith(".md")) {
         return [...files, fullPath];
       }
       return files;
