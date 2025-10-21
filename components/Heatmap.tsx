@@ -173,14 +173,28 @@ const Heatmap = ({
 
       <div className="flex gap-2 mb-2">
         {/* Day labels */}
-        <div className="flex flex-col gap-[1px] md:gap-[2px] pt-[15px] text-[9px] md:text-[11px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60">
-          <div className="h-[9px] md:h-[11px] flex items-center">s</div>
-          <div className="h-[9px] md:h-[11px] flex items-center">m</div>
-          <div className="h-[9px] md:h-[11px] flex items-center">t</div>
-          <div className="h-[9px] md:h-[11px] flex items-center">w</div>
-          <div className="h-[9px] md:h-[11px] flex items-center">t</div>
-          <div className="h-[9px] md:h-[11px] flex items-center">f</div>
-          <div className="h-[9px] md:h-[11px] flex items-center">s</div>
+        <div className="flex flex-col gap-[1px] md:gap-[2px] pt-[16px] text-[9px] md:text-[11px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60">
+          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
+            s
+          </div>
+          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
+            m
+          </div>
+          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
+            t
+          </div>
+          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
+            w
+          </div>
+          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
+            t
+          </div>
+          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
+            f
+          </div>
+          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
+            s
+          </div>
         </div>
 
         {/* Calendar section */}
@@ -276,13 +290,13 @@ const Heatmap = ({
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[10px]">
-                  less
+                  short
                 </span>
                 <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30"></div>
                 <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60"></div>
                 <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90"></div>
                 <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[10px]">
-                  more words
+                  long
                 </span>
               </div>
             </div>
