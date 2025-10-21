@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { scaleLinear } from "d3-scale";
 import { zoom as d3Zoom } from "d3-zoom";
 import { select } from "d3-selection";
-import Loader from "./Loader";
+import UMAPLoader from "./UMAPLoader";
 
 interface Article {
   id: string;
@@ -272,11 +272,7 @@ export default function KnowledgeMap({
   }, [hoveredArticle]);
 
   if (loading) {
-    return (
-      <div className={`flex items-center justify-center ${className}`}>
-        <Loader text="crunching data..." size="lg" />
-      </div>
-    );
+    return <UMAPLoader className={className} />;
   }
 
   if (error) {
