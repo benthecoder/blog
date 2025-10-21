@@ -63,6 +63,7 @@ export default function KnowledgeMap({
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [neighbors, minDist, spread]);
 
   // Filter articles
