@@ -125,6 +125,7 @@ function SearchContent() {
     if (cached) setResults(JSON.parse(cached));
 
     setHasSearched(sessionStorage.getItem("hasSearched") === "true");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -220,6 +221,7 @@ function SearchContent() {
       // Don't auto-trigger search when params change
       // Users must press Enter or click Search button
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   // Clear hasSearched when query changes
