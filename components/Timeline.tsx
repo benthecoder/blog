@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Image from "next/image";
 
 type ImageLink = {
   text: string;
@@ -130,10 +131,12 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
               left: `${position.left}px`,
             }}
           >
-            <img
+            <Image
               src={link.imagePath}
               alt={link.altText || link.text}
               className="image-hover"
+              width={800}
+              height={600}
             />
           </div>
         )}
