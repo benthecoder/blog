@@ -1,6 +1,6 @@
 ---
 title: 'First Room-Temperature Superconductor'
-tags: 'science'
+tags: 'science, tech, energy'
 date: 'Jul 26, 2023'
 ---
 

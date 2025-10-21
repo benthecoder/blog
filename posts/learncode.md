@@ -1,6 +1,6 @@
 ---
 title: 'Learn to Code'
-tags: 'programming'
+tags: 'programming, learning'
 date: 'Jan 1, 2024'
 ---
 

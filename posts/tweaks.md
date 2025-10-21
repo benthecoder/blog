@@ -1,6 +1,6 @@
 ---
 title: 'Tiny Word Tweaks'
-tags: 'writing'
+tags: 'writing, advice, talking'
 date: 'Nov 30, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Plastic is everywhere'
-tags: 'climate'
+tags: 'climate, science'
 date: 'Oct 12, 2023'
 ---
 

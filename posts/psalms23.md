@@ -1,6 +1,6 @@
 ---
 title: 'Psalm 23'
-tags: 'bible'
+tags: 'bible, life'
 date: 'Oct 29, 2023'
 ---
 

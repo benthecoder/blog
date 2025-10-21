@@ -1,6 +1,6 @@
 ---
 title: 'Ma 間'
-tags: 'life'
+tags: 'philosophy, design'
 date: 'Sep 13, 2023'
 ---
 

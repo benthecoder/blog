@@ -1,6 +1,6 @@
 ---
 title: 'How To Increase Agency (Flowchart)'
-tags: 'howto'
+tags: 'life, advice, productivity'
 date: 'May 22, 2024'
 ---
 

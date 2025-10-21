@@ -1,6 +1,6 @@
 ---
 title: 'Advanced Python resources'
-tags: 'programming, python'
+tags: 'programming, python, resources'
 date: 'Jul 19, 2023'
 ---
 

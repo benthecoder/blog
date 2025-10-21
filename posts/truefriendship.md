@@ -1,6 +1,6 @@
 ---
 title: 'How to Be a Friend'
-tags: 'book, friends'
+tags: 'book, friends, philosophy'
 date: 'Mar 24, 2024'
 ---
 

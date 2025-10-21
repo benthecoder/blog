@@ -1,6 +1,6 @@
 ---
 title: 'Flowers'
-tags: 'nature, art'
+tags: 'art, science'
 date: 'Jun 8, 2024'
 ---
 

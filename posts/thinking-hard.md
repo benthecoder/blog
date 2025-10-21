@@ -1,6 +1,6 @@
 ---
 title: 'Why Thinking Hard Makes you tired'
-tags: 'neuroscience'
+tags: 'neuroscience, science'
 date: 'Nov 17, 2023'
 ---
 

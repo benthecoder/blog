@@ -1,6 +1,6 @@
 ---
 title: 'Hard Work'
-tags: 'work'
+tags: 'work, advice'
 date: 'Aug 8, 2023'
 ---
 

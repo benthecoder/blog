@@ -1,6 +1,6 @@
 ---
 title: "The World in Seven Colors"
-tags: "art"
+tags: 'art'
 date: "Apr 28, 2024"
 ---
 

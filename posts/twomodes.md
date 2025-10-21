@@ -1,6 +1,6 @@
 ---
 title: 'Two Modes of Experience'
-tags: 'life'
+tags: 'life, thinking, advice'
 date: 'May 26, 2024'
 ---
 

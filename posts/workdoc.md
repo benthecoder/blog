@@ -1,6 +1,6 @@
 ---
 title: 'Work Docs'
-tags: 'job, writing'
+tags: 'work, productivity, writing'
 date: 'Apr 3, 2024'
 ---
 

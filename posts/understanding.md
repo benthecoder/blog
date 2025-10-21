@@ -1,6 +1,6 @@
 ---
 title: 'Qualities of Intelligent People'
-tags: 'learning'
+tags: 'learning, intelligence, thinking'
 date: 'Feb 12, 2024'
 ---
 

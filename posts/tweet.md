@@ -1,6 +1,6 @@
 ---
 title: 'How to: Twitter'
-tags: 'advice'
+tags: 'advice, writing'
 date: 'May 9, 2024'
 ---
 

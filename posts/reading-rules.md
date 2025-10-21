@@ -1,6 +1,6 @@
 ---
 title: 'Reading Rules'
-tags: 'reading'
+tags: 'reading, advice'
 date: 'Sep 10, 2023'
 ---
 

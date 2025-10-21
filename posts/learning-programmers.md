@@ -1,6 +1,6 @@
 ---
 title: 'On Learning (for programmers)'
-tags: 'programming'
+tags: 'programming, learning'
 date: 'Jan 2, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'How To Make Millions Before Grandma Dies'
-tags: 'movies, journal'
+tags: 'movies, journal, life'
 date: 'Jun 15, 2024'
 ---
 

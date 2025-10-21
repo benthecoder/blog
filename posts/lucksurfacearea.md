@@ -1,6 +1,6 @@
 ---
 title: 'Luck Surface Area'
-tags: 'work'
+tags: 'work, advice'
 date: 'Jan 18, 2024'
 ---
 

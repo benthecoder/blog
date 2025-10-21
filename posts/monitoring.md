@@ -1,6 +1,6 @@
 ---
 title: 'Self-Monitoring'
-tags: 'productivity'
+tags: 'productivity, ideas'
 date: 'Sep 29, 2023'
 ---
 

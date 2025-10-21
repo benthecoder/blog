@@ -1,6 +1,6 @@
 ---
 title: 'when in pain'
-tags: 'journal, advice'
+tags: 'journal, advice, life'
 date: 'Apr 17, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Impact Bias'
-tags: 'psychology, bias'
+tags: 'psychology'
 date: 'Jul 25, 2023'
 ---
 

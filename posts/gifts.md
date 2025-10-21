@@ -1,6 +1,6 @@
 ---
 title: 'Gifts'
-tags: 'people'
+tags: 'people, advice'
 date: 'Dec 19, 2023'
 ---
 

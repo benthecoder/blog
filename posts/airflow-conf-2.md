@@ -1,6 +1,6 @@
 ---
 title: 'Airflow Summit Day 2'
-tags: 'tech, journal'
+tags: 'journal, tech, travel'
 date: 'Sep 20, 2023'
 ---
 

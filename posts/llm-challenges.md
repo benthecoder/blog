@@ -1,6 +1,6 @@
 ---
 title: '10 LLM Challenges'
-tags: 'AI'
+tags: 'AI, tech'
 date: 'Jul 3, 2023'
 ---
 

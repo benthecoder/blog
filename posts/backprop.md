@@ -1,6 +1,6 @@
 ---
 title: "what is backprop?"
-tags: "whatis, AI"
+tags: 'whatis, AI'
 date: "Apr 29, 2024"
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Visualizing 1700 internet bookmarks'
-tags: 'tech, programming'
+tags: 'tech, data, programming'
 date: 'Mar 18, 2024'
 ---
 

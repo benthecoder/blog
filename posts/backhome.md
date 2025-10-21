@@ -1,6 +1,6 @@
 ---
 title: 'Going Back Home'
-tags: 'journal'
+tags: 'journal, book, life'
 date: 'Jan 6, 2024'
 ---
 

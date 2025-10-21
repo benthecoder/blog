@@ -1,6 +1,6 @@
 ---
 title: 'Some IOS Apps I Like'
-tags: 'listicles'
+tags: 'listicles, tech'
 date: 'Dec 26, 2023'
 ---
 

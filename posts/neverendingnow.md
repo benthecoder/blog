@@ -1,6 +1,6 @@
 ---
 title: 'Never Ending Now'
-tags: 'ideas'
+tags: 'ideas, tech'
 date: 'Feb 3, 2024'
 ---
 

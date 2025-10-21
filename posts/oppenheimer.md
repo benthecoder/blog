@@ -1,6 +1,6 @@
 ---
 title: 'Oppenheimer'
-tags: 'movies'
+tags: 'movies, philosophy'
 date: 'Jul 28, 2023'
 ---
 
