@@ -12,7 +12,7 @@ export async function generateMetadata({
 }: {
   params: Params;
 }): Promise<Metadata | undefined> {
-  const posts = getPostMetadata();
+  const posts = await getPostMetadata();
   // Await params before accessing slug
   const { slug } = await params;
   const post = posts.find((post) => post.slug === slug);
@@ -42,7 +42,7 @@ export async function generateMetadata({
 }
 
 export const generateStaticParams = async () => {
-  const posts = getPostMetadata();
+  const posts = await getPostMetadata();
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -50,7 +50,7 @@ export const generateStaticParams = async () => {
 
 // Update component props type to use Promise<Params>
 const PostPage = async ({ params }: { params: Params }) => {
-  const metadata = getPostMetadata();
+  const metadata = await getPostMetadata();
   // Await params before accessing slug
   const { slug } = await params;
   const post = metadata.find((p) => p.slug === slug);
