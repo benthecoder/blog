@@ -1,6 +1,6 @@
 ---
 title: 'Advice for New College Grads'
-tags: 'advice'
+tags: 'advice, career'
 date: 'Dec 17, 2023'
 ---
 

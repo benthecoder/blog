@@ -1,6 +1,6 @@
 ---
 title: 'Ox 9 Lanzhou'
-tags: 'history'
+tags: 'journal, travel'
 date: 'Aug 16, 2023'
 ---
 

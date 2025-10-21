@@ -1,6 +1,6 @@
 ---
 title: 'Que sais je?'
-tags: 'life'
+tags: 'life, philosophy'
 date: 'Mar 19, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'How to Be Alone'
-tags: 'work'
+tags: 'journal, life, personal'
 date: 'Jan 22, 2024'
 ---
 

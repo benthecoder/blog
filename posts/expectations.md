@@ -1,6 +1,6 @@
 ---
 title: 'A Cheerful Pessimist'
-tags: 'life'
+tags: 'life, philosophy'
 date: 'Mar 11, 2024'
 ---
 

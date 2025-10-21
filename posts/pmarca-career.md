@@ -1,6 +1,6 @@
 ---
 title: "Marc Andreessen's Career Advice"
-tags: 'work, life'
+tags: 'work, life, advice'
 date: 'Apr 1, 2024'
 ---
 

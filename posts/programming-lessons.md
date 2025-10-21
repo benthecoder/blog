@@ -1,6 +1,6 @@
 ---
 title: 'Lessons on Programming'
-tags: 'programming'
+tags: 'programming, advice'
 date: 'Jun 12, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Life Swings like a Pendulum'
-tags: 'philosophy'
+tags: 'philosophy, life'
 date: 'Jun 25, 2023'
 ---
 

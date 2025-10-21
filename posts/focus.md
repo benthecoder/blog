@@ -1,6 +1,6 @@
 ---
 title: 'Tools for Keeping Focus'
-tags: 'work'
+tags: 'work, productivity'
 date: 'Jan 3, 2024'
 ---
 

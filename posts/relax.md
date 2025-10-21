@@ -1,6 +1,6 @@
 ---
 title: 'Relax for the Same Results'
-tags: 'ideas'
+tags: 'ideas, productivity'
 date: 'Nov 25, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Favorite Interview Questions'
-tags: 'job'
+tags: 'job, career'
 date: 'Dec 2, 2023'
 ---
 

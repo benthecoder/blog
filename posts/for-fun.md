@@ -1,6 +1,6 @@
 ---
 title: 'Just for Fun'
-tags: 'programming'
+tags: 'programming, ideas'
 date: 'Feb 28, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'The Night Before'
-tags: 'personal'
+tags: 'personal, journal, life'
 date: 'Feb 29, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'YouTube Archive'
-tags: 'listicles'
+tags: 'listicles, movies, resources'
 date: 'Feb 8, 2024'
 ---
 

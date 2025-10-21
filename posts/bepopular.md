@@ -1,6 +1,6 @@
 ---
 title: 'How to be popular?'
-tags: 'people'
+tags: 'people, advice'
 date: 'Jun 13, 2024'
 ---
 

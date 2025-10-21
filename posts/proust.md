@@ -1,6 +1,6 @@
 ---
 title: 'How Proust Can Change Your Life'
-tags: 'book'
+tags: 'book, life, philosophy'
 date: 'Jan 7, 2024'
 ---
 

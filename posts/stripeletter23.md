@@ -1,6 +1,6 @@
 ---
 title: 'New Progress in Tech'
-tags: 'tech, ideas'
+tags: 'tech, climate, energy'
 date: 'Mar 16, 2024'
 ---
 

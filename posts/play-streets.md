@@ -1,6 +1,6 @@
 ---
 title: 'Playing Freely on the Streets'
-tags: 'friends'
+tags: 'friends, life'
 date: 'Dec 11, 2023'
 ---
 

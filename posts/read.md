@@ -1,6 +1,6 @@
 ---
 title: 'How to Read'
-tags: 'reading'
+tags: 'reading, advice'
 date: 'Sep 17, 2023'
 ---
 

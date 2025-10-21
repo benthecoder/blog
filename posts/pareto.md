@@ -1,6 +1,6 @@
 ---
 title: 'Pareto Principle Lifestyle'
-tags: 'productivity'
+tags: 'productivity, life'
 date: 'May 26, 2023'
 ---
 

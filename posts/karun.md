@@ -1,6 +1,6 @@
 ---
 title: 'Coffee Chat with Karun'
-tags: 'chats'
+tags: 'chats, people'
 date: 'Sep 27, 2023'
 ---
 

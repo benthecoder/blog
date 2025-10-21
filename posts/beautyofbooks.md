@@ -1,6 +1,6 @@
 ---
 title: 'The Beauty of Books'
-tags: 'book'
+tags: 'book, reading, listicles'
 date: 'Mar 28, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'The Art of Gathering'
-tags: 'people, book'
+tags: 'people, book, advice'
 date: 'Apr 10, 2024'
 ---
 

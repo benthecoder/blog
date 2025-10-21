@@ -1,6 +1,6 @@
 ---
 title: 'Ukiyo-e style'
-tags: 'art'
+tags: 'art, whatis'
 date: 'Oct 26, 2023'
 ---
 

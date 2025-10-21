@@ -1,6 +1,6 @@
 ---
 title: 'Type II fun'
-tags: 'life'
+tags: 'life, hiking'
 date: 'Mar 30, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Places to Find Art Online'
-tags: 'art, listicles'
+tags: 'art, listicles, resources'
 date: 'Jan 17, 2024'
 ---
 

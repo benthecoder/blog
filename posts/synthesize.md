@@ -1,6 +1,6 @@
 ---
 title: 'How to Synthesize Books'
-tags: 'reading, knowledge'
+tags: 'reading, learning'
 date: 'Apr 27, 2023'
 ---
 

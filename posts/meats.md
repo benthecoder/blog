@@ -1,6 +1,6 @@
 ---
 title: 'Real vs Fake meat'
-tags: 'ideas, science'
+tags: 'ideas, science, climate'
 date: 'Aug 23, 2023'
 ---
 

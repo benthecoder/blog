@@ -1,6 +1,6 @@
 ---
 title: 'Tasks Pitch'
-tags: 'life'
+tags: 'life, productivity'
 date: 'May 30, 2024'
 ---
 

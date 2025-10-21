@@ -1,6 +1,6 @@
 ---
 title: 'looking at life with the eyes of a child'
-tags: 'art'
+tags: 'art, philosophy'
 date: 'Mar 23, 2024'
 ---
 

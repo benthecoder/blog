@@ -1,6 +1,6 @@
 ---
 title: 'How New Ideas Arise'
-tags: 'ideas'
+tags: 'ideas, thinking'
 date: 'May 3, 2024'
 ---
 

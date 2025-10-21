@@ -1,6 +1,6 @@
 ---
 title: 'Live in the Present'
-tags: 'life'
+tags: 'life, journal'
 date: 'Feb 19, 2024'
 ---
 

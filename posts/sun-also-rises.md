@@ -1,6 +1,6 @@
 ---
 title: 'The Sun Also Rises'
-tags: 'book'
+tags: 'book, reading'
 date: 'Sep 21, 2023'
 ---
 

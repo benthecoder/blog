@@ -1,6 +1,6 @@
 ---
 title: 'Neuroticism'
-tags: 'psychology'
+tags: 'psychology, life'
 date: 'May 23, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Job Hunt as a PhD in AI'
-tags: 'AI, work'
+tags: 'AI, career, job'
 date: 'Nov 3, 2023'
 ---
 

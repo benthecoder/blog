@@ -1,6 +1,6 @@
 ---
 title: 'Why (and How) Joan Didion writes'
-tags: 'writing'
+tags: 'writing, art'
 date: 'Apr 4, 2024'
 ---
 

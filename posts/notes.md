@@ -1,6 +1,6 @@
 ---
 title: 'Taking Good Reading Notes'
-tags: 'reading'
+tags: 'reading, advice'
 date: 'Sep 30, 2023'
 ---
 

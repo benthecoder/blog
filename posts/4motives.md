@@ -1,6 +1,6 @@
 ---
 title: 'Four Motives for Writing'
-tags: 'writing'
+tags: 'writing, ideas'
 date: 'Feb 15, 2024'
 ---
 

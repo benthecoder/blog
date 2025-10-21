@@ -1,6 +1,6 @@
 ---
 title: 'Understand ML Papers Quickly'
-tags: 'ML'
+tags: 'ML, advice'
 date: 'Aug 28, 2023'
 ---
 

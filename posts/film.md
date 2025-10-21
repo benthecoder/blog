@@ -1,6 +1,6 @@
 ---
 title: 'Film photography 101'
-tags: 'photography'
+tags: 'photography, art'
 date: 'May 7, 2023'
 ---
 

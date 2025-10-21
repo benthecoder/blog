@@ -1,6 +1,6 @@
 ---
 title: 'How To Feel Good'
-tags: 'psychology'
+tags: 'psychology, emotions'
 date: 'Feb 17, 2024'
 ---
 

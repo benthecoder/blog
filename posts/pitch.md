@@ -1,6 +1,6 @@
 ---
 title: 'Pitching'
-tags: 'startup'
+tags: 'startup, advice'
 date: 'Sep 15, 2023'
 ---
 

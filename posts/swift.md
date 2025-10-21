@@ -1,6 +1,6 @@
 ---
 title: 'Swift Starter Pack'
-tags: 'programming'
+tags: 'programming, resources'
 date: 'Dec 30, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: '16 Life-Learnings'
-tags: 'life'
+tags: 'life, advice'
 date: 'Dec 8, 2023'
 ---
 

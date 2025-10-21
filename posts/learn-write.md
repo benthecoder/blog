@@ -1,6 +1,6 @@
 ---
 title: 'Learn by Writing'
-tags: 'writing'
+tags: 'writing, learning'
 date: 'Sep 11, 2023'
 ---
 

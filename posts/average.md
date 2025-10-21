@@ -1,6 +1,6 @@
 ---
 title: 'The Joy of Being Average'
-tags: 'ideas, life'
+tags: 'journal, life, personal'
 date: 'Feb 26, 2024'
 ---
 

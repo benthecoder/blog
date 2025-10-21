@@ -1,6 +1,6 @@
 ---
 title: 'Skill of Humor'
-tags: 'talks'
+tags: 'talking, people'
 date: 'Jun 15, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Princess Mononoke'
-tags: 'movies'
+tags: 'movies, art'
 date: 'Oct 6, 2023'
 ---
 

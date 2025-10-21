@@ -1,6 +1,6 @@
 ---
 title: 'Make Money, Have Fun, Do Good'
-tags: 'life'
+tags: 'life, career'
 date: 'Nov 26, 2023'
 ---
 

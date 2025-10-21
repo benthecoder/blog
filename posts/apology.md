@@ -1,6 +1,6 @@
 ---
 title: 'Components of an Effective Apology'
-tags: 'people'
+tags: 'people, advice'
 date: 'Feb 23, 2024'
 ---
 

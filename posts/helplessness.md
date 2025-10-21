@@ -1,6 +1,6 @@
 ---
 title: 'Learned Helplessness'
-tags: 'notes, psychology, personal'
+tags: 'psychology'
 date: 'Jul 14, 2023'
 ---
 

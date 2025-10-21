@@ -1,6 +1,6 @@
 ---
 title: '10 Tools for Embracing Finitude'
-tags: 'life'
+tags: 'life, productivity'
 date: 'Feb 22, 2024'
 ---
 

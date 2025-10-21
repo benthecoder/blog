@@ -1,6 +1,6 @@
 ---
 title: 'Success'
-tags: 'work, life'
+tags: 'life, advice'
 date: 'Sep 14, 2023'
 ---
 

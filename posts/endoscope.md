@@ -1,6 +1,6 @@
 ---
 title: 'Endoscope #3'
-tags: 'journal'
+tags: 'journal, life, book'
 date: 'Jan 19, 2024'
 ---
 

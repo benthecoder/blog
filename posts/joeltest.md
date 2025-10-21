@@ -1,6 +1,6 @@
 ---
 title: 'The Joel Test'
-tags: 'coding'
+tags: 'coding, work'
 date: 'Sep 16, 2023'
 ---
 

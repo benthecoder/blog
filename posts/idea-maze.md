@@ -1,6 +1,6 @@
 ---
 title: 'Idea Maze'
-tags: 'startup'
+tags: 'startup, ideas'
 date: 'Jun 14, 2023'
 ---
 

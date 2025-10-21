@@ -1,6 +1,6 @@
 ---
 title: 'Stuff on GPUs'
-tags: 'tech'
+tags: 'tech, AI'
 date: 'Aug 26, 2023'
 ---
 

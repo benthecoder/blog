@@ -1,6 +1,6 @@
 ---
 title: 'Mental Health Toolkit'
-tags: 'health, notes'
+tags: 'psychology, life'
 date: 'Oct 31, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Lifeloggers'
-tags: 'life'
+tags: 'life, journal'
 date: 'Sep 12, 2023'
 ---
 

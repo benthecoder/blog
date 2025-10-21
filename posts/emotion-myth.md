@@ -1,6 +1,6 @@
 ---
 title: 'Myths about emotion'
-tags: 'psychology'
+tags: 'psychology, emotions'
 date: 'Jun 20, 2023'
 ---
 

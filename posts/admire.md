@@ -1,6 +1,6 @@
 ---
 title: 'Some people I admire'
-tags: 'people'
+tags: 'people, listicles'
 date: 'Dec 27, 2023'
 ---
 
