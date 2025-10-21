@@ -4,6 +4,10 @@ const nextConfig = {
   experimental: {
     //serverExternalPackages: ['sharp', 'onnxruntime-node'],
   },
+  outputFileTracingExcludes: {
+    "/posts": ["public/**/*"],
+    "/posts/[slug]": ["public/**/*"],
+  },
   rewrites: async () => [
     {
       source: "/rss.xml",
