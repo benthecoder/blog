@@ -1,6 +1,6 @@
 ---
 title: 'Strong Opinions, Weakly Held'
-tags: 'ideas'
+tags: 'ideas, thinking'
 date: 'Jan 29, 2024'
 ---
 

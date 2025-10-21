@@ -1,6 +1,6 @@
 ---
 title: 'Muir Woods'
-tags: 'travel'
+tags: 'travel, journal'
 date: 'Jul 8, 2023'
 ---
 

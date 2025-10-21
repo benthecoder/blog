@@ -1,6 +1,6 @@
 ---
 title: 'Extreme Brainstorming Questions'
-tags: 'ideas'
+tags: 'ideas, startup'
 date: 'Feb 5, 2024'
 ---
 

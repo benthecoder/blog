@@ -1,6 +1,6 @@
 ---
 title: 'What Makes a Good Meeting?'
-tags: 'work'
+tags: 'work, productivity'
 date: 'Feb 4, 2024'
 ---
 

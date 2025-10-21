@@ -1,6 +1,6 @@
 ---
 title: "Most People Won't"
-tags: 'ideas'
+tags: 'ideas, advice'
 date: 'Feb 2, 2024'
 ---
 

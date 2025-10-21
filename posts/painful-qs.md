@@ -1,6 +1,6 @@
 ---
 title: 'Painful Questions'
-tags: 'life'
+tags: 'life, questions'
 date: 'Nov 1, 2023'
 ---
 

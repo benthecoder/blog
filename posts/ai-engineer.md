@@ -1,6 +1,6 @@
 ---
 title: 'AI Engineer curriculum'
-tags: 'resources'
+tags: 'resources, AI, learning'
 date: 'Jul 7, 2023'
 ---
 

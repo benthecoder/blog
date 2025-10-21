@@ -1,6 +1,6 @@
 ---
 title: 'Taste > Skill'
-tags: 'ideas, work'
+tags: 'ideas, work, advice'
 date: 'Dec 18, 2023'
 ---
 

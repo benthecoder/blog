@@ -1,6 +1,6 @@
 ---
 title: 'Small Writing Habits'
-tags: 'writing'
+tags: 'writing, advice'
 date: 'Sep 25, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'AI Engineer Summit'
-tags: 'AI'
+tags: 'AI, journal'
 date: 'Oct 10, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Some Thoughts on Photography'
-tags: 'photography'
+tags: 'photography, art'
 date: 'Mar 15, 2024'
 ---
 

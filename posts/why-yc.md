@@ -1,6 +1,6 @@
 ---
 title: 'Why YC'
-tags: 'startup'
+tags: 'startup, advice'
 date: 'Oct 11, 2023'
 ---
 

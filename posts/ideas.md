@@ -1,6 +1,6 @@
 ---
 title: 'How to Get and Evaluate Startup Ideas'
-tags: 'startup'
+tags: 'startup, ideas'
 date: 'Aug 30, 2023'
 ---
 

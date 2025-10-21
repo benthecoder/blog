@@ -1,6 +1,6 @@
 ---
 title: 'Alcatraz Night Tour'
-tags: 'journal, SF'
+tags: 'journal, SF, travel'
 date: 'Aug 12, 2023'
 ---
 

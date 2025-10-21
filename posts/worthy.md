@@ -1,6 +1,6 @@
 ---
 title: 'Be Worthy of Your Sufferings'
-tags: 'life'
+tags: 'life, philosophy'
 date: 'Jan 20, 2024'
 ---
 

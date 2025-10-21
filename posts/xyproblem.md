@@ -1,6 +1,6 @@
 ---
 title: 'XY Problem'
-tags: 'work'
+tags: 'work, programming, advice'
 date: 'Aug 22, 2023'
 ---
 

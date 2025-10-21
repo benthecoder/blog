@@ -1,6 +1,6 @@
 ---
 title: 'Audacious Gardening'
-tags: 'ideas'
+tags: 'ideas, climate'
 date: 'Dec 21, 2023'
 ---
 

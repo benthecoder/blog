@@ -1,6 +1,6 @@
 ---
 title: 'Climate Forecast with AI'
-tags: 'climate, AI'
+tags: 'climate, AI, notes'
 date: 'Apr 19, 2024'
 ---
 

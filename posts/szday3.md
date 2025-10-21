@@ -1,6 +1,6 @@
 ---
 title: 'Shenzhen Day 3'
-tags: 'travel, journal'
+tags: 'travel, journal, art'
 date: 'Apr 24, 2024'
 ---
 

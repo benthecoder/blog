@@ -1,6 +1,6 @@
 ---
 title: 'Habits of Great SWEs'
-tags: 'programming'
+tags: 'programming, advice, work'
 date: 'Nov 8, 2023'
 ---
 

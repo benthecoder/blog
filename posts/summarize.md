@@ -1,6 +1,6 @@
 ---
 title: 'Summarizing is Thinking'
-tags: 'ideas, writing'
+tags: 'thinking, learning, writing'
 date: 'May 17, 2024'
 ---
 

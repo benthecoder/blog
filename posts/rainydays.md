@@ -1,6 +1,6 @@
 ---
 title: 'for rainy days'
-tags: 'life'
+tags: 'life, resources'
 date: 'May 1, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Never been loved'
-tags: 'love'
+tags: 'love, life'
 date: 'Aug 19, 2023'
 ---
 

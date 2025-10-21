@@ -1,6 +1,6 @@
 ---
 title: 'Beautiful minds are free from fear'
-tags: 'fear, gratitude'
+tags: 'fear, psychology'
 date: 'Apr 23, 2023'
 ---
 

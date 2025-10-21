@@ -1,6 +1,6 @@
 ---
 title: 'How To Read Well'
-tags: 'reading'
+tags: 'reading, advice'
 date: 'Jan 15, 2024'
 ---
 

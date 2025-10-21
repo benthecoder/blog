@@ -1,6 +1,6 @@
 ---
 title: 'How to Work Better'
-tags: 'life, work'
+tags: 'work, advice'
 date: 'Oct 8, 2023'
 ---
 

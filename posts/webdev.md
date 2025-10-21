@@ -1,6 +1,6 @@
 ---
 title: 'For Hacking Together a Front-End'
-tags: 'listicles, programming'
+tags: 'programming, resources, design'
 date: 'Apr 5, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'The Almanack of Naval Ravikant'
-tags: 'book'
+tags: 'book, life, advice'
 date: 'Apr 12, 2024'
 ---
 

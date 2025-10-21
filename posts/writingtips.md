@@ -1,6 +1,6 @@
 ---
 title: 'Writing Tips For Work'
-tags: 'writing, job'
+tags: 'writing, work, advice'
 date: 'Jun 19, 2024'
 ---
 

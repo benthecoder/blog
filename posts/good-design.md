@@ -1,6 +1,6 @@
 ---
 title: '10 Principles for Good Design'
-tags: 'design'
+tags: 'design, art'
 date: 'Nov 11, 2023'
 ---
 

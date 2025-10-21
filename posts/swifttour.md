@@ -1,6 +1,6 @@
 ---
 title: 'A Swift Tour'
-tags: 'programming, notes'
+tags: 'programming, notes, learning'
 date: 'Jan 5, 2024'
 ---
 

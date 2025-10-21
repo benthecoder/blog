@@ -1,6 +1,6 @@
 ---
 title: 'Three Types of Conversations'
-tags: 'people'
+tags: 'people, talking, advice'
 date: 'May 25, 2024'
 ---
 
