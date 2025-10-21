@@ -5,8 +5,12 @@ const nextConfig = {
     //serverExternalPackages: ['sharp', 'onnxruntime-node'],
   },
   outputFileTracingExcludes: {
+    "*": ["public/**/*", ".git/**/*"],
     "/posts": ["public/**/*"],
     "/posts/[slug]": ["public/**/*"],
+    "/tags": ["public/**/*"],
+    "/tags/[slug]": ["public/**/*"],
+    "/api/**": ["public/**/*"],
   },
   rewrites: async () => [
     {
