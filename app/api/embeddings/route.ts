@@ -1,24 +1,68 @@
-import { sql } from '@vercel/postgres';
-import { NextResponse } from 'next/server';
+import { sql } from "@vercel/postgres";
+import { NextResponse } from "next/server";
+import { computeUMAP, normalizePositions } from "@/utils/umapUtils";
 
-export async function GET() {
+interface ChunkRow {
+  id: string;
+  post_slug: string;
+  post_title: string;
+  content: string;
+  chunk_type: string;
+  metadata: {
+    published_date?: string;
+    tags?: string[];
+  };
+  sequence: number;
+  embedding: unknown;
+  created_at: string;
+}
+
+interface ArticleData {
+  id: string;
+  postSlug: string;
+  postTitle: string;
+  content: string;
+  chunkType: string;
+  metadata: ChunkRow["metadata"];
+  sequence: number;
+  embedding: number[];
+  publishedDate?: string;
+  tags: string[];
+  createdAt: string;
+  index: number;
+  x: number;
+  y: number;
+}
+
+const parseEmbedding = (embedding: unknown): number[] => {
+  if (Array.isArray(embedding)) {
+    return embedding;
+  }
+
+  if (typeof embedding === "string") {
+    try {
+      const parsed = JSON.parse(embedding);
+      if (Array.isArray(parsed)) {
+        return parsed;
+      }
+    } catch {
+      // Parse PostgreSQL vector format
+      const cleaned = embedding.replace(/[\[\]]/g, "");
+      return cleaned.split(",").map(Number);
+    }
+  }
+
+  return [];
+};
+
+export async function GET(request: Request) {
   try {
-    console.log('Fetching embeddings data for visualization...');
+    const { searchParams } = new URL(request.url);
+    const nNeighbors = parseInt(searchParams.get("neighbors") || "8");
+    const minDist = parseFloat(searchParams.get("minDist") || "0.05");
+    const spread = parseFloat(searchParams.get("spread") || "2.0");
 
-    // First, let's see how many total chunks we have
-    const totalChunks = await sql`
-      SELECT COUNT(*) as count FROM content_chunks WHERE embedding IS NOT NULL
-    `;
-    console.log(`Total chunks with embeddings: ${totalChunks.rows[0].count}`);
-
-    // Count unique articles
-    const uniqueArticles = await sql`
-      SELECT COUNT(DISTINCT post_slug) as count FROM content_chunks WHERE embedding IS NOT NULL
-    `;
-    console.log(`Unique articles with embeddings: ${uniqueArticles.rows[0].count}`);
-
-    // Simplified query - get one embedding per article
-    const results = await sql`
+    const results = await sql<ChunkRow>`
       SELECT DISTINCT ON (post_slug)
         id,
         post_slug,
@@ -31,44 +75,14 @@ export async function GET() {
         created_at
       FROM content_chunks
       WHERE embedding IS NOT NULL
-      ORDER BY 
+      ORDER BY
         post_slug,
         CASE WHEN chunk_type = 'full-post' THEN 0 ELSE 1 END,
         sequence
     `;
 
-    console.log(`Found ${results.rows.length} articles with embeddings`);
-
-    // Helper function to parse embedding
-    const parseEmbedding = (embedding: any): number[] => {
-      if (Array.isArray(embedding)) {
-        return embedding;
-      }
-      
-      if (typeof embedding === 'string') {
-        try {
-          // Try to parse as JSON array
-          const parsed = JSON.parse(embedding);
-          if (Array.isArray(parsed)) {
-            return parsed;
-          }
-        } catch (e) {
-          // If not JSON, try to parse as PostgreSQL vector format
-          // Remove brackets and split by comma
-          const cleaned = embedding.replace(/[\[\]]/g, '');
-          return cleaned.split(',').map(Number);
-        }
-      }
-      
-      console.warn('Could not parse embedding:', typeof embedding, embedding);
-      return [];
-    };
-
-    // Process the data for visualization
-    const processedData = results.rows.map((row, index) => {
-      const parsedEmbedding = parseEmbedding(row.embedding);
-      
-      return {
+    const parsedData = results.rows
+      .map((row, index) => ({
         id: row.id,
         postSlug: row.post_slug,
         postTitle: row.post_title,
@@ -76,33 +90,45 @@ export async function GET() {
         chunkType: row.chunk_type,
         metadata: row.metadata,
         sequence: row.sequence,
-        embedding: parsedEmbedding,
+        embedding: parseEmbedding(row.embedding),
         publishedDate: row.metadata?.published_date,
         tags: row.metadata?.tags || [],
         createdAt: row.created_at,
-        index: index
-      };
-    }).filter(item => item.embedding.length > 0); // Filter out items with invalid embeddings
+        index,
+      }))
+      .filter((item) => item.embedding.length > 0);
 
-    console.log(`Processed ${processedData.length} articles with valid embeddings`);
+    const embeddings = parsedData.map((item) => item.embedding);
+    const umapPositions = computeUMAP(embeddings, {
+      nNeighbors: Math.min(nNeighbors, parsedData.length - 1),
+      minDist,
+      spread,
+    });
+
+    const normalizedPositions = normalizePositions(
+      umapPositions,
+      1000,
+      1000,
+      50
+    );
+
+    const processedData: ArticleData[] = parsedData.map((item, index) => ({
+      ...item,
+      x: normalizedPositions[index].x,
+      y: normalizedPositions[index].y,
+    }));
 
     return NextResponse.json({
       success: true,
       data: processedData,
       count: processedData.length,
-      debug: {
-        totalChunks: totalChunks.rows[0].count,
-        uniqueArticles: uniqueArticles.rows[0].count,
-        returnedArticles: processedData.length
-      }
     });
-
   } catch (error) {
-    console.error('Error fetching embeddings:', error);
+    console.error("Error fetching embeddings:", error);
     return NextResponse.json(
-      { 
-        error: 'Failed to fetch embeddings data',
-        details: error instanceof Error ? error.message : 'Unknown error'
+      {
+        error: "Failed to fetch embeddings data",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );
