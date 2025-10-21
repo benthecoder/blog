@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
+    useCache: true,
     //serverExternalPackages: ['sharp', 'onnxruntime-node'],
   },
   outputFileTracingExcludes: {
