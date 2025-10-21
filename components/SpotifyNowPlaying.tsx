@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import Image from "next/image";
+import Loader from "./Loader";
 
 interface NowPlayingData {
   isPlaying: boolean;
@@ -34,21 +35,38 @@ interface RecentlyPlayedData {
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
 export default function SpotifyNowPlaying() {
-  const { data: nowPlaying } = useSWR<NowPlayingData>(
-    "/api/spotify/now-playing",
-    fetcher,
-    {
-      refreshInterval: 60000,
-    }
-  );
+  const [isVisible, setIsVisible] = useState(false);
 
-  const { data: recentlyPlayed } = useSWR<RecentlyPlayedData>(
-    !nowPlaying?.isPlaying ? "/api/spotify/recently-played" : null,
-    fetcher,
-    {
-      refreshInterval: 300000,
+  const { data: nowPlaying, isLoading: nowPlayingLoading } =
+    useSWR<NowPlayingData>("/api/spotify/now-playing", fetcher, {
+      refreshInterval: 60000,
+    });
+
+  const { data: recentlyPlayed, isLoading: recentlyPlayedLoading } =
+    useSWR<RecentlyPlayedData>(
+      !nowPlaying?.isPlaying ? "/api/spotify/recently-played" : null,
+      fetcher,
+      {
+        refreshInterval: 300000,
+      }
+    );
+
+  useEffect(() => {
+    if (nowPlaying || recentlyPlayed) {
+      const timer = setTimeout(() => setIsVisible(true), 100);
+      return () => clearTimeout(timer);
     }
-  );
+  }, [nowPlaying, recentlyPlayed]);
+
+  const isLoading = nowPlayingLoading || recentlyPlayedLoading;
+
+  if (isLoading) {
+    return (
+      <div className="mt-8 pt-6 border-t border-japanese-shiraumenezu dark:border-dark-tag">
+        <Loader text="loading music..." size="sm" />
+      </div>
+    );
+  }
 
   if (!nowPlaying && !recentlyPlayed) {
     return null;
@@ -56,11 +74,11 @@ export default function SpotifyNowPlaying() {
 
   return (
     <div
+      className={`transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
       style={{
         marginTop: "32px",
         paddingLeft: "0px",
         paddingRight: "0px",
-        fontFamily: "monospace",
         fontSize: "14px",
         color: "#888888",
         lineHeight: "1.6",
