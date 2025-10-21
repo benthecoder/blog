@@ -2,7 +2,7 @@ import getPostMetadata from "@/utils/getPostMetadata";
 import PostPreview from "@/components/PostPreview";
 
 export const generateStaticParams = async () => {
-  const postMetadata = await getPostMetadata();
+  const postMetadata = getPostMetadata();
 
   const tags = new Set();
 
@@ -18,7 +18,7 @@ export const generateStaticParams = async () => {
 const TagPage = async (props: any) => {
   const params = await props.params;
   const tag = decodeURIComponent(params.slug);
-  const postMetadata = await getPostMetadata();
+  const postMetadata = getPostMetadata();
 
   const filteredPosts = postMetadata.filter((post) =>
     post.tags.split(", ").includes(tag)
