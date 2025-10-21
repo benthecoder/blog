@@ -1,6 +1,5 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
-import { unstable_cacheLife as cacheLife } from "next/cache";
 import { computeUMAP, normalizePositions } from "@/utils/umapUtils";
 
 interface ChunkRow {
@@ -56,16 +55,14 @@ const parseEmbedding = (embedding: unknown): number[] => {
   return [];
 };
 
-// Cached function to fetch and compute embeddings
-async function getEmbeddingsData(
-  nNeighbors: number,
-  minDist: number,
-  spread: number
-) {
-  "use cache";
-  cacheLife("hours");
+export async function GET(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const nNeighbors = parseInt(searchParams.get("neighbors") || "8");
+    const minDist = parseFloat(searchParams.get("minDist") || "0.05");
+    const spread = parseFloat(searchParams.get("spread") || "2.0");
 
-  const results = await sql<ChunkRow>`
+    const results = await sql<ChunkRow>`
       SELECT DISTINCT ON (post_slug)
         id,
         post_slug,
@@ -84,49 +81,42 @@ async function getEmbeddingsData(
         sequence
     `;
 
-  const parsedData = results.rows
-    .map((row, index) => ({
-      id: row.id,
-      postSlug: row.post_slug,
-      postTitle: row.post_title,
-      content: row.content,
-      chunkType: row.chunk_type,
-      metadata: row.metadata,
-      sequence: row.sequence,
-      embedding: parseEmbedding(row.embedding),
-      publishedDate: row.metadata?.published_date,
-      tags: row.metadata?.tags || [],
-      createdAt: row.created_at,
-      index,
-    }))
-    .filter((item) => item.embedding.length > 0);
+    const parsedData = results.rows
+      .map((row, index) => ({
+        id: row.id,
+        postSlug: row.post_slug,
+        postTitle: row.post_title,
+        content: row.content,
+        chunkType: row.chunk_type,
+        metadata: row.metadata,
+        sequence: row.sequence,
+        embedding: parseEmbedding(row.embedding),
+        publishedDate: row.metadata?.published_date,
+        tags: row.metadata?.tags || [],
+        createdAt: row.created_at,
+        index,
+      }))
+      .filter((item) => item.embedding.length > 0);
 
-  const embeddings = parsedData.map((item) => item.embedding);
-  const umapPositions = computeUMAP(embeddings, {
-    nNeighbors: Math.min(nNeighbors, parsedData.length - 1),
-    minDist,
-    spread,
-  });
+    const embeddings = parsedData.map((item) => item.embedding);
+    const umapPositions = computeUMAP(embeddings, {
+      nNeighbors: Math.min(nNeighbors, parsedData.length - 1),
+      minDist,
+      spread,
+    });
 
-  const normalizedPositions = normalizePositions(umapPositions, 1000, 1000, 50);
+    const normalizedPositions = normalizePositions(
+      umapPositions,
+      1000,
+      1000,
+      50
+    );
 
-  const processedData: ArticleData[] = parsedData.map((item, index) => ({
-    ...item,
-    x: normalizedPositions[index].x,
-    y: normalizedPositions[index].y,
-  }));
-
-  return processedData;
-}
-
-export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const nNeighbors = parseInt(searchParams.get("neighbors") || "8");
-    const minDist = parseFloat(searchParams.get("minDist") || "0.05");
-    const spread = parseFloat(searchParams.get("spread") || "2.0");
-
-    const processedData = await getEmbeddingsData(nNeighbors, minDist, spread);
+    const processedData: ArticleData[] = parsedData.map((item, index) => ({
+      ...item,
+      x: normalizedPositions[index].x,
+      y: normalizedPositions[index].y,
+    }));
 
     return NextResponse.json({
       success: true,

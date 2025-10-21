@@ -1,8 +1,8 @@
 import Link from "next/link";
 import getPostMetadata from "@/utils/getPostMetadata";
 
-const TagPage = async () => {
-  const postMetadata = await getPostMetadata();
+const TagPage = () => {
+  const postMetadata = getPostMetadata();
 
   const tags: { [index: string]: any } = {};
 

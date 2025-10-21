@@ -8,7 +8,7 @@ const ArchivePage = async ({
 }: {
   searchParams: Promise<{ year?: string }>;
 }) => {
-  const postMetadata = await getPostMetadata();
+  const postMetadata = getPostMetadata();
   const params = await searchParams;
 
   const currentYear = new Date().getFullYear();
