@@ -276,24 +276,16 @@ const Heatmap = ({
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
                 <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[10px]">
-                  Less
+                  less
                 </span>
                 <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30"></div>
                 <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60"></div>
                 <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90"></div>
                 <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[10px]">
-                  More
+                  more words
                 </span>
               </div>
             </div>
-            {!showNavigation && (
-              <Link
-                href="/calendar"
-                className="text-japanese-nezumiiro dark:text-japanese-ginnezu hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu"
-              >
-                view all years →
-              </Link>
-            )}
           </div>
         )}
       </div>
