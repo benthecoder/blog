@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import Timeline from "@/components/Timeline";
 
 type ImageOnHoverProps = {
@@ -18,7 +19,13 @@ const ImageOnHover: React.FC<ImageOnHoverProps> = ({
         {text}
       </span>
       <div className="absolute hidden group-hover:flex left-1/2 -translate-x-1/2 bottom-full pb-2 z-50 pointer-events-none">
-        <img src={imagePath} alt={altText} className="image-hover" />
+        <Image
+          src={imagePath}
+          alt={altText}
+          className="image-hover"
+          width={300}
+          height={200}
+        />
       </div>
     </span>
   );

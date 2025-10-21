@@ -299,6 +299,8 @@ mark {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   animation: fadeInImage 200ms ease-out;
   transform-origin: center;
+  border: none !important;
+  outline: none !important;
 }
 
 .dark .image-hover {
