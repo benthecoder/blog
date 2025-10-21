@@ -175,7 +175,7 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-10">
+    <div className="space-y-6 sm:space-y-10 font-serif">
       {Object.entries(groupedEvents).map(([year, yearEvents]) => (
         <div key={year} className="group/year">
           <div className="flex gap-2 sm:gap-4 text-[#595857] dark:text-[#F3F3F3]">
