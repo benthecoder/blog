@@ -51,23 +51,19 @@ const ArchivePage = async ({
           <div className="text-black-400">•</div>
           <div>
             <Link
-              href="/random"
-              className="underline hover:text-light-accent dark:hover:text-dark-accent transition-colors"
-            >
-              random
-            </Link>{" "}
-            🎲
-          </div>
-          <div className="text-black-400">•</div>
-          <div>
-            <Link
               href="/search"
               className="underline hover:text-light-accent dark:hover:text-dark-accent transition-colors"
             >
               search
             </Link>{" "}
-            🔍
           </div>
+          <div className="text-black-400">•</div>
+          <Link
+            href="/viz"
+            className="underline hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+          >
+            viz
+          </Link>
         </div>
 
         <p className="text-japanese-sumiiro dark:text-japanese-murasakisuishiyou text-sm mb-4 font-medium">
