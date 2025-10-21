@@ -305,7 +305,7 @@ function SearchContent() {
         hasSearched &&
         query && (
           <div className="text-center py-6 text-light-text/70 dark:text-dark-text/70">
-            <p>No results found for "{query}"</p>
+            <p>No results found for &quot;{query}&quot;</p>
             <p className="text-sm mt-2">
               Try a different search type or modify your query
             </p>
