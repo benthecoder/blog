@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 
 interface SearchResult {
   content: string;
@@ -24,13 +25,8 @@ interface SearchResult {
 
 const LoadingComponent = () => {
   return (
-    <div className="flex flex-col items-center space-y-4 py-8">
-      <div className="w-48 h-1 bg-light-border/20 dark:bg-dark-tag rounded-full overflow-hidden">
-        <div className="w-full h-full bg-light-accent dark:bg-dark-accent animate-loading-bar" />
-      </div>
-      <span className="text-sm text-light-accent/70 dark:text-dark-accent/70">
-        Searching posts...
-      </span>
+    <div className="py-8">
+      <Loader text="searching posts..." size="md" />
     </div>
   );
 };
@@ -323,14 +319,7 @@ export default function SearchPage() {
     <Suspense
       fallback={
         <div className="max-w-3xl mx-auto px-4 py-8">
-          <div className="flex flex-col items-center space-y-4 py-8">
-            <div className="w-48 h-1 bg-light-border/20 dark:bg-dark-tag rounded-full overflow-hidden">
-              <div className="w-full h-full bg-light-accent dark:bg-dark-accent animate-loading-bar" />
-            </div>
-            <span className="text-sm text-light-accent/70 dark:text-dark-accent/70">
-              Loading search...
-            </span>
-          </div>
+          <Loader text="loading search..." size="md" />
         </div>
       }
     >

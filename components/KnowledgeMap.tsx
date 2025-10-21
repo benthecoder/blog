@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { scaleLinear } from "d3-scale";
 import { zoom as d3Zoom } from "d3-zoom";
 import { select } from "d3-selection";
+import Loader from "./Loader";
 
 interface Article {
   id: string;
@@ -273,10 +274,7 @@ export default function KnowledgeMap({
   if (loading) {
     return (
       <div className={`flex items-center justify-center ${className}`}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mx-auto mb-2"></div>
-          <p className="text-xs text-gray-500">loading...</p>
-        </div>
+        <Loader text="loading knowledge map..." size="lg" />
       </div>
     );
   }
