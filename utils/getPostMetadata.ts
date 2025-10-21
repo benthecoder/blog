@@ -1,13 +1,18 @@
 import * as fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { unstable_cacheLife as cacheLife } from "next/cache";
 
 // Import shared utilities and types
 import { POSTS_DIR, DRAFTS_DIR } from "@/config/paths";
 import { PostMetadata } from "@/types/post";
 import { calculateWordCount } from "./postUtils";
 
-const getPostMetadata = (getDrafts: boolean = false): PostMetadata[] => {
+const getPostMetadata = async (
+  getDrafts: boolean = false
+): Promise<PostMetadata[]> => {
+  "use cache";
+  cacheLife("hours");
   const folder = getDrafts ? DRAFTS_DIR : POSTS_DIR;
   const files = fs.readdirSync(folder);
   const markdownPosts = files.filter((file) => file.endsWith(".md"));
