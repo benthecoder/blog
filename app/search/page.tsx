@@ -26,7 +26,7 @@ interface SearchResult {
 const LoadingComponent = () => {
   return (
     <div className="py-8">
-      <Loader text="searching posts..." size="md" />
+      <Loader text="scavenging the archives..." size="md" />
     </div>
   );
 };

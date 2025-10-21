@@ -274,7 +274,7 @@ export default function KnowledgeMap({
   if (loading) {
     return (
       <div className={`flex items-center justify-center ${className}`}>
-        <Loader text="loading knowledge map..." size="lg" />
+        <Loader text="crunching data..." size="lg" />
       </div>
     );
   }
