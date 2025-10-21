@@ -1,6 +1,6 @@
 ---
 title: 'Cure?'
-tags: 'journal'
+tags: 'journal, life'
 date: 'Jan 11, 2024'
 ---
 

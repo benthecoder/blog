@@ -1,6 +1,6 @@
 ---
 title: 'Intro to LLMs'
-tags: 'notes, AI'
+tags: 'AI, notes'
 date: 'Nov 27, 2023'
 ---
 

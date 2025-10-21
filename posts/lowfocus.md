@@ -1,6 +1,6 @@
 ---
 title: 'Dealing With Low Focus'
-tags: 'life, work'
+tags: 'work, productivity'
 date: 'Mar 29, 2024'
 ---
 

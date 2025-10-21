@@ -1,6 +1,6 @@
 ---
 title: 'A Short Guide to a Happy Life'
-tags: 'book'
+tags: 'book, life'
 date: 'Jul 1, 2023'
 ---
 

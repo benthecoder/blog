@@ -1,6 +1,6 @@
 ---
 title: 'Convocation'
-tags: 'journal'
+tags: 'journal, life'
 date: 'Dec 15, 2023'
 ---
 

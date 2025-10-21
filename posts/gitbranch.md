@@ -1,6 +1,6 @@
 ---
 title: 'Git Best Practice'
-tags: 'programming'
+tags: 'programming, coding'
 date: 'Nov 13, 2023'
 ---
 

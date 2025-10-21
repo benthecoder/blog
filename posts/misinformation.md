@@ -1,6 +1,6 @@
 ---
 title: 'Misinformation and AI'
-tags: 'AI'
+tags: 'AI, tech'
 date: 'Jun 30, 2023'
 ---
 

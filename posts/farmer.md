@@ -1,6 +1,6 @@
 ---
 title: 'Think life a Farmer'
-tags: 'life'
+tags: 'life, advice'
 date: 'May 31, 2024'
 ---
 

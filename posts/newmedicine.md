@@ -1,6 +1,6 @@
 ---
 title: 'Predict New Medicine with ML'
-tags: 'ML'
+tags: 'ML, science'
 date: 'May 24, 2024'
 ---
 

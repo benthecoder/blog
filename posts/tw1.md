@@ -1,6 +1,6 @@
 ---
 title: 'Taiwan Day 1'
-tags: 'journal, travel'
+tags: 'travel, journal'
 date: 'Jun 1, 2024'
 ---
 

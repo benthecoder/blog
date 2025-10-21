@@ -1,6 +1,6 @@
 ---
 title: 'Getting things done'
-tags: 'work'
+tags: 'work, productivity, advice'
 date: 'Jan 14, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'F-beta score'
-tags: 'ML'
+tags: 'ML, data'
 date: 'May 14, 2023'
 ---
 

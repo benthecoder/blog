@@ -1,6 +1,6 @@
 ---
 title: '@property in Python'
-tags: 'python'
+tags: 'python, programming'
 date: 'May 16, 2023'
 ---
 

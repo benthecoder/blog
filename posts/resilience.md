@@ -1,6 +1,6 @@
 ---
 title: 'Ingredients for Resiliency'
-tags: 'personal, notes'
+tags: 'personal, notes, life'
 date: 'Apr 21, 2023'
 ---
 

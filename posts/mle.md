@@ -1,6 +1,6 @@
 ---
 title: 'MoM and MLE'
-tags: 'statistics'
+tags: 'statistics, math'
 date: 'Oct 9, 2023'
 ---
 

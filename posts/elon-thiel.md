@@ -1,6 +1,6 @@
 ---
 title: 'Best Co-founder Duo'
-tags: 'startup'
+tags: 'startup, people'
 date: 'Nov 5, 2023'
 ---
 

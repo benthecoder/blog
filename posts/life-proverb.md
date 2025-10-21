@@ -1,6 +1,6 @@
 ---
 title: 'A fable about life'
-tags: 'life'
+tags: 'life, philosophy'
 date: 'Jun 11, 2023'
 ---
 

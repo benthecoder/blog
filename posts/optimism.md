@@ -1,6 +1,6 @@
 ---
 title: 'Optimism'
-tags: 'psychology'
+tags: 'psychology, life'
 date: 'Dec 6, 2023'
 ---
 

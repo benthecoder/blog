@@ -1,6 +1,6 @@
 ---
 title: '26 Time Management Hacks'
-tags: 'work, productivity'
+tags: 'productivity, work, advice'
 date: 'May 21, 2024'
 ---
 

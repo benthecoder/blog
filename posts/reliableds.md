@@ -1,6 +1,6 @@
 ---
 title: '10 Rules of Reliable Data Science'
-tags: 'data'
+tags: 'data, advice'
 date: 'Jun 14, 2024'
 ---
 

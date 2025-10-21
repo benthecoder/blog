@@ -1,6 +1,6 @@
 ---
 title: 'Solving Hard Problems'
-tags: 'work'
+tags: 'work, advice'
 date: 'Aug 7, 2023'
 ---
 

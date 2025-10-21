@@ -1,6 +1,6 @@
 ---
 title: 'What is Airflow?'
-tags: 'data, whatis'
+tags: 'data, whatis, tech'
 date: 'Jun 29, 2023'
 ---
 

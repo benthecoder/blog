@@ -1,6 +1,6 @@
 ---
 title: '5 Questions to Ask in Climate'
-tags: 'book, climate'
+tags: 'book, climate, energy'
 date: 'Apr 9, 2024'
 ---
 

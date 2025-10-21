@@ -1,6 +1,6 @@
 ---
 title: 'A Bayesian mindset'
-tags: 'statistics'
+tags: 'statistics, math'
 date: 'May 9, 2023'
 ---
 

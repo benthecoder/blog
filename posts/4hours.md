@@ -1,6 +1,6 @@
 ---
 title: '4 Hour Rule for Getting Work Done'
-tags: 'work, productivity'
+tags: 'work, productivity, advice'
 date: 'Mar 27, 2024'
 ---
 

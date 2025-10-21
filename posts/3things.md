@@ -1,6 +1,6 @@
 ---
 title: 'You Only Need 3 Things'
-tags: 'life'
+tags: 'life, philosophy'
 date: 'Feb 7, 2024'
 ---
 

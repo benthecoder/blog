@@ -1,6 +1,6 @@
 ---
 title: 'Writing Better Logs'
-tags: 'programming'
+tags: 'programming, python'
 date: 'Jun 28, 2023'
 ---
 

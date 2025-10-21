@@ -1,6 +1,6 @@
 ---
 title: 'Testing'
-tags: 'statistics'
+tags: 'statistics, data'
 date: 'Oct 17, 2023'
 ---
 

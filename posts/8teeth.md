@@ -1,6 +1,6 @@
 ---
 title: 'I got 8 teeth extracted today'
-tags: 'journal'
+tags: 'journal, life'
 date: 'Jan 30, 2024'
 ---
 

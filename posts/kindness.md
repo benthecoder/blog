@@ -1,6 +1,6 @@
 ---
 title: 'Kindness'
-tags: 'life'
+tags: 'life, advice'
 date: 'Jan 27, 2024'
 ---
 

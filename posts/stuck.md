@@ -1,6 +1,6 @@
 ---
 title: 'Getting stuck'
-tags: 'work'
+tags: 'work, programming, journal'
 date: 'Aug 2, 2023'
 ---
 

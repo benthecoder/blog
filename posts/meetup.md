@@ -1,6 +1,6 @@
 ---
 title: 'Lessons from Running Tech Meetups'
-tags: 'tech'
+tags: 'tech, advice'
 date: 'Dec 7, 2023'
 ---
 

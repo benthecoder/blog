@@ -1,6 +1,6 @@
 ---
 title: 'How to Read Papers'
-tags: 'ideas'
+tags: 'reading, advice'
 date: 'Nov 29, 2023'
 ---
 

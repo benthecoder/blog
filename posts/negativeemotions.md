@@ -1,6 +1,6 @@
 ---
 title: 'Negative Triggers'
-tags: 'psychology'
+tags: 'psychology, emotions'
 date: 'Jan 24, 2024'
 ---
 

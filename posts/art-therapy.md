@@ -1,6 +1,6 @@
 ---
 title: 'Art as Therapy'
-tags: 'art'
+tags: 'art, book, psychology'
 date: 'Dec 10, 2023'
 ---
 

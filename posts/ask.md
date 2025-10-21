@@ -1,6 +1,6 @@
 ---
 title: 'Ask For What You Want'
-tags: 'journal'
+tags: 'journal, advice'
 date: 'Jan 10, 2024'
 ---
 

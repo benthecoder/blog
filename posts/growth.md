@@ -1,6 +1,6 @@
 ---
 title: 'Professional vs personal growth'
-tags: 'work'
+tags: 'work, life'
 date: 'Sep 7, 2023'
 ---
 

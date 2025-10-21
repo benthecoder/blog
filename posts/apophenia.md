@@ -1,6 +1,6 @@
 ---
 title: 'Apophenia'
-tags: 'life'
+tags: 'life, psychology'
 date: 'Sep 4, 2023'
 ---
 

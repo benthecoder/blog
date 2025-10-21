@@ -1,6 +1,6 @@
 ---
 title: 'Food Waste'
-tags: 'climate, food'
+tags: 'climate, science'
 date: 'Jun 7, 2023'
 ---
 

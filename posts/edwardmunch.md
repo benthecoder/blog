@@ -1,6 +1,6 @@
 ---
 title: 'Edward Munch'
-tags: 'artist, biography'
+tags: 'art, biography'
 date: 'Apr 7, 2024'
 ---
 

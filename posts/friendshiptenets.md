@@ -1,6 +1,6 @@
 ---
 title: 'Friendship Tenets'
-tags: 'friends'
+tags: 'friends, people'
 date: 'May 15, 2024'
 ---
 

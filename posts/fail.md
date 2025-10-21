@@ -1,6 +1,6 @@
 ---
 title: 'Stop saying "Fail"'
-tags: 'life'
+tags: 'life, advice'
 date: 'Oct 2, 2023'
 ---
 

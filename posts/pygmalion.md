@@ -1,6 +1,6 @@
 ---
 title: 'The Pygmalion Effect'
-tags: 'life'
+tags: 'life, psychology'
 date: 'May 18, 2024'
 ---
 

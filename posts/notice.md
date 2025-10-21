@@ -1,6 +1,6 @@
 ---
 title: "If This Isn't Nice, I Don't Know What Is"
-tags: 'life'
+tags: 'life, advice'
 date: 'May 30, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'How to Understand things'
-tags: 'thinking, reading'
+tags: 'thinking, learning, advice'
 date: 'Jan 16, 2024'
 ---
 

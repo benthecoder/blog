@@ -1,6 +1,6 @@
 ---
 title: 'Writing Book Summaries'
-tags: 'reading'
+tags: 'reading, writing, book'
 date: 'Feb 10, 2024'
 ---
 

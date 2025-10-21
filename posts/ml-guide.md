@@ -1,6 +1,6 @@
 ---
 title: 'How to Win Kaggle Competitions'
-tags: 'ML'
+tags: 'ML, advice'
 date: 'Nov 10, 2023'
 ---
 

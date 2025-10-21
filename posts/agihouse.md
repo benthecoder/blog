@@ -1,6 +1,6 @@
 ---
 title: 'AGI House Hackathon'
-tags: 'journal, coding'
+tags: 'journal, coding, AI'
 date: 'Jul 22, 2023'
 ---
 

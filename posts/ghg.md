@@ -1,6 +1,6 @@
 ---
 title: 'Tracking Carbon Emission'
-tags: 'climate'
+tags: 'climate, tech'
 date: 'Jan 25, 2024'
 ---
 

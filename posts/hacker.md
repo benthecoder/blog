@@ -1,6 +1,6 @@
 ---
 title: 'The Hacker Attitude'
-tags: 'programming'
+tags: 'programming, philosophy'
 date: 'Dec 29, 2023'
 ---
 

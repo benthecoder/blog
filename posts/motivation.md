@@ -1,6 +1,6 @@
 ---
 title: 'Goals'
-tags: 'goals, notes'
+tags: 'productivity, notes'
 date: 'Aug 29, 2023'
 ---
 

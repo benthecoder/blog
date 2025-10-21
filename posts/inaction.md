@@ -1,6 +1,6 @@
 ---
 title: 'Cost of Inaction'
-tags: 'action'
+tags: 'action, life'
 date: 'Jul 16, 2023'
 ---
 

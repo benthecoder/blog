@@ -1,6 +1,6 @@
 ---
 title: 'The Day After'
-tags: 'personal'
+tags: 'personal, journal, movies'
 date: 'Mar 2, 2024'
 ---
 

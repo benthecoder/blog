@@ -1,6 +1,6 @@
 ---
 title: 'Economists at Instacart'
-tags: 'tech'
+tags: 'tech, work, data'
 date: 'Nov 19, 2023'
 ---
 

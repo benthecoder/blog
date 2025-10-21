@@ -1,6 +1,6 @@
 ---
 title: 'Make Something Wonderful'
-tags: 'book'
+tags: 'book, biography'
 date: 'Apr 27, 2024'
 ---
 

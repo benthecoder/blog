@@ -1,6 +1,6 @@
 ---
 title: '6 Forces That Fuel Friendship'
-tags: 'friends'
+tags: 'friends, people'
 date: 'Dec 20, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Advice for Starting Programmers'
-tags: 'programming, advice'
+tags: 'programming, advice, listicles'
 date: 'Dec 22, 2023'
 ---
 

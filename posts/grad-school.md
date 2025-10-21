@@ -1,6 +1,6 @@
 ---
 title: 'Grad School'
-tags: 'resources'
+tags: 'resources, learning'
 date: 'Sep 26, 2023'
 ---
 

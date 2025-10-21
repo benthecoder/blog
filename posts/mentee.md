@@ -1,6 +1,6 @@
 ---
 title: 'Golden Rules of Effective Menteeship'
-tags: 'career, work'
+tags: 'career, work, advice'
 date: 'Sep 24, 2023'
 ---
 

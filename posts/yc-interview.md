@@ -1,6 +1,6 @@
 ---
 title: 'YC interview Experience'
-tags: 'startup'
+tags: 'startup, advice'
 date: 'Oct 7, 2023'
 ---
 

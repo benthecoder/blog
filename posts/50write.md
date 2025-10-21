@@ -1,6 +1,6 @@
 ---
 title: '50 reasons to write'
-tags: 'writing'
+tags: 'writing, listicles'
 date: 'May 28, 2024'
 ---
 

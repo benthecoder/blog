@@ -1,6 +1,6 @@
 ---
 title: 'Convergent and Divergent Thinking'
-tags: 'thinking'
+tags: 'thinking, ideas'
 date: 'Nov 14, 2023'
 ---
 

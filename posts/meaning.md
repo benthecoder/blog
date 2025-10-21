@@ -1,6 +1,6 @@
 ---
 title: "Man's Search For Meaning"
-tags: 'book'
+tags: 'book, philosophy, life'
 date: 'Jan 31, 2024'
 ---
 

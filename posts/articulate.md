@@ -1,6 +1,6 @@
 ---
 title: 'How To Present like Steve Jobs'
-tags: 'talking, ideas'
+tags: 'talking, advice'
 date: 'Apr 30, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Developing Technical Taste'
-tags: 'coding, ai'
+tags: 'programming, AI, advice'
 date: 'Jun 16, 2024'
 ---
 

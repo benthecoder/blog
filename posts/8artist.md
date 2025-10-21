@@ -1,6 +1,6 @@
 ---
 title: 'Advice from 8 Artists'
-tags: 'advice, art'
+tags: 'advice, art, listicles'
 date: 'Mar 13, 2024'
 ---
 

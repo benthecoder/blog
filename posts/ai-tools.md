@@ -1,6 +1,6 @@
 ---
 title: 'Useful AI Tools'
-tags: 'listicles, AI'
+tags: 'listicles, AI, resources'
 date: 'Oct 30, 2023'
 ---
 

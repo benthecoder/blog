@@ -1,6 +1,6 @@
 ---
 title: 'Noise vs Music'
-tags: 'music'
+tags: 'music, art'
 date: 'Jun 10, 2023'
 ---
 

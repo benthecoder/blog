@@ -1,6 +1,6 @@
 ---
 title: 'Akrasia'
-tags: 'psychology, work'
+tags: 'psychology, work, life'
 date: 'Sep 5, 2023'
 ---
 
