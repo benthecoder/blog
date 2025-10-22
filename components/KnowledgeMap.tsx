@@ -17,6 +17,7 @@ interface Article {
   tags?: string[];
   x: number;
   y: number;
+  cluster: number;
 }
 
 export default function KnowledgeMap({
@@ -30,13 +31,10 @@ export default function KnowledgeMap({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hoveredArticle, setHoveredArticle] = useState<Article | null>(null);
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [transform, setTransform] = useState({ k: 1, x: 0, y: 0 });
-  const [neighbors] = useState(4);
-  const [minDist] = useState(0.05);
-  const [spread] = useState(6.0);
   const { theme } = useTheme();
+  const zoomBehaviorRef = useRef<any>(null);
 
   // Fetch data from static JSON file
   const fetchData = async () => {
@@ -76,10 +74,26 @@ export default function KnowledgeMap({
     return dot / (magA * magB);
   }, []);
 
-  // Render
+  // Generate color palette for clusters
+  const getClusterColor = useCallback(
+    (cluster: number, isDark: boolean): string => {
+      if (cluster === -1) {
+        // Noise points - use default color
+        return isDark ? "#91989C" : "#595857";
+      }
+
+      // HSL color palette with good contrast
+      const hue = (cluster * 137.5) % 360; // Golden angle for good distribution
+      const saturation = isDark ? 60 : 55;
+      const lightness = isDark ? 60 : 50;
+      return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    },
+    []
+  );
+
+  // Render (drawing only, no dimension changes)
   useEffect(() => {
-    if (!canvasRef.current || !containerRef.current || filtered.length === 0)
-      return;
+    if (!canvasRef.current || !containerRef.current) return;
 
     const canvas = canvasRef.current;
     const container = containerRef.current;
@@ -88,14 +102,17 @@ export default function KnowledgeMap({
 
     const dpr = window.devicePixelRatio || 1;
     const rect = container.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    canvas.style.width = `${rect.width}px`;
-    canvas.style.height = `${rect.height}px`;
-    ctx.scale(dpr, dpr);
-
     const width = rect.width;
     const height = rect.height;
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+    ctx.scale(dpr, dpr);
+
+    // Clear canvas (transparent to show container background with texture)
+    ctx.clearRect(0, 0, width, height);
+
+    // Early return if no results
+    if (filtered.length === 0) return;
 
     const xScale = scaleLinear().domain([0, 1000]).range([0, width]);
     const yScale = scaleLinear().domain([0, 1000]).range([0, height]);
@@ -115,9 +132,6 @@ export default function KnowledgeMap({
     const connection = isDark
       ? "rgba(145, 152, 156, 0.08)"
       : "rgba(89, 88, 87, 0.08)";
-
-    // Clear canvas (transparent to show container background with texture)
-    ctx.clearRect(0, 0, width, height);
 
     ctx.save();
     ctx.translate(transform.x, transform.y);
@@ -151,13 +165,11 @@ export default function KnowledgeMap({
       // Opacity varies by word count (longer posts = more opaque)
       const baseOpacity = Math.min(0.8, 0.3 + wordCount / 2000);
 
-      let color = dot;
+      // Use cluster color
+      let color = getClusterColor(article.cluster, isDark);
       let opacity = baseOpacity;
 
-      if (article.id === selectedArticle?.id) {
-        color = dotSelected;
-        opacity = 1;
-      } else if (article.id === hoveredArticle?.id) {
+      if (article.id === hoveredArticle?.id) {
         color = dotHover;
         opacity = 1;
       } else if (
@@ -190,17 +202,45 @@ export default function KnowledgeMap({
     theme,
     transform,
     hoveredArticle,
-    selectedArticle,
     searchQuery,
     similarity,
+    getClusterColor,
   ]);
 
-  // Zoom setup
+  // Refs to avoid stale closures
+  const transformRef = useRef(transform);
+  const hoveredArticleRef = useRef(hoveredArticle);
+  const filteredRef = useRef(filtered);
+
   useEffect(() => {
-    if (!canvasRef.current || !containerRef.current) return;
+    transformRef.current = transform;
+  }, [transform]);
+
+  useEffect(() => {
+    hoveredArticleRef.current = hoveredArticle;
+  }, [hoveredArticle]);
+
+  useEffect(() => {
+    filteredRef.current = filtered;
+  }, [filtered]);
+
+  // Canvas initialization and zoom setup
+  useEffect(() => {
+    if (!canvasRef.current || !containerRef.current || articles.length === 0)
+      return;
 
     const canvas = canvasRef.current;
+    const container = containerRef.current;
 
+    // Initialize canvas dimensions ONCE
+    const dpr = window.devicePixelRatio || 1;
+    const rect = container.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = `${rect.width}px`;
+    canvas.style.height = `${rect.height}px`;
+
+    // Set up zoom behavior
     const zoomBehavior = d3Zoom()
       .scaleExtent([0.5, 10])
       .on("zoom", (event) => {
@@ -211,30 +251,33 @@ export default function KnowledgeMap({
         });
       });
 
+    zoomBehaviorRef.current = zoomBehavior;
+
     const selection = select(canvas);
     selection.call(zoomBehavior as any);
 
-    // Prevent default scroll behavior
-    const preventScroll = (e: WheelEvent) => {
-      e.preventDefault();
+    // Handle window resize
+    const handleResize = () => {
+      const newRect = container.getBoundingClientRect();
+      canvas.width = newRect.width * dpr;
+      canvas.height = newRect.height * dpr;
+      canvas.style.width = `${newRect.width}px`;
+      canvas.style.height = `${newRect.height}px`;
+
+      // Re-apply zoom behavior after canvas reset
+      selection.call(zoomBehavior as any);
     };
 
-    canvas.addEventListener("wheel", preventScroll, { passive: false });
+    window.addEventListener("resize", handleResize);
 
-    return () => {
-      selection.on(".zoom", null);
-      canvas.removeEventListener("wheel", preventScroll);
-    };
-  }, []);
-
-  // Mouse hover
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLCanvasElement>) => {
-      if (!canvasRef.current || !containerRef.current) return;
-
-      const rect = canvasRef.current.getBoundingClientRect();
-      const x = (e.clientX - rect.left - transform.x) / transform.k;
-      const y = (e.clientY - rect.top - transform.y) / transform.k;
+    // Handle mouse move for hover
+    const handleNativeMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const currentTransform = transformRef.current;
+      const x =
+        (e.clientX - rect.left - currentTransform.x) / currentTransform.k;
+      const y =
+        (e.clientY - rect.top - currentTransform.y) / currentTransform.k;
 
       const width = rect.width;
       const height = rect.height;
@@ -244,7 +287,7 @@ export default function KnowledgeMap({
       let closest: Article | null = null;
       let minDist = 12;
 
-      filtered.forEach((article) => {
+      filteredRef.current.forEach((article) => {
         const dx = xScale(article.x) - x;
         const dy = yScale(article.y) - y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -255,16 +298,26 @@ export default function KnowledgeMap({
       });
 
       setHoveredArticle(closest);
-    },
-    [filtered, transform]
-  );
+    };
 
-  // Click to navigate
-  const handleClick = useCallback(() => {
-    if (hoveredArticle) {
-      window.location.href = `/posts/${hoveredArticle.postSlug}`;
-    }
-  }, [hoveredArticle]);
+    // Handle click for navigation
+    const handleNativeClick = () => {
+      const currentHovered = hoveredArticleRef.current;
+      if (currentHovered) {
+        window.location.href = `/posts/${currentHovered.postSlug}`;
+      }
+    };
+
+    canvas.addEventListener("mousemove", handleNativeMouseMove);
+    canvas.addEventListener("click", handleNativeClick);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      selection.on(".zoom", null);
+      canvas.removeEventListener("mousemove", handleNativeMouseMove);
+      canvas.removeEventListener("click", handleNativeClick);
+    };
+  }, [articles.length]);
 
   if (loading) {
     return <UMAPLoader className={className} />;
@@ -287,28 +340,26 @@ export default function KnowledgeMap({
       }}
     >
       {/* Search */}
-      <div className="absolute top-4 left-4 z-20">
+      <div className="absolute top-4 left-4 z-20 pointer-events-none">
         <input
           type="text"
           placeholder="search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-40 px-2 py-1 text-xs bg-white/90 dark:bg-gray-900/90 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded focus:outline-none placeholder:text-gray-400"
+          className="w-40 px-2 py-1 text-xs bg-white/90 dark:bg-gray-900/90 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded focus:outline-none placeholder:text-gray-400 pointer-events-auto"
         />
       </div>
 
       {/* Canvas */}
       <canvas
         ref={canvasRef}
-        onMouseMove={handleMouseMove}
-        onClick={handleClick}
-        className="cursor-pointer w-full h-full block"
+        className="cursor-crosshair w-full h-full block"
         style={{ background: "transparent" }}
       />
 
       {/* Article Detail on Hover */}
       {hoveredArticle && (
-        <div className="absolute top-4 right-4 z-20 bg-white/95 dark:bg-gray-900/95 p-3 rounded border border-gray-300 dark:border-gray-700 shadow-sm max-w-xs">
+        <div className="absolute top-4 right-4 z-20 bg-white/95 dark:bg-gray-900/95 p-3 rounded border border-gray-300 dark:border-gray-700 shadow-sm max-w-xs pointer-events-none">
           <h3 className="font-semibold text-sm leading-tight mb-2">
             {hoveredArticle.postTitle}
           </h3>
@@ -343,7 +394,7 @@ export default function KnowledgeMap({
       )}
 
       {/* Instructions */}
-      <div className="absolute bottom-4 left-4 z-10 bg-white/90 dark:bg-gray-900/90 px-3 py-1 rounded border border-gray-300 dark:border-gray-700 text-xs text-gray-500">
+      <div className="absolute bottom-4 left-4 z-10 bg-white/90 dark:bg-gray-900/90 px-3 py-1 rounded border border-gray-300 dark:border-gray-700 text-xs text-gray-500 pointer-events-none">
         scroll to zoom • drag to pan • click to read
       </div>
     </div>

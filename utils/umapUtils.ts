@@ -1,8 +1,14 @@
 import { UMAP } from "umap-js";
+import { kmeans } from "ml-kmeans";
 
 export interface UMAPPosition {
   x: number;
   y: number;
+}
+
+export interface ClusterResult {
+  labels: number[];
+  numClusters: number;
 }
 
 /**
@@ -79,4 +85,33 @@ export function normalizePositions(
     x: padding + ((pos.x - minX) / rangeX) * (width - 2 * padding),
     y: padding + ((pos.y - minY) / rangeY) * (height - 2 * padding),
   }));
+}
+
+/**
+ * Perform k-means clustering on high-dimensional embeddings
+ * @param embeddings Array of high-dimensional vectors
+ * @param k Number of clusters (default: 15)
+ * @returns Cluster labels for each point
+ */
+export function computeKMeans(
+  embeddings: number[][],
+  k: number = 15
+): ClusterResult {
+  if (embeddings.length === 0) {
+    return { labels: [], numClusters: 0 };
+  }
+
+  // Adjust k if we have fewer data points
+  const numClusters = Math.min(k, Math.floor(embeddings.length / 3));
+
+  // Run k-means clustering
+  const result = kmeans(embeddings, numClusters, {
+    initialization: "kmeans++",
+    maxIterations: 100,
+  });
+
+  return {
+    labels: result.clusters,
+    numClusters,
+  };
 }
