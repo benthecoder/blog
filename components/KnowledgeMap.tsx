@@ -225,7 +225,7 @@ export default function KnowledgeMap({
       selection.on(".zoom", null);
       canvas.removeEventListener("wheel", preventScroll);
     };
-  }, [filtered]);
+  }, []);
 
   // Mouse hover
   const handleMouseMove = useCallback(
