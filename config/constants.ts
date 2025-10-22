@@ -38,9 +38,9 @@ export const MAX_OVERLAP_SENTENCES = 2;
 export const MAX_WHOLE_POST_LENGTH = 8000;
 
 // Rate limiting & batching
-export const EMBEDDING_BATCH_SIZE = 15;
-export const DELAY_BETWEEN_BATCHES = 500;
-export const DELAY_BETWEEN_FILES = 1500;
+export const EMBEDDING_BATCH_SIZE = 128; // Voyage AI supports up to 128 per batch
+export const DELAY_BETWEEN_BATCHES = 100; // Reduced for faster processing
+export const DELAY_BETWEEN_FILES = 200; // Reduced for faster backfill
 export const MAX_RETRIES = 5;
 export const INITIAL_RETRY_DELAY = 2000;
 export const API_TIMEOUT = 60000;
