@@ -59,6 +59,21 @@ const parseEmbedding = (embedding: unknown): number[] => {
 
 async function generateKnowledgeMap() {
   try {
+    // Ensure POSTGRES_URL is set (Vercel postgres needs this specific var name)
+    if (!process.env.POSTGRES_URL && process.env.DATABASE_URL) {
+      process.env.POSTGRES_URL = process.env.DATABASE_URL;
+    }
+
+    // Check if database connection is available
+    if (!process.env.DATABASE_URL && !process.env.POSTGRES_URL) {
+      console.warn("⚠️  DATABASE_URL not available during build");
+      console.warn("⚠️  Skipping knowledge map generation");
+      console.warn(
+        "⚠️  Knowledge map will use existing data or fail gracefully"
+      );
+      return;
+    }
+
     console.log("Fetching embeddings from database...");
 
     const results = await sql<ChunkRow>`
