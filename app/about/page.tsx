@@ -249,6 +249,12 @@ const ChronologyPage = () => {
     },
     {
       year: "2025",
+      month: "january",
+      day: "21",
+      description: "me and T",
+    },
+    {
+      year: "2025",
       month: "march",
       day: "12",
       description: "joined contrary research fellowship",
