@@ -14,6 +14,7 @@
     "prebuild": "npm run generate:rss && npm run generate:knowledge-map",
     "postbuild": "next-sitemap",
     "generate-embeddings": "tsx scripts/generateEmbeddings.ts",
+    "backfill-embeddings": "tsx scripts/backfillEmbeddings.ts",
     "prepare": "husky"
   },
   "dependencies": {

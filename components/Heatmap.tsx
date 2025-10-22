@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PostMetadata } from "@/types/post";
 
@@ -20,11 +21,16 @@ interface DayData {
 
 const Heatmap = ({
   posts,
-  year,
+  year: initialYear,
   showNavigation = true,
   navigationPath = "/calendar",
 }: HeatmapProps) => {
+  const searchParams = useSearchParams();
   const [hoveredDay, setHoveredDay] = useState<DayData | null>(null);
+
+  // Read year from URL params, fallback to initialYear prop
+  const yearParam = searchParams.get("year");
+  const year = yearParam ? parseInt(yearParam, 10) : initialYear;
 
   // Calculate min and max years from actual posts
   const postYears = posts.map((post) => new Date(post.date).getFullYear());
