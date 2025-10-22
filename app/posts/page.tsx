@@ -3,20 +3,13 @@ import PostPreview from "@/components/PostPreview";
 import Link from "next/link";
 import Heatmap from "@/components/Heatmap";
 
-const ArchivePage = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ year?: string }>;
-}) => {
+const ArchivePage = () => {
   const postMetadata = getPostMetadata();
-  const params = await searchParams;
-
   const currentYear = new Date().getFullYear();
-  const year = params.year ? parseInt(params.year) : currentYear;
 
-  // Filter posts by year
+  // Filter posts by current year by default
   const filteredPosts = postMetadata.filter(
-    (post) => new Date(post.date).getFullYear() === year
+    (post) => new Date(post.date).getFullYear() === currentYear
   );
 
   // Calculate overall totals
@@ -76,7 +69,7 @@ const ArchivePage = async ({
         <div className="mb-6">
           <Heatmap
             posts={postMetadata}
-            year={year}
+            year={currentYear}
             month={0}
             showNavigation={true}
             navigationPath="/posts"
