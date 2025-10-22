@@ -1,10 +1,15 @@
+import { Suspense } from "react";
 import getPostMetadata from "@/utils/getPostMetadata";
 import ArchiveClient from "@/components/ArchiveClient";
 
 const ArchivePage = () => {
   const postMetadata = getPostMetadata();
 
-  return <ArchiveClient allPosts={postMetadata} />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ArchiveClient allPosts={postMetadata} />
+    </Suspense>
+  );
 };
 
 export default ArchivePage;
