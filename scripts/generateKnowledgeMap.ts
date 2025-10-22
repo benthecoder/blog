@@ -1,6 +1,10 @@
 import "dotenv/config";
 import { sql } from "@vercel/postgres";
-import { computeUMAP, normalizePositions } from "../utils/umapUtils";
+import {
+  computeUMAP,
+  normalizePositions,
+  computeKMeans,
+} from "../utils/umapUtils";
 import fs from "fs";
 import path from "path";
 
@@ -34,6 +38,7 @@ interface ArticleData {
   index: number;
   x: number;
   y: number;
+  cluster: number;
 }
 
 const parseEmbedding = (embedding: unknown): number[] => {
@@ -114,9 +119,21 @@ async function generateKnowledgeMap() {
       }))
       .filter((item) => item.embedding.length > 0);
 
-    console.log("Computing UMAP positions...");
+    console.log("Computing k-means clusters on embeddings...");
 
     const embeddings = parsedData.map((item) => item.embedding);
+
+    // Cluster in high-dimensional space BEFORE dimensionality reduction for better results
+    // Why k-means in high-D works best:
+    // - UMAP distorts distances, so clustering after UMAP gives scattered colors
+    // - HDBSCAN in high-D suffers from curse of dimensionality (most points = noise)
+    // - k-means in high-D works well with embedding space, every point gets a cluster
+    // Result: Semantically similar posts get same color even if UMAP spreads them apart
+    const clusterResult = computeKMeans(embeddings, 18);
+    console.log(`Created ${clusterResult.numClusters} clusters`);
+
+    console.log("Computing UMAP positions...");
+
     const umapPositions = computeUMAP(embeddings, {
       nNeighbors: Math.min(15, parsedData.length - 1),
       minDist: 0.1,
@@ -134,6 +151,7 @@ async function generateKnowledgeMap() {
       ...item,
       x: normalizedPositions[index].x,
       y: normalizedPositions[index].y,
+      cluster: clusterResult.labels[index],
     }));
 
     // Create public/data directory if it doesn't exist
@@ -151,6 +169,7 @@ async function generateKnowledgeMap() {
           success: true,
           data: processedData,
           count: processedData.length,
+          numClusters: clusterResult.numClusters,
           generatedAt: new Date().toISOString(),
         },
         null,
@@ -160,6 +179,7 @@ async function generateKnowledgeMap() {
 
     console.log(`✓ Knowledge map generated: ${outputPath}`);
     console.log(`  ${processedData.length} articles processed`);
+    console.log(`  ${clusterResult.numClusters} clusters found`);
   } catch (error) {
     console.error("Error generating knowledge map:", error);
     process.exit(1);
