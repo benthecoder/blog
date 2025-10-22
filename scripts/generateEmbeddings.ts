@@ -26,6 +26,11 @@ import { PostFrontmatter } from "@/types/post";
 
 dotenv.config();
 
+// Ensure POSTGRES_URL is set (Vercel postgres needs this specific var name)
+if (!process.env.POSTGRES_URL && process.env.DATABASE_URL) {
+  process.env.POSTGRES_URL = process.env.DATABASE_URL;
+}
+
 interface EmbeddingResult {
   successfulChunks: number;
   failedChunks: number;
