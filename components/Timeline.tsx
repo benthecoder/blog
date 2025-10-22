@@ -1,7 +1,20 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
+import {
+  useFloating,
+  autoUpdate,
+  offset,
+  flip,
+  shift,
+  useHover,
+  useFocus,
+  useDismiss,
+  useRole,
+  useInteractions,
+  FloatingPortal,
+} from "@floating-ui/react";
 
 type ImageLink = {
   text: string;
@@ -21,8 +34,24 @@ type TimelineProps = {
   events: TimelineEvent[];
 };
 
+// Month name to number mapping for sorting
+const monthToNumber: Record<string, number> = {
+  january: 1,
+  february: 2,
+  march: 3,
+  april: 4,
+  may: 5,
+  june: 6,
+  july: 7,
+  august: 8,
+  september: 9,
+  october: 10,
+  november: 11,
+  december: 12,
+};
+
 const Timeline: React.FC<TimelineProps> = ({ events }) => {
-  // Group events by year
+  // Group events by year and sort chronologically within each year
   const groupedEvents = events.reduce(
     (acc, event) => {
       if (!acc[event.year]) {
@@ -34,118 +63,92 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
     {} as Record<string, TimelineEvent[]>
   );
 
-  // Helper component for image link with smart positioning
-  const ImageLinkComponent: React.FC<{ link: ImageLink; idx: number }> = ({
-    link,
-    idx,
-  }) => {
-    const [isVisible, setIsVisible] = useState(false);
-    const [position, setPosition] = useState<{ top: number; left: number }>({
-      top: 0,
-      left: 0,
+  // Sort events within each year
+  Object.keys(groupedEvents).forEach((year) => {
+    groupedEvents[year].sort((a, b) => {
+      const monthA = a.month ? monthToNumber[a.month.toLowerCase()] || 0 : 0;
+      const monthB = b.month ? monthToNumber[b.month.toLowerCase()] || 0 : 0;
+
+      if (monthA !== monthB) {
+        return monthA - monthB;
+      }
+
+      const dayA = a.day ? parseInt(a.day, 10) : 0;
+      const dayB = b.day ? parseInt(b.day, 10) : 0;
+
+      return dayA - dayB;
     });
-    const spanRef = useRef<HTMLSpanElement>(null);
+  });
 
-    const calculatePosition = () => {
-      if (spanRef.current) {
-        const rect = spanRef.current.getBoundingClientRect();
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
+  // Helper component for image link with Floating UI positioning
+  const ImageLinkComponent: React.FC<{ link: ImageLink; eventId: string }> = ({
+    link,
+    eventId,
+  }) => {
+    const [isOpen, setIsOpen] = useState(false);
 
-        // Image dimensions (max)
-        const imageMaxWidth = Math.min(1200, viewportWidth * 0.9);
-        const imageMaxHeight = Math.min(800, viewportHeight * 0.8);
+    const { refs, floatingStyles, context } = useFloating({
+      open: isOpen,
+      onOpenChange: setIsOpen,
+      placement: "top",
+      whileElementsMounted: autoUpdate,
+      middleware: [
+        offset(8),
+        flip({
+          fallbackAxisSideDirection: "start",
+        }),
+        shift({
+          padding: 8,
+        }),
+      ],
+    });
 
-        // Calculate center position
-        const centerX = rect.left + rect.width / 2;
+    const hover = useHover(context, { move: false });
+    const focus = useFocus(context);
+    const dismiss = useDismiss(context);
+    const role = useRole(context, { role: "tooltip" });
 
-        // Calculate left position (centered on word, but constrained to viewport)
-        let left = centerX - imageMaxWidth / 2;
-        const rightEdge = left + imageMaxWidth;
-
-        // Adjust if going off screen
-        if (left < 10) {
-          left = 10; // 10px padding from left edge
-        } else if (rightEdge > viewportWidth - 10) {
-          left = viewportWidth - imageMaxWidth - 10; // 10px padding from right edge
-        }
-
-        // Calculate vertical position
-        const spaceAbove = rect.top;
-        const spaceBelow = viewportHeight - rect.bottom;
-
-        let top;
-        if (spaceAbove > imageMaxHeight + 20 || spaceAbove > spaceBelow) {
-          // Show above
-          top = rect.top - imageMaxHeight - 8;
-        } else {
-          // Show below
-          top = rect.bottom + 8;
-        }
-
-        // Ensure image doesn't go off top or bottom
-        if (top < 10) {
-          top = 10;
-        } else if (top + imageMaxHeight > viewportHeight - 10) {
-          top = viewportHeight - imageMaxHeight - 10;
-        }
-
-        setPosition({ top, left });
-        setIsVisible(true);
-      }
-    };
-
-    const handleMouseEnter = () => {
-      calculatePosition();
-    };
-
-    const handleMouseLeave = () => {
-      setIsVisible(false);
-    };
-
-    const handleClick = (e: React.MouseEvent) => {
-      e.preventDefault();
-      if (isVisible) {
-        setIsVisible(false);
-      } else {
-        calculatePosition();
-      }
-    };
+    const { getReferenceProps, getFloatingProps } = useInteractions([
+      hover,
+      focus,
+      dismiss,
+      role,
+    ]);
 
     return (
       <>
         <span
+          ref={refs.setReference}
+          {...getReferenceProps()}
           className="underline decoration-solid decoration-1 cursor-pointer decoration-[#91989C]/40 dark:decoration-[#91989C]/40 underline-offset-2 transition-all hover:decoration-[#91989C] hover:dark:decoration-[#91989C]"
-          ref={spanRef}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          onClick={handleClick}
         >
           {link.text}
         </span>
-        {isVisible && (
-          <div
-            className="fixed z-50 pointer-events-none"
-            style={{
-              top: `${position.top}px`,
-              left: `${position.left}px`,
-            }}
-          >
-            <Image
-              src={link.imagePath}
-              alt={link.altText || link.text}
-              className="image-hover"
-              width={800}
-              height={600}
-            />
-          </div>
+        {isOpen && (
+          <FloatingPortal>
+            <div
+              ref={refs.setFloating}
+              style={floatingStyles}
+              {...getFloatingProps()}
+              className="z-50 pointer-events-none"
+            >
+              <Image
+                src={link.imagePath}
+                alt={link.altText || link.text}
+                className="image-hover"
+                width={400}
+                height={600}
+                style={{ maxWidth: "90vw", height: "auto" }}
+              />
+            </div>
+          </FloatingPortal>
         )}
       </>
     );
   };
 
   // Helper to render description with image links
-  const renderDescription = (event: TimelineEvent) => {
+  const renderDescription = (event: TimelineEvent, eventIndex: number) => {
     if (!event.imageLinks || event.imageLinks.length === 0) {
       return event.description;
     }
@@ -158,17 +161,27 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
       if (index !== -1) {
         // Add text before the link
         if (index > 0) {
-          parts.push(remainingText.substring(0, index));
+          parts.push(
+            <span key={`text-before-${eventIndex}-${idx}`}>
+              {remainingText.substring(0, index)}
+            </span>
+          );
         }
         // Add the image link
-        parts.push(<ImageLinkComponent key={idx} link={link} idx={idx} />);
+        parts.push(
+          <ImageLinkComponent
+            key={`link-${eventIndex}-${idx}`}
+            link={link}
+            eventId={`${eventIndex}-${idx}`}
+          />
+        );
         remainingText = remainingText.substring(index + link.text.length);
       }
     });
 
     // Add any remaining text
     if (remainingText.length > 0) {
-      parts.push(remainingText);
+      parts.push(<span key={`text-after-${eventIndex}`}>{remainingText}</span>);
     }
 
     return <>{parts}</>;
@@ -193,9 +206,11 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
                       ? event.month
                       : null;
 
+                const eventKey = `${year}-${event.month || "no-month"}-${event.day || "no-day"}-${index}`;
+
                 return (
                   <div
-                    key={index}
+                    key={eventKey}
                     className="flex gap-1.5 sm:gap-3 group/event"
                   >
                     {dateDetail ? (
@@ -206,12 +221,12 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
                           </span>
                         </div>
                         <div className="flex-1 leading-relaxed">
-                          {renderDescription(event)}
+                          {renderDescription(event, index)}
                         </div>
                       </>
                     ) : (
                       <div className="flex-1 leading-relaxed">
-                        {renderDescription(event)}
+                        {renderDescription(event, index)}
                       </div>
                     )}
                   </div>
