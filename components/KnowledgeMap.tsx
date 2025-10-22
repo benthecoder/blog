@@ -38,17 +38,12 @@ export default function KnowledgeMap({
   const [spread] = useState(6.0);
   const { theme } = useTheme();
 
-  // Fetch data
+  // Fetch data from static JSON file
   const fetchData = async () => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({
-        neighbors: neighbors.toString(),
-        minDist: minDist.toString(),
-        spread: spread.toString(),
-      });
-      const response = await fetch(`/api/embeddings?${params}`);
+      const response = await fetch("/data/knowledge-map.json");
       const result = await response.json();
       if (result.success) {
         setArticles(result.data);
@@ -65,7 +60,7 @@ export default function KnowledgeMap({
   useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [neighbors, minDist, spread]);
+  }, []);
 
   // Filter articles
   const filtered = articles.filter((article) => {

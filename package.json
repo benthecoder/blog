@@ -10,7 +10,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "generate:rss": "node scripts/rss.mjs",
-    "prebuild": "npm run generate:rss",
+    "generate:knowledge-map": "tsx scripts/generateKnowledgeMap.ts",
+    "prebuild": "npm run generate:rss && npm run generate:knowledge-map",
     "postbuild": "next-sitemap",
     "generate-embeddings": "tsx scripts/generateEmbeddings.ts",
     "prepare": "husky"
