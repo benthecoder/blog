@@ -1,7 +1,16 @@
+// Configure environment variables BEFORE any imports that use them
+import * as dotenv from "dotenv";
+dotenv.config();
+
+// Ensure POSTGRES_URL is set (Vercel postgres needs this specific var name)
+if (!process.env.POSTGRES_URL && process.env.DATABASE_URL) {
+  process.env.POSTGRES_URL = process.env.DATABASE_URL;
+}
+
+// Now import modules that depend on environment variables
 import { processAllPosts } from "@/utils/processAllPosts";
 import { sql } from "@vercel/postgres";
 import { v4 as uuidv4 } from "uuid";
-import * as dotenv from "dotenv";
 import * as fs from "fs";
 import matter from "gray-matter";
 
@@ -23,13 +32,6 @@ import {
 
 // Import types
 import { PostFrontmatter } from "@/types/post";
-
-dotenv.config();
-
-// Ensure POSTGRES_URL is set (Vercel postgres needs this specific var name)
-if (!process.env.POSTGRES_URL && process.env.DATABASE_URL) {
-  process.env.POSTGRES_URL = process.env.DATABASE_URL;
-}
 
 interface EmbeddingResult {
   successfulChunks: number;
