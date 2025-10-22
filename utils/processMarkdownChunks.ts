@@ -34,13 +34,38 @@ function shouldBeSeparateChunk(
 ): boolean {
   if (!content) return false;
 
-  // Always keep these as separate chunks
-  if (type === "code" || type === "quote") return true;
-  if (type === "heading" && content.length > 30) return true; // Keep meaningful headers
-  if (type === "bullet-list") return true; // Always keep lists separate
+  const trimmedContent = content.trim();
 
-  // Check word count AND character length for text content
-  const wordCount = content.trim().split(/\s+/).length;
+  // Filter out HTML-only content
+  if (/^<\/?[a-z]+>$/i.test(trimmedContent)) return false;
+
+  // Filter out empty or whitespace-only content
+  if (!trimmedContent || trimmedContent.length < 20) return false;
+
+  // Check word count for all types
+  const wordCount = trimmedContent.split(/\s+/).filter(Boolean).length;
+  if (wordCount < MIN_WORD_COUNT_LOCAL) return false;
+
+  // For code blocks, ensure they have substance
+  if (type === "code") {
+    return content.length >= 30; // Minimum code block size
+  }
+
+  // For quotes, ensure they're meaningful
+  if (type === "quote") {
+    return content.length >= 50 && wordCount >= 5; // At least 50 chars and 5 words
+  }
+
+  // For bullet lists, ensure they have multiple items
+  if (type === "bullet-list") {
+    const items = trimmedContent.split("\n").filter(Boolean);
+    return items.length >= MIN_BULLET_POINTS && content.length >= 30;
+  }
+
+  // For headings, keep meaningful ones
+  if (type === "heading") {
+    return content.length > 30;
+  }
 
   // For text/paragraph content, ensure it has enough words and characters
   if (type === "text" || type === "paragraph") {
@@ -49,7 +74,7 @@ function shouldBeSeparateChunk(
     );
   }
 
-  // For other content types, use length requirement only
+  // For other content types, use length requirement
   return content.length >= MIN_CHUNK_LENGTH;
 }
 
@@ -338,13 +363,32 @@ export async function processMarkdownFile(filePath: string) {
           break;
 
         case "list":
+          // Helper function to safely extract text from any node type
+          const extractText = (node: any): string => {
+            if (!node) return "";
+
+            // Direct text value
+            if (node.value) return node.value;
+
+            // Code block
+            if (node.type === "code") return node.value || "";
+
+            // Has children - recursively extract
+            if (node.children && Array.isArray(node.children)) {
+              return node.children.map(extractText).join("");
+            }
+
+            return "";
+          };
+
           const listItems = node.children
-            .map((listItem: any) =>
-              listItem.children
-                .map((child: any) => child.children[0].value)
+            .map((listItem: any) => {
+              if (!listItem.children) return "";
+              return listItem.children
+                .map((child: any) => extractText(child))
                 .join("")
-                .trim()
-            )
+                .trim();
+            })
             .filter(Boolean);
 
           if (listItems.length >= MIN_BULLET_POINTS) {
