@@ -46,3 +46,8 @@ jobs:
             slug="${filename%.md}"
             npx tsx scripts/generateEmbeddings.ts "$slug"
           done
+
+      - name: Trigger Vercel deployment to update knowledge map
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOKS }}"
