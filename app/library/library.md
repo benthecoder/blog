@@ -1,43 +1,32 @@
 # library
 
-## books i want to read in 2025
+## books for 2025
 
 fiction
 
-- Street Haunting (Virginia Woolf) ⏳
 - To The Lighthouse (Virginia Woolf)
-- The Last Samurai (Helen DeWitt)
-- Outline (Rachel Cusk)
-- Transit (Rachel Cusk)
 - The Unbearable Lightness of Being (Milan Kundera)
-- The Brothers Karamazov (Fyodor Dostoevsky)
-- White Nights (Fyodor Dostoevsky)
 
 spirituality
 
-- Confession (Leo Tolstoy) ⏳
-- Gospel in Brief (Leo Tolstoy)
+- Screwtape Letters (C.S. Lewis)
 - Works of Love (Søren Kierkegaard)
 - Fear and Trembling (Søren Kierkegaard)
-- Mere Christianity (C.S. Lewis)
-- Screwtape Letters (C.S. Lewis)
 - The Wisdom of Insecurity (Alan W. Watts)
+- [Confession](/posts/100725) (Leo Tolstoy) ✅
+- [Mere Christianity](/posts/120725) (C.S. Lewis) ✅
 
 self / art
 
-- [In Praise of Shadows](/posts/040125) (Jun’ichirō Tanizaki) ✅
-- A Life of One's Own (Joanna Field)
-- The Conquest of Happiness (Bertrand Russell)
-- Daily Rituals (Mason Currey)
 - The Sense of Style (Steven Pinker)
+- The Conquest of Happiness (Bertrand Russell)
+- [In Praise of Shadows](/posts/040125) (Jun’ichirō Tanizaki) ✅
 
-tech
+tech/world
 
-- Read Write Own: Building the Next Era of the Internet (Chris Dixon)
-- Boom: Bubbles and the End of Stagnation (Byrne Hobart and Tobias Huber)
-- The Art of Doing Science and Engineering (Richard W. Hamming)
+- Breakneck (Dan Wang)
 
-## Books in 2024
+## books for 2024
 
 1. [How Proust Can Change Your Life](/posts/proust) (Alain de Botton) ✅
 1. [Man's Search for meaning](/posts/meaning) (Viktor Frankl) ✅
@@ -50,7 +39,8 @@ tech
 1. [The Almanack of Naval Ravikant](/posts/naval) (Naval Ravikant) ✅
 1. [Make Something Wonderful](/posts/makesomethingwonderful) (Steve Jobs) ✅
 
-## My Information Diet
+
+## my information diet
 
 - [Asterisk](https://asteriskmag.com/issues)
 - [Works in Progress](https://worksinprogress.co/)
@@ -66,13 +56,9 @@ tech
 - [Read Something Wonderful](https://readsomethingwonderful.com/)
 - [Hypertext as Literature](https://hypertext.joodaloop.com/)
 
-## Fellow Daily Writers
 
-- [James Quiambao](https://www.jquiambao.com/archives)
-- [Rishi Dhanaraj](https://www.rishi.io/)
-- [Rohan Rajiv](https://alearningaday.blog/archives/)
 
-## Ideas I want to revisit
+## ideas i want to revisit
 
 - [Evergreen notes](https://notes.andymatuschak.org/Evergreen_notes)
 - [Life is Short](http://www.paulgraham.com/vb.html)
@@ -81,7 +67,7 @@ tech
 - [How to Pick a Career (That Actually Fits You) — Wait But Why](https://waitbutwhy.com/2018/04/picking-career.html)
 - [Conviction is the Scarcest Resource: Dialogues About Conviction](https://blog.aayushg.com/conviction)
 
-## List of Essays
+## list of essays
 
 - [Hypertext as Literature](https://hypertext.joodaloop.com/#about)
 - [Great essays · Applied Cartography](https://jmduke.com/posts/catalogs/great-essays/)
@@ -102,6 +88,6 @@ tech
 - [David Mitchell, The Art of Fiction No. 204](https://web.archive.org/web/20120107072852/https://www.theparisreview.org/interviews/6034/the-art-of-fiction-no-204-david-mitchell)
 - [Ursula K. Le Guin, The Art of Fiction No. 221](https://web.archive.org/web/20150106213733/https://www.theparisreview.org/interviews/6253/the-art-of-fiction-no-221-ursula-k-le-guin)
 
-## Bookmarks
+## bookmarks
 
 - [The Best Tacit Knowledge Videos on Every Subject — LessWrong](https://www.lesswrong.com/posts/SXJGSPeQWbACveJhs/the-best-tacit-knowledge-videos-on-every-subject)
