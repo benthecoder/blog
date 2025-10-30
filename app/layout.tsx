@@ -1,10 +1,10 @@
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Averia_Serif_Libre } from "next/font/google";
-import { Sidebar } from "@/components/SideBar";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "./providers";
+import { ConditionalLayout } from "@/components/ConditionalLayout";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bneo.xyz"),
@@ -56,10 +56,7 @@ export default function RootLayout({
     >
       <body className="flex flex-col mx-2 md:mx-10 md:flex-row md:items-start md:mt-10">
         <Providers>
-          <Sidebar />
-          <main className="flex-auto text-md md:mt-0 px-2 md:px-10 max-w-xl lg:max-w-3xl mx-auto w-full selection:bg-japanese-murasakisuishiyou/20 dark:selection:bg-japanese-nyuhakushoku/20 mb-40">
-            {children}
-          </main>
+          <ConditionalLayout>{children}</ConditionalLayout>
         </Providers>
         <SpeedInsights />
         <Analytics />

@@ -12,6 +12,7 @@ const links = [
   { path: "/library", text: "library" },
   { path: "/contact", text: "findme" },
   { path: "/posts", text: "archive" },
+  { path: "/gallery", text: "gallery" },
   { path: "/random", text: "🎲" },
 ];
 
