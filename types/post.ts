@@ -35,25 +35,7 @@ export interface PostContent {
 }
 
 /**
- * Processed post with chunks
- */
-export interface ProcessedPost {
-  frontmatter: PostFrontmatter;
-  chunks: ChunkMetadata[];
-  filePath: string;
-}
-
-/**
- * Chunk metadata for semantic search
- */
-export interface ChunkMetadata {
-  type: string;
-  content: string;
-  metadata?: Record<string, any>;
-}
-
-/**
- * Content chunk stored in database
+ * Content chunk stored in database (cleaned up schema)
  */
 export interface ContentChunk {
   id: string;
@@ -64,8 +46,8 @@ export interface ContentChunk {
   metadata: Record<string, any>;
   sequence: number;
   embedding?: number[];
-  overlaps_with?: string[];
-  overlap_score?: number[];
+  published_date?: string; // Extracted from metadata JSONB into proper column
+  tags?: string[]; // Extracted from metadata JSONB into proper column
   created_at?: Date;
 }
 
