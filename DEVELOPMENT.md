@@ -105,7 +105,7 @@ CREATE INDEX idx_content_chunks_chunk_type ON content_chunks(chunk_type);
 Run generate embeddings:
 
 ```bash
-npm run generate-embeddings
+pnpm run generate-embeddings
 ```
 
 ### References
