@@ -37,6 +37,7 @@
     "dotenv": "^16.4.5",
     "eventsource-parser": "^1.0.0",
     "gray-matter": "^4.0.3",
+    "image-size": "^2.0.2",
     "install": "^0.13.0",
     "jsdom": "^21.1.1",
     "katex": "^0.16.22",
