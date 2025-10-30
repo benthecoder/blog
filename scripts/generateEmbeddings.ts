@@ -11,8 +11,8 @@ if (!process.env.POSTGRES_URL && process.env.DATABASE_URL) {
 import { processAllPosts } from "@/utils/processAllPosts";
 import { sql } from "@vercel/postgres";
 import { v4 as uuidv4 } from "uuid";
-import * as fs from "fs";
-import matter from "gray-matter";
+import chalk from "chalk";
+import ora from "ora";
 
 // Import shared utilities
 import { getVoyageClient } from "@/utils/clients";
@@ -20,18 +20,11 @@ import { formatEmbeddingForPostgres } from "@/utils/embeddingUtils";
 import { withEmbeddingRetry, wait } from "@/utils/retry";
 import { extractPostDate, toISODateString } from "@/utils/dateUtils";
 import { extractTags } from "@/utils/postUtils";
-import { POSTS_DIR } from "@/config/paths";
-import {
-  EMBEDDING_DIMENSIONS,
-  EMBEDDING_BATCH_SIZE,
-  DELAY_BETWEEN_BATCHES,
-  DELAY_BETWEEN_FILES,
-  MAX_WHOLE_POST_LENGTH,
-  OVERLAP_DETECTION_THRESHOLD,
-} from "@/config/constants";
+import { DELAY_BETWEEN_BATCHES } from "@/config/constants";
 
 // Import types
 import { PostFrontmatter } from "@/types/post";
+import { ProcessedChunk, ProcessedPost } from "@/types/chunks";
 
 interface EmbeddingResult {
   successfulChunks: number;
@@ -59,7 +52,7 @@ const setupTable = async () => {
     if (!tableExists.rows[0].exists) {
       console.log("Table does not exist, creating new one...");
 
-      // Create table with simpler schema, keeping everything in metadata
+      // Create table with clean schema
       await sql`
         CREATE TABLE content_chunks (
           id UUID PRIMARY KEY,
@@ -70,8 +63,8 @@ const setupTable = async () => {
           metadata JSONB,
           sequence INTEGER,
           embedding vector(1024),
-          overlaps_with UUID[], /* Array of chunk IDs this chunk overlaps with */
-          overlap_score FLOAT[], /* Corresponding overlap percentage/score */
+          published_date DATE,
+          tags TEXT[],
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
       `;
@@ -79,12 +72,12 @@ const setupTable = async () => {
       // Create indexes in separate commands
       await sql`CREATE INDEX idx_content_chunks_post_slug ON content_chunks(post_slug);`;
       await sql`CREATE INDEX idx_content_chunks_chunk_type ON content_chunks(chunk_type);`;
-      await sql`CREATE INDEX idx_content_chunks_published_date ON content_chunks((metadata->>'published_date'));`; // JSON path index
-      await sql`CREATE INDEX idx_overlaps_with ON content_chunks USING GIN(overlaps_with);`;
+      await sql`CREATE INDEX idx_content_chunks_published_date ON content_chunks(published_date);`;
+      await sql`CREATE INDEX idx_content_chunks_tags ON content_chunks USING GIN(tags);`;
 
-      console.log("✅ Table created successfully with all indexes");
+      console.log(chalk.green("Table created successfully with all indexes"));
     } else {
-      console.log("✅ Table already exists, skipping creation");
+      console.log(chalk.green("Table already exists, skipping creation"));
     }
   } catch (error) {
     console.error("Error setting up table:", error);
@@ -107,7 +100,7 @@ interface EmbeddingResponse {
 async function embedWithRetry(texts: string[]): Promise<EmbeddingResponse> {
   return withEmbeddingRetry(async () => {
     return (await client.embed({
-      model: "voyage-3-lite",
+      model: "voyage-3.5-lite",
       input: texts,
       inputType: "document",
     })) as Promise<EmbeddingResponse>;
@@ -139,7 +132,7 @@ async function generateEmbeddingsForSingleFile(
   try {
     console.log(`Removing previous embeddings for ${normalizedFilePath}...`);
     await sql`DELETE FROM content_chunks WHERE post_slug = ${normalizedFilePath}`;
-    console.log(`✅ Previous embeddings removed`);
+    console.log(chalk.green(`Previous embeddings removed`));
   } catch (error) {
     console.error("Error removing previous embeddings:", error);
     // Continue with embedding generation even if deletion fails
@@ -167,101 +160,16 @@ async function generateEmbeddingsForSingleFile(
   const publishedDate = extractPostDate(filePath, frontmatter);
   const formattedPublishedDate = toISODateString(publishedDate);
 
-  // Create a whole-post context for better document-level embedding
-  let wholePostEmbeddingDone = false;
-
-  // Get the full content of the post
-  try {
-    const fullFilePath = `${POSTS_DIR}/${filePath}.md`;
-
-    if (fs.existsSync(fullFilePath)) {
-      const fileContent = fs.readFileSync(fullFilePath, "utf8");
-      const { content } = matter(fileContent);
-
-      // Only embed whole post if it's not too long
-      if (content.length <= MAX_WHOLE_POST_LENGTH) {
-        const wholePostText = `FULL POST: ${content.trim()}`;
-        const wholePostResponse = await embedWithRetry([wholePostText]);
-
-        if (wholePostResponse?.data?.length) {
-          const embedding = wholePostResponse.data[0].embedding;
-          const formattedEmbedding = formatEmbeddingForPostgres(embedding);
-
-          // Enhanced metadata (non-date/tag specific info remains in metadata)
-          interface WholePostMetadata {
-            is_whole_post: boolean;
-            word_count: number;
-            title: string;
-            published_date?: string;
-            tags?: string[];
-          }
-
-          const enhancedMetadata: WholePostMetadata = {
-            is_whole_post: true,
-            word_count: content.split(/\s+/).length,
-            title: frontmatter?.title || filePath,
-          };
-
-          // Treat frontmatter as proper type
-          const typedFrontmatter = frontmatter as PostFrontmatter;
-
-          // Extract tags as array using shared utility
-          const tagsArray = extractTags(typedFrontmatter);
-
-          try {
-            // Add published_date to metadata
-            enhancedMetadata.published_date = formattedPublishedDate;
-            enhancedMetadata.tags = tagsArray;
-
-            const wholePostId = uuidv4();
-            await sql`
-              INSERT INTO content_chunks (
-                id, post_slug, post_title, content, chunk_type, 
-                metadata, sequence, embedding, overlaps_with, overlap_score
-              ) VALUES (
-                ${wholePostId},
-                ${filePath},
-                ${frontmatter?.title || filePath},
-                ${
-                  content.length > 2000
-                    ? content.substring(0, 2000) + "..."
-                    : content
-                },
-                ${"full-post"},
-                ${JSON.stringify(enhancedMetadata)},
-                ${0}, /* Whole post is always first */
-                ${formattedEmbedding},
-                ${null}, /* Initialize with NULL instead of empty array */
-                ${null}  /* Initialize with NULL instead of empty array */
-              )
-            `;
-            successfulChunks++;
-            wholePostEmbeddingDone = true;
-            console.log("✅ Whole post embedding complete");
-          } catch (error) {
-            console.error("Error inserting whole post chunk:", error);
-            failedChunks++;
-
-            // Update chunk progress after error
-            console.log(updateChunkProgress());
-          }
-        }
-      }
-    }
-  } catch (error) {
-    console.error("Error processing whole post:", error);
-    // Continue with chunk processing even if whole post fails
-  }
-
-  // Process chunks in batches
-  for (let i = 0; i < chunks.length; i += EMBEDDING_BATCH_SIZE) {
-    const batchChunks = chunks.slice(i, i + EMBEDDING_BATCH_SIZE);
-    const batchEnd = Math.min(i + EMBEDDING_BATCH_SIZE, chunks.length);
+  // Process chunks in batches (smaller batch size for single file)
+  const SINGLE_FILE_BATCH_SIZE = 50;
+  for (let i = 0; i < chunks.length; i += SINGLE_FILE_BATCH_SIZE) {
+    const batchChunks = chunks.slice(i, i + SINGLE_FILE_BATCH_SIZE);
+    const batchEnd = Math.min(i + SINGLE_FILE_BATCH_SIZE, chunks.length);
 
     console.log(
       `\nProcessing batch ${i}-${batchEnd} of ${chunks.length} (${Math.ceil(
-        (batchEnd - i) / EMBEDDING_BATCH_SIZE
-      )}/${Math.ceil(chunks.length / EMBEDDING_BATCH_SIZE)} batches)`
+        (batchEnd - i) / SINGLE_FILE_BATCH_SIZE
+      )}/${Math.ceil(chunks.length / SINGLE_FILE_BATCH_SIZE)} batches)`
     );
 
     try {
@@ -376,8 +284,8 @@ async function generateEmbeddingsForSingleFile(
 
           await sql`
             INSERT INTO content_chunks (
-              id, post_slug, post_title, content, chunk_type, 
-              metadata, sequence, embedding, overlaps_with, overlap_score
+              id, post_slug, post_title, content, chunk_type,
+              metadata, sequence, embedding
             ) VALUES (
               ${chunkIds[j]},
               ${filePath},
@@ -385,14 +293,8 @@ async function generateEmbeddingsForSingleFile(
               ${chunk.content},
               ${chunk.type},
               ${JSON.stringify(enhancedMetadata)},
-              ${
-                wholePostEmbeddingDone
-                  ? chunk.metadata?.sequence || j + 1
-                  : chunk.metadata?.sequence || j
-              },
-              ${formattedEmbedding},
-              ${null}, /* Initialize with NULL instead of empty array */
-              ${null}  /* Initialize with NULL instead of empty array */
+              ${chunk.sequence},
+              ${formattedEmbedding}
             )
           `;
           return true;
@@ -400,54 +302,6 @@ async function generateEmbeddingsForSingleFile(
           console.error("Error inserting chunk:", error);
           return false;
         }
-      });
-
-      // Second pass: Analyze and record overlaps between sequential chunks
-      const updateOverlapPromises = batchChunks.map(async (chunk, j) => {
-        if (j === 0) return true; // Skip first chunk
-
-        const currentChunk = chunk.content;
-        const prevChunk = batchChunks[j - 1].content;
-
-        // Calculate overlap
-        let overlapScore = 0;
-        let overlapFound = false;
-
-        // Simple overlap detection
-        // Check if end of previous chunk is in current chunk
-        const prevChunkEnd = prevChunk.substring(
-          Math.max(0, prevChunk.length - OVERLAP_DETECTION_THRESHOLD)
-        );
-        if (currentChunk.includes(prevChunkEnd)) {
-          overlapScore = prevChunkEnd.length / currentChunk.length;
-          overlapFound = true;
-        }
-
-        if (overlapFound) {
-          try {
-            // Update current chunk with reference to previous
-            await sql`
-              UPDATE content_chunks 
-              SET overlaps_with = array_append(overlaps_with, ${
-                chunkIds[j - 1]
-              }),
-                  overlap_score = array_append(overlap_score, ${overlapScore})
-              WHERE id = ${chunkIds[j]}
-            `;
-
-            // Update previous chunk with reference to current
-            await sql`
-              UPDATE content_chunks 
-              SET overlaps_with = array_append(overlaps_with, ${chunkIds[j]}),
-                  overlap_score = array_append(overlap_score, ${overlapScore})
-              WHERE id = ${chunkIds[j - 1]}
-            `;
-          } catch (error) {
-            console.error("Error updating overlap:", error);
-          }
-        }
-
-        return true;
       });
 
       // Wait for inserts to complete
@@ -458,18 +312,13 @@ async function generateEmbeddingsForSingleFile(
       successfulChunks += successCount;
       failedChunks += batchChunks.length - successCount;
 
-      // Process overlaps after all inserts completed
-      if (successCount > 1) {
-        // Only process overlaps if we have at least 2 chunks
-        await Promise.all(updateOverlapPromises);
-        console.log(`✅ Processed overlaps between chunks`);
-      }
-
       // Update chunk progress
       console.log(updateChunkProgress());
 
       console.log(
-        `✅ Batch complete: ${successCount}/${batchChunks.length} chunks successful with sliding window overlaps`
+        chalk.green(
+          `Batch complete: ${successCount}/${batchChunks.length} chunks successful`
+        )
       );
 
       // Add delay between batches to avoid rate limits
@@ -485,53 +334,165 @@ async function generateEmbeddingsForSingleFile(
 
   return { successfulChunks, failedChunks };
 }
-/**
- * Creates a simple ASCII progress bar
- */
-function createProgressBar(
-  current: number,
-  total: number,
-  width: number = 30
-): string {
-  const percentage = Math.round((current / total) * 100);
-  const progressChars = Math.round((current / total) * width);
-  const progressBar =
-    "█".repeat(progressChars) + "░".repeat(width - progressChars);
-  return `[${progressBar}] ${percentage}% (${current}/${total})`;
-}
 
+/**
+ * Optimized: Batch embeddings across multiple posts
+ * Instead of processing one post at a time, we collect chunks from many posts
+ * and send them in large batches (100-150 chunks) to VoyageAI.
+ */
 async function generateEmbeddingsForAllFiles() {
   const posts = await processAllPosts();
   const nonDraftPosts = posts.filter(
     (post) => !post.filePath.includes("/drafts/")
   );
 
+  console.log(
+    chalk.bold(
+      `\nProcessing ${nonDraftPosts.length} posts with cross-post batching\n`
+    )
+  );
+
+  // Step 1: Clear existing embeddings for all posts we're about to process
+  const clearSpinner = ora("Clearing existing embeddings...").start();
+  const result = await sql`DELETE FROM content_chunks`;
+  clearSpinner.succeed(`Cleared ${result.rowCount} existing chunks`);
+
+  // Step 2: Collect all chunks from all posts with metadata
+  const collectSpinner = ora(
+    "Processing markdown and collecting chunks..."
+  ).start();
+
+  interface ChunkWithContext {
+    chunk: ProcessedChunk;
+    post: ProcessedPost;
+    publishedDate: string;
+    tags: string[];
+  }
+
+  const allChunksWithContext: ChunkWithContext[] = [];
+
+  for (const post of nonDraftPosts) {
+    const { frontmatter, chunks, filePath } = post;
+    const publishedDate = extractPostDate(filePath, frontmatter);
+    const formattedDate = toISODateString(publishedDate);
+    const tags = extractTags(frontmatter as PostFrontmatter);
+
+    chunks.forEach((chunk) => {
+      allChunksWithContext.push({
+        chunk,
+        post,
+        publishedDate: formattedDate,
+        tags,
+      });
+    });
+  }
+
+  collectSpinner.succeed(
+    `Collected ${allChunksWithContext.length} chunks from ${nonDraftPosts.length} posts`
+  );
+
+  // Step 3: Batch chunks and generate embeddings
+  console.log(chalk.bold("\nGenerating embeddings in large batches:\n"));
+
+  const CROSS_POST_BATCH_SIZE = 120; // Conservative under 1M token limit
   let totalSuccessful = 0;
   let totalFailed = 0;
-  const totalFiles = nonDraftPosts.length;
+  const totalBatches = Math.ceil(
+    allChunksWithContext.length / CROSS_POST_BATCH_SIZE
+  );
 
-  console.log(`\nProcessing ${totalFiles} files in total`);
-  console.log(createProgressBar(0, totalFiles));
-
-  for (let i = 0; i < nonDraftPosts.length; i++) {
-    const post = nonDraftPosts[i];
-    console.log(
-      `\n=== Processing file ${i + 1}/${totalFiles}: ${post.filePath} ===`
+  for (let i = 0; i < allChunksWithContext.length; i += CROSS_POST_BATCH_SIZE) {
+    const batchWithContext = allChunksWithContext.slice(
+      i,
+      i + CROSS_POST_BATCH_SIZE
     );
+    const batchNum = Math.floor(i / CROSS_POST_BATCH_SIZE) + 1;
 
-    const { successfulChunks, failedChunks } =
-      await generateEmbeddingsForSingleFile(post.filePath);
+    const batchSpinner = ora(
+      `Batch ${batchNum}/${totalBatches} (${batchWithContext.length} chunks)`
+    ).start();
 
-    totalSuccessful += successfulChunks;
-    totalFailed += failedChunks;
+    try {
+      // Prepare texts for embedding
+      const inputTexts = batchWithContext.map(({ chunk }) => {
+        const typePrefix = chunk.type.toUpperCase();
+        const sectionPrefix = chunk.metadata?.section
+          ? `[SECTION: ${chunk.metadata.section}] `
+          : "";
+        return `${typePrefix}: ${sectionPrefix}${chunk.content.trim()}`;
+      });
 
-    // Update progress bar
-    console.log(createProgressBar(i + 1, totalFiles));
+      // Get embeddings from VoyageAI
+      const response = await embedWithRetry(inputTexts);
 
-    // Add delay between files
-    if (i < nonDraftPosts.length - 1) {
-      console.log(`Waiting ${DELAY_BETWEEN_FILES}ms before next file...`);
-      await wait(DELAY_BETWEEN_FILES);
+      if (!response?.data?.length) {
+        batchSpinner.fail("No embeddings data in response");
+        totalFailed += batchWithContext.length;
+        continue;
+      }
+
+      // Step 4: Insert all chunks with their embeddings
+      const insertPromises = batchWithContext.map(
+        async ({ chunk, post, publishedDate, tags }, j) => {
+          const embedding = response.data[j]?.embedding;
+          if (!embedding) return false;
+
+          const formattedEmbedding = formatEmbeddingForPostgres(embedding);
+          const { frontmatter, filePath } = post;
+
+          const enhancedMetadata = {
+            ...chunk.metadata,
+            post_title: frontmatter?.title || filePath,
+            published_date: publishedDate,
+            tags,
+          };
+
+          try {
+            await sql`
+            INSERT INTO content_chunks (
+              id, post_slug, post_title, content, chunk_type,
+              metadata, sequence, embedding
+            ) VALUES (
+              ${uuidv4()},
+              ${filePath},
+              ${frontmatter?.title || filePath},
+              ${chunk.content},
+              ${chunk.type},
+              ${JSON.stringify(enhancedMetadata)},
+              ${chunk.sequence},
+              ${formattedEmbedding}
+            )
+          `;
+            return true;
+          } catch (error) {
+            console.error(
+              chalk.red(`Error inserting chunk for ${filePath}:`),
+              error
+            );
+            return false;
+          }
+        }
+      );
+
+      const results = await Promise.all(insertPromises);
+      const successCount = results.filter(Boolean).length;
+      totalSuccessful += successCount;
+      totalFailed += batchWithContext.length - successCount;
+
+      const percentage = Math.round(
+        ((i + batchWithContext.length) / allChunksWithContext.length) * 100
+      );
+      batchSpinner.succeed(
+        `Batch ${batchNum}/${totalBatches}: ${successCount}/${batchWithContext.length} chunks (${percentage}% total)`
+      );
+
+      // Rate limiting delay between batches
+      if (i + CROSS_POST_BATCH_SIZE < allChunksWithContext.length) {
+        await wait(DELAY_BETWEEN_BATCHES);
+      }
+    } catch (error) {
+      batchSpinner.fail(`Error processing batch: ${error}`);
+      totalFailed += batchWithContext.length;
     }
   }
 
@@ -580,7 +541,7 @@ async function main() {
 
     process.exit(0);
   } catch (error) {
-    console.error("❌ Fatal error:", error);
+    console.error(chalk.red("Fatal error:"), error);
     process.exit(1);
   }
 }
