@@ -1,12 +1,11 @@
 // Embedding config
 export const EMBEDDING_DIMENSIONS = 1024;
-export const VOYAGE_MODEL = "voyage-3-lite";
+export const VOYAGE_MODEL = "voyage-3.5-lite";
 export const VOYAGE_INPUT_TYPE = "document";
 
 // Semantic search thresholds
 export const SEMANTIC_SIMILARITY_THRESHOLD_STRICT = 0.5;
 export const SEMANTIC_SIMILARITY_THRESHOLD = 0.4;
-export const SEMANTIC_SIMILARITY_THRESHOLD_LENIENT = 0.3;
 export const CHAT_SIMILARITY_THRESHOLD = 0.3;
 
 // Hybrid search weights
@@ -20,27 +19,18 @@ export const SEARCH_FALLBACK_LIMIT = 15;
 export const CHAT_CONTEXT_LIMIT = 8;
 export const TIME_QUERY_LIMIT = 12;
 
-// Markdown chunking
-export const MIN_CHUNK_LENGTH = 150;
-export const MAX_CHUNK_LENGTH = 600;
-export const TARGET_CHUNK_LENGTH = 200;
-export const MIN_STANDALONE_CHUNK = 10;
-export const CHUNK_OVERLAP_PERCENTAGE = 0.3;
-export const CHUNK_OVERLAP_MIN_CHARS = 100;
-export const CHUNK_OVERLAP_MAX_CHARS = 200;
-export const OVERLAP_DETECTION_THRESHOLD = 100;
-export const MIN_BULLET_POINTS = 3;
-export const MIN_WORD_COUNT = 3;
-export const MAX_CONTEXT_PARAGRAPHS = 2;
-export const MAX_OVERLAP_SENTENCES = 2;
+// Markdown chunking - Simplified strategy-based approach
+export const MIN_CHUNK_LENGTH = 100; // Minimum chars for a meaningful chunk
+export const MIN_WORD_COUNT = 12; // Minimum words for semantic meaning
+export const MIN_QUOTE_LENGTH = 50; // Quotes can be shorter (profound thoughts)
+export const MIN_SECTION_LENGTH = 150; // Sections should have substantial content
+export const MIN_BULLET_POINTS = 3; // Lists need multiple items to be useful
 
-// Whole post embedding
-export const MAX_WHOLE_POST_LENGTH = 8000;
+// Whole post embedding (VoyageAI supports up to ~64k chars)
+export const MAX_WHOLE_POST_LENGTH = 50000;
 
 // Rate limiting & batching
-export const EMBEDDING_BATCH_SIZE = 128; // Voyage AI supports up to 128 per batch
-export const DELAY_BETWEEN_BATCHES = 100; // Reduced for faster processing
-export const DELAY_BETWEEN_FILES = 200; // Reduced for faster backfill
+export const DELAY_BETWEEN_BATCHES = 200; // Delay between large cross-post batches
 export const MAX_RETRIES = 5;
 export const INITIAL_RETRY_DELAY = 2000;
 export const API_TIMEOUT = 60000;
