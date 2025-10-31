@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { getGalleryImages } from "@/utils/getGalleryImages";
-import Gallery from "@/components/Gallery";
+import Gallery from "@/components/visualizations/Gallery";
 
 export const metadata: Metadata = {
   title: "gallery",

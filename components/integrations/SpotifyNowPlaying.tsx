@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import Image from "next/image";
-import Loader from "./Loader";
+import Loader from "@/components/ui/Loader";
 
 interface NowPlayingData {
   isPlaying: boolean;
