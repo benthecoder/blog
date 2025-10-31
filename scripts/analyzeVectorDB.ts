@@ -68,7 +68,7 @@ async function getOverallStats() {
 
   const d = dist.rows[0];
   const pct = (count: number) =>
-    ((parseInt(count) / parseInt(total_chunks)) * 100).toFixed(1);
+    ((count / Number(total_chunks)) * 100).toFixed(1);
 
   console.log("Length Distribution:");
   console.log(
