@@ -21,7 +21,7 @@ export function getVoyageClient(): VoyageAIClient {
 
 /**
  * Singleton Anthropic client instance
- * Used for Claude AI chat and LLM operations
+ * Used for LLM operations
  */
 let anthropicClientInstance: Anthropic | null = null;
 
