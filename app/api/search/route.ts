@@ -16,13 +16,26 @@ import {
 
 export async function POST(request: Request) {
   try {
-    // Get shared client instance
     const client = getVoyageClient();
 
     console.log("Database URL:", !!process.env.DATABASE_URL);
 
-    const { query, searchType = "hybrid" } = await request.json();
-    console.log("Received search query:", query, "Search type:", searchType);
+    const {
+      query,
+      searchType = "hybrid",
+      tags,
+      chunkType,
+    } = await request.json();
+    console.log(
+      "Received search query:",
+      query,
+      "Search type:",
+      searchType,
+      "Tags:",
+      tags,
+      "Chunk type:",
+      chunkType
+    );
 
     if (!query) {
       return NextResponse.json(
@@ -30,6 +43,38 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    // Build metadata filter SQL with sanitized inputs
+    // Note: While we use string interpolation for the WHERE clause, inputs are sanitized:
+    // - Tags: Single quotes escaped using SQL standard ('')
+    // - Chunk types: Whitelisted to alphanumeric and underscores only
+    // - All main query params (embeddings, query, thresholds, limits) use proper parameterization
+    const buildMetadataFilter = () => {
+      const filters = [];
+      if (tags && Array.isArray(tags) && tags.length > 0) {
+        // Sanitize tags to prevent SQL injection (escape single quotes)
+        const sanitizedTags = tags
+          .map((tag: string) => String(tag).replace(/'/g, "''"))
+          .filter((tag: string) => tag.length > 0 && tag.length < 100); // Max tag length
+
+        if (sanitizedTags.length > 0) {
+          const tagsFilter = sanitizedTags
+            .map((tag: string) => `metadata->'tags' ? '${tag}'`)
+            .join(" OR ");
+          filters.push(`(${tagsFilter})`);
+        }
+      }
+      if (chunkType && typeof chunkType === "string") {
+        // Sanitize chunk_type: whitelist alphanumeric, underscores, and hyphens only
+        const sanitizedChunkType = chunkType.replace(/[^a-zA-Z0-9_-]/g, "");
+        if (sanitizedChunkType.length > 0 && sanitizedChunkType.length < 50) {
+          filters.push(`chunk_type = '${sanitizedChunkType}'`);
+        }
+      }
+      return filters.length > 0 ? filters.join(" AND ") : null;
+    };
+
+    const metadataFilter = buildMetadataFilter();
 
     // Helper function to safely prepare query for PostgreSQL ts_query
     const prepareSearchQuery = (
@@ -62,40 +107,36 @@ export async function POST(request: Request) {
     };
 
     if (searchType === "keyword") {
-      // Perform keyword-only search
       console.log("Executing keyword search query...");
 
-      // Process query to handle multiple words properly
       const processedQuery = prepareSearchQuery(query, "&");
-      // Fallback query uses OR logic for broader matches
-      const fallbackQuery = prepareSearchQuery(query, "|");
 
       console.log("Processed query:", processedQuery);
 
-      // Modified to give higher weight to post titles
-      const results = await sql`
+      const metadataWhere = metadataFilter ? ` AND (${metadataFilter})` : "";
+      const results = await sql.query(
+        `
         WITH RankedResults AS (
-          SELECT 
+          SELECT
             content,
             post_slug,
             post_title,
             chunk_type,
             metadata,
-            CASE 
-              -- Give higher score to title matches
-              WHEN to_tsvector('english', post_title) @@ to_tsquery('english', ${processedQuery}) THEN
-                2.0 * ts_rank_cd(to_tsvector('english', post_title), to_tsquery('english', ${processedQuery}))
+            CASE
+              WHEN to_tsvector('english', post_title) @@ to_tsquery('english', $1) THEN
+                2.0 * ts_rank_cd(to_tsvector('english', post_title), to_tsquery('english', $1))
               ELSE
-                ts_rank_cd(to_tsvector('english', content || ' ' || post_title), to_tsquery('english', ${processedQuery}))
+                ts_rank_cd(to_tsvector('english', content || ' ' || post_title), to_tsquery('english', $1))
             END as text_rank,
-            -- Flag to indicate if this was a title match
-            (to_tsvector('english', post_title) @@ to_tsquery('english', ${processedQuery})) as is_title_match
+            (to_tsvector('english', post_title) @@ to_tsquery('english', $1)) as is_title_match
           FROM content_chunks
-          WHERE 
-            to_tsvector('english', content || ' ' || post_title) @@ to_tsquery('english', ${processedQuery})
-            OR to_tsvector('english', post_title) @@ to_tsquery('english', ${processedQuery})
+          WHERE
+            (to_tsvector('english', content || ' ' || post_title) @@ to_tsquery('english', $1)
+            OR to_tsvector('english', post_title) @@ to_tsquery('english', $1))
+            ${metadataWhere}
         )
-        SELECT 
+        SELECT
           content,
           post_slug,
           post_title,
@@ -105,12 +146,13 @@ export async function POST(request: Request) {
           is_title_match
         FROM RankedResults
         ORDER BY is_title_match DESC, keyword_score DESC
-        LIMIT ${SEARCH_RESULT_LIMIT};
-      `;
+        LIMIT $2
+      `,
+        [processedQuery, SEARCH_RESULT_LIMIT]
+      );
 
       console.log(`Found ${results.rows.length} keyword results`);
 
-      // No fallbacks for keyword search - strict matching only
       if (results.rows.length === 0) {
         return NextResponse.json({
           results: [],
@@ -120,8 +162,16 @@ export async function POST(request: Request) {
 
       return NextResponse.json({
         results: results.rows.map((row) => ({
-          ...row,
-          similarity: row.keyword_score,
+          content: row.content,
+          post_slug: row.post_slug,
+          post_title: row.post_title,
+          chunk_type: row.chunk_type,
+          tags: row.metadata?.tags || [],
+          published_date: row.metadata?.published_date,
+          similarity: Number(row.keyword_score?.toFixed(4)) || 0,
+          score_type: "keyword",
+          section: row.metadata?.section,
+          language: row.metadata?.language,
         })),
       });
     } else {
@@ -144,29 +194,31 @@ export async function POST(request: Request) {
       const embedding = queryEmbedding.data[0].embedding;
       const formattedEmbedding = formatEmbeddingForPostgres(embedding);
 
-      // Default behavior: hybrid search (semantic + keyword)
       if (searchType === "hybrid") {
         console.log("Executing hybrid search query...");
-        const results = await sql`
+        const metadataWhere = metadataFilter ? ` AND (${metadataFilter})` : "";
+        const results = await sql.query(
+          `
           WITH RankedResults AS (
-            SELECT 
+            SELECT
               content,
               post_slug,
               post_title,
               chunk_type,
               metadata,
-              1 - (embedding <=> ${formattedEmbedding}::vector) as vector_similarity,
+              1 - (embedding <=> $1::vector) as vector_similarity,
               ts_rank(
                 to_tsvector('english', content || ' ' || post_title),
-                plainto_tsquery('english', ${query})
+                plainto_tsquery('english', $2)
               ) as text_rank
             FROM content_chunks
             WHERE
-              -- Text search condition
-              to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', ${query})
-              OR
-              -- Vector similarity condition
-              1 - (embedding <=> ${formattedEmbedding}::vector) > ${SEMANTIC_SIMILARITY_THRESHOLD_STRICT}
+              (
+                to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', $2)
+                OR
+                1 - (embedding <=> $1::vector) > $3
+              )
+              ${metadataWhere}
           )
           SELECT
             content,
@@ -176,31 +228,41 @@ export async function POST(request: Request) {
             metadata,
             vector_similarity,
             text_rank,
-            -- Combine both scores with weights
-            (vector_similarity * ${HYBRID_VECTOR_WEIGHT} + COALESCE(text_rank, 0) * ${HYBRID_KEYWORD_WEIGHT}) as hybrid_score
+            (vector_similarity * $4 + COALESCE(text_rank, 0) * $5) as hybrid_score
           FROM RankedResults
           ORDER BY hybrid_score DESC
-          LIMIT ${SEARCH_RESULT_LIMIT};
-        `;
+          LIMIT $6
+        `,
+          [
+            formattedEmbedding,
+            query,
+            SEMANTIC_SIMILARITY_THRESHOLD_STRICT,
+            HYBRID_VECTOR_WEIGHT,
+            HYBRID_KEYWORD_WEIGHT,
+            SEARCH_RESULT_LIMIT,
+          ]
+        );
 
         console.log(`Found ${results.rows.length} hybrid results`);
 
         if (results.rows.length === 0) {
           console.log("No results, trying fallback hybrid search...");
-          const fallbackResults = await sql`
+          const fallbackResults = await sql.query(
+            `
             WITH RankedResults AS (
-              SELECT 
+              SELECT
                 content,
                 post_slug,
                 post_title,
                 chunk_type,
                 metadata,
-                1 - (embedding <=> ${formattedEmbedding}::vector) as vector_similarity,
+                1 - (embedding <=> $1::vector) as vector_similarity,
                 ts_rank(
                   to_tsvector('english', content || ' ' || post_title),
-                  plainto_tsquery('english', ${query})
+                  plainto_tsquery('english', $2)
                 ) as text_rank
               FROM content_chunks
+              ${metadataFilter ? `WHERE ${metadataFilter}` : ""}
             )
             SELECT
               content,
@@ -210,16 +272,34 @@ export async function POST(request: Request) {
               metadata,
               vector_similarity,
               text_rank,
-              (vector_similarity * ${HYBRID_VECTOR_WEIGHT} + COALESCE(text_rank, 0) * ${HYBRID_KEYWORD_WEIGHT}) as hybrid_score
+              (vector_similarity * $3 + COALESCE(text_rank, 0) * $4) as hybrid_score
             FROM RankedResults
             ORDER BY hybrid_score DESC
-            LIMIT ${SEARCH_FALLBACK_LIMIT};
-          `;
+            LIMIT $5
+          `,
+            [
+              formattedEmbedding,
+              query,
+              HYBRID_VECTOR_WEIGHT,
+              HYBRID_KEYWORD_WEIGHT,
+              SEARCH_FALLBACK_LIMIT,
+            ]
+          );
 
           return NextResponse.json({
             results: fallbackResults.rows.map((row) => ({
-              ...row,
-              similarity: row.hybrid_score,
+              content: row.content,
+              post_slug: row.post_slug,
+              post_title: row.post_title,
+              chunk_type: row.chunk_type,
+              tags: row.metadata?.tags || [],
+              published_date: row.metadata?.published_date,
+              similarity: Number(row.hybrid_score?.toFixed(4)) || 0,
+              vector_similarity: Number(row.vector_similarity?.toFixed(4)) || 0,
+              keyword_score: Number(row.text_rank?.toFixed(4)) || 0,
+              score_type: "hybrid",
+              section: row.metadata?.section,
+              language: row.metadata?.language,
             })),
             fallback: true,
           });
@@ -227,48 +307,78 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
           results: results.rows.map((row) => ({
-            ...row,
-            similarity: row.hybrid_score,
+            content: row.content,
+            post_slug: row.post_slug,
+            post_title: row.post_title,
+            chunk_type: row.chunk_type,
+            tags: row.metadata?.tags || [],
+            published_date: row.metadata?.published_date,
+            similarity: Number(row.hybrid_score?.toFixed(4)) || 0,
+            vector_similarity: Number(row.vector_similarity?.toFixed(4)) || 0,
+            keyword_score: Number(row.text_rank?.toFixed(4)) || 0,
+            score_type: "hybrid",
+            section: row.metadata?.section,
+            language: row.metadata?.language,
           })),
         });
       } else if (searchType === "semantic") {
-        // Pure semantic/vector search
         console.log("Executing pure semantic search query...");
-        const results = await sql`
+        const metadataWhere = metadataFilter ? ` AND (${metadataFilter})` : "";
+        const results = await sql.query(
+          `
           SELECT
             content,
             post_slug,
             post_title,
             chunk_type,
             metadata,
-            1 - (embedding <=> ${formattedEmbedding}::vector) as vector_similarity
+            1 - (embedding <=> $1::vector) as vector_similarity
           FROM content_chunks
-          WHERE 1 - (embedding <=> ${formattedEmbedding}::vector) > ${SEMANTIC_SIMILARITY_THRESHOLD}
+          WHERE 1 - (embedding <=> $1::vector) > $2
+          ${metadataWhere}
           ORDER BY vector_similarity DESC
-          LIMIT ${SEARCH_RESULT_LIMIT};
-        `;
+          LIMIT $3
+        `,
+          [
+            formattedEmbedding,
+            SEMANTIC_SIMILARITY_THRESHOLD,
+            SEARCH_RESULT_LIMIT,
+          ]
+        );
 
         console.log(`Found ${results.rows.length} semantic results`);
 
         if (results.rows.length === 0) {
           console.log("No semantic results, trying more lenient search...");
-          const fallbackResults = await sql`
+          const fallbackResults = await sql.query(
+            `
             SELECT
               content,
               post_slug,
               post_title,
               chunk_type,
               metadata,
-              1 - (embedding <=> ${formattedEmbedding}::vector) as vector_similarity
+              1 - (embedding <=> $1::vector) as vector_similarity
             FROM content_chunks
+            ${metadataFilter ? `WHERE ${metadataFilter}` : ""}
             ORDER BY vector_similarity DESC
-            LIMIT ${SEARCH_FALLBACK_LIMIT};
-          `;
+            LIMIT $2
+          `,
+            [formattedEmbedding, SEARCH_FALLBACK_LIMIT]
+          );
 
           return NextResponse.json({
             results: fallbackResults.rows.map((row) => ({
-              ...row,
-              similarity: row.vector_similarity,
+              content: row.content,
+              post_slug: row.post_slug,
+              post_title: row.post_title,
+              chunk_type: row.chunk_type,
+              tags: row.metadata?.tags || [],
+              published_date: row.metadata?.published_date,
+              similarity: Number(row.vector_similarity?.toFixed(4)) || 0,
+              score_type: "semantic",
+              section: row.metadata?.section,
+              language: row.metadata?.language,
             })),
             fallback: true,
           });
@@ -276,14 +386,21 @@ export async function POST(request: Request) {
 
         return NextResponse.json({
           results: results.rows.map((row) => ({
-            ...row,
-            similarity: row.vector_similarity,
+            content: row.content,
+            post_slug: row.post_slug,
+            post_title: row.post_title,
+            chunk_type: row.chunk_type,
+            tags: row.metadata?.tags || [],
+            published_date: row.metadata?.published_date,
+            similarity: Number(row.vector_similarity?.toFixed(4)) || 0,
+            score_type: "semantic",
+            section: row.metadata?.section,
+            language: row.metadata?.language,
           })),
         });
       }
     }
 
-    // Fallback for invalid search type
     return NextResponse.json(
       { error: 'Invalid search type. Use "keyword", "semantic", or "hybrid"' },
       { status: 400 }
