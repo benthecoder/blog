@@ -1,6 +1,6 @@
 import getPostContent from "@/utils/getPostContent";
 import getPostMetadata from "@/utils/getPostMetadata";
-import RenderPost from "@/components/RenderPost";
+import RenderPost from "@/components/posts/RenderPost";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 

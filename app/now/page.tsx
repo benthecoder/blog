@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import SpotifyNowPlaying from "@/components/SpotifyNowPlaying";
+import SpotifyNowPlaying from "@/components/integrations/SpotifyNowPlaying";
 
 const TIMEZONE = "America/Chicago";
 

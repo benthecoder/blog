@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import ThemeSwitch from "./ThemeSwitch";
+import ThemeSwitch from "@/components/ui/ThemeSwitch";
 const links = [
   { path: "/thoughts", text: "💭" },
   { path: "/hn", text: "📰" },

@@ -1,4 +1,4 @@
-import KnowledgeMap from "../../components/KnowledgeMap";
+import KnowledgeMap from "@/components/visualizations/KnowledgeMap";
 
 export const metadata = {
   title: "knowledge map",
