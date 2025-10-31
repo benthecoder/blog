@@ -1,4 +1,4 @@
-import ArtworkRotation from "@/components/ArtworkRotation";
+import ArtworkRotation from "@/components/ui/ArtworkRotation";
 
 export default function HomePage() {
   return <ArtworkRotation />;

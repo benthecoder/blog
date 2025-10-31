@@ -2,8 +2,8 @@
 
 import { useSearchParams } from "next/navigation";
 import { PostMetadata } from "@/types/post";
-import PostPreview from "@/components/PostPreview";
-import Heatmap from "@/components/Heatmap";
+import PostPreview from "@/components/posts/PostPreview";
+import Heatmap from "@/components/visualizations/Heatmap";
 import Link from "next/link";
 
 interface ArchiveClientProps {

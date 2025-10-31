@@ -4,7 +4,7 @@ import { Averia_Serif_Libre } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "./providers";
-import { ConditionalLayout } from "@/components/ConditionalLayout";
+import { ConditionalLayout } from "@/components/layout/ConditionalLayout";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bneo.xyz"),
