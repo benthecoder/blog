@@ -10,17 +10,14 @@ interface SearchResult {
   post_slug: string;
   post_title: string;
   chunk_type: string;
-  metadata: {
-    section: string;
-    sequence: number;
-    isComposite?: boolean;
-    language?: string;
-  };
+  tags: string[];
+  published_date?: string;
   similarity: number;
   vector_similarity?: number;
-  text_rank?: number;
-  hybrid_score?: number;
   keyword_score?: number;
+  score_type: "keyword" | "semantic" | "hybrid";
+  section?: string;
+  language?: string;
 }
 
 const LoadingComponent = () => {
@@ -31,25 +28,145 @@ const LoadingComponent = () => {
   );
 };
 
-const SearchResult = ({ result }: { result: SearchResult }) => {
-  const truncateText = (text: string, maxLength: number = 150) => {
-    return text.length > maxLength
-      ? `${text.substring(0, maxLength)}...`
-      : text;
+const SearchResult = ({
+  result,
+  query,
+}: {
+  result: SearchResult;
+  query?: string;
+}) => {
+  // Extract keywords from query for highlighting
+  const getKeywords = (searchQuery: string): string[] => {
+    if (!searchQuery) return [];
+    return searchQuery
+      .toLowerCase()
+      .split(/\s+/)
+      .filter((word) => word.length > 0); // Include all words
+  };
+
+  // Find the best snippet with keyword context
+  const getBestSnippet = (
+    text: string,
+    keywords: string[],
+    maxLength: number = 200
+  ): { snippet: string; hasMatch: boolean } => {
+    if (keywords.length === 0 || result.chunk_type === "code") {
+      return {
+        snippet:
+          text.length > maxLength ? text.substring(0, maxLength) + "..." : text,
+        hasMatch: false,
+      };
+    }
+
+    const lowerText = text.toLowerCase();
+    let bestIndex = -1;
+    let matchedKeyword = "";
+
+    // Find first keyword match
+    for (const keyword of keywords) {
+      const index = lowerText.indexOf(keyword);
+      if (index !== -1) {
+        bestIndex = index;
+        matchedKeyword = keyword;
+        break;
+      }
+    }
+
+    if (bestIndex === -1) {
+      // No match found, just truncate
+      return {
+        snippet:
+          text.length > maxLength ? text.substring(0, maxLength) + "..." : text,
+        hasMatch: false,
+      };
+    }
+
+    // Extract context around the match
+    const contextBefore = 60;
+    const contextAfter = maxLength - contextBefore - matchedKeyword.length;
+    const start = Math.max(0, bestIndex - contextBefore);
+    const end = Math.min(
+      text.length,
+      bestIndex + matchedKeyword.length + contextAfter
+    );
+
+    let snippet = text.substring(start, end);
+    if (start > 0) snippet = "..." + snippet;
+    if (end < text.length) snippet = snippet + "...";
+
+    return { snippet, hasMatch: true };
+  };
+
+  // Highlight keywords in text
+  const highlightText = (text: string, keywords: string[]): React.ReactNode => {
+    if (keywords.length === 0) return text;
+
+    const parts: React.ReactNode[] = [];
+    let lastIndex = 0;
+    const lowerText = text.toLowerCase();
+
+    // Find all keyword positions
+    const matches: { index: number; length: number; keyword: string }[] = [];
+    keywords.forEach((keyword) => {
+      let index = 0;
+      while ((index = lowerText.indexOf(keyword, index)) !== -1) {
+        matches.push({ index, length: keyword.length, keyword });
+        index += keyword.length;
+      }
+    });
+
+    // Sort by position
+    matches.sort((a, b) => a.index - b.index);
+
+    // Build highlighted text
+    matches.forEach(({ index, length }) => {
+      if (index > lastIndex) {
+        parts.push(text.substring(lastIndex, index));
+      }
+      parts.push(
+        <mark
+          key={index}
+          className="bg-light-accent dark:bg-dark-accent text-white font-medium px-1 py-0.5 rounded"
+        >
+          {text.substring(index, index + length)}
+        </mark>
+      );
+      lastIndex = index + length;
+    });
+
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex));
+    }
+
+    return <>{parts}</>;
   };
 
   const formatContent = (content: string) => {
-    const truncatedContent = truncateText(content);
+    if (!query) {
+      // No query to highlight
+      const truncated =
+        content.length > 200 ? content.substring(0, 200) + "..." : content;
+      return (
+        <p className="text-light-text/70 dark:text-dark-text/70 mt-2 text-sm leading-relaxed">
+          {truncated}
+        </p>
+      );
+    }
+
+    const keywords = getKeywords(query);
+    const { snippet, hasMatch } = getBestSnippet(content, keywords);
+
     if (result.chunk_type === "code") {
       return (
         <pre className="bg-light-tag dark:bg-dark-tag p-2 rounded text-sm overflow-x-auto mt-2">
-          <code>{truncatedContent}</code>
+          <code>{snippet}</code>
         </pre>
       );
     }
+
     return (
-      <p className="text-light-text/70 dark:text-dark-text/70 mt-2 text-sm">
-        {truncatedContent}
+      <p className="text-light-text/70 dark:text-dark-text/70 mt-2 text-sm leading-relaxed">
+        {highlightText(snippet, keywords)}
       </p>
     );
   };
@@ -57,31 +174,53 @@ const SearchResult = ({ result }: { result: SearchResult }) => {
   return (
     <div className="group border-l-2 border-light-border dark:border-dark-tag pl-4 py-3 mb-4 hover:border-light-accent dark:hover:border-dark-accent transition-colors hover:bg-light-tag/50 dark:hover:bg-dark-tag/50 rounded-r">
       <Link href={`/posts/${result.post_slug}`} className="block space-y-2">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
           <h3 className="font-medium text-light-text dark:text-dark-text group-hover:text-light-accent dark:group-hover:text-dark-accent transition-colors">
             {result.post_title}
           </h3>
-          <div className="flex items-center gap-2">
-            <span className="text-xs px-2 py-1 rounded-full bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent font-medium">
-              {Math.round(
-                (result.hybrid_score ??
-                  result.keyword_score ??
-                  result.vector_similarity ??
-                  result.similarity) * 100
-              )}
-              % match
-            </span>
-          </div>
+          <span className="text-xs px-2 py-1 rounded-full bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent font-medium whitespace-nowrap">
+            {Math.round(result.similarity * 100)}% match
+          </span>
         </div>
         <div className="prose prose-sm max-w-none">
           {formatContent(result.content)}
         </div>
-        <div className="text-xs text-light-accent/70 dark:text-dark-accent/70 font-medium">
-          <span className="capitalize">{result.chunk_type}</span>
-          {result.metadata.section && (
+        <div className="flex items-center gap-2 text-xs text-light-accent/70 dark:text-dark-accent/70">
+          <span className="capitalize font-medium">{result.chunk_type}</span>
+          {result.section && (
             <>
-              <span className="mx-2">•</span>
-              <span>{result.metadata.section}</span>
+              <span>•</span>
+              <span className="text-light-text/60 dark:text-dark-text/60 italic">
+                {result.section}
+              </span>
+            </>
+          )}
+          {result.language && (
+            <>
+              <span>•</span>
+              <span className="text-light-text/60 dark:text-dark-text/60 font-mono text-[10px]">
+                {result.language}
+              </span>
+            </>
+          )}
+          {result.tags && result.tags.length > 0 && (
+            <>
+              <span>•</span>
+              <div className="flex gap-1.5">
+                {result.tags.slice(0, 3).map((tag, i) => (
+                  <span
+                    key={i}
+                    className="text-light-text/60 dark:text-dark-text/60"
+                  >
+                    #{tag}
+                  </span>
+                ))}
+                {result.tags.length > 3 && (
+                  <span className="text-light-text/50 dark:text-dark-text/50">
+                    +{result.tags.length - 3}
+                  </span>
+                )}
+              </div>
             </>
           )}
         </div>
@@ -90,32 +229,47 @@ const SearchResult = ({ result }: { result: SearchResult }) => {
   );
 };
 
-// Search type options
-type SearchType = "hybrid" | "semantic" | "keyword";
-
 function SearchContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  // Initialize with empty defaults for server rendering
   const [query, setQuery] = useState("");
-  const [searchType, setSearchType] = useState<SearchType>("hybrid");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
 
-  // Use useEffect to safely load from sessionStorage after mount
+  // Filter states
+  const [searchType, setSearchType] = useState<
+    "hybrid" | "semantic" | "keyword"
+  >("hybrid");
+  const [selectedChunkType, setSelectedChunkType] = useState<string>("");
+  const [availableChunkTypes, setAvailableChunkTypes] = useState<string[]>([]);
+
+  // Load available filters from API
+  useEffect(() => {
+    const fetchFilters = async () => {
+      try {
+        const response = await fetch("/api/search-filters");
+        const data = await response.json();
+        if (data.chunkTypes) setAvailableChunkTypes(data.chunkTypes);
+      } catch (error) {
+        console.error("Failed to load filters:", error);
+      }
+    };
+    fetchFilters();
+  }, []);
+
+  // Load from URL and session storage
   useEffect(() => {
     const urlQuery = searchParams.get("q");
-    const urlType = searchParams.get("type") as SearchType;
+    const urlChunkType = searchParams.get("chunkType");
 
     setQuery(urlQuery || sessionStorage.getItem("lastQuery") || "");
-    setSearchType(
-      urlType ||
-        (sessionStorage.getItem("lastSearchType") as SearchType) ||
-        "hybrid"
-    );
+
+    if (urlChunkType) {
+      setSelectedChunkType(urlChunkType);
+    }
 
     const cached = sessionStorage.getItem("searchResults");
     if (cached) setResults(JSON.parse(cached));
@@ -124,23 +278,18 @@ function SearchContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSearch = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!query.trim()) return;
 
-    const params = new URLSearchParams(searchParams);
-    if (query.trim()) {
-      params.set("q", query.trim());
-    } else {
-      params.delete("q");
+    const params = new URLSearchParams();
+    params.set("q", query.trim());
+    if (selectedChunkType) {
+      params.set("chunkType", selectedChunkType);
     }
-    // Add search type to URL
-    params.set("type", searchType);
     replace(`${pathname}?${params.toString()}`);
 
-    // Store in session storage
     sessionStorage.setItem("lastQuery", query.trim());
-    sessionStorage.setItem("lastSearchType", searchType);
     setIsLoading(true);
     setError("");
 
@@ -150,7 +299,8 @@ function SearchContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: query.trim(),
-          searchType,
+          searchType: searchType,
+          chunkType: selectedChunkType || undefined,
         }),
       });
 
@@ -182,131 +332,194 @@ function SearchContent() {
     }
   };
 
-  const handleSearchTypeChange = (type: SearchType) => {
-    setSearchType(type);
-    if (query.trim()) {
-      // Only update the URL without triggering immediate search
-      const params = new URLSearchParams(searchParams);
-      params.set("type", type);
-      if (query.trim()) {
-        params.set("q", query.trim());
-      }
-      replace(`${pathname}?${params.toString()}`);
-      sessionStorage.setItem("lastSearchType", type);
-    }
+  // Clear all filters
+  const clearFilters = () => {
+    setSelectedChunkType("");
+    setResults([]);
+    setHasSearched(false);
   };
 
+  // Auto-search when filters change (after a brief delay)
   useEffect(() => {
-    if (searchParams) {
-      const urlQuery = searchParams.get("q");
-      const urlType = searchParams.get("type") as SearchType;
-
-      // Only set the query and search type without auto-searching
-      if (urlQuery && urlQuery !== query) {
-        setQuery(urlQuery);
-      }
-
-      if (
-        urlType &&
-        urlType !== searchType &&
-        ["hybrid", "semantic", "keyword"].includes(urlType)
-      ) {
-        setSearchType(urlType);
-      }
-
-      // Don't auto-trigger search when params change
-      // Users must press Enter or click Search button
+    if (query.trim()) {
+      const timeout = setTimeout(() => {
+        handleSearch();
+      }, 300);
+      return () => clearTimeout(timeout);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
+  }, [searchType, selectedChunkType]);
 
-  // Clear hasSearched when query changes
-  useEffect(() => {
-    // When the user manually changes the query, reset the search state
-    setHasSearched(false);
-    sessionStorage.removeItem("hasSearched");
-  }, [query]);
+  // Format chunk type labels
+  const formatChunkTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      "full-post": "posts",
+      section: "sections",
+      code: "code",
+      quote: "quotes",
+    };
+    return labels[type] || type;
+  };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      <form onSubmit={handleSearch} className="mb-8 space-y-4">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search posts..."
-          className="w-full p-2 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-tag rounded-lg focus:ring-2 focus:ring-light-accent dark:focus:ring-dark-accent focus:border-transparent text-light-text dark:text-dark-text placeholder-gray-400 dark:placeholder-gray-500"
-        />
-
-        {/* Search Type Toggle */}
-        <div className="flex justify-center space-x-2 mt-2">
-          <button
-            type="button"
-            onClick={() => handleSearchTypeChange("hybrid")}
-            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-              searchType === "hybrid"
-                ? "bg-light-accent dark:bg-dark-accent text-white"
-                : "bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70"
-            }`}
-          >
-            Hybrid
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSearchTypeChange("semantic")}
-            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-              searchType === "semantic"
-                ? "bg-light-accent dark:bg-dark-accent text-white"
-                : "bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70"
-            }`}
-          >
-            Semantic
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSearchTypeChange("keyword")}
-            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
-              searchType === "keyword"
-                ? "bg-light-accent dark:bg-dark-accent text-white"
-                : "bg-light-border/20 dark:bg-dark-tag text-light-text dark:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/70"
-            }`}
-          >
-            Keyword
-          </button>
-        </div>
-
-        {/* Search Type Explanation */}
-        <div className="text-xs text-center text-light-text/60 dark:text-dark-text/60 italic mt-1">
-          {searchType === "hybrid" &&
-            "Combines meaning and exact matches for balanced results"}
-          {searchType === "semantic" &&
-            "Finds conceptually related content even with different wording"}
-          {searchType === "keyword" &&
-            "Searches for exact word matches (like traditional search)"}
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      {/* Main search form */}
+      <form onSubmit={handleSearch} className="mb-6">
+        <div className="relative">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="search..."
+            className="w-full px-4 py-3 bg-light-bg dark:bg-dark-bg border-2 border-light-border dark:border-dark-tag focus:border-light-accent dark:focus:border-dark-accent transition-colors text-light-text dark:text-dark-text text-lg font-medium placeholder-light-text/40 dark:placeholder-dark-text/40 outline-none selection:bg-light-accent selection:text-white dark:selection:bg-dark-accent dark:selection:text-white"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setResults([]);
+                setHasSearched(false);
+              }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-light-text/40 dark:text-dark-text/40 hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+            >
+              ✕
+            </button>
+          )}
         </div>
       </form>
 
+      {/* Filters */}
+      <div className="mb-8 space-y-4">
+        {/* Search Type Filter */}
+        <div className="border-t border-light-border dark:border-dark-tag pt-4">
+          <label className="block text-xs font-medium text-light-text/70 dark:text-dark-text/70 mb-2 tracking-wide">
+            SEARCH TYPE
+          </label>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setSearchType("hybrid")}
+              className={`px-3 py-1.5 text-sm border transition-all ${
+                searchType === "hybrid"
+                  ? "border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent"
+                  : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
+              }`}
+            >
+              hybrid
+            </button>
+            <button
+              type="button"
+              onClick={() => setSearchType("semantic")}
+              className={`px-3 py-1.5 text-sm border transition-all ${
+                searchType === "semantic"
+                  ? "border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent"
+                  : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
+              }`}
+            >
+              semantic
+            </button>
+            <button
+              type="button"
+              onClick={() => setSearchType("keyword")}
+              className={`px-3 py-1.5 text-sm border transition-all ${
+                searchType === "keyword"
+                  ? "border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent"
+                  : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
+              }`}
+            >
+              keyword
+            </button>
+          </div>
+        </div>
+
+        {/* Content Type Filter */}
+        {availableChunkTypes.length > 0 && (
+          <div className="pt-4">
+            <label className="block text-xs font-medium text-light-text/70 dark:text-dark-text/70 mb-2 tracking-wide">
+              CONTENT TYPE
+            </label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => setSelectedChunkType("")}
+                className={`px-3 py-1.5 text-sm border transition-all ${
+                  selectedChunkType === ""
+                    ? "border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent"
+                    : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
+                }`}
+              >
+                all
+              </button>
+              {availableChunkTypes.map((type) => (
+                <button
+                  key={type}
+                  type="button"
+                  onClick={() => setSelectedChunkType(type)}
+                  className={`px-3 py-1.5 text-sm border transition-all ${
+                    selectedChunkType === type
+                      ? "border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent"
+                      : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
+                  }`}
+                >
+                  {formatChunkTypeLabel(type)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Clear filters button */}
+        {selectedChunkType && (
+          <div className="flex justify-end pt-2">
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="text-xs text-light-text/50 dark:text-dark-text/50 hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+            >
+              clear filters
+            </button>
+          </div>
+        )}
+      </div>
+
       {isLoading && <LoadingComponent />}
       {error && (
-        <div className="text-red-500 dark:text-red-400 mb-4">{error}</div>
+        <div className="text-red-500 dark:text-red-400 mb-4 p-4 border-l-2 border-red-500">
+          {error}
+        </div>
       )}
 
       {results.length > 0 ? (
-        <div className="space-y-6">
-          {results.map((result, index) => (
-            <SearchResult key={index} result={result} />
-          ))}
+        <div>
+          {/* Results count */}
+          <div className="mb-4 pb-2 border-b border-light-border dark:border-dark-tag">
+            <p className="text-xs text-light-text/60 dark:text-dark-text/60 tracking-wide">
+              {results.length} RESULTS
+            </p>
+          </div>
+          <div className="space-y-4">
+            {results.map((result, index) => (
+              <SearchResult key={index} result={result} query={query} />
+            ))}
+          </div>
         </div>
       ) : (
-        // Only show "no results" message if a search has been performed
         !isLoading &&
         hasSearched &&
         query && (
-          <div className="text-center py-6 text-light-text/70 dark:text-dark-text/70">
-            <p>No results found for &quot;{query}&quot;</p>
-            <p className="text-sm mt-2">
-              Try a different search type or modify your query
+          <div className="text-center py-12 border border-light-border dark:border-dark-tag">
+            <p className="text-light-text/70 dark:text-dark-text/70 mb-2">
+              No results found for &quot;{query}&quot;
             </p>
+            {selectedChunkType && (
+              <button
+                onClick={clearFilters}
+                className="mt-4 text-xs text-light-accent dark:text-dark-accent hover:underline"
+              >
+                clear filters
+              </button>
+            )}
           </div>
         )
       )}
