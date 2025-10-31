@@ -1,5 +1,5 @@
 import getPostMetadata from "@/utils/getPostMetadata";
-import PostPreview from "@/components/PostPreview";
+import PostPreview from "@/components/posts/PostPreview";
 
 export const generateStaticParams = async () => {
   const postMetadata = getPostMetadata();

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import getPostMetadata from "@/utils/getPostMetadata";
-import ArchiveClient from "@/components/ArchiveClient";
+import ArchiveClient from "@/components/archive/ArchiveClient";
 
 const ArchivePage = () => {
   const postMetadata = getPostMetadata();

@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import Timeline from "@/components/Timeline";
+import Timeline from "@/components/visualizations/Timeline";
 
 type ImageOnHoverProps = {
   text: string;
