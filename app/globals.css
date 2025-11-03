@@ -96,6 +96,7 @@ body {
   border: none !important;
   box-shadow: none !important;
   outline: none !important;
+  overflow-x: auto;
 }
 
 .prose pre code {
@@ -127,6 +128,7 @@ body {
   border: none !important;
   box-shadow: none !important;
   outline: none !important;
+  overflow-x: auto;
 }
 
 .dark .prose pre > div {

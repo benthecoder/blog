@@ -24,6 +24,7 @@ const customDracula = {
     marginLeft: "-1.5rem", // break out of prose (0.5rem) + parent (1rem) padding
     marginRight: "-1.5rem",
     padding: "1rem",
+    overflowX: "auto",
   },
 };
 
