@@ -6,8 +6,9 @@ import { Sidebar } from "./SideBar";
 export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isGallery = pathname === "/gallery";
+  const isAdmin = pathname?.startsWith("/admin");
 
-  if (isGallery) {
+  if (isGallery || isAdmin) {
     return <>{children}</>;
   }
 
