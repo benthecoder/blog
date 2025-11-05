@@ -1,6 +1,6 @@
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
-import { Averia_Serif_Libre } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "./providers";
@@ -35,12 +35,41 @@ export const metadata: Metadata = {
   },
 };
 
-const averia = Averia_Serif_Libre({
-  weight: ["300", "400", "700"],
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  display: "swap",
+const averia = localFont({
+  src: [
+    {
+      path: "../public/fonts/AveriaSerifLibre-Light.ttf",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/AveriaSerifLibre-LightItalic.ttf",
+      weight: "300",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/AveriaSerifLibre-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/AveriaSerifLibre-Italic.ttf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/AveriaSerifLibre-Bold.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/AveriaSerifLibre-BoldItalic.ttf",
+      weight: "700",
+      style: "italic",
+    },
+  ],
   variable: "--font-averia",
+  display: "swap",
 });
 
 export default function RootLayout({
