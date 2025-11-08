@@ -4,10 +4,9 @@ import path from "path";
 // Import shared paths
 import { POSTS_DIR } from "@/config/paths";
 
-export function getAllPosts() {
+export function getAllPosts(includeDrafts: boolean = false) {
   const postsDirectory = POSTS_DIR;
 
-  // Get all markdown files recursively
   function getMarkdownFiles(dir: string): string[] {
     const entries = fs.readdirSync(dir, { withFileTypes: true });
 
@@ -22,5 +21,14 @@ export function getAllPosts() {
     }, []);
   }
 
-  return getMarkdownFiles(postsDirectory);
+  const allFiles = getMarkdownFiles(postsDirectory);
+
+  if (includeDrafts) {
+    return allFiles;
+  }
+
+  // Exclude drafts folder
+  return allFiles.filter(
+    (file) => !file.includes("/drafts/") && !file.includes("\\drafts\\")
+  );
 }

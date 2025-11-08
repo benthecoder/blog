@@ -33,6 +33,7 @@ export default function KnowledgeMap({
   const [hoveredArticle, setHoveredArticle] = useState<Article | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [transform, setTransform] = useState({ k: 1, x: 0, y: 0 });
+  const [canvasReady, setCanvasReady] = useState(false);
   const { theme } = useTheme();
   const zoomBehaviorRef = useRef<any>(null);
 
@@ -205,6 +206,7 @@ export default function KnowledgeMap({
     searchQuery,
     similarity,
     getClusterColor,
+    canvasReady,
   ]);
 
   // Refs to avoid stale closures
@@ -255,6 +257,9 @@ export default function KnowledgeMap({
 
     const selection = select(canvas);
     selection.call(zoomBehavior as any);
+
+    // Force initial render after canvas is set up
+    setCanvasReady(true);
 
     // Handle window resize
     const handleResize = () => {
