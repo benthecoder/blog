@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   try {
     const client = getVoyageClient();
 
-    console.log("Database URL:", !!process.env.DATABASE_URL);
+    console.log("Database URL:", !!process.env.POSTGRES_URL);
 
     const {
       query,

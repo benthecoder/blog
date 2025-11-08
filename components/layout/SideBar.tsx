@@ -83,7 +83,7 @@ export function Sidebar() {
       </div>
 
       {/* Navigation icons */}
-      <nav className="flex flex-row gap-2 justify-center md:flex-col md:fixed md:top-1/2 md:-translate-y-1/2 md:left-10 mb-2 md:mb-0">
+      <nav className="flex flex-row gap-2 justify-center md:flex-col md:fixed md:top-1/2 md:-translate-y-1/2 md:left-10 mb-6 md:mb-0">
         {links.map(({ path, text, icon }) => (
           <Link
             key={path}

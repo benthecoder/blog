@@ -2,9 +2,9 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-// Ensure POSTGRES_URL is set (Vercel postgres needs this specific var name)
-if (!process.env.POSTGRES_URL && process.env.DATABASE_URL) {
-  process.env.POSTGRES_URL = process.env.DATABASE_URL;
+// POSTGRES_URL is required for Vercel postgres
+if (!process.env.POSTGRES_URL) {
+  throw new Error("POSTGRES_URL environment variable is required");
 }
 
 // Now import modules that depend on environment variables
@@ -25,6 +25,14 @@ import { DELAY_BETWEEN_BATCHES } from "@/config/constants";
 // Import types
 import { PostFrontmatter } from "@/types/post";
 import { ProcessedChunk, ProcessedPost } from "@/types/chunks";
+
+// Helper to format array for PostgreSQL
+const formatArrayForPostgres = (arr: string[]): string => {
+  if (!arr || arr.length === 0) return "{}";
+  // Escape quotes and wrap each element, then join with commas
+  const escaped = arr.map((item) => `"${item.replace(/"/g, '\\"')}"`);
+  return `{${escaped.join(",")}}`;
+};
 
 interface EmbeddingResult {
   successfulChunks: number;
@@ -282,10 +290,12 @@ async function generateEmbeddingsForSingleFile(
           enhancedMetadata.published_date = formattedPublishedDate;
           enhancedMetadata.tags = tagsArray;
 
+          const formattedTags = formatArrayForPostgres(tagsArray);
+
           await sql`
             INSERT INTO content_chunks (
               id, post_slug, post_title, content, chunk_type,
-              metadata, sequence, embedding
+              metadata, sequence, embedding, published_date, tags
             ) VALUES (
               ${chunkIds[j]},
               ${filePath},
@@ -294,7 +304,9 @@ async function generateEmbeddingsForSingleFile(
               ${chunk.type},
               ${JSON.stringify(enhancedMetadata)},
               ${chunk.sequence},
-              ${formattedEmbedding}
+              ${formattedEmbedding},
+              ${formattedPublishedDate},
+              ${formattedTags}
             )
           `;
           return true;
@@ -447,11 +459,13 @@ async function generateEmbeddingsForAllFiles() {
             tags,
           };
 
+          const formattedTags = formatArrayForPostgres(tags);
+
           try {
             await sql`
             INSERT INTO content_chunks (
               id, post_slug, post_title, content, chunk_type,
-              metadata, sequence, embedding
+              metadata, sequence, embedding, published_date, tags
             ) VALUES (
               ${uuidv4()},
               ${filePath},
@@ -460,7 +474,9 @@ async function generateEmbeddingsForAllFiles() {
               ${chunk.type},
               ${JSON.stringify(enhancedMetadata)},
               ${chunk.sequence},
-              ${formattedEmbedding}
+              ${formattedEmbedding},
+              ${publishedDate},
+              ${formattedTags}
             )
           `;
             return true;

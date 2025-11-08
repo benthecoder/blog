@@ -35,14 +35,8 @@ body {
 }
 
 .dark body {
-  background: linear-gradient(
-    135deg,
-    #1a1b26 0%,
-    /* Dark base */ #2a2b36 50%,
-    /* Slightly lighter */ #1a1b26 100% /* Dark base */
-  );
+  background: #1a1b26;
   min-height: 100vh;
-  background-attachment: fixed;
 }
 
 .prose {

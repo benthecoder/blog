@@ -113,11 +113,11 @@ const ContactPage = () => {
         />
 
         <p>
-          I love meeting and having interesting conversations with new people!
+          i love meeting and having interesting conversations with new people!
         </p>
 
         <p>
-          I also like learning about <Link href="/tags/art">art</Link> and
+          i also like learning about <Link href="/tags/art">art</Link> and
           reading{" "}
           <a href="https://www.goodreads.com/review/list/103179068-benedict-neo?shelf=to-read">
             good books

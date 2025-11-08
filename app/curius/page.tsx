@@ -1,87 +1,76 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { CuriusLink } from "@/types/curius";
 
-const timeSince = (date: string | Date) => {
-  const now = new Date();
-  const dateObject = date instanceof Date ? date : new Date(date);
-  const diffInSeconds = Math.floor(
-    (now.getTime() - dateObject.getTime()) / 1000
-  );
-  const days = Math.floor(diffInSeconds / (3600 * 24));
-  const hours = Math.floor((diffInSeconds % (3600 * 24)) / 3600);
-  const minutes = Math.floor((diffInSeconds % 3600) / 60);
+export default function CuriusPage() {
+  const [links, setLinks] = useState<CuriusLink[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  if (days > 1) {
-    return `${days} days ago`;
-  } else if (days === 1) {
-    return "1 day ago";
-  } else if (hours > 1) {
-    return `${hours} hours ago`;
-  } else if (hours === 1) {
-    return "1 hour ago";
-  } else if (minutes > 1) {
-    return `${minutes} minutes ago`;
-  } else if (minutes === 1) {
-    return "1 minute ago";
-  } else {
-    return "less than a minute ago";
-  }
-};
-
-export default function Page() {
-  const Curius = () => {
-    const [links, setLinks] = useState<any[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-
+  useEffect(() => {
     const fetchLinks = async () => {
-      setIsLoading(true);
-      const response = await fetch("api/curius");
-      const data = await response.json();
-      setLinks(data.data.links);
-      setIsLoading(false);
+      try {
+        const response = await fetch("/api/curius");
+        const data = await response.json();
+        setLinks(data.data.links);
+      } catch (error) {
+        console.error("Failed to fetch Curius links:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    useEffect(() => {
-      fetchLinks();
-    }, []);
+    fetchLinks();
+  }, []);
 
-    return (
-      <div>
-        <p className="mb-5">
-          my bookmarks on{" "}
-          <a href="https://curius.app/benedict-neo" className="underline">
-            Curius
-          </a>{" "}
-        </p>
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : (
-          <ul className="pl-1 list-outside list-disc">
-            {links.map((link) => (
-              <li key={link.id}>
-                <a
-                  href={link.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className=" underline"
-                >
-                  {link.title}
-                </a>
-                <span className="pl-1 text-gray-500">
-                  {timeSince(link.createdDate)}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    );
+  const formatTime = (dateString: string): string => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    const days = Math.floor(diffInSeconds / (3600 * 24));
+    const hours = Math.floor((diffInSeconds % (3600 * 24)) / 3600);
+    const minutes = Math.floor((diffInSeconds % 3600) / 60);
+
+    if (days > 0) return `${days}d`;
+    if (hours > 0) return `${hours}h`;
+    if (minutes > 0) return `${minutes}m`;
+    return "now";
   };
 
   return (
     <div>
-      <h1 className="font-bold text-left mb-10 text-2xl"> saved links</h1>
-      <Curius />
+      <p className="mb-5">
+        stay{" "}
+        <a
+          href="https://curius.app/benedict-neo"
+          className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
+        >
+          curius
+        </a>
+      </p>
+      {isLoading ? (
+        <p>discombobulating...</p>
+      ) : (
+        <ol className="space-y-1 list-none">
+          {links.map((link, index) => (
+            <li key={link.id} className="flex items-baseline gap-2">
+              <span className="text-japanese-sumiiro dark:text-japanese-shironezu text-sm tabular-nums min-w-[2ch]">
+                {index + 1}.
+              </span>
+              <a
+                href={link.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
+              >
+                {link.title.toLowerCase()}
+              </a>
+              <span className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 text-sm whitespace-nowrap">
+                {formatTime(link.createdDate)}
+              </span>
+            </li>
+          ))}
+        </ol>
+      )}
     </div>
   );
 }
