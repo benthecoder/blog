@@ -1,26 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PostMetadata } from "@/types/post";
 
 interface CalendarViewProps {
   posts: PostMetadata[];
 }
 
-type DraftStatus = "new" | "modified";
-
 export default function CalendarView({ posts }: CalendarViewProps) {
   const router = useRouter();
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [drafts, setDrafts] = useState<Record<string, DraftStatus>>({});
-
-  useEffect(() => {
-    fetch("/api/admin/git-status")
-      .then((res) => res.json())
-      .then((data) => setDrafts(data.drafts || {}))
-      .catch((err) => console.error("Failed to fetch draft status:", err));
-  }, []);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -142,15 +132,10 @@ export default function CalendarView({ posts }: CalendarViewProps) {
 
           const dd = String(day).padStart(2, "0");
           const mm = String(month + 1).padStart(2, "0");
-          const yy = String(year).substring(2);
-          const slug = `${dd}${mm}${yy}`;
           const dateKey = `${year}-${mm}-${dd}`;
           const post = postsByDate.get(dateKey);
           const isTodayDate = isToday(day);
-          const draftStatus = drafts[slug];
-          const isDraft = !!draftStatus;
-          const isNewDraft = draftStatus === "new";
-          const isModified = draftStatus === "modified";
+          const isDraft = post?.isDraft || false;
 
           return (
             <button
@@ -160,8 +145,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
                 aspect-square border rounded-sm p-3 flex flex-col items-start justify-between relative
                 hover:border-japanese-sumiiro dark:hover:border-japanese-shironezu hover:shadow-sm transition-all
                 ${isTodayDate ? "border-japanese-sumiiro dark:border-japanese-shironezu bg-japanese-murasakisuishiyou dark:bg-gray-800 shadow-sm" : "border-japanese-shiraumenezu dark:border-gray-700"}
-                ${isDraft && isNewDraft ? "border-2 border-dashed border-blue-400 dark:border-blue-500" : ""}
-                ${isDraft && isModified ? "border-2 border-yellow-400 dark:border-yellow-500" : ""}
+                ${isDraft ? "border-2 border-dashed border-blue-400 dark:border-blue-500 bg-blue-50 dark:bg-blue-950/20" : ""}
                 ${post && !isTodayDate && !isDraft ? "bg-japanese-kinairo dark:bg-gray-800/50" : ""}
                 ${!post && !isTodayDate ? "bg-white dark:bg-transparent" : ""}
               `}
@@ -178,6 +162,11 @@ export default function CalendarView({ posts }: CalendarViewProps) {
                 >
                   {day}
                 </span>
+                {isDraft && (
+                  <span className="text-blue-500 dark:text-blue-400 text-[10px] font-medium uppercase tracking-wide">
+                    draft
+                  </span>
+                )}
                 {!post && (
                   <span className="text-japanese-ginnezu dark:text-gray-600 text-xs opacity-60">
                     +
