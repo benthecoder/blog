@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import MarkdownPreview from "@/components/admin/MarkdownPreview";
+import { RenderPost } from "@/components/posts";
 
 export default function EditPostPage() {
   const params = useParams();
@@ -396,7 +396,7 @@ export default function EditPostPage() {
 
         <div className="flex-1 overflow-hidden">
           {showPreview ? (
-            <div className="h-full overflow-y-auto p-8 prose dark:prose-invert max-w-none">
+            <div className="h-full overflow-y-auto p-8">
               {(() => {
                 const frontmatterMatch = markdown.match(
                   /^---\n([\s\S]*?)\n---\n\n([\s\S]*)$/
@@ -410,19 +410,25 @@ export default function EditPostPage() {
                 const content = frontmatterMatch[2];
                 const titleMatch = frontmatterText.match(/title:\s*(.+)/);
                 const tagsMatch = frontmatterText.match(/tags:\s*(.+)/);
+                const dateMatch = frontmatterText.match(/date:\s*(.+)/);
+
                 const previewTitle = titleMatch
                   ? titleMatch[1].trim()
                   : "Untitled";
                 const previewTags = tagsMatch ? tagsMatch[1].trim() : "";
+                const previewDate = dateMatch ? dateMatch[1].trim() : date;
+
+                const post = {
+                  data: {
+                    title: previewTitle,
+                    tags: previewTags,
+                    date: previewDate,
+                  },
+                  content: content,
+                };
 
                 return (
-                  <>
-                    <h1 className="mb-2">{previewTitle}</h1>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-                      {date} {previewTags && `• ${previewTags}`}
-                    </p>
-                    <MarkdownPreview markdown={content} />
-                  </>
+                  <RenderPost post={post} prev={null} next={null} slug={null} />
                 );
               })()}
             </div>

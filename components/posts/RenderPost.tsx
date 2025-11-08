@@ -1,77 +1,7 @@
 import Link from "next/link";
-import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dracula } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import rehypeRaw from "rehype-raw";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import Image from "next/image";
-import remarkGfm from "remark-gfm";
-
-import "katex/dist/katex.min.css";
-
-// Override dracula theme to remove borders
-const customDracula = {
-  ...dracula,
-  'pre[class*="language-"]': {
-    ...dracula['pre[class*="language-"]'],
-    borderRadius: 0,
-    border: "none",
-    borderImage: "none",
-    borderWidth: 0,
-    marginTop: 0,
-    marginBottom: 0,
-    marginLeft: "-1.5rem", // break out of prose (0.5rem) + parent (1rem) padding
-    marginRight: "-1.5rem",
-    padding: "1rem",
-    overflowX: "auto",
-  },
-};
+import MarkdownContent from "./MarkdownContent";
 
 const RenderPost = ({ post, prev, next, slug }: any) => {
-  const components = {
-    code({ node, inline, className, children, ...props }: any) {
-      const match = /language-(\w+)/.exec(className || "");
-      return !inline && match ? (
-        <SyntaxHighlighter
-          style={customDracula}
-          language={match[1]}
-          customStyle={{
-            border: "none",
-            boxShadow: "none",
-            outline: "none",
-          }}
-          PreTag="div"
-          {...props}
-        >
-          {String(children).replace(/\n$/, "")}
-        </SyntaxHighlighter>
-      ) : (
-        <code className={className} {...props}>
-          {children}
-        </code>
-      );
-    },
-    p: ({ node, children }: any) => {
-      if (node.children[0].tagName === "img") {
-        const image: any = node.children[0];
-        return (
-          <div className="text-center">
-            <Image
-              src={`${image.properties.src}`}
-              alt={image.properties.alt}
-              width="800"
-              height="500"
-            />
-            <p className="text-gray-400 text-xs mt-1">{image.properties.alt}</p>
-          </div>
-        );
-      }
-
-      return <p>{children}</p>;
-    },
-  };
-
   return (
     <div>
       <div
@@ -119,13 +49,7 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
 
         {/* Content */}
         <article className="prose dark:prose-invert dark:text-japanese-shironezu text-sm md:text-base leading-relaxed max-w-none selection:bg-japanese-unoharairo/30 dark:selection:bg-japanese-murasakisuishiyou/20 prose-a:text-japanese-sumiiro prose-a:decoration-japanese-soshoku/50 hover:prose-a:text-japanese-sumiiro/70 hover:prose-a:decoration-japanese-sumiiro prose-headings:text-japanese-sumiiro dark:prose-headings:text-japanese-murasakisuishiyou">
-          <ReactMarkdown
-            components={components}
-            remarkPlugins={[remarkMath, remarkGfm]}
-            rehypePlugins={[rehypeRaw, rehypeKatex]}
-          >
-            {post.content}
-          </ReactMarkdown>
+          <MarkdownContent content={post.content} />
         </article>
       </div>
 

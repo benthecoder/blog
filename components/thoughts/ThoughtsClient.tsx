@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface Tweet {
   id: number;
@@ -43,7 +43,7 @@ export default function ThoughtsClient({
 
   const dates = Object.keys(groupedByDate);
 
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     if (loading || !hasMore) return;
 
     setLoading(true);
@@ -64,7 +64,7 @@ export default function ThoughtsClient({
     } finally {
       setLoading(false);
     }
-  };
+  }, [loading, hasMore, thoughts.length, total]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -81,7 +81,7 @@ export default function ThoughtsClient({
     }
 
     return () => observer.disconnect();
-  }, [hasMore, loading, thoughts.length]);
+  }, [hasMore, loading, loadMore]);
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
