@@ -16,6 +16,7 @@ const SKETCH_PATHS = [
   "/images/wave.png",
   "/images/room.png",
   "/images/angel.png",
+  "/images/icons.jpg",
 ] as const;
 
 const ROTATION_INTERVAL = 3000;
@@ -32,9 +33,9 @@ export default function ArtworkRotation() {
   }, []);
 
   return (
-    <div className="fixed inset-0 md:left-64 flex items-center justify-center overflow-hidden">
+    <div className="fixed top-32 md:top-0 bottom-0 left-0 right-0 md:left-64 flex items-center justify-center overflow-hidden z-[-100]">
       <div className="relative w-full h-full max-w-6xl px-8 flex items-center justify-center">
-        <div className="relative w-full h-[75vh] select-none">
+        <div className="relative w-full h-[70vh] select-none">
           <Image
             src={SKETCH_PATHS[currentIndex]}
             alt="sketch"
