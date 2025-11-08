@@ -22,69 +22,25 @@ type ImageLink = {
   altText?: string;
 };
 
-type TimelineEvent = {
-  year: string;
-  month?: string;
-  day?: string;
+type TimelineItem = {
   description: string;
   imageLinks?: ImageLink[];
+};
+
+type TimelineEvent = {
+  period: string;
+  month?: string;
+  day?: string;
+  items: TimelineItem[];
 };
 
 type TimelineProps = {
   events: TimelineEvent[];
 };
 
-// Month name to number mapping for sorting
-const monthToNumber: Record<string, number> = {
-  january: 1,
-  february: 2,
-  march: 3,
-  april: 4,
-  may: 5,
-  june: 6,
-  july: 7,
-  august: 8,
-  september: 9,
-  october: 10,
-  november: 11,
-  december: 12,
-};
-
 const Timeline: React.FC<TimelineProps> = ({ events }) => {
-  // Group events by year and sort chronologically within each year
-  const groupedEvents = events.reduce(
-    (acc, event) => {
-      if (!acc[event.year]) {
-        acc[event.year] = [];
-      }
-      acc[event.year].push(event);
-      return acc;
-    },
-    {} as Record<string, TimelineEvent[]>
-  );
-
-  // Sort events within each year
-  Object.keys(groupedEvents).forEach((year) => {
-    groupedEvents[year].sort((a, b) => {
-      const monthA = a.month ? monthToNumber[a.month.toLowerCase()] || 0 : 0;
-      const monthB = b.month ? monthToNumber[b.month.toLowerCase()] || 0 : 0;
-
-      if (monthA !== monthB) {
-        return monthA - monthB;
-      }
-
-      const dayA = a.day ? parseInt(a.day, 10) : 0;
-      const dayB = b.day ? parseInt(b.day, 10) : 0;
-
-      return dayA - dayB;
-    });
-  });
-
   // Helper component for image link with Floating UI positioning
-  const ImageLinkComponent: React.FC<{ link: ImageLink; eventId: string }> = ({
-    link,
-    eventId,
-  }) => {
+  const ImageLinkComponent: React.FC<{ link: ImageLink }> = ({ link }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const { refs, floatingStyles, context } = useFloating({
@@ -148,32 +104,28 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
   };
 
   // Helper to render description with image links
-  const renderDescription = (event: TimelineEvent, eventIndex: number) => {
-    if (!event.imageLinks || event.imageLinks.length === 0) {
-      return event.description;
+  const renderDescription = (item: TimelineItem, itemIndex: number) => {
+    if (!item.imageLinks || item.imageLinks.length === 0) {
+      return item.description;
     }
 
-    let remainingText = event.description;
+    let remainingText = item.description;
     const parts: React.ReactNode[] = [];
 
-    event.imageLinks.forEach((link, idx) => {
+    item.imageLinks.forEach((link, idx) => {
       const index = remainingText.indexOf(link.text);
       if (index !== -1) {
         // Add text before the link
         if (index > 0) {
           parts.push(
-            <span key={`text-before-${eventIndex}-${idx}`}>
+            <span key={`text-before-${itemIndex}-${idx}`}>
               {remainingText.substring(0, index)}
             </span>
           );
         }
         // Add the image link
         parts.push(
-          <ImageLinkComponent
-            key={`link-${eventIndex}-${idx}`}
-            link={link}
-            eventId={`${eventIndex}-${idx}`}
-          />
+          <ImageLinkComponent key={`link-${itemIndex}-${idx}`} link={link} />
         );
         remainingText = remainingText.substring(index + link.text.length);
       }
@@ -181,7 +133,7 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
 
     // Add any remaining text
     if (remainingText.length > 0) {
-      parts.push(<span key={`text-after-${eventIndex}`}>{remainingText}</span>);
+      parts.push(<span key={`text-after-${itemIndex}`}>{remainingText}</span>);
     }
 
     return <>{parts}</>;
@@ -189,53 +141,50 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
 
   return (
     <div className="space-y-6 sm:space-y-10 font-serif">
-      {Object.entries(groupedEvents).map(([year, yearEvents]) => (
-        <div key={year} className="group/year">
-          <div className="flex gap-2 sm:gap-4 text-[#595857] dark:text-[#F3F3F3]">
-            <div className="min-w-[50px] sm:min-w-[70px] pt-0.5">
-              <span className="text-sm opacity-50 tracking-wide transition-opacity group-hover/year:opacity-70">
-                {year}
-              </span>
-            </div>
-            <div className="flex-1 space-y-2 sm:space-y-4 -mt-0.5">
-              {yearEvents.map((event, index) => {
-                const dateDetail =
-                  event.day && event.month
-                    ? `${event.month} ${event.day}`
-                    : event.month
-                      ? event.month
-                      : null;
+      {events.map((event, eventIndex) => {
+        const dateDetail =
+          event.day && event.month
+            ? `${event.month} ${event.day}`
+            : event.month
+              ? event.month
+              : null;
 
-                const eventKey = `${year}-${event.month || "no-month"}-${event.day || "no-day"}-${index}`;
-
-                return (
-                  <div
-                    key={eventKey}
-                    className="flex gap-1.5 sm:gap-3 group/event"
-                  >
-                    {dateDetail ? (
-                      <>
-                        <div className="min-w-[70px] sm:min-w-[90px] pt-0.5">
-                          <span className="text-sm opacity-30 transition-opacity group-hover/event:opacity-50">
-                            {dateDetail}
-                          </span>
-                        </div>
-                        <div className="flex-1 leading-relaxed">
-                          {renderDescription(event, index)}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="flex-1 leading-relaxed">
-                        {renderDescription(event, index)}
-                      </div>
-                    )}
+        return (
+          <div key={`${event.period}-${eventIndex}`} className="group/year">
+            <div className="flex gap-2 sm:gap-4 text-[#595857] dark:text-[#F3F3F3]">
+              <div className="min-w-[80px] sm:min-w-[100px] pt-0.5">
+                <span className="text-sm opacity-50 tracking-wide transition-opacity group-hover/year:opacity-70">
+                  {event.period}
+                </span>
+              </div>
+              <div className="flex-1 space-y-2 -mt-0.5">
+                {dateDetail && (
+                  <div className="min-w-[70px] sm:min-w-[90px] pt-0.5">
+                    <span className="text-sm opacity-30 transition-opacity group-hover/year:opacity-50">
+                      {dateDetail}
+                    </span>
                   </div>
-                );
-              })}
+                )}
+                <ul className="space-y-2 list-none">
+                  {event.items.map((item, itemIndex) => (
+                    <li
+                      key={`${event.period}-item-${itemIndex}`}
+                      className="flex gap-2 leading-relaxed group/item"
+                    >
+                      <span className="opacity-30 transition-opacity group-hover/item:opacity-50">
+                        -
+                      </span>
+                      <span className="flex-1">
+                        {renderDescription(item, itemIndex)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
