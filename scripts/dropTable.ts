@@ -3,8 +3,9 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
-// Ensure the database URL is properly set
-process.env.POSTGRES_URL = process.env.DATABASE_URL;
+if (!process.env.POSTGRES_URL) {
+  throw new Error("POSTGRES_URL environment variable is required");
+}
 
 async function dropTable() {
   try {

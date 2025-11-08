@@ -1,5 +1,3 @@
-# library
-
 ## books for 2025
 
 fiction
@@ -13,14 +11,14 @@ spirituality
 - Works of Love (Søren Kierkegaard)
 - Fear and Trembling (Søren Kierkegaard)
 - The Wisdom of Insecurity (Alan W. Watts)
-- [Confession](/posts/100725) (Leo Tolstoy) ✅
-- [Mere Christianity](/posts/120725) (C.S. Lewis) ✅
+- [Confession](/posts/100725) (Leo Tolstoy)
+- [Mere Christianity](/posts/120725) (C.S. Lewis)
 
 self / art
 
 - The Sense of Style (Steven Pinker)
 - The Conquest of Happiness (Bertrand Russell)
-- [In Praise of Shadows](/posts/040125) (Jun’ichirō Tanizaki) ✅
+- [In Praise of Shadows](/posts/040125) (Jun’ichirō Tanizaki)
 
 tech/world
 
@@ -28,16 +26,16 @@ tech/world
 
 ## books for 2024
 
-1. [How Proust Can Change Your Life](/posts/proust) (Alain de Botton) ✅
-1. [Man's Search for meaning](/posts/meaning) (Viktor Frankl) ✅
-1. [The Elements of Style, Fourth Edition](/posts/elementsofstyle) (Willian Strunk) ✅
-1. [Letters to a Young Poet](/posts/rilkeletters) (Rainer Maria Rilke) ✅
-1. [Burnout Society](/posts/burnoutsociety) (Byung-Chul Han) ✅
-1. [Zero to One](/posts/0to1) (Peter Thiel) ✅
-1. [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn Klinkenborg) ✅
-1. [How to Be a Friend: An Ancient Guide to True Friendship](/posts/truefriendship) (Marcus Tullius Cicero) ✅
-1. [The Almanack of Naval Ravikant](/posts/naval) (Naval Ravikant) ✅
-1. [Make Something Wonderful](/posts/makesomethingwonderful) (Steve Jobs) ✅
+- [How Proust Can Change Your Life](/posts/proust) (Alain de Botton)  
+- [Man's Search for meaning](/posts/meaning) (Viktor Frankl)  
+- [The Elements of Style, Fourth Edition](/posts/elementsofstyle)   (Willian Strunk)  
+- [Letters to a Young Poet](/posts/rilkeletters) (Rainer Maria Rilke)  
+- [Burnout Society](/posts/burnoutsociety) (Byung-Chul Han)  
+- [Zero to One](/posts/0to1) (Peter Thiel)  
+- [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn linkenborg)  
+- [How to Be a Friend: An Ancient Guide to True Friendship](/posts/[x]ruefriendship) (Marcus Tullius Cicero)  
+- [The Almanack of Naval Ravikant](/posts/naval) (Naval Ravikant)  
+- [Make Something Wonderful](/posts/makesomethingwonderful) (Steve Jobs)
 
 
 ## my information diet

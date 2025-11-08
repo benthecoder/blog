@@ -20,8 +20,7 @@ const nextConfig = {
   ],
   staticPageGenerationTimeout: 1000,
   env: {
-    DATABASE_URL: process.env.DATABASE_URL,
-    POSTGRES_URL: process.env.DATABASE_URL,
+    POSTGRES_URL: process.env.POSTGRES_URL,
   },
 };
 

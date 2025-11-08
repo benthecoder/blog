@@ -1,6 +1,4 @@
-# projects
-
-shipped
+done?
 
 - [scribesystem](https://scribesystem.vercel.app): retro writing assistant with custom styles
 - [aha](https://github.com/benthecoder/aha): chrome extension that explains anything with llama 3.1 + exa.ai api
@@ -13,7 +11,7 @@ ideas
 
 ---
 
-other projects page
+inspirations
 
 - [jaclyn](https://www.straightupjac.xyz/projects)
 - [Varun Shenoy](https://varunshenoy.com/projects.html)
@@ -22,8 +20,5 @@ other projects page
 - [Ray Del Vecchio](https://raydelv.tech/technology)
 - [Alex Reichert](https://www.alexreichert.com/projects)
 - [Keane Moraes](https://www.itskeane.info/projects)
-
-ideas
-
 - [straightupjac](https://www.straightupjac.xyz/thoughts/ideas)
 - [Minn Kim](https://x.com/minney_cat/status/1045046502417031168)

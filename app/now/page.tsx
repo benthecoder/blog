@@ -35,7 +35,6 @@ const AboutPage = () => {
   return (
     <div>
       <article className="prose">
-        <h1>now</h1>
         <p>
           this is a <a href="https://sive.rs/nowff">now</a> page
         </p>
