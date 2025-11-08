@@ -25,7 +25,7 @@ export default function Gallery({ images }: GalleryProps) {
   // Masonry layout algorithm
   const imagePositions = useRef(
     (() => {
-      const sizes = [0.9, 1, 1.1];
+      const sizes = [1];
 
       // Track height of each column
       const columnHeights = new Array(COLS).fill(0);
