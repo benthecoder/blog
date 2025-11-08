@@ -64,7 +64,9 @@ export default function HackerNewsPage() {
   return (
     <div className="w-full">
       {isLoading ? (
-        <p>flibbertigibbeting...</p>
+        <p className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
+          flibbertigibbeting...
+        </p>
       ) : (
         <div>
           <ol className="space-y-1 list-none">
