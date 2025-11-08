@@ -12,8 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      POSTGRES_URL: ${{ secrets.DATABASE_URL }}
+      POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
       VOYAGE_AI_API_KEY: ${{ secrets.VOYAGE_AI_API_KEY }}
 
     steps:
