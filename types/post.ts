@@ -14,6 +14,7 @@ export interface PostMetadata {
   slug: string;
   prev?: PostMetadata | null;
   next?: PostMetadata | null;
+  isDraft?: boolean;
 }
 
 /**

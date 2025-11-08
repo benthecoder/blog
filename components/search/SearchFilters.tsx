@@ -32,7 +32,7 @@ export default function SearchFilters({
               onClick={() => onSearchTypeChange(type)}
               className={`px-3 py-1.5 text-sm border transition-all ${
                 searchType === type
-                  ? "border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent"
+                  ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-[#595857] dark:text-[#DCDDDD] font-medium"
                   : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
               }`}
             >
@@ -53,7 +53,7 @@ export default function SearchFilters({
             onClick={() => onChunkTypeChange("")}
             className={`px-3 py-1.5 text-sm border transition-all ${
               selectedChunkType === ""
-                ? "border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent"
+                ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-[#595857] dark:text-[#DCDDDD] font-medium"
                 : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
             }`}
           >
@@ -66,7 +66,7 @@ export default function SearchFilters({
               onClick={() => onChunkTypeChange(type)}
               className={`px-3 py-1.5 text-sm border transition-all ${
                 selectedChunkType === type
-                  ? "border-light-accent dark:border-dark-accent bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent"
+                  ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-[#595857] dark:text-[#DCDDDD] font-medium"
                   : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
               }`}
             >

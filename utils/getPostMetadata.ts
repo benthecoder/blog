@@ -3,17 +3,28 @@ import path from "path";
 import matter from "gray-matter";
 
 // Import shared utilities and types
-import { POSTS_DIR, DRAFTS_DIR } from "@/config/paths";
+import { POSTS_DIR } from "@/config/paths";
 import { PostMetadata } from "@/types/post";
 import { calculateWordCount } from "./postUtils";
 
-const getPostMetadata = (getDrafts: boolean = false): PostMetadata[] => {
-  const folder = getDrafts ? DRAFTS_DIR : POSTS_DIR;
-  const files = fs.readdirSync(folder);
-  const markdownPosts = files.filter((file) => file.endsWith(".md"));
+const getPostMetadata = (
+  options: { includeDrafts?: boolean } = {}
+): PostMetadata[] => {
+  const { includeDrafts = false } = options;
 
-  const posts: PostMetadata[] = markdownPosts.map(
-    (fileName): Partial<PostMetadata> => {
+  const folders = includeDrafts
+    ? [POSTS_DIR, path.join(POSTS_DIR, "drafts")]
+    : [POSTS_DIR];
+
+  const posts: PostMetadata[] = [];
+
+  for (const folder of folders) {
+    if (!fs.existsSync(folder)) continue;
+
+    const files = fs.readdirSync(folder);
+    const markdownPosts = files.filter((file) => file.endsWith(".md"));
+
+    const folderPosts = markdownPosts.map((fileName): Partial<PostMetadata> => {
       try {
         const fileContents = fs.readFileSync(
           path.join(folder, fileName),
@@ -27,18 +38,21 @@ const getPostMetadata = (getDrafts: boolean = false): PostMetadata[] => {
           tags: matterResult.data.tags || "",
           wordcount: calculateWordCount(matterResult.content),
           slug: fileName.replace(".md", ""),
+          isDraft: folder.includes("drafts"),
         };
       } catch (error) {
         console.error(`Error parsing frontmatter in file: ${fileName}`);
         console.error(error);
-        // Return a minimal object to prevent the entire function from failing
         return {
           title: `Error in ${fileName}`,
           slug: fileName.replace(".md", ""),
+          isDraft: folder.includes("drafts"),
         };
       }
-    }
-  ) as PostMetadata[];
+    }) as PostMetadata[];
+
+    posts.push(...folderPosts);
+  }
 
   // Sort posts by date.
   posts.sort((a, b) => {
