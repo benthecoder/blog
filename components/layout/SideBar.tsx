@@ -32,14 +32,14 @@ export function Sidebar() {
         <div className="font-bold text-center md:text-left mt-4 md:mt-0 mb-8">
           <Link
             href="/"
-            className="flex flex-row items-center justify-center md:justify-start gap-2"
+            className="flex flex-row md:flex-col items-center justify-center md:justify-start gap-2"
           >
             <Image
               src="/icons/ename.svg"
               alt="BENEDICT NEO"
               width={10}
               height={10}
-              className="w-24 h-auto dark:invert"
+              className="w-24 md:w-32 h-auto dark:invert"
               priority
             />
             <Image
@@ -47,13 +47,13 @@ export function Sidebar() {
               alt="梁耀恩"
               width={10}
               height={10}
-              className="w-28 h-auto dark:invert"
+              className="w-24 md:w-32 h-auto dark:invert"
               priority
             />
           </Link>
         </div>
 
-        <div className="flex flex-row gap-2 justify-center md:flex md:flex-col mt-2 md:mt-10 md:gap-0 md:justify-start">
+        <div className="flex flex-row gap-2 justify-center md:flex md:flex-col mt-2 md:mt-10 md:gap-3 md:justify-start">
           {links.map(({ path, text, icon }) => (
             <Link
               key={path}
