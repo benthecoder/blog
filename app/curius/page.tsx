@@ -38,38 +38,42 @@ export default function CuriusPage() {
 
   return (
     <div>
-      <p className="mb-5">
-        stay{" "}
-        <a
-          href="https://curius.app/benedict-neo"
-          className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
-        >
-          curius
-        </a>
-      </p>
       {isLoading ? (
-        <p>discombobulating...</p>
+        <p className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
+          discombobulating...
+        </p>
       ) : (
-        <ol className="space-y-1 list-none">
-          {links.map((link, index) => (
-            <li key={link.id} className="flex items-baseline gap-2">
-              <span className="text-japanese-sumiiro dark:text-japanese-shironezu text-sm tabular-nums min-w-[2ch]">
-                {index + 1}.
-              </span>
-              <a
-                href={link.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
-              >
-                {link.title.toLowerCase()}
-              </a>
-              <span className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 text-sm whitespace-nowrap">
-                {formatTime(link.createdDate)}
-              </span>
-            </li>
-          ))}
-        </ol>
+        <>
+          <p className="mb-5">
+            stay{" "}
+            <a
+              href="https://curius.app/benedict-neo"
+              className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
+            >
+              curius
+            </a>
+          </p>
+          <ol className="space-y-1 list-none">
+            {links.map((link, index) => (
+              <li key={link.id} className="flex items-baseline gap-2">
+                <span className="text-japanese-sumiiro dark:text-japanese-shironezu text-sm tabular-nums min-w-[2ch]">
+                  {index + 1}.
+                </span>
+                <a
+                  href={link.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
+                >
+                  {link.title.toLowerCase()}
+                </a>
+                <span className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 text-sm whitespace-nowrap">
+                  {formatTime(link.createdDate)}
+                </span>
+              </li>
+            ))}
+          </ol>
+        </>
       )}
     </div>
   );

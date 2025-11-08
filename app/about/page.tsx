@@ -312,15 +312,11 @@ const ChronologyPage = () => {
   return (
     <div className="min-h-screen font-serif">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="mb-8 pb-4 border-b border-light-border dark:border-dark-tag">
-          <p className="text-xs text-light-text/60 dark:text-dark-text/60 tracking-wide mb-2">
-            ABOUT
-          </p>
-          <h1 className="text-2xl font-bold text-light-accent dark:text-dark-accent">
+        <div className="mb-8 pb-4">
+          <h1 className="text-md text-japanese-sumiiro dark:text-japanese-shironezu">
             my life made up of small, meaningful moments
           </h1>
         </div>
-
         <Timeline events={timelineEvents} />
       </div>
     </div>
