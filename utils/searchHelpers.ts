@@ -69,7 +69,7 @@ export const highlightText = (
           {
             key: i,
             className:
-              "bg-light-accent dark:bg-dark-accent text-white font-medium px-1 py-0.5 rounded",
+              "bg-japanese-sumiiro dark:bg-japanese-shironezu text-japanese-gofuniro dark:text-japanese-sumiiro font-medium px-1 py-0.5 rounded",
           },
           text.substring(index, index + length)
         )

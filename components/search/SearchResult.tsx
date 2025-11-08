@@ -41,9 +41,11 @@ export default function SearchResult({ result, query }: SearchResultProps) {
           <h3 className="font-medium text-light-text dark:text-dark-text group-hover:text-light-accent dark:group-hover:text-dark-accent transition-colors">
             {result.post_title}
           </h3>
-          <span className="text-xs px-2 py-1 rounded-full bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent font-medium whitespace-nowrap">
-            {Math.round(result.similarity * 100)}%
-          </span>
+          {result.score_type !== "keyword" && (
+            <span className="text-xs px-2 py-1 rounded-full bg-light-accent/10 dark:bg-dark-accent/10 text-light-accent dark:text-dark-accent font-medium whitespace-nowrap">
+              {Math.round(result.similarity * 100)}%
+            </span>
+          )}
         </div>
 
         {result.chunk_type === "code" ? (

@@ -88,7 +88,7 @@ export default function ThoughtsClient({
       <div className="space-y-8">
         {dates.map((date) => (
           <div key={date} className="relative">
-            <div className="mb-6 pb-2 border-b border-japanese-shiraumenezu dark:border-japanese-ginnezu/30">
+            <div className="mb-2 pb-2 border-b border-japanese-shiraumenezu dark:border-japanese-ginnezu/30">
               <p className="text-xs text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 tracking-wide lowercase">
                 {date}
               </p>

@@ -190,6 +190,14 @@ body {
   color: #91989c; /* ginnezu */
 }
 
+.prose ::selection {
+  background-color: #91989c !important; /* ginnezu - silver mouse */
+}
+
+.dark .prose ::selection {
+  background-color: #595857 !important; /* sumiiro - ink color, darker for contrast */
+}
+
 .prose h1 {
   font-size: 1.5rem /* 24px */;
   line-height: 2rem /* 32px */;
@@ -255,18 +263,13 @@ img.not-prose {
 }
 
 ::selection {
-  background: theme("colors.japanese.murasakisuishiyou / 30%");
-  color: theme("colors.light.text");
+  background-color: #dcdddd; /* shironezu - white grey */
 }
 
-mark {
-  background-color: theme("colors.japanese.unoharairo");
-  color: black;
-}
+/* Removed global mark styles - now handled in component */
 
 .dark ::selection {
-  background: theme("colors.japanese.nyuhakushoku / 20%");
-  color: theme("colors.dark.text");
+  background-color: #595857; /* sumiiro - ink color */
 }
 
 .hover-container {
