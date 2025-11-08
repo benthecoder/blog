@@ -1,7 +1,21 @@
 [
   {
-    "content": "\n> [quote that resonated today]\n\nmeals:\n\n- breakfast:\n- lunch:\n- dinner:\n\nnotes:\n\n- [interesting links]\n- [best moment]\n- [learned]\n- [grateful for]\n- [excitements]\n\nreflection:\n\n- gave me energy?\n- patterns am I noticing?\n- what needs attention?\n- how did I grow?\n- what would improve tomorrow?\n\ntomorrow: [one focus]\n\nslept: [time]",
-    "data": { "title": "", "tags": "journal", "date": "Oct 30, 2025" },
+    "content": "\n",
+    "data": {
+      "title": "401k explained",
+      "tags": "finance",
+      "date": "Nov 1, 2025"
+    },
+    "filePath": "011125.md"
+  },
+  {
+    "content": "\n",
+    "data": { "title": "test", "tags": "test", "date": "Oct 31, 2025" },
+    "filePath": "311025.md"
+  },
+  {
+    "content": "\n\n> [quote that resonated today]\n\nmeals:\n\n- breakfast:\n- lunch:\n- dinner:\n\nnotes:\n\n- [interesting links]\n- [best moment]\n- [learned]\n- [grateful for]\n- [excitements]\n\nreflection:\n\n- gave me energy?\n- patterns am I noticing?\n- what needs attention?\n- how did I grow?\n- what would improve tomorrow?\n\ntomorrow: [one focus]\n\nslept: [time]\n![](/images/test.png)",
+    "data": { "title": "wefwefewf", "tags": "journal", "date": "Oct 30, 2025" },
     "filePath": "301025.md"
   },
   {
@@ -10,7 +24,7 @@
     "filePath": "291025.md"
   },
   {
-    "content": "\n> [quote that resonated today]\n\nmeals:\n\n- breakfast:\n- lunch:\n- dinner:\n\nnotes:\n\n- [interesting links]\n- [best moment]\n- [learned]\n- [grateful for]\n- [excitements]\n\nreflection:\n\n- gave me energy?\n- patterns am I noticing?\n- what needs attention?\n- how did I grow?\n- what would improve tomorrow?\n\ntomorrow: [one focus]\n\nslept: [time]",
+    "content": "\n\n> [quote that resonated today]\n\nmeals:\n\n- breakfast:\n- lunch:\n- dinner:\n\nnotes:\n\n- [interesting links]\n- [best moment]\n- [learned]\n- [grateful for]\n- [excitements]\n\nreflection:\n\n- gave me energy?\n- patterns am I noticing?\n- what needs attention?\n- how did I grow?\n- what would improve tomorrow?\n\ntomorrow: [one focus]\n\nslept: [time]",
     "data": {
       "title": "village sushi",
       "tags": "journal",
@@ -52,7 +66,7 @@
     "filePath": "231025.md"
   },
   {
-    "content": "\nmeals:\n\nbreakfast: acai\nlunch: chicken tofu yakisoba\ndinner: salmon arugula rice\n\n\nwent for PT in the morning, i always feel better after the exercises, stronger and lighter somehow.\n\ni've been consistently going to the gym around 6pm at the office. chest, shoulders, legs. i hope i get to keep this up.\n\n\n---\n\npersonality is a form of performance \n\nif you're naturally an introvert and you have to deliver a presentation, you have to perform\n\nour natural personality is the little patterns we fall into in our day to day\n\nthe way we prefer to listen than speak, ask questions rather than share things without being prompted.",
+    "content": "\n\n\nmeals:\n\n\nbreakfast: acai\nlunch: chicken tofu yakisoba\ndinner: salmon arugula rice\n\n\n\nwent for PT in the morning, i always feel better after the exercises, stronger and lighter somehow.\n\ni've been consistently going to the gym around 6pm at the office. chest, shoulders, legs. i hope i get to keep this up.\n\n\n\n---\n\npersonality is a form of performance \n\nif you're naturally an introvert and you have to deliver a presentation, you have to perform\n\nour natural personality is the little patterns we fall into in our day to day\n\nthe way we prefer to listen than speak, ask questions rather than share things without being prompted.",
     "data": {
       "title": "personality is a performance",
       "tags": "journal, psychology",
@@ -106,7 +120,7 @@
     "filePath": "171025.md"
   },
   {
-    "content": "\nhere's a scenario:\n\nyou have a vector db of disease terms mapping to information you want, say journal_id, and given a user query, you want to find all the journal_ids for that disease term.\n\nsay the disease term is \"autoimmune polyendocrine syndrome type 1\"\n\nand you use using text-embedding-ada-002 and got this back:\n\n```txt\n0.6462 │ Type 1 Diabetes Mellitus          │ ID_001, ID_003 (+92 more)\n0.6452 │ Type 1 Diabetes                   │ ID_002, ID_004 (+95 more)  \n0.6443 │ Autoimmune Polyendocrinopathy...  │ ID_099\n```\n\nmy first thought, being medically illiterate like me, is oh the model saw Type 1 in both terms, so it latched on to that heavily. these general embeddings are bad at medical concepts. but it understood it more than i give it credit for.\n\nhere's the gist:\n\ntype 1 diabetes is actually a component diseases of [APS-1](https://pmc.ncbi.nlm.nih.gov/articles/PMC2859971/). APS-1 (aka [APECED](https://emedicine.medscape.com/article/124183-overview)) is caused by mutation in the [AIRE](https://en.wikipedia.org/wiki/Autoimmune_regulator) gene.\n\nThe AIRE protein normally teaches your immune system not to attack your own organs, but when its broken, it goes rogue and attacks multiple organs.\n\ndiagnosis requires at least 2 out of 3 classicial triad symptoms:\n\n- chronic candidiasis (yeast infections)\n- hypoparathyroidism (low calcium)\n- addison's disease (adrenal failure)\n\nbut only 45-67% of patients actually develop all three, many patients develop other autoimmune conditions or in addition, including: type 1 diabetes (18% of APS-1 patients), autoimmune hepatitis, vitiligo (skin), alopecia (hair loss), thyroid problems\n\nso APS-1 is a syndrome that can include T1D as one of the many possible manifestation, and the embedding model picked up on this relationship\n\n```txt\nAPS-1 (the syndrome - broken AIRE gene)\n├── Chronic candidiasis (73-100%)\n├── Hypoparathyroidism (76-93%)\n├── Addison's disease (72-100%)\n├── Type 1 diabetes (~18%)\n├── Alopecia (29-40%)\n└── Other manifestations\n```\n\nso searching for APS-1 and getting a T1D is like seraching heart attack and getting \"chest pain\" back. yes chest pain is a symptom of heart attack, but if someone needs info on heart attacks, giving them chest pain resources misses the point. they want the specific condition, not one of its symptoms. \n\nthe solution?\n\nmedical specific embeddings, a two stage retrieval (common in industry), contrastive finetuning w triplet loss where positive pairs are synonyms and exact matches, and hard negatives are manifestations and siblings.\n",
+    "content": "\nhere's a scenario:\n\nyou have a vector db of disease terms mapping to information you want, say journal_id, and given a user query, you want to find all the journal_ids for that disease term.\n\nsay the disease term is \"autoimmune polyendocrine syndrome type 1\"\n\nand you use using text-embedding-ada-002 and got this back\n\n```txt\n0.6462 │ Type 1 Diabetes Mellitus          │ ID_001, ID_003 (+92 more)\n0.6452 │ Type 1 Diabetes                   │ ID_002, ID_004 (+95 more)  \n0.6443 │ Autoimmune Polyendocrinopathy...  │ ID_099\n```\n\nmy first thought, being medically illiterate like me, is oh the model saw Type 1 in both terms, so it latched on to that heavily. these general embeddings are bad at medical concepts. but it understood it more than i give it credit for.\n\nhere's the gist:\n\ntype 1 diabetes is actually a component diseases of [APS-1](https://pmc.ncbi.nlm.nih.gov/articles/PMC2859971/). APS-1 (aka [APECED](https://emedicine.medscape.com/article/124183-overview)) is caused by mutation in the [AIRE](https://en.wikipedia.org/wiki/Autoimmune_regulator) gene.\n\nThe AIRE protein normally teaches your immune system not to attack your own organs, but when its broken, it goes rogue and attacks multiple organs.\n\ndiagnosis requires at least 2 out of 3 classicial triad symptoms:\n\n- chronic candidiasis (yeast infections)\n- hypoparathyroidism (low calcium)\n- addison's disease (adrenal failure)\n\nbut only 45-67% of patients actually develop all three, many patients develop other autoimmune conditions or in addition, including: type 1 diabetes (18% of APS-1 patients), autoimmune hepatitis, vitiligo (skin), alopecia (hair loss), thyroid problems\n\nso APS-1 is a syndrome that can include T1D as one of the many possible manifestation, and the embedding model picked up on this relationship\n\n```txt\nAPS-1 (the syndrome - broken AIRE gene)\n├── Chronic candidiasis (73-100%)\n├── Hypoparathyroidism (76-93%)\n├── Addison's disease (72-100%)\n├── Type 1 diabetes (~18%)\n├── Alopecia (29-40%)\n└── Other manifestations\n```\n\nso searching for APS-1 and getting a T1D is like seraching heart attack and getting \"chest pain\" back. yes chest pain is a symptom of heart attack, but if someone needs info on heart attacks, giving them chest pain resources misses the point. they want the specific condition, not one of its symptoms. \n\nthe solution?\n\nmedical specific embeddings, a two stage retrieval (common in industry), contrastive finetuning w triplet loss where positive pairs are synonyms and exact matches, and hard negatives are manifestations and siblings.\n",
     "data": {
       "title": "limitations of embeddings",
       "tags": "journal",

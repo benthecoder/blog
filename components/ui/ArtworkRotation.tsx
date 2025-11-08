@@ -33,27 +33,29 @@ export default function ArtworkRotation() {
   }, []);
 
   return (
-    <div className="fixed top-32 md:top-0 bottom-0 left-0 right-0 md:left-64 flex items-center justify-center overflow-hidden z-[-100]">
-      <div className="relative w-full h-full max-w-6xl px-8 flex items-center justify-center">
-        <div className="relative w-full h-[70vh] select-none">
-          <Image
-            src={SKETCH_PATHS[currentIndex]}
-            alt="sketch"
-            fill
-            className="object-contain opacity-90"
-            priority
-            draggable={false}
-            sizes="(max-width: 768px) 100vw, 1280px"
-          />
+    <>
+      <div className="fixed top-32 md:top-0 bottom-0 left-0 right-0 md:left-64 flex items-center justify-center overflow-hidden z-[-100]">
+        <div className="relative w-full h-full max-w-6xl px-8 flex items-center justify-center">
+          <div className="relative w-full h-[70vh] select-none">
+            <Image
+              src={SKETCH_PATHS[currentIndex]}
+              alt="sketch"
+              fill
+              className="object-contain opacity-90"
+              priority
+              draggable={false}
+              sizes="(max-width: 768px) 100vw, 1280px"
+            />
+          </div>
         </div>
       </div>
 
       <Link
         href="/about"
-        className="absolute bottom-8 right-8 text-sm text-japanese-sumiiro dark:text-japanese-shironezu hover:underline"
+        className="fixed bottom-8 right-8 text-sm text-japanese-sumiiro dark:text-japanese-shironezu hover:underline z-10"
       >
         about
       </Link>
-    </div>
+    </>
   );
 }

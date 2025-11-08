@@ -130,32 +130,36 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
       </div>
 
       {/* Navigation */}
-      <div className="mt-8 flex flex-col text-base gap-2">
-        {next && (
-          <div className="flex group">
-            <p className="text-japanese-sumiiro dark:text-japanese-shironezu font-semibold">
-              Next:
-            </p>
-            <Link
-              href={`/posts/${next.slug}`}
-              className="ml-2 text-japanese-sumiiro dark:text-japanese-nyuhakushoku hover:text-japanese-nezumiiro dark:hover:text-japanese-murasakisuishiyou transition-colors duration-200 underline"
-            >
-              {next.title}
-            </Link>
-          </div>
-        )}
-        {prev && (
-          <div className="flex group">
-            <p className="text-japanese-sumiiro dark:text-japanese-shironezu font-semibold">
-              Previous:
+      <div className="mt-8 flex justify-between text-xs gap-4">
+        {prev ? (
+          <div className="flex flex-col group flex-1">
+            <p className="text-light-text/40 dark:text-dark-text/40 mb-1">
+              Previous
             </p>
             <Link
               href={`/posts/${prev.slug}`}
-              className="ml-2 text-japanese-sumiiro dark:text-japanese-nyuhakushoku hover:text-japanese-nezumiiro dark:hover:text-japanese-murasakisuishiyou transition-colors duration-200 underline"
+              className="text-light-text dark:text-dark-text hover:text-light-accent dark:hover:text-dark-accent transition-colors"
             >
               {prev.title}
             </Link>
           </div>
+        ) : (
+          <div className="flex-1"></div>
+        )}
+        {next ? (
+          <div className="flex flex-col group flex-1 text-right">
+            <p className="text-light-text/40 dark:text-dark-text/40 mb-1">
+              Next
+            </p>
+            <Link
+              href={`/posts/${next.slug}`}
+              className="text-light-text dark:text-dark-text hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+            >
+              {next.title}
+            </Link>
+          </div>
+        ) : (
+          <div className="flex-1"></div>
         )}
       </div>
     </div>

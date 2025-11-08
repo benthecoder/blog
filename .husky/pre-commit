@@ -1,1 +1,8 @@
 npx lint-staged
+
+# Type check
+echo "Running TypeScript type check..."
+pnpm tsc --noEmit || {
+  echo "❌ Type check failed. Please fix TypeScript errors before committing."
+  exit 1
+}
