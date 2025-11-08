@@ -36,13 +36,22 @@ export default function ArchiveClient({ allPosts }: ArchiveClientProps) {
 
   return (
     <div>
-      <h1 className="font-bold text-left mb-6 text-2xl hover:text-light-accent dark:hover:text-dark-accent transition-colors">
-        {" "}
-        archive
-      </h1>
+      <div className="mb-8 pb-4 border-b border-light-border dark:border-dark-tag">
+        <p className="text-xs text-light-text/60 dark:text-dark-text/60 tracking-wide mb-2">
+          ARCHIVE
+        </p>
+        <div className="flex items-baseline gap-3">
+          <h1 className="text-2xl font-bold text-light-accent dark:text-dark-accent">
+            {totalPosts} entries
+          </h1>
+          <span className="text-sm text-light-text/40 dark:text-dark-text/40 font-mono tabular-nums">
+            {new Intl.NumberFormat().format(totalWordCount)} words
+          </span>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 text-sm">
-        <div className="flex flex-row space-x-2 mb-3">
+        <div className="flex flex-row space-x-2 mb-6">
           <div>
             filter by{" "}
             <Link
@@ -69,13 +78,6 @@ export default function ArchiveClient({ allPosts }: ArchiveClientProps) {
             viz
           </Link>
         </div>
-
-        <p className="text-japanese-sumiiro dark:text-japanese-murasakisuishiyou text-sm mb-4 font-medium">
-          total: {totalPosts} entries (
-          {new Intl.NumberFormat().format(totalWordCount)} words)
-        </p>
-
-        <br />
 
         <div className="mb-6">
           <Heatmap

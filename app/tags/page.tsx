@@ -19,17 +19,31 @@ const TagPage = () => {
   });
 
   const sortedTags = Object.keys(tags).sort((a, b) => tags[b] - tags[a]);
-  const tagList = sortedTags.map((tag) => (
-    <div className="flex text-blue-800 pr-2 dark:text-blue-200" key={tag}>
-      <Link href={`/tags/${tag}`}>{tag}</Link>
-      <p className="text-slate-500 dark:text-slate-100 pl-1">({tags[tag]})</p>
-    </div>
-  ));
 
   return (
-    <div>
-      <h1 className="font-bold text-left mb-10 text-2xl"> Tags</h1>
-      <div className="flex flex-wrap">{tagList}</div>
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      {/* Header */}
+      <div className="mb-4">
+        <p className="text-[10px] text-light-text/40 dark:text-dark-text/40 tracking-widest font-mono">
+          {sortedTags.length} TAGS
+        </p>
+      </div>
+
+      {/* Tags grid - compact bulletin board style */}
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-0">
+        {sortedTags.map((tag) => (
+          <Link href={`/tags/${tag}`} key={tag}>
+            <div className="group border border-light-border dark:border-dark-tag hover:bg-light-accent/5 dark:hover:bg-dark-accent/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors">
+              <span className="text-xs text-light-text dark:text-dark-text group-hover:text-light-accent dark:group-hover:text-dark-accent transition-colors truncate">
+                {tag}
+              </span>
+              <span className="text-[10px] text-light-text/30 dark:text-dark-text/30 font-mono tabular-nums shrink-0">
+                {tags[tag]}
+              </span>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };

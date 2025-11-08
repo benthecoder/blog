@@ -1,38 +1,8 @@
 import React from "react";
-import Image from "next/image";
 import Timeline from "@/components/visualizations/Timeline";
 
-type ImageOnHoverProps = {
-  text: string;
-  imagePath: string;
-  altText: string;
-};
-
-const ImageOnHover: React.FC<ImageOnHoverProps> = ({
-  text,
-  imagePath,
-  altText,
-}) => {
-  return (
-    <span className="relative group inline-block">
-      <span className="underline decoration-dotted cursor-pointer hover:decoration-solid">
-        {text}
-      </span>
-      <div className="absolute hidden group-hover:flex left-1/2 -translate-x-1/2 bottom-full pb-2 z-50 pointer-events-none">
-        <Image
-          src={imagePath}
-          alt={altText}
-          className="image-hover"
-          width={300}
-          height={200}
-        />
-      </div>
-    </span>
-  );
-};
-
 const ChronologyPage = () => {
-  const timelineEvents = [
+  const rawEvents = [
     {
       year: "2001",
       month: "october",
@@ -308,11 +278,45 @@ const ChronologyPage = () => {
     },
   ];
 
+  // Group events by year
+  const groupedEvents = rawEvents.reduce(
+    (acc, event) => {
+      const year = event.year;
+      if (!acc[year]) {
+        acc[year] = [];
+      }
+      acc[year].push({
+        month: event.month,
+        day: event.day,
+        description: event.description,
+        imageLinks: event.imageLinks,
+      });
+      return acc;
+    },
+    {} as Record<
+      string,
+      Array<{
+        month?: string;
+        day?: string;
+        description: string;
+        imageLinks?: any[];
+      }>
+    >
+  );
+
+  const timelineEvents = Object.entries(groupedEvents).map(([year, items]) => ({
+    period: year,
+    items: items,
+  }));
+
   return (
     <div className="min-h-screen font-serif">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="mb-8 sm:mb-12">
-          <h1 className="text-md font-normal text-[#595857] dark:text-[#F3F3F3] mb-2">
+        <div className="mb-8 pb-4 border-b border-light-border dark:border-dark-tag">
+          <p className="text-xs text-light-text/60 dark:text-dark-text/60 tracking-wide mb-2">
+            ABOUT
+          </p>
+          <h1 className="text-2xl font-bold text-light-accent dark:text-dark-accent">
             my life made up of small, meaningful moments
           </h1>
         </div>
