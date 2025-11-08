@@ -36,37 +36,37 @@ export default function ArchiveClient({ allPosts }: ArchiveClientProps) {
 
   return (
     <div>
-      <div className="flex items-baseline justify-between mb-6">
-        <div>
-          <h1 className="text-sm text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 mb-1">
+      <div className="flex items-start justify-between mb-6">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-sm text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
             archive
           </h1>
-          <div className="flex items-baseline gap-3 text-sm text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
-            <span>{totalPosts} entries</span>
-            <span>{new Intl.NumberFormat().format(totalWordCount)} words</span>
+          <div className="flex gap-2 text-sm text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
+            <Link
+              href="/tags"
+              className="hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+            >
+              tags
+            </Link>
+            <span>•</span>
+            <Link
+              href="/search"
+              className="hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+            >
+              search
+            </Link>
+            <span>•</span>
+            <Link
+              href="/viz"
+              className="hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+            >
+              cluster
+            </Link>
           </div>
         </div>
-        <div className="flex gap-2 text-sm text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
-          <Link
-            href="/tags"
-            className="hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
-          >
-            tags
-          </Link>
-          <span>•</span>
-          <Link
-            href="/search"
-            className="hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
-          >
-            search
-          </Link>
-          <span>•</span>
-          <Link
-            href="/viz"
-            className="hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
-          >
-            cluster
-          </Link>
+        <div className="flex flex-col items-end gap-1 text-sm text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
+          <span>{totalPosts} entries</span>
+          <span>{new Intl.NumberFormat().format(totalWordCount)} words</span>
         </div>
       </div>
 
