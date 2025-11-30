@@ -39,19 +39,24 @@ export async function GET(req: NextRequest) {
     const feedUrl = `${rootUrl}${feedPath}`; // The full URL to your feed
 
     const postItems = feed
-      .map((page) => {
-        const url = `${rootUrl}/posts/${page.filePath.replace(".md", "")}`;
-        let contentHTML = marked(page.content);
+      .map(
+        (page: {
+          data: { title: string; date: string };
+          content: string;
+          filePath: string;
+        }) => {
+          const url = `${rootUrl}/posts/${page.filePath.replace(".md", "")}`;
+          let contentHTML = marked(page.content);
 
-        // Convert relative URLs to absolute URLs
-        contentHTML = contentHTML.replace(
-          /src="\/images\//g,
-          `src="${rootUrl}/images/`
-        );
+          // Convert relative URLs to absolute URLs
+          contentHTML = contentHTML.replace(
+            /src="\/images\//g,
+            `src="${rootUrl}/images/`
+          );
 
-        const pubDate = new Date(page.data.date).toUTCString();
+          const pubDate = new Date(page.data.date).toUTCString();
 
-        return `<item>
+          return `<item>
         <title><![CDATA[${page.data.title}]]></title>
         <link>${url}</link>
         <guid>${url}</guid>
@@ -59,7 +64,8 @@ export async function GET(req: NextRequest) {
         <description><![CDATA[${contentHTML}]]></description>
         <content:encoded><![CDATA[${contentHTML}]]></content:encoded>
       </item>`;
-      })
+        }
+      )
       .join("");
 
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
