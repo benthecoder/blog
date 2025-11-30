@@ -17,6 +17,7 @@ const SKETCH_PATHS = [
   "/images/room.png",
   "/images/angel.png",
   "/images/icons.jpg",
+  "/images/psalms.png",
 ] as const;
 
 const ROTATION_INTERVAL = 3000;
