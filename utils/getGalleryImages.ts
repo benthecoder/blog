@@ -62,7 +62,7 @@ export function getGalleryImages(): GalleryImage[] {
 
     try {
       const buffer = fs.readFileSync(imagePath);
-      const dimensions = sizeOf(buffer);
+      const dimensions = sizeOf(new Uint8Array(buffer));
       width = dimensions.width || 1;
       height = dimensions.height || 1;
     } catch (error) {
