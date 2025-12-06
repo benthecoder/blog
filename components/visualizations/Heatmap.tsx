@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PostMetadata } from "@/types/post";
@@ -177,90 +177,63 @@ const Heatmap = ({
         </div>
       ) : null}
 
-      <div className="flex gap-2 mb-2">
-        {/* Day labels */}
-        <div className="flex flex-col gap-[1px] md:gap-[2px] pt-[16px] text-[9px] md:text-[11px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60">
-          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
-            s
-          </div>
-          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
-            m
-          </div>
-          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
-            t
-          </div>
-          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
-            w
-          </div>
-          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
-            t
-          </div>
-          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
-            f
-          </div>
-          <div className="h-[8px] md:h-[8px] lg:h-[11px] flex items-center">
-            s
-          </div>
-        </div>
+      <div
+        className="grid overflow-x-auto md:overflow-visible min-w-[467px] md:min-w-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+        style={{
+          gridTemplateColumns: `auto repeat(${weeks.length}, auto)`,
+          gap: "1px",
+        }}
+      >
+        {/* Row 0: Empty corner + month labels */}
+        <div />
+        {weeks.map((_, weekIndex) => {
+          const label = monthLabels.find((l) => l.weekIndex === weekIndex);
+          return (
+            <div
+              key={`month-${weekIndex}`}
+              className="text-[9px] md:text-[10px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 h-[14px] w-[8px] md:w-[10px] lg:w-[12px] overflow-visible"
+            >
+              {label?.month || ""}
+            </div>
+          );
+        })}
 
-        {/* Calendar section */}
-        <div className="flex-1 overflow-x-auto md:overflow-visible">
-          {/* Month labels */}
-          <div className="relative h-[14px] mb-1">
-            {monthLabels.map((label) => (
-              <div
-                key={label.month}
-                className="absolute text-[9px] md:text-[10px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60"
-                style={{
-                  left: `calc((100% / ${weeks.length}) * ${label.weekIndex})`,
-                }}
-              >
-                {label.month}
-              </div>
-            ))}
-          </div>
+        {/* Rows 1-7: Day labels + day cells */}
+        {[0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => (
+          <Fragment key={dayOfWeek}>
+            <div className="text-[9px] md:text-[11px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 flex items-center pr-1 h-[8px] md:h-[10px] lg:h-[12px]">
+              {["s", "m", "t", "w", "t", "f", "s"][dayOfWeek]}
+            </div>
+            {weeks.map((week, weekIndex) => {
+              const day = week[dayOfWeek];
+              const isToday =
+                day.date.getDate() === new Date().getDate() &&
+                day.date.getMonth() === new Date().getMonth() &&
+                day.date.getFullYear() === new Date().getFullYear();
 
-          {/* Grid */}
-          <div
-            className="grid gap-[1px] md:gap-[2px] min-w-[467px] md:min-w-0"
-            style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}
-          >
-            {weeks.map((week, weekIndex) => (
-              <div
-                key={weekIndex}
-                className="flex flex-col gap-[1px] md:gap-[2px]"
-              >
-                {week.map((day, dayIndex) => {
-                  const isToday =
-                    day.date.getDate() === new Date().getDate() &&
-                    day.date.getMonth() === new Date().getMonth() &&
-                    day.date.getFullYear() === new Date().getFullYear();
-
-                  return (
-                    <div
-                      key={dayIndex}
-                      className={`w-full aspect-square rounded-[1px] ${getColor(day.posts)} ${
-                        day.posts.length > 0
-                          ? "cursor-pointer hover:ring-1 hover:ring-japanese-sumiiro dark:hover:ring-japanese-shironezu"
-                          : ""
-                      } ${isToday ? "ring-1 ring-japanese-sumiiro dark:ring-japanese-shironezu" : ""} transition-all`}
-                      onMouseEnter={() =>
-                        day.posts.length > 0 && setHoveredDay(day)
-                      }
-                      onMouseLeave={() => setHoveredDay(null)}
-                      onClick={() => handleDayClick(day)}
-                      title={day.date.toDateString()}
-                    />
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-        </div>
+              return (
+                <div
+                  key={`${weekIndex}-${dayOfWeek}`}
+                  className={`w-[8px] h-[8px] md:w-[10px] md:h-[10px] lg:w-[12px] lg:h-[12px] rounded-sm ${getColor(day.posts)} ${
+                    day.posts.length > 0
+                      ? "cursor-pointer hover:ring-1 hover:ring-japanese-sumiiro dark:hover:ring-japanese-shironezu"
+                      : ""
+                  } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-all`}
+                  onMouseEnter={() =>
+                    day.posts.length > 0 && setHoveredDay(day)
+                  }
+                  onMouseLeave={() => setHoveredDay(null)}
+                  onClick={() => handleDayClick(day)}
+                  title={day.date.toDateString()}
+                />
+              );
+            })}
+          </Fragment>
+        ))}
       </div>
 
       {/* Info bar below - compact */}
-      <div className="border-t border-japanese-shiraumenezu dark:border-gray-800 pt-2">
+      <div className="pt-2">
         {hoveredDay ? (
           <div className="text-xs">
             <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
