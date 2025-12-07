@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { PostMetadata } from "@/types/post";
 
 interface CalendarViewProps {
@@ -10,10 +10,32 @@ interface CalendarViewProps {
 
 export default function CalendarView({ posts }: CalendarViewProps) {
   const router = useRouter();
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const searchParams = useSearchParams();
+
+  // Initialize from URL params or default to current date
+  const [currentDate, setCurrentDate] = useState(() => {
+    const monthParam = searchParams.get("month");
+    if (monthParam) {
+      const [year, month] = monthParam.split("-").map(Number);
+      return new Date(year, month - 1);
+    }
+    return new Date();
+  });
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
+
+  // Update URL when currentDate changes
+  useEffect(() => {
+    const monthParam = `${year}-${String(month + 1).padStart(2, "0")}`;
+    const currentMonthParam = searchParams.get("month");
+
+    if (currentMonthParam !== monthParam) {
+      const url = new URL(window.location.href);
+      url.searchParams.set("month", monthParam);
+      router.push(url.pathname + url.search, { scroll: false });
+    }
+  }, [year, month, router, searchParams]);
 
   const firstDayOfMonth = new Date(year, month, 1);
   const lastDayOfMonth = new Date(year, month + 1, 0);
@@ -36,12 +58,13 @@ export default function CalendarView({ posts }: CalendarViewProps) {
     const dd = String(day).padStart(2, "0");
     const mm = String(month + 1).padStart(2, "0");
     const dateKey = `${year}-${mm}-${dd}`;
+    const monthParam = `${year}-${mm}`;
 
     const existingPost = postsByDate.get(dateKey);
     if (existingPost) {
-      router.push(`/admin/edit/${existingPost.slug}`);
+      router.push(`/admin/edit/${existingPost.slug}?month=${monthParam}`);
     } else {
-      router.push(`/admin/edit/new?date=${dateKey}`);
+      router.push(`/admin/edit/new?date=${dateKey}&month=${monthParam}`);
     }
   };
 
