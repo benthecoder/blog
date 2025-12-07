@@ -19,10 +19,11 @@ const customDracula = {
     borderWidth: 0,
     marginTop: 0,
     marginBottom: 0,
-    marginLeft: "-1.5rem",
-    marginRight: "-1.5rem",
+    marginLeft: 0,
+    marginRight: 0,
     padding: "1rem",
     overflowX: "auto",
+    maxWidth: "100%",
   },
 };
 
@@ -58,8 +59,12 @@ export default function MarkdownContent({ content }: { content: string }) {
             <Image
               src={`${image.properties.src}`}
               alt={image.properties.alt}
-              width="800"
-              height="500"
+              width={0}
+              height={0}
+              sizes="100vw"
+              unoptimized={true}
+              style={{ width: "100%", height: "auto", maxWidth: "800px" }}
+              className="mx-auto"
             />
             <p className="text-gray-400 text-xs mt-1">{image.properties.alt}</p>
           </div>

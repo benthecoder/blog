@@ -28,8 +28,39 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Draft not found" }, { status: 404 });
     }
 
-    // Move from drafts to posts
-    fs.renameSync(draftPath, publishedPath);
+    // Read the draft content to update image paths
+    let postContent = fs.readFileSync(draftPath, "utf8");
+
+    // Update image paths from /images/drafts/ to /images/
+    postContent = postContent.replace(/\/images\/drafts\//g, "/images/");
+
+    // Write the updated content
+    fs.writeFileSync(publishedPath, postContent, "utf8");
+
+    // Delete the draft file
+    fs.unlinkSync(draftPath);
+
+    // Move associated images from drafts to published
+    const imagesDraftsDir = path.join(
+      process.cwd(),
+      "public",
+      "images",
+      "drafts"
+    );
+    const imagesPublicDir = path.join(process.cwd(), "public", "images");
+
+    if (fs.existsSync(imagesDraftsDir)) {
+      const draftImages = fs.readdirSync(imagesDraftsDir);
+      const postImages = draftImages.filter((file) =>
+        file.startsWith(`${slug}-`)
+      );
+
+      postImages.forEach((imageFile) => {
+        const sourcePath = path.join(imagesDraftsDir, imageFile);
+        const destPath = path.join(imagesPublicDir, imageFile);
+        fs.renameSync(sourcePath, destPath);
+      });
+    }
 
     return NextResponse.json({ success: true, slug });
   } catch (error) {

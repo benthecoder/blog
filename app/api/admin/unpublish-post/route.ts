@@ -28,8 +28,53 @@ export async function POST(request: NextRequest) {
       fs.mkdirSync(draftsDir, { recursive: true });
     }
 
-    // Move from posts to drafts
-    fs.renameSync(publishedPath, draftPath);
+    // Read the published content to update image paths
+    let postContent = fs.readFileSync(publishedPath, "utf8");
+
+    // Update image paths from /images/ to /images/drafts/
+    postContent = postContent.replace(
+      /\/images\/([^/\s)"']+)/g,
+      (match, filename) => {
+        // Only replace if it's a slug-prefixed image
+        if (filename.startsWith(`${slug}-`)) {
+          return `/images/drafts/${filename}`;
+        }
+        return match;
+      }
+    );
+
+    // Write the updated content
+    fs.writeFileSync(draftPath, postContent, "utf8");
+
+    // Delete the published file
+    fs.unlinkSync(publishedPath);
+
+    // Move associated images back to drafts
+    const imagesDraftsDir = path.join(
+      process.cwd(),
+      "public",
+      "images",
+      "drafts"
+    );
+    const imagesPublicDir = path.join(process.cwd(), "public", "images");
+
+    // Ensure drafts images directory exists
+    if (!fs.existsSync(imagesDraftsDir)) {
+      fs.mkdirSync(imagesDraftsDir, { recursive: true });
+    }
+
+    if (fs.existsSync(imagesPublicDir)) {
+      const publishedImages = fs.readdirSync(imagesPublicDir);
+      const postImages = publishedImages.filter((file) =>
+        file.startsWith(`${slug}-`)
+      );
+
+      postImages.forEach((imageFile) => {
+        const sourcePath = path.join(imagesPublicDir, imageFile);
+        const destPath = path.join(imagesDraftsDir, imageFile);
+        fs.renameSync(sourcePath, destPath);
+      });
+    }
 
     return NextResponse.json({ success: true, slug });
   } catch (error) {

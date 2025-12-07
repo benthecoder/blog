@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import sharp from "sharp";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -14,25 +15,48 @@ export async function POST(request: NextRequest) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const originalName = file.name;
-    const ext = path.extname(originalName);
+    const ext = path.extname(originalName).toLowerCase();
 
-    const fileName = customName
-      ? `${customName}${ext}`
-      : `${Date.now()}-${originalName}`;
+    // Always use .jpg for images to avoid Vercel Image Optimization limits
+    const fileName = customName ? `${customName}.jpg` : `${Date.now()}.jpg`;
 
-    const publicDir = path.join(process.cwd(), "public", "images");
+    // Save to drafts folder initially
+    const draftsDir = path.join(process.cwd(), "public", "images", "drafts");
 
-    if (!fs.existsSync(publicDir)) {
-      fs.mkdirSync(publicDir, { recursive: true });
+    if (!fs.existsSync(draftsDir)) {
+      fs.mkdirSync(draftsDir, { recursive: true });
     }
 
-    const filePath = path.join(publicDir, fileName);
-    fs.writeFileSync(filePath, new Uint8Array(buffer));
+    const filePath = path.join(draftsDir, fileName);
+
+    // Always compress and convert to JPEG for Vercel free tier optimization
+    if ([".jpg", ".jpeg", ".png", ".webp", ".gif"].includes(ext)) {
+      const image = sharp(buffer);
+      const metadata = await image.metadata();
+
+      let processor = image;
+
+      // Resize to max 1600px width to save bandwidth
+      if (metadata.width && metadata.width > 1600) {
+        processor = processor.resize(1600, null, {
+          fit: "inside",
+          withoutEnlargement: true,
+        });
+      }
+
+      // Always convert to JPEG with quality 85 for best size/quality ratio
+      await processor
+        .jpeg({ quality: 85, progressive: true, mozjpeg: true })
+        .toFile(filePath);
+    } else {
+      // Not an image, save as-is
+      fs.writeFileSync(filePath, new Uint8Array(buffer));
+    }
 
     return NextResponse.json({
       success: true,
       fileName,
-      url: `/images/${fileName}`,
+      url: `/images/drafts/${fileName}`,
     });
   } catch (error) {
     console.error("Upload error:", error);
