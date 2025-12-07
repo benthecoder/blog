@@ -35,8 +35,8 @@ export default function ArtworkRotation() {
 
   return (
     <>
-      <div className="fixed top-32 md:top-0 bottom-0 left-0 right-0 md:left-64 flex items-center justify-center overflow-hidden z-[-100]">
-        <div className="relative w-full h-full max-w-6xl px-8 flex items-center justify-center">
+      <div className="fixed top-32 md:top-0 bottom-0 left-0 right-0 flex items-center justify-center overflow-hidden z-[-100]">
+        <div className="relative w-full h-full max-w-xl lg:max-w-3xl px-2 md:px-10 mx-auto flex items-center justify-center">
           <div className="relative w-full h-[70vh] select-none">
             <Image
               src={SKETCH_PATHS[currentIndex]}
