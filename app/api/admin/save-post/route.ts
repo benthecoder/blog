@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import matter from "gray-matter";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -43,15 +44,9 @@ export async function POST(request: NextRequest) {
       fs.mkdirSync(draftsDir, { recursive: true });
     }
 
-    const frontmatter = `---
-title: '${title}'
-tags: '${tags}'
-date: '${date}'
----
+    const fileContent = matter.stringify(content, { title, tags, date });
 
-${content}`;
-
-    fs.writeFileSync(filePath, frontmatter, "utf8");
+    fs.writeFileSync(filePath, fileContent, "utf8");
 
     return NextResponse.json({ success: true, slug, isDraft: !isPublished });
   } catch (error) {
