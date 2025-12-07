@@ -4,6 +4,16 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { RenderPost } from "@/components/posts";
+import matter from "gray-matter";
+import {
+  LuCalendar,
+  LuChevronLeft,
+  LuChevronRight,
+  LuEye,
+  LuFileEdit,
+  LuImage,
+  LuX,
+} from "react-icons/lu";
 
 export default function EditPostPage() {
   const params = useParams();
@@ -20,7 +30,7 @@ export default function EditPostPage() {
   const [showPreview, setShowPreview] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [editorWidth, setEditorWidth] = useState(900);
+  const [editorWidth, setEditorWidth] = useState(700);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isDraft, setIsDraft] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -29,9 +39,61 @@ export default function EditPostPage() {
     message: string;
     onConfirm: () => void;
   } | null>(null);
+  const [showImageNameModal, setShowImageNameModal] = useState(false);
+  const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
+  const [imageNameInput, setImageNameInput] = useState("");
+  const [prevSlug, setPrevSlug] = useState<string | null>(null);
+  const [nextSlug, setNextSlug] = useState<string | null>(null);
+  const [postImages, setPostImages] = useState<string[]>([]);
+  const [showImages, setShowImages] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isResizing = useRef(false);
   const initialContentRef = useRef({ markdown: "" });
+
+  // Fetch all posts to determine prev/next
+  useEffect(() => {
+    if (isNew) return;
+
+    const abortController = new AbortController();
+
+    fetch("/api/admin/list-posts", { signal: abortController.signal })
+      .then((res) => res.json())
+      .then((posts: string[]) => {
+        // Sort posts by actual date (slug format is DDMMYY)
+        const sortedPosts = posts
+          .filter((s) => s.length === 6) // Only date-based slugs
+          .sort((a, b) => {
+            // Parse DDMMYY format
+            const dateA = new Date(
+              2000 + parseInt(a.substring(4, 6)), // year
+              parseInt(a.substring(2, 4)) - 1, // month (0-indexed)
+              parseInt(a.substring(0, 2)) // day
+            );
+            const dateB = new Date(
+              2000 + parseInt(b.substring(4, 6)),
+              parseInt(b.substring(2, 4)) - 1,
+              parseInt(b.substring(0, 2))
+            );
+            return dateA.getTime() - dateB.getTime();
+          });
+
+        const currentIndex = sortedPosts.indexOf(slug);
+
+        setPrevSlug(currentIndex > 0 ? sortedPosts[currentIndex - 1] : null);
+        setNextSlug(
+          currentIndex < sortedPosts.length - 1
+            ? sortedPosts[currentIndex + 1]
+            : null
+        );
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          console.error("Error loading posts:", err);
+        }
+      });
+
+    return () => abortController.abort();
+  }, [slug, isNew]);
 
   useEffect(() => {
     const draftKey = `draft-${slug}`;
@@ -40,7 +102,11 @@ export default function EditPostPage() {
       fetch(`/api/admin/get-post?slug=${slug}`)
         .then((res) => res.json())
         .then((data) => {
-          const rawContent = `---\ntitle: ${data.title}\ntags: ${data.tags}\ndate: ${data.date}\n---\n\n${data.content}`;
+          const rawContent = matter.stringify(data.content, {
+            title: data.title,
+            tags: data.tags,
+            date: data.date,
+          });
           setMarkdown(rawContent);
           setDate(data.date);
           setIsDraft(data.isDraft ?? false);
@@ -62,7 +128,11 @@ export default function EditPostPage() {
           year: "numeric",
         });
         setDate(formattedDate);
-        const initialContent = `---\ntitle: \ntags: \ndate: ${formattedDate}\n---\n\n`;
+        const initialContent = matter.stringify("", {
+          title: "",
+          tags: "",
+          date: formattedDate,
+        });
         setMarkdown(initialContent);
 
         const savedDraft = localStorage.getItem(draftKey);
@@ -93,25 +163,11 @@ export default function EditPostPage() {
     setMessage("");
 
     try {
-      const frontmatterMatch = markdown.match(
-        /^---\n([\s\S]*?)\n---\n\n([\s\S]*)$/
-      );
-      if (!frontmatterMatch) {
-        setMessage("✗ Invalid format: Missing frontmatter");
-        setSaving(false);
-        return;
-      }
+      const { data: frontmatter, content } = matter(markdown);
 
-      const frontmatterText = frontmatterMatch[1];
-      const content = frontmatterMatch[2];
-
-      const titleMatch = frontmatterText.match(/title:\s*(.+)/);
-      const tagsMatch = frontmatterText.match(/tags:\s*(.+)/);
-      const dateMatch = frontmatterText.match(/date:\s*(.+)/);
-
-      const parsedTitle = titleMatch ? titleMatch[1].trim() : "";
-      const parsedTags = tagsMatch ? tagsMatch[1].trim() : "";
-      const parsedDate = dateMatch ? dateMatch[1].trim() : date;
+      const parsedTitle = (frontmatter.title || "").toString().trim();
+      const parsedTags = (frontmatter.tags || "").toString().trim();
+      const parsedDate = (frontmatter.date || date).toString().trim();
 
       let slugToUse = slug;
 
@@ -303,13 +359,49 @@ export default function EditPostPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleSave]);
 
+  // Refresh images list
+  const refreshImages = useCallback(() => {
+    if (isNew) return;
+
+    fetch(`/api/admin/list-images?slug=${slug}`)
+      .then((res) => res.json())
+      .then((images: string[]) => setPostImages(images))
+      .catch((err) => console.error("Error loading images:", err));
+  }, [slug, isNew]);
+
+  // Load images for this post on mount
+  useEffect(() => {
+    refreshImages();
+  }, [refreshImages]);
+
+  const handleDeleteImage = async (fileName: string) => {
+    try {
+      const response = await fetch(
+        `/api/admin/delete-image?fileName=${encodeURIComponent(fileName)}`,
+        { method: "DELETE" }
+      );
+
+      if (response.ok) {
+        setMessage(`✓ Deleted ${fileName}`);
+        refreshImages();
+      } else {
+        setMessage(`✗ Failed to delete ${fileName}`);
+      }
+    } catch (error) {
+      setMessage(`✗ Error: ${error}`);
+    }
+  };
+
   const handleImageUpload = async (file: File, customName?: string) => {
     setUploading(true);
     try {
       const formData = new FormData();
       formData.append("file", file);
-      if (customName) {
-        formData.append("name", customName);
+
+      // Prefix image name with slug
+      const finalName = customName ? `${slug}-${customName}` : null;
+      if (finalName) {
+        formData.append("name", finalName);
       }
 
       const response = await fetch("/api/admin/upload-image", {
@@ -333,6 +425,7 @@ export default function EditPostPage() {
           setMarkdown(markdown + "\n" + imageMarkdown);
         }
         setMessage(`✓ Image uploaded: ${data.fileName}`);
+        refreshImages();
       } else {
         setMessage(`✗ Upload failed: ${data.error}`);
       }
@@ -362,14 +455,28 @@ export default function EditPostPage() {
     const imageFiles = files.filter((file) => file.type.startsWith("image/"));
 
     if (imageFiles.length > 0) {
-      for (const file of imageFiles) {
-        const cleanName = file.name
-          .replace(/\.[^/.]+$/, "")
-          .replace(/[^a-zA-Z0-9-]/g, "-")
-          .toLowerCase();
-        await handleImageUpload(file, cleanName);
-      }
+      const file = imageFiles[0]; // Handle one at a time
+      const defaultName = file.name
+        .replace(/\.[^/.]+$/, "")
+        .replace(/[^a-zA-Z0-9-]/g, "-")
+        .toLowerCase();
+
+      setPendingImageFile(file);
+      setImageNameInput(defaultName);
+      setShowImageNameModal(true);
     }
+  };
+
+  const confirmImageUpload = async () => {
+    if (!pendingImageFile) return;
+
+    const finalName =
+      imageNameInput.trim() || pendingImageFile.name.replace(/\.[^/.]+$/, "");
+    await handleImageUpload(pendingImageFile, finalName);
+
+    setShowImageNameModal(false);
+    setPendingImageFile(null);
+    setImageNameInput("");
   };
 
   const handlePaste = async (e: React.ClipboardEvent) => {
@@ -425,66 +532,70 @@ export default function EditPostPage() {
         style={{ width: `${editorWidth}px`, height: "calc(100vh - 4rem)" }}
         className="flex flex-col relative group border-l border-r border-gray-200 dark:border-gray-700"
       >
-        <div className="border-b border-japanese-shiraumenezu dark:border-gray-700 p-4 flex justify-between items-center">
-          <div className="flex items-center gap-6">
+        <div className="border-b border-japanese-shiraumenezu dark:border-gray-700 px-6 py-3 flex justify-between items-center">
+          <div className="flex items-center gap-4">
             <Link
               href={
                 searchParams.get("month")
                   ? `/admin?month=${searchParams.get("month")}`
                   : "/admin"
               }
-              className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu transition-colors"
+              className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+              title="Back to calendar"
             >
-              ← Back
+              <LuCalendar size={18} />
             </Link>
-            {date && (
-              <span className="text-xs text-japanese-ginnezu dark:text-gray-500 tracking-wide">
-                {date}
-              </span>
+            {isDraft && !isNew && (
+              <div
+                className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400"
+                title="Draft"
+              />
             )}
           </div>
 
-          <div className="flex gap-4 items-center">
-            {isDraft && !isNew && (
-              <span className="text-xs px-2 py-0.5 border border-dashed border-blue-400 text-blue-600 dark:text-blue-400">
-                Draft
-              </span>
-            )}
-            {hasUnsavedChanges && !saving && !message && (
-              <span className="text-xs text-japanese-ginnezu dark:text-gray-400">
-                Unsaved
-              </span>
-            )}
-            {uploading && (
-              <span className="text-sm text-japanese-ginnezu">
-                Uploading...
-              </span>
-            )}
+          <div className="flex gap-3 items-center">
             {message && (
               <span
-                className={`text-sm ${message.includes("✓") ? "text-green-600" : "text-red-600"}`}
+                className={`text-xs ${message.includes("✓") ? "text-green-600 dark:text-green-500" : "text-red-600 dark:text-red-500"}`}
               >
                 {message}
               </span>
             )}
+            {uploading && (
+              <span className="text-xs text-japanese-ginnezu dark:text-gray-500">
+                Uploading...
+              </span>
+            )}
+            {hasUnsavedChanges && !saving && !message && (
+              <div
+                className="w-1.5 h-1.5 rounded-full bg-orange-500"
+                title="Unsaved changes (⌘S to save)"
+              />
+            )}
+            {!isNew && postImages.length > 0 && (
+              <button
+                onClick={() => setShowImages(!showImages)}
+                className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors relative"
+                title="Manage images"
+              >
+                <LuImage size={18} />
+                <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full text-[8px] text-white flex items-center justify-center">
+                  {postImages.length}
+                </span>
+              </button>
+            )}
             <button
               onClick={() => setShowPreview(!showPreview)}
-              className="px-4 py-1.5 text-sm border border-japanese-shiraumenezu dark:border-gray-700 text-japanese-sumiiro dark:text-japanese-shironezu hover:border-japanese-sumiiro dark:hover:border-japanese-shironezu transition-colors"
+              className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+              title={showPreview ? "Edit" : "Preview"}
             >
-              {showPreview ? "Edit" : "Preview"}
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={saving || !hasUnsavedChanges}
-              className="px-4 py-1.5 text-sm border border-japanese-sumiiro dark:border-japanese-shironezu text-japanese-sumiiro dark:text-japanese-shironezu hover:bg-japanese-sumiiro hover:text-white dark:hover:bg-japanese-shironezu dark:hover:text-japanese-sumiiro disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-japanese-sumiiro dark:disabled:hover:text-japanese-shironezu transition-colors"
-            >
-              {saving ? "Saving..." : "Save"}
+              {showPreview ? <LuFileEdit size={18} /> : <LuEye size={18} />}
             </button>
             {isDraft && (
               <button
                 onClick={handlePublish}
                 disabled={publishing || isNew}
-                className="px-4 py-1.5 text-sm border border-green-600 text-green-600 hover:bg-green-600 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-green-600 transition-colors"
+                className="px-3 py-1.5 text-xs bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 disabled:opacity-30 transition-opacity rounded-sm"
               >
                 {publishing ? "Publishing..." : "Publish"}
               </button>
@@ -493,7 +604,7 @@ export default function EditPostPage() {
               <button
                 onClick={handleUnpublish}
                 disabled={publishing}
-                className="px-4 py-1.5 text-sm border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-orange-500 transition-colors"
+                className="px-3 py-1.5 text-xs text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 disabled:opacity-30 transition-colors rounded-sm"
               >
                 {publishing ? "Moving..." : "Unpublish"}
               </button>
@@ -501,35 +612,63 @@ export default function EditPostPage() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-hidden">
+        {showImages && !isNew && (
+          <div className="border-b border-japanese-shiraumenezu dark:border-gray-700 px-6 py-3 bg-japanese-kinairo dark:bg-gray-800/50">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs text-japanese-ginnezu dark:text-gray-500 uppercase tracking-wider">
+                Images ({postImages.length})
+              </span>
+              <button
+                onClick={() => setShowImages(false)}
+                className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu"
+              >
+                <LuX size={14} />
+              </button>
+            </div>
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {postImages.map((img) => {
+                // Determine the correct path (drafts or published)
+                const imgPath = isDraft
+                  ? `/images/drafts/${img}`
+                  : `/images/${img}`;
+                return (
+                  <div key={img} className="flex-shrink-0 group relative">
+                    <img
+                      src={imgPath}
+                      alt={img}
+                      className="h-20 w-20 object-cover rounded border border-japanese-shiraumenezu dark:border-gray-700"
+                    />
+                    <button
+                      onClick={() => handleDeleteImage(img)}
+                      className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Delete"
+                    >
+                      <LuX size={12} />
+                    </button>
+                    <div className="text-[10px] text-japanese-ginnezu dark:text-gray-500 mt-1 truncate w-20">
+                      {img.replace(`${slug}-`, "")}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <div
+          className="flex-1 overflow-hidden"
+          style={{ paddingBottom: isNew ? "0" : "40px" }}
+        >
           {showPreview ? (
             <div className="h-full overflow-y-auto p-8">
               {(() => {
-                const frontmatterMatch = markdown.match(
-                  /^---\n([\s\S]*?)\n---\n\n([\s\S]*)$/
-                );
-                if (!frontmatterMatch) {
-                  return (
-                    <p className="text-red-600">Invalid markdown format</p>
-                  );
-                }
-                const frontmatterText = frontmatterMatch[1];
-                const content = frontmatterMatch[2];
-                const titleMatch = frontmatterText.match(/title:\s*(.+)/);
-                const tagsMatch = frontmatterText.match(/tags:\s*(.+)/);
-                const dateMatch = frontmatterText.match(/date:\s*(.+)/);
-
-                const previewTitle = titleMatch
-                  ? titleMatch[1].trim()
-                  : "Untitled";
-                const previewTags = tagsMatch ? tagsMatch[1].trim() : "";
-                const previewDate = dateMatch ? dateMatch[1].trim() : date;
+                const { data: frontmatter, content } = matter(markdown);
 
                 const post = {
                   data: {
-                    title: previewTitle,
-                    tags: previewTags,
-                    date: previewDate,
+                    title: (frontmatter.title || "Untitled").toString(),
+                    tags: (frontmatter.tags || "").toString(),
+                    date: (frontmatter.date || date).toString(),
                   },
                   content: content,
                 };
@@ -575,6 +714,86 @@ export default function EditPostPage() {
           className="absolute right-0 top-0 bottom-0 w-4 cursor-ew-resize"
           onMouseDown={(e) => handleMouseDown(e, "right")}
         />
+
+        {!isNew && (
+          <div className="absolute bottom-0 left-0 right-0 border-t border-japanese-shiraumenezu dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2 flex justify-between items-center">
+            {prevSlug ? (
+              <Link
+                href={`/admin/edit/${prevSlug}${searchParams.get("month") ? `?month=${searchParams.get("month")}` : ""}`}
+                className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+              >
+                <LuChevronLeft size={14} />
+                Previous
+              </Link>
+            ) : (
+              <span className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-700 opacity-20">
+                <LuChevronLeft size={14} />
+                Previous
+              </span>
+            )}
+            {date && (
+              <span className="text-xs text-japanese-ginnezu dark:text-gray-500 tracking-wide">
+                {date}
+              </span>
+            )}
+            {nextSlug ? (
+              <Link
+                href={`/admin/edit/${nextSlug}${searchParams.get("month") ? `?month=${searchParams.get("month")}` : ""}`}
+                className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+              >
+                Next
+                <LuChevronRight size={14} />
+              </Link>
+            ) : (
+              <span className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-700 opacity-20">
+                Next
+                <LuChevronRight size={14} />
+              </span>
+            )}
+          </div>
+        )}
+
+        {showImageNameModal && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-900 border border-japanese-shiraumenezu dark:border-gray-700 p-8 max-w-md mx-4 w-full">
+              <h2 className="text-lg font-light mb-4 text-japanese-sumiiro dark:text-japanese-shironezu tracking-wide">
+                Name your image
+              </h2>
+              <input
+                type="text"
+                value={imageNameInput}
+                onChange={(e) => setImageNameInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") confirmImageUpload();
+                  if (e.key === "Escape") {
+                    setShowImageNameModal(false);
+                    setPendingImageFile(null);
+                  }
+                }}
+                placeholder="image-name"
+                autoFocus
+                className="w-full px-3 py-2 mb-6 border border-japanese-shiraumenezu dark:border-gray-700 bg-transparent text-japanese-sumiiro dark:text-japanese-shironezu focus:outline-none focus:border-japanese-sumiiro dark:focus:border-japanese-shironezu rounded-sm"
+              />
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => {
+                    setShowImageNameModal(false);
+                    setPendingImageFile(null);
+                  }}
+                  className="px-4 py-1.5 text-sm text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmImageUpload}
+                  className="px-4 py-1.5 text-sm bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 transition-opacity rounded-sm"
+                >
+                  Upload
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {showModal && modalConfig && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
