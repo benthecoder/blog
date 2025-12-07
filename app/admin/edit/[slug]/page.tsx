@@ -15,12 +15,14 @@ export default function EditPostPage() {
   const [date, setDate] = useState("");
   const [markdown, setMarkdown] = useState("");
   const [saving, setSaving] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   const [message, setMessage] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [editorWidth, setEditorWidth] = useState(900);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isDraft, setIsDraft] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [modalConfig, setModalConfig] = useState<{
     title: string;
@@ -41,6 +43,7 @@ export default function EditPostPage() {
           const rawContent = `---\ntitle: ${data.title}\ntags: ${data.tags}\ndate: ${data.date}\n---\n\n${data.content}`;
           setMarkdown(rawContent);
           setDate(data.date);
+          setIsDraft(data.isDraft ?? false);
           initialContentRef.current = { markdown: rawContent };
         })
         .catch((err) => console.error("Error loading post:", err));
@@ -61,20 +64,26 @@ export default function EditPostPage() {
         setDate(formattedDate);
         const initialContent = `---\ntitle: \ntags: \ndate: ${formattedDate}\n---\n\n`;
         setMarkdown(initialContent);
-      }
 
-      const savedDraft = localStorage.getItem(draftKey);
-      if (savedDraft) {
-        const draft = JSON.parse(savedDraft);
-        setModalConfig({
-          title: "Draft Found",
-          message: `Found unsaved draft from ${new Date(draft.timestamp).toLocaleString()}. Restore it?`,
-          onConfirm: () => {
-            setMarkdown(draft.markdown);
-            setShowModal(false);
-          },
-        });
-        setShowModal(true);
+        const savedDraft = localStorage.getItem(draftKey);
+        if (savedDraft) {
+          const draft = JSON.parse(savedDraft);
+          // Only show the draft if it's from the same date
+          if (draft.date === formattedDate) {
+            setModalConfig({
+              title: "Draft Found",
+              message: `Found unsaved draft from ${new Date(draft.timestamp).toLocaleString()}. Restore it?`,
+              onConfirm: () => {
+                setMarkdown(draft.markdown);
+                setShowModal(false);
+              },
+            });
+            setShowModal(true);
+          } else {
+            // Remove outdated draft from different date
+            localStorage.removeItem(draftKey);
+          }
+        }
       }
     }
   }, [slug, isNew, searchParams]);
@@ -136,6 +145,7 @@ export default function EditPostPage() {
         setMessage("✓ Saved!");
         setTimeout(() => setMessage(""), 3000);
         setHasUnsavedChanges(false);
+        setIsDraft(data.isDraft ?? isDraft);
 
         const draftKey = `draft-${slugToUse}`;
         localStorage.removeItem(draftKey);
@@ -152,7 +162,76 @@ export default function EditPostPage() {
     } finally {
       setSaving(false);
     }
-  }, [slug, isNew, searchParams, date, markdown, router]);
+  }, [slug, isNew, searchParams, date, markdown, router, isDraft]);
+
+  const handlePublish = useCallback(async () => {
+    // Save first if there are unsaved changes
+    if (hasUnsavedChanges) {
+      await handleSave();
+    }
+
+    setPublishing(true);
+    setMessage("");
+
+    try {
+      let slugToUse = slug;
+      if (isNew) {
+        const dateParam = searchParams.get("date");
+        if (dateParam) {
+          const [year, month, day] = dateParam.split("-");
+          const yy = year.substring(2);
+          slugToUse = `${day}${month}${yy}`;
+        }
+      }
+
+      const response = await fetch("/api/admin/publish-post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: slugToUse }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage("✓ Published!");
+        setTimeout(() => setMessage(""), 3000);
+        setIsDraft(false);
+      } else {
+        setMessage(`✗ Error: ${data.error}`);
+      }
+    } catch (error) {
+      setMessage(`✗ Error: ${error}`);
+    } finally {
+      setPublishing(false);
+    }
+  }, [slug, isNew, searchParams, hasUnsavedChanges, handleSave]);
+
+  const handleUnpublish = useCallback(async () => {
+    setPublishing(true);
+    setMessage("");
+
+    try {
+      const response = await fetch("/api/admin/unpublish-post", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage("✓ Moved to drafts");
+        setTimeout(() => setMessage(""), 3000);
+        setIsDraft(true);
+      } else {
+        setMessage(`✗ Error: ${data.error}`);
+      }
+    } catch (error) {
+      setMessage(`✗ Error: ${error}`);
+    } finally {
+      setPublishing(false);
+    }
+  }, [slug]);
 
   useEffect(() => {
     const hasChanged = markdown !== initialContentRef.current.markdown;
@@ -163,10 +242,11 @@ export default function EditPostPage() {
       const draft = {
         markdown,
         timestamp: Date.now(),
+        date,
       };
       localStorage.setItem(draftKey, JSON.stringify(draft));
     }
-  }, [markdown, slug]);
+  }, [markdown, slug, date]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -348,7 +428,11 @@ export default function EditPostPage() {
         <div className="border-b border-japanese-shiraumenezu dark:border-gray-700 p-4 flex justify-between items-center">
           <div className="flex items-center gap-6">
             <Link
-              href="/admin"
+              href={
+                searchParams.get("month")
+                  ? `/admin?month=${searchParams.get("month")}`
+                  : "/admin"
+              }
               className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu transition-colors"
             >
               ← Back
@@ -361,6 +445,11 @@ export default function EditPostPage() {
           </div>
 
           <div className="flex gap-4 items-center">
+            {isDraft && !isNew && (
+              <span className="text-xs px-2 py-0.5 border border-dashed border-blue-400 text-blue-600 dark:text-blue-400">
+                Draft
+              </span>
+            )}
             {hasUnsavedChanges && !saving && !message && (
               <span className="text-xs text-japanese-ginnezu dark:text-gray-400">
                 Unsaved
@@ -391,6 +480,24 @@ export default function EditPostPage() {
             >
               {saving ? "Saving..." : "Save"}
             </button>
+            {isDraft && (
+              <button
+                onClick={handlePublish}
+                disabled={publishing || isNew}
+                className="px-4 py-1.5 text-sm border border-green-600 text-green-600 hover:bg-green-600 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-green-600 transition-colors"
+              >
+                {publishing ? "Publishing..." : "Publish"}
+              </button>
+            )}
+            {!isDraft && !isNew && (
+              <button
+                onClick={handleUnpublish}
+                disabled={publishing}
+                className="px-4 py-1.5 text-sm border border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-orange-500 transition-colors"
+              >
+                {publishing ? "Moving..." : "Unpublish"}
+              </button>
+            )}
           </div>
         </div>
 
