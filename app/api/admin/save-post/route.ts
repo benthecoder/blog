@@ -13,13 +13,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const filePath = path.join(process.cwd(), "posts", `${slug}.md`);
+    const postsDir = path.join(process.cwd(), "posts");
+    const draftsDir = path.join(process.cwd(), "posts", "drafts");
+    const publishedPath = path.join(postsDir, `${slug}.md`);
+    const draftPath = path.join(draftsDir, `${slug}.md`);
 
-    if (isNew && fs.existsSync(filePath)) {
-      return NextResponse.json(
-        { error: "A post already exists for this date" },
-        { status: 409 }
-      );
+    // Check if post already exists (in either location) when creating new
+    if (isNew) {
+      if (fs.existsSync(publishedPath)) {
+        return NextResponse.json(
+          { error: "A post already exists for this date" },
+          { status: 409 }
+        );
+      }
+      if (fs.existsSync(draftPath)) {
+        return NextResponse.json(
+          { error: "A draft already exists for this date" },
+          { status: 409 }
+        );
+      }
+    }
+
+    // Determine where to save: if already published, keep it published; otherwise save as draft
+    const isPublished = fs.existsSync(publishedPath);
+    const filePath = isPublished ? publishedPath : draftPath;
+
+    // Ensure drafts directory exists
+    if (!isPublished && !fs.existsSync(draftsDir)) {
+      fs.mkdirSync(draftsDir, { recursive: true });
     }
 
     const frontmatter = `---
@@ -32,7 +53,7 @@ ${content}`;
 
     fs.writeFileSync(filePath, frontmatter, "utf8");
 
-    return NextResponse.json({ success: true, slug });
+    return NextResponse.json({ success: true, slug, isDraft: !isPublished });
   } catch (error) {
     console.error("Save error:", error);
     return NextResponse.json({ error: "Failed to save post" }, { status: 500 });
