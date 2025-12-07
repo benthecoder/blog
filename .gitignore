@@ -37,6 +37,8 @@ next-env.d.ts
 
 posts/drafts/*.md
 drafts
+public/images/drafts/*
+!public/images/drafts/.gitkeep
 
 .vscode
 
