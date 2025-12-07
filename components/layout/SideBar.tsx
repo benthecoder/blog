@@ -67,7 +67,7 @@ export function Sidebar() {
               alt="BENEDICT NEO"
               width={10}
               height={10}
-              className="w-24 md:w-32 h-auto dark:invert"
+              className="w-24 md:w-28 h-auto dark:invert"
               priority
             />
             <Image
@@ -75,7 +75,7 @@ export function Sidebar() {
               alt="梁耀恩"
               width={10}
               height={10}
-              className="w-24 md:w-32 h-auto dark:invert"
+              className="w-24 md:w-28 h-auto dark:invert"
               priority
             />
           </Link>
