@@ -177,59 +177,55 @@ const Heatmap = ({
         </div>
       ) : null}
 
-      <div
-        className="grid overflow-x-auto md:overflow-visible min-w-[467px] md:min-w-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-        style={{
-          gridTemplateColumns: `auto repeat(${weeks.length}, auto)`,
-          gap: "1px",
-        }}
-      >
-        {/* Row 0: Empty corner + month labels */}
-        <div />
-        {weeks.map((_, weekIndex) => {
-          const label = monthLabels.find((l) => l.weekIndex === weekIndex);
-          return (
-            <div
-              key={`month-${weekIndex}`}
-              className="text-[9px] md:text-[10px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 h-[14px] w-[8px] md:w-[10px] lg:w-[12px] overflow-visible"
-            >
-              {label?.month || ""}
-            </div>
-          );
-        })}
+      <div className="overflow-x-auto md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="grid gap-px md:gap-[0.5px] lg:gap-px [grid-template-columns:15px_repeat(53,9px)] md:[grid-template-columns:15px_repeat(53,9px)] lg:[grid-template-columns:15px_repeat(53,12px)]">
+          {/* Row 0: Empty corner + month labels */}
+          <div />
+          {weeks.map((_, weekIndex) => {
+            const label = monthLabels.find((l) => l.weekIndex === weekIndex);
+            return (
+              <div
+                key={`month-${weekIndex}`}
+                className="text-[8px] md:text-[10px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 h-[12px] md:h-[14px] w-[9px] lg:w-[12px] overflow-visible"
+              >
+                {label?.month || ""}
+              </div>
+            );
+          })}
 
-        {/* Rows 1-7: Day labels + day cells */}
-        {[0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => (
-          <Fragment key={dayOfWeek}>
-            <div className="text-[9px] md:text-[11px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 flex items-center pr-1 h-[8px] md:h-[10px] lg:h-[12px]">
-              {["s", "m", "t", "w", "t", "f", "s"][dayOfWeek]}
-            </div>
-            {weeks.map((week, weekIndex) => {
-              const day = week[dayOfWeek];
-              const isToday =
-                day.date.getDate() === new Date().getDate() &&
-                day.date.getMonth() === new Date().getMonth() &&
-                day.date.getFullYear() === new Date().getFullYear();
+          {/* Rows 1-7: Day labels + day cells */}
+          {[0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => (
+            <Fragment key={dayOfWeek}>
+              <div className="text-[8px] md:text-[11px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 flex items-center pr-0.5 md:pr-1 h-[9px] lg:h-[12px]">
+                {["s", "m", "t", "w", "t", "f", "s"][dayOfWeek]}
+              </div>
+              {weeks.map((week, weekIndex) => {
+                const day = week[dayOfWeek];
+                const isToday =
+                  day.date.getDate() === new Date().getDate() &&
+                  day.date.getMonth() === new Date().getMonth() &&
+                  day.date.getFullYear() === new Date().getFullYear();
 
-              return (
-                <div
-                  key={`${weekIndex}-${dayOfWeek}`}
-                  className={`w-[8px] h-[8px] md:w-[10px] md:h-[10px] lg:w-[12px] lg:h-[12px] rounded-sm ${getColor(day.posts)} ${
-                    day.posts.length > 0
-                      ? "cursor-pointer hover:ring-1 hover:ring-japanese-sumiiro dark:hover:ring-japanese-shironezu"
-                      : ""
-                  } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-all`}
-                  onMouseEnter={() =>
-                    day.posts.length > 0 && setHoveredDay(day)
-                  }
-                  onMouseLeave={() => setHoveredDay(null)}
-                  onClick={() => handleDayClick(day)}
-                  title={day.date.toDateString()}
-                />
-              );
-            })}
-          </Fragment>
-        ))}
+                return (
+                  <div
+                    key={`${weekIndex}-${dayOfWeek}`}
+                    className={`w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-sm ${getColor(day.posts)} ${
+                      day.posts.length > 0
+                        ? "cursor-pointer hover:ring-1 hover:ring-japanese-sumiiro dark:hover:ring-japanese-shironezu"
+                        : ""
+                    } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-all`}
+                    onMouseEnter={() =>
+                      day.posts.length > 0 && setHoveredDay(day)
+                    }
+                    onMouseLeave={() => setHoveredDay(null)}
+                    onClick={() => handleDayClick(day)}
+                    title={day.date.toDateString()}
+                  />
+                );
+              })}
+            </Fragment>
+          ))}
+        </div>
       </div>
 
       {/* Info bar below - compact */}
@@ -268,13 +264,13 @@ const Heatmap = ({
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
-                <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[10px]">
+                <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[9px] md:text-[10px]">
                   short
                 </span>
-                <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30"></div>
-                <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60"></div>
-                <div className="w-[10px] h-[10px] rounded-[1px] bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90"></div>
-                <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[10px]">
+                <div className="w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-sm bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30"></div>
+                <div className="w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-sm bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60"></div>
+                <div className="w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-sm bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90"></div>
+                <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[9px] md:text-[10px]">
                   long
                 </span>
               </div>
