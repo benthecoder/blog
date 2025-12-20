@@ -34,7 +34,8 @@ export async function POST(request: NextRequest) {
       const image = sharp(buffer);
       const metadata = await image.metadata();
 
-      let processor = image;
+      // Auto-rotate based on EXIF orientation
+      let processor = image.rotate();
 
       // Resize to max 1600px width to save bandwidth
       if (metadata.width && metadata.width > 1600) {
