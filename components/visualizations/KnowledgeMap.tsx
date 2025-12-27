@@ -20,6 +20,15 @@ interface Article {
   cluster: number;
 }
 
+interface KnowledgeMapData {
+  success: boolean;
+  data: Article[];
+  count: number;
+  numClusters: number;
+  clusterLabels?: Record<number, string>;
+  generatedAt: string;
+}
+
 export default function KnowledgeMap({
   className = "",
 }: {
@@ -28,12 +37,17 @@ export default function KnowledgeMap({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [articles, setArticles] = useState<Article[]>([]);
+  const [clusterLabels, setClusterLabels] = useState<Record<number, string>>(
+    {}
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hoveredArticle, setHoveredArticle] = useState<Article | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCluster, setSelectedCluster] = useState<number | null>(null);
   const [transform, setTransform] = useState({ k: 1, x: 0, y: 0 });
   const [canvasReady, setCanvasReady] = useState(false);
+  const [showLegend, setShowLegend] = useState(false);
   const { theme } = useTheme();
   const zoomBehaviorRef = useRef<any>(null);
 
@@ -43,9 +57,10 @@ export default function KnowledgeMap({
     setError(null);
     try {
       const response = await fetch("/data/knowledge-map.json");
-      const result = await response.json();
+      const result: KnowledgeMapData = await response.json();
       if (result.success) {
         setArticles(result.data);
+        setClusterLabels(result.clusterLabels || {});
       } else {
         setError("failed to load");
       }
@@ -63,8 +78,18 @@ export default function KnowledgeMap({
 
   // Filter articles
   const filtered = articles.filter((article) => {
-    if (!searchQuery) return true;
-    return article.postTitle.toLowerCase().includes(searchQuery.toLowerCase());
+    // Filter by search query
+    if (
+      searchQuery &&
+      !article.postTitle.toLowerCase().includes(searchQuery.toLowerCase())
+    ) {
+      return false;
+    }
+    // Filter by selected cluster
+    if (selectedCluster !== null && article.cluster !== selectedCluster) {
+      return false;
+    }
+    return true;
   });
 
   // Cosine similarity
@@ -369,6 +394,22 @@ export default function KnowledgeMap({
             {hoveredArticle.postTitle}
           </h3>
           <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+            {clusterLabels[hoveredArticle.cluster] && (
+              <div className="flex items-center gap-1.5 mb-1">
+                <div
+                  className="w-2 h-2 rounded-full"
+                  style={{
+                    backgroundColor: getClusterColor(
+                      hoveredArticle.cluster,
+                      theme === "dark"
+                    ),
+                  }}
+                />
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {clusterLabels[hoveredArticle.cluster]}
+                </span>
+              </div>
+            )}
             {hoveredArticle.publishedDate && (
               <p>
                 {new Date(hoveredArticle.publishedDate).toLocaleDateString(
@@ -395,6 +436,74 @@ export default function KnowledgeMap({
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Cluster Legend Toggle */}
+      {Object.keys(clusterLabels).length > 0 && (
+        <div className="absolute bottom-4 right-4 z-10">
+          <button
+            onClick={() => setShowLegend(!showLegend)}
+            className="bg-white/90 dark:bg-gray-900/90 px-2 py-1 rounded border border-gray-300 dark:border-gray-700 text-xs text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-900 transition-colors"
+          >
+            {showLegend
+              ? "hide"
+              : selectedCluster !== null
+                ? `cluster: ${clusterLabels[selectedCluster]}`
+                : "clusters"}
+          </button>
+          {showLegend && (
+            <div className="absolute bottom-8 right-0 bg-white/95 dark:bg-gray-900/95 px-3 py-2 rounded border border-gray-300 dark:border-gray-700 max-h-[60vh] overflow-y-auto shadow-lg min-w-[200px]">
+              {selectedCluster !== null && (
+                <button
+                  onClick={() => setSelectedCluster(null)}
+                  className="w-full mb-2 px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                >
+                  show all clusters
+                </button>
+              )}
+              <div className="space-y-0.5">
+                {Object.entries(clusterLabels)
+                  .sort(([a], [b]) => Number(a) - Number(b))
+                  .map(([clusterId, label]) => {
+                    const id = Number(clusterId);
+                    const count = articles.filter(
+                      (a) => a.cluster === id
+                    ).length;
+                    const isSelected = selectedCluster === id;
+                    return (
+                      <button
+                        key={clusterId}
+                        onClick={() =>
+                          setSelectedCluster(isSelected ? null : id)
+                        }
+                        className={`w-full flex items-center gap-2 text-xs py-0.5 px-1 rounded transition-colors ${
+                          isSelected
+                            ? "bg-gray-100 dark:bg-gray-800"
+                            : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                        }`}
+                      >
+                        <div
+                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{
+                            backgroundColor: getClusterColor(
+                              id,
+                              theme === "dark"
+                            ),
+                          }}
+                        />
+                        <span className="text-gray-600 dark:text-gray-400 text-left">
+                          {label}{" "}
+                          <span className="text-gray-400 dark:text-gray-500">
+                            ({count})
+                          </span>
+                        </span>
+                      </button>
+                    );
+                  })}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
