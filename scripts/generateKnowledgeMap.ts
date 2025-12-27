@@ -5,6 +5,9 @@ import {
   normalizePositions,
   computeKMeans,
 } from "../utils/umapUtils";
+import { labelClusters } from "../utils/clusterLabeling";
+import { NUM_CLUSTERS } from "../config/constants";
+import type { KnowledgeMapOutput } from "../types/knowledgeMap";
 import fs from "fs";
 import path from "path";
 
@@ -114,18 +117,48 @@ async function generateKnowledgeMap() {
       }))
       .filter((item) => item.embedding.length > 0);
 
-    console.log("Computing k-means clusters on embeddings...");
+    console.log("Computing k-means clusters...");
 
     const embeddings = parsedData.map((item) => item.embedding);
 
-    // Cluster in high-dimensional space BEFORE dimensionality reduction for better results
-    // Why k-means in high-D works best:
-    // - UMAP distorts distances, so clustering after UMAP gives scattered colors
-    // - HDBSCAN in high-D suffers from curse of dimensionality (most points = noise)
-    // - k-means in high-D works well with embedding space, every point gets a cluster
-    // Result: Semantically similar posts get same color even if UMAP spreads them apart
-    const clusterResult = computeKMeans(embeddings, 18);
+    // Simple k-means clustering on all embeddings
+    const clusterResult = computeKMeans(embeddings, NUM_CLUSTERS);
     console.log(`Created ${clusterResult.numClusters} clusters`);
+
+    // Group articles by cluster for labeling
+    const clusterMap = new Map<number, ArticleData[]>();
+    parsedData.forEach((item, index) => {
+      const clusterId = clusterResult.labels[index];
+      if (!clusterMap.has(clusterId)) {
+        clusterMap.set(clusterId, []);
+      }
+      clusterMap.get(clusterId)!.push({
+        ...item,
+        x: 0, // Will be updated after UMAP
+        y: 0,
+        cluster: clusterId,
+      });
+    });
+
+    // Label clusters using Anthropic API
+    let clusterLabels: Record<number, string> | undefined;
+
+    if (process.env.ANTHROPIC_API_KEY) {
+      try {
+        const labelsMap = await labelClusters(clusterMap);
+        if (labelsMap) {
+          clusterLabels = Object.fromEntries(labelsMap);
+        }
+      } catch (error) {
+        console.warn("⚠️  Cluster labeling failed, continuing without labels");
+        console.warn(
+          "⚠️  Error:",
+          error instanceof Error ? error.message : error
+        );
+      }
+    } else {
+      console.warn("⚠️  ANTHROPIC_API_KEY not set, skipping cluster labeling");
+    }
 
     console.log("Computing UMAP positions...");
 
@@ -157,24 +190,24 @@ async function generateKnowledgeMap() {
 
     // Write to file
     const outputPath = path.join(dataDir, "knowledge-map.json");
-    fs.writeFileSync(
-      outputPath,
-      JSON.stringify(
-        {
-          success: true,
-          data: processedData,
-          count: processedData.length,
-          numClusters: clusterResult.numClusters,
-          generatedAt: new Date().toISOString(),
-        },
-        null,
-        2
-      )
-    );
+
+    const output: KnowledgeMapOutput = {
+      success: true,
+      data: processedData,
+      count: processedData.length,
+      numClusters: clusterResult.numClusters,
+      clusterLabels,
+      generatedAt: new Date().toISOString(),
+    };
+
+    fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
 
     console.log(`✓ Knowledge map generated: ${outputPath}`);
     console.log(`  ${processedData.length} articles processed`);
     console.log(`  ${clusterResult.numClusters} clusters found`);
+    if (clusterLabels) {
+      console.log(`  ${Object.keys(clusterLabels).length} clusters labeled`);
+    }
   } catch (error) {
     console.error("Error generating knowledge map:", error);
     process.exit(1);

@@ -31,3 +31,10 @@ export const DELAY_BETWEEN_BATCHES = 200; // Delay between large cross-post batc
 export const MAX_RETRIES = 5;
 export const INITIAL_RETRY_DELAY = 2000;
 export const API_TIMEOUT = 60000;
+
+// Cluster labeling config
+export const NUM_CLUSTERS = 15; // Number of k-means clusters
+export const ANTHROPIC_CLUSTER_MODEL = "claude-haiku-4-5"; // Latest Haiku model
+export const CLUSTER_LABEL_MAX_SAMPLES = 8; // Increased for better diversity
+export const CLUSTER_LABEL_MIN_SAMPLES = 3;
+export const CLUSTER_LABEL_TIMEOUT = 30000; // 30s
