@@ -13,6 +13,7 @@ import {
   LuEye,
   LuFileEdit,
   LuImage,
+  LuTrash2,
   LuX,
 } from "react-icons/lu";
 
@@ -27,6 +28,7 @@ export default function EditPostPage() {
   const [markdown, setMarkdown] = useState("");
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -296,6 +298,45 @@ export default function EditPostPage() {
     }
   }, [slug]);
 
+  const handleDelete = useCallback(async () => {
+    setModalConfig({
+      title: "Delete Post",
+      message: `Are you sure you want to delete this post? This action cannot be undone.`,
+      onConfirm: async () => {
+        setShowModal(false);
+        setDeleting(true);
+        setMessage("");
+
+        try {
+          const response = await fetch(
+            `/api/admin/delete-post?slug=${encodeURIComponent(slug)}`,
+            { method: "DELETE" }
+          );
+
+          const data = await response.json();
+
+          if (response.ok) {
+            setMessage("✓ Post deleted");
+            setTimeout(() => {
+              router.push(
+                searchParams.get("month")
+                  ? `/admin?month=${searchParams.get("month")}`
+                  : "/admin"
+              );
+            }, 1000);
+          } else {
+            setMessage(`✗ Error: ${data.error}`);
+          }
+        } catch (error) {
+          setMessage(`✗ Error: ${error}`);
+        } finally {
+          setDeleting(false);
+        }
+      },
+    });
+    setShowModal(true);
+  }, [slug, router, searchParams]);
+
   useEffect(() => {
     const hasChanged = markdown !== initialContentRef.current.markdown;
     setHasUnsavedChanges(hasChanged);
@@ -350,8 +391,10 @@ export default function EditPostPage() {
       }
     };
 
-    document.addEventListener("click", handleClick, true);
-    return () => document.removeEventListener("click", handleClick, true);
+    if (hasUnsavedChanges) {
+      document.addEventListener("click", handleClick, true);
+      return () => document.removeEventListener("click", handleClick, true);
+    }
   }, [hasUnsavedChanges]);
 
   useEffect(() => {
@@ -616,6 +659,16 @@ export default function EditPostPage() {
                 className="px-3 py-1.5 text-xs text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 disabled:opacity-30 transition-colors rounded-sm"
               >
                 {publishing ? "Moving..." : "Unpublish"}
+              </button>
+            )}
+            {!isNew && (
+              <button
+                onClick={handleDelete}
+                disabled={deleting}
+                className="text-japanese-ginnezu dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 disabled:opacity-30 transition-colors"
+                title="Delete post"
+              >
+                <LuTrash2 size={18} />
               </button>
             )}
           </div>
