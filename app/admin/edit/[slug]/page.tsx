@@ -477,8 +477,10 @@ export default function EditPostPage() {
   const confirmImageUpload = async () => {
     if (!pendingImageFile) return;
 
-    const finalName =
+    const rawName =
       imageNameInput.trim() || pendingImageFile.name.replace(/\.[^/.]+$/, "");
+    // Standardize: lowercase and replace spaces with hyphens
+    const finalName = rawName.toLowerCase().replace(/\s+/g, "-");
     await handleImageUpload(pendingImageFile, finalName);
 
     setShowImageNameModal(false);
