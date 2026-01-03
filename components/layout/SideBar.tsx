@@ -58,27 +58,28 @@ export function Sidebar() {
       {/* Name section */}
       <div className="flex flex-col items-center mb-2 md:fixed md:top-10 md:left-10 md:mb-2">
         <div className="font-bold text-center md:text-left mt-4 mb-2 md:mt-0">
-          <Link
-            href="/"
-            className="flex flex-row md:flex-col items-center justify-center md:justify-start gap-2"
-          >
-            <Image
-              src="/icons/ename.svg"
-              alt="BENEDICT NEO"
-              width={10}
-              height={10}
-              className="w-24 md:w-28 h-auto dark:invert"
-              priority
-            />
-            <Image
-              src="/icons/cname.svg"
-              alt="梁耀恩"
-              width={10}
-              height={10}
-              className="w-24 md:w-28 h-auto dark:invert"
-              priority
-            />
-          </Link>
+          <div className="flex flex-row md:flex-col items-center justify-center md:justify-start gap-2">
+            <Link href="/">
+              <Image
+                src="/icons/ename.svg"
+                alt="BENEDICT NEO"
+                width={10}
+                height={10}
+                className="w-24 md:w-28 h-auto dark:invert"
+                priority
+              />
+            </Link>
+            <Link href="/about">
+              <Image
+                src="/icons/cname.svg"
+                alt="梁耀恩"
+                width={10}
+                height={10}
+                className="w-24 md:w-28 h-auto dark:invert"
+                priority
+              />
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -12,11 +12,16 @@ interface ArchiveClientProps {
 
 export default function ArchiveClient({ allPosts }: ArchiveClientProps) {
   const searchParams = useSearchParams();
-  const currentYear = new Date().getFullYear();
 
-  // Read year from URL params, fallback to current year
+  // Get the latest post's year
+  const latestPostYear =
+    allPosts.length > 0
+      ? new Date(allPosts[0].date).getFullYear()
+      : new Date().getFullYear();
+
+  // Read year from URL params, fallback to latest post year
   const yearParam = searchParams.get("year");
-  const selectedYear = yearParam ? parseInt(yearParam, 10) : currentYear;
+  const selectedYear = yearParam ? parseInt(yearParam, 10) : latestPostYear;
 
   // Filter posts by selected year
   const filteredPosts = allPosts.filter(
