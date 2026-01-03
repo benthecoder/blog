@@ -6,10 +6,11 @@ import ThemeSwitch from "@/components/ui/ThemeSwitch";
 
 export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const isHome = pathname === "/";
   const isGallery = pathname === "/gallery";
   const isAdmin = pathname?.startsWith("/admin");
 
-  if (isGallery || isAdmin) {
+  if (isHome || isGallery || isAdmin) {
     return (
       <>
         <div className="fixed top-4 right-4 z-50">
