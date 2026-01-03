@@ -59,12 +59,12 @@ export default function MarkdownContent({ content }: { content: string }) {
             <Image
               src={`${image.properties.src}`}
               alt={image.properties.alt}
-              width={0}
-              height={0}
-              sizes="100vw"
-              unoptimized={true}
+              width={800}
+              height={600}
+              sizes="(max-width: 800px) 100vw, 800px"
               style={{ width: "100%", height: "auto", maxWidth: "800px" }}
               className="mx-auto"
+              priority={false}
             />
             <p className="text-gray-400 text-xs mt-1">{image.properties.alt}</p>
           </div>
