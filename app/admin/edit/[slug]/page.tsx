@@ -5,6 +5,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { RenderPost } from "@/components/posts";
 import matter from "gray-matter";
+import { DEFAULT_POST_TEMPLATE } from "@/lib/post-template";
 import {
   LuCalendar,
   LuChevronLeft,
@@ -44,13 +45,15 @@ export default function EditPostPage() {
   const [imageNameInput, setImageNameInput] = useState("");
   const [prevSlug, setPrevSlug] = useState<string | null>(null);
   const [nextSlug, setNextSlug] = useState<string | null>(null);
+  const [prevDate, setPrevDate] = useState<string | null>(null);
+  const [nextDate, setNextDate] = useState<string | null>(null);
   const [postImages, setPostImages] = useState<string[]>([]);
   const [showImages, setShowImages] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isResizing = useRef(false);
   const initialContentRef = useRef({ markdown: "" });
 
-  // Fetch all posts to determine prev/next
+  // Fetch all posts to determine prev/next for existing posts
   useEffect(() => {
     if (isNew) return;
 
@@ -58,25 +61,7 @@ export default function EditPostPage() {
 
     fetch("/api/admin/list-posts", { signal: abortController.signal })
       .then((res) => res.json())
-      .then((posts: string[]) => {
-        // Sort posts by actual date (slug format is DDMMYY)
-        const sortedPosts = posts
-          .filter((s) => s.length === 6) // Only date-based slugs
-          .sort((a, b) => {
-            // Parse DDMMYY format
-            const dateA = new Date(
-              2000 + parseInt(a.substring(4, 6)), // year
-              parseInt(a.substring(2, 4)) - 1, // month (0-indexed)
-              parseInt(a.substring(0, 2)) // day
-            );
-            const dateB = new Date(
-              2000 + parseInt(b.substring(4, 6)),
-              parseInt(b.substring(2, 4)) - 1,
-              parseInt(b.substring(0, 2))
-            );
-            return dateA.getTime() - dateB.getTime();
-          });
-
+      .then((sortedPosts: string[]) => {
         const currentIndex = sortedPosts.indexOf(slug);
 
         setPrevSlug(currentIndex > 0 ? sortedPosts[currentIndex - 1] : null);
@@ -94,6 +79,28 @@ export default function EditPostPage() {
 
     return () => abortController.abort();
   }, [slug, isNew]);
+
+  // Calculate prev/next dates for new posts
+  useEffect(() => {
+    if (!isNew) return;
+
+    const dateParam = searchParams.get("date");
+    if (!dateParam) return;
+
+    const currentDate = new Date(dateParam);
+
+    // Previous day
+    const prevDateObj = new Date(currentDate);
+    prevDateObj.setDate(prevDateObj.getDate() - 1);
+    const prevDateStr = `${prevDateObj.getFullYear()}-${String(prevDateObj.getMonth() + 1).padStart(2, "0")}-${String(prevDateObj.getDate()).padStart(2, "0")}`;
+    setPrevDate(prevDateStr);
+
+    // Next day
+    const nextDateObj = new Date(currentDate);
+    nextDateObj.setDate(nextDateObj.getDate() + 1);
+    const nextDateStr = `${nextDateObj.getFullYear()}-${String(nextDateObj.getMonth() + 1).padStart(2, "0")}-${String(nextDateObj.getDate()).padStart(2, "0")}`;
+    setNextDate(nextDateStr);
+  }, [isNew, searchParams]);
 
   useEffect(() => {
     const draftKey = `draft-${slug}`;
@@ -128,12 +135,12 @@ export default function EditPostPage() {
           year: "numeric",
         });
         setDate(formattedDate);
-        const initialContent = matter.stringify("", {
-          title: "",
-          tags: "",
-          date: formattedDate,
-        });
-        setMarkdown(initialContent);
+        // Use the template and replace the date placeholder
+        const templateWithDate = DEFAULT_POST_TEMPLATE.replace(
+          "date:",
+          `date: ${formattedDate}`
+        );
+        setMarkdown(templateWithDate);
 
         const savedDraft = localStorage.getItem(draftKey);
         if (savedDraft) {
@@ -715,43 +722,69 @@ export default function EditPostPage() {
           onMouseDown={(e) => handleMouseDown(e, "right")}
         />
 
-        {!isNew && (
-          <div className="absolute bottom-0 left-0 right-0 border-t border-japanese-shiraumenezu dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2 flex justify-between items-center">
-            {prevSlug ? (
+        <div className="absolute bottom-0 left-0 right-0 border-t border-japanese-shiraumenezu dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2 flex justify-between items-center">
+          {isNew ? (
+            prevDate ? (
               <Link
-                href={`/admin/edit/${prevSlug}${searchParams.get("month") ? `?month=${searchParams.get("month")}` : ""}`}
+                href={`/admin/edit/new?date=${prevDate}${searchParams.get("month") ? `&month=${searchParams.get("month")}` : ""}`}
                 className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
               >
                 <LuChevronLeft size={14} />
-                Previous
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  Previous
+                </span>
               </Link>
             ) : (
-              <span className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-700 opacity-20">
-                <LuChevronLeft size={14} />
+              <div />
+            )
+          ) : prevSlug ? (
+            <Link
+              href={`/admin/edit/${prevSlug}${searchParams.get("month") ? `?month=${searchParams.get("month")}` : ""}`}
+              className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+            >
+              <LuChevronLeft size={14} />
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                 Previous
               </span>
-            )}
-            {date && (
-              <span className="text-xs text-japanese-ginnezu dark:text-gray-500 tracking-wide">
-                {date}
-              </span>
-            )}
-            {nextSlug ? (
+            </Link>
+          ) : (
+            <div />
+          )}
+
+          {date && (
+            <span className="text-xs text-japanese-ginnezu dark:text-gray-500 tracking-wide">
+              {date}
+            </span>
+          )}
+
+          {isNew ? (
+            nextDate ? (
               <Link
-                href={`/admin/edit/${nextSlug}${searchParams.get("month") ? `?month=${searchParams.get("month")}` : ""}`}
+                href={`/admin/edit/new?date=${nextDate}${searchParams.get("month") ? `&month=${searchParams.get("month")}` : ""}`}
                 className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
               >
-                Next
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  Next
+                </span>
                 <LuChevronRight size={14} />
               </Link>
             ) : (
-              <span className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-700 opacity-20">
+              <div />
+            )
+          ) : nextSlug ? (
+            <Link
+              href={`/admin/edit/${nextSlug}${searchParams.get("month") ? `?month=${searchParams.get("month")}` : ""}`}
+              className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+            >
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                 Next
-                <LuChevronRight size={14} />
               </span>
-            )}
-          </div>
-        )}
+              <LuChevronRight size={14} />
+            </Link>
+          ) : (
+            <div />
+          )}
+        </div>
 
         {showImageNameModal && (
           <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
