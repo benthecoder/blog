@@ -30,12 +30,6 @@ async function compressImage(filePath) {
     const image = sharp(filePath);
     const metadata = await image.metadata();
 
-    // Create backup
-    const backupPath = filePath + ".backup";
-    if (!fs.existsSync(backupPath)) {
-      fs.copyFileSync(filePath, backupPath);
-    }
-
     // Resize if very large
     let processor = image;
     if (metadata.width > 2000) {
