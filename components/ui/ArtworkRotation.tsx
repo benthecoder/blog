@@ -81,9 +81,9 @@ export default function ArtworkRotation() {
   return (
     <>
       <NameHeader />
-      <div className="min-h-screen w-full flex items-center justify-center p-4">
-        <div className="flex flex-col items-center justify-center gap-3 w-full max-w-[min(90vw,400px)]">
-          <div className="relative w-full aspect-square">
+      <div className="min-h-screen w-full flex flex-col items-center justify-center px-4 md:px-8 pt-32 md:pt-36 pb-12 md:pb-16">
+        <div className="flex flex-col items-center justify-center gap-4 md:gap-6 w-full max-w-[min(85vw,700px)] md:max-w-[min(60vw,600px)]">
+          <div className="relative w-full aspect-square max-h-[calc(100vh-320px)] md:max-h-[calc(100vh-280px)]">
             <Image
               src={SKETCH_PATHS[currentIndex]}
               alt="sketch"
@@ -91,11 +91,11 @@ export default function ArtworkRotation() {
               className="object-contain select-none opacity-90"
               priority
               draggable={false}
-              sizes="(max-width: 640px) 90vw, 400px"
+              sizes="(max-width: 768px) 85vw, 60vw"
             />
           </div>
 
-          <div className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center gap-2 pb-2">
             {stats && stats.totalDays > 0 && stats.totalWords > 0 && (
               <div className="text-xs text-japanese-ginnezu dark:text-gray-500">
                 {stats.totalDays} days · {stats.totalWords.toLocaleString()}{" "}
