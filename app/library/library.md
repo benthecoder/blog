@@ -1,30 +1,24 @@
-## books for 2025
+## books to read 2026
 
-fiction
-
-- To The Lighthouse (Virginia Woolf)
-- The Unbearable Lightness of Being (Milan Kundera)
-
-spirituality
-
+- Waiting For God (Simone Weil)
 - Screwtape Letters (C.S. Lewis)
+- The Four Loves (C.S. Lewis)
+- Christian Reflections (C.S. Lewis)
+- The Image of the City (Kevin Lynch)
 - Works of Love (Søren Kierkegaard)
 - Fear and Trembling (Søren Kierkegaard)
 - The Wisdom of Insecurity (Alan W. Watts)
+- To The Lighthouse (Virginia Woolf)
+- The Unbearable Lightness of Being (Milan Kundera)
+
+## 2025 books
+
 - [Confession](/posts/100725) (Leo Tolstoy)
 - [Mere Christianity](/posts/120725) (C.S. Lewis)
-
-self / art
-
-- The Sense of Style (Steven Pinker)
-- The Conquest of Happiness (Bertrand Russell)
 - [In Praise of Shadows](/posts/040125) (Jun’ichirō Tanizaki)
+- [Breakneck](/posts/301225) (Dan Wang)
 
-tech/world
-
-- Breakneck (Dan Wang)
-
-## books for 2024
+## 2024 books
 
 - [How Proust Can Change Your Life](/posts/proust) (Alain de Botton)  
 - [Man's Search for meaning](/posts/meaning) (Viktor Frankl)  
