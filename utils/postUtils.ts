@@ -55,13 +55,19 @@ export function extractTags(frontmatter: PostFrontmatter): string[] {
 }
 
 /**
- * Calculate word count from content
+ * Calculate word count from content, excluding block quotes
  *
  * @param content - Text content
  * @returns Number of words
  */
 export function calculateWordCount(content: string): number {
-  return (content.match(/\b\w+\b/gu) || []).length;
+  // Remove block quote lines (lines starting with >)
+  const contentWithoutBlockQuotes = content
+    .split("\n")
+    .filter((line) => !line.trim().startsWith(">"))
+    .join("\n");
+
+  return (contentWithoutBlockQuotes.match(/\b\w+\b/gu) || []).length;
 }
 
 /**
