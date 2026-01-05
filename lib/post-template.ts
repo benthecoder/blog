@@ -10,14 +10,6 @@ date:
 
 [3-5 sentences summarizing your day]
 
-## thoughts
-
-[your reflections, stories, deep thoughts - as long as you want]
-
-## read
-
-[what you read, quotes, reflections]
-
 ---
 
 mood: /5
