@@ -13,9 +13,9 @@
 
 ## 2025 books
 
+- [In Praise of Shadows](/posts/040125) (Jun’ichirō Tanizaki)
 - [Confession](/posts/100725) (Leo Tolstoy)
 - [Mere Christianity](/posts/120725) (C.S. Lewis)
-- [In Praise of Shadows](/posts/040125) (Jun’ichirō Tanizaki)
 - [Breakneck](/posts/301225) (Dan Wang)
 
 ## 2024 books
