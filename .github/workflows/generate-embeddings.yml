@@ -6,6 +6,7 @@ on:
       - "posts/*.md"
     branches:
       - main # or your default branch
+  workflow_dispatch:
 
 jobs:
   generate-embeddings:
