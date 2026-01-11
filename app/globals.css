@@ -168,6 +168,16 @@ body {
   margin-left: -1em; /* Tweak as needed */
 }
 
+/* Remove bullets from task list items (checkboxes) */
+.prose ul li.task-list-item::before {
+  content: none;
+}
+
+.prose ul li.task-list-item {
+  margin-left: 0;
+  padding-left: 0;
+}
+
 .prose a {
   background-image: url("../public/underline.svg");
   background-size: 100% 4px;
