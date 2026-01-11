@@ -1,15 +1,30 @@
-## books to read 2026
+## to read
+
+> Tsundoku (積ん読): the habit of acquiring books but letting them pile up without reading them 
+> 
+> from [How to Maintain an antilibrary](https://nesslabs.com/antilibrary)
+
+Non-Fiction
 
 - Waiting For God (Simone Weil)
-- Screwtape Letters (C.S. Lewis)
-- The Four Loves (C.S. Lewis)
-- Christian Reflections (C.S. Lewis)
 - The Image of the City (Kevin Lynch)
 - Works of Love (Søren Kierkegaard)
 - Fear and Trembling (Søren Kierkegaard)
 - The Wisdom of Insecurity (Alan W. Watts)
+
+C.S. Lewis
+- The Four Loves
+- Christian Reflections
+- The Problem of Pain
+- Letters to Malcolm
+- The World's Last Night
+- The Great Divorce
+- Miracles
+
+Fiction
 - To The Lighthouse (Virginia Woolf)
 - The Unbearable Lightness of Being (Milan Kundera)
+
 
 ## 2025 books
 
@@ -34,6 +49,8 @@
 
 ## my information diet
 
+- [Aeon](https://aeon.co)
+- [Asimov Press](https://press.asimov.com/)
 - [Asterisk](https://asteriskmag.com/issues)
 - [Works in Progress](https://worksinprogress.co/)
 - [Bored Reading](https://boredreading.com/)
@@ -49,9 +66,9 @@
 - [Hypertext as Literature](https://hypertext.joodaloop.com/)
 
 
-
 ## ideas i want to revisit
 
+- [in praise of writing on the internet](https://www.personalcanon.com/p/in-praise-of-writing-on-the-internet)
 - [Evergreen notes](https://notes.andymatuschak.org/Evergreen_notes)
 - [Life is Short](http://www.paulgraham.com/vb.html)
 - [How to Do Great Work](http://paulgraham.com/greatwork.html)
@@ -80,6 +97,6 @@
 - [David Mitchell, The Art of Fiction No. 204](https://web.archive.org/web/20120107072852/https://www.theparisreview.org/interviews/6034/the-art-of-fiction-no-204-david-mitchell)
 - [Ursula K. Le Guin, The Art of Fiction No. 221](https://web.archive.org/web/20150106213733/https://www.theparisreview.org/interviews/6253/the-art-of-fiction-no-221-ursula-k-le-guin)
 
-## bookmarks
+## videos
 
 - [The Best Tacit Knowledge Videos on Every Subject — LessWrong](https://www.lesswrong.com/posts/SXJGSPeQWbACveJhs/the-best-tacit-knowledge-videos-on-every-subject)
