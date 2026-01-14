@@ -6,9 +6,17 @@ date:
 
 ![](/images/)
 
-## what happened today
-
 [3-5 sentences summarizing your day]
+
+til:
+-
+-
+-
+
+links:
+-
+-
+-
 
 ---
 
@@ -21,11 +29,6 @@ meals:
 - breakfast:
 - lunch:
 - dinner:
-
-til:
--
--
--
 
 grateful for:
 `;
