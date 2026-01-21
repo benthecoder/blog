@@ -46,4 +46,5 @@ export default async function ThoughtsPage() {
 }
 
 export const runtime = "edge";
-export const revalidate = 0;
+// Revalidate every 60 seconds instead of on every request
+export const revalidate = 60;

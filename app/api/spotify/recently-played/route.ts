@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { getRecentlyPlayed } from "@/utils/spotify";
 
-export const dynamic = "force-dynamic";
+// Revalidate every 60 seconds - recently played doesn't change as frequently
+export const revalidate = 60;
 
 export async function GET() {
   try {
