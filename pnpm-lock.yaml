@@ -28,6 +28,12 @@ importers:
       '@neondatabase/serverless':
         specifier: ^0.10.4
         version: 0.10.4
+      '@thi.ng/pixel':
+        specifier: ^7.5.21
+        version: 7.5.21
+      '@thi.ng/pixel-dither':
+        specifier: ^1.1.189
+        version: 1.1.189
       '@types/node':
         specifier: 18.11.9
         version: 18.11.9
@@ -874,6 +880,38 @@ packages:
     resolution: {integrity: sha512-w31dd8HOx3k9vPtcQh5QHP9GwKcgbMp87j58qi6xgiBnFFtKEAgCWnDw4qUT8aHwkCp8bKvb/KGKWWHedP0AAg==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20 || >=4.0.0-beta.1'
+
+  '@thi.ng/api@8.12.12':
+    resolution: {integrity: sha512-cjdAUqqolcR6uAgELXoP4a2DN9Mhu+QEGiVyRPqyNdZ06fYIhkdkiJRFbl0+JnRUw9I3yhVF6C5AxtF60oKzqw==}
+    engines: {node: '>=18'}
+
+  '@thi.ng/canvas@1.1.5':
+    resolution: {integrity: sha512-+0EdZHbupOgdy6sh1CeRA0bom9YPg2m5Wtew/gSj6xG9TW4bO7qn19JXD9qViKqSxbtkimTze59rV5B7+D7vMg==}
+    engines: {node: '>=18'}
+
+  '@thi.ng/checks@3.8.2':
+    resolution: {integrity: sha512-rlFMR1nD69JffzRkifaew/W9hSx4avVIGoiaLWnGEmFSFV3GelXunSLF/YoIflketC1R+dZe7EBau6g/qSDfjg==}
+    engines: {node: '>=18'}
+
+  '@thi.ng/errors@2.6.1':
+    resolution: {integrity: sha512-5kkJ1+JK6OInYMnRXtiJ6qZMt2zNqEuw0ZNwU8bFPfxF3yiWD5tcDNVLwE4EsMm8cGwH1K0h0TI5HIPfHSUWow==}
+    engines: {node: '>=18'}
+
+  '@thi.ng/math@5.15.1':
+    resolution: {integrity: sha512-/SvlqvxlOetGddcALBSzLnKpr4WpVdIYbpeZmKpRJIA8CzkgSVeRBXx1ypCeXjNayVXSVagT9s6eZRb7JlqQJA==}
+    engines: {node: '>=18'}
+
+  '@thi.ng/pixel-dither@1.1.189':
+    resolution: {integrity: sha512-25U1iiMyIiQ/K2/e3wrSeUNvZTJSC7TSCa2toxxewd615GtjZX8iduRQNS2ylCQGa4DN0KX3N8oWKSmG7JtC8g==}
+    engines: {node: '>=18'}
+
+  '@thi.ng/pixel@7.5.21':
+    resolution: {integrity: sha512-PrQZTAJ1HMCmKRsZbCKO7dCP84DMyk9b3v5w8711zR8LXqB6mOobaGbmg7ynK/UdNcJT8gVFbGfuaNophCiZOA==}
+    engines: {node: '>=18'}
+
+  '@thi.ng/porter-duff@2.1.124':
+    resolution: {integrity: sha512-XBMC947WFzORZR3tJVV0BhDK7YqXMVLQsm8MPT0SU2PRUsvbY93pmd8Pz3skcuPFo3AVA5hAz5CQiTpp3XBpLA==}
+    engines: {node: '>=18'}
 
   '@tsconfig/node16@1.0.4':
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
@@ -4448,6 +4486,37 @@ snapshots:
     dependencies:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.18(tsx@4.20.6)(yaml@2.8.1)
+
+  '@thi.ng/api@8.12.12': {}
+
+  '@thi.ng/canvas@1.1.5': {}
+
+  '@thi.ng/checks@3.8.2': {}
+
+  '@thi.ng/errors@2.6.1': {}
+
+  '@thi.ng/math@5.15.1':
+    dependencies:
+      '@thi.ng/api': 8.12.12
+
+  '@thi.ng/pixel-dither@1.1.189':
+    dependencies:
+      '@thi.ng/checks': 3.8.2
+      '@thi.ng/math': 5.15.1
+      '@thi.ng/pixel': 7.5.21
+
+  '@thi.ng/pixel@7.5.21':
+    dependencies:
+      '@thi.ng/api': 8.12.12
+      '@thi.ng/canvas': 1.1.5
+      '@thi.ng/checks': 3.8.2
+      '@thi.ng/errors': 2.6.1
+      '@thi.ng/math': 5.15.1
+      '@thi.ng/porter-duff': 2.1.124
+
+  '@thi.ng/porter-duff@2.1.124':
+    dependencies:
+      '@thi.ng/api': 8.12.12
 
   '@tsconfig/node16@1.0.4': {}
 
