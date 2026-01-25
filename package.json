@@ -22,6 +22,8 @@
     "@floating-ui/react": "^0.27.16",
     "@mozilla/readability": "^0.6.0",
     "@neondatabase/serverless": "^0.10.4",
+    "@thi.ng/pixel": "^7.5.21",
+    "@thi.ng/pixel-dither": "^1.1.189",
     "@types/node": "18.11.9",
     "@types/react": "^18.2.48",
     "@types/react-dom": "18.0.9",
