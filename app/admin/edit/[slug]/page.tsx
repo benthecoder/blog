@@ -448,8 +448,16 @@ export default function EditPostPage() {
       const formData = new FormData();
       formData.append("file", file);
 
-      // Prefix image name with slug
-      const finalName = customName ? `${slug}-${customName}` : null;
+      // Prefix image name with slug (or date for new posts)
+      let prefix = slug;
+      if (isNew) {
+        const dateParam = searchParams.get("date");
+        if (dateParam) {
+          const [year, month, day] = dateParam.split("-");
+          prefix = `${day}${month}${year.slice(2)}`; // DDMMYY format
+        }
+      }
+      const finalName = customName ? `${prefix}-${customName}` : null;
       if (finalName) {
         formData.append("name", finalName);
       }
