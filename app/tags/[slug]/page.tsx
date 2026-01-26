@@ -1,6 +1,8 @@
 import getPostMetadata from "@/utils/getPostMetadata";
 import PostPreview from "@/components/posts/PostPreview";
 
+export const revalidate = 3600; // Cache for 1 hour
+
 export const generateStaticParams = async () => {
   const postMetadata = getPostMetadata();
 
