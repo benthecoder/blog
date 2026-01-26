@@ -2,6 +2,28 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 
+function parseContent(content: string): React.ReactNode[] {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = content.split(urlRegex);
+
+  return parts.map((part, index) => {
+    if (part.startsWith("http://") || part.startsWith("https://")) {
+      return (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 hover:text-japanese-aiiro dark:hover:text-japanese-asagi transition-colors break-all"
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
+  });
+}
+
 interface Tweet {
   id: number;
   content: string;
@@ -89,7 +111,7 @@ export default function ThoughtsClient({
         {dates.map((date) => (
           <div key={date} className="relative">
             <div className="mb-2 pb-2 border-b border-japanese-shiraumenezu dark:border-japanese-ginnezu/30">
-              <p className="text-xs text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 tracking-wide lowercase">
+              <p className="text-xs text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 tracking-wide lowercase text-center">
                 {date}
               </p>
             </div>
@@ -107,12 +129,12 @@ export default function ThoughtsClient({
                 );
 
                 return (
-                  <div key={entry.id} className="flex gap-4">
-                    <span className="text-xs text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 shrink-0 select-none leading-relaxed">
+                  <div key={entry.id} className="flex gap-4 items-baseline">
+                    <span className="text-xs text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 shrink-0 select-none w-10">
                       {time}
                     </span>
-                    <p className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu leading-relaxed break-words whitespace-pre-wrap">
-                      {entry.content}
+                    <p className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu leading-relaxed break-words whitespace-pre-wrap flex-1">
+                      {parseContent(entry.content)}
                     </p>
                   </div>
                 );
