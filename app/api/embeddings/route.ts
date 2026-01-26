@@ -2,6 +2,8 @@ import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 import { computeUMAP, normalizePositions } from "@/utils/umapUtils";
 
+export const revalidate = 3600; // Cache for 1 hour
+
 interface ChunkRow {
   id: string;
   post_slug: string;

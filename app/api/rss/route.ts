@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import feed from "./feed.json";
 import { marked } from "marked";
 
+export const revalidate = 3600; // Cache for 1 hour
+
 const metadata = {
   title: "Benedict Neo",
   description: "Daily writing about learnings, thoughts, and ideas",
