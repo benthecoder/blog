@@ -1,6 +1,7 @@
 import getPostContent from "@/utils/getPostContent";
 import getPostMetadata from "@/utils/getPostMetadata";
 import RenderPost from "@/components/posts/RenderPost";
+import PostViewTracker from "@/components/posts/PostViewTracker";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -61,7 +62,17 @@ const PostPage = async ({ params }: { params: Params }) => {
 
   const postContent = getPostContent(slug);
 
-  return <RenderPost post={postContent} prev={post.prev} next={post.next} />;
+  return (
+    <>
+      <PostViewTracker slug={slug} />
+      <RenderPost
+        post={postContent}
+        prev={post.prev}
+        next={post.next}
+        slug={slug}
+      />
+    </>
+  );
 };
 
 export default PostPage;
