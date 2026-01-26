@@ -1,22 +1,19 @@
-import { Pool } from "pg";
+import { neon } from "@neondatabase/serverless";
 
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
+const sql = neon(process.env.POSTGRES_URL!);
+
+export const runtime = "edge";
 
 export async function POST(request: Request) {
   const body = await request.json();
   const content = (body.body || "").slice(0, 700);
 
   try {
-    const client = await pool.connect();
-    const queryText = "INSERT INTO tweets(content) VALUES($1) RETURNING *";
-    const res = await client.query(queryText, [content]);
-    client.release();
-    return new Response(JSON.stringify({ error: null, tweet: res.rows[0] }), {
+    const result = await sql(
+      "INSERT INTO tweets(content, created_at) VALUES($1, NOW()) RETURNING *",
+      [content]
+    );
+    return new Response(JSON.stringify({ error: null, tweet: result[0] }), {
       status: 200,
     });
   } catch (err) {
@@ -32,9 +29,7 @@ export async function DELETE(request: Request) {
   const id = body.id;
 
   try {
-    const client = await pool.connect();
-    await client.query("DELETE FROM tweets WHERE id = $1", [id]);
-    client.release();
+    await sql("DELETE FROM tweets WHERE id = $1", [id]);
     return new Response(null, { status: 204 });
   } catch (err) {
     console.error(err);
