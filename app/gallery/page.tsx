@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: "a collection of artworks and images",
 };
 
+export const revalidate = 3600; // Cache for 1 hour
+
 export default function GalleryPage() {
   const images = getGalleryImages();
 

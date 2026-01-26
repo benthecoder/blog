@@ -1,6 +1,8 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 
+export const revalidate = 3600; // Cache for 1 hour
+
 export async function GET() {
   try {
     // Get tags that appear in more than 1 post

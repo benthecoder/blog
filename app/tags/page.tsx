@@ -1,6 +1,8 @@
 import Link from "next/link";
 import getPostMetadata from "@/utils/getPostMetadata";
 
+export const revalidate = 3600; // Cache for 1 hour
+
 const TagPage = () => {
   const postMetadata = getPostMetadata();
 
