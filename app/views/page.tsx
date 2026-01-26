@@ -68,12 +68,12 @@ export default async function ViewsPage() {
               return (
                 <div
                   key={row.slug}
-                  className="grid grid-cols-12 text-xs border-b border-japanese-shiraumenezu/40 dark:border-white/10"
+                  className="grid grid-cols-12 text-xs border-b border-japanese-shiraumenezu/40 dark:border-white/10 text-japanese-sumiiro dark:text-japanese-shironezu"
                 >
                   <div className="col-span-9 border-r border-japanese-shiraumenezu/40 dark:border-white/10 p-3 truncate">
                     <Link
                       href={`/posts/${row.slug}`}
-                      className="hover:opacity-70"
+                      className="hover:underline underline-offset-2"
                     >
                       {title}
                     </Link>
