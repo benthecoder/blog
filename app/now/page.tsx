@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import SpotifyNowPlaying from "@/components/integrations/SpotifyNowPlaying";
 
-const TIMEZONE = "America/Chicago";
+const TIMEZONE = "America/New_York";
 
 const AboutPage = () => {
   const [time, setTime] = useState<string | null>(null);
@@ -38,7 +38,7 @@ const AboutPage = () => {
         <p>
           this is a <a href="https://sive.rs/nowff">now</a> page
         </p>
-        <p>📌 Austin, TX, time is {time}</p>
+        <p>📌 Miami, FL, time is {time}</p>
         <ul className="list-disc">
           <li>
             building cool stuff for AI in healthcare @{" "}
@@ -47,7 +47,7 @@ const AboutPage = () => {
           <li>finding balance in life and work and trying to sleep more</li>
           <li>
             experimenting with{" "}
-            <a href="https://pubmed.ncbi.nlm.nih.gov/38309304/">
+            <a href="https://en.wikipedia.org/wiki/Low-level_laser_therapy/">
               photobiomodulation
             </a>
           </li>
@@ -58,7 +58,7 @@ const AboutPage = () => {
           </li>
         </ul>
         <p className="text-sm text-[#595857]/60 dark:text-[#DCDDDD]/60 mt-6">
-          Last updated: Sep 26, 2025
+          Last updated: Feb 22, 2026
         </p>
       </article>
 
