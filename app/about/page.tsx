@@ -276,6 +276,18 @@ const ChronologyPage = () => {
       day: "30",
       description: "first day @ oe",
     },
+    {
+      year: "2025",
+      month: "august",
+      day: "5",
+      description: "moved to ATX",
+    },
+    {
+      year: "2026",
+      month: "feb",
+      day: "13",
+      description: "moved to MIA",
+    },
   ];
 
   // Group events by year
