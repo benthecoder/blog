@@ -8,16 +8,6 @@ date:
 
 [3-5 sentences summarizing your day]
 
-til:
--
--
--
-
-links:
--
--
--
-
 ---
 
 mood: /5
@@ -29,6 +19,16 @@ meals:
 - breakfast:
 - lunch:
 - dinner:
+
+til:
+-
+-
+-
+
+links:
+-
+-
+-
 
 grateful for:
 `;
