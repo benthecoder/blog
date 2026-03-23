@@ -330,7 +330,7 @@ export default function Gallery({ images }: GalleryProps) {
                 src={pos.image.path}
                 alt={pos.image.filename}
                 fill
-                sizes="300px"
+                sizes="150px"
                 style={{ objectFit: "contain" }}
                 draggable={false}
               />
