@@ -1,12 +1,32 @@
 import Link from "next/link";
+import { PostMetadata } from "@/types/post";
 import MarkdownContent from "./MarkdownContent";
 
-const RenderPost = ({ post, prev, next, slug }: any) => {
+interface PostData {
+  title?: string;
+  date?: string;
+  tags?: string;
+  [key: string]: unknown;
+}
+
+interface GrayMatterPost {
+  data: PostData;
+  content: string;
+}
+
+interface RenderPostProps {
+  post: GrayMatterPost;
+  prev: PostMetadata | null;
+  next: PostMetadata | null;
+  slug: string | null;
+}
+
+const RenderPost = ({ post, prev, next, slug }: RenderPostProps) => {
   return (
     <div>
       <div
         key={post.data.title}
-        className="p-4 bg-gradient-to-br from-japanese-hakuji to-japanese-unoharairo dark:from-gray-900 dark:to-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 dark:text-japanese-nyuhakushoku border-l-4 border-japanese-soshoku dark:border-japanese-murasakisuishiyou hover:border-japanese-nezumiiro dark:hover:border-japanese-shironezu/70"
+        className="p-4 bg-gradient-to-br from-japanese-hakuji to-japanese-unoharairo dark:from-gray-900 dark:to-gray-800 rounded-lg shadow-md hover:shadow-lg transition-[box-shadow,border-color] duration-300 dark:text-japanese-nyuhakushoku border-l-4 border-japanese-soshoku dark:border-japanese-murasakisuishiyou hover:border-japanese-nezumiiro dark:hover:border-japanese-shironezu/70"
       >
         {/* Title */}
         <div className="text-center">
@@ -24,17 +44,18 @@ const RenderPost = ({ post, prev, next, slug }: any) => {
 
           {/* Date */}
           <p className="text-japanese-nezumiiro/80 dark:text-japanese-murasakisuishiyou/60 text-sm mt-2 font-light tracking-wide">
-            {new Date(post.data.date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
+            {post.data.date &&
+              new Date(post.data.date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
           </p>
         </div>
 
         {/* Tags */}
         <div className="mt-2 flex flex-wrap justify-center gap-2 mb-4">
-          {post.data.tags.split(", ").map((tag: any) => (
+          {post.data.tags?.split(", ").map((tag: string) => (
             <Link
               href={`/tags/${tag}`}
               key={tag}
