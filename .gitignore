@@ -50,3 +50,5 @@ app/api/rss/feed.json
 
 AGENTS.md
 CLAUDE.md
+
+scripts/syncAppleNotes.mjs
