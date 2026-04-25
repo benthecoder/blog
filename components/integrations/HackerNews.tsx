@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const HackerNews = () => {
   const [topStories, setTopStories] = useState<any[]>([]);
@@ -30,7 +30,7 @@ const HackerNews = () => {
     return data;
   };
 
-  const fetchTopStories = async () => {
+  const fetchTopStories = useCallback(async () => {
     setIsLoading(true);
     const stories = await fetchIDs();
     const startIndex = currentPage * postsPerPage;
@@ -41,12 +41,11 @@ const HackerNews = () => {
     );
     setTopStories(fetchedStories);
     setIsLoading(false);
-  };
+  }, [currentPage]);
 
   useEffect(() => {
     fetchTopStories();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, [fetchTopStories]);
 
   const handleNextPage = () => {
     if (currentPage < maxPages - 1) {
