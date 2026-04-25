@@ -1,9 +1,12 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { checkAdminAuth } from "@/utils/adminAuth";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const authError = checkAdminAuth(request);
+  if (authError) return authError;
   try {
     const postsDir = path.join(process.cwd(), "posts");
     const draftsDir = path.join(process.cwd(), "posts", "drafts");
