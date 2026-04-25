@@ -32,7 +32,7 @@ export default function Form() {
     const { error } = await res.json();
 
     if (error) {
-      console.log(error);
+      console.error(error);
     }
 
     setRemainingChars(280);
