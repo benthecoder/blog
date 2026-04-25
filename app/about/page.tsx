@@ -281,12 +281,26 @@ const ChronologyPage = () => {
       month: "august",
       day: "5",
       description: "moved to ATX",
+      imageLinks: [
+        {
+          text: "ATX",
+          imagePath: "/images/austin.png",
+          altText: "ATX",
+        },
+      ],
     },
     {
       year: "2026",
       month: "feb",
       day: "13",
       description: "moved to MIA",
+      imageLinks: [
+        {
+          text: "MIA",
+          imagePath: "/images/miami.png",
+          altText: "MIA",
+        },
+      ],
     },
   ];
 
