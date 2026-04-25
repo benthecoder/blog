@@ -166,11 +166,11 @@ export default function CalendarView({ posts }: CalendarViewProps) {
               onClick={() => handleDateClick(day)}
               className={`
                 aspect-square border rounded-sm p-3 flex flex-col items-start justify-between relative
-                hover:border-japanese-sumiiro dark:hover:border-japanese-shironezu hover:shadow-sm transition-all
+                hover:border-japanese-sumiiro dark:hover:border-japanese-shironezu hover:shadow-sm transition-[border-color,box-shadow]
                 ${isTodayDate ? "border-japanese-sumiiro dark:border-japanese-shironezu bg-japanese-murasakisuishiyou dark:bg-gray-800 shadow-sm" : "border-japanese-shiraumenezu dark:border-gray-700"}
                 ${isDraft ? "border-2 border-dashed border-blue-400 dark:border-blue-500 bg-blue-50 dark:bg-blue-950/20" : ""}
                 ${post && !isTodayDate && !isDraft ? "bg-japanese-kinairo dark:bg-gray-800/50" : ""}
-                ${!post && !isTodayDate ? "bg-white dark:bg-transparent" : ""}
+                ${!post && !isTodayDate ? "bg-white dark:bg-gray-900" : ""}
               `}
             >
               <div className="flex items-start justify-between w-full">

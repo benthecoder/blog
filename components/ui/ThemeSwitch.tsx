@@ -26,7 +26,7 @@ const ThemeSwitcher = () => {
         alt={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
         width={10}
         height={10}
-        className="inline-block w-6 h-6 md:w-12 md:h-12 dark:invert"
+        className="inline-block w-6 h-6 md:w-12 md:h-12 dark:invert transition-opacity duration-200 opacity-80 hover:opacity-100"
       />
     </button>
   );
