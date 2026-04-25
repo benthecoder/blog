@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Markdown from "markdown-to-jsx";
 
 const Summarize: React.FC = () => {
