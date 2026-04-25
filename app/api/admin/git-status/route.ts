@@ -1,10 +1,13 @@
 import { exec } from "child_process";
 import { promisify } from "util";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { checkAdminAuth } from "@/utils/adminAuth";
 
 const execAsync = promisify(exec);
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const authError = checkAdminAuth(request);
+  if (authError) return authError;
   try {
     const { stdout } = await execAsync("git status --porcelain posts/");
 

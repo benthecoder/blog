@@ -1,8 +1,11 @@
 import fs from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
+import { checkAdminAuth } from "@/utils/adminAuth";
 
 export async function POST(request: NextRequest) {
+  const authError = checkAdminAuth(request);
+  if (authError) return authError;
   try {
     const { slug } = await request.json();
 
