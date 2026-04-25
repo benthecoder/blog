@@ -2,8 +2,11 @@ import fs from "fs";
 import path from "path";
 import sharp from "sharp";
 import { NextRequest, NextResponse } from "next/server";
+import { checkAdminAuth } from "@/utils/adminAuth";
 
 export async function POST(request: NextRequest) {
+  const authError = checkAdminAuth(request);
+  if (authError) return authError;
   try {
     const formData = await request.formData();
     const file = formData.get("file") as File;

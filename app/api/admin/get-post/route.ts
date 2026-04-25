@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { NextRequest, NextResponse } from "next/server";
+import { checkAdminAuth } from "@/utils/adminAuth";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -11,6 +12,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Slug required" }, { status: 400 });
   }
 
+  const authError = checkAdminAuth(request);
+  if (authError) return authError;
   try {
     const postsDir = path.join(process.cwd(), "posts");
     const draftsDir = path.join(process.cwd(), "posts", "drafts");
