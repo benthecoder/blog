@@ -18,24 +18,12 @@ export async function POST(request: Request) {
   try {
     const client = getVoyageClient();
 
-    console.log("Database URL:", !!process.env.POSTGRES_URL);
-
     const {
       query,
       searchType = "hybrid",
       tags,
       chunkType,
     } = await request.json();
-    console.log(
-      "Received search query:",
-      query,
-      "Search type:",
-      searchType,
-      "Tags:",
-      tags,
-      "Chunk type:",
-      chunkType
-    );
 
     if (!query) {
       return NextResponse.json(
@@ -107,11 +95,7 @@ export async function POST(request: Request) {
     };
 
     if (searchType === "keyword") {
-      console.log("Executing keyword search query...");
-
       const processedQuery = prepareSearchQuery(query, "&");
-
-      console.log("Processed query:", processedQuery);
 
       const metadataWhere = metadataFilter ? ` AND (${metadataFilter})` : "";
       const results = await sql.query(
@@ -151,8 +135,6 @@ export async function POST(request: Request) {
         [processedQuery, SEARCH_RESULT_LIMIT]
       );
 
-      console.log(`Found ${results.rows.length} keyword results`);
-
       if (results.rows.length === 0) {
         return NextResponse.json({
           results: [],
@@ -175,8 +157,6 @@ export async function POST(request: Request) {
         })),
       });
     } else {
-      // Generate embedding for semantic search
-      console.log("Generating embedding for semantic search...");
       const queryEmbedding = await client.embed({
         model: VOYAGE_MODEL,
         input: query,
@@ -195,7 +175,6 @@ export async function POST(request: Request) {
       const formattedEmbedding = formatEmbeddingForPostgres(embedding);
 
       if (searchType === "hybrid") {
-        console.log("Executing hybrid search query...");
         const metadataWhere = metadataFilter ? ` AND (${metadataFilter})` : "";
         const results = await sql.query(
           `
@@ -243,10 +222,7 @@ export async function POST(request: Request) {
           ]
         );
 
-        console.log(`Found ${results.rows.length} hybrid results`);
-
         if (results.rows.length === 0) {
-          console.log("No results, trying fallback hybrid search...");
           const fallbackResults = await sql.query(
             `
             WITH RankedResults AS (
@@ -322,7 +298,6 @@ export async function POST(request: Request) {
           })),
         });
       } else if (searchType === "semantic") {
-        console.log("Executing pure semantic search query...");
         const metadataWhere = metadataFilter ? ` AND (${metadataFilter})` : "";
         const results = await sql.query(
           `
@@ -346,10 +321,7 @@ export async function POST(request: Request) {
           ]
         );
 
-        console.log(`Found ${results.rows.length} semantic results`);
-
         if (results.rows.length === 0) {
-          console.log("No semantic results, trying more lenient search...");
           const fallbackResults = await sql.query(
             `
             SELECT
