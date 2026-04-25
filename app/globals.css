@@ -249,8 +249,18 @@ body {
     0 1px 10px 0 rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition:
-    transform 0.1s ease,
-    box-shadow 0.1s ease;
+    transform 150ms ease-out,
+    box-shadow 150ms ease-out;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .prose img:not(.not-prose):hover {
+    transform: scale(1.01);
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.07),
+      0 4px 16px 0 rgba(0, 0, 0, 0.13),
+      0 2px 6px -1px rgba(0, 0, 0, 0.08);
+  }
 }
 
 /* Spotify images - exclude from prose styles */
@@ -277,13 +287,20 @@ img.not-prose {
 .image-container {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
   bottom: calc(100% + 12px);
-  display: none;
+  display: flex;
   justify-content: center;
   align-items: center;
   pointer-events: none;
   z-index: 50;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) scale(0.96);
+  transform-origin: bottom center;
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out,
+    visibility 0ms 200ms;
 }
 
 .image-hover {
@@ -295,8 +312,6 @@ img.not-prose {
   pointer-events: none;
   border-radius: 0.125rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
-  animation: fadeInImage 200ms ease-out;
-  transform-origin: center;
   border: none !important;
   outline: none !important;
 }
@@ -306,10 +321,16 @@ img.not-prose {
 }
 
 .group:hover .image-container {
-  display: flex;
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out,
+    visibility 0ms 0ms;
 }
 
-@media (hover: hover) {
+@media (hover: hover) and (pointer: fine) {
   .group {
     transition: none;
   }
@@ -331,13 +352,25 @@ img.not-prose {
   animation: loading-bar 1.5s ease-in-out infinite;
 }
 
-@keyframes fadeInImage {
+@keyframes artworkFadeIn {
   from {
     opacity: 0;
-    transform: scale(0.96);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image-container,
+  .group:hover .image-container {
+    transition:
+      opacity 150ms ease-out,
+      visibility 0ms;
+    transform: translateX(-50%) scale(1);
+  }
+
+  .animate-loading-bar {
+    animation-duration: 2.5s;
   }
 }
