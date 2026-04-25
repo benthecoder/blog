@@ -104,8 +104,15 @@ export default function MarkdownContent({ content }: { content: string }) {
                 width={800}
                 height={600}
                 sizes="(max-width: 800px) 100vw, 800px"
-                style={{ width: "100%", height: "auto", maxWidth: "800px" }}
-                className="mx-auto"
+                style={{
+                  width: "auto",
+                  height: "auto",
+                  maxWidth: "100%",
+                  maxHeight: "65vh",
+                  display: "block",
+                  margin: "0 auto",
+                }}
+                className=""
               />
               {alt && <p className="text-gray-400 text-xs mt-1">{alt}</p>}
             </div>
