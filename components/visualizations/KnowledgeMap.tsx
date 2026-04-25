@@ -51,8 +51,7 @@ export default function KnowledgeMap({
   const { theme } = useTheme();
   const zoomBehaviorRef = useRef<any>(null);
 
-  // Fetch data from static JSON file
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -69,12 +68,11 @@ export default function KnowledgeMap({
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [fetchData]);
 
   // Filter articles
   const filtered = articles.filter((article) => {
