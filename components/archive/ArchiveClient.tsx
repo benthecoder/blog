@@ -85,9 +85,7 @@ export default function ArchiveClient({ allPosts }: ArchiveClientProps) {
         />
       </div>
 
-      <div className="space-y-1 hover:space-y-2 transition-all duration-300">
-        {postPreviews}
-      </div>
+      <div className="space-y-1">{postPreviews}</div>
     </div>
   );
 }
