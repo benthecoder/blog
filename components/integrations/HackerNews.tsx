@@ -2,22 +2,27 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+interface HNStory {
+  id: number;
+  title: string;
+  url: string;
+}
+
 const HackerNews = () => {
-  const [topStories, setTopStories] = useState<any[]>([]);
+  const [topStories, setTopStories] = useState<HNStory[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const postsPerPage = 50;
   const maxPages = 10;
 
-  const fetchIDs = async () => {
+  const fetchIDs = async (): Promise<number[]> => {
     const response = await fetch(
       "https://hacker-news.firebaseio.com/v0/topstories.json"
     );
-    const data = await response.json();
-    return data;
+    return response.json() as Promise<number[]>;
   };
 
-  const fetchStory = async (id: number) => {
+  const fetchStory = async (id: number): Promise<HNStory> => {
     const response = await fetch(
       `https://hacker-news.firebaseio.com/v0/item/${id}.json`
     );
@@ -27,7 +32,7 @@ const HackerNews = () => {
       data.url = `https://news.ycombinator.com/item?id=${data.id}`;
     }
 
-    return data;
+    return data as HNStory;
   };
 
   const fetchTopStories = useCallback(async () => {
@@ -37,7 +42,7 @@ const HackerNews = () => {
     const endIndex = startIndex + postsPerPage;
     const currentStories = stories.slice(startIndex, endIndex);
     const fetchedStories = await Promise.all(
-      currentStories.map((storyId: number) => fetchStory(storyId))
+      currentStories.map((storyId) => fetchStory(storyId))
     );
     setTopStories(fetchedStories);
     setIsLoading(false);
