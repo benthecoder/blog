@@ -5,10 +5,11 @@ import Image from "next/image";
 
 const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
 
-  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
-  const icon = theme === "light" ? "dark.svg" : "light.svg";
+  const toggleTheme = () =>
+    setTheme(resolvedTheme === "light" ? "dark" : "light");
+  const icon = resolvedTheme === "light" ? "dark.svg" : "light.svg";
 
   useEffect(() => {
     setMounted(true);
@@ -23,7 +24,7 @@ const ThemeSwitcher = () => {
     >
       <Image
         src={`/icons/${icon}`}
-        alt={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+        alt={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} mode`}
         width={10}
         height={10}
         className="inline-block w-6 h-6 md:w-12 md:h-12 dark:invert transition-opacity duration-200 opacity-80 hover:opacity-100"
