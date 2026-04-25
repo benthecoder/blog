@@ -131,32 +131,12 @@ body {
   outline: none !important;
 }
 
-/* Nuclear option: target all possible code block elements */
 .prose pre[class*="language-"],
 .prose div[class*="language-"],
 .prose code[class*="language-"] {
   border: none !important;
-  border-left: none !important;
-  border-right: none !important;
-  border-top: none !important;
-  border-bottom: none !important;
   box-shadow: none !important;
   outline: none !important;
-  ring: none !important;
-  border-radius: 0 !important;
-}
-
-.dark .prose pre[class*="language-"],
-.dark .prose div[class*="language-"],
-.dark .prose code[class*="language-"] {
-  border: none !important;
-  border-left: none !important;
-  border-right: none !important;
-  border-top: none !important;
-  border-bottom: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-  ring: none !important;
   border-radius: 0 !important;
 }
 
