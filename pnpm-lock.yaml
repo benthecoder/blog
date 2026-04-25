@@ -47,13 +47,13 @@ importers:
         specifier: ^1.1.189
         version: 1.1.189
       '@types/node':
-        specifier: 18.11.9
-        version: 18.11.9
+        specifier: ^18.11.9
+        version: 18.19.130
       '@types/react':
         specifier: ^18.2.48
         version: 18.3.26
       '@types/react-dom':
-        specifier: 18.0.9
+        specifier: ^18.0.9
         version: 18.0.9
       '@vercel/analytics':
         specifier: ^2.0.1
@@ -976,9 +976,6 @@ packages:
 
   '@types/node-fetch@2.6.13':
     resolution: {integrity: sha512-QGpRVpzSaUs30JBSGPjOg4Uveu384erbHBoT1zeONvyCfwQxIkUshLAOqN/k9EjGviPRmWTTe6aH2qySWKTVSw==}
-
-  '@types/node@18.11.9':
-    resolution: {integrity: sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==}
 
   '@types/node@18.19.130':
     resolution: {integrity: sha512-GRaXQx6jGfL8sKfaIDD6OupbIHBr9jv7Jnaml9tB7l4v068PAOXqfcujMMo5PhbIs6ggR1XODELqahT2R8v0fg==}
@@ -4418,7 +4415,7 @@ snapshots:
 
   '@types/jsdom@21.1.7':
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.19.130
       '@types/tough-cookie': 4.0.5
       parse5: 7.3.0
 
@@ -4438,10 +4435,8 @@ snapshots:
 
   '@types/node-fetch@2.6.13':
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.19.130
       form-data: 4.0.4
-
-  '@types/node@18.11.9': {}
 
   '@types/node@18.19.130':
     dependencies:
@@ -4449,13 +4444,13 @@ snapshots:
 
   '@types/pg@8.11.6':
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.19.130
       pg-protocol: 1.10.3
       pg-types: 4.1.0
 
   '@types/pg@8.15.6':
     dependencies:
-      '@types/node': 18.11.9
+      '@types/node': 18.19.130
       pg-protocol: 1.10.3
       pg-types: 2.2.0
 
@@ -4670,7 +4665,7 @@ snapshots:
 
   '@vue/compiler-core@3.5.22':
     dependencies:
-      '@babel/parser': 7.28.5
+      '@babel/parser': 7.29.2
       '@vue/shared': 3.5.22
       entities: 4.5.0
       estree-walker: 2.0.2
@@ -4685,7 +4680,7 @@ snapshots:
 
   '@vue/compiler-sfc@3.5.22':
     dependencies:
-      '@babel/parser': 7.28.5
+      '@babel/parser': 7.29.2
       '@vue/compiler-core': 3.5.22
       '@vue/compiler-dom': 3.5.22
       '@vue/compiler-ssr': 3.5.22
