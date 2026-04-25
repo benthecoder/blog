@@ -191,21 +191,14 @@ body {
 .prose h1 {
   font-size: 1.5rem /* 24px */;
   line-height: 2rem /* 32px */;
-  text-wrap: balance;
 }
 
 .prose h2 {
   font-size: 1.2rem;
-  text-wrap: balance;
 }
 
 .prose h3 {
   font-size: 1.1rem;
-  text-wrap: balance;
-}
-
-.prose p {
-  text-wrap: pretty;
 }
 
 .dark .prose h1,
