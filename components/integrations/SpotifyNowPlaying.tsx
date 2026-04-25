@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import useSWR from "swr";
 import Image from "next/image";
 import Loader from "@/components/ui/Loader";
