@@ -75,6 +75,11 @@ body {
 
 .prose ul {
   list-style: none;
+  padding-left: 1rem;
+}
+
+.prose ul ul {
+  padding-left: 0.75rem;
 }
 
 .prose code {
@@ -142,10 +147,10 @@ body {
 
 .prose ul li::before {
   content: "\25E6"; /* Unicode for a small circle */
-  color: slategrey; /* Change the color */
-  display: inline-block; /* Needed to add space between the bullet and the text */
-  width: 1em; /* Also needed for space (tweak if needed) */
-  margin-left: -1em; /* Tweak as needed */
+  color: slategrey;
+  display: inline-block;
+  width: 0.75em;
+  margin-left: -0.75em;
 }
 
 /* Remove bullets from task list items (checkboxes) */
