@@ -47,7 +47,7 @@ const SKETCH_PATHS = [
   "/images/psalms.png",
 ] as const;
 
-const ROTATION_INTERVAL = 3000;
+const INTERVAL = 4000;
 
 export default function ArtworkRotation() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -60,8 +60,7 @@ export default function ArtworkRotation() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % SKETCH_PATHS.length);
-    }, ROTATION_INTERVAL);
-
+    }, INTERVAL);
     return () => clearInterval(timer);
   }, []);
 
@@ -83,16 +82,17 @@ export default function ArtworkRotation() {
       <NameHeader />
       <div className="h-screen w-full flex flex-col items-center justify-center px-4 md:px-8 overflow-hidden">
         <div className="flex flex-col items-center justify-center gap-4 md:gap-6 w-full max-w-[min(85vw,700px)] md:max-w-[min(60vw,600px)]">
-          <div
-            key={currentIndex}
-            className="relative w-full aspect-square max-h-[calc(100vh-320px)] md:max-h-[calc(100vh-280px)]"
-            style={{ animation: "artworkFadeIn 600ms ease-out" }}
-          >
+          <div className="relative w-full aspect-square max-h-[calc(100vh-320px)] md:max-h-[calc(100vh-280px)]">
             <Image
+              key={currentIndex}
               src={SKETCH_PATHS[currentIndex]}
               alt="sketch"
               fill
-              className="object-contain select-none opacity-90"
+              className="object-contain select-none"
+              style={{
+                animation:
+                  "artworkFadeIn 800ms cubic-bezier(0.23,1,0.32,1) forwards",
+              }}
               priority
               draggable={false}
               sizes="(max-width: 768px) 85vw, 60vw"

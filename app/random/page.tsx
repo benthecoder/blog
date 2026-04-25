@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/ui/Loader";
 
 const RandomPost = () => {
   const router = useRouter();
@@ -15,7 +16,11 @@ const RandomPost = () => {
     fetchRandomPostSlug();
   }, [router]);
 
-  return <p>Loading...</p>;
+  return (
+    <div className="flex items-center justify-center min-h-[40vh]">
+      <Loader />
+    </div>
+  );
 };
 
 export default RandomPost;

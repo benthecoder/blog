@@ -12,8 +12,8 @@ import {
 import rehypeRaw from "rehype-raw";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
-import Image from "next/image";
 import remarkGfm from "remark-gfm";
+import PostImage from "./PostImage";
 import { useTheme } from "next-themes";
 import CopyButton from "./CopyButton";
 
@@ -96,27 +96,7 @@ export default function MarkdownContent({ content }: { content: string }) {
         if (first?.tagName === "img") {
           const src = first.properties?.src as string;
           const alt = (first.properties?.alt as string) ?? "";
-          return (
-            <div className="text-center">
-              <Image
-                src={src}
-                alt={alt}
-                width={800}
-                height={600}
-                sizes="(max-width: 800px) 100vw, 800px"
-                style={{
-                  width: "auto",
-                  height: "auto",
-                  maxWidth: "100%",
-                  maxHeight: "65vh",
-                  display: "block",
-                  margin: "0 auto",
-                }}
-                className=""
-              />
-              {alt && <p className="text-gray-400 text-xs mt-1">{alt}</p>}
-            </div>
-          );
+          return <PostImage src={src} alt={alt} />;
         }
         return <p>{children}</p>;
       },

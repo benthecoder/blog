@@ -44,14 +44,14 @@ module.exports = {
           highlight: "#E7E7EB", // murasakisuishiyou - purple water
         },
 
-        // Dark mode - using Japanese colors
+        // Dark mode - Obsidian Minimal inspired (neutral grays)
         dark: {
-          bg: "#1a1b26",
-          text: "#DCDDDD", // shironezu
-          accent: "#91989C", // ginnezu - silver mouse
-          border: "#E5E4E6", // shiraumenezu
-          tag: "#1e2030",
-          highlight: "#F3F3F3", // nyuhakushoku - milky white
+          bg: "#1a1a1a",
+          text: "#d1d1d1",
+          accent: "#999999",
+          border: "#333333",
+          tag: "#242424",
+          highlight: "#e8e8e8",
         },
       },
       fontFamily: {

@@ -35,7 +35,7 @@ body {
 }
 
 .dark body {
-  background: #1a1b26;
+  background: #1a1a1a;
   min-height: 100vh;
 }
 
@@ -119,7 +119,7 @@ body {
 }
 
 .dark .prose code {
-  background-color: #2a2b36;
+  background-color: #2a2a2a;
   color: #dcdddd; /* shironezu - light grey */
 }
 
@@ -356,7 +356,7 @@ img.not-prose {
     opacity: 0;
   }
   to {
-    opacity: 1;
+    opacity: 0.9;
   }
 }
 
