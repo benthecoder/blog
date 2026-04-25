@@ -83,7 +83,7 @@ export default function RootLayout({
       lang="en"
       className={`${averia.variable} font-serif`}
     >
-      <body className="flex flex-col mx-2 md:mx-10 md:flex-row md:items-start md:mt-10">
+      <body className="flex flex-col mx-2 md:mx-10 md:flex-row md:items-start md:mt-10 antialiased">
         <Providers>
           <ConditionalLayout>{children}</ConditionalLayout>
         </Providers>
