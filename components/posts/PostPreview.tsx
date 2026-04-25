@@ -6,7 +6,7 @@ const PostPreview = (props: PostMetadata) => {
 
   return (
     <Link href={`/posts/${props.slug}`}>
-      <div className="group relative flex justify-between items-center hover:bg-japanese-unoharairo dark:hover:bg-japanese-sumiiro/30 cursor-crosshair text-sm md:text-md">
+      <div className="group relative flex justify-between items-center hover:bg-japanese-unoharairo dark:hover:bg-japanese-sumiiro/30 transition-colors duration-150 cursor-crosshair text-sm md:text-md">
         {/* Title and optional star */}
         <div className="flex items-center gap-1">
           {isStarred && (
