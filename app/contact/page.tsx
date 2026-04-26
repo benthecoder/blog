@@ -19,8 +19,7 @@ type LinkItemProps = {
 const LinkItem = ({ href, children }: LinkItemProps) => (
   <a
     href={href}
-    className="opacity-75 hover:opacity-100 transition-opacity duration-200 no-underline bg-none"
-    style={{ background: "none", textDecoration: "none" }}
+    className="opacity-75 hover:opacity-100 transition-opacity duration-150"
   >
     {children}
   </a>
@@ -109,21 +108,12 @@ const ContactPage = () => {
           alt="have tea"
           width={800}
           height={600}
-          className="w-full mb-4"
+          className="mb-4"
+          style={{ width: "100%", height: "auto" }}
+          priority
         />
 
-        <p>
-          i love meeting and having interesting conversations with new people!
-        </p>
-
-        <p>
-          i also like learning about <Link href="/tags/art">art</Link> and
-          reading{" "}
-          <a href="https://www.goodreads.com/review/list/103179068-benedict-neo?shelf=to-read">
-            good books
-          </a>
-          .
-        </p>
+        <p>lover of tea and good conversations</p>
 
         <p>email: thisis[firstname][lastname][at]gmail[dot]com</p>
 
