@@ -55,6 +55,13 @@ const ChronologyPage = () => {
       year: "2019",
       month: "january",
       description: "started college @ INTI Subang",
+      imageLinks: [
+        {
+          text: "INTI",
+          imagePath: "/images/inti.png",
+          altText: "INTI",
+        },
+      ],
     },
     {
       year: "2020",
@@ -64,7 +71,7 @@ const ChronologyPage = () => {
     {
       year: "2021",
       month: "january",
-      description: "started online classes with isu",
+      description: "started online classes @ isu",
     },
     {
       year: "2021",
@@ -72,9 +79,16 @@ const ChronologyPage = () => {
       description: "flew to iowa with friends",
     },
     {
-      year: "2022",
-      month: "january",
-      description: "started doing hackathons online",
+      year: "2021",
+      month: "november",
+      description: "first hackathon",
+      imageLinks: [
+        {
+          text: "hackathon",
+          imagePath: "/images/firsthackathon.png",
+          altText: "hackathon",
+        },
+      ],
     },
     {
       year: "2022",
@@ -105,6 +119,15 @@ const ChronologyPage = () => {
       description: "got high",
       imageLinks: [
         { text: "high", imagePath: "/images/gothigh.jpg", altText: "got high" },
+      ],
+    },
+    {
+      year: "2022",
+      month: "november",
+      day: "26",
+      description: "first rave in sf",
+      imageLinks: [
+        { text: "rave", imagePath: "/images/rave.png", altText: "rave" },
       ],
     },
     {
