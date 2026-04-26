@@ -49,6 +49,7 @@ export default function KnowledgeMap({
   const [canvasReady, setCanvasReady] = useState(false);
   const [showLegend, setShowLegend] = useState(false);
   const { theme } = useTheme();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const zoomBehaviorRef = useRef<any>(null);
 
   const fetchData = useCallback(async () => {
@@ -279,6 +280,7 @@ export default function KnowledgeMap({
     zoomBehaviorRef.current = zoomBehavior;
 
     const selection = select(canvas);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     selection.call(zoomBehavior as any);
 
     // Force initial render after canvas is set up
@@ -293,6 +295,7 @@ export default function KnowledgeMap({
       canvas.style.height = `${newRect.height}px`;
 
       // Re-apply zoom behavior after canvas reset
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       selection.call(zoomBehavior as any);
     };
 
