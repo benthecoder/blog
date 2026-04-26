@@ -149,7 +149,7 @@ const Heatmap = ({
         <div className="flex items-center justify-between mb-4">
           {year > minYear ? (
             <Link
-              href={`${navigationPath}?year=${year - 1}&month=0`}
+              href={`${navigationPath}${navigationPath.includes("?") ? "&" : "?"}year=${year - 1}&month=0`}
               className="text-sm text-japanese-nezumiiro dark:text-japanese-ginnezu hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
             >
               ← {year - 1}
@@ -164,7 +164,7 @@ const Heatmap = ({
           </h1>
           {year < effectiveMaxYear ? (
             <Link
-              href={`${navigationPath}?year=${year + 1}&month=0`}
+              href={`${navigationPath}${navigationPath.includes("?") ? "&" : "?"}year=${year + 1}&month=0`}
               className="text-sm text-japanese-nezumiiro dark:text-japanese-ginnezu hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
             >
               {year + 1} →

@@ -2,7 +2,7 @@ i'm benedict, born and raised in Kuala Lumpur, Malaysia.
 
 this site is my [commonplace book](https://en.wikipedia.org/wiki/Commonplace_book). 
 
-browse the [archives](/posts) or wander through the [viz](/knowledge-map)
+browse the [archives](/posts) or wander through the [map](/posts?view=map)
 
 click on the [🎲](/random) icon if for a random post.
 
