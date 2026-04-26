@@ -76,7 +76,7 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
         <span
           ref={refs.setReference}
           {...getReferenceProps()}
-          className="underline decoration-solid decoration-1 cursor-pointer decoration-[#91989C]/40 dark:decoration-[#91989C]/40 underline-offset-2 transition-all hover:decoration-[#91989C] hover:dark:decoration-[#91989C]"
+          className="underline decoration-solid decoration-1 cursor-pointer decoration-[#91989C]/40 dark:decoration-[#91989C]/40 underline-offset-2 transition-[text-decoration-color] duration-150 hover:decoration-[#91989C] hover:dark:decoration-[#91989C]"
         >
           {link.text}
         </span>
