@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type PostViewTrackerProps = {
   slug: string;
@@ -13,27 +13,43 @@ const shouldSkipCount = () => {
 };
 
 const PostViewTracker = ({ slug }: PostViewTrackerProps) => {
-  useEffect(() => {
-    if (!slug || shouldSkipCount()) return;
+  const [count, setCount] = useState<number | null>(null);
 
-    const increment = async () => {
+  useEffect(() => {
+    if (!slug) return;
+
+    const track = async () => {
       try {
-        await fetch("/api/views", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ slug }),
-        });
+        if (shouldSkipCount()) {
+          const res = await fetch(
+            `/api/views?slug=${encodeURIComponent(slug)}`
+          );
+          const data = await res.json();
+          setCount(data.count ?? null);
+        } else {
+          const res = await fetch("/api/views", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ slug }),
+          });
+          const data = await res.json();
+          setCount(data.count ?? null);
+        }
       } catch {
         // Ignore failures; don't block page render.
       }
     };
 
-    increment();
+    track();
   }, [slug]);
 
-  return null;
+  if (count === null) return null;
+
+  return (
+    <span className="text-japanese-ginnezu dark:text-japanese-ginnezu text-xs tabular-nums">
+      {count.toLocaleString()} views
+    </span>
+  );
 };
 
 export default PostViewTracker;
