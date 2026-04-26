@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import getPostMetadata from "@/utils/getPostMetadata";
 import ArchiveClient from "@/components/archive/ArchiveClient";
 
-export const revalidate = 3600; // Cache for 1 hour
+export const dynamic = "force-static";
 
 const ArchivePage = () => {
   const postMetadata = getPostMetadata();

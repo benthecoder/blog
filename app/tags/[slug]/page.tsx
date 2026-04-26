@@ -1,7 +1,7 @@
 import getPostMetadata from "@/utils/getPostMetadata";
 import PostPreview from "@/components/posts/PostPreview";
 
-export const revalidate = 3600; // Cache for 1 hour
+export const dynamic = "force-static";
 
 export const generateStaticParams = async () => {
   const postMetadata = getPostMetadata();
@@ -12,12 +12,12 @@ export const generateStaticParams = async () => {
     post.tags.split(", ").forEach((tag) => tags.add(tag));
   });
 
-  return Array.from(tags).map((tag: any) => ({
-    slug: tag,
+  return Array.from(tags).map((tag) => ({
+    slug: tag as string,
   }));
 };
 
-const TagPage = async (props: any) => {
+const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   const params = await props.params;
   const tag = decodeURIComponent(params.slug);
   const postMetadata = getPostMetadata();
