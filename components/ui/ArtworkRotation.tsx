@@ -107,10 +107,10 @@ export default function ArtworkRotation() {
               </div>
             )}
             <Link
-              href="/posts"
+              href="/start"
               className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu hover:underline"
             >
-              archive
+              start here
             </Link>
           </div>
         </div>
