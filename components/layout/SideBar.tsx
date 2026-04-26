@@ -6,16 +6,16 @@ import Image from "next/image";
 import { useState } from "react";
 
 const links = [
-  { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
+  { path: "/posts", text: "archive", icon: "archive.svg" },
+  { path: "/random", text: "random", icon: "random.svg" },
+  { path: "/contact", text: "findme", icon: "contact.svg" },
   { path: "/hn", text: "hn", icon: "news.svg" },
   { path: "/now", text: "now", icon: "now.svg" },
   { path: "/curius", text: "curius", icon: "bookmark.svg" },
   { path: "/projects", text: "projects", icon: "code.svg" },
   { path: "/library", text: "library", icon: "library.svg" },
-  { path: "/contact", text: "findme", icon: "contact.svg" },
-  { path: "/posts", text: "archive", icon: "archive.svg" },
+  { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
   { path: "/gallery", text: "gallery", icon: "gallery.svg" },
-  { path: "/random", text: "random", icon: "random.svg" },
 ];
 
 export function Sidebar() {
