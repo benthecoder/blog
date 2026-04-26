@@ -325,7 +325,7 @@ const ChronologyPage = () => {
         month?: string;
         day?: string;
         description: string;
-        imageLinks?: any[];
+        imageLinks?: { text: string; imagePath: string; altText: string }[];
       }>
     >
   );

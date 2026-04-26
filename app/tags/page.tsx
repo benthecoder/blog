@@ -1,15 +1,15 @@
 import Link from "next/link";
 import getPostMetadata from "@/utils/getPostMetadata";
 
-export const revalidate = 3600; // Cache for 1 hour
+export const dynamic = "force-static";
 
 const TagPage = () => {
   const postMetadata = getPostMetadata();
 
-  const tags: { [index: string]: any } = {};
+  const tags: Record<string, number> = {};
 
   postMetadata.forEach((post) => {
-    post.tags.split(",").forEach((tag: any) => {
+    post.tags.split(",").forEach((tag) => {
       tag = tag.trim();
 
       if (tags[tag]) {
