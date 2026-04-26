@@ -52,13 +52,8 @@ function GalleryTile({
   return (
     <div
       ref={ref}
-      className="absolute overflow-hidden"
-      style={{
-        left: pos.x,
-        top: pos.y,
-        width: pos.width,
-        height: pos.height,
-      }}
+      className="overflow-hidden"
+      style={{ width: pos.width, height: pos.height }}
       onMouseMove={(e) => onHover(pos.image, e.clientX, e.clientY)}
       onMouseLeave={onLeave}
     >
@@ -328,7 +323,12 @@ export default function Gallery({ images }: GalleryProps) {
               key={pos.image.path}
               href={`/posts/${pos.image.usedInPosts[0].slug}`}
               className="absolute"
-              style={{ left: pos.x, top: pos.y }}
+              style={{
+                left: pos.x,
+                top: pos.y,
+                width: pos.width,
+                height: pos.height,
+              }}
             >
               <GalleryTile
                 pos={pos}
@@ -337,12 +337,22 @@ export default function Gallery({ images }: GalleryProps) {
               />
             </Link>
           ) : (
-            <GalleryTile
+            <div
               key={pos.image.path}
-              pos={pos}
-              onHover={(img, x, y) => setHoveredImage({ image: img, x, y })}
-              onLeave={() => setHoveredImage(null)}
-            />
+              className="absolute"
+              style={{
+                left: pos.x,
+                top: pos.y,
+                width: pos.width,
+                height: pos.height,
+              }}
+            >
+              <GalleryTile
+                pos={pos}
+                onHover={(img, x, y) => setHoveredImage({ image: img, x, y })}
+                onLeave={() => setHoveredImage(null)}
+              />
+            </div>
           )
         )}
       </div>
