@@ -1,6 +1,6 @@
 ---
 title: 'Understand The Data'
-tags: 'data, work, ✰'
+tags: 'data, work'
 date: 'Apr 15, 2024'
 ---
 
