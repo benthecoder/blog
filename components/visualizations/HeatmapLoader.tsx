@@ -45,7 +45,7 @@ export default function HeatmapLoader() {
             {Array.from({ length: 364 }).map((_, i) => (
               <div
                 key={i}
-                className={`w-full aspect-square rounded-[1px] transition-all duration-150 ${
+                className={`w-full aspect-square rounded-[1px] transition-[background-color] duration-150 ${
                   flashingCells.has(i)
                     ? "bg-japanese-sumiiro/40 dark:bg-japanese-shironezu/40"
                     : "bg-japanese-shiraumenezu/20 dark:bg-gray-800/20"
