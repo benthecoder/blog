@@ -34,7 +34,7 @@ export default function SearchResult({ result, query }: SearchResultProps) {
   return (
     <Link
       href={`/posts/${result.post_slug}`}
-      className="group block mb-4 p-4 border border-light-border/40 dark:border-dark-tag/40 bg-japanese-hakuji/40 dark:bg-dark-tag/20 hover:border-light-accent/60 dark:hover:border-dark-accent/60 hover:bg-japanese-unoharairo/60 dark:hover:bg-dark-tag/40 transition-all duration-200 hover:shadow-sm"
+      className="group block mb-4 p-4 border border-light-border/40 dark:border-dark-tag/40 bg-japanese-hakuji/40 dark:bg-dark-tag/20 hover:border-light-accent/60 dark:hover:border-dark-accent/60 hover:bg-japanese-unoharairo/60 dark:hover:bg-dark-tag/40 transition-[border-color,background-color,box-shadow] duration-200 hover:shadow-sm"
     >
       <div className="space-y-2">
         <div className="flex items-center justify-between gap-3">
