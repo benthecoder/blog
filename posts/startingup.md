@@ -1,6 +1,6 @@
 ---
 title: 'Intercom on Starting Up'
-tags: 'startup, book, ✰'
+tags: 'startup, book'
 date: 'May 16, 2024'
 ---
 
