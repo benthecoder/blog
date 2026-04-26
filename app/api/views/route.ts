@@ -29,8 +29,45 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const slug = parseSlug(searchParams.get("slug"));
 
+  // No slug → return all view counts
   if (!slug) {
-    return NextResponse.json({ error: "Slug required" }, { status: 400 });
+    try {
+      let cursor = "0";
+      const keys: string[] = [];
+      do {
+        const result = (await upstashRequest([
+          "SCAN",
+          cursor,
+          "MATCH",
+          "views:*",
+          "COUNT",
+          200,
+        ])) as [string, string[]];
+        cursor = result[0];
+        keys.push(...result[1]);
+      } while (cursor !== "0");
+
+      const viewKeys = keys.filter((k) => !k.startsWith("views:dedupe:"));
+      if (viewKeys.length === 0) return NextResponse.json({ results: [] });
+
+      const counts = (await upstashRequest(["MGET", ...viewKeys])) as Array<
+        string | null
+      >;
+      const results = viewKeys
+        .map((key, i) => ({
+          slug: key.replace("views:", ""),
+          count: Number(counts[i] ?? 0),
+        }))
+        .sort((a, b) => b.count - a.count);
+
+      return NextResponse.json({ results });
+    } catch (error) {
+      console.error("Error fetching all views:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch views" },
+        { status: 500 }
+      );
+    }
   }
 
   try {

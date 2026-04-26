@@ -365,7 +365,7 @@ export default function KnowledgeMap({
   return (
     <div
       ref={containerRef}
-      className={`relative ${className} bg-white dark:bg-[#1a1a1a]`}
+      className={`relative ${className} bg-japanese-kinairo dark:bg-[#1a1a1a]`}
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E")`,
       }}
@@ -377,7 +377,7 @@ export default function KnowledgeMap({
           placeholder="search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-40 px-2 py-1 text-xs bg-white/90 dark:bg-gray-900/90 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 rounded focus:outline-none placeholder:text-gray-400 pointer-events-auto"
+          className="w-40 px-2 py-1 text-xs bg-japanese-kinairo/90 dark:bg-[#1a1a1a]/90 text-japanese-sumiiro dark:text-japanese-shironezu border border-japanese-shiraumenezu dark:border-white/[0.08] focus:outline-none placeholder:text-japanese-sumiiro/30 dark:placeholder:text-japanese-shironezu/30 pointer-events-auto backdrop-blur-sm"
         />
       </div>
 
@@ -390,11 +390,11 @@ export default function KnowledgeMap({
 
       {/* Article Detail on Hover */}
       {hoveredArticle && (
-        <div className="absolute top-4 right-4 z-20 bg-white/95 dark:bg-gray-900/95 p-3 rounded border border-gray-300 dark:border-gray-700 shadow-sm max-w-xs pointer-events-none">
-          <h3 className="font-semibold text-sm leading-tight mb-2">
+        <div className="absolute top-4 right-4 z-20 bg-japanese-kinairo/95 dark:bg-[#1a1a1a]/95 p-3 border border-japanese-shiraumenezu dark:border-white/[0.08] shadow-sm max-w-xs pointer-events-none backdrop-blur-sm">
+          <h3 className="font-medium text-sm leading-tight mb-2 text-japanese-sumiiro dark:text-japanese-shironezu">
             {hoveredArticle.postTitle}
           </h3>
-          <div className="space-y-1 text-xs text-gray-600 dark:text-gray-400">
+          <div className="space-y-1 text-xs text-japanese-sumiiro/60 dark:text-japanese-shironezu/60">
             {clusterLabels[hoveredArticle.cluster] && (
               <div className="flex items-center gap-1.5 mb-1">
                 <div
@@ -406,7 +406,7 @@ export default function KnowledgeMap({
                     ),
                   }}
                 />
-                <span className="font-medium text-gray-700 dark:text-gray-300">
+                <span className="font-medium text-japanese-sumiiro dark:text-japanese-shironezu">
                   {clusterLabels[hoveredArticle.cluster]}
                 </span>
               </div>
@@ -429,7 +429,7 @@ export default function KnowledgeMap({
                 {hoveredArticle.tags.map((tag, i) => (
                   <span
                     key={i}
-                    className="px-1 py-0.5 bg-gray-100 dark:bg-gray-800 rounded text-xs"
+                    className="px-1 py-0.5 bg-japanese-shiraumenezu/40 dark:bg-white/[0.06] text-xs text-japanese-sumiiro/70 dark:text-japanese-shironezu/70"
                   >
                     {tag}
                   </span>
@@ -445,7 +445,7 @@ export default function KnowledgeMap({
         <div className="absolute bottom-4 right-4 z-10">
           <button
             onClick={() => setShowLegend(!showLegend)}
-            className="bg-white/90 dark:bg-gray-900/90 px-2 py-1 rounded border border-gray-300 dark:border-gray-700 text-xs text-gray-600 dark:text-gray-400 hover:bg-white dark:hover:bg-gray-900 transition-colors"
+            className="bg-japanese-kinairo/90 dark:bg-[#1a1a1a]/90 px-2 py-1 border border-japanese-shiraumenezu dark:border-white/[0.08] text-xs text-japanese-sumiiro/60 dark:text-japanese-shironezu/60 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors backdrop-blur-sm"
           >
             {showLegend
               ? "hide"
@@ -454,11 +454,11 @@ export default function KnowledgeMap({
                 : "clusters"}
           </button>
           {showLegend && (
-            <div className="absolute bottom-8 right-0 bg-white/95 dark:bg-gray-900/95 px-3 py-2 rounded border border-gray-300 dark:border-gray-700 max-h-[60vh] overflow-y-auto shadow-lg min-w-[200px]">
+            <div className="absolute bottom-8 right-0 bg-japanese-kinairo/95 dark:bg-[#1a1a1a]/95 px-3 py-2 border border-japanese-shiraumenezu dark:border-white/[0.08] max-h-[60vh] overflow-y-auto shadow-sm min-w-[200px] backdrop-blur-sm">
               {selectedCluster !== null && (
                 <button
                   onClick={() => setSelectedCluster(null)}
-                  className="w-full mb-2 px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+                  className="w-full mb-2 px-2 py-1 text-xs bg-japanese-shiraumenezu/30 dark:bg-white/[0.06] hover:bg-japanese-shiraumenezu/50 dark:hover:bg-white/[0.10] transition-colors"
                 >
                   show all clusters
                 </button>
@@ -480,8 +480,8 @@ export default function KnowledgeMap({
                         }
                         className={`w-full flex items-center gap-2 text-xs py-0.5 px-1 rounded transition-colors ${
                           isSelected
-                            ? "bg-gray-100 dark:bg-gray-800"
-                            : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                            ? "bg-japanese-shiraumenezu/40 dark:bg-white/[0.06]"
+                            : "hover:bg-japanese-shiraumenezu/20 dark:hover:bg-white/[0.04]"
                         }`}
                       >
                         <div
@@ -493,9 +493,9 @@ export default function KnowledgeMap({
                             ),
                           }}
                         />
-                        <span className="text-gray-600 dark:text-gray-400 text-left">
+                        <span className="text-japanese-sumiiro/70 dark:text-japanese-shironezu/70 text-left">
                           {label}{" "}
-                          <span className="text-gray-400 dark:text-gray-500">
+                          <span className="text-japanese-sumiiro/40 dark:text-japanese-shironezu/40">
                             ({count})
                           </span>
                         </span>
@@ -509,7 +509,7 @@ export default function KnowledgeMap({
       )}
 
       {/* Instructions */}
-      <div className="absolute bottom-4 left-4 z-10 bg-white/90 dark:bg-gray-900/90 px-3 py-1 rounded border border-gray-300 dark:border-gray-700 text-xs text-gray-500 pointer-events-none">
+      <div className="absolute bottom-4 left-4 z-10 bg-japanese-kinairo/80 dark:bg-[#1a1a1a]/80 px-3 py-1 border border-japanese-shiraumenezu dark:border-white/[0.08] text-xs text-japanese-sumiiro/40 dark:text-japanese-shironezu/40 pointer-events-none backdrop-blur-sm">
         scroll to zoom • drag to pan • click to read
       </div>
     </div>

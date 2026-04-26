@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PostMetadata } from "@/types/post";
 import MarkdownContent from "./MarkdownContent";
+import PostViewTracker from "./PostViewTracker";
 
 interface PostData {
   title?: string;
@@ -66,6 +67,14 @@ const RenderPost = ({ post, prev, next, slug }: RenderPostProps) => {
                     #{tag}
                   </Link>
                 ))}
+              </>
+            )}
+            {slug && (
+              <>
+                <span className="text-japanese-shiraumenezu dark:text-japanese-sumiiro/50 text-xs">
+                  ·
+                </span>
+                <PostViewTracker slug={slug} />
               </>
             )}
           </div>
