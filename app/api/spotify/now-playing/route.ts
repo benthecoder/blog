@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getNowPlaying } from "@/utils/spotify";
 
-// Revalidate every 30 seconds to reduce origin requests while keeping data fresh
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
