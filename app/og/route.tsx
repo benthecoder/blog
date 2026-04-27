@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   ).then((res) => res.arrayBuffer());
   const fontData = await font;
 
-  return new ImageResponse(
+  const imageResponse = new ImageResponse(
     (
       <div
         style={{
@@ -49,10 +49,17 @@ export async function GET(req: NextRequest) {
       fonts: [
         {
           name: "Averia Serif Libre",
-          data: fontData, // fontData is now an ArrayBuffer
+          data: fontData,
           style: "normal",
         },
       ],
     }
   );
+
+  return new Response(await imageResponse.arrayBuffer(), {
+    headers: {
+      "Content-Type": "image/png",
+      "Cache-Control": "public, max-age=31536000, immutable",
+    },
+  });
 }
