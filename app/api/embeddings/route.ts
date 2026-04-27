@@ -114,10 +114,21 @@ export async function GET(request: Request) {
       50
     );
 
-    const processedData: ArticleData[] = parsedData.map((item, index) => ({
-      ...item,
+    const processedData = parsedData.map((item, index) => ({
+      id: item.id,
+      postSlug: item.postSlug,
+      postTitle: item.postTitle,
+      content: item.content,
+      chunkType: item.chunkType,
+      metadata: item.metadata,
+      sequence: item.sequence,
+      publishedDate: item.publishedDate,
+      tags: item.tags,
+      createdAt: item.createdAt,
+      index,
       x: normalizedPositions[index].x,
       y: normalizedPositions[index].y,
+      // embedding vectors intentionally omitted — large and unused by clients
     }));
 
     return NextResponse.json({

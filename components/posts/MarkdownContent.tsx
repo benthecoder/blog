@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import type React from "react";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import type { PluggableList } from "unified";
@@ -16,7 +17,6 @@ import remarkGfm from "remark-gfm";
 import PostImage from "./PostImage";
 import { useTheme } from "next-themes";
 import CopyButton from "./CopyButton";
-
 import "katex/dist/katex.min.css";
 
 const baseOverrides = {
@@ -59,34 +59,51 @@ const rehypePlugins: PluggableList = [
   [rehypeKatex, { strict: false }],
 ];
 
-export default function MarkdownContent({ content }: { content: string }) {
+function CodeBlock({
+  className,
+  children,
+  ...props
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
   const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
-  const style = isDark ? customDracula : customOneLight;
+  const style = resolvedTheme === "dark" ? customDracula : customOneLight;
+  const match = /language-(\w+)/.exec(className || "");
+  const codeString = String(children).replace(/\n$/, "");
 
+  if (!match) {
+    return (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    );
+  }
+
+  return (
+    <div className="relative group/code">
+      <CopyButton code={codeString} />
+      <SyntaxHighlighter
+        style={style}
+        language={match[1]}
+        customStyle={{}}
+        PreTag="div"
+        {...(props as object)}
+      >
+        {codeString}
+      </SyntaxHighlighter>
+    </div>
+  );
+}
+
+export default function MarkdownContent({ content }: { content: string }) {
   const components = useMemo<Components>(
     () => ({
-      // In react-markdown v9, inline code has no language- class; block code does
       code({ className, children, ...props }) {
-        const match = /language-(\w+)/.exec(className || "");
-        const codeString = String(children).replace(/\n$/, "");
-        return match ? (
-          <div className="relative group/code">
-            <CopyButton code={codeString} />
-            <SyntaxHighlighter
-              style={style}
-              language={match[1]}
-              customStyle={{}}
-              PreTag="div"
-              {...(props as object)}
-            >
-              {codeString}
-            </SyntaxHighlighter>
-          </div>
-        ) : (
-          <code className={className} {...props}>
+        return (
+          <CodeBlock className={className} {...props}>
             {children}
-          </code>
+          </CodeBlock>
         );
       },
       p({ node, children }) {
@@ -101,7 +118,7 @@ export default function MarkdownContent({ content }: { content: string }) {
         return <p>{children}</p>;
       },
     }),
-    [style]
+    []
   );
 
   return (
