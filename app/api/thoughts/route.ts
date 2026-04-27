@@ -4,7 +4,7 @@ import { neon } from "@neondatabase/serverless";
 const sql = neon(process.env.POSTGRES_URL!);
 
 export const runtime = "edge";
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
