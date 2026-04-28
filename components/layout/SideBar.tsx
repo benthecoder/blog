@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const links = [
   { path: "/posts", text: "archive", icon: "archive.svg" },
@@ -20,6 +20,22 @@ const links = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [spinning, setSpinning] = useState(false);
+  const spinTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    function onSpin() {
+      setSpinning(true);
+      if (spinTimer.current) clearTimeout(spinTimer.current);
+      spinTimer.current = setTimeout(() => setSpinning(false), 500);
+    }
+    window.addEventListener("random-spin", onSpin);
+    return () => {
+      window.removeEventListener("random-spin", onSpin);
+      if (spinTimer.current) clearTimeout(spinTimer.current);
+    };
+  }, []);
+
   const [hoveredLink, setHoveredLink] = useState<{
     text: string;
     x: number;
@@ -101,7 +117,7 @@ export function Sidebar() {
                 alt={text}
                 width={10}
                 height={10}
-                className="w-full h-full dark:invert"
+                className={`w-full h-full dark:invert${path === "/random" && spinning ? " dice-spin" : ""}`}
               />
             ) : (
               text
