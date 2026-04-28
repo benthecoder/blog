@@ -110,6 +110,14 @@ export function Sidebar() {
             }`}
             onMouseEnter={(e) => handleMouseEnter(e, text)}
             onMouseLeave={() => setHoveredLink(null)}
+            onClick={
+              path === "/random"
+                ? (e) => {
+                    e.preventDefault();
+                    window.dispatchEvent(new CustomEvent("random-dice-click"));
+                  }
+                : undefined
+            }
           >
             {icon ? (
               <Image
