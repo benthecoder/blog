@@ -63,12 +63,40 @@ export function useRandomPost() {
       }
     }
 
+    function registerMotion() {
+      window.addEventListener("devicemotion", onMotion);
+    }
+
+    // iOS 13+ requires explicit permission for DeviceMotionEvent
+    function requestMotionPermission() {
+      type DME = typeof DeviceMotionEvent & {
+        requestPermission?: () => Promise<"granted" | "denied">;
+      };
+      const DME = DeviceMotionEvent as DME;
+      if (typeof DME.requestPermission === "function") {
+        DME.requestPermission()
+          .then((state) => {
+            if (state === "granted") registerMotion();
+          })
+          .catch(() => {});
+      } else {
+        registerMotion();
+      }
+    }
+
     window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("devicemotion", onMotion);
+
+    if (typeof DeviceMotionEvent !== "undefined") {
+      // Request permission on first touch so the prompt is user-gesture gated
+      window.addEventListener("touchstart", requestMotionPermission, {
+        once: true,
+      });
+    }
 
     return () => {
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("devicemotion", onMotion);
+      window.removeEventListener("touchstart", requestMotionPermission);
     };
   }, [router]);
 }
