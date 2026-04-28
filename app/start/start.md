@@ -2,7 +2,7 @@ i'm benedict, [born](/about) and raised in Kuala Lumpur, Malaysia.
 
 this site is my [commonplace book](https://en.wikipedia.org/wiki/Commonplace_book). 
 
-browse the [archives](/posts). click [🎲](/random) for a random post.
+browse the [archives](/posts). press `r` for a random post or shake your phone.
 
 i like going down rabbitholes on the internet with [curius](https://curius.app/benedict-neo). 
 
