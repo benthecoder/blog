@@ -351,6 +351,25 @@ img.not-prose {
   animation: loading-bar 1.5s ease-in-out infinite;
 }
 
+@keyframes diceSpin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  40% {
+    transform: rotate(200deg) scale(1.2);
+  }
+  70% {
+    transform: rotate(340deg) scale(0.95);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+.dice-spin {
+  animation: diceSpin 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
 @keyframes artworkFadeIn {
   from {
     opacity: 0;
