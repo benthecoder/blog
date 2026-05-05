@@ -5,31 +5,16 @@ import useSWR from "swr";
 import Image from "next/image";
 import Loader from "@/components/ui/Loader";
 
-interface NowPlayingData {
-  isPlaying: boolean;
-  title?: string;
-  artist?: string;
-  album?: string;
-  albumImageUrl?: string;
-  songUrl?: string;
-  duration_ms?: number;
-  progress_ms?: number;
-  progressPercent?: number;
-  releaseYear?: string;
-  trackNumber?: number;
-  totalTracks?: number;
-  popularity?: number;
+interface RecentTrack {
+  title: string;
+  artist: string;
+  albumImageUrl: string;
+  songUrl: string;
+  playedAt: string;
 }
 
 interface RecentlyPlayedData {
-  tracks: Array<{
-    title: string;
-    artist: string;
-    album: string;
-    albumImageUrl: string;
-    songUrl: string;
-    playedAt: string;
-  }>;
+  tracks: RecentTrack[];
 }
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
@@ -37,28 +22,20 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json());
 export default function SpotifyNowPlaying() {
   const [isVisible, setIsVisible] = useState(false);
 
-  const { data: nowPlaying, isLoading: nowPlayingLoading } =
-    useSWR<NowPlayingData>("/api/spotify/now-playing", fetcher, {
-      refreshInterval: 60000,
-    });
-
-  const { data: recentlyPlayed, isLoading: recentlyPlayedLoading } =
-    useSWR<RecentlyPlayedData>(
-      !nowPlaying?.isPlaying ? "/api/spotify/recently-played" : null,
-      fetcher,
-      {
-        refreshInterval: 300000,
-      }
-    );
+  const { data: recentlyPlayed, isLoading } = useSWR<RecentlyPlayedData>(
+    "/api/spotify/recently-played",
+    fetcher,
+    {
+      refreshInterval: 300000,
+    }
+  );
 
   useEffect(() => {
-    if (nowPlaying || recentlyPlayed) {
+    if (recentlyPlayed) {
       const timer = setTimeout(() => setIsVisible(true), 100);
       return () => clearTimeout(timer);
     }
-  }, [nowPlaying, recentlyPlayed]);
-
-  const isLoading = nowPlayingLoading || recentlyPlayedLoading;
+  }, [recentlyPlayed]);
 
   if (isLoading) {
     return (
@@ -68,184 +45,92 @@ export default function SpotifyNowPlaying() {
     );
   }
 
-  if (!nowPlaying && !recentlyPlayed) {
-    return null;
-  }
+  if (!recentlyPlayed?.tracks?.length) return null;
 
   return (
     <div
       className={`transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
       style={{
         marginTop: "32px",
-        paddingLeft: "0px",
-        paddingRight: "0px",
         fontSize: "14px",
         color: "#888888",
         lineHeight: "1.6",
       }}
     >
-      <div
-        style={{
-          borderTop: "1px solid #e0e0e0",
-          paddingTop: "24px",
-        }}
-      >
-        {nowPlaying?.isPlaying ? (
-          <div>
-            <div
-              style={{ marginBottom: "12px", fontSize: "12px", opacity: 0.6 }}
+      <div style={{ borderTop: "1px solid #e0e0e0", paddingTop: "24px" }}>
+        <div style={{ marginBottom: "12px", fontSize: "12px", opacity: 0.6 }}>
+          ♫ recent
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {recentlyPlayed.tracks.slice(0, 10).map((track, i) => (
+            <a
+              key={i}
+              href={track.songUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "12px",
+                textDecoration: "none",
+                color: "inherit",
+              }}
             >
-              ♫ now
-            </div>
-            <div
-              style={{ display: "flex", gap: "16px", alignItems: "flex-start" }}
-            >
-              {nowPlaying.albumImageUrl && (
-                <a
-                  href={nowPlaying.songUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ flexShrink: 0 }}
-                >
-                  <Image
-                    src={nowPlaying.albumImageUrl}
-                    alt=""
-                    width={120}
-                    height={120}
-                    className="not-prose"
-                    style={{
-                      width: "120px",
-                      height: "120px",
-                      minWidth: "120px",
-                      maxWidth: "120px",
-                      borderRadius: "4px",
-                      opacity: 0.95,
-                    }}
-                    unoptimized
-                  />
-                </a>
-              )}
-              <a
-                href={nowPlaying.songUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <span
                 style={{
-                  textDecoration: "none",
-                  color: "inherit",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "flex-start",
-                  flex: 1,
-                  minWidth: 0,
+                  fontSize: "11px",
+                  opacity: 0.35,
+                  width: "16px",
+                  textAlign: "right",
+                  flexShrink: 0,
                 }}
               >
-                <div
+                {i + 1}
+              </span>
+              {track.albumImageUrl && (
+                <Image
+                  src={track.albumImageUrl}
+                  alt=""
+                  width={40}
+                  height={40}
+                  className="not-prose"
                   style={{
-                    color: "#000000 !important" as any,
-                    fontSize: "16px !important" as any,
-                    opacity: "1 !important" as any,
-                    visibility: "visible !important" as any,
-                    marginBottom: "4px",
-                    fontWeight: "500",
+                    width: "40px",
+                    height: "40px",
+                    minWidth: "40px",
+                    borderRadius: "3px",
+                    opacity: 0.9,
                   }}
-                >
-                  {nowPlaying.title}
-                </div>
+                  unoptimized
+                />
+              )}
+              <div style={{ minWidth: 0 }}>
                 <div
                   style={{
                     fontSize: "13px",
-                    opacity: 0.6,
+                    fontWeight: "500",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {nowPlaying.artist}
-                  {nowPlaying.releaseYear && ` · ${nowPlaying.releaseYear}`}
+                  {track.title}
                 </div>
-              </a>
-            </div>
-          </div>
-        ) : recentlyPlayed?.tracks && recentlyPlayed.tracks.length > 0 ? (
-          <div>
-            <div
-              style={{ marginBottom: "12px", fontSize: "12px", opacity: 0.6 }}
-            >
-              ♫ recent
-            </div>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "14px" }}
-            >
-              {recentlyPlayed.tracks.slice(0, 3).map((track, index) => (
                 <div
-                  key={index}
                   style={{
-                    display: "flex",
-                    gap: "14px",
-                    alignItems: "flex-start",
+                    fontSize: "11px",
+                    opacity: 0.55,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {track.albumImageUrl && (
-                    <a
-                      href={track.songUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ flexShrink: 0 }}
-                    >
-                      <Image
-                        src={track.albumImageUrl}
-                        alt=""
-                        width={80}
-                        height={80}
-                        className="not-prose"
-                        style={{
-                          width: "80px",
-                          height: "80px",
-                          minWidth: "80px",
-                          maxWidth: "80px",
-                          borderRadius: "4px",
-                          opacity: 0.9,
-                        }}
-                        unoptimized
-                      />
-                    </a>
-                  )}
-                  <a
-                    href={track.songUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      textDecoration: "none",
-                      color: "inherit",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "flex-start",
-                      flex: 1,
-                      minWidth: 0,
-                    }}
-                  >
-                    <div
-                      style={{
-                        color: "#000000 !important" as any,
-                        fontSize: "14px !important" as any,
-                        opacity: "1 !important" as any,
-                        visibility: "visible !important" as any,
-                        marginBottom: "3px",
-                      }}
-                    >
-                      {track.title}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "12px",
-                        opacity: 0.6,
-                      }}
-                    >
-                      {track.artist}
-                    </div>
-                  </a>
+                  {track.artist}
                 </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
     </div>
   );
