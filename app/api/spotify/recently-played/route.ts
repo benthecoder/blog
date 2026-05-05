@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const response = await getRecentlyPlayed(5);
+    const response = await getRecentlyPlayed(10);
     return NextResponse.json(response);
   } catch (error) {
     console.error("Error fetching recently played:", error);
