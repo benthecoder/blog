@@ -1,6 +1,6 @@
 ---
 title: 'Taiwan Day 4'
-tags: 'travel, journal'
+tags: 'travel, journal, TPE'
 date: 'Jun 4, 2024'
 ---
 

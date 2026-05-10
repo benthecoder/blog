@@ -1,6 +1,6 @@
 ---
 title: 'Boston Day 3: Isabella & MFA'
-tags: 'travel, journal'
+tags: 'travel, journal, boston'
 date: 'Nov 22 2023'
 ---
 

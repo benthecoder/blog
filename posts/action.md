@@ -1,12 +1,10 @@
 ---
 title: 'Bias Towards Action'
-tags: 'action, life, advice'
+tags: 'action, life, advice, ✰'
 date: 'Jul 21, 2023'
 ---
 
-Your 20s is the time do do random and unexpected things.
-
-If you're hesitant or overthinking about doing something, [bias towards action](https://www.benkuhn.net/college/#bias-towards-action), apply the [regret minimization framework](https://sahilbloom.substack.com/p/the-bezos-regret-minimization-framework).
+If you're someone who hestiates or overthink about doing things, think about how you can [bias towards action](https://www.benkuhn.net/college/#bias-towards-action) and apply the [regret minimization framework](https://sahilbloom.substack.com/p/the-bezos-regret-minimization-framework).
 
 Action can mean many things, but the fundamental idea is to do cool shit.
 
