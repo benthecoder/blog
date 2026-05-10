@@ -187,6 +187,7 @@ body {
 
 .prose ::selection {
   background-color: #91989c !important; /* ginnezu - silver mouse */
+  color: #2c353d !important; /* force dark text so blockquote gray stays readable */
 }
 
 .dark .prose ::selection {
