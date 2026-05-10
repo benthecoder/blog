@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+export const dynamic = "force-static";
+
 const Wave = () => {
   return (
     <div className="w-full">
