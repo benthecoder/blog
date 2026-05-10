@@ -1,6 +1,6 @@
 ---
 title: 'Feynman on Purpose'
-tags: 'life, advice'
+tags: 'life, advice, ✰'
 date: 'Jun 9, 2024'
 ---
 
