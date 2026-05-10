@@ -8,26 +8,17 @@ export default function PostImage({ src, alt }: { src: string; alt: string }) {
 
   return (
     <figure className="my-1">
-      {/* Fixed 4:3 container — never changes size regardless of image dimensions.
-          Portrait images get space on the sides, landscape fits naturally. */}
-      <div className="relative w-full overflow-hidden rounded-sm aspect-[4/3]">
-        <div
-          className="absolute inset-0 bg-japanese-soshoku/20 dark:bg-white/[0.04]"
-          style={{
-            opacity: loaded ? 0 : 1,
-            transition: "opacity 400ms cubic-bezier(0.23,1,0.32,1)",
-            pointerEvents: "none",
-            zIndex: 1,
-          }}
-        />
+      <div className="w-full overflow-hidden rounded-sm">
         <Image
           src={src}
           alt={alt}
-          fill
+          width={800}
+          height={600}
           sizes="(max-width: 800px) 100vw, 800px"
           onLoad={() => setLoaded(true)}
           style={{
-            objectFit: "contain",
+            width: "100%",
+            height: "auto",
             opacity: loaded ? 1 : 0,
             transition: "opacity 500ms cubic-bezier(0.23,1,0.32,1)",
           }}
