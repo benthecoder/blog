@@ -1,6 +1,6 @@
 ---
 title: 'Christmas in Seattle'
-tags: 'journal'
+tags: 'journal, SEA'
 date: 'Dec 25, 2023'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Good Day'
-tags: 'life, advice'
+tags: 'life, advice, ✰'
 date: 'Jul 13, 2023'
 ---
 

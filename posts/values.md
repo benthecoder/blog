@@ -1,6 +1,6 @@
 ---
 title: 'what you value most'
-tags: 'life, philosophy, questions'
+tags: 'life, philosophy, questions, ✰'
 date: 'Jun 27, 2024'
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: 'Boston Day 1: Quincy Market'
-tags: 'travel, journal'
+tags: 'travel, journal, boston'
 date: 'Nov 20, 2023'
 ---
 

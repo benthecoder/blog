@@ -1,6 +1,6 @@
 ---
 title: 'ISU classes: A Review'
-tags: 'life, learning'
+tags: 'life, learning, ✰'
 date: 'Dec 14, 2023'
 ---
 
