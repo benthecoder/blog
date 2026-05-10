@@ -4,6 +4,8 @@ import RenderPost from "@/components/posts/RenderPost";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
+export const dynamic = "force-static";
+
 // Update Params type to be a Promise
 type Params = Promise<{ slug: string }>;
 

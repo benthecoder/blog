@@ -2,6 +2,8 @@ import fs from "fs";
 import Markdown from "markdown-to-jsx";
 import matter from "gray-matter";
 
+export const dynamic = "force-static";
+
 const ProjectsPage = () => {
   const file = "app/projects/projects.md";
   const content = fs.readFileSync(file, "utf8");

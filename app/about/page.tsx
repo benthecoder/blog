@@ -1,6 +1,8 @@
 import React from "react";
 import Timeline from "@/components/visualizations/Timeline";
 
+export const dynamic = "force-static";
+
 const ChronologyPage = () => {
   const rawEvents = [
     {
