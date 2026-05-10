@@ -1,6 +1,6 @@
 i'm benedict, [born](/about) and raised in [Kuala Lumpur, Malaysia](https://en.wikipedia.org/wiki/Kuala_Lumpur).
 
-this site is my [筆記](https://en.wikipedia.org/wiki/Biji_(Chinese_literature)), translated as 'written notes'.
+this site is my [筆記](https://en.wikipedia.org/wiki/Biji_(Chinese_literature)), meaning 'written notes'.
 
 browse the [archives](/posts). press `r` for a random post or click on 🎲
 
