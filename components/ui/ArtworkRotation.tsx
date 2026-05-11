@@ -51,30 +51,11 @@ const INTERVAL = 4000;
 
 export default function ArtworkRotation() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [stats, setStats] = useState<{
-    totalPosts: number;
-    totalWords: number;
-    totalDays: number;
-  } | null>(null);
-
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % SKETCH_PATHS.length);
     }, INTERVAL);
     return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/stats")
-      .then((res) => res.json())
-      .then((data) =>
-        setStats({
-          totalPosts: data.totalPosts,
-          totalWords: data.totalWords,
-          totalDays: data.totalDays,
-        })
-      )
-      .catch(() => {});
   }, []);
 
   return (
@@ -100,12 +81,6 @@ export default function ArtworkRotation() {
           </div>
 
           <div className="flex flex-col items-center gap-2 pb-2">
-            {stats && stats.totalDays > 0 && stats.totalWords > 0 && (
-              <div className="text-xs text-japanese-ginnezu dark:text-gray-500">
-                {stats.totalDays} days · {stats.totalWords.toLocaleString()}{" "}
-                words
-              </div>
-            )}
             <Link
               href="/start"
               className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu hover:underline"
