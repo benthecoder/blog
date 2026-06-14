@@ -46,8 +46,7 @@ export default function Form() {
 
   return (
     <form
-      style={{ opacity: !isMutating ? 1 : 0.7 }}
-      className="relative max-w-[500px] mb-20"
+      className={`relative max-w-[500px] mb-20 transition-opacity ${isMutating ? "opacity-70" : "opacity-100"}`}
       onSubmit={onSubmit}
     >
       <input
