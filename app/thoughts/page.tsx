@@ -1,22 +1,17 @@
 import { neon } from "@neondatabase/serverless";
 import { Metadata } from "next";
 import { ThoughtsClient } from "@/components/thoughts";
+import type { Thought } from "@/types/thoughts";
 
 export const metadata: Metadata = {
   title: "thoughts",
   description: "unfiltered thoughts, stream of consciousness",
 };
 
-interface Tweet {
-  id: number;
-  content: string;
-  created_at: Date;
-}
-
 const sql = neon(process.env.POSTGRES_URL!);
 
 async function getInitialThoughts(): Promise<{
-  thoughts: Tweet[];
+  thoughts: Thought[];
   total: number;
 }> {
   const INITIAL_LIMIT = 100;
@@ -27,7 +22,7 @@ async function getInitialThoughts(): Promise<{
       FROM tweets
       ORDER BY created_at DESC
       LIMIT ${INITIAL_LIMIT}
-    `) as unknown as Tweet[],
+    `) as unknown as Thought[],
     sql(`SELECT COUNT(*) as count FROM tweets`) as unknown as {
       count: number;
     }[],

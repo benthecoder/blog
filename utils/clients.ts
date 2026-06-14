@@ -1,10 +1,6 @@
 import { VoyageAIClient } from "voyageai";
 import { Anthropic } from "@anthropic-ai/sdk";
 
-/**
- * Singleton VoyageAI client instance
- * Used for generating embeddings across the application
- */
 let voyageClientInstance: VoyageAIClient | null = null;
 
 export function getVoyageClient(): VoyageAIClient {
@@ -19,10 +15,6 @@ export function getVoyageClient(): VoyageAIClient {
   return voyageClientInstance;
 }
 
-/**
- * Singleton Anthropic client instance
- * Used for LLM operations
- */
 let anthropicClientInstance: Anthropic | null = null;
 
 export function getAnthropicClient(): Anthropic {
