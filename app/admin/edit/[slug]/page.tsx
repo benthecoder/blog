@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { RenderPost } from "@/components/posts";
+import RenderPost from "@/components/posts/RenderPost";
 import matter from "gray-matter";
 import { DEFAULT_POST_TEMPLATE } from "../post-template";
 import {
