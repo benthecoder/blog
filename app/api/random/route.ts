@@ -1,16 +1,16 @@
-import { getAllPostSlugs } from "@/scripts/postUtils";
+import getPostMetadata from "@/utils/getPostMetadata";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export function GET(request: Request) {
-  const slugs = getAllPostSlugs();
-  const randomSlug = slugs[Math.floor(Math.random() * slugs.length)];
+export function GET() {
+  const posts = getPostMetadata();
+  const random = posts[Math.floor(Math.random() * posts.length)];
 
-  return new NextResponse(JSON.stringify({ slug: randomSlug }), {
+  return new NextResponse(JSON.stringify({ slug: random.slug }), {
     headers: {
       "Content-Type": "application/json",
-      "Cache-Control": "no-store", // Ensures no caching
+      "Cache-Control": "no-store",
     },
   });
 }

@@ -14,6 +14,9 @@ export const POSTS_DIR = path.join(ROOT_DIR, "posts");
 /** Drafts directory containing unpublished posts */
 export const DRAFTS_DIR = path.join(POSTS_DIR, "drafts");
 
+/** Wiki directory containing personal encyclopedia pages */
+export const WIKI_DIR = path.join(ROOT_DIR, "wiki");
+
 /** Public directory for static assets */
 export const PUBLIC_DIR = path.join(ROOT_DIR, "public");
 
@@ -36,4 +39,8 @@ export function getPostPath(slug: string): string {
  */
 export function getDraftPath(slug: string): string {
   return path.join(DRAFTS_DIR, `${slug}.md`);
+}
+
+export function getWikiPath(slug: string): string {
+  return path.join(WIKI_DIR, `${slug}.md`);
 }
