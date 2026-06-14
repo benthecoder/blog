@@ -6,7 +6,6 @@ import type { Metadata } from "next";
 
 export const dynamic = "force-static";
 
-// Update Params type to be a Promise
 type Params = Promise<{ slug: string }>;
 
 export async function generateMetadata({
@@ -15,7 +14,6 @@ export async function generateMetadata({
   params: Params;
 }): Promise<Metadata | undefined> {
   const posts = getPostMetadata();
-  // Await params before accessing slug
   const { slug } = await params;
   const post = posts.find((post) => post.slug === slug);
 
@@ -50,10 +48,8 @@ export const generateStaticParams = async () => {
   }));
 };
 
-// Update component props type to use Promise<Params>
 const PostPage = async ({ params }: { params: Params }) => {
   const metadata = getPostMetadata();
-  // Await params before accessing slug
   const { slug } = await params;
   const post = metadata.find((p) => p.slug === slug);
 

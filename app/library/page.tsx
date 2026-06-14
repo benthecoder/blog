@@ -1,10 +1,11 @@
 import { readMarkdownFile } from "@/utils/markdown";
 import MarkdownContent from "@/components/posts/MarkdownContent";
+import { LIBRARY_MD } from "@/config/paths";
 
 export const dynamic = "force-static";
 
 const LibraryPage = () => {
-  const { content } = readMarkdownFile("app/library/library.md");
+  const { content } = readMarkdownFile(LIBRARY_MD);
 
   return (
     <div>

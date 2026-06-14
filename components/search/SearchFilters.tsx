@@ -1,14 +1,16 @@
 import { formatChunkTypeLabel } from "@/utils/searchHelpers";
+import type { SearchType } from "@/types/search";
+import type { ChunkType } from "@/types/chunks";
 
 interface SearchFiltersProps {
-  searchType: "hybrid" | "semantic" | "keyword";
-  onSearchTypeChange: (type: "hybrid" | "semantic" | "keyword") => void;
-  selectedChunkType: string;
-  onChunkTypeChange: (type: string) => void;
+  searchType: SearchType;
+  onSearchTypeChange: (type: SearchType) => void;
+  selectedChunkType: ChunkType | "";
+  onChunkTypeChange: (type: ChunkType | "") => void;
   onClearFilters: () => void;
 }
 
-const CHUNK_TYPES = ["code", "full-post", "quote", "section"];
+const CHUNK_TYPES: ChunkType[] = ["code", "full-post", "quote", "section"];
 
 export default function SearchFilters({
   searchType,
