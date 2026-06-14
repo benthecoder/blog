@@ -1,11 +1,3 @@
-/**
- * Date parsing and formatting utilities
- * Consolidates date handling logic across the application
- */
-
-/**
- * Month name to index mapping for parsing dates
- */
 const MONTH_MAP: { [key: string]: number } = {
   jan: 0,
   january: 0,
@@ -32,113 +24,48 @@ const MONTH_MAP: { [key: string]: number } = {
   december: 11,
 };
 
-/**
- * Extract date from frontmatter with improved parsing
- * Supports multiple date formats and falls back to filename parsing
- *
- * @param filePath - Path to the markdown file
- * @param frontmatter - Frontmatter object from gray-matter
- * @returns Parsed Date object
- */
+function parseMonthName(dateStr: string): Date | null {
+  const match = dateStr.match(/([A-Za-z]+)\s+(\d{1,2})(?:,?\s+)?(\d{4})/);
+  if (!match) return null;
+  const [, month, day, year] = match;
+  const monthIndex = MONTH_MAP[month.toLowerCase()];
+  if (monthIndex === undefined) return null;
+  const date = new Date(parseInt(year), monthIndex, parseInt(day));
+  return isNaN(date.getTime()) ? null : date;
+}
+
 export function extractPostDate(
   filePath: string,
   frontmatter: Record<string, unknown> | null
 ): Date {
-  // Always prioritize frontmatter date if available
   if (frontmatter?.date) {
-    // Try multiple date parsing approaches
-    // Approach 1: Direct Date constructor (handles ISO formats and many common formats)
-    const parsedDate = new Date(frontmatter.date as string);
-    if (!isNaN(parsedDate.getTime())) {
-      return parsedDate;
-    }
+    const direct = new Date(frontmatter.date as string);
+    if (!isNaN(direct.getTime())) return direct;
 
-    // Approach 2: Handle month name formats like "Jun 1, 2024" or "June 1 2024"
-    const monthNameMatch = String(frontmatter.date).match(
-      /([A-Za-z]+)\s+(\d{1,2})(?:,?\s+)?(\d{4})/
-    );
-    if (monthNameMatch) {
-      const [_, month, day, year] = monthNameMatch;
-      const monthIndex = MONTH_MAP[month.toLowerCase()];
-      if (monthIndex !== undefined) {
-        const formattedDate = new Date(
-          parseInt(year),
-          monthIndex,
-          parseInt(day)
-        );
-        if (!isNaN(formattedDate.getTime())) {
-          return formattedDate;
-        }
-      }
-    }
+    const fromName = parseMonthName(String(frontmatter.date));
+    if (fromName) return fromName;
 
-    // Log warning if we have a date field but couldn't parse it
     console.warn(
-      `Warning: Could not parse date '${frontmatter.date}' from frontmatter in ${filePath}`
+      `Could not parse date '${frontmatter.date}' from frontmatter in ${filePath}`
     );
   }
 
-  // Try to parse from filename as fallback (e.g., MMDDYY.md format)
   const filenameMatch = filePath.match(/(\d{2})(\d{2})(\d{2})\.md$/);
   if (filenameMatch) {
-    const [_, month, day, year] = filenameMatch;
-    const fullYear = parseInt(`20${year}`); // Assuming 20xx years
-    const dateFromFilename = new Date(
-      fullYear,
-      parseInt(month) - 1,
-      parseInt(day)
-    );
-    return dateFromFilename;
+    const [, month, day, year] = filenameMatch;
+    return new Date(parseInt(`20${year}`), parseInt(month) - 1, parseInt(day));
   }
 
-  // Use a stable default date for posts with no date instead of current date
-  // Using January 1, 2020 as a reasonable default that will still sort correctly
-  const defaultDate = new Date(2020, 0, 1);
-  console.warn(
-    `Warning: No date found for ${filePath}, using default date ${defaultDate.toISOString()}`
-  );
-  return defaultDate;
+  console.warn(`No date found for ${filePath}, using default`);
+  return new Date(2020, 0, 1);
 }
 
-/**
- * Format a Date object to ISO date string (YYYY-MM-DD)
- * Commonly used for database storage and comparisons
- *
- * @param date - Date object to format
- * @returns ISO date string (YYYY-MM-DD)
- */
 export function toISODateString(date: Date): string {
   return date.toISOString().split("T")[0];
 }
 
-/**
- * Parse a date string in multiple formats
- * Handles ISO dates, month names, and other common formats
- *
- * @param dateStr - Date string to parse
- * @returns Parsed Date object or null if parsing fails
- */
 export function parseFlexibleDate(dateStr: string): Date | null {
-  // Try direct parsing first
-  const directParse = new Date(dateStr);
-  if (!isNaN(directParse.getTime())) {
-    return directParse;
-  }
-
-  // Try month name format
-  const monthNameMatch = dateStr.match(
-    /([A-Za-z]+)\s+(\d{1,2})(?:,?\s+)?(\d{4})/
-  );
-  if (monthNameMatch) {
-    const [_, month, day, year] = monthNameMatch;
-    const monthIndex = MONTH_MAP[month.toLowerCase()];
-    if (monthIndex !== undefined) {
-      const date = new Date(parseInt(year), monthIndex, parseInt(day));
-      if (!isNaN(date.getTime())) {
-        return date;
-      }
-    }
-  }
-
-  return null;
+  const direct = new Date(dateStr);
+  if (!isNaN(direct.getTime())) return direct;
+  return parseMonthName(dateStr);
 }
