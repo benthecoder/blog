@@ -16,7 +16,3 @@ export function calculateWordCount(content: string): number {
     .join("\n");
   return (withoutBlockquotes.match(/\b\w+\b/gu) || []).length;
 }
-
-export function isDraft(filePath: string): boolean {
-  return filePath.includes("/drafts/");
-}
