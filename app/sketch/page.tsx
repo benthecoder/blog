@@ -2,20 +2,21 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { DRAWINGS_URL } from "@/config/constants";
 
 const SKETCHES = [
-  "/images/handrose.png",
-  "/images/sunflowersketch.png",
-  "/images/peony.png",
-  "/images/hummingbird.png",
-  "/images/howl.png",
-  "/images/hokusai.png",
-  "/images/christ.png",
-  "/images/metro.png",
-  "/images/wave.png",
-  "/images/room.png",
-  "/images/angel.png",
-];
+  "handrose.png",
+  "sunflowersketch.png",
+  "peony.png",
+  "hummingbird.png",
+  "howl.png",
+  "hokusai.png",
+  "christ.png",
+  "metro.png",
+  "wave.png",
+  "room.png",
+  "angel.png",
+].map((f) => `${DRAWINGS_URL}/${f}`);
 
 export default function SketchPage() {
   const [selected, setSelected] = useState<string | null>(null);
