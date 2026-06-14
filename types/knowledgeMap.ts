@@ -10,7 +10,7 @@ export interface ArticleData {
   metadata: {
     published_date?: string;
     tags?: string[];
-    [key: string]: any;
+    [key: string]: unknown;
   };
   sequence: number;
   embedding: number[];
