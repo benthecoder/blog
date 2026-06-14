@@ -12,7 +12,6 @@ export default function CalendarView({ posts }: CalendarViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Initialize from URL params or default to current date
   const [currentDate, setCurrentDate] = useState(() => {
     const monthParam = searchParams.get("month");
     if (monthParam) {
@@ -25,7 +24,6 @@ export default function CalendarView({ posts }: CalendarViewProps) {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
 
-  // Update URL when currentDate changes
   useEffect(() => {
     const monthParam = `${year}-${String(month + 1).padStart(2, "0")}`;
     const currentMonthParam = searchParams.get("month");
