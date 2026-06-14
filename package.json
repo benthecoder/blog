@@ -64,7 +64,7 @@
     "unified": "^11.0.5",
     "unist-util-visit": "^5.0.0",
     "uuid": "^14.0.0",
-    "voyageai": "^0.0.1-5"
+    "voyageai": "^0.3.1"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.19",
