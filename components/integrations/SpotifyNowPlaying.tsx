@@ -25,9 +25,7 @@ export default function SpotifyNowPlaying() {
   const { data: recentlyPlayed, isLoading } = useSWR<RecentlyPlayedData>(
     "/api/spotify/recently-played",
     fetcher,
-    {
-      refreshInterval: 300000,
-    }
+    { refreshInterval: 300000 }
   );
 
   useEffect(() => {
@@ -49,42 +47,20 @@ export default function SpotifyNowPlaying() {
 
   return (
     <div
-      className={`transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
-      style={{
-        marginTop: "32px",
-        fontSize: "14px",
-        color: "#888888",
-        lineHeight: "1.6",
-      }}
+      className={`mt-8 text-sm text-[#888] leading-relaxed transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
-      <div style={{ borderTop: "1px solid #e0e0e0", paddingTop: "24px" }}>
-        <div style={{ marginBottom: "12px", fontSize: "12px", opacity: 0.6 }}>
-          ♫ recent
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+      <div className="border-t border-[#e0e0e0] pt-6">
+        <p className="mb-3 text-xs opacity-60">♫ recent</p>
+        <div className="flex flex-col gap-2.5">
           {recentlyPlayed.tracks.slice(0, 10).map((track, i) => (
             <a
               key={i}
               href={track.songUrl}
               target="_blank"
               rel="noopener noreferrer"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                textDecoration: "none",
-                color: "inherit",
-              }}
+              className="flex items-center gap-3 no-underline text-inherit hover:opacity-70 transition-opacity"
             >
-              <span
-                style={{
-                  fontSize: "11px",
-                  opacity: 0.35,
-                  width: "16px",
-                  textAlign: "right",
-                  flexShrink: 0,
-                }}
-              >
+              <span className="text-[11px] opacity-35 w-4 text-right shrink-0">
                 {i + 1}
               </span>
               {track.albumImageUrl && (
@@ -93,40 +69,17 @@ export default function SpotifyNowPlaying() {
                   alt=""
                   width={40}
                   height={40}
-                  className="not-prose"
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    minWidth: "40px",
-                    borderRadius: "3px",
-                    opacity: 0.9,
-                  }}
+                  className="not-prose rounded-sm opacity-90 shrink-0"
                   unoptimized
                 />
               )}
-              <div style={{ minWidth: 0 }}>
-                <div
-                  style={{
-                    fontSize: "13px",
-                    fontWeight: "500",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
+              <div className="min-w-0">
+                <p className="text-[13px] font-medium truncate">
                   {track.title}
-                </div>
-                <div
-                  style={{
-                    fontSize: "11px",
-                    opacity: 0.55,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
+                </p>
+                <p className="text-[11px] opacity-55 truncate">
                   {track.artist}
-                </div>
+                </p>
               </div>
             </a>
           ))}
