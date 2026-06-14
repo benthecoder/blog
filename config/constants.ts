@@ -1,3 +1,6 @@
+// Public URL paths
+export const DRAWINGS_URL = "/drawings";
+
 // Embedding config
 export const EMBEDDING_DIMENSIONS = 1024;
 export const VOYAGE_MODEL = "voyage-3.5-lite";
