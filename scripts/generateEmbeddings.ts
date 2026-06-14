@@ -19,7 +19,7 @@ import { getVoyageClient } from "@/utils/clients";
 import { formatEmbeddingForPostgres } from "@/utils/embeddingUtils";
 import { withEmbeddingRetry, wait } from "@/utils/retry";
 import { extractPostDate, toISODateString } from "@/utils/dateUtils";
-import { extractTags } from "@/utils/postUtils";
+import { extractTags } from "@/utils/content/posts";
 import { DELAY_BETWEEN_BATCHES } from "@/config/constants";
 
 // Import types
@@ -114,11 +114,6 @@ async function embedWithRetry(texts: string[]): Promise<EmbeddingResponse> {
     })) as Promise<EmbeddingResponse>;
   });
 }
-
-// Note: extractPostDate is now imported from utils/dateUtils
-// Note: extractTags is now imported from utils/postUtils
-// Note: wait() is now imported from utils/retry
-// Note: formatEmbeddingForPostgres is now imported from utils/embeddingUtils
 
 async function generateEmbeddingsForSingleFile(
   filePath: string

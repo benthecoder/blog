@@ -1,4 +1,4 @@
-import { readMarkdownFile } from "@/utils/markdown";
+import { readMarkdownFile } from "@/utils/content/markdown";
 import MarkdownContent from "@/components/posts/MarkdownContent";
 import { LIBRARY_MD } from "@/config/paths";
 

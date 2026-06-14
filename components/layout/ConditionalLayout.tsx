@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { Sidebar } from "./SideBar";
 import ThemeSwitch from "@/components/ui/ThemeSwitch";
 import SearchModal from "@/components/ui/SearchModal";
-import { useRandomPost } from "@/components/ui/useRandomPost";
+import { useRandomPost } from "./useRandomPost";
 
 export function ConditionalLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

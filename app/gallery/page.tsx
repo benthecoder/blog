@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { getGalleryImages } from "@/utils/getGalleryImages";
+import { getGalleryImages } from "@/utils/content/gallery";
 import Gallery from "@/components/visualizations/Gallery";
 
 export const metadata: Metadata = {

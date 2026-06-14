@@ -1,5 +1,5 @@
 import Link from "next/link";
-import getPostMetadata from "@/utils/getPostMetadata";
+import { getPostMetadata } from "@/utils/content/posts";
 
 export const dynamic = "force-static";
 

@@ -1,4 +1,4 @@
-import { formatChunkTypeLabel } from "@/utils/searchHelpers";
+import { formatChunkTypeLabel } from "./searchHelpers";
 import type { SearchType } from "@/types/search";
 import type { ChunkType } from "@/types/chunks";
 
