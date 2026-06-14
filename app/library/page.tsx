@@ -1,18 +1,15 @@
-import fs from "fs";
-import Markdown from "markdown-to-jsx";
-import matter from "gray-matter";
+import { readMarkdownFile } from "@/utils/markdown";
+import MarkdownContent from "@/components/posts/MarkdownContent";
 
 export const dynamic = "force-static";
 
 const LibraryPage = () => {
-  const file = "app/library/library.md";
-  const content = fs.readFileSync(file, "utf8");
-  const library = matter(content);
+  const { content } = readMarkdownFile("app/library/library.md");
 
   return (
     <div>
       <article className="prose">
-        <Markdown>{library.content}</Markdown>
+        <MarkdownContent content={content} />
       </article>
     </div>
   );

@@ -1,16 +1,6 @@
-import matter from "gray-matter";
-import fs from "fs";
-
-// Import shared utilities
 import { getPostPath } from "@/config/paths";
+import { readMarkdownFile } from "./markdown";
 
-const getPostContent = (slug: string) => {
-  const file = getPostPath(slug);
-  const content = fs.readFileSync(file, "utf8");
-  const matterResult = matter(content);
-  // Remove the orig property (Uint8Array) which can't be serialized
-  const { orig, ...serializableResult } = matterResult;
-  return serializableResult;
-};
+const getPostContent = (slug: string) => readMarkdownFile(getPostPath(slug));
 
 export default getPostContent;
