@@ -1,4 +1,4 @@
-import { getAllPosts } from "./getAllPosts";
+import { getAllPosts } from "./content/posts";
 import { processMarkdownFile } from "./processMarkdownChunks";
 
 export async function processAllPosts() {

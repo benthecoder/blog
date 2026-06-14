@@ -1,5 +1,5 @@
 import Link from "next/link";
-import getWikiMetadata from "@/utils/getWikiMetadata";
+import { getWikiMetadata } from "@/utils/content/wiki";
 import type { Metadata } from "next";
 
 export const dynamic = "force-static";

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { readMarkdownFile } from "@/utils/markdown";
+import { readMarkdownFile } from "@/utils/content/markdown";
 import MarkdownContent from "@/components/posts/MarkdownContent";
 import { START_MD } from "@/config/paths";
 

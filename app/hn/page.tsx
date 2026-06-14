@@ -1,6 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import type { HNStory } from "@/types/hackernews";
+
+interface HNStory {
+  id: number;
+  title: string;
+  url: string;
+  by: string;
+  time: number;
+  score: number;
+  descendants?: number;
+}
 
 const POSTS_PER_PAGE = 50;
 const MAX_PAGES = 10;

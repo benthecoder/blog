@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import getWikiMetadata from "@/utils/getWikiMetadata";
-import getWikiContent from "@/utils/getWikiContent";
+import { getWikiMetadata, getWikiContent } from "@/utils/content/wiki";
 import MarkdownContent from "@/components/posts/MarkdownContent";
 
 export const dynamic = "force-static";
