@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { DRAWINGS_URL } from "@/config/constants";
 
 const NameHeader = () => (
   <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50">
@@ -31,21 +32,23 @@ const NameHeader = () => (
   </div>
 );
 
-const SKETCH_PATHS = [
-  "/images/sunflowersketch.png",
-  "/images/handrose.png",
-  "/images/peony.png",
-  "/images/hummingbird.png",
-  "/images/howl.png",
-  "/images/hokusai.png",
-  "/images/christ.png",
-  "/images/metro.png",
-  "/images/wave.png",
-  "/images/room.png",
-  "/images/angel.png",
-  "/images/icons.jpg",
-  "/images/psalms.png",
+const SKETCHES = [
+  "sunflowersketch.png",
+  "handrose.png",
+  "peony.png",
+  "hummingbird.png",
+  "howl.png",
+  "hokusai.png",
+  "christ.png",
+  "metro.png",
+  "wave.png",
+  "room.png",
+  "angel.png",
+  "icons.jpg",
+  "psalms.png",
 ] as const;
+
+const SKETCH_PATHS = SKETCHES.map((f) => `${DRAWINGS_URL}/${f}`);
 
 const INTERVAL = 4000;
 

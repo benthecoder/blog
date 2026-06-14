@@ -4,7 +4,7 @@ tags: 'journal, SEA'
 date: 'Dec 25, 2023'
 ---
 
-![The Nativity](/images/christ.png)
+![The Nativity](/drawings/christ.png)
 
 We decided to stay home the whole day in the two-story modern airbnb apartment in Beacon Hill.
 
