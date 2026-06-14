@@ -1,4 +1,4 @@
-import SpotifyNowPlaying from "@/components/integrations/SpotifyNowPlaying";
+import SpotifyNowPlaying from "./SpotifyNowPlaying";
 import Clock from "@/components/ui/Clock";
 
 export default function NowPage() {
