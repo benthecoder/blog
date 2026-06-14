@@ -22,7 +22,7 @@ export interface ChunkMetadata {
   language?: string;
   level?: number;
   wordCount?: number;
-  [key: string]: any;
+  [key: string]: unknown | any; // AST metadata is inherently loose
 }
 
 export interface ChunkExtractor {
