@@ -1,5 +1,5 @@
 // Public URL paths
-export const DRAWINGS_URL = "/drawings";
+export const DRAWINGS_URL = "/images/drawings";
 
 // Embedding config
 export const EMBEDDING_DIMENSIONS = 1024;
