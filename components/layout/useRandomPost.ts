@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-export async function goRandom(router: ReturnType<typeof useRouter>) {
+async function goRandom(router: ReturnType<typeof useRouter>) {
   window.dispatchEvent(new CustomEvent("random-spin"));
   const res = await fetch("/api/random", { cache: "no-store" });
   const data = await res.json();
