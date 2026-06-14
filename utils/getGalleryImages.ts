@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
-import matter from "gray-matter";
 import sizeOf from "image-size";
+import { IMAGES_DIR, POSTS_DIR } from "@/config/paths";
+import { scanMarkdownDir } from "./markdown";
 
 export interface GalleryImage {
   filename: string;
@@ -13,50 +14,30 @@ export interface GalleryImage {
 }
 
 export function getGalleryImages(): GalleryImage[] {
-  const imagesDir = path.join(process.cwd(), "public/images");
-  const postsDir = path.join(process.cwd(), "posts");
-
-  // Get all images
   const imageFiles = fs
-    .readdirSync(imagesDir)
+    .readdirSync(IMAGES_DIR)
     .filter((file) => /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(file))
     .sort();
 
-  // Create a map of image filename to posts that use it
   const imageToPostsMap = new Map<string, { slug: string; title: string }[]>();
 
-  // Scan all posts for image references
-  const postFiles = fs
-    .readdirSync(postsDir)
-    .filter((file) => file.endsWith(".md"));
-
-  postFiles.forEach((postFile) => {
-    const slug = postFile.replace(".md", "");
-    const postPath = path.join(postsDir, postFile);
-    const fileContents = fs.readFileSync(postPath, "utf8");
-    const { data, content } = matter(fileContents);
-
-    // Find all image references in the markdown content
+  scanMarkdownDir(POSTS_DIR).forEach(({ slug, data, content }) => {
     const imageRegex = /\/images\/([^)\s]+)/g;
     let match;
-
     while ((match = imageRegex.exec(content)) !== null) {
       const imageName = match[1];
-
       if (!imageToPostsMap.has(imageName)) {
         imageToPostsMap.set(imageName, []);
       }
-
       imageToPostsMap.get(imageName)!.push({
         slug,
-        title: data.title || slug,
+        title: (data.title as string) || slug,
       });
     }
   });
 
-  // Combine images with their post references and dimensions
   return imageFiles.map((filename) => {
-    const imagePath = path.join(imagesDir, filename);
+    const imagePath = path.join(IMAGES_DIR, filename);
     let width = 1;
     let height = 1;
 

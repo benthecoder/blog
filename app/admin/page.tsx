@@ -8,7 +8,7 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen flex items-center justify-center p-8 bg-japanese-kinairo dark:bg-gray-900">
       <div className="w-full max-w-6xl">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={null}>
           <CalendarView posts={posts} />
         </Suspense>
       </div>
