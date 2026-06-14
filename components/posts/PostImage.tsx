@@ -16,12 +16,7 @@ export default function PostImage({ src, alt }: { src: string; alt: string }) {
           height={600}
           sizes="(max-width: 800px) 100vw, 800px"
           onLoad={() => setLoaded(true)}
-          style={{
-            width: "100%",
-            height: "auto",
-            opacity: loaded ? 1 : 0,
-            transition: "opacity 500ms cubic-bezier(0.23,1,0.32,1)",
-          }}
+          className={`w-full h-auto transition-opacity duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${loaded ? "opacity-100" : "opacity-0"}`}
         />
       </div>
       {alt && (
