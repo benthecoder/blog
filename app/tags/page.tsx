@@ -6,32 +6,24 @@ export const dynamic = "force-static";
 const TagPage = () => {
   const postMetadata = getPostMetadata();
 
-  const tags: Record<string, number> = {};
-
-  postMetadata.forEach((post) => {
+  const tags = postMetadata.reduce<Record<string, number>>((acc, post) => {
     post.tags.split(",").forEach((tag) => {
-      tag = tag.trim();
-
-      if (tags[tag]) {
-        tags[tag] += 1;
-      } else {
-        tags[tag] = 1;
-      }
+      const t = tag.trim();
+      if (t) acc[t] = (acc[t] ?? 0) + 1;
     });
-  });
+    return acc;
+  }, {});
 
   const sortedTags = Object.keys(tags).sort((a, b) => tags[b] - tags[a]);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      {/* Header */}
       <div className="mb-4">
         <p className="text-[10px] text-light-text/40 dark:text-dark-text/40 tracking-widest font-mono">
           {sortedTags.length} TAGS
         </p>
       </div>
 
-      {/* Tags grid - compact bulletin board style */}
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-0">
         {sortedTags.map((tag) => (
           <Link href={`/tags/${tag}`} key={tag}>

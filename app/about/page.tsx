@@ -1,4 +1,3 @@
-import React from "react";
 import Timeline from "@/components/visualizations/Timeline";
 
 export const dynamic = "force-static";
@@ -329,7 +328,6 @@ const ChronologyPage = () => {
     },
   ];
 
-  // Group events by year
   const groupedEvents = rawEvents.reduce(
     (acc, event) => {
       const year = event.year;
