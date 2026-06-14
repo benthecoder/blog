@@ -1,4 +1,4 @@
-import getPostMetadata from "@/utils/getPostMetadata";
+import { getPostMetadata } from "@/utils/content/posts";
 import CalendarView from "./CalendarView";
 import { Suspense } from "react";
 

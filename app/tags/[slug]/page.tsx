@@ -1,4 +1,4 @@
-import getPostMetadata from "@/utils/getPostMetadata";
+import { getPostMetadata } from "@/utils/content/posts";
 import PostPreview from "@/components/posts/PostPreview";
 
 export const dynamic = "force-static";

@@ -26,13 +26,10 @@ export function getGalleryImages(): GalleryImage[] {
     let match;
     while ((match = imageRegex.exec(content)) !== null) {
       const imageName = match[1];
-      if (!imageToPostsMap.has(imageName)) {
-        imageToPostsMap.set(imageName, []);
-      }
-      imageToPostsMap.get(imageName)!.push({
-        slug,
-        title: (data.title as string) || slug,
-      });
+      if (!imageToPostsMap.has(imageName)) imageToPostsMap.set(imageName, []);
+      imageToPostsMap
+        .get(imageName)!
+        .push({ slug, title: (data.title as string) || slug });
     }
   });
 
@@ -40,16 +37,14 @@ export function getGalleryImages(): GalleryImage[] {
     const imagePath = path.join(IMAGES_DIR, filename);
     let width = 1;
     let height = 1;
-
     try {
       const buffer = fs.readFileSync(imagePath);
       const dimensions = sizeOf(new Uint8Array(buffer));
       width = dimensions.width || 1;
       height = dimensions.height || 1;
-    } catch (error) {
-      console.error(`Failed to get dimensions for ${filename}:`, error);
+    } catch {
+      // non-fatal: use default 1×1
     }
-
     return {
       filename,
       path: `/images/${filename}`,

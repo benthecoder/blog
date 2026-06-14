@@ -1,4 +1,4 @@
-import getPostMetadata from "@/utils/getPostMetadata";
+import { getPostMetadata } from "@/utils/content/posts";
 import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";

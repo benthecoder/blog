@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import getPostMetadata from "@/utils/getPostMetadata";
+import { getPostMetadata } from "@/utils/content/posts";
 
 export default function RandomPage() {
   const posts = getPostMetadata();

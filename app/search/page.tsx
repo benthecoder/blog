@@ -3,8 +3,8 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Loader from "@/components/ui/Loader";
-import SearchResult from "@/components/search/SearchResult";
-import SearchFilters from "@/components/search/SearchFilters";
+import SearchResult from "./SearchResult";
+import SearchFilters from "./SearchFilters";
 import type { SearchResultItem, SearchType } from "@/types/search";
 import type { ChunkType } from "@/types/chunks";
 

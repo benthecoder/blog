@@ -1,9 +1,5 @@
 import Link from "next/link";
-import {
-  extractKeywords,
-  getSnippet,
-  highlightText,
-} from "@/utils/searchHelpers";
+import { extractKeywords, getSnippet, highlightText } from "./searchHelpers";
 import type { SearchResultItem } from "@/types/search";
 
 interface SearchResultProps {

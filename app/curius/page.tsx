@@ -1,6 +1,12 @@
 "use client";
 import useSWR from "swr";
-import type { CuriusLink } from "@/types/curius";
+
+interface CuriusLink {
+  id: string;
+  title: string;
+  link: string;
+  createdDate: string;
+}
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
 
