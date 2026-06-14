@@ -8,7 +8,7 @@ const ArchivePage = () => {
   const postMetadata = getPostMetadata();
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={null}>
       <ArchiveClient allPosts={postMetadata} />
     </Suspense>
   );

@@ -4,22 +4,10 @@ import {
   getSnippet,
   highlightText,
 } from "@/utils/searchHelpers";
+import type { SearchResultItem } from "@/types/search";
 
 interface SearchResultProps {
-  result: {
-    content: string;
-    post_slug: string;
-    post_title: string;
-    chunk_type: string;
-    tags: string[];
-    published_date?: string;
-    similarity: number;
-    vector_similarity?: number;
-    keyword_score?: number;
-    score_type: "keyword" | "semantic" | "hybrid";
-    section?: string;
-    language?: string;
-  };
+  result: SearchResultItem;
   query?: string;
 }
 
