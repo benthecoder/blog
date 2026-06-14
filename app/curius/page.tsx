@@ -1,40 +1,30 @@
 "use client";
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 import type { CuriusLink } from "@/types/curius";
 
+const fetcher = (url: string) => fetch(url).then((r) => r.json());
+
+function formatTime(dateString: string): string {
+  const diffInSeconds = Math.floor(
+    (Date.now() - new Date(dateString).getTime()) / 1000
+  );
+  const days = Math.floor(diffInSeconds / (3600 * 24));
+  const hours = Math.floor((diffInSeconds % (3600 * 24)) / 3600);
+  const minutes = Math.floor((diffInSeconds % 3600) / 60);
+
+  if (days > 0) return `${days}d`;
+  if (hours > 0) return `${hours}h`;
+  if (minutes > 0) return `${minutes}m`;
+  return "now";
+}
+
 export default function CuriusPage() {
-  const [links, setLinks] = useState<CuriusLink[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, isLoading } = useSWR<{ data: { links: CuriusLink[] } }>(
+    "/api/curius",
+    fetcher
+  );
 
-  useEffect(() => {
-    const fetchLinks = async () => {
-      try {
-        const response = await fetch("/api/curius");
-        const data = await response.json();
-        setLinks(data.data.links);
-      } catch (error) {
-        console.error("Failed to fetch Curius links:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchLinks();
-  }, []);
-
-  const formatTime = (dateString: string): string => {
-    const now = new Date();
-    const date = new Date(dateString);
-    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-    const days = Math.floor(diffInSeconds / (3600 * 24));
-    const hours = Math.floor((diffInSeconds % (3600 * 24)) / 3600);
-    const minutes = Math.floor((diffInSeconds % 3600) / 60);
-
-    if (days > 0) return `${days}d`;
-    if (hours > 0) return `${hours}h`;
-    if (minutes > 0) return `${minutes}m`;
-    return "now";
-  };
+  const links = data?.data?.links ?? [];
 
   return (
     <div>

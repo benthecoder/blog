@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import type { Thought } from "@/types/thoughts";
 
 function parseContent(content: string): React.ReactNode[] {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -24,14 +25,8 @@ function parseContent(content: string): React.ReactNode[] {
   });
 }
 
-interface Tweet {
-  id: number;
-  content: string;
-  created_at: Date;
-}
-
 interface ThoughtsClientProps {
-  initialThoughts: Tweet[];
+  initialThoughts: Thought[];
   total: number;
 }
 
@@ -39,7 +34,7 @@ export default function ThoughtsClient({
   initialThoughts,
   total,
 }: ThoughtsClientProps) {
-  const [thoughts, setThoughts] = useState<Tweet[]>(initialThoughts);
+  const [thoughts, setThoughts] = useState<Thought[]>(initialThoughts);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialThoughts.length < total);
   const observerRef = useRef<HTMLDivElement>(null);
@@ -60,7 +55,7 @@ export default function ThoughtsClient({
       acc[dateStr].push(entry);
       return acc;
     },
-    {} as Record<string, Tweet[]>
+    {} as Record<string, Thought[]>
   );
 
   const dates = Object.keys(groupedByDate);
@@ -73,7 +68,7 @@ export default function ThoughtsClient({
       const response = await fetch(
         `/api/thoughts?offset=${thoughts.length}&limit=100`
       );
-      const newThoughts: Tweet[] = await response.json();
+      const newThoughts: Thought[] = await response.json();
 
       if (newThoughts.length > 0) {
         setThoughts((prev) => [...prev, ...newThoughts]);
