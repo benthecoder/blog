@@ -263,12 +263,6 @@ body {
   }
 }
 
-/* Spotify images - exclude from prose styles */
-img.not-prose {
-  width: auto !important;
-  height: auto !important;
-}
-
 ::selection {
   background-color: #dcdddd; /* shironezu - white grey */
 }
