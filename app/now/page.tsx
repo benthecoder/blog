@@ -1,44 +1,16 @@
-"use client";
-import { useState, useEffect } from "react";
 import SpotifyNowPlaying from "@/components/integrations/SpotifyNowPlaying";
+import Clock from "@/components/ui/Clock";
 
-const TIMEZONE = "America/New_York";
-
-const AboutPage = () => {
-  const [time, setTime] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Set initial time
-    setTime(getTimeInTimezone(TIMEZONE));
-
-    // Update time every second
-    const intervalId = setInterval(() => {
-      setTime(getTimeInTimezone(TIMEZONE));
-    }, 1000);
-
-    // Clear the interval when the component unmounts
-    return () => clearInterval(intervalId);
-  }, []);
-
-  function getTimeInTimezone(timezone: string): string {
-    const date = new Date();
-    const options: Intl.DateTimeFormatOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      timeZone: timezone,
-      hour12: true, // Use 24-hour format
-    };
-    return new Intl.DateTimeFormat("en-US", options).format(date);
-  }
-
+export default function NowPage() {
   return (
     <div>
       <article className="prose">
         <p>
           this is a <a href="https://sive.rs/nowff">now</a> page
         </p>
-        <p>📌 Miami, FL, time is {time}</p>
+        <p>
+          📌 Miami, FL, time is <Clock />
+        </p>
         <ul className="list-disc">
           <li>
             building cool stuff for AI in healthcare @{" "}
@@ -65,6 +37,4 @@ const AboutPage = () => {
       <SpotifyNowPlaying />
     </div>
   );
-};
-
-export default AboutPage;
+}
