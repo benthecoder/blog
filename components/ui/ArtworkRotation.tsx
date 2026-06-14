@@ -66,7 +66,10 @@ export default function ArtworkRotation() {
       <NameHeader />
       <div className="h-screen w-full flex flex-col items-center justify-center pt-10 px-4 md:px-8 overflow-hidden">
         <div className="flex flex-col items-center justify-center gap-4 md:gap-6 w-full max-w-[min(85vw,700px)] md:max-w-[min(60vw,600px)]">
-          <div className="relative w-full aspect-square max-h-[calc(100vh-320px)] md:max-h-[calc(100vh-280px)]">
+          <Link
+            href="/sketch"
+            className="relative w-full aspect-square max-h-[calc(100vh-320px)] md:max-h-[calc(100vh-280px)] cursor-pointer"
+          >
             <Image
               key={currentIndex}
               src={SKETCH_PATHS[currentIndex]}
@@ -81,7 +84,7 @@ export default function ArtworkRotation() {
               draggable={false}
               sizes="(max-width: 768px) 85vw, 60vw"
             />
-          </div>
+          </Link>
 
           <div className="flex flex-col items-center gap-2 pb-2">
             <Link
