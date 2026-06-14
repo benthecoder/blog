@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { readMarkdownFile } from "@/utils/markdown";
 import MarkdownContent from "@/components/posts/MarkdownContent";
+import { START_MD } from "@/config/paths";
 
 export const metadata: Metadata = {
   title: "start here",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-static";
 
 const StartPage = () => {
-  const { content } = readMarkdownFile("app/start/start.md");
+  const { content } = readMarkdownFile(START_MD);
 
   return (
     <div>

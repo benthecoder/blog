@@ -5,21 +5,8 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Loader from "@/components/ui/Loader";
 import SearchResult from "@/components/search/SearchResult";
 import SearchFilters from "@/components/search/SearchFilters";
-
-interface SearchResult {
-  content: string;
-  post_slug: string;
-  post_title: string;
-  chunk_type: string;
-  tags: string[];
-  published_date?: string;
-  similarity: number;
-  vector_similarity?: number;
-  keyword_score?: number;
-  score_type: "keyword" | "semantic" | "hybrid";
-  section?: string;
-  language?: string;
-}
+import type { SearchResultItem, SearchType } from "@/types/search";
+import type { ChunkType } from "@/types/chunks";
 
 function SearchContent() {
   const searchParams = useSearchParams();
@@ -28,12 +15,12 @@ function SearchContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [results, setResults] = useState<SearchResultItem[]>([]);
   const [hasSearched, setHasSearched] = useState(false);
-  const [searchType, setSearchType] = useState<
-    "hybrid" | "semantic" | "keyword"
-  >("hybrid");
-  const [selectedChunkType, setSelectedChunkType] = useState<string>("");
+  const [searchType, setSearchType] = useState<SearchType>("hybrid");
+  const [selectedChunkType, setSelectedChunkType] = useState<ChunkType | "">(
+    ""
+  );
 
   useEffect(() => {
     const urlQuery = searchParams.get("q");
@@ -42,13 +29,14 @@ function SearchContent() {
     setQuery(urlQuery || sessionStorage.getItem("lastQuery") || "");
 
     if (urlChunkType) {
-      setSelectedChunkType(urlChunkType);
+      setSelectedChunkType(urlChunkType as ChunkType);
     }
 
     const cached = sessionStorage.getItem("searchResults");
     if (cached) setResults(JSON.parse(cached));
 
     setHasSearched(sessionStorage.getItem("hasSearched") === "true");
+    // mount-only: intentionally not re-running on searchParams changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -73,7 +61,7 @@ function SearchContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: query.trim(),
-          searchType: searchType,
+          searchType,
           chunkType: selectedChunkType || undefined,
         }),
       });
@@ -85,7 +73,6 @@ function SearchContent() {
       }
 
       if (!data.results || !Array.isArray(data.results)) {
-        console.warn("Unexpected response format:", data);
         setResults([]);
         return;
       }
@@ -115,12 +102,12 @@ function SearchContent() {
       setResults([]);
       handleSearch();
     }
+    // intentionally re-runs only when filter changes, not on every handleSearch re-creation
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchType, selectedChunkType]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* Main search form */}
       <form onSubmit={handleSearch} className="mb-6">
         <div className="relative">
           <input
@@ -167,7 +154,6 @@ function SearchContent() {
 
       {results.length > 0 ? (
         <div>
-          {/* Results count */}
           <div className="mb-4 pb-2 border-b border-light-border dark:border-dark-tag">
             <p className="text-xs text-light-text/60 dark:text-dark-text/60 tracking-wide">
               {results.length} RESULTS
