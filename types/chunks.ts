@@ -22,7 +22,8 @@ export interface ChunkMetadata {
   language?: string;
   level?: number;
   wordCount?: number;
-  [key: string]: unknown | any; // AST metadata is inherently loose
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 }
 
 export interface ChunkExtractor {
