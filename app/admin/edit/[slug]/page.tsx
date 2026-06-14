@@ -5,7 +5,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { RenderPost } from "@/components/posts";
 import matter from "gray-matter";
-import { DEFAULT_POST_TEMPLATE } from "@/lib/post-template";
+import { DEFAULT_POST_TEMPLATE } from "../post-template";
 import {
   LuCalendar,
   LuChevronLeft,

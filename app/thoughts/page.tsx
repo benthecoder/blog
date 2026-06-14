@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { Metadata } from "next";
-import { ThoughtsClient } from "@/components/thoughts";
+import ThoughtsClient from "./ThoughtsClient";
 import type { Thought } from "@/types/thoughts";
 
 export const metadata: Metadata = {

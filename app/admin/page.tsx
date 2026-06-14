@@ -1,5 +1,5 @@
 import getPostMetadata from "@/utils/getPostMetadata";
-import { CalendarView } from "@/components/admin";
+import CalendarView from "./CalendarView";
 import { Suspense } from "react";
 
 export default function AdminPage() {
