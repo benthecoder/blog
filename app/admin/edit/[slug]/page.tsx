@@ -725,10 +725,7 @@ export default function EditPostPage() {
           </div>
         )}
 
-        <div
-          className="flex-1 overflow-hidden"
-          style={{ paddingBottom: isNew ? "0" : "40px" }}
-        >
+        <div className={`flex-1 overflow-hidden ${isNew ? "pb-0" : "pb-10"}`}>
           {showPreview ? (
             <div className="h-full overflow-y-auto p-8">
               {(() => {

@@ -11,7 +11,7 @@ const Wave = () => {
         width={0}
         height={0}
         sizes="90vw"
-        style={{ width: "100%", height: "auto" }}
+        className="w-full h-auto"
       />
     </div>
   );

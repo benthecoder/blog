@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import {
   LuScroll,
@@ -107,8 +105,7 @@ const ContactPage = () => {
           alt="have tea"
           width={800}
           height={600}
-          className="mb-4"
-          style={{ width: "100%", height: "auto" }}
+          className="mb-4 w-full h-auto"
           priority
         />
 
