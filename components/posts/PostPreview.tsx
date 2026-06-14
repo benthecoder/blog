@@ -11,7 +11,6 @@ const PostPreview = (props: PostMetadata) => {
           </p>
         </div>
 
-        {/* Date */}
         <p className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
           {props.date}
         </p>

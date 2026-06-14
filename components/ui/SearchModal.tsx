@@ -41,7 +41,6 @@ export default function SearchModal() {
     };
   }, []);
 
-  // Focus input when opened
   useEffect(() => {
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 50);
@@ -65,7 +64,6 @@ export default function SearchModal() {
         body: JSON.stringify({ query: q, searchType: type }),
       });
       const data = await res.json();
-      // Deduplicate by slug
       const seen = new Set<string>();
       const deduped: SearchResult[] = [];
       for (const r of data.results ?? []) {
@@ -83,7 +81,6 @@ export default function SearchModal() {
     }
   }, []);
 
-  // Debounced search on input change
   const handleInput = (value: string) => {
     setQuery(value);
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -97,7 +94,6 @@ export default function SearchModal() {
     if (query.trim()) search(query, type);
   };
 
-  // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -123,15 +119,12 @@ export default function SearchModal() {
       className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]"
       onClick={() => setOpen(false)}
     >
-      {/* Backdrop */}
       <div className="absolute inset-0 bg-japanese-kinairo/80 dark:bg-[#111]/80 backdrop-blur-sm" />
 
-      {/* Panel */}
       <div
         className="relative w-full max-w-lg mx-4 bg-japanese-kinairo dark:bg-[#1c1c1c] border border-japanese-shiraumenezu dark:border-white/[0.08] shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Input row */}
         <div className="flex items-center border-b border-japanese-shiraumenezu dark:border-white/[0.06] px-3 gap-2">
           <svg
             className="w-4 h-4 text-japanese-sumiiro/30 dark:text-japanese-shironezu/30 shrink-0"
@@ -150,7 +143,6 @@ export default function SearchModal() {
             placeholder="search posts…"
             className="flex-1 py-3 text-sm bg-transparent outline-none text-japanese-sumiiro dark:text-japanese-shironezu placeholder:text-japanese-sumiiro/30 dark:placeholder:text-japanese-shironezu/30"
           />
-          {/* Type toggle */}
           <div className="flex items-center gap-1 shrink-0">
             {(["keyword", "semantic"] as SearchType[]).map((t) => (
               <button
@@ -168,7 +160,6 @@ export default function SearchModal() {
           </div>
         </div>
 
-        {/* Results */}
         {loading && (
           <div className="px-4 py-3 text-xs text-japanese-sumiiro/40 dark:text-japanese-shironezu/40">
             searching…
@@ -212,7 +203,6 @@ export default function SearchModal() {
           </ul>
         )}
 
-        {/* Footer hint */}
         {results.length > 0 && (
           <div className="border-t border-japanese-shiraumenezu dark:border-white/[0.06] px-4 py-2 flex gap-3 text-[10px] text-japanese-sumiiro/30 dark:text-japanese-shironezu/30">
             <span>↑↓ navigate</span>
