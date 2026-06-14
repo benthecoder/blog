@@ -74,7 +74,6 @@ export default function ArchiveClient({
         : new Date().getFullYear();
   }, [searchParams, allPosts]);
 
-  // Fetch view counts lazily when sort=views is selected
   useEffect(() => {
     if (sort !== "views" || viewCounts !== null || viewsLoading) return;
     setViewsLoading(true);
@@ -121,7 +120,6 @@ export default function ArchiveClient({
         (a, b) => (viewCounts.get(b.slug) ?? 0) - (viewCounts.get(a.slug) ?? 0)
       );
     }
-    // default: date descending
     return [...regularPosts].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
