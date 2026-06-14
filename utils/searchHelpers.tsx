@@ -1,11 +1,10 @@
-import React from "react";
+import type { ReactNode } from "react";
 
-export const extractKeywords = (query: string): string[] => {
-  return query
+export const extractKeywords = (query: string): string[] =>
+  query
     .toLowerCase()
     .split(/\s+/)
     .filter((word) => word.length > 0);
-};
 
 export const getSnippet = (
   text: string,
@@ -19,8 +18,6 @@ export const getSnippet = (
   }
 
   const lowerText = text.toLowerCase();
-
-  // Find first keyword match
   for (const keyword of keywords) {
     const index = lowerText.indexOf(keyword);
     if (index !== -1) {
@@ -33,22 +30,15 @@ export const getSnippet = (
     }
   }
 
-  // No match - just truncate
   return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
 };
 
-export const highlightText = (
-  text: string,
-  keywords: string[]
-): React.ReactNode => {
+export const highlightText = (text: string, keywords: string[]): ReactNode => {
   if (keywords.length === 0) return text;
 
-  const parts: React.ReactNode[] = [];
   const lowerText = text.toLowerCase();
-  let lastIndex = 0;
-
-  // Find all keyword positions
   const matches: Array<{ index: number; length: number }> = [];
+
   keywords.forEach((keyword) => {
     let index = lowerText.indexOf(keyword);
     while (index !== -1) {
@@ -57,29 +47,28 @@ export const highlightText = (
     }
   });
 
-  // Sort and avoid overlaps
   matches.sort((a, b) => a.index - b.index);
+
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
 
   matches.forEach(({ index, length }, i) => {
     if (index >= lastIndex) {
       if (index > lastIndex) parts.push(text.substring(lastIndex, index));
       parts.push(
-        React.createElement(
-          "mark",
-          {
-            key: i,
-            className:
-              "bg-japanese-sumiiro dark:bg-japanese-shironezu text-japanese-gofuniro dark:text-japanese-sumiiro font-medium px-1 py-0.5 rounded",
-          },
-          text.substring(index, index + length)
-        )
+        <mark
+          key={i}
+          className="bg-japanese-sumiiro dark:bg-japanese-shironezu text-japanese-gofuniro dark:text-japanese-sumiiro font-medium px-1 py-0.5 rounded"
+        >
+          {text.substring(index, index + length)}
+        </mark>
       );
       lastIndex = index + length;
     }
   });
 
   if (lastIndex < text.length) parts.push(text.substring(lastIndex));
-  return React.createElement(React.Fragment, null, ...parts);
+  return <>{parts}</>;
 };
 
 export const formatChunkTypeLabel = (type: string): string => {

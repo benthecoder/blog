@@ -5,34 +5,22 @@ export const dynamic = "force-static";
 
 export const generateStaticParams = async () => {
   const postMetadata = getPostMetadata();
-
-  const tags = new Set();
-
+  const tags = new Set<string>();
   postMetadata.forEach((post) => {
     post.tags.split(", ").forEach((tag) => tags.add(tag));
   });
-
-  return Array.from(tags).map((tag) => ({
-    slug: tag as string,
-  }));
+  return Array.from(tags).map((tag) => ({ slug: tag }));
 };
 
 const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   const params = await props.params;
   const tag = decodeURIComponent(params.slug);
-  const postMetadata = getPostMetadata();
-
-  const filteredPosts = postMetadata.filter((post) =>
+  const filteredPosts = getPostMetadata().filter((post) =>
     post.tags.split(", ").includes(tag)
   );
 
-  const postPreviews = filteredPosts.map((post) => (
-    <PostPreview key={post.slug} {...post} />
-  ));
-
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      {/* Header */}
       <div className="mb-8 pb-4 border-b border-light-border dark:border-dark-tag">
         <p className="text-xs text-light-text/60 dark:text-dark-text/60 tracking-wide mb-2">
           TAG
@@ -46,9 +34,11 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
           </span>
         </div>
       </div>
-
-      {/* Posts */}
-      <div className="grid grid-cols-1 text-sm">{postPreviews}</div>
+      <div className="grid grid-cols-1 text-sm">
+        {filteredPosts.map((post) => (
+          <PostPreview key={post.slug} {...post} />
+        ))}
+      </div>
     </div>
   );
 };
