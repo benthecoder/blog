@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import getPostMetadata from "@/utils/getPostMetadata";
-import ArchiveClient from "@/components/archive/ArchiveClient";
+import ArchiveClient from "./ArchiveClient";
 
 export const dynamic = "force-static";
 
