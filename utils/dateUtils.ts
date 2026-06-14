@@ -40,12 +40,15 @@ const MONTH_MAP: { [key: string]: number } = {
  * @param frontmatter - Frontmatter object from gray-matter
  * @returns Parsed Date object
  */
-export function extractPostDate(filePath: string, frontmatter: any): Date {
+export function extractPostDate(
+  filePath: string,
+  frontmatter: Record<string, unknown> | null
+): Date {
   // Always prioritize frontmatter date if available
   if (frontmatter?.date) {
     // Try multiple date parsing approaches
     // Approach 1: Direct Date constructor (handles ISO formats and many common formats)
-    const parsedDate = new Date(frontmatter.date);
+    const parsedDate = new Date(frontmatter.date as string);
     if (!isNaN(parsedDate.getTime())) {
       return parsedDate;
     }
