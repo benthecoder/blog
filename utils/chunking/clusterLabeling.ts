@@ -250,9 +250,6 @@ async function callAnthropicForLabel(
   );
 }
 
-/**
- * Helper to wait for a specified duration
- */
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }

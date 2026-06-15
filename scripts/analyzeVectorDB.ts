@@ -1,13 +1,3 @@
-/**
- * Unified Vector Database Analysis Tool
- *
- * Comprehensive diagnostics for the chunking and embedding system.
- * Combines the best parts of the previous analysis scripts into one
- * clean, useful debugging tool.
- *
- * Usage: pnpm run analyze-vector-db
- */
-
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -117,7 +107,7 @@ async function getChunkTypeStats(): Promise<ChunkTypeStats[]> {
     avgLength: parseInt(row.avg_length),
     minLength: parseInt(row.min_length),
     maxLength: parseInt(row.max_length),
-    avgWords: 0, // Calculate separately if needed
+    avgWords: 0,
     tinyCount: parseInt(row.tiny_count),
     tinyPercentage: (parseInt(row.tiny_count) / parseInt(row.count)) * 100,
   }));
