@@ -83,7 +83,7 @@ export default function KnowledgeMap({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCluster, setSelectedCluster] = useState<number | null>(null);
   const [transform, setTransform] = useState({ k: 1, x: 0, y: 0 });
-  const [canvasReady, setCanvasReady] = useState(false);
+  const [canvasVersion, setCanvasVersion] = useState(0);
   const [showLegend, setShowLegend] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const { theme } = useTheme();
@@ -243,15 +243,16 @@ export default function KnowledgeMap({
       if (!label || id === -1) return;
       const cx = xScale(sx / count);
       const cy = yScale(sy / count);
-      // Font size stays proportionally constant as you zoom
-      const fontSize = Math.max(7, 9 / transform.k);
+      const fontSize = Math.max(8, 10 / transform.k);
       ctx.font = `${fontSize}px ui-serif, Georgia, serif`;
-      ctx.fillStyle = isDark
-        ? "rgba(220, 221, 221, 0.25)"
-        : "rgba(89, 88, 87, 0.2)";
-      // Truncate long labels
       const words = label.split(" ").slice(0, 3).join(" ");
-      ctx.fillText(words, cx, cy - 12 / transform.k);
+      const labelY = cy - 14 / transform.k;
+      // Knockout background for legibility
+      ctx.shadowColor = isDark ? "#1a1a1a" : "#f3f3f2";
+      ctx.shadowBlur = 4 / transform.k;
+      ctx.fillStyle = isDark ? "rgba(220,221,221,0.55)" : "rgba(89,88,87,0.5)";
+      ctx.fillText(words, cx, labelY);
+      ctx.shadowBlur = 0;
     });
 
     // Dots
@@ -280,23 +281,6 @@ export default function KnowledgeMap({
         opacity = 0.8;
       }
 
-      // Outer rings for selected article
-      if (isSelected) {
-        ctx.globalAlpha = 0.15;
-        ctx.beginPath();
-        ctx.arc(x, y, size * 4, 0, Math.PI * 2);
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 1.5 / transform.k;
-        ctx.stroke();
-
-        ctx.globalAlpha = 0.3;
-        ctx.beginPath();
-        ctx.arc(x, y, size * 2.5, 0, Math.PI * 2);
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 1 / transform.k;
-        ctx.stroke();
-      }
-
       ctx.globalAlpha = opacity;
       drawMarker(ctx, shape, x, y, size);
       ctx.fillStyle = color;
@@ -315,7 +299,7 @@ export default function KnowledgeMap({
     similarity,
     getClusterColor,
     clusterLabels,
-    canvasReady,
+    canvasVersion,
   ]);
 
   // Canvas init and event wiring
@@ -347,7 +331,7 @@ export default function KnowledgeMap({
     const selection = select(canvas);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     selection.call(zoomBehavior as any);
-    setCanvasReady(true);
+    setCanvasVersion((v) => v + 1);
 
     const handleResize = () => {
       const newRect = container.getBoundingClientRect();
@@ -607,9 +591,7 @@ export default function KnowledgeMap({
 
       {/* Instructions */}
       <div className="absolute bottom-4 left-4 z-10 bg-japanese-kinairo/80 dark:bg-dark-bg/80 px-3 py-1 border border-japanese-shiraumenezu dark:border-white/[0.08] text-xs text-japanese-sumiiro/40 dark:text-japanese-shironezu/40 pointer-events-none backdrop-blur-sm">
-        {isTouchDevice
-          ? "pinch to zoom · drag to pan · tap to preview"
-          : "scroll to zoom · drag to pan · click to pin · click again to read"}
+        {isTouchDevice ? "pinch · drag · tap" : "scroll · drag · click"}
       </div>
     </div>
   );
