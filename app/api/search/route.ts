@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 // Import shared utilities and constants
 import { getVoyageClient } from "@/utils/clients";
-import { formatEmbeddingForPostgres } from "@/utils/embeddingUtils";
+import { formatEmbeddingForPostgres } from "@/utils/chunking/embeddingUtils";
 import {
   SEARCH_RESULT_LIMIT,
   SEARCH_FALLBACK_LIMIT,
