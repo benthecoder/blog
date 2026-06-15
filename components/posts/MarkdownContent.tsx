@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import type React from "react";
+import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import type { PluggableList } from "unified";
@@ -65,7 +65,7 @@ function CodeBlock({
   ...props
 }: {
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }) {
   const { resolvedTheme } = useTheme();
   const style = resolvedTheme === "dark" ? customDracula : customOneLight;
