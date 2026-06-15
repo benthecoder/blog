@@ -13,7 +13,7 @@ export function extractTags(frontmatter: PostFrontmatter): string[] {
   return [];
 }
 
-export function calculateWordCount(content: string): number {
+function calculateWordCount(content: string): number {
   const withoutBlockquotes = content
     .split("\n")
     .filter((line) => !line.trim().startsWith(">"))
