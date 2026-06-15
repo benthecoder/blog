@@ -1,6 +1,11 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import type {
+  DragEvent,
+  ClipboardEvent,
+  MouseEvent as ReactMouseEvent,
+} from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import RenderPost from "@/components/posts/RenderPost";
@@ -494,17 +499,17 @@ export default function EditPostPage() {
     }
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
   };
 
-  const handleDragLeave = (e: React.DragEvent) => {
+  const handleDragLeave = (e: DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
   };
 
-  const handleDrop = async (e: React.DragEvent) => {
+  const handleDrop = async (e: DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -539,7 +544,7 @@ export default function EditPostPage() {
     setImageNameInput("");
   };
 
-  const handlePaste = async (e: React.ClipboardEvent) => {
+  const handlePaste = async (e: ClipboardEvent) => {
     const items = Array.from(e.clipboardData.items);
     const imageItem = items.find((item) => item.type.startsWith("image/"));
 
@@ -553,7 +558,7 @@ export default function EditPostPage() {
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent, side: "left" | "right") => {
+  const handleMouseDown = (e: ReactMouseEvent, side: "left" | "right") => {
     e.preventDefault();
     e.stopPropagation();
     isResizing.current = true;
