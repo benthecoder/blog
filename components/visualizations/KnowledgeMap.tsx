@@ -80,6 +80,9 @@ export default function KnowledgeMap({
   const [error, setError] = useState<string | null>(null);
   const [hoveredArticle, setHoveredArticle] = useState<Article | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(
+    null
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCluster, setSelectedCluster] = useState<number | null>(null);
   const [transform, setTransform] = useState({ k: 1, x: 0, y: 0 });
@@ -341,6 +344,7 @@ export default function KnowledgeMap({
       canvas.style.height = `${newRect.height}px`;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       selection.call(zoomBehavior as any);
+      setCanvasVersion((v) => v + 1);
     };
 
     // Shared hit-test: returns closest article within threshold
@@ -384,12 +388,15 @@ export default function KnowledgeMap({
 
       if (!closest) {
         setSelectedArticle(null);
+        setClickPos(null);
         return;
       }
 
       if (selectedArticleRef.current?.id === closest.id) {
         window.location.href = `/posts/${closest.postSlug}`;
       } else {
+        const cr = containerRef.current!.getBoundingClientRect();
+        setClickPos({ x: e.clientX - cr.left, y: e.clientY - cr.top });
         setSelectedArticle(closest);
       }
     };
@@ -418,6 +425,21 @@ export default function KnowledgeMap({
 
   const displayArticle = selectedArticle ?? hoveredArticle;
   const isPinned = selectedArticle !== null;
+
+  const getPanelPosition = () => {
+    if (!isPinned || !clickPos || !containerRef.current)
+      return { top: "1rem", right: "1rem" };
+    const cw = containerRef.current.clientWidth;
+    const ch = containerRef.current.clientHeight;
+    const W = 240;
+    const H = 160;
+    const GAP = 12;
+    let left = clickPos.x + GAP;
+    let top = clickPos.y + GAP;
+    if (left + W > cw - 8) left = clickPos.x - W - GAP;
+    if (top + H > ch - 8) top = clickPos.y - H - GAP;
+    return { left: Math.max(8, left), top: Math.max(8, top) };
+  };
 
   return (
     <div
@@ -448,15 +470,19 @@ export default function KnowledgeMap({
       {/* Article detail panel — hover preview or pinned detail */}
       {displayArticle && (
         <div
-          className={`absolute top-4 right-4 z-20 bg-japanese-kinairo/95 dark:bg-dark-bg/95 p-3 border shadow-sm max-w-[200px] sm:max-w-xs backdrop-blur-sm transition-[border-color] duration-150 ${
+          className={`absolute z-20 bg-japanese-kinairo/95 dark:bg-dark-bg/95 p-3 border shadow-sm w-[200px] sm:w-56 backdrop-blur-sm transition-[border-color] duration-150 ${
             isPinned
               ? "border-japanese-sumiiro/25 dark:border-white/[0.15] pointer-events-auto"
               : "border-japanese-shiraumenezu dark:border-white/[0.08] pointer-events-none"
           }`}
+          style={getPanelPosition()}
         >
           {isPinned && (
             <button
-              onClick={() => setSelectedArticle(null)}
+              onClick={() => {
+                setSelectedArticle(null);
+                setClickPos(null);
+              }}
               aria-label="close"
               className="absolute top-1.5 right-2 text-japanese-sumiiro/30 hover:text-japanese-sumiiro/70 dark:text-japanese-shironezu/30 dark:hover:text-japanese-shironezu/70 transition-colors text-base leading-none"
             >
@@ -470,7 +496,7 @@ export default function KnowledgeMap({
 
           <div className="space-y-1 text-xs text-japanese-sumiiro/60 dark:text-japanese-shironezu/60">
             {clusterLabels[displayArticle.cluster] && (
-              <div className="flex items-center gap-1.5 mb-1">
+              <div className="flex items-center gap-1.5">
                 <div
                   className="w-2 h-2 rounded-full shrink-0"
                   style={{
@@ -480,9 +506,7 @@ export default function KnowledgeMap({
                     ),
                   }}
                 />
-                <span className="font-medium text-japanese-sumiiro dark:text-japanese-shironezu">
-                  {clusterLabels[displayArticle.cluster]}
-                </span>
+                <span>{clusterLabels[displayArticle.cluster]}</span>
               </div>
             )}
             {displayArticle.publishedDate && (
@@ -492,19 +516,6 @@ export default function KnowledgeMap({
                   { year: "numeric", month: "short", day: "numeric" }
                 )}
               </p>
-            )}
-            <p>{displayArticle.content.split(/\s+/).length} words</p>
-            {displayArticle.tags && displayArticle.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-1">
-                {displayArticle.tags.map((tag, i) => (
-                  <span
-                    key={i}
-                    className="px-1 py-0.5 bg-japanese-shiraumenezu/40 dark:bg-white/[0.06] text-xs text-japanese-sumiiro/70 dark:text-japanese-shironezu/70"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
             )}
           </div>
 
