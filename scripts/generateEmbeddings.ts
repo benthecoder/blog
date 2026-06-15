@@ -20,9 +20,7 @@ import { formatEmbeddingForPostgres } from "@/utils/chunking/embeddingUtils";
 import { withEmbeddingRetry, wait } from "@/utils/retry";
 import { extractPostDate, toISODateString } from "@/utils/dateUtils";
 import { extractTags } from "@/utils/content/posts";
-import { DELAY_BETWEEN_BATCHES } from "@/config/constants";
-
-// Import types
+import { DELAY_BETWEEN_BATCHES, VOYAGE_MODEL } from "@/config/constants";
 import { PostFrontmatter } from "@/types/post";
 import { ProcessedChunk, ProcessedPost } from "@/types/chunks";
 
@@ -108,7 +106,7 @@ interface EmbeddingResponse {
 async function embedWithRetry(texts: string[]): Promise<EmbeddingResponse> {
   return withEmbeddingRetry(async () => {
     return (await client.embed({
-      model: "voyage-3.5-lite",
+      model: VOYAGE_MODEL,
       input: texts,
       inputType: "document",
     })) as Promise<EmbeddingResponse>;
