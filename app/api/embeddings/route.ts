@@ -1,24 +1,11 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 import { computeUMAP, normalizePositions } from "@/utils/chunking/umapUtils";
+import { parseEmbedding } from "@/utils/chunking/embeddingUtils";
+import type { ChunkRow } from "@/types/chunks";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 3600;
-
-interface ChunkRow {
-  id: string;
-  post_slug: string;
-  post_title: string;
-  content: string;
-  chunk_type: string;
-  metadata: {
-    published_date?: string;
-    tags?: string[];
-  };
-  sequence: number;
-  embedding: unknown;
-  created_at: string;
-}
 
 interface ArticleData {
   id: string;
@@ -36,27 +23,6 @@ interface ArticleData {
   x: number;
   y: number;
 }
-
-const parseEmbedding = (embedding: unknown): number[] => {
-  if (Array.isArray(embedding)) {
-    return embedding;
-  }
-
-  if (typeof embedding === "string") {
-    try {
-      const parsed = JSON.parse(embedding);
-      if (Array.isArray(parsed)) {
-        return parsed;
-      }
-    } catch {
-      // Parse PostgreSQL vector format
-      const cleaned = embedding.replace(/[\[\]]/g, "");
-      return cleaned.split(",").map(Number);
-    }
-  }
-
-  return [];
-};
 
 export async function GET(request: Request) {
   try {

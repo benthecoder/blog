@@ -36,3 +36,18 @@ export interface ProcessedPost {
   chunks: ProcessedChunk[];
   filePath: string;
 }
+
+export interface ChunkRow {
+  id: string;
+  post_slug: string;
+  post_title: string;
+  content: string;
+  chunk_type: string;
+  metadata: {
+    published_date?: string;
+    tags?: string[];
+  };
+  sequence: number;
+  embedding: unknown;
+  created_at: string;
+}
