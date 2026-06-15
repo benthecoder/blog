@@ -1,5 +1,5 @@
 import { getAnthropicClient } from "../clients";
-import { withRetry } from "../retry";
+import { withRetry, wait } from "../retry";
 import {
   ANTHROPIC_CLUSTER_MODEL,
   CLUSTER_LABEL_MAX_SAMPLES,
@@ -248,10 +248,6 @@ async function callAnthropicForLabel(
       },
     }
   );
-}
-
-function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**

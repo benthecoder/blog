@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-export interface MarkdownFile {
+interface MarkdownFile {
   slug: string;
   data: Record<string, unknown>;
   content: string;
