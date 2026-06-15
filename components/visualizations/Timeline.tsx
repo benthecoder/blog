@@ -144,7 +144,7 @@ const Timeline: FC<TimelineProps> = ({ events }) => {
     <div className="space-y-6 font-serif">
       {events.map((event, eventIndex) => (
         <div key={`${event.period}-${eventIndex}`} className="group/year">
-          <div className="flex gap-2 sm:gap-4 text-[#595857] dark:text-[#F3F3F3]">
+          <div className="flex gap-2 sm:gap-4 text-japanese-sumiiro dark:text-japanese-nyuhakushoku">
             <div className="min-w-[60px] sm:min-w-[70px] pt-0.5">
               <span className="text-sm opacity-50 transition-opacity group-hover/year:opacity-70">
                 {event.period}

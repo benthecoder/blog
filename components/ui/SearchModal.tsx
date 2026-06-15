@@ -44,7 +44,8 @@ export default function SearchModal() {
 
   useEffect(() => {
     if (open) {
-      setTimeout(() => inputRef.current?.focus(), 50);
+      const raf = requestAnimationFrame(() => inputRef.current?.focus());
+      return () => cancelAnimationFrame(raf);
     } else {
       setQuery("");
       setResults([]);
@@ -123,6 +124,9 @@ export default function SearchModal() {
       <div className="absolute inset-0 bg-japanese-kinairo/80 dark:bg-[#111]/80 backdrop-blur-sm" />
 
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search posts"
         className="relative w-full max-w-lg mx-4 bg-japanese-kinairo dark:bg-[#1c1c1c] border border-japanese-shiraumenezu dark:border-white/[0.08] shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
