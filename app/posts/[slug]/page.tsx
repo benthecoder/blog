@@ -48,9 +48,9 @@ export const generateStaticParams = async () => {
 };
 
 const PostPage = async ({ params }: { params: Params }) => {
-  const metadata = getPostMetadata();
+  const posts = getPostMetadata();
   const { slug } = await params;
-  const post = metadata.find((p) => p.slug === slug);
+  const post = posts.find((p) => p.slug === slug);
 
   if (!post) {
     return notFound();
