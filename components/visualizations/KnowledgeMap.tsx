@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import Link from "next/link";
 import { useTheme } from "next-themes";
 import { scaleLinear } from "d3-scale";
 import { zoom as d3Zoom } from "d3-zoom";
@@ -29,6 +30,41 @@ interface KnowledgeMapData {
   generatedAt: string;
 }
 
+// Four distinct shapes rotated per cluster — adds a visual channel beyond color
+const SHAPES = ["circle", "square", "diamond", "triangle"] as const;
+type Shape = (typeof SHAPES)[number];
+
+function drawMarker(
+  ctx: CanvasRenderingContext2D,
+  shape: Shape,
+  x: number,
+  y: number,
+  r: number
+) {
+  ctx.beginPath();
+  switch (shape) {
+    case "circle":
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      break;
+    case "square":
+      ctx.rect(x - r, y - r, r * 2, r * 2);
+      break;
+    case "diamond":
+      ctx.moveTo(x, y - r * 1.3);
+      ctx.lineTo(x + r, y);
+      ctx.lineTo(x, y + r * 1.3);
+      ctx.lineTo(x - r, y);
+      ctx.closePath();
+      break;
+    case "triangle":
+      ctx.moveTo(x, y - r * 1.2);
+      ctx.lineTo(x + r * 1.1, y + r * 0.7);
+      ctx.lineTo(x - r * 1.1, y + r * 0.7);
+      ctx.closePath();
+      break;
+  }
+}
+
 export default function KnowledgeMap({
   className = "",
 }: {
@@ -43,14 +79,25 @@ export default function KnowledgeMap({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hoveredArticle, setHoveredArticle] = useState<Article | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCluster, setSelectedCluster] = useState<number | null>(null);
   const [transform, setTransform] = useState({ k: 1, x: 0, y: 0 });
   const [canvasReady, setCanvasReady] = useState(false);
   const [showLegend, setShowLegend] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const { theme } = useTheme();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const zoomBehaviorRef = useRef<any>(null);
+  const selectedArticleRef = useRef<Article | null>(null);
+
+  useEffect(() => {
+    setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  useEffect(() => {
+    selectedArticleRef.current = selectedArticle;
+  }, [selectedArticle]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -75,23 +122,19 @@ export default function KnowledgeMap({
     fetchData();
   }, [fetchData]);
 
-  // Filter articles
   const filtered = articles.filter((article) => {
-    // Filter by search query
     if (
       searchQuery &&
       !article.postTitle.toLowerCase().includes(searchQuery.toLowerCase())
     ) {
       return false;
     }
-    // Filter by selected cluster
     if (selectedCluster !== null && article.cluster !== selectedCluster) {
       return false;
     }
     return true;
   });
 
-  // Cosine similarity
   const similarity = useCallback((a: number[], b: number[]): number => {
     const dot = a.reduce((sum, val, i) => sum + val * b[i], 0);
     const magA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
@@ -99,16 +142,12 @@ export default function KnowledgeMap({
     return dot / (magA * magB);
   }, []);
 
-  // Generate color palette for clusters
   const getClusterColor = useCallback(
     (cluster: number, isDark: boolean): string => {
       if (cluster === -1) {
-        // Noise points - use default color
         return isDark ? "#91989C" : "#595857";
       }
-
-      // HSL color palette with good contrast
-      const hue = (cluster * 137.5) % 360; // Golden angle for good distribution
+      const hue = (cluster * 137.5) % 360;
       const saturation = isDark ? 60 : 55;
       const lightness = isDark ? 60 : 50;
       return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
@@ -116,7 +155,22 @@ export default function KnowledgeMap({
     []
   );
 
-  // Render (drawing only, no dimension changes)
+  // Refs to avoid stale closures
+  const transformRef = useRef(transform);
+  const hoveredArticleRef = useRef(hoveredArticle);
+  const filteredRef = useRef(filtered);
+
+  useEffect(() => {
+    transformRef.current = transform;
+  }, [transform]);
+  useEffect(() => {
+    hoveredArticleRef.current = hoveredArticle;
+  }, [hoveredArticle]);
+  useEffect(() => {
+    filteredRef.current = filtered;
+  }, [filtered]);
+
+  // Render
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current) return;
 
@@ -130,31 +184,22 @@ export default function KnowledgeMap({
     const width = rect.width;
     const height = rect.height;
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
-
-    // Clear canvas (transparent to show container background with texture)
     ctx.clearRect(0, 0, width, height);
 
-    // Early return if no results
     if (filtered.length === 0) return;
 
     const xScale = scaleLinear().domain([0, 1000]).range([0, width]);
     const yScale = scaleLinear().domain([0, 1000]).range([0, height]);
-
     const isDark = theme === "dark";
 
-    // Get colors from CSS variables (from your Tailwind theme)
     const styles = getComputedStyle(document.documentElement);
-    const dot = isDark
+    const dotDefault = isDark
       ? styles.getPropertyValue("--color-japanese-ginnezu").trim() || "#91989C"
       : styles.getPropertyValue("--color-japanese-sumiiro").trim() || "#595857";
-    const dotHover = isDark
-      ? styles.getPropertyValue("--color-japanese-shironezu").trim() ||
-        "#DCDDDD"
-      : "#000000";
-    const dotSelected = dot;
-    const connection = isDark
+    const dotHover = isDark ? "#DCDDDD" : "#000000";
+    const connectionColor = isDark
       ? "rgba(145, 152, 156, 0.08)"
       : "rgba(89, 88, 87, 0.08)";
 
@@ -162,63 +207,101 @@ export default function KnowledgeMap({
     ctx.translate(transform.x, transform.y);
     ctx.scale(transform.k, transform.k);
 
-    // Draw connections on hover
-    if (hoveredArticle) {
+    // Similarity connections on hover/select
+    const focusedArticle = selectedArticle ?? hoveredArticle;
+    if (focusedArticle) {
       filtered.forEach((other) => {
-        if (other.id === hoveredArticle.id) return;
-        const sim = similarity(hoveredArticle.embedding, other.embedding);
+        if (other.id === focusedArticle.id) return;
+        const sim = similarity(focusedArticle.embedding, other.embedding);
         if (sim > 0.7) {
           ctx.beginPath();
-          ctx.moveTo(xScale(hoveredArticle.x), yScale(hoveredArticle.y));
+          ctx.moveTo(xScale(focusedArticle.x), yScale(focusedArticle.y));
           ctx.lineTo(xScale(other.x), yScale(other.y));
-          ctx.strokeStyle = connection;
+          ctx.strokeStyle = connectionColor;
           ctx.lineWidth = 1 / transform.k;
           ctx.stroke();
         }
       });
     }
 
-    // Draw articles as precise, minimal dots
+    // Cluster centroid labels — drawn before dots so dots sit on top
+    const centroids: Record<number, { sx: number; sy: number; count: number }> =
+      {};
+    filtered.forEach((a) => {
+      if (!centroids[a.cluster])
+        centroids[a.cluster] = { sx: 0, sy: 0, count: 0 };
+      centroids[a.cluster].sx += a.x;
+      centroids[a.cluster].sy += a.y;
+      centroids[a.cluster].count++;
+    });
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    Object.entries(centroids).forEach(([clusterId, { sx, sy, count }]) => {
+      const id = Number(clusterId);
+      const label = clusterLabels[id];
+      if (!label || id === -1) return;
+      const cx = xScale(sx / count);
+      const cy = yScale(sy / count);
+      // Font size stays proportionally constant as you zoom
+      const fontSize = Math.max(7, 9 / transform.k);
+      ctx.font = `${fontSize}px ui-serif, Georgia, serif`;
+      ctx.fillStyle = isDark
+        ? "rgba(220, 221, 221, 0.25)"
+        : "rgba(89, 88, 87, 0.2)";
+      // Truncate long labels
+      const words = label.split(" ").slice(0, 3).join(" ");
+      ctx.fillText(words, cx, cy - 12 / transform.k);
+    });
+
+    // Dots
     filtered.forEach((article) => {
       const x = xScale(article.x);
       const y = yScale(article.y);
-
-      // Smaller, more precise sizing
       const wordCount = article.content.split(/\s+/).length;
       const size = Math.max(1.5, Math.min(4, Math.log(wordCount + 1) * 0.6));
-
-      // Opacity varies by word count (longer posts = more opaque)
       const baseOpacity = Math.min(0.8, 0.3 + wordCount / 2000);
+      const shape = SHAPES[Math.abs(article.cluster) % SHAPES.length];
 
-      // Use cluster color
+      const isSelected = article.id === selectedArticle?.id;
+      const isHovered = article.id === hoveredArticle?.id;
+
       let color = getClusterColor(article.cluster, isDark);
       let opacity = baseOpacity;
 
-      if (article.id === hoveredArticle?.id) {
+      if (isSelected || isHovered) {
         color = dotHover;
         opacity = 1;
       } else if (
         searchQuery &&
         article.postTitle.toLowerCase().includes(searchQuery.toLowerCase())
       ) {
-        color = dotSelected;
+        color = dotDefault;
         opacity = 0.8;
       }
 
-      // Draw crisp, minimal circle
-      ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.fillStyle = color;
-      ctx.globalAlpha = opacity;
-      ctx.fill();
-      ctx.globalAlpha = 1;
-
-      // Minimal stroke only for hovered (Tufte: remove chartjunk)
-      if (article.id === hoveredArticle?.id) {
+      // Outer rings for selected article
+      if (isSelected) {
+        ctx.globalAlpha = 0.15;
+        ctx.beginPath();
+        ctx.arc(x, y, size * 4, 0, Math.PI * 2);
         ctx.strokeStyle = color;
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 1.5 / transform.k;
+        ctx.stroke();
+
+        ctx.globalAlpha = 0.3;
+        ctx.beginPath();
+        ctx.arc(x, y, size * 2.5, 0, Math.PI * 2);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1 / transform.k;
         ctx.stroke();
       }
+
+      ctx.globalAlpha = opacity;
+      drawMarker(ctx, shape, x, y, size);
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.globalAlpha = 1;
     });
 
     ctx.restore();
@@ -227,30 +310,15 @@ export default function KnowledgeMap({
     theme,
     transform,
     hoveredArticle,
+    selectedArticle,
     searchQuery,
     similarity,
     getClusterColor,
+    clusterLabels,
     canvasReady,
   ]);
 
-  // Refs to avoid stale closures
-  const transformRef = useRef(transform);
-  const hoveredArticleRef = useRef(hoveredArticle);
-  const filteredRef = useRef(filtered);
-
-  useEffect(() => {
-    transformRef.current = transform;
-  }, [transform]);
-
-  useEffect(() => {
-    hoveredArticleRef.current = hoveredArticle;
-  }, [hoveredArticle]);
-
-  useEffect(() => {
-    filteredRef.current = filtered;
-  }, [filtered]);
-
-  // Canvas initialization and zoom setup
+  // Canvas init and event wiring
   useEffect(() => {
     if (!canvasRef.current || !containerRef.current || articles.length === 0)
       return;
@@ -258,7 +326,6 @@ export default function KnowledgeMap({
     const canvas = canvasRef.current;
     const container = containerRef.current;
 
-    // Initialize canvas dimensions ONCE
     const dpr = window.devicePixelRatio || 1;
     const rect = container.getBoundingClientRect();
     canvas.width = rect.width * dpr;
@@ -266,7 +333,6 @@ export default function KnowledgeMap({
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
 
-    // Set up zoom behavior
     const zoomBehavior = d3Zoom()
       .scaleExtent([0.5, 10])
       .on("zoom", (event) => {
@@ -278,45 +344,36 @@ export default function KnowledgeMap({
       });
 
     zoomBehaviorRef.current = zoomBehavior;
-
     const selection = select(canvas);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     selection.call(zoomBehavior as any);
-
-    // Force initial render after canvas is set up
     setCanvasReady(true);
 
-    // Handle window resize
     const handleResize = () => {
       const newRect = container.getBoundingClientRect();
       canvas.width = newRect.width * dpr;
       canvas.height = newRect.height * dpr;
       canvas.style.width = `${newRect.width}px`;
       canvas.style.height = `${newRect.height}px`;
-
-      // Re-apply zoom behavior after canvas reset
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       selection.call(zoomBehavior as any);
     };
 
-    window.addEventListener("resize", handleResize);
+    // Shared hit-test: returns closest article within threshold
+    function hitTest(clientX: number, clientY: number): Article | null {
+      const r = canvas.getBoundingClientRect();
+      const t = transformRef.current;
+      const x = (clientX - r.left - t.x) / t.k;
+      const y = (clientY - r.top - t.y) / t.k;
 
-    // Handle mouse move for hover
-    const handleNativeMouseMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      const currentTransform = transformRef.current;
-      const x =
-        (e.clientX - rect.left - currentTransform.x) / currentTransform.k;
-      const y =
-        (e.clientY - rect.top - currentTransform.y) / currentTransform.k;
+      const xScale = scaleLinear().domain([0, 1000]).range([0, r.width]);
+      const yScale = scaleLinear().domain([0, 1000]).range([0, r.height]);
 
-      const width = rect.width;
-      const height = rect.height;
-      const xScale = scaleLinear().domain([0, 1000]).range([0, width]);
-      const yScale = scaleLinear().domain([0, 1000]).range([0, height]);
+      const isTouch = window.matchMedia("(pointer: coarse)").matches;
+      const threshold = isTouch ? 24 : 12;
 
       let closest: Article | null = null;
-      let minDist = 12;
+      let minDist = threshold;
 
       filteredRef.current.forEach((article) => {
         const dx = xScale(article.x) - x;
@@ -328,31 +385,44 @@ export default function KnowledgeMap({
         }
       });
 
+      return closest;
+    }
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const closest = hitTest(e.clientX, e.clientY);
+      canvas.style.cursor = closest ? "pointer" : "crosshair";
       setHoveredArticle(closest);
     };
 
-    // Handle click for navigation
-    const handleNativeClick = () => {
-      const currentHovered = hoveredArticleRef.current;
-      if (currentHovered) {
-        window.location.href = `/posts/${currentHovered.postSlug}`;
+    // Two-step click: first click → pin detail panel; second click on same dot → navigate
+    const handleClick = (e: MouseEvent) => {
+      const closest = hitTest(e.clientX, e.clientY);
+
+      if (!closest) {
+        setSelectedArticle(null);
+        return;
+      }
+
+      if (selectedArticleRef.current?.id === closest.id) {
+        window.location.href = `/posts/${closest.postSlug}`;
+      } else {
+        setSelectedArticle(closest);
       }
     };
 
-    canvas.addEventListener("mousemove", handleNativeMouseMove);
-    canvas.addEventListener("click", handleNativeClick);
+    window.addEventListener("resize", handleResize);
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("click", handleClick);
 
     return () => {
       window.removeEventListener("resize", handleResize);
       selection.on(".zoom", null);
-      canvas.removeEventListener("mousemove", handleNativeMouseMove);
-      canvas.removeEventListener("click", handleNativeClick);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("click", handleClick);
     };
   }, [articles.length]);
 
-  if (loading) {
-    return <UMAPLoader className={className} />;
-  }
+  if (loading) return <UMAPLoader className={className} />;
 
   if (error) {
     return (
@@ -361,6 +431,9 @@ export default function KnowledgeMap({
       </div>
     );
   }
+
+  const displayArticle = selectedArticle ?? hoveredArticle;
+  const isPinned = selectedArticle !== null;
 
   return (
     <div
@@ -384,49 +457,62 @@ export default function KnowledgeMap({
       {/* Canvas */}
       <canvas
         ref={canvasRef}
-        className="cursor-crosshair w-full h-full block"
+        className="w-full h-full block"
         style={{ background: "transparent" }}
       />
 
-      {/* Article Detail on Hover */}
-      {hoveredArticle && (
-        <div className="absolute top-4 right-4 z-20 bg-japanese-kinairo/95 dark:bg-dark-bg/95 p-3 border border-japanese-shiraumenezu dark:border-white/[0.08] shadow-sm max-w-xs pointer-events-none backdrop-blur-sm">
-          <h3 className="font-medium text-sm leading-tight mb-2 text-japanese-sumiiro dark:text-japanese-shironezu">
-            {hoveredArticle.postTitle}
+      {/* Article detail panel — hover preview or pinned detail */}
+      {displayArticle && (
+        <div
+          className={`absolute top-4 right-4 z-20 bg-japanese-kinairo/95 dark:bg-dark-bg/95 p-3 border shadow-sm max-w-[200px] sm:max-w-xs backdrop-blur-sm transition-[border-color] duration-150 ${
+            isPinned
+              ? "border-japanese-sumiiro/25 dark:border-white/[0.15] pointer-events-auto"
+              : "border-japanese-shiraumenezu dark:border-white/[0.08] pointer-events-none"
+          }`}
+        >
+          {isPinned && (
+            <button
+              onClick={() => setSelectedArticle(null)}
+              aria-label="close"
+              className="absolute top-1.5 right-2 text-japanese-sumiiro/30 hover:text-japanese-sumiiro/70 dark:text-japanese-shironezu/30 dark:hover:text-japanese-shironezu/70 transition-colors text-base leading-none"
+            >
+              ×
+            </button>
+          )}
+
+          <h3 className="font-medium text-sm leading-tight mb-2 text-japanese-sumiiro dark:text-japanese-shironezu pr-4">
+            {displayArticle.postTitle}
           </h3>
+
           <div className="space-y-1 text-xs text-japanese-sumiiro/60 dark:text-japanese-shironezu/60">
-            {clusterLabels[hoveredArticle.cluster] && (
+            {clusterLabels[displayArticle.cluster] && (
               <div className="flex items-center gap-1.5 mb-1">
                 <div
-                  className="w-2 h-2 rounded-full"
+                  className="w-2 h-2 rounded-full shrink-0"
                   style={{
                     backgroundColor: getClusterColor(
-                      hoveredArticle.cluster,
+                      displayArticle.cluster,
                       theme === "dark"
                     ),
                   }}
                 />
                 <span className="font-medium text-japanese-sumiiro dark:text-japanese-shironezu">
-                  {clusterLabels[hoveredArticle.cluster]}
+                  {clusterLabels[displayArticle.cluster]}
                 </span>
               </div>
             )}
-            {hoveredArticle.publishedDate && (
+            {displayArticle.publishedDate && (
               <p>
-                {new Date(hoveredArticle.publishedDate).toLocaleDateString(
+                {new Date(displayArticle.publishedDate).toLocaleDateString(
                   "en-US",
-                  {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  }
+                  { year: "numeric", month: "short", day: "numeric" }
                 )}
               </p>
             )}
-            <p>{hoveredArticle.content.split(/\s+/).length} words</p>
-            {hoveredArticle.tags && hoveredArticle.tags.length > 0 && (
+            <p>{displayArticle.content.split(/\s+/).length} words</p>
+            {displayArticle.tags && displayArticle.tags.length > 0 && (
               <div className="flex flex-wrap gap-1 mt-1">
-                {hoveredArticle.tags.map((tag, i) => (
+                {displayArticle.tags.map((tag, i) => (
                   <span
                     key={i}
                     className="px-1 py-0.5 bg-japanese-shiraumenezu/40 dark:bg-white/[0.06] text-xs text-japanese-sumiiro/70 dark:text-japanese-shironezu/70"
@@ -437,10 +523,23 @@ export default function KnowledgeMap({
               </div>
             )}
           </div>
+
+          {isPinned ? (
+            <Link
+              href={`/posts/${displayArticle.postSlug}`}
+              className="mt-3 flex items-center gap-1 text-xs text-japanese-sumiiro/50 hover:text-japanese-sumiiro dark:text-japanese-shironezu/50 dark:hover:text-japanese-shironezu transition-colors"
+            >
+              read →
+            </Link>
+          ) : (
+            <p className="mt-2 text-[10px] text-japanese-sumiiro/25 dark:text-japanese-shironezu/25">
+              {isTouchDevice ? "tap again to read" : "click to pin"}
+            </p>
+          )}
         </div>
       )}
 
-      {/* Cluster Legend Toggle */}
+      {/* Cluster legend toggle */}
       {Object.keys(clusterLabels).length > 0 && (
         <div className="absolute bottom-4 right-4 z-10">
           <button
@@ -471,21 +570,19 @@ export default function KnowledgeMap({
                     const count = articles.filter(
                       (a) => a.cluster === id
                     ).length;
-                    const isSelected = selectedCluster === id;
+                    const isActive = selectedCluster === id;
                     return (
                       <button
                         key={clusterId}
-                        onClick={() =>
-                          setSelectedCluster(isSelected ? null : id)
-                        }
+                        onClick={() => setSelectedCluster(isActive ? null : id)}
                         className={`w-full flex items-center gap-2 text-xs py-0.5 px-1 rounded transition-colors ${
-                          isSelected
+                          isActive
                             ? "bg-japanese-shiraumenezu/40 dark:bg-white/[0.06]"
                             : "hover:bg-japanese-shiraumenezu/20 dark:hover:bg-white/[0.04]"
                         }`}
                       >
                         <div
-                          className="w-2 h-2 rounded-full flex-shrink-0"
+                          className="w-2 h-2 rounded-full shrink-0"
                           style={{
                             backgroundColor: getClusterColor(
                               id,
@@ -510,7 +607,9 @@ export default function KnowledgeMap({
 
       {/* Instructions */}
       <div className="absolute bottom-4 left-4 z-10 bg-japanese-kinairo/80 dark:bg-dark-bg/80 px-3 py-1 border border-japanese-shiraumenezu dark:border-white/[0.08] text-xs text-japanese-sumiiro/40 dark:text-japanese-shironezu/40 pointer-events-none backdrop-blur-sm">
-        scroll to zoom • drag to pan • click to read
+        {isTouchDevice
+          ? "pinch to zoom · drag to pan · tap to preview"
+          : "scroll to zoom · drag to pan · click to pin · click again to read"}
       </div>
     </div>
   );
