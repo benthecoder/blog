@@ -1,4 +1,3 @@
-// Revalidate every hour - curius links don't change frequently
 export const revalidate = 3600;
 
 export async function GET() {
