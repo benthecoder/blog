@@ -7,10 +7,10 @@ export function GET() {
   const posts = getPostMetadata();
   const random = posts[Math.floor(Math.random() * posts.length)];
 
-  return new NextResponse(JSON.stringify({ slug: random.slug }), {
-    headers: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-store",
-    },
-  });
+  return NextResponse.json(
+    { slug: random.slug },
+    {
+      headers: { "Cache-Control": "no-store" },
+    }
+  );
 }
