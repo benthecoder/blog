@@ -20,7 +20,7 @@ export default function PostImage({ src, alt }: { src: string; alt: string }) {
         />
       </div>
       {alt && (
-        <figcaption className="text-center text-gray-400 text-xs mt-1">
+        <figcaption className="text-center text-japanese-ginnezu dark:text-japanese-ginnezu text-xs mt-1">
           {alt}
         </figcaption>
       )}
