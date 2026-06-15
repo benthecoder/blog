@@ -6,25 +6,12 @@ import {
   computeKMeans,
 } from "../utils/chunking/umapUtils";
 import { labelClusters } from "../utils/chunking/clusterLabeling";
+import { parseEmbedding } from "../utils/chunking/embeddingUtils";
 import { NUM_CLUSTERS } from "../config/constants";
 import type { KnowledgeMapOutput } from "../types/knowledgeMap";
+import type { ChunkRow } from "../types/chunks";
 import fs from "fs";
 import path from "path";
-
-interface ChunkRow {
-  id: string;
-  post_slug: string;
-  post_title: string;
-  content: string;
-  chunk_type: string;
-  metadata: {
-    published_date?: string;
-    tags?: string[];
-  };
-  sequence: number;
-  embedding: unknown;
-  created_at: string;
-}
 
 interface ArticleData {
   id: string;
@@ -43,27 +30,6 @@ interface ArticleData {
   y: number;
   cluster: number;
 }
-
-const parseEmbedding = (embedding: unknown): number[] => {
-  if (Array.isArray(embedding)) {
-    return embedding;
-  }
-
-  if (typeof embedding === "string") {
-    try {
-      const parsed = JSON.parse(embedding);
-      if (Array.isArray(parsed)) {
-        return parsed;
-      }
-    } catch {
-      // Parse PostgreSQL vector format
-      const cleaned = embedding.replace(/[\[\]]/g, "");
-      return cleaned.split(",").map(Number);
-    }
-  }
-
-  return [];
-};
 
 async function generateKnowledgeMap() {
   try {

@@ -1,6 +1,3 @@
-/**
- * Article data structure for knowledge map visualization
- */
 export interface ArticleData {
   id: string;
   postSlug: string;
@@ -23,9 +20,6 @@ export interface ArticleData {
   cluster: number;
 }
 
-/**
- * Knowledge map JSON output structure
- */
 export interface KnowledgeMapOutput {
   success: boolean;
   data: ArticleData[];
@@ -35,9 +29,6 @@ export interface KnowledgeMapOutput {
   generatedAt: string;
 }
 
-/**
- * Cluster labeling options
- */
 export interface ClusterLabelingOptions {
   maxSamplesPerCluster?: number;
   minSamplesPerCluster?: number;

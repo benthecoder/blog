@@ -16,7 +16,6 @@ export interface PostFrontmatter {
   [key: string]: unknown;
 }
 
-/** Parsed markdown file — frontmatter + body content. */
 export interface ParsedPost {
   data: PostFrontmatter;
   content: string;
