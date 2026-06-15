@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
 type SearchType = "keyword" | "semantic";
@@ -94,7 +95,7 @@ export default function SearchModal() {
     if (query.trim()) search(query, type);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: ReactKeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setActiveIndex((i) => Math.min(i + 1, results.length - 1));

@@ -1,12 +1,13 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { Sidebar } from "./SideBar";
 import ThemeSwitch from "@/components/ui/ThemeSwitch";
 import SearchModal from "@/components/ui/SearchModal";
 import { useRandomPost } from "./useRandomPost";
 
-export function ConditionalLayout({ children }: { children: React.ReactNode }) {
+export function ConditionalLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   useRandomPost();
   const isHome = pathname === "/";

@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -43,10 +44,7 @@ export function Sidebar() {
     isMobile: boolean;
   } | null>(null);
 
-  const handleMouseEnter = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    text: string
-  ) => {
+  const handleMouseEnter = (e: MouseEvent<HTMLAnchorElement>, text: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const isMobile = window.innerWidth < 768; // md breakpoint
 

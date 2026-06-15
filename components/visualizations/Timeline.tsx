@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { FC, ReactNode } from "react";
 import Image from "next/image";
 import {
   useFloating,
@@ -38,9 +39,9 @@ type TimelineProps = {
   events: TimelineEvent[];
 };
 
-const Timeline: React.FC<TimelineProps> = ({ events }) => {
+const Timeline: FC<TimelineProps> = ({ events }) => {
   // Helper component for image link with Floating UI positioning
-  const ImageLinkComponent: React.FC<{ link: ImageLink }> = ({ link }) => {
+  const ImageLinkComponent: FC<{ link: ImageLink }> = ({ link }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const { refs, floatingStyles, context } = useFloating({
@@ -110,7 +111,7 @@ const Timeline: React.FC<TimelineProps> = ({ events }) => {
     }
 
     let remainingText = item.description;
-    const parts: React.ReactNode[] = [];
+    const parts: ReactNode[] = [];
 
     item.imageLinks.forEach((link, idx) => {
       const index = remainingText.indexOf(link.text);

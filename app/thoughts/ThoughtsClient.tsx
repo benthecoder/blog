@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import type { ReactNode } from "react";
 import type { Thought } from "@/types/thoughts";
 
-function parseContent(content: string): React.ReactNode[] {
+function parseContent(content: string): ReactNode[] {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   const parts = content.split(urlRegex);
 

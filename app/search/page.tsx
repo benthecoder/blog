@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
+import type { FormEvent } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Loader from "@/components/ui/Loader";
 import SearchResult from "./SearchResult";
@@ -40,7 +41,7 @@ function SearchContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSearch = async (e?: React.FormEvent) => {
+  const handleSearch = async (e?: FormEvent) => {
     if (e) e.preventDefault();
     if (!query.trim()) return;
 

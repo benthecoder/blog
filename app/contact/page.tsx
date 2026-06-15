@@ -1,3 +1,4 @@
+import type { ComponentType } from "react";
 import Image from "next/image";
 import {
   LuScroll,
@@ -23,7 +24,7 @@ const LinkItem = ({ href, children }: LinkItemProps) => (
 );
 
 type LinkSectionProps = {
-  icon: React.ComponentType<{ className?: string }>;
+  icon: ComponentType<{ className?: string }>;
   links: { href: string; text: string }[];
 };
 
