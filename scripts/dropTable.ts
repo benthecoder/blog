@@ -22,5 +22,4 @@ async function dropTable() {
   }
 }
 
-// Execute the function
 dropTable();
