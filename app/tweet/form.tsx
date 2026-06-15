@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import type { FormEvent } from "react";
 
 export default function Form() {
   const router = useRouter();
@@ -11,7 +12,7 @@ export default function Form() {
 
   const isMutating = isFetching || isPending;
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsFetching(true);
 

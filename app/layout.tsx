@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -72,11 +73,7 @@ const averia = localFont({
   display: "swap",
 });
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       suppressHydrationWarning
