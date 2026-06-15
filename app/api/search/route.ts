@@ -1,7 +1,6 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 
-// Import shared utilities and constants
 import { getVoyageClient } from "@/utils/clients";
 import { formatEmbeddingForPostgres } from "@/utils/chunking/embeddingUtils";
 import {
