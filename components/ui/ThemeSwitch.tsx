@@ -15,7 +15,8 @@ const ThemeSwitcher = () => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  if (!mounted)
+    return <div className="w-6 h-6 md:w-12 md:h-12" aria-hidden="true" />;
 
   return (
     <button
