@@ -1,14 +1,3 @@
-/**
- * Markdown Chunking - Simplified Extractor-Based Approach
- *
- * This module processes markdown files into semantic chunks using
- * clean extractor classes. Each chunk type (full-post, section,
- * quote, code) is handled by its own extractor.
- *
- * Previous version: 451 lines with complex sliding window logic
- * This version: ~150 lines, KISS principle, easy to understand
- */
-
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";

@@ -63,9 +63,3 @@ export function extractPostDate(
 export function toISODateString(date: Date): string {
   return date.toISOString().split("T")[0];
 }
-
-export function parseFlexibleDate(dateStr: string): Date | null {
-  const direct = new Date(dateStr);
-  if (!isNaN(direct.getTime())) return direct;
-  return parseMonthName(dateStr);
-}
