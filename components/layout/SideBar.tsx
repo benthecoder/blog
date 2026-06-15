@@ -103,8 +103,8 @@ export function Sidebar() {
           <Link
             key={path}
             href={path}
-            className={`inline-flex w-8 h-8 md:w-11 md:h-11 ${
-              pathname === path ? "text-gray-500" : "hover:underline"
+            className={`inline-flex w-8 h-8 md:w-11 md:h-11 transition-opacity ${
+              pathname === path ? "opacity-50" : "hover:opacity-70"
             }`}
             onMouseEnter={(e) => handleMouseEnter(e, text)}
             onMouseLeave={() => setHoveredLink(null)}

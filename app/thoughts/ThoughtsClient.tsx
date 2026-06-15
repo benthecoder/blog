@@ -16,7 +16,7 @@ function parseContent(content: string): ReactNode[] {
           href={part}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline underline-offset-2 hover:text-japanese-aiiro dark:hover:text-japanese-asagi transition-colors break-all"
+          className="underline underline-offset-2 hover:text-japanese-sumiiro/70 dark:hover:text-japanese-shironezu/70 transition-colors break-all"
         >
           {part}
         </a>

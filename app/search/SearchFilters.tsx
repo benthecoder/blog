@@ -34,7 +34,7 @@ export default function SearchFilters({
               onClick={() => onSearchTypeChange(type)}
               className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
                 searchType === type
-                  ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-[#595857] dark:text-[#DCDDDD] font-medium"
+                  ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-light-accent dark:text-dark-text font-medium"
                   : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
               }`}
             >
@@ -55,7 +55,7 @@ export default function SearchFilters({
             onClick={() => onChunkTypeChange("")}
             className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
               selectedChunkType === ""
-                ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-[#595857] dark:text-[#DCDDDD] font-medium"
+                ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-light-accent dark:text-dark-text font-medium"
                 : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
             }`}
           >
@@ -68,7 +68,7 @@ export default function SearchFilters({
               onClick={() => onChunkTypeChange(type)}
               className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
                 selectedChunkType === type
-                  ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-[#595857] dark:text-[#DCDDDD] font-medium"
+                  ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-light-accent dark:text-dark-text font-medium"
                   : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
               }`}
             >

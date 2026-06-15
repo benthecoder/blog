@@ -29,7 +29,7 @@ export default function NowPage() {
             more this year
           </li>
         </ul>
-        <p className="text-sm text-[#595857]/60 dark:text-[#DCDDDD]/60 mt-6">
+        <p className="text-sm text-japanese-sumiiro/60 dark:text-japanese-shironezu/60 mt-6">
           Last updated: Feb 22, 2026
         </p>
       </article>
