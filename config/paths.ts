@@ -3,10 +3,9 @@ import path from "path";
 export const ROOT_DIR = process.cwd();
 
 export const POSTS_DIR = path.join(ROOT_DIR, "posts");
-export const DRAFTS_DIR = path.join(POSTS_DIR, "drafts");
 export const WIKI_DIR = path.join(ROOT_DIR, "wiki");
 
-export const PUBLIC_DIR = path.join(ROOT_DIR, "public");
+const PUBLIC_DIR = path.join(ROOT_DIR, "public");
 export const IMAGES_DIR = path.join(PUBLIC_DIR, "images");
 
 export const LIBRARY_MD = path.join(ROOT_DIR, "app/library/library.md");
@@ -15,10 +14,6 @@ export const START_MD = path.join(ROOT_DIR, "app/start/start.md");
 
 export function getPostPath(slug: string): string {
   return path.join(POSTS_DIR, `${slug}.md`);
-}
-
-export function getDraftPath(slug: string): string {
-  return path.join(DRAFTS_DIR, `${slug}.md`);
 }
 
 export function getWikiPath(slug: string): string {

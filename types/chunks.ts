@@ -17,7 +17,7 @@ export interface ProcessedChunk {
   sequence: number;
 }
 
-export interface ChunkMetadata {
+interface ChunkMetadata {
   section?: string;
   language?: string;
   level?: number;

@@ -281,7 +281,6 @@ async function generateEmbeddingsForSingleFile(
         };
 
         try {
-          // Put the published_date in the metadata for now until we resolve the schema issue
           enhancedMetadata.published_date = formattedPublishedDate;
           enhancedMetadata.tags = tagsArray;
 
