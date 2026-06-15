@@ -128,7 +128,7 @@ const Heatmap = ({
       0
     );
     if (totalWords === 0)
-      return "bg-japanese-shiraumenezu/20 dark:bg-gray-800/20";
+      return "bg-japanese-shiraumenezu/20 dark:bg-dark-border/20";
     if (totalWords <= 300)
       return "bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30";
     if (totalWords <= 800)
