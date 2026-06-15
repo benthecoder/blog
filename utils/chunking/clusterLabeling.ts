@@ -1,15 +1,15 @@
-import { getAnthropicClient } from "./clients";
-import { withRetry } from "./retry";
+import { getAnthropicClient } from "../clients";
+import { withRetry } from "../retry";
 import {
   ANTHROPIC_CLUSTER_MODEL,
   CLUSTER_LABEL_MAX_SAMPLES,
   CLUSTER_LABEL_MIN_SAMPLES,
   CLUSTER_LABEL_TIMEOUT,
-} from "../config/constants";
+} from "../../config/constants";
 import type {
   ArticleData,
   ClusterLabelingOptions,
-} from "../types/knowledgeMap";
+} from "../../types/knowledgeMap";
 
 /**
  * Compute diversity score for sampling strategy

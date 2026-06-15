@@ -3,7 +3,7 @@
  * Consolidates embedding formatting and generation logic
  */
 
-import { getVoyageClient } from "./clients";
+import { getVoyageClient } from "../clients";
 import { VOYAGE_MODEL, VOYAGE_INPUT_TYPE } from "@/config/constants";
 
 /**
@@ -67,7 +67,7 @@ export async function generateEmbeddingsBatch(
   }
 
   return response.data
-    .map((item) => item.embedding)
+    .map((item: { embedding?: number[] }) => item.embedding)
     .filter((emb): emb is number[] => emb !== undefined);
 }
 

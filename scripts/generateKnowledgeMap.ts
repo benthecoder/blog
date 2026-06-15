@@ -4,8 +4,8 @@ import {
   computeUMAP,
   normalizePositions,
   computeKMeans,
-} from "../utils/umapUtils";
-import { labelClusters } from "../utils/clusterLabeling";
+} from "../utils/chunking/umapUtils";
+import { labelClusters } from "../utils/chunking/clusterLabeling";
 import { NUM_CLUSTERS } from "../config/constants";
 import type { KnowledgeMapOutput } from "../types/knowledgeMap";
 import fs from "fs";

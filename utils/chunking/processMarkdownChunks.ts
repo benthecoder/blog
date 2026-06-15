@@ -17,10 +17,10 @@ import fs from "fs";
 import path from "path";
 
 // Import our clean extractor classes
-import { FullPostExtractor } from "./chunking/extractors/FullPostExtractor";
-import { SectionExtractor } from "./chunking/extractors/SectionExtractor";
-import { QuoteExtractor } from "./chunking/extractors/QuoteExtractor";
-import { CodeExtractor } from "./chunking/extractors/CodeExtractor";
+import { FullPostExtractor } from "./extractors/FullPostExtractor";
+import { SectionExtractor } from "./extractors/SectionExtractor";
+import { QuoteExtractor } from "./extractors/QuoteExtractor";
+import { CodeExtractor } from "./extractors/CodeExtractor";
 
 // Import types
 import { ProcessedPost, ProcessedChunk, ChunkContext } from "@/types/chunks";

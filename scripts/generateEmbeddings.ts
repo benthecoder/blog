@@ -8,7 +8,7 @@ if (!process.env.POSTGRES_URL) {
 }
 
 // Now import modules that depend on environment variables
-import { processAllPosts } from "@/utils/processAllPosts";
+import { processAllPosts } from "@/utils/chunking/processAllPosts";
 import { sql } from "@vercel/postgres";
 import { v4 as uuidv4 } from "uuid";
 import chalk from "chalk";
@@ -16,7 +16,7 @@ import ora from "ora";
 
 // Import shared utilities
 import { getVoyageClient } from "@/utils/clients";
-import { formatEmbeddingForPostgres } from "@/utils/embeddingUtils";
+import { formatEmbeddingForPostgres } from "@/utils/chunking/embeddingUtils";
 import { withEmbeddingRetry, wait } from "@/utils/retry";
 import { extractPostDate, toISODateString } from "@/utils/dateUtils";
 import { extractTags } from "@/utils/content/posts";
