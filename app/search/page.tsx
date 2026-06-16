@@ -162,7 +162,11 @@ function SearchContent() {
           </div>
           <div className="space-y-4">
             {results.map((result, index) => (
-              <SearchResult key={index} result={result} query={query} />
+              <SearchResult
+                key={`${result.post_slug}-${result.chunk_type}-${index}`}
+                result={result}
+                query={query}
+              />
             ))}
           </div>
         </div>

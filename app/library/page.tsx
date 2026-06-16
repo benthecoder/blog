@@ -1,6 +1,12 @@
+import { Metadata } from "next";
 import { readMarkdownFile } from "@/utils/content/markdown";
 import MarkdownContent from "@/components/posts/MarkdownContent";
 import { LIBRARY_MD } from "@/config/paths";
+
+export const metadata: Metadata = {
+  title: "library",
+  description: "books i've read",
+};
 
 export const dynamic = "force-static";
 

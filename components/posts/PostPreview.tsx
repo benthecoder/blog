@@ -3,18 +3,16 @@ import { PostMetadata } from "@/types/post";
 
 const PostPreview = (props: PostMetadata) => {
   return (
-    <Link href={`/posts/${props.slug}`}>
-      <div className="group relative flex justify-between items-center cursor-crosshair text-sm md:text-base">
-        <div className="flex items-center gap-1">
-          <p className="text-japanese-sumiiro dark:text-japanese-shironezu">
-            {props.title}
-          </p>
-        </div>
-
-        <p className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
-          {props.date}
-        </p>
-      </div>
+    <Link
+      href={`/posts/${props.slug}`}
+      className="group relative flex justify-between items-center cursor-crosshair text-sm md:text-base"
+    >
+      <p className="text-japanese-sumiiro dark:text-japanese-shironezu">
+        {props.title}
+      </p>
+      <p className="text-japanese-nezumiiro dark:text-japanese-ginnezu shrink-0 ml-4">
+        {props.date}
+      </p>
     </Link>
   );
 };
