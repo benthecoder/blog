@@ -54,7 +54,7 @@ export default function SpotifyNowPlaying() {
         <div className="flex flex-col gap-2.5">
           {recentlyPlayed.tracks.slice(0, 10).map((track, i) => (
             <a
-              key={i}
+              key={track.songUrl}
               href={track.songUrl}
               target="_blank"
               rel="noopener noreferrer"

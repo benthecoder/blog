@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default function RandomPage() {
   const posts = getPostMetadata();
+  if (!posts.length) redirect("/posts");
   const random = posts[Math.floor(Math.random() * posts.length)];
   redirect(`/posts/${random.slug}`);
 }
