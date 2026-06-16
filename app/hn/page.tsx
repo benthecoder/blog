@@ -17,6 +17,7 @@ const MAX_PAGES = 10;
 export default function HackerNewsPage() {
   const [topStories, setTopStories] = useState<HNStory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
 
   useEffect(() => {
@@ -48,8 +49,10 @@ export default function HackerNewsPage() {
         );
 
         setTopStories(stories);
+        setIsError(false);
       } catch (error) {
         console.error("Failed to fetch HackerNews stories:", error);
+        setIsError(true);
       } finally {
         setIsLoading(false);
       }
@@ -75,6 +78,10 @@ export default function HackerNewsPage() {
       {isLoading ? (
         <p className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
           flibbertigibbeting...
+        </p>
+      ) : isError ? (
+        <p className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
+          couldn&apos;t reach hacker news
         </p>
       ) : (
         <div>

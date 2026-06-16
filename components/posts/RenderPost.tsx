@@ -11,7 +11,15 @@ interface RenderPostProps {
 }
 
 const RenderPost = ({ post, prev, next, slug }: RenderPostProps) => {
-  const { title, date, tags } = post.data;
+  const { title, date, tags: rawTags } = post.data;
+  const tags = rawTags
+    ? Array.isArray(rawTags)
+      ? rawTags
+      : (rawTags as string)
+          .split(",")
+          .map((t) => t.trim())
+          .filter(Boolean)
+    : [];
 
   return (
     <div>
@@ -39,12 +47,12 @@ const RenderPost = ({ post, prev, next, slug }: RenderPostProps) => {
                 })}
               </span>
             )}
-            {tags && (
+            {tags.length > 0 && (
               <>
                 <span className="text-japanese-shiraumenezu dark:text-japanese-sumiiro/50 text-xs">
                   ·
                 </span>
-                {(tags as string).split(", ").map((tag: string) => (
+                {tags.map((tag) => (
                   <Link
                     href={`/tags/${tag}`}
                     key={tag}
