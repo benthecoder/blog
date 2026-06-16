@@ -25,7 +25,7 @@ function formatTime(dateString: string): string {
 }
 
 export default function CuriusPage() {
-  const { data, isLoading } = useSWR<{ data: { links: CuriusLink[] } }>(
+  const { data, isLoading, error } = useSWR<{ data: { links: CuriusLink[] } }>(
     "/api/curius",
     fetcher
   );
@@ -37,6 +37,10 @@ export default function CuriusPage() {
       {isLoading ? (
         <p className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
           discombobulating...
+        </p>
+      ) : error ? (
+        <p className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
+          couldn&apos;t load links
         </p>
       ) : (
         <>
