@@ -13,6 +13,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Slug required" }, { status: 400 });
     }
 
+    // Security: prevent path traversal
+    if (slug.includes("..") || slug.includes("/")) {
+      return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+    }
+
     const postsDir = path.join(process.cwd(), "posts");
     const draftsDir = path.join(process.cwd(), "posts", "drafts");
     const publishedPath = path.join(postsDir, `${slug}.md`);

@@ -14,6 +14,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Slug required" }, { status: 400 });
     }
 
+    // Security: prevent path traversal
+    if (slug.includes("..") || slug.includes("/")) {
+      return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+    }
+
     const draftsDir = path.join(process.cwd(), "public", "images", "drafts");
     const imagesDir = path.join(process.cwd(), "public", "images");
 
