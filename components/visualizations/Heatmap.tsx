@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, Fragment } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useMemo, Fragment } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PostMetadata } from "@/types/post";
 
@@ -19,12 +19,28 @@ interface DayData {
   dateKey: string;
 }
 
+const MONTH_NAMES = [
+  "jan",
+  "feb",
+  "mar",
+  "apr",
+  "may",
+  "jun",
+  "jul",
+  "aug",
+  "sep",
+  "oct",
+  "nov",
+  "dec",
+];
+
 const Heatmap = ({
   posts,
   year: initialYear,
   showNavigation = true,
   navigationPath = "/calendar",
 }: HeatmapProps) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [hoveredDay, setHoveredDay] = useState<DayData | null>(null);
 
@@ -42,84 +58,76 @@ const Heatmap = ({
   const effectiveMaxYear = Math.max(maxYear, currentYear);
 
   // Group posts by date
-  const postsByDate: { [key: string]: PostMetadata[] } = {};
-  posts.forEach((post) => {
-    const date = new Date(post.date);
-    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-    if (!postsByDate[dateKey]) {
-      postsByDate[dateKey] = [];
-    }
-    postsByDate[dateKey].push(post);
-  });
+  const postsByDate = useMemo(() => {
+    const map: { [key: string]: PostMetadata[] } = {};
+    posts.forEach((post) => {
+      const date = new Date(post.date);
+      const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      (map[dateKey] ??= []).push(post);
+    });
+    return map;
+  }, [posts]);
 
   // Generate all days in the year, organized by weeks
-  const firstDayOfYear = new Date(year, 0, 1);
-  const lastDayOfYear = new Date(year, 11, 31);
+  const weeks = useMemo(() => {
+    const firstDayOfYear = new Date(year, 0, 1);
+    const lastDayOfYear = new Date(year, 11, 31);
 
-  // Start from the Sunday before or on Jan 1
-  const startDate = new Date(firstDayOfYear);
-  startDate.setDate(startDate.getDate() - startDate.getDay());
+    // Start from the Sunday before or on Jan 1
+    const startDate = new Date(firstDayOfYear);
+    startDate.setDate(startDate.getDate() - startDate.getDay());
 
-  // End on the Saturday after or on Dec 31
-  const endDate = new Date(lastDayOfYear);
-  endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
+    // End on the Saturday after or on Dec 31
+    const endDate = new Date(lastDayOfYear);
+    endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
 
-  const weeks: DayData[][] = [];
-  let currentWeek: DayData[] = [];
-  let currentDate = new Date(startDate);
+    const result: DayData[][] = [];
+    let currentWeek: DayData[] = [];
+    const currentDate = new Date(startDate);
 
-  while (currentDate <= endDate) {
-    const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(currentDate.getDate()).padStart(2, "0")}`;
-    // Only show posts for dates in the current calendar year
-    const dayPosts =
-      currentDate.getFullYear() === year ? postsByDate[dateKey] || [] : [];
+    while (currentDate <= endDate) {
+      const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(currentDate.getDate()).padStart(2, "0")}`;
+      // Only show posts for dates in the current calendar year
+      const dayPosts =
+        currentDate.getFullYear() === year ? postsByDate[dateKey] || [] : [];
 
-    currentWeek.push({
-      date: new Date(currentDate),
-      posts: dayPosts,
-      dateKey,
-    });
+      currentWeek.push({
+        date: new Date(currentDate),
+        posts: dayPosts,
+        dateKey,
+      });
 
-    if (currentWeek.length === 7) {
-      weeks.push(currentWeek);
-      currentWeek = [];
+      if (currentWeek.length === 7) {
+        result.push(currentWeek);
+        currentWeek = [];
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
+    // Add remaining days if any
+    if (currentWeek.length > 0) {
+      result.push(currentWeek);
+    }
 
-  // Add remaining days if any
-  if (currentWeek.length > 0) {
-    weeks.push(currentWeek);
-  }
+    return result;
+  }, [year, postsByDate]);
 
   // Month labels - find first day of each month
-  const monthLabels: { month: string; weekIndex: number }[] = [];
-  const monthNames = [
-    "jan",
-    "feb",
-    "mar",
-    "apr",
-    "may",
-    "jun",
-    "jul",
-    "aug",
-    "sep",
-    "oct",
-    "nov",
-    "dec",
-  ];
-
-  weeks.forEach((week, weekIndex) => {
-    week.forEach((day) => {
-      if (day.date.getDate() === 1 && day.date.getFullYear() === year) {
-        monthLabels.push({
-          month: monthNames[day.date.getMonth()],
-          weekIndex,
-        });
-      }
+  const monthLabels = useMemo(() => {
+    const labels: { month: string; weekIndex: number }[] = [];
+    weeks.forEach((week, weekIndex) => {
+      week.forEach((day) => {
+        if (day.date.getDate() === 1 && day.date.getFullYear() === year) {
+          labels.push({
+            month: MONTH_NAMES[day.date.getMonth()],
+            weekIndex,
+          });
+        }
+      });
     });
-  });
+    return labels;
+  }, [weeks, year]);
 
   // Get color based on total word count for the day
   const getColor = (posts: PostMetadata[]) => {
@@ -138,7 +146,7 @@ const Heatmap = ({
 
   const handleDayClick = (day: DayData) => {
     if (day.posts.length === 1) {
-      window.location.href = `/posts/${day.posts[0].slug}`;
+      router.push(`/posts/${day.posts[0].slug}`);
     }
   };
 
@@ -240,7 +248,7 @@ const Heatmap = ({
               ·{" "}
             </span>
             {hoveredDay.posts.map((post, idx) => (
-              <span key={idx}>
+              <span key={post.slug}>
                 {idx > 0 && ", "}
                 <Link
                   href={`/posts/${post.slug}`}
