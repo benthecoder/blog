@@ -97,14 +97,14 @@ export default function ProductsPage() {
       </p>
 
       <div className="w-full max-w-3xl px-4 space-y-12">
-        {categories.map((category, i) => (
-          <div key={i}>
+        {categories.map((category) => (
+          <div key={category.name}>
             <p className="text-[10px] tracking-[0.2em] uppercase opacity-40 mb-4 text-center">
               {category.name}
             </p>
             <div className="grid grid-cols-3 md:grid-cols-4 border-t border-l border-japanese-shiraumenezu/40 dark:border-white/10">
-              {category.items.map((item, j) => (
-                <ProductCell key={j} item={item} />
+              {category.items.map((item) => (
+                <ProductCell key={item.name} item={item} />
               ))}
             </div>
           </div>

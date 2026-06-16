@@ -73,7 +73,11 @@ export default function ArtworkRotation() {
             <Image
               key={currentIndex}
               src={SKETCH_PATHS[currentIndex]}
-              alt="sketch"
+              alt={
+                SKETCHES[currentIndex]
+                  .replace(/\.[^.]+$/, "")
+                  .replace(/[-_]/g, " ") + " sketch"
+              }
               fill
               className="object-contain select-none"
               style={{
