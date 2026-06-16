@@ -1,29 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const ADMIN_COOKIE = "admin_session";
+
 export function checkAdminAuth(request: NextRequest): NextResponse | null {
-  const token = request.headers.get("x-admin-token");
   const adminSecret = process.env.ADMIN_SECRET;
 
-  if (adminSecret && token === adminSecret) {
-    return null;
+  if (!adminSecret) {
+    return NextResponse.json(
+      { error: "Admin auth not configured" },
+      { status: 500 }
+    );
   }
 
-  // Allow browser-originated requests from this app's admin pages.
-  // This keeps secrets server-only while preserving the existing admin UI flow.
-  const referer = request.headers.get("referer");
-  if (referer) {
-    try {
-      const requestUrl = new URL(request.url);
-      const refererUrl = new URL(referer);
-      const isSameOrigin = refererUrl.origin === requestUrl.origin;
-      const fromAdminPage = refererUrl.pathname.startsWith("/admin");
+  const token = request.headers.get("x-admin-token");
+  const cookieToken = request.cookies.get(ADMIN_COOKIE)?.value;
 
-      if (isSameOrigin && fromAdminPage) {
-        return null;
-      }
-    } catch {
-      // Ignore malformed referer and fall through to Unauthorized.
-    }
+  if (token === adminSecret || cookieToken === adminSecret) {
+    return null;
   }
 
   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

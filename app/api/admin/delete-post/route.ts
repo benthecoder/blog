@@ -48,6 +48,7 @@ export async function DELETE(request: NextRequest) {
       deletedFrom === "drafts" ? "drafts" : ""
     );
 
+    let imagesDeleted = 0;
     if (fs.existsSync(imagesDir)) {
       const files = fs.readdirSync(imagesDir);
       const postImages = files.filter((file) => file.startsWith(`${slug}-`));
@@ -56,12 +57,13 @@ export async function DELETE(request: NextRequest) {
         const filePath = path.join(imagesDir, file);
         fs.unlinkSync(filePath);
       });
+      imagesDeleted = postImages.length;
     }
 
     return NextResponse.json({
       success: true,
       deletedFrom,
-      imagesDeleted: 0,
+      imagesDeleted,
     });
   } catch (error) {
     console.error("Delete error:", error);

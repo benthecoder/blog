@@ -16,6 +16,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
+    // Security: prevent path traversal via custom name
+    if (customName && (customName.includes("..") || customName.includes("/"))) {
+      return NextResponse.json({ error: "Invalid file name" }, { status: 400 });
+    }
+
     const buffer = Buffer.from(await file.arrayBuffer());
     const originalName = file.name;
     const ext = path.extname(originalName).toLowerCase();
