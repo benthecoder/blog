@@ -4,6 +4,8 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import type { ReactNode } from "react";
 import type { Thought } from "@/types/thoughts";
 
+const TZ = "America/New_York";
+
 function parseContent(content: string): ReactNode[] {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   const parts = content.split(urlRegex);
@@ -39,8 +41,6 @@ export default function ThoughtsClient({
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialThoughts.length < total);
   const observerRef = useRef<HTMLDivElement>(null);
-
-  const TZ = "America/New_York";
 
   const groupedByDate = useMemo(
     () =>

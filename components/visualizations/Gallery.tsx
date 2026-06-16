@@ -73,6 +73,10 @@ function GalleryTile({
   );
 }
 
+const BASE_SIZE = 150;
+const GAP = 10;
+const COLS = 12;
+
 export default function Gallery({ images }: GalleryProps) {
   const [hoveredImage, setHoveredImage] = useState<{
     image: GalleryImage;
@@ -81,10 +85,6 @@ export default function Gallery({ images }: GalleryProps) {
   } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
-
-  const BASE_SIZE = 150;
-  const GAP = 10;
-  const COLS = 12;
 
   const imagePositions = useRef(
     (() => {
