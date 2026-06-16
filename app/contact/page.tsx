@@ -82,7 +82,7 @@ const ContactPage = () => {
           href: "https://open.spotify.com/user/31w6rspp4fe5ihwoimt4of5tcwiu",
           text: "spotify",
         },
-        { href: "http://www.youtube.com/@benxneo", text: "youtube" },
+        { href: "https://www.youtube.com/@benxneo", text: "youtube" },
         { href: "https://letterboxd.com/benneo/", text: "letterboxd" },
       ],
     },

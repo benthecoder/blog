@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import type { ReactNode } from "react";
 import type { Thought } from "@/types/thoughts";
 
@@ -40,26 +40,25 @@ export default function ThoughtsClient({
   const [hasMore, setHasMore] = useState(initialThoughts.length < total);
   const observerRef = useRef<HTMLDivElement>(null);
 
-  const groupedByDate = thoughts.reduce(
-    (acc, entry) => {
-      const dateObj = new Date(entry.created_at);
-      const dateStr = dateObj.toLocaleDateString("en-US", {
-        timeZone: "America/Chicago",
-        year: "2-digit",
-        month: "2-digit",
-        day: "2-digit",
-      });
+  const TZ = "America/New_York";
 
-      if (!acc[dateStr]) {
-        acc[dateStr] = [];
-      }
-      acc[dateStr].push(entry);
-      return acc;
-    },
-    {} as Record<string, Thought[]>
+  const groupedByDate = useMemo(
+    () =>
+      thoughts.reduce(
+        (acc, entry) => {
+          const dateStr = new Date(entry.created_at).toLocaleDateString(
+            "en-US",
+            { timeZone: TZ, year: "2-digit", month: "2-digit", day: "2-digit" }
+          );
+          (acc[dateStr] ??= []).push(entry);
+          return acc;
+        },
+        {} as Record<string, Thought[]>
+      ),
+    [thoughts]
   );
 
-  const dates = Object.keys(groupedByDate);
+  const dates = useMemo(() => Object.keys(groupedByDate), [groupedByDate]);
 
   const loadMore = useCallback(async () => {
     if (loading || !hasMore) return;
@@ -117,7 +116,7 @@ export default function ThoughtsClient({
                 const time = new Date(entry.created_at).toLocaleString(
                   "en-GB",
                   {
-                    timeZone: "America/Chicago",
+                    timeZone: TZ,
                     hour: "2-digit",
                     minute: "2-digit",
                     hour12: false,
