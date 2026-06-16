@@ -274,15 +274,17 @@ export default function ArchiveClient({
       {view === "tags" && (
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-0">
           {sortedTags.map(([tag, count]) => (
-            <Link href={`/tags/${tag}`} key={tag}>
-              <div className="border border-light-border dark:border-dark-tag hover:bg-japanese-sumiiro/5 dark:hover:bg-japanese-shironezu/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors duration-150">
-                <span className="text-xs text-japanese-sumiiro dark:text-japanese-shironezu truncate">
-                  {tag}
-                </span>
-                <span className="text-[10px] text-japanese-sumiiro/30 dark:text-japanese-shironezu/30 font-mono shrink-0">
-                  {count}
-                </span>
-              </div>
+            <Link
+              href={`/tags/${tag}`}
+              key={tag}
+              className="border border-light-border dark:border-dark-tag hover:bg-japanese-sumiiro/5 dark:hover:bg-japanese-shironezu/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors duration-150"
+            >
+              <span className="text-xs text-japanese-sumiiro dark:text-japanese-shironezu truncate">
+                {tag}
+              </span>
+              <span className="text-[10px] text-japanese-sumiiro/30 dark:text-japanese-shironezu/30 font-mono shrink-0">
+                {count}
+              </span>
             </Link>
           ))}
         </div>
