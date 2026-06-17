@@ -23,6 +23,29 @@ const nextConfig = {
       destination: "/api/rss",
     },
   ],
+  headers: async () => [
+    {
+      source: "/fonts/:path*",
+      headers: [
+        { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+      ],
+    },
+    {
+      source: "/icons/:path*",
+      headers: [
+        { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+      ],
+    },
+    {
+      source: "/images/:path*",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, s-maxage=86400, stale-while-revalidate=2592000",
+        },
+      ],
+    },
+  ],
   staticPageGenerationTimeout: 1000,
   env: {
     POSTGRES_URL: process.env.POSTGRES_URL,
