@@ -4,7 +4,6 @@ import { computeUMAP, normalizePositions } from "@/utils/chunking/umapUtils";
 import { parseEmbedding } from "@/utils/chunking/embeddingUtils";
 import type { ChunkRow } from "@/types/chunks";
 
-export const dynamic = "force-dynamic";
 export const revalidate = 3600;
 
 interface ArticleData {
