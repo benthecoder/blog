@@ -463,10 +463,10 @@ export default function KnowledgeMap({
       {/* Article detail panel — hover preview or pinned detail */}
       {displayArticle && (
         <div
-          className={`absolute z-20 bg-japanese-kinairo/95 dark:bg-dark-bg/95 p-3 border shadow-sm w-[200px] sm:w-56 backdrop-blur-sm transition-[border-color] duration-150 ${
+          className={`absolute z-20 bg-japanese-kinairo/95 dark:bg-dark-bg/95 p-3 border shadow-sm w-[200px] sm:w-56 backdrop-blur-sm transition-[border-color] duration-150 pointer-events-none ${
             isPinned
-              ? "border-japanese-sumiiro/25 dark:border-white/[0.15] pointer-events-auto"
-              : "border-japanese-shiraumenezu dark:border-white/[0.08] pointer-events-none"
+              ? "border-japanese-sumiiro/25 dark:border-white/[0.15]"
+              : "border-japanese-shiraumenezu dark:border-white/[0.08]"
           }`}
           style={getPanelPosition()}
         >
@@ -477,7 +477,7 @@ export default function KnowledgeMap({
                 setClickPos(null);
               }}
               aria-label="close"
-              className="absolute top-1.5 right-2 text-japanese-sumiiro/30 hover:text-japanese-sumiiro/70 dark:text-japanese-shironezu/30 dark:hover:text-japanese-shironezu/70 transition-colors text-base leading-none"
+              className="pointer-events-auto absolute top-1.5 right-2 text-japanese-sumiiro/30 hover:text-japanese-sumiiro/70 dark:text-japanese-shironezu/30 dark:hover:text-japanese-shironezu/70 transition-colors text-base leading-none"
             >
               ×
             </button>
@@ -515,7 +515,7 @@ export default function KnowledgeMap({
           {isPinned ? (
             <Link
               href={`/posts/${displayArticle.postSlug}`}
-              className="mt-3 flex items-center gap-1 text-xs text-japanese-sumiiro/50 hover:text-japanese-sumiiro dark:text-japanese-shironezu/50 dark:hover:text-japanese-shironezu transition-colors"
+              className="pointer-events-auto mt-3 flex items-center gap-1 text-xs text-japanese-sumiiro/50 hover:text-japanese-sumiiro dark:text-japanese-shironezu/50 dark:hover:text-japanese-shironezu transition-colors"
             >
               read →
             </Link>
