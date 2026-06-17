@@ -12,7 +12,6 @@ export default function UMAPLoader({ className = "" }: { className?: string }) {
   const [dots, setDots] = useState<Dot[]>([]);
 
   useEffect(() => {
-    // Generate initial random dots - more dense to mimic actual map
     const initialDots = Array.from({ length: 180 }, () => ({
       x: Math.random() * 100,
       y: Math.random() * 100,
@@ -20,7 +19,6 @@ export default function UMAPLoader({ className = "" }: { className?: string }) {
     }));
     setDots(initialDots);
 
-    // Randomly update opacities to create flashing effect
     const interval = setInterval(() => {
       setDots((prev) =>
         prev.map((dot) => ({
@@ -40,7 +38,6 @@ export default function UMAPLoader({ className = "" }: { className?: string }) {
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E")`,
       }}
     >
-      {/* Random flashing dots */}
       <svg className="w-full h-full absolute inset-0">
         {dots.map((dot, i) => (
           <circle
@@ -54,7 +51,6 @@ export default function UMAPLoader({ className = "" }: { className?: string }) {
         ))}
       </svg>
 
-      {/* Instructions */}
       <div className="absolute bottom-4 left-4 z-10 bg-japanese-kinairo/90 dark:bg-dark-bg/90 px-3 py-1 rounded border border-japanese-shiraumenezu dark:border-dark-border text-xs text-japanese-ginnezu dark:text-japanese-ginnezu">
         loading knowledge map...
       </div>

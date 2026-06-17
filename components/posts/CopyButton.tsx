@@ -17,7 +17,6 @@ export default function CopyButton({ code }: { code: string }) {
       aria-label={copied ? "Copied" : "Copy code"}
       className="absolute top-2 right-2 p-1.5 rounded text-japanese-ginnezu hover:text-japanese-sumiiro dark:text-japanese-ginnezu dark:hover:text-japanese-shironezu hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-150"
     >
-      {/* Copy icon */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="14"
@@ -38,7 +37,6 @@ export default function CopyButton({ code }: { code: string }) {
         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
       </svg>
 
-      {/* Check icon */}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="14"
