@@ -21,7 +21,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@floating-ui/react": "^0.27.19",
-    "@neondatabase/serverless": "^0.10.4",
+    "@neondatabase/serverless": "^1.1.0",
     "@types/node": "^18.11.9",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.0.9",

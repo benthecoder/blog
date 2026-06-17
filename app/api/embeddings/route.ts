@@ -1,5 +1,7 @@
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+
+const sql = neon(process.env.POSTGRES_URL!);
 import { computeUMAP, normalizePositions } from "@/utils/chunking/umapUtils";
 import { parseEmbedding } from "@/utils/chunking/embeddingUtils";
 import type { ChunkRow } from "@/types/chunks";
@@ -30,7 +32,7 @@ export async function GET(request: Request) {
     const minDist = parseFloat(searchParams.get("minDist") || "0.05");
     const spread = parseFloat(searchParams.get("spread") || "2.0");
 
-    const results = await sql<ChunkRow>`
+    const rows = (await sql`
       SELECT DISTINCT ON (post_slug)
         id,
         post_slug,
@@ -47,9 +49,9 @@ export async function GET(request: Request) {
         post_slug,
         CASE WHEN chunk_type = 'full-post' THEN 0 ELSE 1 END,
         sequence
-    `;
+    `) as ChunkRow[];
 
-    const parsedData = results.rows
+    const parsedData = rows
       .map((row, index) => ({
         id: row.id,
         postSlug: row.post_slug,

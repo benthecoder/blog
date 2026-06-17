@@ -29,7 +29,6 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const slug = parseSlug(searchParams.get("slug"));
 
-  // No slug → return all view counts
   if (!slug) {
     try {
       let cursor = "0";
