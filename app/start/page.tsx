@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
@@ -45,9 +45,11 @@ const ExternalLinkIcon = () => (
 );
 
 const StartPage = () => {
-  const [index, setIndex] = useState(() =>
-    Math.floor(Math.random() * INTERESTS.length)
-  );
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    setIndex(Math.floor(Math.random() * INTERESTS.length));
+  }, []);
 
   const cycle = useCallback(() => {
     setIndex((prev) => {
