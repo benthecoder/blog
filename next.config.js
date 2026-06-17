@@ -45,6 +45,15 @@ const nextConfig = {
         },
       ],
     },
+    {
+      source: "/data/:path*",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, s-maxage=86400, stale-while-revalidate=2592000",
+        },
+      ],
+    },
   ],
   staticPageGenerationTimeout: 1000,
   env: {
