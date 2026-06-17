@@ -16,15 +16,13 @@ export async function GET(request: NextRequest) {
       ? Math.min(Math.max(1, rawLimit), 200)
       : 100;
 
-    const thoughts = await sql(
-      `
+    const thoughts = await sql`
       SELECT id, content, created_at
       FROM tweets
       ORDER BY created_at DESC
       LIMIT ${limit}
       OFFSET ${offset}
-    `
-    );
+    `;
 
     return NextResponse.json(thoughts);
   } catch (error) {
