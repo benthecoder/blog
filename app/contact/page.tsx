@@ -1,13 +1,6 @@
 import type { ComponentType } from "react";
 import Image from "next/image";
-import {
-  LuScroll,
-  LuCamera,
-  LuPencil,
-  LuBox,
-  LuPlay,
-  LuCode2,
-} from "react-icons/lu";
+import { Scroll, Camera, Pencil, Box, Play, Code2 } from "lucide-react";
 
 type LinkItemProps = {
   href: string;
@@ -45,14 +38,14 @@ const LinkSection = ({ icon: Icon, links }: LinkSectionProps) => (
 const ContactPage = () => {
   const sections = [
     {
-      icon: LuScroll,
+      icon: Scroll,
       links: [
         { href: "https://twitter.com/benxneo", text: "twitter" },
         { href: "https://www.linkedin.com/in/benedictneo/", text: "linkedin" },
       ],
     },
     {
-      icon: LuCamera,
+      icon: Camera,
       links: [
         { href: "https://vsco.co/benxneo/gallery", text: "vsco" },
         { href: "https://www.instagram.com/benthesaint/", text: "instagram" },
@@ -60,7 +53,7 @@ const ContactPage = () => {
       ],
     },
     {
-      icon: LuPencil,
+      icon: Pencil,
       links: [
         { href: "https://substack.com/@bneo", text: "substack" },
         { href: "https://benedictxneo.medium.com/", text: "medium" },
@@ -68,7 +61,7 @@ const ContactPage = () => {
       ],
     },
     {
-      icon: LuBox,
+      icon: Box,
       links: [
         { href: "https://www.are.na/benedict-neo", text: "are.na" },
         { href: "https://curius.app/benedict-neo", text: "curius" },
@@ -76,7 +69,7 @@ const ContactPage = () => {
       ],
     },
     {
-      icon: LuPlay,
+      icon: Play,
       links: [
         {
           href: "https://open.spotify.com/user/31w6rspp4fe5ihwoimt4of5tcwiu",
@@ -87,7 +80,7 @@ const ContactPage = () => {
       ],
     },
     {
-      icon: LuCode2,
+      icon: Code2,
       links: [
         { href: "https://github.com/benthecoder", text: "github" },
         {

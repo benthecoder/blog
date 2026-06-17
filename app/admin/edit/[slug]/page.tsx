@@ -12,15 +12,15 @@ import RenderPost from "@/components/posts/RenderPost";
 import matter from "gray-matter";
 import { DEFAULT_POST_TEMPLATE } from "../post-template";
 import {
-  LuCalendar,
-  LuChevronLeft,
-  LuChevronRight,
-  LuEye,
-  LuFileEdit,
-  LuImage,
-  LuTrash2,
-  LuX,
-} from "react-icons/lu";
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  FileEdit,
+  ImageIcon,
+  Trash2,
+  X,
+} from "lucide-react";
 
 export default function EditPostPage() {
   const params = useParams();
@@ -608,7 +608,7 @@ export default function EditPostPage() {
               className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
               title="Back to calendar"
             >
-              <LuCalendar size={18} />
+              <Calendar size={18} />
             </Link>
             {isDraft && !isNew && (
               <div
@@ -643,7 +643,7 @@ export default function EditPostPage() {
                 className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors relative"
                 title="Manage images"
               >
-                <LuImage size={18} />
+                <ImageIcon size={18} />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full text-[8px] text-white flex items-center justify-center">
                   {postImages.length}
                 </span>
@@ -654,7 +654,7 @@ export default function EditPostPage() {
               className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
               title={showPreview ? "Edit" : "Preview"}
             >
-              {showPreview ? <LuFileEdit size={18} /> : <LuEye size={18} />}
+              {showPreview ? <FileEdit size={18} /> : <Eye size={18} />}
             </button>
             {isDraft && (
               <button
@@ -681,7 +681,7 @@ export default function EditPostPage() {
                 className="text-japanese-ginnezu dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 disabled:opacity-30 transition-colors"
                 title="Delete post"
               >
-                <LuTrash2 size={18} />
+                <Trash2 size={18} />
               </button>
             )}
           </div>
@@ -697,7 +697,7 @@ export default function EditPostPage() {
                 onClick={() => setShowImages(false)}
                 className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu"
               >
-                <LuX size={14} />
+                <X size={14} />
               </button>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-2">
@@ -718,7 +718,7 @@ export default function EditPostPage() {
                       className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                       title="Delete"
                     >
-                      <LuX size={12} />
+                      <X size={12} />
                     </button>
                     <div className="text-[10px] text-japanese-ginnezu dark:text-gray-500 mt-1 truncate w-20">
                       {img.replace(`${slug}-`, "")}
@@ -794,7 +794,7 @@ export default function EditPostPage() {
                 href={`/admin/edit/new?date=${prevDate}${searchParams.get("month") ? `&month=${searchParams.get("month")}` : ""}`}
                 className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
               >
-                <LuChevronLeft size={14} />
+                <ChevronLeft size={14} />
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                   Previous
                 </span>
@@ -807,7 +807,7 @@ export default function EditPostPage() {
               href={`/admin/edit/${prevSlug}${searchParams.get("month") ? `?month=${searchParams.get("month")}` : ""}`}
               className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
             >
-              <LuChevronLeft size={14} />
+              <ChevronLeft size={14} />
               <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                 Previous
               </span>
@@ -831,7 +831,7 @@ export default function EditPostPage() {
                 <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                   Next
                 </span>
-                <LuChevronRight size={14} />
+                <ChevronRight size={14} />
               </Link>
             ) : (
               <div />
@@ -844,7 +844,7 @@ export default function EditPostPage() {
               <span className="opacity-0 group-hover:opacity-100 transition-opacity">
                 Next
               </span>
-              <LuChevronRight size={14} />
+              <ChevronRight size={14} />
             </Link>
           ) : (
             <div />
