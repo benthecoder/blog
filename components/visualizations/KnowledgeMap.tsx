@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { scaleLinear } from "d3-scale";
-import { zoom as d3Zoom } from "d3-zoom";
+import { zoom as d3Zoom, ZoomBehavior } from "d3-zoom";
 import { select } from "d3-selection";
 import UMAPLoader from "./UMAPLoader";
 
@@ -90,8 +90,7 @@ export default function KnowledgeMap({
   const [showLegend, setShowLegend] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const { theme } = useTheme();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const zoomBehaviorRef = useRef<any>(null);
+  const zoomBehaviorRef = useRef<ZoomBehavior<Element, unknown> | null>(null);
   const selectedArticleRef = useRef<Article | null>(null);
 
   useEffect(() => {
@@ -158,7 +157,6 @@ export default function KnowledgeMap({
     []
   );
 
-  // Refs to avoid stale closures
   const transformRef = useRef(transform);
   const hoveredArticleRef = useRef(hoveredArticle);
   const filteredRef = useRef(filtered);
@@ -330,9 +328,8 @@ export default function KnowledgeMap({
       });
 
     zoomBehaviorRef.current = zoomBehavior;
-    const selection = select(canvas);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    selection.call(zoomBehavior as any);
+    const selection = select<Element, unknown>(canvas);
+    selection.call(zoomBehavior);
     setCanvasVersion((v) => v + 1);
 
     const handleResize = () => {
@@ -341,12 +338,10 @@ export default function KnowledgeMap({
       canvas.height = newRect.height * dpr;
       canvas.style.width = `${newRect.width}px`;
       canvas.style.height = `${newRect.height}px`;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      selection.call(zoomBehavior as any);
+      selection.call(zoomBehavior);
       setCanvasVersion((v) => v + 1);
     };
 
-    // Shared hit-test: returns closest article within threshold
     function hitTest(clientX: number, clientY: number): Article | null {
       const r = canvas.getBoundingClientRect();
       const t = transformRef.current;
@@ -381,7 +376,6 @@ export default function KnowledgeMap({
       setHoveredArticle(closest);
     };
 
-    // Two-step click: first click → pin detail panel; second click on same dot → navigate
     const handleClick = (e: MouseEvent) => {
       const closest = hitTest(e.clientX, e.clientY);
 
