@@ -60,7 +60,14 @@ export async function GET(request: NextRequest) {
         }))
         .sort((a, b) => b.count - a.count);
 
-      return NextResponse.json({ results });
+      return NextResponse.json(
+        { results },
+        {
+          headers: {
+            "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600",
+          },
+        }
+      );
     } catch (error) {
       console.error("Error fetching all views:", error);
       return NextResponse.json(
@@ -75,7 +82,14 @@ export async function GET(request: NextRequest) {
     const result = await upstashRequest(["GET", viewKey]);
     const count = Number(result ?? 0);
 
-    return NextResponse.json({ slug, count });
+    return NextResponse.json(
+      { slug, count },
+      {
+        headers: {
+          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=3600",
+        },
+      }
+    );
   } catch (error) {
     console.error("Error fetching post views:", error);
     return NextResponse.json(
