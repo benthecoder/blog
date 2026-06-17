@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import feed from "./feed.json";
 import { marked } from "marked";
 
+marked.use({ mangle: false, headerIds: false });
+
 export const dynamic = "force-static";
 
 const siteMetadata = {
