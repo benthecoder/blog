@@ -1,14 +1,13 @@
 import { NextResponse } from "next/server";
 import { getRecentlyPlayed } from "@/utils/spotify";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export async function GET() {
   try {
     const response = await getRecentlyPlayed(10);
     return NextResponse.json(response);
-  } catch (error) {
-    console.error("Error fetching recently played:", error);
-    return NextResponse.json({ tracks: [] }, { status: 200 });
+  } catch {
+    return NextResponse.json({ tracks: [] });
   }
 }
