@@ -1,5 +1,7 @@
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
+
+const sql = neon(process.env.POSTGRES_URL!);
 
 import { getVoyageClient } from "@/utils/clients";
 import { formatEmbeddingForPostgres } from "@/utils/chunking/embeddingUtils";
@@ -136,7 +138,7 @@ export async function POST(request: Request) {
         [processedQuery, SEARCH_RESULT_LIMIT]
       );
 
-      if (results.rows.length === 0) {
+      if (results.length === 0) {
         return NextResponse.json({
           results: [],
           message: "No exact matches found for your query",
@@ -144,7 +146,7 @@ export async function POST(request: Request) {
       }
 
       return NextResponse.json({
-        results: results.rows.map((row) => mapRow(row, "keyword")),
+        results: results.map((row) => mapRow(row as DbRow, "keyword")),
       });
     }
 
@@ -191,9 +193,9 @@ export async function POST(request: Request) {
         ]
       );
 
-      if (results.rows.length > 0) {
+      if (results.length > 0) {
         return NextResponse.json({
-          results: results.rows.map((row) => mapRow(row, "hybrid")),
+          results: results.map((row) => mapRow(row as DbRow, "hybrid")),
         });
       }
 
@@ -220,7 +222,7 @@ export async function POST(request: Request) {
       );
 
       return NextResponse.json({
-        results: fallback.rows.map((row) => mapRow(row, "hybrid")),
+        results: fallback.map((row) => mapRow(row as DbRow, "hybrid")),
         fallback: true,
       });
     }
@@ -238,9 +240,9 @@ export async function POST(request: Request) {
         [formattedEmbedding, SEMANTIC_SIMILARITY_THRESHOLD, SEARCH_RESULT_LIMIT]
       );
 
-      if (results.rows.length > 0) {
+      if (results.length > 0) {
         return NextResponse.json({
-          results: results.rows.map((row) => mapRow(row, "semantic")),
+          results: results.map((row) => mapRow(row as DbRow, "semantic")),
         });
       }
 
@@ -256,7 +258,7 @@ export async function POST(request: Request) {
       );
 
       return NextResponse.json({
-        results: fallback.rows.map((row) => mapRow(row, "semantic")),
+        results: fallback.map((row) => mapRow(row as DbRow, "semantic")),
         fallback: true,
       });
     }
