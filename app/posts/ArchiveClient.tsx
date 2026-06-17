@@ -2,21 +2,15 @@
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
-import dynamic from "next/dynamic";
 import { PostMetadata } from "@/types/post";
 import PostPreview from "@/components/posts/PostPreview";
 import Heatmap from "@/components/visualizations/Heatmap";
 import Link from "next/link";
 
-const KnowledgeMap = dynamic(
-  () => import("@/components/visualizations/KnowledgeMap"),
-  { ssr: false }
-);
-
-type View = "list" | "year" | "map" | "tags";
+type View = "list" | "year" | "tags";
 type Sort = "date" | "views" | "length";
 const PAGE_SIZE = 50;
-const VIEWS: View[] = ["list", "year", "map", "tags"];
+const VIEWS: View[] = ["list", "year", "tags"];
 
 const labelCls =
   "text-[10px] tracking-widest uppercase text-japanese-sumiiro/30 dark:text-japanese-shironezu/30";
@@ -263,12 +257,6 @@ export default function ArchiveClient({
               ))}
           </div>
         </>
-      )}
-
-      {view === "map" && (
-        <div className="h-[70vh] overflow-hidden border border-japanese-shiraumenezu dark:border-white/[0.08]">
-          <KnowledgeMap className="w-full h-full" />
-        </div>
       )}
 
       {view === "tags" && (

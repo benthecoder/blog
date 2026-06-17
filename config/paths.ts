@@ -10,7 +10,6 @@ export const IMAGES_DIR = path.join(PUBLIC_DIR, "images");
 
 export const LIBRARY_MD = path.join(ROOT_DIR, "app/library/library.md");
 export const PROJECTS_MD = path.join(ROOT_DIR, "app/projects/projects.md");
-export const START_MD = path.join(ROOT_DIR, "app/start/start.md");
 
 export function getPostPath(slug: string): string {
   return path.join(POSTS_DIR, `${slug}.md`);

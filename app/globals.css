@@ -163,6 +163,21 @@ body {
   color: #91989c; /* ginnezu */
 }
 
+/* Looks identical to a real link — clicking it cycles instead of navigating */
+.prose button.start-interest {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
 .prose ::selection {
   background-color: #91989c !important; /* ginnezu - silver mouse */
   color: #2c353d !important; /* force dark text so blockquote gray stays readable */

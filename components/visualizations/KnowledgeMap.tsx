@@ -248,13 +248,12 @@ export default function KnowledgeMap({
       const cy = yScale(sy / count);
       const fontSize = Math.max(8, 10 / transform.k);
       ctx.font = `${fontSize}px ui-serif, Georgia, serif`;
-      const words = label.split(" ").slice(0, 3).join(" ");
       const labelY = cy - 14 / transform.k;
       // Knockout background for legibility
       ctx.shadowColor = isDark ? "#1a1a1a" : "#f3f3f2";
       ctx.shadowBlur = 4 / transform.k;
       ctx.fillStyle = isDark ? "rgba(220,221,221,0.55)" : "rgba(89,88,87,0.5)";
-      ctx.fillText(words, cx, labelY);
+      ctx.fillText(label, cx, labelY);
       ctx.shadowBlur = 0;
     });
 
