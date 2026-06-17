@@ -12,7 +12,7 @@ interface Article {
   id: string;
   postSlug: string;
   postTitle: string;
-  content: string;
+  wordCount: number;
   embedding: number[];
   publishedDate?: string;
   tags?: string[];
@@ -259,7 +259,7 @@ export default function KnowledgeMap({
     filtered.forEach((article) => {
       const x = xScale(article.x);
       const y = yScale(article.y);
-      const wordCount = article.content.split(/\s+/).length;
+      const wordCount = article.wordCount;
       const size = Math.max(1.5, Math.min(4, Math.log(wordCount + 1) * 0.6));
       const baseOpacity = Math.min(0.8, 0.3 + wordCount / 2000);
       const shape = SHAPES[Math.abs(article.cluster) % SHAPES.length];

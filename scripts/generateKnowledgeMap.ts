@@ -8,7 +8,7 @@ import {
 import { labelClusters } from "../utils/chunking/clusterLabeling";
 import { parseEmbedding } from "../utils/chunking/embeddingUtils";
 import { NUM_CLUSTERS } from "../config/constants";
-import type { KnowledgeMapOutput } from "../types/knowledgeMap";
+import type { KnowledgeMapOutput, ArticleNode } from "../types/knowledgeMap";
 import type { ChunkRow } from "../types/chunks";
 import fs from "fs";
 import path from "path";
@@ -141,8 +141,14 @@ async function generateKnowledgeMap() {
       50
     );
 
-    const processedData: ArticleData[] = parsedData.map((item, index) => ({
-      ...item,
+    const processedData: ArticleNode[] = parsedData.map((item, index) => ({
+      id: item.id,
+      postSlug: item.postSlug,
+      postTitle: item.postTitle,
+      wordCount: item.content.split(/\s+/).length,
+      embedding: item.embedding.map((v) => Math.round(v * 10000) / 10000),
+      publishedDate: item.publishedDate,
+      tags: item.tags,
       x: normalizedPositions[index].x,
       y: normalizedPositions[index].y,
       cluster: clusterResult.labels[index],
@@ -166,7 +172,7 @@ async function generateKnowledgeMap() {
       generatedAt: new Date().toISOString(),
     };
 
-    fs.writeFileSync(outputPath, JSON.stringify(output, null, 2));
+    fs.writeFileSync(outputPath, JSON.stringify(output));
 
     console.log(`✓ Knowledge map generated: ${outputPath}`);
     console.log(`  ${processedData.length} articles processed`);

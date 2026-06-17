@@ -20,9 +20,22 @@ export interface ArticleData {
   cluster: number;
 }
 
+export interface ArticleNode {
+  id: string;
+  postSlug: string;
+  postTitle: string;
+  wordCount: number;
+  embedding: number[];
+  publishedDate?: string;
+  tags: string[];
+  x: number;
+  y: number;
+  cluster: number;
+}
+
 export interface KnowledgeMapOutput {
   success: boolean;
-  data: ArticleData[];
+  data: ArticleNode[];
   count: number;
   numClusters: number;
   clusterLabels?: Record<number, string>;
