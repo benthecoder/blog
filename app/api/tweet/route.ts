@@ -9,10 +9,8 @@ export async function POST(request: Request) {
   const content = (body.body || "").slice(0, 700);
 
   try {
-    const result = await sql(
-      "INSERT INTO tweets(content, created_at) VALUES($1, NOW()) RETURNING *",
-      [content]
-    );
+    const result =
+      await sql`INSERT INTO tweets(content, created_at) VALUES(${content}, NOW()) RETURNING *`;
     return new Response(JSON.stringify({ error: null, tweet: result[0] }), {
       status: 200,
     });
@@ -29,7 +27,7 @@ export async function DELETE(request: Request) {
   const id = body.id;
 
   try {
-    await sql("DELETE FROM tweets WHERE id = $1", [id]);
+    await sql`DELETE FROM tweets WHERE id = ${id}`;
     return new Response(null, { status: 204 });
   } catch (err) {
     console.error(err);
