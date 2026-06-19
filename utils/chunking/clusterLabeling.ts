@@ -3,7 +3,6 @@ import { withRetry, wait } from "../retry";
 import {
   ANTHROPIC_CLUSTER_MODEL,
   CLUSTER_LABEL_MAX_SAMPLES,
-  CLUSTER_LABEL_MIN_SAMPLES,
   CLUSTER_LABEL_TIMEOUT,
 } from "../../config/constants";
 import type {
@@ -12,121 +11,27 @@ import type {
 } from "../../types/knowledgeMap";
 
 /**
- * Compute diversity score for sampling strategy
- * Uses tag diversity and temporal spread to ensure representative samples
- */
-function computeDiversityMetrics(articles: ArticleData[]) {
-  // Extract unique tags
-  const allTags = new Set<string>();
-  const dates: number[] = [];
-
-  articles.forEach((a) => {
-    a.tags?.forEach((tag) => allTags.add(tag));
-    if (a.publishedDate) {
-      dates.push(new Date(a.publishedDate).getTime());
-    }
-  });
-
-  return {
-    uniqueTags: allTags,
-    dateRange: dates.length > 0 ? Math.max(...dates) - Math.min(...dates) : 0,
-    tagCount: allTags.size,
-  };
-}
-
-/**
- * Select representative samples using advanced diversity sampling
- *
- * Strategy for better diversity:
- * 1. Random sampling from different time periods (temporal diversity)
- * 2. Tag-based diversity (select posts with different tags)
- * 3. Content length diversity (mix of short/medium/long posts)
- * 4. Avoid bias from sorting by single dimension
+ * Pick evenly-spaced samples across the cluster's time range.
+ * Temporal diversity gives the model a representative view of how the cluster
+ * evolved, which produces more accurate labels than random or length-based sampling.
  */
 function selectClusterSamples(
   articles: ArticleData[],
-  minSamples: number,
   maxSamples: number
 ): ArticleData[] {
-  if (articles.length === 0) return [];
+  if (articles.length <= maxSamples) return articles;
 
-  // Determine sample size
-  let sampleSize: number;
-  if (articles.length <= 2) {
-    sampleSize = articles.length;
-  } else if (articles.length <= 5) {
-    sampleSize = Math.min(Math.max(2, minSamples), articles.length);
-  } else if (articles.length <= 10) {
-    sampleSize = Math.min(Math.max(3, minSamples), articles.length);
-  } else {
-    sampleSize = Math.min(maxSamples, articles.length);
-  }
+  const sorted = [...articles].sort((a, b) => {
+    const da = a.publishedDate ? new Date(a.publishedDate).getTime() : 0;
+    const db = b.publishedDate ? new Date(b.publishedDate).getTime() : 0;
+    return da - db;
+  });
 
-  if (sampleSize >= articles.length) {
-    return articles;
-  }
-
-  // Compute diversity metrics
-  const { uniqueTags } = computeDiversityMetrics(articles);
-
-  // Strategy: Multi-dimensional diverse sampling
-  const samples: ArticleData[] = [];
-  const remaining = [...articles];
-  const usedTags = new Set<string>();
-
-  // 1. First, try to get posts with unique tags for tag diversity
-  if (uniqueTags.size > 0) {
-    for (const tag of uniqueTags) {
-      if (samples.length >= sampleSize) break;
-
-      const postWithTag = remaining.find(
-        (a) => a.tags?.includes(tag) && !samples.includes(a)
-      );
-
-      if (postWithTag) {
-        samples.push(postWithTag);
-        postWithTag.tags?.forEach((t) => usedTags.add(t));
-        remaining.splice(remaining.indexOf(postWithTag), 1);
-      }
-    }
-  }
-
-  // 2. If we still need more samples, use stratified random sampling
-  // Divide by content length and sample from each stratum
-  if (samples.length < sampleSize && remaining.length > 0) {
-    // Sort remaining by word count
-    const sorted = remaining.sort((a, b) => {
-      const wordsA = a.content.split(/\s+/).length;
-      const wordsB = b.content.split(/\s+/).length;
-      return wordsB - wordsA;
-    });
-
-    // Divide into thirds (long, medium, short)
-    const third = Math.ceil(sorted.length / 3);
-    const strata = [
-      sorted.slice(0, third), // Long posts
-      sorted.slice(third, third * 2), // Medium posts
-      sorted.slice(third * 2), // Short posts
-    ];
-
-    // Sample from each stratum in round-robin fashion
-    let strataIndex = 0;
-    while (samples.length < sampleSize) {
-      const stratum = strata[strataIndex % 3];
-      if (stratum.length > 0) {
-        // Random selection from this stratum
-        const randomIndex = Math.floor(Math.random() * stratum.length);
-        samples.push(stratum[randomIndex]);
-        stratum.splice(randomIndex, 1);
-      }
-      strataIndex++;
-
-      // Break if all strata are empty
-      if (strata.every((s) => s.length === 0)) break;
-    }
-  }
-
-  return samples.slice(0, sampleSize);
+  const step = sorted.length / maxSamples;
+  return Array.from(
+    { length: maxSamples },
+    (_, i) => sorted[Math.floor(i * step)]
+  );
 }
 
 /**
@@ -253,7 +158,6 @@ export async function labelClusters(
 ): Promise<Map<number, string> | null> {
   const {
     maxSamplesPerCluster = CLUSTER_LABEL_MAX_SAMPLES,
-    minSamplesPerCluster = CLUSTER_LABEL_MIN_SAMPLES,
     model = ANTHROPIC_CLUSTER_MODEL,
   } = options;
 
@@ -273,11 +177,7 @@ export async function labelClusters(
 
     try {
       // Sample articles
-      const samples = selectClusterSamples(
-        articles,
-        minSamplesPerCluster,
-        maxSamplesPerCluster
-      );
+      const samples = selectClusterSamples(articles, maxSamplesPerCluster);
 
       // Build prompt
       const prompt = buildClusterPrompt(articles, samples);

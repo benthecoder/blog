@@ -23,10 +23,9 @@ export const INITIAL_RETRY_DELAY = 2000;
 export const API_TIMEOUT = 60000;
 
 // Clustering: k-means on 10D UMAP projection, then 2D for visualization
-export const NUM_CLUSTERS = 12;
-export const CLUSTER_MIN_SIZE = 5; // merge clusters smaller than this
-export const CLUSTERING_UMAP_COMPONENTS = 10; // reduce to 10D for clustering
+export const NUM_CLUSTERS = 10;
+export const CLUSTER_MIN_SIZE = 5; // merge clusters smaller than this into nearest centroid
+export const CLUSTERING_UMAP_COMPONENTS = 10;
 export const ANTHROPIC_CLUSTER_MODEL = "claude-haiku-4-5";
 export const CLUSTER_LABEL_MAX_SAMPLES = 15;
-export const CLUSTER_LABEL_MIN_SAMPLES = 3;
 export const CLUSTER_LABEL_TIMEOUT = 30000;
