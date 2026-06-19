@@ -9,28 +9,14 @@ import {
 import { labelClusters } from "../utils/chunking/clusterLabeling";
 import { parseEmbedding } from "../utils/chunking/embeddingUtils";
 import { NUM_CLUSTERS } from "../config/constants";
-import type { KnowledgeMapOutput, ArticleNode } from "../types/knowledgeMap";
+import type {
+  KnowledgeMapOutput,
+  ArticleNode,
+  ArticleData,
+} from "../types/knowledgeMap";
 import type { ChunkRow } from "../types/chunks";
 import fs from "fs";
 import path from "path";
-
-interface ArticleData {
-  id: string;
-  postSlug: string;
-  postTitle: string;
-  content: string;
-  chunkType: string;
-  metadata: ChunkRow["metadata"];
-  sequence: number;
-  embedding: number[];
-  publishedDate?: string;
-  tags: string[];
-  createdAt: string;
-  index: number;
-  x: number;
-  y: number;
-  cluster: number;
-}
 
 async function generateKnowledgeMap() {
   try {

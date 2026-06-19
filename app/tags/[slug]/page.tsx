@@ -7,7 +7,7 @@ export const generateStaticParams = async () => {
   const postMetadata = getPostMetadata();
   const tags = new Set<string>();
   postMetadata.forEach((post) => {
-    post.tags.split(", ").forEach((tag) => tags.add(tag));
+    post.tags.forEach((tag) => tags.add(tag));
   });
   return Array.from(tags).map((tag) => ({ slug: tag }));
 };
@@ -16,7 +16,7 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   const params = await props.params;
   const tag = decodeURIComponent(params.slug);
   const filteredPosts = getPostMetadata().filter((post) =>
-    post.tags.split(", ").includes(tag)
+    post.tags.includes(tag)
   );
 
   return (

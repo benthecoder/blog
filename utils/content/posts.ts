@@ -41,6 +41,20 @@ export function getPostContent(slug: string) {
   return readMarkdownFile(getPostPath(slug));
 }
 
+export function countTagFrequency(
+  posts: PostMetadata[],
+  exclude?: string[]
+): [string, number][] {
+  const counts: Record<string, number> = {};
+  const excluded = new Set(exclude ?? []);
+  posts.forEach((post) =>
+    post.tags.forEach((tag) => {
+      if (tag && !excluded.has(tag)) counts[tag] = (counts[tag] ?? 0) + 1;
+    })
+  );
+  return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+}
+
 export function getPostMetadata(
   options: { includeDrafts?: boolean } = {}
 ): PostMetadata[] {
@@ -53,7 +67,7 @@ export function getPostMetadata(
     scanMarkdownDir(dir).map(({ slug, data, content }) => ({
       title: data.title as string,
       date: data.date as string,
-      tags: (data.tags as string) || "",
+      tags: extractTags(data as PostFrontmatter),
       wordcount: calculateWordCount(content),
       slug,
       isDraft: dir.includes("drafts"),

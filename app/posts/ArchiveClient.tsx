@@ -3,6 +3,7 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
 import { PostMetadata } from "@/types/post";
+import { countTagFrequency } from "@/utils/content/posts";
 import PostPreview from "@/components/posts/PostPreview";
 import Heatmap from "@/components/visualizations/Heatmap";
 import Link from "next/link";
@@ -30,17 +31,6 @@ function paginationRange(current: number, total: number): (number | "…")[] {
     }
   }
   return pages;
-}
-
-function countTags(posts: PostMetadata[]): [string, number][] {
-  const counts: Record<string, number> = {};
-  posts.forEach((post) =>
-    post.tags.split(",").forEach((t) => {
-      const tag = t.trim();
-      if (tag && tag !== "✰") counts[tag] = (counts[tag] || 0) + 1;
-    })
-  );
-  return Object.entries(counts).sort((a, b) => b[1] - a[1]);
 }
 
 export default function ArchiveClient({
@@ -97,7 +87,10 @@ export default function ArchiveClient({
     setPage(1);
   };
 
-  const sortedTags = useMemo(() => countTags(allPosts), [allPosts]);
+  const sortedTags = useMemo(
+    () => countTagFrequency(allPosts, ["✰"]),
+    [allPosts]
+  );
 
   const { starredPosts, regularPosts } = useMemo(() => {
     const starred = allPosts.filter((p) => p.tags.includes("✰"));
