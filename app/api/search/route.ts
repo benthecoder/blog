@@ -1,8 +1,5 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
-
-const sql = neon(process.env.POSTGRES_URL!);
-
 import { getVoyageClient } from "@/utils/clients";
 import { formatEmbeddingForPostgres } from "@/utils/chunking/embeddingUtils";
 import {
@@ -14,6 +11,8 @@ import {
   HYBRID_KEYWORD_WEIGHT,
   VOYAGE_MODEL,
 } from "@/config/constants";
+
+const sql = neon(process.env.POSTGRES_URL!);
 
 type ScoreType = "keyword" | "hybrid" | "semantic";
 
