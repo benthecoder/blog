@@ -116,9 +116,9 @@ async function generateKnowledgeMap() {
     console.log("Computing UMAP positions...");
 
     const umapPositions = computeUMAP(embeddings, {
-      nNeighbors: Math.min(15, parsedData.length - 1),
-      minDist: 0.1,
-      spread: 5.0,
+      nNeighbors: Math.min(30, parsedData.length - 1),
+      minDist: 0.05,
+      spread: 12.0,
     });
 
     const normalizedPositions = normalizePositions(

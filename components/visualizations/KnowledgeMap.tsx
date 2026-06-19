@@ -9,41 +9,6 @@ import { select } from "d3-selection";
 import type { ArticleNode, KnowledgeMapOutput } from "@/types/knowledgeMap";
 import UMAPLoader from "./UMAPLoader";
 
-// Four distinct shapes rotated per cluster — adds a visual channel beyond color
-const SHAPES = ["circle", "square", "diamond", "triangle"] as const;
-type Shape = (typeof SHAPES)[number];
-
-function drawMarker(
-  ctx: CanvasRenderingContext2D,
-  shape: Shape,
-  x: number,
-  y: number,
-  r: number
-) {
-  ctx.beginPath();
-  switch (shape) {
-    case "circle":
-      ctx.arc(x, y, r, 0, Math.PI * 2);
-      break;
-    case "square":
-      ctx.rect(x - r, y - r, r * 2, r * 2);
-      break;
-    case "diamond":
-      ctx.moveTo(x, y - r * 1.3);
-      ctx.lineTo(x + r, y);
-      ctx.lineTo(x, y + r * 1.3);
-      ctx.lineTo(x - r, y);
-      ctx.closePath();
-      break;
-    case "triangle":
-      ctx.moveTo(x, y - r * 1.2);
-      ctx.lineTo(x + r * 1.1, y + r * 0.7);
-      ctx.lineTo(x - r * 1.1, y + r * 0.7);
-      ctx.closePath();
-      break;
-  }
-}
-
 export default function KnowledgeMap({
   className = "",
 }: {
@@ -51,7 +16,7 @@ export default function KnowledgeMap({
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [articles, setArticleNodes] = useState<ArticleNode[]>([]);
+  const [articles, setArticles] = useState<ArticleNode[]>([]);
   const [clusterLabels, setClusterLabels] = useState<Record<number, string>>(
     {}
   );
@@ -89,7 +54,7 @@ export default function KnowledgeMap({
       const response = await fetch("/data/knowledge-map.json");
       const result: KnowledgeMapOutput = await response.json();
       if (result.success) {
-        setArticleNodes(result.data);
+        setArticles(result.data);
         setClusterLabels(result.clusterLabels || {});
       } else {
         setError("failed to load");
@@ -131,8 +96,8 @@ export default function KnowledgeMap({
         return isDark ? "#91989C" : "#595857";
       }
       const hue = (cluster * 137.5) % 360;
-      const saturation = isDark ? 60 : 55;
-      const lightness = isDark ? 60 : 50;
+      const saturation = isDark ? 42 : 38;
+      const lightness = isDark ? 63 : 52;
       return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     },
     []
@@ -181,35 +146,35 @@ export default function KnowledgeMap({
       ? styles.getPropertyValue("--color-japanese-ginnezu").trim() || "#91989C"
       : styles.getPropertyValue("--color-japanese-sumiiro").trim() || "#595857";
     const dotHover = isDark ? "#DCDDDD" : "#000000";
-    const connectionColor = isDark
-      ? "rgba(145, 152, 156, 0.08)"
-      : "rgba(89, 88, 87, 0.08)";
 
     ctx.save();
     ctx.translate(transform.x, transform.y);
     ctx.scale(transform.k, transform.k);
 
-    // Similarity connections on hover/select
+    // Similarity connections on hover/select — opacity scales with similarity
     const focusedArticleNode = selectedArticleNode ?? hoveredArticleNode;
     if (focusedArticleNode) {
       filtered.forEach((other) => {
         if (other.id === focusedArticleNode.id) return;
         const sim = similarity(focusedArticleNode.embedding, other.embedding);
         if (sim > 0.7) {
+          const alpha = Math.max(0.06, (sim - 0.7) * 0.5);
           ctx.beginPath();
           ctx.moveTo(
             xScale(focusedArticleNode.x),
             yScale(focusedArticleNode.y)
           );
           ctx.lineTo(xScale(other.x), yScale(other.y));
-          ctx.strokeStyle = connectionColor;
-          ctx.lineWidth = 1 / transform.k;
+          ctx.strokeStyle = isDark
+            ? `rgba(145, 152, 156, ${alpha})`
+            : `rgba(89, 88, 87, ${alpha})`;
+          ctx.lineWidth = 0.8 / transform.k;
           ctx.stroke();
         }
       });
     }
 
-    // Cluster centroid labels — drawn before dots so dots sit on top
+    // Cluster centroid labels
     const centroids: Record<number, { sx: number; sy: number; count: number }> =
       {};
     filtered.forEach((a) => {
@@ -228,25 +193,20 @@ export default function KnowledgeMap({
       if (!label || id === -1) return;
       const cx = xScale(sx / count);
       const cy = yScale(sy / count);
-      const fontSize = Math.max(8, 10 / transform.k);
+      const fontSize = Math.max(7, 9 / transform.k);
       ctx.font = `${fontSize}px ui-serif, Georgia, serif`;
-      const labelY = cy - 14 / transform.k;
-      // Knockout background for legibility
-      ctx.shadowColor = isDark ? "#1a1a1a" : "#f3f3f2";
-      ctx.shadowBlur = 4 / transform.k;
-      ctx.fillStyle = isDark ? "rgba(220,221,221,0.55)" : "rgba(89,88,87,0.5)";
+      const labelY = cy - 12 / transform.k;
+      ctx.fillStyle = isDark ? "rgba(220,221,221,0.38)" : "rgba(89,88,87,0.38)";
       ctx.fillText(label, cx, labelY);
-      ctx.shadowBlur = 0;
     });
 
-    // Dots
+    // Dots — circles only
     filtered.forEach((article) => {
       const x = xScale(article.x);
       const y = yScale(article.y);
       const wordCount = article.wordCount;
-      const size = Math.max(1.5, Math.min(4, Math.log(wordCount + 1) * 0.6));
-      const baseOpacity = Math.min(0.8, 0.3 + wordCount / 2000);
-      const shape = SHAPES[Math.abs(article.cluster) % SHAPES.length];
+      const size = Math.max(2, Math.min(3.5, Math.log(wordCount + 1) * 0.55));
+      const baseOpacity = Math.min(0.65, 0.25 + wordCount / 2500);
 
       const isSelected = article.id === selectedArticleNode?.id;
       const isHovered = article.id === hoveredArticleNode?.id;
@@ -262,11 +222,12 @@ export default function KnowledgeMap({
         article.postTitle.toLowerCase().includes(searchQuery.toLowerCase())
       ) {
         color = dotDefault;
-        opacity = 0.8;
+        opacity = 0.85;
       }
 
       ctx.globalAlpha = opacity;
-      drawMarker(ctx, shape, x, y, size);
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI * 2);
       ctx.fillStyle = color;
       ctx.fill();
       ctx.globalAlpha = 1;
@@ -422,20 +383,15 @@ export default function KnowledgeMap({
     <div
       ref={containerRef}
       className={`relative ${className} bg-japanese-kinairo dark:bg-dark-bg`}
-      style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E")`,
-      }}
     >
       {/* Search */}
-      <div className="absolute top-4 left-4 z-20 pointer-events-none">
-        <input
-          type="text"
-          placeholder="search..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-40 px-2 py-1 text-xs bg-japanese-kinairo/90 dark:bg-dark-bg/90 text-japanese-sumiiro dark:text-japanese-shironezu border border-japanese-shiraumenezu dark:border-white/[0.08] focus:outline-none placeholder:text-japanese-sumiiro/30 dark:placeholder:text-japanese-shironezu/30 pointer-events-auto backdrop-blur-sm"
-        />
-      </div>
+      <input
+        type="text"
+        placeholder="search..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="absolute top-4 left-4 z-20 w-36 px-2 py-1 text-xs bg-japanese-kinairo/90 dark:bg-dark-bg/90 text-japanese-sumiiro dark:text-japanese-shironezu border border-japanese-shiraumenezu dark:border-white/[0.08] focus:outline-none placeholder:text-japanese-sumiiro/25 dark:placeholder:text-japanese-shironezu/25 backdrop-blur-sm"
+      />
 
       {/* Canvas */}
       <canvas
