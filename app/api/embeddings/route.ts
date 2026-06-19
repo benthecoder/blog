@@ -1,13 +1,13 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
-
-const sql = neon(process.env.POSTGRES_URL!);
 import {
   computeVisualizationUMAP,
   normalizePositions,
 } from "@/utils/chunking/umapUtils";
 import { parseEmbedding } from "@/utils/chunking/embeddingUtils";
 import type { ChunkRow } from "@/types/chunks";
+
+const sql = neon(process.env.POSTGRES_URL!);
 
 export const dynamic = "force-dynamic";
 

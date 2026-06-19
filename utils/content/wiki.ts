@@ -2,6 +2,7 @@ import { cache } from "react";
 import { WIKI_DIR, getWikiPath } from "@/config/paths";
 import type { WikiMetadata } from "@/types/wiki";
 import { readMarkdownFile, scanMarkdownDir } from "./markdown";
+import { parseTags } from "./tags";
 
 export const getWikiContent = cache(function getWikiContent(slug: string) {
   return readMarkdownFile(getWikiPath(slug));
@@ -13,11 +14,7 @@ export const getWikiMetadata = cache(
       .map(({ slug, data }) => ({
         title: (data.title as string) || slug,
         description: (data.description as string) || "",
-        tags: Array.isArray(data.tags)
-          ? (data.tags as string[])
-          : typeof data.tags === "string"
-            ? (data.tags as string).split(",").map((t) => t.trim())
-            : [],
+        tags: parseTags(data.tags),
         lastUpdated: (data.lastUpdated as string) || "",
         slug,
       }))
