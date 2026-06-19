@@ -94,14 +94,7 @@ export default function Gallery({ images }: GalleryProps) {
         (_, i) => i * (BASE_SIZE + GAP)
       );
 
-      return images.map((img, i) => {
-        let seed = 12345 + i;
-        const random = () => {
-          seed = (seed * 16807) % 2147483647;
-          return (seed - 1) / 2147483646;
-        };
-        void random(); // consume seed
-
+      return images.map((img) => {
         const width = BASE_SIZE;
         const height = width / img.aspectRatio;
 

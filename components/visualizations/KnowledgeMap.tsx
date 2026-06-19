@@ -6,29 +6,8 @@ import { useTheme } from "next-themes";
 import { scaleLinear } from "d3-scale";
 import { zoom as d3Zoom, ZoomBehavior } from "d3-zoom";
 import { select } from "d3-selection";
+import type { ArticleNode, KnowledgeMapOutput } from "@/types/knowledgeMap";
 import UMAPLoader from "./UMAPLoader";
-
-interface Article {
-  id: string;
-  postSlug: string;
-  postTitle: string;
-  wordCount: number;
-  embedding: number[];
-  publishedDate?: string;
-  tags?: string[];
-  x: number;
-  y: number;
-  cluster: number;
-}
-
-interface KnowledgeMapData {
-  success: boolean;
-  data: Article[];
-  count: number;
-  numClusters: number;
-  clusterLabels?: Record<number, string>;
-  generatedAt: string;
-}
 
 // Four distinct shapes rotated per cluster — adds a visual channel beyond color
 const SHAPES = ["circle", "square", "diamond", "triangle"] as const;
@@ -72,14 +51,16 @@ export default function KnowledgeMap({
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticleNodes] = useState<ArticleNode[]>([]);
   const [clusterLabels, setClusterLabels] = useState<Record<number, string>>(
     {}
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hoveredArticle, setHoveredArticle] = useState<Article | null>(null);
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const [hoveredArticleNode, setHoveredArticleNode] =
+    useState<ArticleNode | null>(null);
+  const [selectedArticleNode, setSelectedArticleNode] =
+    useState<ArticleNode | null>(null);
   const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(
     null
   );
@@ -91,24 +72,24 @@ export default function KnowledgeMap({
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const { theme } = useTheme();
   const zoomBehaviorRef = useRef<ZoomBehavior<Element, unknown> | null>(null);
-  const selectedArticleRef = useRef<Article | null>(null);
+  const selectedArticleNodeRef = useRef<ArticleNode | null>(null);
 
   useEffect(() => {
     setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
   }, []);
 
   useEffect(() => {
-    selectedArticleRef.current = selectedArticle;
-  }, [selectedArticle]);
+    selectedArticleNodeRef.current = selectedArticleNode;
+  }, [selectedArticleNode]);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await fetch("/data/knowledge-map.json");
-      const result: KnowledgeMapData = await response.json();
+      const result: KnowledgeMapOutput = await response.json();
       if (result.success) {
-        setArticles(result.data);
+        setArticleNodes(result.data);
         setClusterLabels(result.clusterLabels || {});
       } else {
         setError("failed to load");
@@ -158,15 +139,15 @@ export default function KnowledgeMap({
   );
 
   const transformRef = useRef(transform);
-  const hoveredArticleRef = useRef(hoveredArticle);
+  const hoveredArticleNodeRef = useRef(hoveredArticleNode);
   const filteredRef = useRef(filtered);
 
   useEffect(() => {
     transformRef.current = transform;
   }, [transform]);
   useEffect(() => {
-    hoveredArticleRef.current = hoveredArticle;
-  }, [hoveredArticle]);
+    hoveredArticleNodeRef.current = hoveredArticleNode;
+  }, [hoveredArticleNode]);
   useEffect(() => {
     filteredRef.current = filtered;
   }, [filtered]);
@@ -209,14 +190,17 @@ export default function KnowledgeMap({
     ctx.scale(transform.k, transform.k);
 
     // Similarity connections on hover/select
-    const focusedArticle = selectedArticle ?? hoveredArticle;
-    if (focusedArticle) {
+    const focusedArticleNode = selectedArticleNode ?? hoveredArticleNode;
+    if (focusedArticleNode) {
       filtered.forEach((other) => {
-        if (other.id === focusedArticle.id) return;
-        const sim = similarity(focusedArticle.embedding, other.embedding);
+        if (other.id === focusedArticleNode.id) return;
+        const sim = similarity(focusedArticleNode.embedding, other.embedding);
         if (sim > 0.7) {
           ctx.beginPath();
-          ctx.moveTo(xScale(focusedArticle.x), yScale(focusedArticle.y));
+          ctx.moveTo(
+            xScale(focusedArticleNode.x),
+            yScale(focusedArticleNode.y)
+          );
           ctx.lineTo(xScale(other.x), yScale(other.y));
           ctx.strokeStyle = connectionColor;
           ctx.lineWidth = 1 / transform.k;
@@ -264,8 +248,8 @@ export default function KnowledgeMap({
       const baseOpacity = Math.min(0.8, 0.3 + wordCount / 2000);
       const shape = SHAPES[Math.abs(article.cluster) % SHAPES.length];
 
-      const isSelected = article.id === selectedArticle?.id;
-      const isHovered = article.id === hoveredArticle?.id;
+      const isSelected = article.id === selectedArticleNode?.id;
+      const isHovered = article.id === hoveredArticleNode?.id;
 
       let color = getClusterColor(article.cluster, isDark);
       let opacity = baseOpacity;
@@ -293,8 +277,8 @@ export default function KnowledgeMap({
     filtered,
     theme,
     transform,
-    hoveredArticle,
-    selectedArticle,
+    hoveredArticleNode,
+    selectedArticleNode,
     searchQuery,
     similarity,
     getClusterColor,
@@ -342,7 +326,7 @@ export default function KnowledgeMap({
       setCanvasVersion((v) => v + 1);
     };
 
-    function hitTest(clientX: number, clientY: number): Article | null {
+    function hitTest(clientX: number, clientY: number): ArticleNode | null {
       const r = canvas.getBoundingClientRect();
       const t = transformRef.current;
       const x = (clientX - r.left - t.x) / t.k;
@@ -354,7 +338,7 @@ export default function KnowledgeMap({
       const isTouch = window.matchMedia("(pointer: coarse)").matches;
       const threshold = isTouch ? 24 : 12;
 
-      let closest: Article | null = null;
+      let closest: ArticleNode | null = null;
       let minDist = threshold;
 
       filteredRef.current.forEach((article) => {
@@ -373,24 +357,24 @@ export default function KnowledgeMap({
     const handleMouseMove = (e: MouseEvent) => {
       const closest = hitTest(e.clientX, e.clientY);
       canvas.style.cursor = closest ? "pointer" : "crosshair";
-      setHoveredArticle(closest);
+      setHoveredArticleNode(closest);
     };
 
     const handleClick = (e: MouseEvent) => {
       const closest = hitTest(e.clientX, e.clientY);
 
       if (!closest) {
-        setSelectedArticle(null);
+        setSelectedArticleNode(null);
         setClickPos(null);
         return;
       }
 
-      if (selectedArticleRef.current?.id === closest.id) {
+      if (selectedArticleNodeRef.current?.id === closest.id) {
         window.location.href = `/posts/${closest.postSlug}`;
       } else {
         const cr = containerRef.current!.getBoundingClientRect();
         setClickPos({ x: e.clientX - cr.left, y: e.clientY - cr.top });
-        setSelectedArticle(closest);
+        setSelectedArticleNode(closest);
       }
     };
 
@@ -416,8 +400,8 @@ export default function KnowledgeMap({
     );
   }
 
-  const displayArticle = selectedArticle ?? hoveredArticle;
-  const isPinned = selectedArticle !== null;
+  const displayArticleNode = selectedArticleNode ?? hoveredArticleNode;
+  const isPinned = selectedArticleNode !== null;
 
   const getPanelPosition = () => {
     if (!isPinned || !clickPos || !containerRef.current)
@@ -460,8 +444,8 @@ export default function KnowledgeMap({
         style={{ background: "transparent" }}
       />
 
-      {/* Article detail panel — hover preview or pinned detail */}
-      {displayArticle && (
+      {/* ArticleNode detail panel — hover preview or pinned detail */}
+      {displayArticleNode && (
         <div
           className={`absolute z-20 bg-japanese-kinairo/95 dark:bg-dark-bg/95 p-3 border shadow-sm w-[200px] sm:w-56 backdrop-blur-sm transition-[border-color] duration-150 pointer-events-none ${
             isPinned
@@ -473,7 +457,7 @@ export default function KnowledgeMap({
           {isPinned && (
             <button
               onClick={() => {
-                setSelectedArticle(null);
+                setSelectedArticleNode(null);
                 setClickPos(null);
               }}
               aria-label="close"
@@ -484,27 +468,27 @@ export default function KnowledgeMap({
           )}
 
           <h3 className="font-medium text-sm leading-tight mb-2 text-japanese-sumiiro dark:text-japanese-shironezu pr-4">
-            {displayArticle.postTitle}
+            {displayArticleNode.postTitle}
           </h3>
 
           <div className="space-y-1 text-xs text-japanese-sumiiro/60 dark:text-japanese-shironezu/60">
-            {clusterLabels[displayArticle.cluster] && (
+            {clusterLabels[displayArticleNode.cluster] && (
               <div className="flex items-center gap-1.5">
                 <div
                   className="w-2 h-2 rounded-full shrink-0"
                   style={{
                     backgroundColor: getClusterColor(
-                      displayArticle.cluster,
+                      displayArticleNode.cluster,
                       theme === "dark"
                     ),
                   }}
                 />
-                <span>{clusterLabels[displayArticle.cluster]}</span>
+                <span>{clusterLabels[displayArticleNode.cluster]}</span>
               </div>
             )}
-            {displayArticle.publishedDate && (
+            {displayArticleNode.publishedDate && (
               <p>
-                {new Date(displayArticle.publishedDate).toLocaleDateString(
+                {new Date(displayArticleNode.publishedDate).toLocaleDateString(
                   "en-US",
                   { year: "numeric", month: "short", day: "numeric" }
                 )}
@@ -514,7 +498,7 @@ export default function KnowledgeMap({
 
           {isPinned ? (
             <Link
-              href={`/posts/${displayArticle.postSlug}`}
+              href={`/posts/${displayArticleNode.postSlug}`}
               className="pointer-events-auto mt-3 flex items-center gap-1 text-xs text-japanese-sumiiro/50 hover:text-japanese-sumiiro dark:text-japanese-shironezu/50 dark:hover:text-japanese-shironezu transition-colors"
             >
               read →
