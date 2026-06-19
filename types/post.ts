@@ -1,7 +1,7 @@
 export interface PostMetadata {
   title: string;
   date: string;
-  tags: string;
+  tags: string[];
   wordcount: number;
   slug: string;
   prev: PostMetadata | null;
