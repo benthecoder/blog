@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import type { Thought } from "@/types/thoughts";
 
 const TZ = "America/New_York";
+const PAGE_SIZE = 100;
 
 function parseContent(content: string): ReactNode[] {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -30,16 +31,14 @@ function parseContent(content: string): ReactNode[] {
 
 interface ThoughtsClientProps {
   initialThoughts: Thought[];
-  total: number;
 }
 
 export default function ThoughtsClient({
   initialThoughts,
-  total,
 }: ThoughtsClientProps) {
   const [thoughts, setThoughts] = useState<Thought[]>(initialThoughts);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(initialThoughts.length < total);
+  const [hasMore, setHasMore] = useState(initialThoughts.length === PAGE_SIZE);
   const observerRef = useRef<HTMLDivElement>(null);
 
   const groupedByDate = useMemo(
@@ -65,14 +64,15 @@ export default function ThoughtsClient({
 
     setLoading(true);
     try {
+      const lastId = thoughts[thoughts.length - 1]?.id;
       const response = await fetch(
-        `/api/thoughts?offset=${thoughts.length}&limit=100`
+        `/api/thoughts?cursor=${lastId}&limit=${PAGE_SIZE}`
       );
       const newThoughts: Thought[] = await response.json();
 
       if (newThoughts.length > 0) {
         setThoughts((prev) => [...prev, ...newThoughts]);
-        setHasMore(thoughts.length + newThoughts.length < total);
+        setHasMore(newThoughts.length === PAGE_SIZE);
       } else {
         setHasMore(false);
       }
@@ -81,7 +81,7 @@ export default function ThoughtsClient({
     } finally {
       setLoading(false);
     }
-  }, [loading, hasMore, thoughts.length, total]);
+  }, [loading, hasMore, thoughts]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(

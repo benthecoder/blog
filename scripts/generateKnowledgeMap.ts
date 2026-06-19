@@ -1,5 +1,6 @@
 import "dotenv/config";
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
+const sql = neon(process.env.POSTGRES_URL!);
 import {
   computeUMAP,
   normalizePositions,
@@ -45,7 +46,7 @@ async function generateKnowledgeMap() {
 
     console.log("Fetching embeddings from database...");
 
-    const results = await sql<ChunkRow>`
+    const results = (await sql`
       SELECT DISTINCT ON (post_slug)
         id,
         post_slug,
@@ -62,11 +63,11 @@ async function generateKnowledgeMap() {
         post_slug,
         CASE WHEN chunk_type = 'full-post' THEN 0 ELSE 1 END,
         sequence
-    `;
+    `) as unknown as ChunkRow[];
 
-    console.log(`Fetched ${results.rows.length} embeddings`);
+    console.log(`Fetched ${results.length} embeddings`);
 
-    const parsedData = results.rows
+    const parsedData = results
       .map((row, index) => ({
         id: row.id,
         postSlug: row.post_slug,

@@ -1,4 +1,5 @@
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
+const sql = neon(process.env.POSTGRES_URL!);
 import * as dotenv from "dotenv";
 
 dotenv.config();
