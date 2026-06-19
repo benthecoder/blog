@@ -96,8 +96,8 @@ export default function KnowledgeMap({
         return isDark ? "#91989C" : "#595857";
       }
       const hue = (cluster * 137.5) % 360;
-      const saturation = isDark ? 42 : 38;
-      const lightness = isDark ? 63 : 52;
+      const saturation = isDark ? 52 : 47;
+      const lightness = isDark ? 62 : 50;
       return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     },
     []
@@ -206,7 +206,7 @@ export default function KnowledgeMap({
       const y = yScale(article.y);
       const wordCount = article.wordCount;
       const size = Math.max(2, Math.min(3.5, Math.log(wordCount + 1) * 0.55));
-      const baseOpacity = Math.min(0.65, 0.25 + wordCount / 2500);
+      const baseOpacity = Math.min(0.78, 0.45 + wordCount / 2500);
 
       const isSelected = article.id === selectedArticleNode?.id;
       const isHovered = article.id === hoveredArticleNode?.id;
