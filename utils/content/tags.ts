@@ -1,12 +1,18 @@
 import type { PostFrontmatter, PostMetadata } from "@/types/post";
 
-export function extractTags(frontmatter: PostFrontmatter): string[] {
-  const tagValue = frontmatter?.tags;
-  if (!tagValue) return [];
-  if (Array.isArray(tagValue)) return tagValue;
-  if (typeof tagValue === "string")
-    return tagValue.split(",").map((t) => t.trim());
+/**
+ * Normalize a frontmatter `tags` value (array, comma-separated string, or
+ * missing) into a clean string array. Shared by posts and wiki.
+ */
+export function parseTags(value: unknown): string[] {
+  if (!value) return [];
+  if (Array.isArray(value)) return value as string[];
+  if (typeof value === "string") return value.split(",").map((t) => t.trim());
   return [];
+}
+
+export function extractTags(frontmatter: PostFrontmatter): string[] {
+  return parseTags(frontmatter?.tags);
 }
 
 export function countTagFrequency(
