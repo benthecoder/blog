@@ -3,7 +3,7 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useState, useMemo, useEffect } from "react";
 import { PostMetadata } from "@/types/post";
-import { countTagFrequency } from "@/utils/content/posts";
+import { countTagFrequency } from "@/utils/content/tags";
 import PostPreview from "@/components/posts/PostPreview";
 import Heatmap from "@/components/visualizations/Heatmap";
 import Link from "next/link";
