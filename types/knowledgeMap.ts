@@ -44,6 +44,5 @@ export interface KnowledgeMapOutput {
 
 export interface ClusterLabelingOptions {
   maxSamplesPerCluster?: number;
-  minSamplesPerCluster?: number;
   model?: string;
 }

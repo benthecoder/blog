@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
-const sql = neon(process.env.POSTGRES_URL!);
 import {
   computeClusteringProjection,
   computeVisualizationUMAP,
@@ -23,6 +22,8 @@ import type {
 import type { ChunkRow } from "../types/chunks";
 import fs from "fs";
 import path from "path";
+
+const sql = neon(process.env.POSTGRES_URL!);
 
 async function generateKnowledgeMap() {
   try {
