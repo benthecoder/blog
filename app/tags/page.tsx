@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getPostMetadata, countTagFrequency } from "@/utils/content/posts";
+import { getPostMetadata } from "@/utils/content/posts";
+import { countTagFrequency } from "@/utils/content/tags";
 
 export const dynamic = "force-static";
 

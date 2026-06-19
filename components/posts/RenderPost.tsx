@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ParsedPost, PostMetadata } from "@/types/post";
-import { extractTags } from "@/utils/content/posts";
+import { extractTags } from "@/utils/content/tags";
 import MarkdownContent from "./MarkdownContent";
 import PostViewTracker from "./PostViewTracker";
 

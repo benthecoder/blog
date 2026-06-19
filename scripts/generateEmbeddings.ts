@@ -20,7 +20,7 @@ import { getVoyageClient } from "@/utils/clients";
 import { formatEmbeddingForPostgres } from "@/utils/chunking/embeddingUtils";
 import { withEmbeddingRetry, wait } from "@/utils/retry";
 import { extractPostDate, toISODateString } from "@/utils/dateUtils";
-import { extractTags } from "@/utils/content/posts";
+import { extractTags } from "@/utils/content/tags";
 import { DELAY_BETWEEN_BATCHES, VOYAGE_MODEL } from "@/config/constants";
 import { PostFrontmatter } from "@/types/post";
 import { ProcessedChunk, ProcessedPost } from "@/types/chunks";
