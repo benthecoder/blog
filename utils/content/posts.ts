@@ -34,7 +34,7 @@ export const getPostContent = cache(function getPostContent(slug: string) {
   return readMarkdownFile(getPostPath(slug));
 });
 
-export function getPostMetadata(
+export const getPostMetadata = cache(function getPostMetadata(
   options: { includeDrafts?: boolean } = {}
 ): PostMetadata[] {
   const { includeDrafts = false } = options;
@@ -61,4 +61,4 @@ export function getPostMetadata(
     post.next = i > 0 ? posts[i - 1] : null;
   });
   return posts;
-}
+});
