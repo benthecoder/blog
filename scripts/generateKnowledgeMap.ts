@@ -2,13 +2,19 @@ import "dotenv/config";
 import { neon } from "@neondatabase/serverless";
 const sql = neon(process.env.POSTGRES_URL!);
 import {
-  computeUMAP,
+  computeClusteringProjection,
+  computeVisualizationUMAP,
   normalizePositions,
   computeKMeans,
+  mergeSmallClusters,
 } from "../utils/chunking/umapUtils";
 import { labelClusters } from "../utils/chunking/clusterLabeling";
 import { parseEmbedding } from "../utils/chunking/embeddingUtils";
-import { NUM_CLUSTERS } from "../config/constants";
+import {
+  NUM_CLUSTERS,
+  CLUSTER_MIN_SIZE,
+  CLUSTERING_UMAP_COMPONENTS,
+} from "../config/constants";
 import type {
   KnowledgeMapOutput,
   ArticleNode,
@@ -70,30 +76,46 @@ async function generateKnowledgeMap() {
       }))
       .filter((item) => item.embedding.length > 0);
 
-    console.log("Computing k-means clusters...");
-
     const embeddings = parsedData.map((item) => item.embedding);
 
-    // Simple k-means clustering on all embeddings
-    const clusterResult = computeKMeans(embeddings, NUM_CLUSTERS);
-    console.log(`Created ${clusterResult.numClusters} clusters`);
+    // Stage 1: Reduce to nD for clustering (minDist=0 forces tight cluster structure)
+    console.log(
+      `Computing ${CLUSTERING_UMAP_COMPONENTS}D clustering projection...`
+    );
+    const clusteringProjection = computeClusteringProjection(
+      embeddings,
+      CLUSTERING_UMAP_COMPONENTS
+    );
+
+    // Stage 2: K-means on the low-dimensional projection (much better than on 1024D)
+    console.log("Computing k-means clusters...");
+    const rawClusters = computeKMeans(clusteringProjection, NUM_CLUSTERS);
+
+    // Stage 3: Merge clusters that are too small into their nearest neighbour
+    const { labels: finalLabels, activeClusters } = mergeSmallClusters(
+      rawClusters.labels,
+      rawClusters.centroids,
+      CLUSTER_MIN_SIZE
+    );
+    const numClusters = activeClusters.size;
+    console.log(
+      `Created ${rawClusters.numClusters} clusters → ${numClusters} after merging small ones`
+    );
 
     // Group articles by cluster for labeling
     const clusterMap = new Map<number, ArticleData[]>();
     parsedData.forEach((item, index) => {
-      const clusterId = clusterResult.labels[index];
-      if (!clusterMap.has(clusterId)) {
-        clusterMap.set(clusterId, []);
-      }
+      const clusterId = finalLabels[index];
+      if (!clusterMap.has(clusterId)) clusterMap.set(clusterId, []);
       clusterMap.get(clusterId)!.push({
         ...item,
-        x: 0, // Will be updated after UMAP
+        x: 0,
         y: 0,
         cluster: clusterId,
       });
     });
 
-    // Label clusters using Anthropic API
+    // Stage 4: Label clusters using Anthropic API
     let clusterLabels: Record<number, string> | undefined;
 
     if (process.env.ANTHROPIC_API_KEY) {
@@ -113,16 +135,11 @@ async function generateKnowledgeMap() {
       console.warn("⚠️  ANTHROPIC_API_KEY not set, skipping cluster labeling");
     }
 
-    console.log("Computing UMAP positions...");
-
-    const umapPositions = computeUMAP(embeddings, {
-      nNeighbors: Math.min(30, parsedData.length - 1),
-      minDist: 0.05,
-      spread: 12.0,
-    });
-
+    // Stage 5: Separate 2D UMAP for visualization (larger spread, minDist > 0)
+    console.log("Computing 2D visualization UMAP...");
+    const vizPositions = computeVisualizationUMAP(embeddings);
     const normalizedPositions = normalizePositions(
-      umapPositions,
+      vizPositions,
       1000,
       1000,
       50
@@ -138,7 +155,7 @@ async function generateKnowledgeMap() {
       tags: item.tags,
       x: normalizedPositions[index].x,
       y: normalizedPositions[index].y,
-      cluster: clusterResult.labels[index],
+      cluster: finalLabels[index],
     }));
 
     // Create public/data directory if it doesn't exist
@@ -154,7 +171,7 @@ async function generateKnowledgeMap() {
       success: true,
       data: processedData,
       count: processedData.length,
-      numClusters: clusterResult.numClusters,
+      numClusters,
       clusterLabels,
       generatedAt: new Date().toISOString(),
     };
@@ -163,7 +180,7 @@ async function generateKnowledgeMap() {
 
     console.log(`✓ Knowledge map generated: ${outputPath}`);
     console.log(`  ${processedData.length} articles processed`);
-    console.log(`  ${clusterResult.numClusters} clusters found`);
+    console.log(`  ${numClusters} clusters found`);
     if (clusterLabels) {
       console.log(`  ${Object.keys(clusterLabels).length} clusters labeled`);
     }

@@ -8,45 +8,62 @@ export interface UMAPPosition {
 
 export interface ClusterResult {
   labels: number[];
+  centroids: number[][];
   numClusters: number;
 }
 
 /**
- * Compute 2D UMAP projection from high-dimensional embeddings
- * @param embeddings Array of 1024-dimensional vectors
- * @param options UMAP configuration options
- * @returns Array of 2D positions
+ * Reduce embeddings to nComponents dimensions for clustering.
+ * Uses minDist=0.0 and high nNeighbors to emphasize global cluster structure
+ * rather than local topology — this is the key to getting tight, separable clusters
+ * before running k-means (the BERTopic two-stage approach).
  */
-export function computeUMAP(
+export function computeClusteringProjection(
+  embeddings: number[][],
+  nComponents: number = 10
+): number[][] {
+  if (embeddings.length === 0) return [];
+
+  const nNeighbors = Math.min(30, embeddings.length - 1);
+
+  const umap = new UMAP({
+    nComponents,
+    nNeighbors,
+    minDist: 0.0, // force points into tight clusters — ideal before k-means
+    spread: 1.0,
+  });
+
+  return umap.fit(embeddings);
+}
+
+/**
+ * Compute 2D UMAP for visualization only. Uses different params than the
+ * clustering projection — minDist > 0 and larger spread so clusters fan out
+ * visually and are easier to explore.
+ */
+export function computeVisualizationUMAP(
   embeddings: number[][],
   options?: {
     nNeighbors?: number;
     minDist?: number;
     spread?: number;
-    random?: () => number;
   }
 ): UMAPPosition[] {
-  if (embeddings.length === 0) {
-    return [];
-  }
+  if (embeddings.length === 0) return [];
 
-  // UMAP parameters optimized for blog post clustering
-  const nNeighbors = options?.nNeighbors ?? Math.min(15, embeddings.length - 1);
-  const minDist = options?.minDist ?? 0.1;
-  const spread = options?.spread ?? 1.0;
+  const nNeighbors = options?.nNeighbors ?? Math.min(30, embeddings.length - 1);
+  const minDist = options?.minDist ?? 0.05;
+  const spread = options?.spread ?? 12.0;
 
   const umap = new UMAP({
     nComponents: 2,
     nNeighbors,
     minDist,
     spread,
-    random: options?.random,
   });
 
-  // Fit and transform the embeddings
   const projection = umap.fit(embeddings);
 
-  // Convert to position objects
   return projection.map((point: number[]) => ({
     x: point[0],
     y: point[1],
@@ -54,12 +71,7 @@ export function computeUMAP(
 }
 
 /**
- * Normalize positions to fit within a specific range
- * @param positions Array of 2D positions
- * @param width Target width
- * @param height Target height
- * @param padding Padding from edges
- * @returns Normalized positions
+ * Normalize 2D positions to fit within a canvas.
  */
 export function normalizePositions(
   positions: UMAPPosition[],
@@ -69,18 +81,15 @@ export function normalizePositions(
 ): UMAPPosition[] {
   if (positions.length === 0) return [];
 
-  // Find bounds
-  const xValues = positions.map((p) => p.x);
-  const yValues = positions.map((p) => p.y);
-  const minX = Math.min(...xValues);
-  const maxX = Math.max(...xValues);
-  const minY = Math.min(...yValues);
-  const maxY = Math.max(...yValues);
-
+  const xs = positions.map((p) => p.x);
+  const ys = positions.map((p) => p.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
   const rangeX = maxX - minX;
   const rangeY = maxY - minY;
 
-  // Normalize to fit within bounds
   return positions.map((pos) => ({
     x: padding + ((pos.x - minX) / rangeX) * (width - 2 * padding),
     y: padding + ((pos.y - minY) / rangeY) * (height - 2 * padding),
@@ -88,30 +97,81 @@ export function normalizePositions(
 }
 
 /**
- * Perform k-means clustering on high-dimensional embeddings
- * @param embeddings Array of high-dimensional vectors
- * @param k Number of clusters (default: 15)
- * @returns Cluster labels for each point
+ * Cluster embeddings using k-means.
+ * Returns labels, centroids, and actual number of clusters.
  */
 export function computeKMeans(
   embeddings: number[][],
-  k: number = 15
+  k: number = 12
 ): ClusterResult {
   if (embeddings.length === 0) {
-    return { labels: [], numClusters: 0 };
+    return { labels: [], centroids: [], numClusters: 0 };
   }
 
-  // Adjust k if we have fewer data points
   const numClusters = Math.min(k, Math.floor(embeddings.length / 3));
 
-  // Run k-means clustering
   const result = kmeans(embeddings, numClusters, {
     initialization: "kmeans++",
-    maxIterations: 100,
+    maxIterations: 300,
   });
 
   return {
     labels: result.clusters,
+    centroids: result.centroids,
     numClusters,
   };
+}
+
+/**
+ * Merge clusters that are too small into the nearest large cluster,
+ * measured by centroid distance. Returns a remapped label array and
+ * the surviving cluster IDs.
+ */
+export function mergeSmallClusters(
+  labels: number[],
+  centroids: number[][],
+  minSize: number
+): { labels: number[]; activeClusters: Set<number> } {
+  const counts = new Map<number, number>();
+  labels.forEach((l) => counts.set(l, (counts.get(l) ?? 0) + 1));
+
+  const small = new Set<number>();
+  const large = new Set<number>();
+  counts.forEach((count, id) => {
+    if (count < minSize) small.add(id);
+    else large.add(id);
+  });
+
+  if (small.size === 0) {
+    return { labels, activeClusters: large };
+  }
+
+  // For each small cluster, find the nearest large cluster by centroid distance
+  const remap = new Map<number, number>();
+  small.forEach((smallId) => {
+    let bestId = -1;
+    let bestDist = Infinity;
+    large.forEach((largeId) => {
+      const dist = euclideanDistance(centroids[smallId], centroids[largeId]);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestId = largeId;
+      }
+    });
+    remap.set(smallId, bestId !== -1 ? bestId : Array.from(large)[0]);
+  });
+
+  const remapped = labels.map((l) => remap.get(l) ?? l);
+
+  // Compact: re-index surviving clusters to 0..n
+  const survivors = Array.from(large).sort((a, b) => a - b);
+  const compact = new Map(survivors.map((id, i) => [id, i]));
+  return {
+    labels: remapped.map((l) => compact.get(l) ?? l),
+    activeClusters: new Set(compact.values()),
+  };
+}
+
+function euclideanDistance(a: number[], b: number[]): number {
+  return Math.sqrt(a.reduce((sum, v, i) => sum + (v - b[i]) ** 2, 0));
 }
