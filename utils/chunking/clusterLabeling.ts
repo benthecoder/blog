@@ -130,54 +130,44 @@ function selectClusterSamples(
 }
 
 /**
- * Construct prompt for cluster labeling
- * Returns a concise, semantic theme label
+ * Construct prompt for cluster labeling.
+ * Passes all titles for pattern recognition + content excerpts from samples for depth.
  */
-function buildClusterPrompt(samples: ArticleData[]): string {
-  const sampleDescriptions = samples
-    .map((s, i) => {
-      const contentPreview = s.content
-        .substring(0, 200)
-        .replace(/\s+/g, " ")
-        .trim();
-      const tags = s.tags && s.tags.length > 0 ? s.tags.join(", ") : "none";
-      const date = s.publishedDate || "unknown";
+function buildClusterPrompt(
+  allArticles: ArticleData[],
+  samples: ArticleData[]
+): string {
+  const allTitles = allArticles
+    .map((a, i) => `${i + 1}. ${a.postTitle}`)
+    .join("\n");
 
-      return `${i + 1}. "${s.postTitle}"
-   Published: ${date}
-   Tags: ${tags}
-   Content preview: ${contentPreview}...`;
+  const sampleDetails = samples
+    .map((s) => {
+      const preview = s.content.substring(0, 300).replace(/\s+/g, " ").trim();
+      const tags = s.tags?.length ? s.tags.join(", ") : "none";
+      return `"${s.postTitle}" [tags: ${tags}]\n  ${preview}...`;
     })
     .join("\n\n");
 
-  return `Analyze these blog posts and create a SHORT, CONCRETE label that describes what they're actually about. Look at the titles and content - what topics, activities, or subjects appear across these posts?
+  return `You are labeling a cluster of semantically similar blog posts. Your goal is to find the MOST SPECIFIC shared theme — not the most general one.
 
-Posts in this cluster:
-${sampleDescriptions}
+ALL ${allArticles.length} post titles in this cluster:
+${allTitles}
 
-Create a label that is:
-- CONCRETE and SPECIFIC (not abstract philosophy)
-- ALL LOWERCASE
-- 2-4 words maximum
-- Based on actual topics/subjects that appear in the posts
-- Describes WHAT the posts are about, not how they feel
+Detailed excerpts from ${samples.length} representative posts:
+${sampleDetails}
 
-Good examples (concrete, topic-based):
-- "machine learning projects"
-- "travel photography"
-- "cooking experiments"
-- "book reviews"
-- "sf city life"
-- "career reflections"
-- "coding tutorials"
+What single topic, activity, or subject appears most consistently across these titles? Be as specific as the titles allow.
 
-Bad examples (too vague/philosophical):
-- "finding meaning in experience"
-- "navigating transitions"
-- "moments of presence"
-- "learning in motion"
+Rules:
+- ALL LOWERCASE, 2-4 words
+- Name the SPECIFIC topic (not the emotional register or writing style)
+- Prefer concrete nouns over abstract concepts
 
-Look at the actual content and give me a straightforward topic label:`;
+Good: "machine learning", "book reviews", "sf apartment life", "startup interviews", "travel journals"
+Bad: "personal reflections", "exploring ideas", "learning journeys", "moments of growth"
+
+Reply with ONLY the label, nothing else:`;
 }
 
 /**
@@ -290,7 +280,7 @@ export async function labelClusters(
       );
 
       // Build prompt
-      const prompt = buildClusterPrompt(samples);
+      const prompt = buildClusterPrompt(articles, samples);
 
       // Call API
       const label = await callAnthropicForLabel(prompt, model);
