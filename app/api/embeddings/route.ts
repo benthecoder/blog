@@ -8,23 +8,6 @@ import type { ChunkRow } from "@/types/chunks";
 
 export const dynamic = "force-dynamic";
 
-interface ArticleData {
-  id: string;
-  postSlug: string;
-  postTitle: string;
-  content: string;
-  chunkType: string;
-  metadata: ChunkRow["metadata"];
-  sequence: number;
-  embedding: number[];
-  publishedDate?: string;
-  tags: string[];
-  createdAt: string;
-  index: number;
-  x: number;
-  y: number;
-}
-
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

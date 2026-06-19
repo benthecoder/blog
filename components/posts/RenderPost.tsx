@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ParsedPost, PostMetadata } from "@/types/post";
+import { extractTags } from "@/utils/content/posts";
 import MarkdownContent from "./MarkdownContent";
 import PostViewTracker from "./PostViewTracker";
 
@@ -12,19 +13,12 @@ interface RenderPostProps {
 }
 
 const RenderPost = ({ post, prev, next, slug, wordcount }: RenderPostProps) => {
-  const { title, date, tags: rawTags } = post.data;
+  const { title, date } = post.data;
+  const tags = extractTags(post.data);
   const readingTime =
     wordcount && wordcount > 0
       ? Math.max(1, Math.round(wordcount / 200))
       : null;
-  const tags = rawTags
-    ? Array.isArray(rawTags)
-      ? rawTags
-      : (rawTags as string)
-          .split(",")
-          .map((t) => t.trim())
-          .filter(Boolean)
-    : [];
 
   return (
     <div>
