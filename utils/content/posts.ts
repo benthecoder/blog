@@ -1,3 +1,4 @@
+import { cache } from "react";
 import fs from "fs";
 import path from "path";
 import { POSTS_DIR, getPostPath } from "@/config/paths";
@@ -37,9 +38,9 @@ export function getAllPosts(includeDrafts = false): string[] {
     : all.filter((f) => !f.includes("/drafts/") && !f.includes("\\drafts\\"));
 }
 
-export function getPostContent(slug: string) {
+export const getPostContent = cache(function getPostContent(slug: string) {
   return readMarkdownFile(getPostPath(slug));
-}
+});
 
 export function countTagFrequency(
   posts: PostMetadata[],
