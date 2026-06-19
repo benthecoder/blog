@@ -21,7 +21,7 @@ export async function generateMetadata({
   }
 
   const { title, date: publishedTime } = post;
-  const ogImage = `https://bneo.xyz/og?title=${title}`;
+  const ogImage = `https://bneo.xyz/og?title=${encodeURIComponent(title)}`;
 
   return {
     title,
