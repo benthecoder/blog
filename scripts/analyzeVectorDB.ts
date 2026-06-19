@@ -1,7 +1,8 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
+const sql = neon(process.env.POSTGRES_URL!);
 import * as fs from "fs";
 import * as path from "path";
 
@@ -32,7 +33,7 @@ async function getOverallStats() {
   `;
 
   const { total_chunks, total_posts, avg_length, min_length, max_length } =
-    totals.rows[0];
+    totals[0];
 
   console.log(`Total chunks: ${total_chunks}`);
   console.log(`Total posts: ${total_posts}`);
@@ -56,7 +57,7 @@ async function getOverallStats() {
     WHERE embedding IS NOT NULL
   `;
 
-  const d = dist.rows[0];
+  const d = dist[0];
   const pct = (count: number) =>
     ((count / Number(total_chunks)) * 100).toFixed(1);
 
@@ -95,12 +96,12 @@ async function getChunkTypeStats(): Promise<ChunkTypeStats[]> {
     ORDER BY count DESC
   `;
 
-  const totalChunks = types.rows.reduce(
-    (sum, row) => sum + parseInt(row.count),
+  const totalChunks = types.reduce(
+    (sum: number, row: Record<string, string>) => sum + parseInt(row.count),
     0
   );
 
-  const stats: ChunkTypeStats[] = types.rows.map((row) => ({
+  const stats: ChunkTypeStats[] = types.map((row: Record<string, string>) => ({
     type: row.chunk_type,
     count: parseInt(row.count),
     percentage: (parseInt(row.count) / totalChunks) * 100,
@@ -151,7 +152,7 @@ async function getPerPostStats() {
   );
   console.log("-".repeat(50));
 
-  perPost.rows.forEach((row) => {
+  (perPost as Record<string, string>[]).forEach((row) => {
     console.log(
       `${row.post_slug.padEnd(30)} | ${String(row.chunk_count).padStart(6)} | ${String(row.avg_length).padStart(7)}`
     );
@@ -169,11 +170,11 @@ async function getPerPostStats() {
     ORDER BY chunk_count
   `;
 
-  if (fewChunks.rows.length > 0) {
+  if (fewChunks.length > 0) {
     console.log(
-      `⚠️  ${fewChunks.rows.length} posts have fewer than 2 chunks (missing full-post?):`
+      `⚠️  ${fewChunks.length} posts have fewer than 2 chunks (missing full-post?):`
     );
-    fewChunks.rows.slice(0, 10).forEach((row) => {
+    (fewChunks as Record<string, string>[]).slice(0, 10).forEach((row) => {
       console.log(`   - ${row.post_slug}: ${row.chunk_count} chunk(s)`);
     });
     console.log("\n");
@@ -194,11 +195,11 @@ async function findProblematicChunks() {
     LIMIT 10
   `;
 
-  if (tiny.rows.length > 0) {
+  if (tiny.length > 0) {
     console.log(
-      `Found ${tiny.rows.length} chunks < 50 chars (excluding headings):\n`
+      `Found ${tiny.length} chunks < 50 chars (excluding headings):\n`
     );
-    tiny.rows.forEach((row, i) => {
+    (tiny as Record<string, string>[]).forEach((row, i) => {
       const preview =
         row.content.length > 60
           ? row.content.substring(0, 60) + "..."
@@ -231,7 +232,7 @@ async function checkDatabaseHealth() {
   `;
 
   const slugsWithFullPost = new Set(
-    fullPostChunks.rows.map((r) => r.post_slug)
+    (fullPostChunks as Record<string, string>[]).map((r) => r.post_slug)
   );
   const missingFullPost = allPostSlugs.filter(
     (slug) => !slugsWithFullPost.has(slug)
@@ -259,7 +260,9 @@ async function checkDatabaseHealth() {
     WHERE embedding IS NULL
   `;
 
-  const nullCount = parseInt(nullEmbeddings.rows[0].count);
+  const nullCount = parseInt(
+    (nullEmbeddings[0] as Record<string, string>).count
+  );
   if (nullCount > 0) {
     console.log(`⚠️  ${nullCount} chunks have NULL embeddings\n`);
   } else {

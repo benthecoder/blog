@@ -8,10 +8,15 @@ interface RenderPostProps {
   prev: PostMetadata | null;
   next: PostMetadata | null;
   slug: string | null;
+  wordcount?: number;
 }
 
-const RenderPost = ({ post, prev, next, slug }: RenderPostProps) => {
+const RenderPost = ({ post, prev, next, slug, wordcount }: RenderPostProps) => {
   const { title, date, tags: rawTags } = post.data;
+  const readingTime =
+    wordcount && wordcount > 0
+      ? Math.max(1, Math.round(wordcount / 200))
+      : null;
   const tags = rawTags
     ? Array.isArray(rawTags)
       ? rawTags
@@ -61,6 +66,16 @@ const RenderPost = ({ post, prev, next, slug }: RenderPostProps) => {
                     #{tag}
                   </Link>
                 ))}
+              </>
+            )}
+            {readingTime && (
+              <>
+                <span className="text-japanese-shiraumenezu dark:text-japanese-sumiiro/50 text-xs">
+                  ·
+                </span>
+                <span className="text-japanese-ginnezu dark:text-japanese-ginnezu text-xs">
+                  {readingTime} min read
+                </span>
               </>
             )}
             {slug && (

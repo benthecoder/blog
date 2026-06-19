@@ -26,7 +26,7 @@ This document tracks the development progress, TODO items, and setup instruction
   - [ ] https://www.spencerchang.me/
   - [ ] https://www.rishi.cx/
 - [ ] Create pop up notes like https://www.rishi.cx/
-- [ ] A real-time digital clock with seconds
+- [x] A real-time digital clock with seconds
 - [ ] build a map of favorite restaurants and places like [build your corner](https://twitter.com/buildyourcorner)
 - [ ] Add listening and reading updates
   - [ ] https://dev.to/j471n/how-to-use-spotify-api-with-nextjs-50o5
@@ -36,8 +36,7 @@ This document tracks the development progress, TODO items, and setup instruction
   - [ ] hover to preview like https://stephango.com/buy-wisely
 - [ ] breadcrumb navigation
   - [ ] https://jake.isnt.online/
-- [ ] Setup contentlayer
-  - [ ] https://youtu.be/nkGjob3q2GI?si=C-LTuMQNGydbxvPy&t=2847
+- ~~Setup contentlayer~~ — abandoned project (no Next.js 15 support); current `utils/content/markdown.ts` approach is fine
 
 ## Inspirations
 

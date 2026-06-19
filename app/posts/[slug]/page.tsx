@@ -57,14 +57,35 @@ const PostPage = async ({ params }: { params: Params }) => {
   }
 
   const postContent = getPostContent(slug);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    datePublished: post.date,
+    dateModified: post.date,
+    url: `https://bneo.xyz/posts/${slug}`,
+    author: {
+      "@type": "Person",
+      name: "Benedict Neo",
+      url: "https://bneo.xyz",
+    },
+    wordCount: post.wordcount,
+  };
 
   return (
-    <RenderPost
-      post={postContent}
-      prev={post.prev}
-      next={post.next}
-      slug={slug}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <RenderPost
+        post={postContent}
+        prev={post.prev}
+        next={post.next}
+        slug={slug}
+        wordcount={post.wordcount}
+      />
+    </>
   );
 };
 

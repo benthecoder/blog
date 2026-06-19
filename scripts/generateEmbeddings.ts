@@ -9,7 +9,8 @@ if (!process.env.POSTGRES_URL) {
 
 // Now import modules that depend on environment variables
 import { processAllPosts } from "@/utils/chunking/processAllPosts";
-import { sql } from "@vercel/postgres";
+import { neon } from "@neondatabase/serverless";
+const sql = neon(process.env.POSTGRES_URL!);
 import { v4 as uuidv4 } from "uuid";
 import chalk from "chalk";
 import ora from "ora";
@@ -55,7 +56,7 @@ const setupTable = async () => {
     `;
 
     // Only create table if it doesn't exist
-    if (!tableExists.rows[0].exists) {
+    if (!(tableExists[0] as Record<string, boolean>).exists) {
       console.log("Table does not exist, creating new one...");
 
       // Create table with clean schema
@@ -358,8 +359,8 @@ async function generateEmbeddingsForAllFiles() {
 
   // Step 1: Clear existing embeddings for all posts we're about to process
   const clearSpinner = ora("Clearing existing embeddings...").start();
-  const result = await sql`DELETE FROM content_chunks`;
-  clearSpinner.succeed(`Cleared ${result.rowCount} existing chunks`);
+  const deleted = await sql`DELETE FROM content_chunks`;
+  clearSpinner.succeed(`Cleared ${deleted.length} existing chunks`);
 
   // Step 2: Collect all chunks from all posts with metadata
   const collectSpinner = ora(
