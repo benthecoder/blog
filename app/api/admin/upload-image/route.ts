@@ -3,6 +3,7 @@ import path from "path";
 import sharp from "sharp";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
+import { IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Security: prevent path traversal via custom name
-    if (customName && (customName.includes("..") || customName.includes("/"))) {
+    if (customName && !isSafeSlug(customName)) {
       return NextResponse.json({ error: "Invalid file name" }, { status: 400 });
     }
 
@@ -29,13 +30,11 @@ export async function POST(request: NextRequest) {
     const fileName = customName ? `${customName}.jpg` : `${Date.now()}.jpg`;
 
     // Save to drafts folder initially
-    const draftsDir = path.join(process.cwd(), "public", "images", "drafts");
-
-    if (!fs.existsSync(draftsDir)) {
-      fs.mkdirSync(draftsDir, { recursive: true });
+    if (!fs.existsSync(IMAGES_DRAFTS_DIR)) {
+      fs.mkdirSync(IMAGES_DRAFTS_DIR, { recursive: true });
     }
 
-    const filePath = path.join(draftsDir, fileName);
+    const filePath = path.join(IMAGES_DRAFTS_DIR, fileName);
 
     // Always compress and convert to JPEG for Vercel free tier optimization
     if ([".jpg", ".jpeg", ".png", ".webp", ".gif"].includes(ext)) {

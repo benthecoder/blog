@@ -3,20 +3,18 @@ import path from "path";
 import matter from "gray-matter";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
+import { POSTS_DIR, DRAFTS_DIR } from "@/config/paths";
 
 export async function GET(request: NextRequest) {
   const authError = checkAdminAuth(request);
   if (authError) return authError;
   try {
-    const postsDir = path.join(process.cwd(), "posts");
-    const draftsDir = path.join(process.cwd(), "posts", "drafts");
-
-    const publishedFiles = fs.existsSync(postsDir)
-      ? fs.readdirSync(postsDir).filter((file) => file.endsWith(".md"))
+    const publishedFiles = fs.existsSync(POSTS_DIR)
+      ? fs.readdirSync(POSTS_DIR).filter((file) => file.endsWith(".md"))
       : [];
 
-    const draftFiles = fs.existsSync(draftsDir)
-      ? fs.readdirSync(draftsDir).filter((file) => file.endsWith(".md"))
+    const draftFiles = fs.existsSync(DRAFTS_DIR)
+      ? fs.readdirSync(DRAFTS_DIR).filter((file) => file.endsWith(".md"))
       : [];
 
     const getPostDate = (filePath: string) => {
@@ -32,11 +30,11 @@ export async function GET(request: NextRequest) {
     const allPosts = [
       ...publishedFiles.map((f) => ({
         slug: f.replace(".md", ""),
-        timestamp: getPostDate(path.join(postsDir, f)),
+        timestamp: getPostDate(path.join(POSTS_DIR, f)),
       })),
       ...draftFiles.map((f) => ({
         slug: f.replace(".md", ""),
-        timestamp: getPostDate(path.join(draftsDir, f)),
+        timestamp: getPostDate(path.join(DRAFTS_DIR, f)),
       })),
     ];
 

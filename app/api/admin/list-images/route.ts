@@ -1,7 +1,7 @@
 import fs from "fs";
-import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
+import { IMAGES_DIR, IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
 
 export async function GET(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -15,26 +15,23 @@ export async function GET(request: NextRequest) {
     }
 
     // Security: prevent path traversal
-    if (slug.includes("..") || slug.includes("/")) {
+    if (!isSafeSlug(slug)) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
-
-    const draftsDir = path.join(process.cwd(), "public", "images", "drafts");
-    const imagesDir = path.join(process.cwd(), "public", "images");
 
     const postImages: string[] = [];
 
     // Check drafts folder
-    if (fs.existsSync(draftsDir)) {
-      const draftFiles = fs.readdirSync(draftsDir);
+    if (fs.existsSync(IMAGES_DRAFTS_DIR)) {
+      const draftFiles = fs.readdirSync(IMAGES_DRAFTS_DIR);
       postImages.push(
         ...draftFiles.filter((file) => file.startsWith(`${slug}-`))
       );
     }
 
     // Check published images folder
-    if (fs.existsSync(imagesDir)) {
-      const publishedFiles = fs.readdirSync(imagesDir);
+    if (fs.existsSync(IMAGES_DIR)) {
+      const publishedFiles = fs.readdirSync(IMAGES_DIR);
       postImages.push(
         ...publishedFiles.filter((file) => file.startsWith(`${slug}-`))
       );
