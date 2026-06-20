@@ -45,7 +45,8 @@ function cleanHtml(html: string): string {
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/\[sound:[^\]]*\]/g, "")
+    .replace(/\[sound:[^\]]*\]/g, "") // audio media refs
+    .replace(/\[anki:[^\]]*\]/g, "") // tts / play-button placeholders
     .replace(/<img[^>]*>/gi, "")
     .replace(/\son\w+\s*=\s*"[^"]*"/gi, "")
     .replace(/\son\w+\s*=\s*'[^']*'/gi, "")
