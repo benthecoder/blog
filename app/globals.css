@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Flashcards: let card text inherit the themed color instead of Anki's
+   hard-coded inline colors, and give pinyin/meaning lines room to breathe. */
+.flashcard-body,
+.flashcard-body * {
+  color: inherit !important;
+  background: transparent !important;
+}
+.flashcard-body > div + div {
+  margin-top: 0.4em;
+}
+
 body {
   background: linear-gradient(
     135deg,

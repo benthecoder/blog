@@ -1,0 +1,15 @@
+<svg
+   width="100"
+   height="100"
+   viewBox="0 0 100 100"
+   fill="none"
+   stroke="#000000"
+   stroke-width="5"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   xmlns="http://www.w3.org/2000/svg">
+  <title>flashcards</title>
+  <path d="M34 24 V18 a6 6 0 0 1 6-6 H82 a6 6 0 0 1 6 6 V60 a6 6 0 0 1-6 6 H76" />
+  <rect x="12" y="28" width="58" height="56" rx="8" />
+  <line x1="12" y1="52" x2="70" y2="52" />
+</svg>

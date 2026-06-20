@@ -22,6 +22,12 @@ export const MAX_RETRIES = 5;
 export const INITIAL_RETRY_DELAY = 2000;
 export const API_TIMEOUT = 60000;
 
+// Anki flashcards: synced locally via the AnkiConnect add-on (Anki must be
+// running). Override the deck per-run with `pnpm sync-anki "Deck Name"`.
+export const ANKI_CONNECT_URL =
+  process.env.ANKI_CONNECT_URL || "http://127.0.0.1:8765";
+export const ANKI_DECK = process.env.ANKI_DECK || "Default";
+
 // Clustering: k-means on 10D UMAP projection, then 2D for visualization
 export const NUM_CLUSTERS = 10;
 export const CLUSTER_MIN_SIZE = 5; // merge clusters smaller than this into nearest centroid
