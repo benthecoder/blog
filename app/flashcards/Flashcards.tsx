@@ -13,6 +13,22 @@ function shuffledIndices(n: number): number[] {
   return a;
 }
 
+/**
+ * Scale type to content length so single-word vocab is large and prominent
+ * while long paragraphs (e.g. a bible verse) stay readable and fit the card.
+ */
+function fontSize(html: string): string {
+  const len = html
+    .replace(/<[^>]*>/g, "")
+    .replace(/&[a-z]+;/gi, " ")
+    .trim().length;
+  if (len <= 16) return "text-4xl sm:text-5xl";
+  if (len <= 48) return "text-2xl sm:text-3xl";
+  if (len <= 140) return "text-xl sm:text-2xl";
+  if (len <= 320) return "text-lg";
+  return "text-base";
+}
+
 export default function Flashcards({ cards }: { cards: Flashcard[] }) {
   const decks = useMemo(
     () => Array.from(new Set(cards.map((c) => c.deck))).sort(),
@@ -142,19 +158,23 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
           }}
         >
           {/* Front */}
-          <div className="absolute inset-0 [backface-visibility:hidden] flex flex-col items-center justify-center gap-4 rounded-2xl border border-light-border dark:border-dark-tag bg-japanese-hakuji dark:bg-dark-tag px-8 py-10 shadow-sm group-hover:shadow-md transition-shadow">
-            <div
-              className="flashcard-body text-center text-3xl sm:text-4xl leading-snug text-japanese-sumiiro dark:text-japanese-nyuhakushoku"
-              dangerouslySetInnerHTML={{ __html: card.front }}
-            />
+          <div className="absolute inset-0 [backface-visibility:hidden] overflow-y-auto rounded-2xl border border-light-border dark:border-dark-tag bg-japanese-hakuji dark:bg-dark-tag shadow-sm group-hover:shadow-md transition-shadow">
+            <div className="min-h-full flex items-center justify-center px-8 py-10">
+              <div
+                className={`flashcard-body text-center leading-snug text-japanese-sumiiro dark:text-japanese-nyuhakushoku ${fontSize(card.front)}`}
+                dangerouslySetInnerHTML={{ __html: card.front }}
+              />
+            </div>
           </div>
 
           {/* Back */}
-          <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] flex flex-col items-center justify-center gap-4 rounded-2xl border border-japanese-sumiiro/20 dark:border-japanese-shironezu/15 bg-japanese-kinairo dark:bg-dark-bg px-8 py-10 shadow-sm">
-            <div
-              className="flashcard-body text-center text-2xl sm:text-3xl leading-snug text-japanese-sumiiro dark:text-japanese-shironezu"
-              dangerouslySetInnerHTML={{ __html: card.back }}
-            />
+          <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-y-auto rounded-2xl border border-japanese-sumiiro/20 dark:border-japanese-shironezu/15 bg-japanese-kinairo dark:bg-dark-bg shadow-sm">
+            <div className="min-h-full flex items-center justify-center px-8 py-10">
+              <div
+                className={`flashcard-body text-center leading-snug text-japanese-sumiiro dark:text-japanese-shironezu ${fontSize(card.back)}`}
+                dangerouslySetInnerHTML={{ __html: card.back }}
+              />
+            </div>
           </div>
         </button>
       </div>
