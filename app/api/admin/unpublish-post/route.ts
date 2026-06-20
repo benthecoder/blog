@@ -2,6 +2,14 @@ import fs from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
+import {
+  DRAFTS_DIR,
+  IMAGES_DIR,
+  IMAGES_DRAFTS_DIR,
+  getPostPath,
+  getDraftPath,
+  isSafeSlug,
+} from "@/config/paths";
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -14,14 +22,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Security: prevent path traversal
-    if (slug.includes("..") || slug.includes("/")) {
+    if (!isSafeSlug(slug)) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
 
-    const postsDir = path.join(process.cwd(), "posts");
-    const draftsDir = path.join(process.cwd(), "posts", "drafts");
-    const publishedPath = path.join(postsDir, `${slug}.md`);
-    const draftPath = path.join(draftsDir, `${slug}.md`);
+    const publishedPath = getPostPath(slug);
+    const draftPath = getDraftPath(slug);
 
     // Check if published post exists
     if (!fs.existsSync(publishedPath)) {
@@ -32,8 +38,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Ensure drafts directory exists
-    if (!fs.existsSync(draftsDir)) {
-      fs.mkdirSync(draftsDir, { recursive: true });
+    if (!fs.existsSync(DRAFTS_DIR)) {
+      fs.mkdirSync(DRAFTS_DIR, { recursive: true });
     }
 
     // Read the published content to update image paths
@@ -58,28 +64,19 @@ export async function POST(request: NextRequest) {
     fs.unlinkSync(publishedPath);
 
     // Move associated images back to drafts
-    const imagesDraftsDir = path.join(
-      process.cwd(),
-      "public",
-      "images",
-      "drafts"
-    );
-    const imagesPublicDir = path.join(process.cwd(), "public", "images");
-
-    // Ensure drafts images directory exists
-    if (!fs.existsSync(imagesDraftsDir)) {
-      fs.mkdirSync(imagesDraftsDir, { recursive: true });
+    if (!fs.existsSync(IMAGES_DRAFTS_DIR)) {
+      fs.mkdirSync(IMAGES_DRAFTS_DIR, { recursive: true });
     }
 
-    if (fs.existsSync(imagesPublicDir)) {
-      const publishedImages = fs.readdirSync(imagesPublicDir);
+    if (fs.existsSync(IMAGES_DIR)) {
+      const publishedImages = fs.readdirSync(IMAGES_DIR);
       const postImages = publishedImages.filter((file) =>
         file.startsWith(`${slug}-`)
       );
 
       postImages.forEach((imageFile) => {
-        const sourcePath = path.join(imagesPublicDir, imageFile);
-        const destPath = path.join(imagesDraftsDir, imageFile);
+        const sourcePath = path.join(IMAGES_DIR, imageFile);
+        const destPath = path.join(IMAGES_DRAFTS_DIR, imageFile);
         fs.renameSync(sourcePath, destPath);
       });
     }

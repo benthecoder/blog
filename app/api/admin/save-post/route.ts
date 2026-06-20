@@ -1,8 +1,13 @@
 import fs from "fs";
-import path from "path";
 import matter from "gray-matter";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
+import {
+  DRAFTS_DIR,
+  getPostPath,
+  getDraftPath,
+  isSafeSlug,
+} from "@/config/paths";
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -18,14 +23,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Security: prevent path traversal
-    if (slug.includes("..") || slug.includes("/")) {
+    if (!isSafeSlug(slug)) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
 
-    const postsDir = path.join(process.cwd(), "posts");
-    const draftsDir = path.join(process.cwd(), "posts", "drafts");
-    const publishedPath = path.join(postsDir, `${slug}.md`);
-    const draftPath = path.join(draftsDir, `${slug}.md`);
+    const publishedPath = getPostPath(slug);
+    const draftPath = getDraftPath(slug);
 
     // Check if post already exists (in either location) when creating new
     if (isNew) {
@@ -48,8 +51,8 @@ export async function POST(request: NextRequest) {
     const filePath = isPublished ? publishedPath : draftPath;
 
     // Ensure drafts directory exists
-    if (!isPublished && !fs.existsSync(draftsDir)) {
-      fs.mkdirSync(draftsDir, { recursive: true });
+    if (!isPublished && !fs.existsSync(DRAFTS_DIR)) {
+      fs.mkdirSync(DRAFTS_DIR, { recursive: true });
     }
 
     const fileContent = matter.stringify(content, { title, tags, date });

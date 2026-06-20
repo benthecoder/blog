@@ -2,6 +2,13 @@ import fs from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
+import {
+  IMAGES_DIR,
+  IMAGES_DRAFTS_DIR,
+  getPostPath,
+  getDraftPath,
+  isSafeSlug,
+} from "@/config/paths";
 
 export async function DELETE(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -15,13 +22,13 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Security: prevent path traversal
-    if (slug.includes("..") || slug.includes("/")) {
+    if (!isSafeSlug(slug)) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
 
     // Check both drafts and published folders
-    const draftPath = path.join(process.cwd(), "posts", "drafts", `${slug}.md`);
-    const publishedPath = path.join(process.cwd(), "posts", `${slug}.md`);
+    const draftPath = getDraftPath(slug);
+    const publishedPath = getPostPath(slug);
 
     let deleted = false;
     let deletedFrom = "";
@@ -41,12 +48,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Also delete associated images if they exist
-    const imagesDir = path.join(
-      process.cwd(),
-      "public",
-      "images",
-      deletedFrom === "drafts" ? "drafts" : ""
-    );
+    const imagesDir = deletedFrom === "drafts" ? IMAGES_DRAFTS_DIR : IMAGES_DIR;
 
     let imagesDeleted = 0;
     if (fs.existsSync(imagesDir)) {

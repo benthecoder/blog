@@ -1,8 +1,8 @@
 import fs from "fs";
-import path from "path";
 import matter from "gray-matter";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
+import { getPostPath, getDraftPath, isSafeSlug } from "@/config/paths";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -13,17 +13,15 @@ export async function GET(request: NextRequest) {
   }
 
   // Security: prevent path traversal
-  if (slug.includes("..") || slug.includes("/")) {
+  if (!isSafeSlug(slug)) {
     return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
   }
 
   const authError = checkAdminAuth(request);
   if (authError) return authError;
   try {
-    const postsDir = path.join(process.cwd(), "posts");
-    const draftsDir = path.join(process.cwd(), "posts", "drafts");
-    const publishedPath = path.join(postsDir, `${slug}.md`);
-    const draftPath = path.join(draftsDir, `${slug}.md`);
+    const publishedPath = getPostPath(slug);
+    const draftPath = getDraftPath(slug);
 
     // Check published first, then drafts
     let filePath: string;

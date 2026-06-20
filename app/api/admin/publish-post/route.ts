@@ -2,6 +2,13 @@ import fs from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
+import {
+  IMAGES_DIR,
+  IMAGES_DRAFTS_DIR,
+  getPostPath,
+  getDraftPath,
+  isSafeSlug,
+} from "@/config/paths";
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -14,14 +21,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Security: prevent path traversal
-    if (slug.includes("..") || slug.includes("/")) {
+    if (!isSafeSlug(slug)) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
 
-    const postsDir = path.join(process.cwd(), "posts");
-    const draftsDir = path.join(process.cwd(), "posts", "drafts");
-    const publishedPath = path.join(postsDir, `${slug}.md`);
-    const draftPath = path.join(draftsDir, `${slug}.md`);
+    const publishedPath = getPostPath(slug);
+    const draftPath = getDraftPath(slug);
 
     // Check if already published
     if (fs.existsSync(publishedPath)) {
@@ -49,23 +54,15 @@ export async function POST(request: NextRequest) {
     fs.unlinkSync(draftPath);
 
     // Move associated images from drafts to published
-    const imagesDraftsDir = path.join(
-      process.cwd(),
-      "public",
-      "images",
-      "drafts"
-    );
-    const imagesPublicDir = path.join(process.cwd(), "public", "images");
-
-    if (fs.existsSync(imagesDraftsDir)) {
-      const draftImages = fs.readdirSync(imagesDraftsDir);
+    if (fs.existsSync(IMAGES_DRAFTS_DIR)) {
+      const draftImages = fs.readdirSync(IMAGES_DRAFTS_DIR);
       const postImages = draftImages.filter((file) =>
         file.startsWith(`${slug}-`)
       );
 
       postImages.forEach((imageFile) => {
-        const sourcePath = path.join(imagesDraftsDir, imageFile);
-        const destPath = path.join(imagesPublicDir, imageFile);
+        const sourcePath = path.join(IMAGES_DRAFTS_DIR, imageFile);
+        const destPath = path.join(IMAGES_DIR, imageFile);
         fs.renameSync(sourcePath, destPath);
       });
     }

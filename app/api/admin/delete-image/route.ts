@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
+import { IMAGES_DIR, IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
 
 export async function DELETE(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -18,24 +19,13 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Security: prevent path traversal
-    if (fileName.includes("..") || fileName.includes("/")) {
+    if (!isSafeSlug(fileName)) {
       return NextResponse.json({ error: "Invalid file name" }, { status: 400 });
     }
 
     // Check both drafts and published folders
-    const draftPath = path.join(
-      process.cwd(),
-      "public",
-      "images",
-      "drafts",
-      fileName
-    );
-    const publishedPath = path.join(
-      process.cwd(),
-      "public",
-      "images",
-      fileName
-    );
+    const draftPath = path.join(IMAGES_DRAFTS_DIR, fileName);
+    const publishedPath = path.join(IMAGES_DIR, fileName);
 
     if (fs.existsSync(draftPath)) {
       fs.unlinkSync(draftPath);

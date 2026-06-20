@@ -14,6 +14,7 @@ import {
   CLUSTER_MIN_SIZE,
   CLUSTERING_UMAP_COMPONENTS,
 } from "../config/constants";
+import { DATA_DIR } from "../config/paths";
 import type {
   KnowledgeMapOutput,
   ArticleNode,
@@ -160,13 +161,12 @@ async function generateKnowledgeMap() {
     }));
 
     // Create public/data directory if it doesn't exist
-    const dataDir = path.join(process.cwd(), "public", "data");
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
     }
 
     // Write to file
-    const outputPath = path.join(dataDir, "knowledge-map.json");
+    const outputPath = path.join(DATA_DIR, "knowledge-map.json");
 
     const output: KnowledgeMapOutput = {
       success: true,
