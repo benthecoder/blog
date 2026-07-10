@@ -1,5 +1,6 @@
 import { getPostContent, getPostMetadata } from "@/utils/content/posts";
 import RenderPost from "@/components/posts/RenderPost";
+import MarkdownContent from "@/components/posts/MarkdownContent";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -84,7 +85,9 @@ const PostPage = async ({ params }: { params: Params }) => {
         next={post.next}
         slug={slug}
         wordcount={post.wordcount}
-      />
+      >
+        <MarkdownContent content={postContent.content} />
+      </RenderPost>
     </>
   );
 };

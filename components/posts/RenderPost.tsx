@@ -1,7 +1,7 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { ParsedPost, PostMetadata } from "@/types/post";
 import { extractTags } from "@/utils/content/tags";
-import MarkdownContent from "./MarkdownContent";
 import PostViewTracker from "./PostViewTracker";
 
 interface RenderPostProps {
@@ -10,9 +10,17 @@ interface RenderPostProps {
   next: PostMetadata | null;
   slug: string | null;
   wordcount?: number;
+  children: ReactNode;
 }
 
-const RenderPost = ({ post, prev, next, slug, wordcount }: RenderPostProps) => {
+const RenderPost = ({
+  post,
+  prev,
+  next,
+  slug,
+  wordcount,
+  children,
+}: RenderPostProps) => {
   const { title, date } = post.data;
   const tags = extractTags(post.data);
   const readingTime =
@@ -84,7 +92,7 @@ const RenderPost = ({ post, prev, next, slug, wordcount }: RenderPostProps) => {
         </div>
 
         <article className="prose dark:prose-invert dark:text-japanese-shironezu text-sm md:text-base leading-relaxed max-w-none selection:bg-japanese-unoharairo/30 dark:selection:bg-japanese-murasakisuishiyou/20 prose-a:text-japanese-sumiiro prose-a:decoration-japanese-soshoku/50 hover:prose-a:text-japanese-sumiiro/70 hover:prose-a:decoration-japanese-sumiiro prose-headings:text-japanese-sumiiro dark:prose-headings:text-japanese-murasakisuishiyou">
-          <MarkdownContent content={post.content} />
+          {children}
         </article>
       </div>
 
