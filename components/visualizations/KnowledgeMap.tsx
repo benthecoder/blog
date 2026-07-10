@@ -17,6 +17,9 @@ export default function KnowledgeMap({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [articles, setArticles] = useState<ArticleNode[]>([]);
+  const [neighborsById, setNeighborsById] = useState<
+    Map<string, { id: string; sim: number }[]>
+  >(new Map());
   const [clusterLabels, setClusterLabels] = useState<Record<number, string>>(
     {}
   );
@@ -55,6 +58,17 @@ export default function KnowledgeMap({
       const result: KnowledgeMapOutput = await response.json();
       if (result.success) {
         setArticles(result.data);
+        const neighbors = new Map<string, { id: string; sim: number }[]>();
+        for (const [i, j, sim] of result.similarityEdges ?? []) {
+          const a = result.data[i]?.id;
+          const b = result.data[j]?.id;
+          if (!a || !b) continue;
+          if (!neighbors.has(a)) neighbors.set(a, []);
+          if (!neighbors.has(b)) neighbors.set(b, []);
+          neighbors.get(a)!.push({ id: b, sim });
+          neighbors.get(b)!.push({ id: a, sim });
+        }
+        setNeighborsById(neighbors);
         setClusterLabels(result.clusterLabels || {});
       } else {
         setError("failed to load");
@@ -82,13 +96,6 @@ export default function KnowledgeMap({
     }
     return true;
   });
-
-  const similarity = useCallback((a: number[], b: number[]): number => {
-    const dot = a.reduce((sum, val, i) => sum + val * b[i], 0);
-    const magA = Math.sqrt(a.reduce((sum, val) => sum + val * val, 0));
-    const magB = Math.sqrt(b.reduce((sum, val) => sum + val * val, 0));
-    return dot / (magA * magB);
-  }, []);
 
   const getClusterColor = useCallback(
     (cluster: number, isDark: boolean): string => {
@@ -154,10 +161,11 @@ export default function KnowledgeMap({
     // Similarity connections on hover/select — opacity scales with similarity
     const focusedArticleNode = selectedArticleNode ?? hoveredArticleNode;
     if (focusedArticleNode) {
-      filtered.forEach((other) => {
-        if (other.id === focusedArticleNode.id) return;
-        const sim = similarity(focusedArticleNode.embedding, other.embedding);
-        if (sim > 0.7) {
+      const byId = new Map(filtered.map((a) => [a.id, a]));
+      (neighborsById.get(focusedArticleNode.id) ?? []).forEach(
+        ({ id, sim }) => {
+          const other = byId.get(id);
+          if (!other) return;
           const alpha = Math.max(0.06, (sim - 0.7) * 0.5);
           ctx.beginPath();
           ctx.moveTo(
@@ -171,7 +179,7 @@ export default function KnowledgeMap({
           ctx.lineWidth = 0.8 / transform.k;
           ctx.stroke();
         }
-      });
+      );
     }
 
     // Cluster centroid labels
@@ -241,7 +249,7 @@ export default function KnowledgeMap({
     hoveredArticleNode,
     selectedArticleNode,
     searchQuery,
-    similarity,
+    neighborsById,
     getClusterColor,
     clusterLabels,
     canvasVersion,

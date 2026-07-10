@@ -32,6 +32,7 @@ export const ANKI_DECK = process.env.ANKI_DECK || "Default";
 export const NUM_CLUSTERS = 10;
 export const CLUSTER_MIN_SIZE = 5; // merge clusters smaller than this into nearest centroid
 export const CLUSTERING_UMAP_COMPONENTS = 10;
+export const SIMILARITY_EDGE_THRESHOLD = 0.7; // min cosine sim for a map edge
 export const ANTHROPIC_CLUSTER_MODEL = "claude-haiku-4-5";
 export const CLUSTER_LABEL_MAX_SAMPLES = 15;
 export const CLUSTER_LABEL_TIMEOUT = 30000;
