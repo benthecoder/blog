@@ -46,7 +46,6 @@ public/robots.txt
 public/sitemap*
 public/data/knowledge-map.json
 
-app/api/rss/feed.json
 
 AGENTS.md
 CLAUDE.md
