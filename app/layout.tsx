@@ -5,7 +5,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "./providers";
-import { ConditionalLayout } from "@/components/layout/ConditionalLayout";
+import ThemeSwitch from "@/components/ui/ThemeSwitch";
+import SearchModal from "@/components/ui/SearchModal";
+import { RandomPostListener } from "@/components/layout/RandomPostListener";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bneo.xyz"),
@@ -82,7 +84,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <body className="antialiased">
         <Providers>
-          <ConditionalLayout>{children}</ConditionalLayout>
+          <div className="fixed top-4 right-4 z-50">
+            <ThemeSwitch />
+          </div>
+          <SearchModal />
+          <RandomPostListener />
+          {children}
         </Providers>
         <SpeedInsights />
         <Analytics />
