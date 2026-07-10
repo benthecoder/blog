@@ -13,12 +13,14 @@ import {
   NUM_CLUSTERS,
   CLUSTER_MIN_SIZE,
   CLUSTERING_UMAP_COMPONENTS,
+  SIMILARITY_EDGE_THRESHOLD,
 } from "../config/constants";
 import { DATA_DIR } from "../config/paths";
 import type {
   KnowledgeMapOutput,
   ArticleNode,
   ArticleData,
+  SimilarityEdge,
 } from "../types/knowledgeMap";
 import type { ChunkRow } from "../types/chunks";
 import fs from "fs";
@@ -152,13 +154,32 @@ async function generateKnowledgeMap() {
       postSlug: item.postSlug,
       postTitle: item.postTitle,
       wordCount: item.content.split(/\s+/).length,
-      embedding: item.embedding.map((v) => Math.round(v * 10000) / 10000),
       publishedDate: item.publishedDate,
       tags: item.tags,
-      x: normalizedPositions[index].x,
-      y: normalizedPositions[index].y,
+      x: Math.round(normalizedPositions[index].x * 100) / 100,
+      y: Math.round(normalizedPositions[index].y * 100) / 100,
       cluster: finalLabels[index],
     }));
+
+    // Precompute similarity edges so the client never needs raw embeddings
+    console.log("Computing similarity edges...");
+    const norms = embeddings.map((e) =>
+      Math.sqrt(e.reduce((sum, v) => sum + v * v, 0))
+    );
+    const similarityEdges: SimilarityEdge[] = [];
+    for (let i = 0; i < embeddings.length; i++) {
+      const a = embeddings[i];
+      for (let j = i + 1; j < embeddings.length; j++) {
+        const b = embeddings[j];
+        let dot = 0;
+        for (let k = 0; k < a.length; k++) dot += a[k] * b[k];
+        const sim = dot / (norms[i] * norms[j]);
+        if (sim > SIMILARITY_EDGE_THRESHOLD) {
+          similarityEdges.push([i, j, Math.round(sim * 1000) / 1000]);
+        }
+      }
+    }
+    console.log(`  ${similarityEdges.length} edges above threshold`);
 
     // Create public/data directory if it doesn't exist
     if (!fs.existsSync(DATA_DIR)) {
@@ -171,6 +192,7 @@ async function generateKnowledgeMap() {
     const output: KnowledgeMapOutput = {
       success: true,
       data: processedData,
+      similarityEdges,
       count: processedData.length,
       numClusters,
       clusterLabels,

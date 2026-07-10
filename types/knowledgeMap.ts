@@ -25,7 +25,6 @@ export interface ArticleNode {
   postSlug: string;
   postTitle: string;
   wordCount: number;
-  embedding: number[];
   publishedDate?: string;
   tags: string[];
   x: number;
@@ -33,9 +32,14 @@ export interface ArticleNode {
   cluster: number;
 }
 
+// [indexA, indexB, cosine similarity] — indices into `data`, only pairs
+// above SIMILARITY_EDGE_THRESHOLD
+export type SimilarityEdge = [number, number, number];
+
 export interface KnowledgeMapOutput {
   success: boolean;
   data: ArticleNode[];
+  similarityEdges: SimilarityEdge[];
   count: number;
   numClusters: number;
   clusterLabels?: Record<number, string>;
