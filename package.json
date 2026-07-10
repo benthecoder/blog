@@ -82,28 +82,5 @@
     "*.{ts,tsx,js,jsx,json,css,md}": [
       "prettier --write"
     ]
-  },
-  "pnpm": {
-    "overrides": {
-      "js-yaml@<3.14.2": "3.14.2",
-      "js-yaml@>=4.0.0 <4.1.1": "4.1.1",
-      "glob@>=10.0.0 <10.5.0": "10.5.0",
-      "glob@>=11.0.0 <11.1.0": "11.1.0",
-      "qs": ">=6.15.2",
-      "mdast-util-to-hast": ">=13.2.1",
-      "protobufjs": ">=7.5.5",
-      "minimatch@<4": "3.1.4",
-      "minimatch@>=9.0.0 <9.0.7": "9.0.7",
-      "flatted": ">=3.4.2",
-      "picomatch@<3": "2.3.2",
-      "picomatch@>=4.0.0 <4.0.4": "4.0.4",
-      "ajv@<6.14.0": "6.14.0",
-      "svelte": ">=5.53.5",
-      "brace-expansion@<2": "1.1.13",
-      "brace-expansion@>=2.0.0 <2.0.3": "2.0.3",
-      "yaml": ">=2.8.3",
-      "postcss": ">=8.5.10",
-      "ws": "8.21.0"
-    }
   }
 }
