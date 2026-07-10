@@ -7,7 +7,7 @@ const PostPreview = (props: PostMetadata) => {
       href={`/posts/${props.slug}`}
       className="group relative flex justify-between items-center cursor-crosshair text-sm md:text-base"
     >
-      <p className="text-japanese-sumiiro dark:text-japanese-shironezu">
+      <p className="text-japanese-sumiiro dark:text-japanese-shironezu group-hover:underline">
         {props.title}
       </p>
       <p className="text-japanese-nezumiiro dark:text-japanese-ginnezu shrink-0 ml-4">
