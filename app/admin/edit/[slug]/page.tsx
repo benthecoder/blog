@@ -9,6 +9,7 @@ import type {
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import RenderPost from "@/components/posts/RenderPost";
+import MarkdownPreview from "@/components/posts/MarkdownPreview";
 import matter from "gray-matter";
 import { DEFAULT_POST_TEMPLATE } from "../post-template";
 import {
@@ -746,7 +747,9 @@ export default function EditPostPage() {
                 };
 
                 return (
-                  <RenderPost post={post} prev={null} next={null} slug={null} />
+                  <RenderPost post={post} prev={null} next={null} slug={null}>
+                    <MarkdownPreview content={post.content} />
+                  </RenderPost>
                 );
               })()}
             </div>

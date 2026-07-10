@@ -93,10 +93,21 @@ body {
   border: none !important;
 }
 
-.prose pre > div {
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
+.prose pre.shiki {
+  padding: 1rem;
+  margin: 0;
+  max-width: 100%;
+  border-radius: 0;
+  background-color: #f3f3f2 !important;
+}
+
+.dark .prose pre.shiki,
+.dark .prose pre.shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
 .prose code::before {
@@ -117,21 +128,6 @@ body {
   box-shadow: none !important;
   outline: none !important;
   overflow-x: auto;
-}
-
-.dark .prose pre > div {
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-.prose pre[class*="language-"],
-.prose div[class*="language-"],
-.prose code[class*="language-"] {
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-  border-radius: 0 !important;
 }
 
 .prose ul li::before {
