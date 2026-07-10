@@ -16,7 +16,6 @@ const links = [
   { path: "/projects", text: "projects", icon: "code.svg" },
   { path: "/library", text: "library", icon: "library.svg" },
   { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
-  { path: "/flashcards", text: "flashcards", icon: "flashcards.svg" },
   { path: "/gallery", text: "gallery", icon: "gallery.svg" },
 ];
 
