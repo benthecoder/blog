@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
-import feed from "./feed.json";
-import { marked } from "marked";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkGfm from "remark-gfm";
+import remarkRehype from "remark-rehype";
+import rehypeRaw from "rehype-raw";
+import rehypeStringify from "rehype-stringify";
+import { getPostMetadata, getPostContent } from "@/utils/content/posts";
 
 export const dynamic = "force-static";
 
@@ -9,38 +14,38 @@ const siteMetadata = {
   description: "Daily writing about learnings, thoughts, and ideas",
 };
 
+const processor = unified()
+  .use(remarkParse)
+  .use(remarkGfm)
+  .use(remarkRehype, { allowDangerousHtml: true })
+  .use(rehypeRaw)
+  .use(rehypeStringify);
+
 export async function GET() {
   try {
     const rootUrl = process.env.NEXT_PUBLIC_ROOT_URL;
     const feedUrl = `${rootUrl}/rss.xml`;
+    const posts = getPostMetadata();
 
-    const postItems = feed
-      .map(
-        (page: {
-          data: { title: string; date: string };
-          content: string;
-          filePath: string;
-        }) => {
-          const url = `${rootUrl}/posts/${page.filePath.replace(".md", "")}`;
-          let contentHTML = marked(page.content) as string;
+    const postItems = posts
+      .map((post) => {
+        const url = `${rootUrl}/posts/${post.slug}`;
+        const { content } = getPostContent(post.slug);
+        const contentHTML = String(processor.processSync(content)).replace(
+          /src="\/images\//g,
+          `src="${rootUrl}/images/`
+        );
+        const pubDate = new Date(post.date).toUTCString();
 
-          contentHTML = contentHTML.replace(
-            /src="\/images\//g,
-            `src="${rootUrl}/images/`
-          );
-
-          const pubDate = new Date(page.data.date).toUTCString();
-
-          return `<item>
-        <title><![CDATA[${page.data.title}]]></title>
+        return `<item>
+        <title><![CDATA[${post.title}]]></title>
         <link>${url}</link>
         <guid>${url}</guid>
         <pubDate>${pubDate}</pubDate>
         <description><![CDATA[${contentHTML}]]></description>
         <content:encoded><![CDATA[${contentHTML}]]></content:encoded>
       </item>`;
-        }
-      )
+      })
       .join("");
 
     const rss = `<?xml version="1.0" encoding="UTF-8"?>
@@ -53,7 +58,7 @@ export async function GET() {
         <description>${siteMetadata.description}</description>
         <link>${rootUrl}</link>
         <atom:link href="${feedUrl}" rel="self" type="application/rss+xml" />
-        <lastBuildDate>${new Date(feed[0].data.date).toUTCString()}</lastBuildDate>
+        <lastBuildDate>${new Date(posts[0].date).toUTCString()}</lastBuildDate>
         ${postItems}
       </channel>
     </rss>`;
