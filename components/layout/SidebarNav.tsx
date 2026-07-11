@@ -1,0 +1,127 @@
+"use client";
+
+import type { MouseEvent } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
+
+const links = [
+  { path: "/posts", text: "archive", icon: "archive.svg" },
+  { path: "/random", text: "random", icon: "random.svg" },
+  { path: "/contact", text: "findme", icon: "contact.svg" },
+  { path: "/hn", text: "hn", icon: "news.svg" },
+  { path: "/now", text: "now", icon: "now.svg" },
+  { path: "/curius", text: "curius", icon: "bookmark.svg" },
+  { path: "/projects", text: "projects", icon: "code.svg" },
+  { path: "/library", text: "library", icon: "library.svg" },
+  { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
+  { path: "/gallery", text: "gallery", icon: "gallery.svg" },
+];
+
+export function SidebarNav() {
+  const pathname = usePathname();
+  const [spinning, setSpinning] = useState(false);
+  const spinTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    function onSpin() {
+      setSpinning(true);
+      if (spinTimer.current) clearTimeout(spinTimer.current);
+      spinTimer.current = setTimeout(() => setSpinning(false), 500);
+    }
+    window.addEventListener("random-spin", onSpin);
+    return () => {
+      window.removeEventListener("random-spin", onSpin);
+      if (spinTimer.current) clearTimeout(spinTimer.current);
+    };
+  }, []);
+
+  const [hoveredLink, setHoveredLink] = useState<{
+    text: string;
+    x: number;
+    y: number;
+    isMobile: boolean;
+  } | null>(null);
+
+  const handleMouseEnter = (e: MouseEvent<HTMLAnchorElement>, text: string) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const isMobile = window.innerWidth < 1024;
+
+    if (isMobile) {
+      // Position below and centered on mobile
+      setHoveredLink({
+        text,
+        x: rect.left + rect.width / 2,
+        y: rect.bottom,
+        isMobile: true,
+      });
+    } else {
+      // Position to the right on desktop
+      setHoveredLink({
+        text,
+        x: rect.right,
+        y: rect.top,
+        isMobile: false,
+      });
+    }
+  };
+
+  return (
+    <>
+      <nav className="flex flex-row gap-2 justify-center lg:flex-col lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-6 lg:mb-0">
+        {links.map(({ path, text, icon }) => (
+          <Link
+            key={path}
+            href={path}
+            className={`inline-flex w-8 h-8 lg:w-11 lg:h-11 transition-opacity ${
+              pathname === path ? "opacity-50" : "hover:opacity-70"
+            }`}
+            onMouseEnter={(e) => handleMouseEnter(e, text)}
+            onMouseLeave={() => setHoveredLink(null)}
+            onClick={
+              path === "/random"
+                ? (e) => {
+                    e.preventDefault();
+                    window.dispatchEvent(new CustomEvent("random-dice-click"));
+                  }
+                : undefined
+            }
+          >
+            {icon ? (
+              <Image
+                src={`/icons/${icon}`}
+                alt={text}
+                width={10}
+                height={10}
+                className={`w-full h-full dark:invert${path === "/random" && spinning ? " dice-spin" : ""}`}
+              />
+            ) : (
+              text
+            )}
+          </Link>
+        ))}
+      </nav>
+
+      {hoveredLink && (
+        <div
+          className="fixed z-50 pointer-events-none px-2 py-1 bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90 text-japanese-kinairo dark:text-japanese-sumiiro backdrop-blur-xs rounded-sm text-xs font-medium whitespace-nowrap"
+          style={
+            hoveredLink.isMobile
+              ? {
+                  left: hoveredLink.x,
+                  top: hoveredLink.y + 8,
+                  transform: "translateX(-50%)",
+                }
+              : {
+                  left: hoveredLink.x + 8,
+                  top: hoveredLink.y,
+                }
+          }
+        >
+          {hoveredLink.text}
+        </div>
+      )}
+    </>
+  );
+}
