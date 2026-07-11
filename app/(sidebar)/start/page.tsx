@@ -47,7 +47,10 @@ const ExternalLinkIcon = () => (
 const StartPage = () => {
   const [index, setIndex] = useState(0);
 
+  // Randomize only after hydration; random in render/initializer would
+  // mismatch the server HTML.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIndex(Math.floor(Math.random() * INTERESTS.length));
   }, []);
 

@@ -1,19 +1,24 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 
+// Hydration-safe mounted flag: false during SSR/hydration, true after.
+function useMounted() {
+  return useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+}
+
 const ThemeSwitcher = () => {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useMounted();
   const { resolvedTheme, setTheme } = useTheme();
 
   const toggleTheme = () =>
     setTheme(resolvedTheme === "light" ? "dark" : "light");
   const icon = resolvedTheme === "light" ? "dark.svg" : "light.svg";
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   if (!mounted)
     return <div className="w-6 h-6 md:w-12 md:h-12" aria-hidden="true" />;

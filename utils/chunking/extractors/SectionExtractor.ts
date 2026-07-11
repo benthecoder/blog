@@ -12,7 +12,12 @@
 
 import { Node } from "unist";
 import { visit } from "unist-util-visit";
-import { ChunkExtractor, ChunkContext, ProcessedChunk } from "@/types/chunks";
+import {
+  ChunkExtractor,
+  ChunkContext,
+  MdNode,
+  ProcessedChunk,
+} from "@/types/chunks";
 import { MIN_SECTION_LENGTH } from "@/config/constants";
 
 export class SectionExtractor implements ChunkExtractor {
@@ -32,9 +37,13 @@ export class SectionExtractor implements ChunkExtractor {
       content: string[];
     } | null = null;
 
-    visit(tree, (node: any) => {
+    visit(tree, (node: MdNode) => {
       // Found a heading
-      if (node.type === "heading" && node.depth <= 3) {
+      if (
+        node.type === "heading" &&
+        node.depth !== undefined &&
+        node.depth <= 3
+      ) {
         // Save previous section if it exists
         if (currentSection) {
           sections.push(currentSection);
@@ -42,12 +51,12 @@ export class SectionExtractor implements ChunkExtractor {
 
         // Start new section
         const headingText = node.children
-          ?.map((child: any) => child.value || "")
+          ?.map((child: MdNode) => child.value || "")
           .join("")
           .trim();
 
         currentSection = {
-          heading: headingText,
+          heading: headingText ?? "",
           level: node.depth,
           content: [],
         };
@@ -56,7 +65,7 @@ export class SectionExtractor implements ChunkExtractor {
       else if (currentSection) {
         if (node.type === "paragraph") {
           const text = node.children
-            ?.map((child: any) => child.value || "")
+            ?.map((child: MdNode) => child.value || "")
             .join("")
             .trim();
           if (text) currentSection.content.push(text);
@@ -100,15 +109,15 @@ export class SectionExtractor implements ChunkExtractor {
     return chunks;
   }
 
-  private extractListItems(listNode: any): string {
+  private extractListItems(listNode: MdNode): string {
     const items: string[] = [];
 
-    listNode.children?.forEach((listItem: any) => {
+    listNode.children?.forEach((listItem: MdNode) => {
       const text = listItem.children
-        ?.map((child: any) => {
+        ?.map((child: MdNode) => {
           if (child.type === "paragraph") {
             return child.children
-              ?.map((c: any) => c.value || "")
+              ?.map((c: MdNode) => c.value || "")
               .join("")
               .trim();
           }

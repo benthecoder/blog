@@ -8,6 +8,7 @@ import type {
 } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
 import matter from "gray-matter";
@@ -53,8 +54,6 @@ export default function EditPostPage() {
   const [imageNameInput, setImageNameInput] = useState("");
   const [prevSlug, setPrevSlug] = useState<string | null>(null);
   const [nextSlug, setNextSlug] = useState<string | null>(null);
-  const [prevDate, setPrevDate] = useState<string | null>(null);
-  const [nextDate, setNextDate] = useState<string | null>(null);
   const [postImages, setPostImages] = useState<string[]>([]);
   const [showImages, setShowImages] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -88,28 +87,19 @@ export default function EditPostPage() {
     return () => abortController.abort();
   }, [slug, isNew]);
 
-  // Calculate prev/next dates for new posts
-  useEffect(() => {
-    if (!isNew) return;
+  // Prev/next dates for new posts: pure function of the date param
+  const dateParam = isNew ? searchParams.get("date") : null;
+  const shiftDate = (base: string, days: number) => {
+    const d = new Date(base);
+    d.setDate(d.getDate() + days);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  };
+  const prevDate = dateParam ? shiftDate(dateParam, -1) : null;
+  const nextDate = dateParam ? shiftDate(dateParam, 1) : null;
 
-    const dateParam = searchParams.get("date");
-    if (!dateParam) return;
-
-    const currentDate = new Date(dateParam);
-
-    // Previous day
-    const prevDateObj = new Date(currentDate);
-    prevDateObj.setDate(prevDateObj.getDate() - 1);
-    const prevDateStr = `${prevDateObj.getFullYear()}-${String(prevDateObj.getMonth() + 1).padStart(2, "0")}-${String(prevDateObj.getDate()).padStart(2, "0")}`;
-    setPrevDate(prevDateStr);
-
-    // Next day
-    const nextDateObj = new Date(currentDate);
-    nextDateObj.setDate(nextDateObj.getDate() + 1);
-    const nextDateStr = `${nextDateObj.getFullYear()}-${String(nextDateObj.getMonth() + 1).padStart(2, "0")}-${String(nextDateObj.getDate()).padStart(2, "0")}`;
-    setNextDate(nextDateStr);
-  }, [isNew, searchParams]);
-
+  // Post/template load syncs fetch + localStorage draft state into the
+  // editor; inherently effect-driven (revisit in the editor decomposition).
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const draftKey = `draft-${slug}`;
 
@@ -172,6 +162,7 @@ export default function EditPostPage() {
       }
     }
   }, [slug, isNew, searchParams]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Stable identity required: dep of the cmd+S keydown effect below
   const handleSave = useCallback(async () => {
@@ -710,9 +701,11 @@ export default function EditPostPage() {
                   : `/images/${img}`;
                 return (
                   <div key={img} className="shrink-0 group relative">
-                    <img
+                    <Image
                       src={imgPath}
                       alt={img}
+                      width={80}
+                      height={80}
                       className="h-20 w-20 object-cover rounded-sm border border-japanese-shiraumenezu dark:border-gray-700"
                     />
                     <button

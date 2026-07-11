@@ -126,18 +126,20 @@ async function callAnthropicForLabel(
     {
       maxRetries: 3,
       timeout: CLUSTER_LABEL_TIMEOUT,
-      shouldRetry: (error: any) => {
+      shouldRetry: (error: unknown) => {
+        const err = error as { status?: number; message?: string };
         // Retry on rate limits, timeouts, overloaded errors
-        return (
-          error?.status === 429 ||
-          error?.status === 529 ||
-          error?.message?.includes("timeout") ||
-          error?.message?.includes("overloaded")
+        return Boolean(
+          err?.status === 429 ||
+            err?.status === 529 ||
+            err?.message?.includes("timeout") ||
+            err?.message?.includes("overloaded")
         );
       },
-      onRetry: (error: any, attempt: number, delay: number) => {
+      onRetry: (error: unknown, attempt: number, delay: number) => {
+        const err = error as { message?: string };
         console.log(
-          `Cluster labeling retry ${attempt}/3: ${error.message}. ` +
+          `Cluster labeling retry ${attempt}/3: ${err.message}. ` +
             `Waiting ${delay}ms...`
         );
       },

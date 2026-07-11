@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { GalleryImage } from "@/utils/content/gallery";
 
 interface GalleryProps {
@@ -86,29 +86,28 @@ export default function Gallery({ images }: GalleryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  const imagePositions = useRef(
-    (() => {
-      const columnHeights = new Array(COLS).fill(0);
-      const columnX = Array.from(
-        { length: COLS },
-        (_, i) => i * (BASE_SIZE + GAP)
+  // Derived masonry layout, not mutable state — memoized per image list
+  const imagePositions = useMemo(() => {
+    const columnHeights = new Array(COLS).fill(0);
+    const columnX = Array.from(
+      { length: COLS },
+      (_, i) => i * (BASE_SIZE + GAP)
+    );
+
+    return images.map((img) => {
+      const width = BASE_SIZE;
+      const height = width / img.aspectRatio;
+
+      const shortestColIndex = columnHeights.indexOf(
+        Math.min(...columnHeights)
       );
+      const x = columnX[shortestColIndex];
+      const y = columnHeights[shortestColIndex];
+      columnHeights[shortestColIndex] += height + GAP;
 
-      return images.map((img) => {
-        const width = BASE_SIZE;
-        const height = width / img.aspectRatio;
-
-        const shortestColIndex = columnHeights.indexOf(
-          Math.min(...columnHeights)
-        );
-        const x = columnX[shortestColIndex];
-        const y = columnHeights[shortestColIndex];
-        columnHeights[shortestColIndex] += height + GAP;
-
-        return { image: img, x, y, width, height };
-      });
-    })()
-  ).current;
+      return { image: img, x, y, width, height };
+    });
+  }, [images]);
 
   useEffect(() => {
     const container = containerRef.current;

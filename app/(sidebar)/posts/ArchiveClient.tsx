@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { PostMetadata } from "@/types/post";
 import { countTagFrequency } from "@/utils/content/tags";
 import PostPreview from "@/components/posts/PostPreview";
@@ -56,8 +56,8 @@ export default function ArchiveClient({
       ? new Date(allPosts[0].date).getFullYear()
       : new Date().getFullYear();
 
-  useEffect(() => {
-    if (sort !== "views" || viewCounts !== null || viewsLoading) return;
+  const fetchViewCounts = () => {
+    if (viewCounts !== null || viewsLoading) return;
     setViewsLoading(true);
     fetch("/api/views")
       .then((r) => r.json())
@@ -72,7 +72,7 @@ export default function ArchiveClient({
       })
       .catch(() => setViewCounts(new Map()))
       .finally(() => setViewsLoading(false));
-  }, [sort, viewCounts, viewsLoading]);
+  };
 
   const setView = (v: View) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -87,6 +87,7 @@ export default function ArchiveClient({
   const handleSort = (s: Sort) => {
     setSort(s);
     setPage(1);
+    if (s === "views") fetchViewCounts();
   };
 
   const sortedTags = countTagFrequency(allPosts, ["✰"]);
