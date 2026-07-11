@@ -117,7 +117,10 @@ const StartPage = () => {
         <p>
           browse the <Link href="/posts">archives</Link>.{" "}
           <span className="text-xs opacity-40">
-            (hint: press <code>r</code> if you&apos;re feeling lucky)
+            {/* explicit string: turbopack's server/client compiles disagree
+                about the space between </code> and the entity-bearing text */}
+            (hint: press <code>r</code>
+            {" if you're feeling lucky)"}
           </span>
         </p>
       </article>
