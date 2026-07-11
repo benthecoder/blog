@@ -4,6 +4,15 @@ import { useState, Fragment } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PostMetadata } from "@/types/post";
+import {
+  DayData,
+  buildWeeks,
+  dateKey,
+  getMonthLabels,
+  groupPostsByDate,
+  totalWordCount,
+  wordCountColor,
+} from "@/utils/content/heatmap";
 
 interface HeatmapProps {
   posts: PostMetadata[];
@@ -13,26 +22,137 @@ interface HeatmapProps {
   navigationPath?: string;
 }
 
-interface DayData {
-  date: Date;
-  posts: PostMetadata[];
-  dateKey: string;
+const DAY_LABELS = ["s", "m", "t", "w", "t", "f", "s"];
+
+function YearNav({
+  year,
+  minYear,
+  maxYear,
+  navigationPath,
+}: {
+  year: number;
+  minYear: number;
+  maxYear: number;
+  navigationPath: string;
+}) {
+  const sep = navigationPath.includes("?") ? "&" : "?";
+  const linkCls =
+    "text-sm text-japanese-nezumiiro dark:text-japanese-ginnezu hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors";
+  const disabledCls =
+    "text-sm text-japanese-nezumiiro/30 dark:text-japanese-ginnezu/30";
+
+  return (
+    <div className="flex items-center justify-between mb-4">
+      {year > minYear ? (
+        <Link
+          href={`${navigationPath}${sep}year=${year - 1}&month=0`}
+          className={linkCls}
+        >
+          ← {year - 1}
+        </Link>
+      ) : (
+        <span className={disabledCls}>← {year - 1}</span>
+      )}
+      <h1 className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu">
+        {year}
+      </h1>
+      {year < maxYear ? (
+        <Link
+          href={`${navigationPath}${sep}year=${year + 1}&month=0`}
+          className={linkCls}
+        >
+          {year + 1} →
+        </Link>
+      ) : (
+        <span className={disabledCls}>{year + 1} →</span>
+      )}
+    </div>
+  );
 }
 
-const MONTH_NAMES = [
-  "jan",
-  "feb",
-  "mar",
-  "apr",
-  "may",
-  "jun",
-  "jul",
-  "aug",
-  "sep",
-  "oct",
-  "nov",
-  "dec",
-];
+function DayCell({
+  day,
+  isToday,
+  onHover,
+  onLeave,
+  onClick,
+}: {
+  day: DayData;
+  isToday: boolean;
+  onHover: (day: DayData) => void;
+  onLeave: () => void;
+  onClick: (day: DayData) => void;
+}) {
+  return (
+    <div
+      className={`w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-xs ${wordCountColor(day.posts)} ${
+        day.posts.length > 0
+          ? "cursor-pointer hover:ring-1 hover:ring-japanese-sumiiro dark:hover:ring-japanese-shironezu"
+          : ""
+      } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-[box-shadow] duration-150`}
+      onMouseEnter={() => day.posts.length > 0 && onHover(day)}
+      onMouseLeave={onLeave}
+      onClick={() => onClick(day)}
+      title={day.date.toDateString()}
+    />
+  );
+}
+
+function HoverInfo({ day }: { day: DayData }) {
+  return (
+    <div className="text-xs">
+      <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
+        {day.date.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+        })}{" "}
+        ·{" "}
+      </span>
+      {day.posts.map((post, idx) => (
+        <span key={post.slug}>
+          {idx > 0 && ", "}
+          <Link
+            href={`/posts/${post.slug}`}
+            className="text-japanese-sumiiro dark:text-japanese-shironezu hover:underline"
+          >
+            {post.title}
+          </Link>
+        </span>
+      ))}
+      <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
+        {" "}
+        · {totalWordCount(day.posts)} words
+      </span>
+    </div>
+  );
+}
+
+function Legend() {
+  const cell = "w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-xs";
+  return (
+    <div className="flex items-center justify-between text-xs">
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[9px] md:text-[10px]">
+            short
+          </span>
+          <div
+            className={`${cell} bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30`}
+          />
+          <div
+            className={`${cell} bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60`}
+          />
+          <div
+            className={`${cell} bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90`}
+          />
+          <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[9px] md:text-[10px]">
+            long
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const Heatmap = ({
   posts,
@@ -48,95 +168,14 @@ const Heatmap = ({
   const yearParam = searchParams.get("year");
   const year = yearParam ? parseInt(yearParam, 10) : initialYear;
 
-  // Calculate min and max years from actual posts
   const postYears = posts.map((post) => new Date(post.date).getFullYear());
   const minYear = Math.min(...postYears);
-  const maxYear = Math.max(...postYears);
-  const currentYear = new Date().getFullYear();
-
   // Use maxYear or current year, whichever is greater (for future posts)
-  const effectiveMaxYear = Math.max(maxYear, currentYear);
+  const maxYear = Math.max(...postYears, new Date().getFullYear());
 
-  // Group posts by date
-  const postsByDate: { [key: string]: PostMetadata[] } = {};
-  posts.forEach((post) => {
-    const date = new Date(post.date);
-    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-    (postsByDate[dateKey] ??= []).push(post);
-  });
-
-  // Generate all days in the year, organized by weeks
-  const weeks: DayData[][] = (() => {
-    const firstDayOfYear = new Date(year, 0, 1);
-    const lastDayOfYear = new Date(year, 11, 31);
-
-    // Start from the Sunday before or on Jan 1
-    const startDate = new Date(firstDayOfYear);
-    startDate.setDate(startDate.getDate() - startDate.getDay());
-
-    // End on the Saturday after or on Dec 31
-    const endDate = new Date(lastDayOfYear);
-    endDate.setDate(endDate.getDate() + (6 - endDate.getDay()));
-
-    const result: DayData[][] = [];
-    let currentWeek: DayData[] = [];
-    const currentDate = new Date(startDate);
-
-    while (currentDate <= endDate) {
-      const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(currentDate.getDate()).padStart(2, "0")}`;
-      // Only show posts for dates in the current calendar year
-      const dayPosts =
-        currentDate.getFullYear() === year ? postsByDate[dateKey] || [] : [];
-
-      currentWeek.push({
-        date: new Date(currentDate),
-        posts: dayPosts,
-        dateKey,
-      });
-
-      if (currentWeek.length === 7) {
-        result.push(currentWeek);
-        currentWeek = [];
-      }
-
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-
-    // Add remaining days if any
-    if (currentWeek.length > 0) {
-      result.push(currentWeek);
-    }
-
-    return result;
-  })();
-
-  // Month labels - find first day of each month
-  const monthLabels: { month: string; weekIndex: number }[] = [];
-  weeks.forEach((week, weekIndex) => {
-    week.forEach((day) => {
-      if (day.date.getDate() === 1 && day.date.getFullYear() === year) {
-        monthLabels.push({
-          month: MONTH_NAMES[day.date.getMonth()],
-          weekIndex,
-        });
-      }
-    });
-  });
-
-  // Get color based on total word count for the day
-  const getColor = (posts: PostMetadata[]) => {
-    const totalWords = posts.reduce(
-      (sum, post) => sum + (post.wordcount || 0),
-      0
-    );
-    if (totalWords === 0)
-      return "bg-japanese-shiraumenezu/20 dark:bg-dark-border/20";
-    if (totalWords <= 300)
-      return "bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30";
-    if (totalWords <= 800)
-      return "bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60";
-    return "bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90";
-  };
+  const weeks = buildWeeks(year, groupPostsByDate(posts));
+  const monthLabels = getMonthLabels(weeks, year);
+  const todayKey = dateKey(new Date());
 
   const handleDayClick = (day: DayData) => {
     if (day.posts.length === 1) {
@@ -146,82 +185,49 @@ const Heatmap = ({
 
   return (
     <div>
-      {/* Header */}
-      {showNavigation ? (
-        <div className="flex items-center justify-between mb-4">
-          {year > minYear ? (
-            <Link
-              href={`${navigationPath}${navigationPath.includes("?") ? "&" : "?"}year=${year - 1}&month=0`}
-              className="text-sm text-japanese-nezumiiro dark:text-japanese-ginnezu hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
-            >
-              ← {year - 1}
-            </Link>
-          ) : (
-            <span className="text-sm text-japanese-nezumiiro/30 dark:text-japanese-ginnezu/30">
-              ← {year - 1}
-            </span>
-          )}
-          <h1 className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu">
-            {year}
-          </h1>
-          {year < effectiveMaxYear ? (
-            <Link
-              href={`${navigationPath}${navigationPath.includes("?") ? "&" : "?"}year=${year + 1}&month=0`}
-              className="text-sm text-japanese-nezumiiro dark:text-japanese-ginnezu hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
-            >
-              {year + 1} →
-            </Link>
-          ) : (
-            <span className="text-sm text-japanese-nezumiiro/30 dark:text-japanese-ginnezu/30">
-              {year + 1} →
-            </span>
-          )}
-        </div>
-      ) : null}
+      {showNavigation && (
+        <YearNav
+          year={year}
+          minYear={minYear}
+          maxYear={maxYear}
+          navigationPath={navigationPath}
+        />
+      )}
 
-      <div className="overflow-x-auto md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] scrollbar-none">
-        <div className="grid gap-px md:gap-[0.5px] lg:gap-px grid-cols-[15px_repeat(53,9px)] md:grid-cols-[15px_repeat(53,9px)] lg:grid-cols-[15px_repeat(53,12px)]">
+      <div className="overflow-x-auto md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div
+          className="grid gap-px md:gap-[0.5px] lg:gap-px [--hm-cell:9px] lg:[--hm-cell:12px]"
+          style={{
+            gridTemplateColumns: `15px repeat(${weeks.length}, var(--hm-cell))`,
+          }}
+        >
           {/* Row 0: Empty corner + month labels */}
           <div />
-          {weeks.map((_, weekIndex) => {
-            const label = monthLabels.find((l) => l.weekIndex === weekIndex);
-            return (
-              <div
-                key={`month-${weekIndex}`}
-                className="text-[8px] md:text-[10px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 h-[12px] md:h-[14px] w-[9px] lg:w-[12px] overflow-visible"
-              >
-                {label?.month || ""}
-              </div>
-            );
-          })}
+          {weeks.map((_, weekIndex) => (
+            <div
+              key={`month-${weekIndex}`}
+              className="text-[8px] md:text-[10px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 h-[12px] md:h-[14px] w-[9px] lg:w-[12px] overflow-visible"
+            >
+              {monthLabels.get(weekIndex) || ""}
+            </div>
+          ))}
 
           {/* Rows 1-7: Day labels + day cells */}
-          {[0, 1, 2, 3, 4, 5, 6].map((dayOfWeek) => (
+          {DAY_LABELS.map((label, dayOfWeek) => (
             <Fragment key={dayOfWeek}>
               <div className="text-[8px] md:text-[11px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 flex items-center pr-0.5 md:pr-1 h-[9px] lg:h-[12px]">
-                {["s", "m", "t", "w", "t", "f", "s"][dayOfWeek]}
+                {label}
               </div>
               {weeks.map((week, weekIndex) => {
                 const day = week[dayOfWeek];
-                const isToday =
-                  day.date.getDate() === new Date().getDate() &&
-                  day.date.getMonth() === new Date().getMonth() &&
-                  day.date.getFullYear() === new Date().getFullYear();
-
                 return (
-                  <div
+                  <DayCell
                     key={`${weekIndex}-${dayOfWeek}`}
-                    className={`w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-xs ${getColor(day.posts)} ${
-                      day.posts.length > 0
-                        ? "cursor-pointer hover:ring-1 hover:ring-japanese-sumiiro dark:hover:ring-japanese-shironezu"
-                        : ""
-                    } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-shadow duration-150`}
-                    onMouseEnter={() =>
-                      day.posts.length > 0 && setHoveredDay(day)
-                    }
-                    onMouseLeave={() => setHoveredDay(null)}
-                    onClick={() => handleDayClick(day)}
-                    title={day.date.toDateString()}
+                    day={day}
+                    isToday={day.dateKey === todayKey}
+                    onHover={setHoveredDay}
+                    onLeave={() => setHoveredDay(null)}
+                    onClick={handleDayClick}
                   />
                 );
               })}
@@ -232,53 +238,7 @@ const Heatmap = ({
 
       {/* Info bar below - compact */}
       <div className="pt-2">
-        {hoveredDay ? (
-          <div className="text-xs">
-            <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
-              {hoveredDay.date.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              })}{" "}
-              ·{" "}
-            </span>
-            {hoveredDay.posts.map((post, idx) => (
-              <span key={post.slug}>
-                {idx > 0 && ", "}
-                <Link
-                  href={`/posts/${post.slug}`}
-                  className="text-japanese-sumiiro dark:text-japanese-shironezu hover:underline"
-                >
-                  {post.title}
-                </Link>
-              </span>
-            ))}
-            <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
-              {" "}
-              ·{" "}
-              {hoveredDay.posts.reduce(
-                (sum, post) => sum + (post.wordcount || 0),
-                0
-              )}{" "}
-              words
-            </span>
-          </div>
-        ) : (
-          <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1">
-                <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[9px] md:text-[10px]">
-                  short
-                </span>
-                <div className="w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-xs bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30"></div>
-                <div className="w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-xs bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60"></div>
-                <div className="w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-xs bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90"></div>
-                <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[9px] md:text-[10px]">
-                  long
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
+        {hoveredDay ? <HoverInfo day={hoveredDay} /> : <Legend />}
       </div>
     </div>
   );
