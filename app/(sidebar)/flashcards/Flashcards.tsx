@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Shuffle, ChevronLeft, ChevronRight, RotateCw } from "lucide-react";
 import type { Flashcard } from "@/types/flashcards";
 
@@ -48,20 +48,24 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
 
   const card = pool[order[pos]];
 
-  const go = (delta: number) => {
-    setFlipped(false);
-    setPos((p) =>
-      order.length ? (p + delta + order.length) % order.length : 0
-    );
-  };
+  // Stable identities required: these are deps of the keydown effect below
+  const go = useCallback(
+    (delta: number) => {
+      setFlipped(false);
+      setPos((p) =>
+        order.length ? (p + delta + order.length) % order.length : 0
+      );
+    },
+    [order.length]
+  );
 
-  const flip = () => setFlipped((f) => !f);
+  const flip = useCallback(() => setFlipped((f) => !f), []);
 
-  const shuffle = () => {
+  const shuffle = useCallback(() => {
     setFlipped(false);
     setPos(0);
     setOrder(shuffledIndices(pool.length));
-  };
+  }, [pool.length]);
 
   const reset = () => {
     setFlipped(false);

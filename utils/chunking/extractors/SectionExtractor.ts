@@ -18,7 +18,7 @@ import { MIN_SECTION_LENGTH } from "@/config/constants";
 export class SectionExtractor implements ChunkExtractor {
   readonly chunkType = "section" as const;
 
-  process(tree: Node, context: ChunkContext): ProcessedChunk[] {
+  process(tree: Node, _context: ChunkContext): ProcessedChunk[] {
     const chunks: ProcessedChunk[] = [];
     const sections: Array<{
       heading: string;

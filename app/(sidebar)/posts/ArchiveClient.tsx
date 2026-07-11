@@ -76,7 +76,11 @@ export default function ArchiveClient({
 
   const setView = (v: View) => {
     const params = new URLSearchParams(searchParams.toString());
-    v === "list" ? params.delete("view") : params.set("view", v);
+    if (v === "list") {
+      params.delete("view");
+    } else {
+      params.set("view", v);
+    }
     router.push(`${pathname}?${params.toString()}`);
   };
 
