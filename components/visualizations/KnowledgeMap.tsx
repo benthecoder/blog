@@ -80,9 +80,11 @@ export default function KnowledgeMap({
     }
   };
 
+  // Run once on mount; fetchData identity is not stable across renders
+  // (the compiler bails on this component), so it must not be a dep.
   useEffect(() => {
     fetchData();
-  }, [fetchData]);
+  }, []);
 
   const filtered = articles.filter((article) => {
     if (
