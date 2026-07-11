@@ -1,0 +1,67 @@
+"use client";
+
+import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const navCls =
+  "flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors";
+
+export function EditorFooter({
+  isNew,
+  date,
+  prevSlug,
+  nextSlug,
+  prevDate,
+  nextDate,
+  monthParam,
+}: {
+  isNew: boolean;
+  date: string;
+  prevSlug: string | null;
+  nextSlug: string | null;
+  prevDate: string | null;
+  nextDate: string | null;
+  monthParam: string | null;
+}) {
+  const monthQuery = (sep: "?" | "&") =>
+    monthParam ? `${sep}month=${monthParam}` : "";
+
+  const prevHref = isNew
+    ? prevDate && `/admin/edit/new?date=${prevDate}${monthQuery("&")}`
+    : prevSlug && `/admin/edit/${prevSlug}${monthQuery("?")}`;
+  const nextHref = isNew
+    ? nextDate && `/admin/edit/new?date=${nextDate}${monthQuery("&")}`
+    : nextSlug && `/admin/edit/${nextSlug}${monthQuery("?")}`;
+
+  return (
+    <div className="absolute bottom-0 left-0 right-0 border-t border-japanese-shiraumenezu dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2 flex justify-between items-center">
+      {prevHref ? (
+        <Link href={prevHref} className={navCls}>
+          <ChevronLeft size={14} />
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+            Previous
+          </span>
+        </Link>
+      ) : (
+        <div />
+      )}
+
+      {date && (
+        <span className="text-xs text-japanese-ginnezu dark:text-gray-500 tracking-wide">
+          {date}
+        </span>
+      )}
+
+      {nextHref ? (
+        <Link href={nextHref} className={navCls}>
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity">
+            Next
+          </span>
+          <ChevronRight size={14} />
+        </Link>
+      ) : (
+        <div />
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,49 @@
+"use client";
+
+export function ImageNameModal({
+  value,
+  onChange,
+  onConfirm,
+  onCancel,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-900 border border-japanese-shiraumenezu dark:border-gray-700 p-8 max-w-md mx-4 w-full">
+        <h2 className="text-lg font-light mb-4 text-japanese-sumiiro dark:text-japanese-shironezu tracking-wide">
+          Name your image
+        </h2>
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") onConfirm();
+            if (e.key === "Escape") onCancel();
+          }}
+          placeholder="image-name"
+          autoFocus
+          className="w-full px-3 py-2 mb-6 border border-japanese-shiraumenezu dark:border-gray-700 bg-transparent text-japanese-sumiiro dark:text-japanese-shironezu focus:outline-hidden focus:border-japanese-sumiiro dark:focus:border-japanese-shironezu rounded-xs"
+        />
+        <div className="flex gap-3 justify-end">
+          <button
+            onClick={onCancel}
+            className="px-4 py-1.5 text-sm text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="px-4 py-1.5 text-sm bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 transition-opacity rounded-xs"
+          >
+            Upload
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
