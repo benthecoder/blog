@@ -1,28 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import type {
-  DragEvent,
-  ClipboardEvent,
-  MouseEvent as ReactMouseEvent,
-} from "react";
+import { useState, useRef } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
 import matter from "gray-matter";
-import { DEFAULT_POST_TEMPLATE } from "../post-template";
-import {
-  Calendar,
-  ChevronLeft,
-  ChevronRight,
-  Eye,
-  FileEdit,
-  ImageIcon,
-  Trash2,
-  X,
-} from "lucide-react";
+import { Calendar, Eye, FileEdit, ImageIcon, Trash2 } from "lucide-react";
+import { usePostDraft } from "./usePostDraft";
+import { useImageManager } from "./useImageManager";
+import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
+import { ImageNameModal } from "./ImageNameModal";
+import { ImageStrip } from "./ImageStrip";
+import { EditorFooter } from "./EditorFooter";
 
 export default function EditPostPage() {
   const params = useParams();
@@ -31,527 +22,66 @@ export default function EditPostPage() {
   const slug = params.slug as string;
   const isNew = slug === "new";
 
-  const [date, setDate] = useState("");
-  const [markdown, setMarkdown] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [publishing, setPublishing] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState("");
   const [showPreview, setShowPreview] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
   const [editorWidth, setEditorWidth] = useState(700);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [isDraft, setIsDraft] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [modalConfig, setModalConfig] = useState<{
-    title: string;
-    message: string;
-    onConfirm: () => void;
-  } | null>(null);
-  const [showImageNameModal, setShowImageNameModal] = useState(false);
-  const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
-  const [imageNameInput, setImageNameInput] = useState("");
-  const [prevSlug, setPrevSlug] = useState<string | null>(null);
-  const [nextSlug, setNextSlug] = useState<string | null>(null);
-  const [postImages, setPostImages] = useState<string[]>([]);
-  const [showImages, setShowImages] = useState(false);
+  const [modalConfig, setModalConfig] = useState<ConfirmConfig | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isResizing = useRef(false);
-  const initialContentRef = useRef({ markdown: "" });
 
-  // Fetch all posts to determine prev/next for existing posts
-  useEffect(() => {
-    if (isNew) return;
-
-    const abortController = new AbortController();
-
-    fetch("/api/admin/list-posts", { signal: abortController.signal })
-      .then((res) => res.json())
-      .then((sortedPosts: string[]) => {
-        const currentIndex = sortedPosts.indexOf(slug);
-
-        setPrevSlug(currentIndex > 0 ? sortedPosts[currentIndex - 1] : null);
-        setNextSlug(
-          currentIndex < sortedPosts.length - 1
-            ? sortedPosts[currentIndex + 1]
-            : null
-        );
-      })
-      .catch((err) => {
-        if (err.name !== "AbortError") {
-          console.error("Error loading posts:", err);
-        }
-      });
-
-    return () => abortController.abort();
-  }, [slug, isNew]);
-
-  // Prev/next dates for new posts: pure function of the date param
-  const dateParam = isNew ? searchParams.get("date") : null;
-  const shiftDate = (base: string, days: number) => {
-    const d = new Date(base);
-    d.setDate(d.getDate() + days);
-    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-  };
-  const prevDate = dateParam ? shiftDate(dateParam, -1) : null;
-  const nextDate = dateParam ? shiftDate(dateParam, 1) : null;
-
-  // Post/template load syncs fetch + localStorage draft state into the
-  // editor; inherently effect-driven (revisit in the editor decomposition).
-  /* eslint-disable react-hooks/set-state-in-effect */
-  useEffect(() => {
-    const draftKey = `draft-${slug}`;
-
-    if (!isNew) {
-      fetch(`/api/admin/get-post?slug=${slug}`)
-        .then((res) => res.json())
-        .then((data) => {
-          const rawContent = matter.stringify(data.content, {
-            title: data.title,
-            tags: data.tags,
-            date: data.date,
-          });
-          setMarkdown(rawContent);
-          setDate(data.date);
-          setIsDraft(data.isDraft ?? false);
-          initialContentRef.current = { markdown: rawContent };
-        })
-        .catch((err) => console.error("Error loading post:", err));
-    } else {
-      const dateParam = searchParams.get("date");
-      if (dateParam) {
-        const [year, month, day] = dateParam.split("-");
-        const dateObj = new Date(
-          parseInt(year),
-          parseInt(month) - 1,
-          parseInt(day)
-        );
-        const formattedDate = dateObj.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
-        setDate(formattedDate);
-        // Use the template and replace the date placeholder
-        const templateWithDate = DEFAULT_POST_TEMPLATE.replace(
-          "date:",
-          `date: ${formattedDate}`
-        );
-        setMarkdown(templateWithDate);
-
-        const savedDraft = localStorage.getItem(draftKey);
-        if (savedDraft) {
-          const draft = JSON.parse(savedDraft);
-          // Only show the draft if it's from the same date
-          if (draft.date === formattedDate) {
-            setModalConfig({
-              title: "Draft Found",
-              message: `Found unsaved draft from ${new Date(draft.timestamp).toLocaleString()}. Restore it?`,
-              onConfirm: () => {
-                setMarkdown(draft.markdown);
-                setShowModal(false);
-              },
-            });
-            setShowModal(true);
-          } else {
-            // Remove outdated draft from different date
-            localStorage.removeItem(draftKey);
-          }
-        }
-      }
-    }
-  }, [slug, isNew, searchParams]);
-  /* eslint-enable react-hooks/set-state-in-effect */
-
-  // Stable identity required: dep of the cmd+S keydown effect below
-  const handleSave = useCallback(async () => {
-    setSaving(true);
-    setMessage("");
-
-    try {
-      const { data: frontmatter, content } = matter(markdown);
-
-      const parsedTitle = (frontmatter.title || "").toString().trim();
-      const parsedTags = (frontmatter.tags || "").toString().trim();
-      const parsedDate = (frontmatter.date || date).toString().trim();
-
-      let slugToUse = slug;
-
-      if (isNew) {
-        const dateParam = searchParams.get("date");
-        if (dateParam) {
-          const [year, month, day] = dateParam.split("-");
-          const yy = year.substring(2);
-          slugToUse = `${day}${month}${yy}`;
-        } else {
-          slugToUse = `${Date.now()}`;
-        }
-      }
-
-      const response = await fetch("/api/admin/save-post", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          slug: slugToUse,
-          title: parsedTitle,
-          tags: parsedTags,
-          date: parsedDate,
-          content: content,
-          isNew,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage("✓ Saved!");
-        setTimeout(() => setMessage(""), 3000);
-        setHasUnsavedChanges(false);
-        setIsDraft(data.isDraft ?? isDraft);
-
-        const draftKey = `draft-${slugToUse}`;
-        localStorage.removeItem(draftKey);
-        initialContentRef.current = { markdown };
-
-        if (isNew) {
-          router.push(`/admin/edit/${data.slug}`);
-        }
-      } else {
-        setMessage(`✗ Error: ${data.error}`);
-      }
-    } catch (error) {
-      setMessage(`✗ Error: ${error}`);
-    } finally {
-      setSaving(false);
-    }
-  }, [slug, isNew, searchParams, date, markdown, router, isDraft]);
-
-  const handlePublish = async () => {
-    // Save first if there are unsaved changes
-    if (hasUnsavedChanges) {
-      await handleSave();
-    }
-
-    setPublishing(true);
-    setMessage("");
-
-    try {
-      let slugToUse = slug;
-      if (isNew) {
-        const dateParam = searchParams.get("date");
-        if (dateParam) {
-          const [year, month, day] = dateParam.split("-");
-          const yy = year.substring(2);
-          slugToUse = `${day}${month}${yy}`;
-        }
-      }
-
-      const response = await fetch("/api/admin/publish-post", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: slugToUse }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage("✓ Published!");
-        setTimeout(() => setMessage(""), 3000);
-        setIsDraft(false);
-      } else {
-        setMessage(`✗ Error: ${data.error}`);
-      }
-    } catch (error) {
-      setMessage(`✗ Error: ${error}`);
-    } finally {
-      setPublishing(false);
-    }
+  const notify = (msg: string, autoClear = false) => {
+    setMessage(msg);
+    if (autoClear) setTimeout(() => setMessage(""), 3000);
   };
 
-  const handleUnpublish = async () => {
-    setPublishing(true);
-    setMessage("");
-
-    try {
-      const response = await fetch("/api/admin/unpublish-post", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setMessage("✓ Moved to drafts");
-        setTimeout(() => setMessage(""), 3000);
-        setIsDraft(true);
-      } else {
-        setMessage(`✗ Error: ${data.error}`);
-      }
-    } catch (error) {
-      setMessage(`✗ Error: ${error}`);
-    } finally {
-      setPublishing(false);
-    }
-  };
-
-  const handleDelete = async () => {
+  // Shows the confirm dialog; the modal closes itself before onConfirm runs.
+  const confirmAction = (
+    title: string,
+    confirmMessage: string,
+    onConfirm: () => void
+  ) => {
     setModalConfig({
-      title: "Delete Post",
-      message: `Are you sure you want to delete this post? This action cannot be undone.`,
-      onConfirm: async () => {
-        setShowModal(false);
-        setDeleting(true);
-        setMessage("");
-
-        try {
-          const response = await fetch(
-            `/api/admin/delete-post?slug=${encodeURIComponent(slug)}`,
-            { method: "DELETE" }
-          );
-
-          const data = await response.json();
-
-          if (response.ok) {
-            setMessage("✓ Post deleted");
-            setTimeout(() => {
-              router.push(
-                searchParams.get("month")
-                  ? `/admin?month=${searchParams.get("month")}`
-                  : "/admin"
-              );
-            }, 1000);
-          } else {
-            setMessage(`✗ Error: ${data.error}`);
-          }
-        } catch (error) {
-          setMessage(`✗ Error: ${error}`);
-        } finally {
-          setDeleting(false);
-        }
+      title,
+      message: confirmMessage,
+      onConfirm: () => {
+        setModalConfig(null);
+        onConfirm();
       },
     });
-    setShowModal(true);
   };
 
-  useEffect(() => {
-    const hasChanged = markdown !== initialContentRef.current.markdown;
-    setHasUnsavedChanges(hasChanged);
+  const draft = usePostDraft({
+    slug,
+    isNew,
+    searchParams,
+    router,
+    confirmAction,
+    notify,
+  });
 
-    if (hasChanged) {
-      const draftKey = `draft-${slug}`;
-      const draft = {
-        markdown,
-        timestamp: Date.now(),
-        date,
-      };
-      localStorage.setItem(draftKey, JSON.stringify(draft));
-    }
-  }, [markdown, slug, date]);
-
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChanges) {
-        e.preventDefault();
-        e.returnValue = "";
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [hasUnsavedChanges]);
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (!hasUnsavedChanges) return;
-
-      const target = e.target as HTMLElement;
-      const anchor = target.closest("a");
-
-      if (anchor && anchor.href && !anchor.href.includes("#")) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        setModalConfig({
-          title: "Unsaved Changes",
-          message: "You have unsaved changes. Are you sure you want to leave?",
-          onConfirm: () => {
-            setShowModal(false);
-            // Temporarily disable beforeunload warning before navigating
-            setHasUnsavedChanges(false);
-            setTimeout(() => {
-              window.location.href = anchor.href;
-            }, 0);
-          },
-        });
-        setShowModal(true);
-      }
-    };
-
-    if (hasUnsavedChanges) {
-      document.addEventListener("click", handleClick, true);
-      return () => document.removeEventListener("click", handleClick, true);
-    }
-  }, [hasUnsavedChanges]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "s") {
-        e.preventDefault();
-        handleSave();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleSave]);
-
-  // Refresh images list; stable identity so the effect below can depend on it
-  const refreshImages = useCallback(() => {
-    if (isNew) return;
-
-    fetch(`/api/admin/list-images?slug=${slug}`)
-      .then((res) => res.json())
-      .then((images: string[]) => setPostImages(images))
-      .catch((err) => console.error("Error loading images:", err));
-  }, [slug, isNew]);
-
-  // Load images for this post on mount
-  useEffect(() => {
-    refreshImages();
-  }, [refreshImages]);
-
-  const handleDeleteImage = async (fileName: string) => {
-    try {
-      const response = await fetch(
-        `/api/admin/delete-image?fileName=${encodeURIComponent(fileName)}`,
-        { method: "DELETE" }
+  const insertMarkdown = (snippet: string) => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      const cursorPos = textarea.selectionStart;
+      draft.setMarkdown(
+        draft.markdown.substring(0, cursorPos) +
+          snippet +
+          draft.markdown.substring(cursorPos)
       );
-
-      if (response.ok) {
-        setMessage(`✓ Deleted ${fileName}`);
-        refreshImages();
-      } else {
-        setMessage(`✗ Failed to delete ${fileName}`);
-      }
-    } catch (error) {
-      setMessage(`✗ Error: ${error}`);
+    } else {
+      draft.setMarkdown(draft.markdown + "\n" + snippet);
     }
   };
 
-  const handleImageUpload = async (file: File, customName?: string) => {
-    setUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
+  const images = useImageManager({
+    slug,
+    isNew,
+    searchParams,
+    insertMarkdown,
+    notify,
+  });
 
-      // Prefix image name with slug (or date for new posts)
-      let prefix = slug;
-      if (isNew) {
-        const dateParam = searchParams.get("date");
-        if (dateParam) {
-          const [year, month, day] = dateParam.split("-");
-          prefix = `${day}${month}${year.slice(2)}`; // DDMMYY format
-        }
-      }
-      const finalName = customName ? `${prefix}-${customName}` : null;
-      if (finalName) {
-        formData.append("name", finalName);
-      }
-
-      const response = await fetch("/api/admin/upload-image", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        const imageMarkdown = `![](${data.url})`;
-        const textarea = textareaRef.current;
-        if (textarea) {
-          const cursorPos = textarea.selectionStart;
-          const newMarkdown =
-            markdown.substring(0, cursorPos) +
-            imageMarkdown +
-            markdown.substring(cursorPos);
-          setMarkdown(newMarkdown);
-        } else {
-          setMarkdown(markdown + "\n" + imageMarkdown);
-        }
-        setMessage(`✓ Image uploaded: ${data.fileName}`);
-        refreshImages();
-      } else {
-        setMessage(`✗ Upload failed: ${data.error}`);
-      }
-    } catch (error) {
-      setMessage(`✗ Upload error: ${error}`);
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleDragOver = (e: DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-  };
-
-  const handleDrop = async (e: DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    const files = Array.from(e.dataTransfer.files);
-    const imageFiles = files.filter((file) => file.type.startsWith("image/"));
-
-    if (imageFiles.length > 0) {
-      const file = imageFiles[0]; // Handle one at a time
-      const defaultName = file.name
-        .replace(/\.[^/.]+$/, "")
-        .replace(/[^a-zA-Z0-9-]/g, "-")
-        .toLowerCase();
-
-      setPendingImageFile(file);
-      setImageNameInput(defaultName);
-      setShowImageNameModal(true);
-    }
-  };
-
-  const confirmImageUpload = async () => {
-    if (!pendingImageFile) return;
-
-    const rawName =
-      imageNameInput.trim() || pendingImageFile.name.replace(/\.[^/.]+$/, "");
-    // Standardize: lowercase and replace spaces with hyphens
-    const finalName = rawName.toLowerCase().replace(/\s+/g, "-");
-    await handleImageUpload(pendingImageFile, finalName);
-
-    setShowImageNameModal(false);
-    setPendingImageFile(null);
-    setImageNameInput("");
-  };
-
-  const handlePaste = async (e: ClipboardEvent) => {
-    const items = Array.from(e.clipboardData.items);
-    const imageItem = items.find((item) => item.type.startsWith("image/"));
-
-    if (imageItem) {
-      e.preventDefault();
-      const file = imageItem.getAsFile();
-      if (file) {
-        const timestamp = Date.now();
-        await handleImageUpload(file, `pasted-${timestamp}`);
-      }
-    }
-  };
-
-  const handleMouseDown = (e: ReactMouseEvent, side: "left" | "right") => {
+  const handleResizeStart = (e: ReactMouseEvent, side: "left" | "right") => {
     e.preventDefault();
     e.stopPropagation();
     isResizing.current = true;
@@ -584,26 +114,25 @@ export default function EditPostPage() {
     document.addEventListener("mouseup", handleMouseUp);
   };
 
+  const monthParam = searchParams.get("month");
+
   return (
     <div className="h-screen flex items-center justify-center bg-white dark:bg-gray-900">
       <div
         style={{ width: `${editorWidth}px`, height: "calc(100vh - 4rem)" }}
         className="flex flex-col relative group border-l border-r border-gray-200 dark:border-gray-700"
       >
+        {/* Top bar */}
         <div className="border-b border-japanese-shiraumenezu dark:border-gray-700 px-6 py-3 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <Link
-              href={
-                searchParams.get("month")
-                  ? `/admin?month=${searchParams.get("month")}`
-                  : "/admin"
-              }
+              href={monthParam ? `/admin?month=${monthParam}` : "/admin"}
               className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
               title="Back to calendar"
             >
               <Calendar size={18} />
             </Link>
-            {isDraft && !isNew && (
+            {draft.isDraft && !isNew && (
               <div
                 className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400"
                 title="Draft"
@@ -619,26 +148,26 @@ export default function EditPostPage() {
                 {message}
               </span>
             )}
-            {uploading && (
+            {images.uploading && (
               <span className="text-xs text-japanese-ginnezu dark:text-gray-500">
                 Uploading...
               </span>
             )}
-            {hasUnsavedChanges && !saving && !message && (
+            {draft.hasUnsavedChanges && !draft.saving && !message && (
               <div
                 className="w-1.5 h-1.5 rounded-full bg-orange-500"
                 title="Unsaved changes (⌘S to save)"
               />
             )}
-            {!isNew && postImages.length > 0 && (
+            {!isNew && images.postImages.length > 0 && (
               <button
-                onClick={() => setShowImages(!showImages)}
+                onClick={() => images.setShowImages(!images.showImages)}
                 className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors relative"
                 title="Manage images"
               >
                 <ImageIcon size={18} />
                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full text-[8px] text-white flex items-center justify-center">
-                  {postImages.length}
+                  {images.postImages.length}
                 </span>
               </button>
             )}
@@ -649,28 +178,28 @@ export default function EditPostPage() {
             >
               {showPreview ? <FileEdit size={18} /> : <Eye size={18} />}
             </button>
-            {isDraft && (
+            {draft.isDraft && (
               <button
-                onClick={handlePublish}
-                disabled={publishing || isNew}
+                onClick={draft.handlePublish}
+                disabled={draft.publishing || isNew}
                 className="px-3 py-1.5 text-xs bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
               >
-                {publishing ? "Publishing..." : "Publish"}
+                {draft.publishing ? "Publishing..." : "Publish"}
               </button>
             )}
-            {!isDraft && !isNew && (
+            {!draft.isDraft && !isNew && (
               <button
-                onClick={handleUnpublish}
-                disabled={publishing}
+                onClick={draft.handleUnpublish}
+                disabled={draft.publishing}
                 className="px-3 py-1.5 text-xs text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 disabled:opacity-30 transition-colors rounded-xs"
               >
-                {publishing ? "Moving..." : "Unpublish"}
+                {draft.publishing ? "Moving..." : "Unpublish"}
               </button>
             )}
             {!isNew && (
               <button
-                onClick={handleDelete}
-                disabled={deleting}
+                onClick={draft.handleDelete}
+                disabled={draft.deleting}
                 className="text-japanese-ginnezu dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 disabled:opacity-30 transition-colors"
                 title="Delete post"
               >
@@ -680,62 +209,28 @@ export default function EditPostPage() {
           </div>
         </div>
 
-        {showImages && !isNew && (
-          <div className="border-b border-japanese-shiraumenezu dark:border-gray-700 px-6 py-3 bg-japanese-kinairo dark:bg-gray-800/50">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs text-japanese-ginnezu dark:text-gray-500 uppercase tracking-wider">
-                Images ({postImages.length})
-              </span>
-              <button
-                onClick={() => setShowImages(false)}
-                className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu"
-              >
-                <X size={14} />
-              </button>
-            </div>
-            <div className="flex gap-3 overflow-x-auto pb-2">
-              {postImages.map((img) => {
-                // Determine the correct path (drafts or published)
-                const imgPath = isDraft
-                  ? `/images/drafts/${img}`
-                  : `/images/${img}`;
-                return (
-                  <div key={img} className="shrink-0 group relative">
-                    <Image
-                      src={imgPath}
-                      alt={img}
-                      width={80}
-                      height={80}
-                      className="h-20 w-20 object-cover rounded-sm border border-japanese-shiraumenezu dark:border-gray-700"
-                    />
-                    <button
-                      onClick={() => handleDeleteImage(img)}
-                      className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-                      title="Delete"
-                    >
-                      <X size={12} />
-                    </button>
-                    <div className="text-[10px] text-japanese-ginnezu dark:text-gray-500 mt-1 truncate w-20">
-                      {img.replace(`${slug}-`, "")}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+        {images.showImages && !isNew && (
+          <ImageStrip
+            slug={slug}
+            isDraft={draft.isDraft}
+            images={images.postImages}
+            onClose={() => images.setShowImages(false)}
+            onDelete={images.handleDeleteImage}
+          />
         )}
 
+        {/* Editor / preview pane */}
         <div className={`flex-1 overflow-hidden ${isNew ? "pb-0" : "pb-10"}`}>
           {showPreview ? (
             <div className="h-full overflow-y-auto p-8">
               {(() => {
-                const { data: frontmatter, content } = matter(markdown);
+                const { data: frontmatter, content } = matter(draft.markdown);
 
                 const post = {
                   data: {
                     title: (frontmatter.title || "Untitled").toString(),
                     tags: (frontmatter.tags || "").toString(),
-                    date: (frontmatter.date || date).toString(),
+                    date: (frontmatter.date || draft.date).toString(),
                   },
                   content: content,
                 };
@@ -750,21 +245,21 @@ export default function EditPostPage() {
           ) : (
             <>
               <div
-                className={`h-full p-8 transition-colors ${isDragging ? "bg-blue-50 dark:bg-blue-950 border-2 border-dashed border-blue-400" : ""}`}
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
+                className={`h-full p-8 transition-colors ${images.isDragging ? "bg-blue-50 dark:bg-blue-950 border-2 border-dashed border-blue-400" : ""}`}
+                onDragOver={images.handleDragOver}
+                onDragLeave={images.handleDragLeave}
+                onDrop={images.handleDrop}
               >
                 <textarea
                   ref={textareaRef}
-                  value={markdown}
-                  onChange={(e) => setMarkdown(e.target.value)}
-                  onPaste={handlePaste}
+                  value={draft.markdown}
+                  onChange={(e) => draft.setMarkdown(e.target.value)}
+                  onPaste={images.handlePaste}
                   placeholder="---&#10;title: &#10;tags: &#10;date: &#10;---&#10;&#10;Write your content here..."
                   className="w-full h-full font-mono text-base p-4 resize-none focus:outline-hidden bg-transparent"
                 />
               </div>
-              {isDragging && (
+              {images.isDragging && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-2xl text-japanese-sumiiro dark:text-japanese-shironezu font-light tracking-wide">
                     Drop images here
@@ -775,146 +270,40 @@ export default function EditPostPage() {
           )}
         </div>
 
+        {/* Resize handles */}
         <div
           className="absolute left-0 top-0 bottom-0 w-4 cursor-ew-resize"
-          onMouseDown={(e) => handleMouseDown(e, "left")}
+          onMouseDown={(e) => handleResizeStart(e, "left")}
         />
         <div
           className="absolute right-0 top-0 bottom-0 w-4 cursor-ew-resize"
-          onMouseDown={(e) => handleMouseDown(e, "right")}
+          onMouseDown={(e) => handleResizeStart(e, "right")}
         />
 
-        <div className="absolute bottom-0 left-0 right-0 border-t border-japanese-shiraumenezu dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2 flex justify-between items-center">
-          {isNew ? (
-            prevDate ? (
-              <Link
-                href={`/admin/edit/new?date=${prevDate}${searchParams.get("month") ? `&month=${searchParams.get("month")}` : ""}`}
-                className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
-              >
-                <ChevronLeft size={14} />
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  Previous
-                </span>
-              </Link>
-            ) : (
-              <div />
-            )
-          ) : prevSlug ? (
-            <Link
-              href={`/admin/edit/${prevSlug}${searchParams.get("month") ? `?month=${searchParams.get("month")}` : ""}`}
-              className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
-            >
-              <ChevronLeft size={14} />
-              <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-                Previous
-              </span>
-            </Link>
-          ) : (
-            <div />
-          )}
+        <EditorFooter
+          isNew={isNew}
+          date={draft.date}
+          prevSlug={draft.prevSlug}
+          nextSlug={draft.nextSlug}
+          prevDate={draft.prevDate}
+          nextDate={draft.nextDate}
+          monthParam={monthParam}
+        />
 
-          {date && (
-            <span className="text-xs text-japanese-ginnezu dark:text-gray-500 tracking-wide">
-              {date}
-            </span>
-          )}
-
-          {isNew ? (
-            nextDate ? (
-              <Link
-                href={`/admin/edit/new?date=${nextDate}${searchParams.get("month") ? `&month=${searchParams.get("month")}` : ""}`}
-                className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
-              >
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  Next
-                </span>
-                <ChevronRight size={14} />
-              </Link>
-            ) : (
-              <div />
-            )
-          ) : nextSlug ? (
-            <Link
-              href={`/admin/edit/${nextSlug}${searchParams.get("month") ? `?month=${searchParams.get("month")}` : ""}`}
-              className="flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
-            >
-              <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-                Next
-              </span>
-              <ChevronRight size={14} />
-            </Link>
-          ) : (
-            <div />
-          )}
-        </div>
-
-        {showImageNameModal && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-900 border border-japanese-shiraumenezu dark:border-gray-700 p-8 max-w-md mx-4 w-full">
-              <h2 className="text-lg font-light mb-4 text-japanese-sumiiro dark:text-japanese-shironezu tracking-wide">
-                Name your image
-              </h2>
-              <input
-                type="text"
-                value={imageNameInput}
-                onChange={(e) => setImageNameInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") confirmImageUpload();
-                  if (e.key === "Escape") {
-                    setShowImageNameModal(false);
-                    setPendingImageFile(null);
-                  }
-                }}
-                placeholder="image-name"
-                autoFocus
-                className="w-full px-3 py-2 mb-6 border border-japanese-shiraumenezu dark:border-gray-700 bg-transparent text-japanese-sumiiro dark:text-japanese-shironezu focus:outline-hidden focus:border-japanese-sumiiro dark:focus:border-japanese-shironezu rounded-xs"
-              />
-              <div className="flex gap-3 justify-end">
-                <button
-                  onClick={() => {
-                    setShowImageNameModal(false);
-                    setPendingImageFile(null);
-                  }}
-                  className="px-4 py-1.5 text-sm text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={confirmImageUpload}
-                  className="px-4 py-1.5 text-sm bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 transition-opacity rounded-xs"
-                >
-                  Upload
-                </button>
-              </div>
-            </div>
-          </div>
+        {images.showImageNameModal && (
+          <ImageNameModal
+            value={images.imageNameInput}
+            onChange={images.setImageNameInput}
+            onConfirm={images.confirmImageUpload}
+            onCancel={images.cancelImageUpload}
+          />
         )}
 
-        {showModal && modalConfig && (
-          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-900 border border-japanese-shiraumenezu dark:border-gray-700 p-8 max-w-md mx-4">
-              <h2 className="text-lg font-light mb-4 text-japanese-sumiiro dark:text-japanese-shironezu tracking-wide">
-                {modalConfig.title}
-              </h2>
-              <p className="text-sm text-japanese-ginnezu dark:text-gray-400 mb-8">
-                {modalConfig.message}
-              </p>
-              <div className="flex gap-3 justify-end">
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="px-4 py-1.5 text-sm border border-japanese-shiraumenezu dark:border-gray-700 text-japanese-sumiiro dark:text-japanese-shironezu hover:border-japanese-sumiiro dark:hover:border-japanese-shironezu transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={modalConfig.onConfirm}
-                  className="px-4 py-1.5 text-sm border border-japanese-sumiiro dark:border-japanese-shironezu text-japanese-sumiiro dark:text-japanese-shironezu hover:bg-japanese-sumiiro hover:text-white dark:hover:bg-japanese-shironezu dark:hover:text-japanese-sumiiro transition-colors"
-                >
-                  Confirm
-                </button>
-              </div>
-            </div>
-          </div>
+        {modalConfig && (
+          <ConfirmModal
+            config={modalConfig}
+            onCancel={() => setModalConfig(null)}
+          />
         )}
       </div>
     </div>
