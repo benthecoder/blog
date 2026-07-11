@@ -75,7 +75,7 @@ const WikiSlugPage = async ({ params }: { params: Params }) => {
         )}
       </div>
 
-      <article className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-light-text dark:prose-headings:text-dark-text prose-a:text-light-accent dark:prose-a:text-dark-accent prose-a:no-underline hover:prose-a:underline">
+      <article className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-light-text dark:prose-headings:text-dark-text prose-a:text-light-accent dark:prose-a:text-dark-accent prose-a:no-underline prose-a:hover:underline">
         <MarkdownContent content={content.content} />
       </article>
     </div>

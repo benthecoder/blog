@@ -661,7 +661,7 @@ export default function EditPostPage() {
               <button
                 onClick={handlePublish}
                 disabled={publishing || isNew}
-                className="px-3 py-1.5 text-xs bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 disabled:opacity-30 transition-opacity rounded-sm"
+                className="px-3 py-1.5 text-xs bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
               >
                 {publishing ? "Publishing..." : "Publish"}
               </button>
@@ -670,7 +670,7 @@ export default function EditPostPage() {
               <button
                 onClick={handleUnpublish}
                 disabled={publishing}
-                className="px-3 py-1.5 text-xs text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 disabled:opacity-30 transition-colors rounded-sm"
+                className="px-3 py-1.5 text-xs text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 disabled:opacity-30 transition-colors rounded-xs"
               >
                 {publishing ? "Moving..." : "Unpublish"}
               </button>
@@ -708,11 +708,11 @@ export default function EditPostPage() {
                   ? `/images/drafts/${img}`
                   : `/images/${img}`;
                 return (
-                  <div key={img} className="flex-shrink-0 group relative">
+                  <div key={img} className="shrink-0 group relative">
                     <img
                       src={imgPath}
                       alt={img}
-                      className="h-20 w-20 object-cover rounded border border-japanese-shiraumenezu dark:border-gray-700"
+                      className="h-20 w-20 object-cover rounded-sm border border-japanese-shiraumenezu dark:border-gray-700"
                     />
                     <button
                       onClick={() => handleDeleteImage(img)}
@@ -767,7 +767,7 @@ export default function EditPostPage() {
                   onChange={(e) => setMarkdown(e.target.value)}
                   onPaste={handlePaste}
                   placeholder="---&#10;title: &#10;tags: &#10;date: &#10;---&#10;&#10;Write your content here..."
-                  className="w-full h-full font-mono text-base p-4 resize-none focus:outline-none bg-transparent"
+                  className="w-full h-full font-mono text-base p-4 resize-none focus:outline-hidden bg-transparent"
                 />
               </div>
               {isDragging && (
@@ -873,7 +873,7 @@ export default function EditPostPage() {
                 }}
                 placeholder="image-name"
                 autoFocus
-                className="w-full px-3 py-2 mb-6 border border-japanese-shiraumenezu dark:border-gray-700 bg-transparent text-japanese-sumiiro dark:text-japanese-shironezu focus:outline-none focus:border-japanese-sumiiro dark:focus:border-japanese-shironezu rounded-sm"
+                className="w-full px-3 py-2 mb-6 border border-japanese-shiraumenezu dark:border-gray-700 bg-transparent text-japanese-sumiiro dark:text-japanese-shironezu focus:outline-hidden focus:border-japanese-sumiiro dark:focus:border-japanese-shironezu rounded-xs"
               />
               <div className="flex gap-3 justify-end">
                 <button
@@ -887,7 +887,7 @@ export default function EditPostPage() {
                 </button>
                 <button
                   onClick={confirmImageUpload}
-                  className="px-4 py-1.5 text-sm bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 transition-opacity rounded-sm"
+                  className="px-4 py-1.5 text-sm bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 transition-opacity rounded-xs"
                 >
                   Upload
                 </button>

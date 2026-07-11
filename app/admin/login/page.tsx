@@ -51,7 +51,7 @@ function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           autoFocus
-          className="w-full px-3 py-2 mb-4 border border-japanese-shiraumenezu dark:border-gray-700 bg-transparent text-japanese-sumiiro dark:text-japanese-shironezu focus:outline-none focus:border-japanese-sumiiro dark:focus:border-japanese-shironezu rounded-sm"
+          className="w-full px-3 py-2 mb-4 border border-japanese-shiraumenezu dark:border-gray-700 bg-transparent text-japanese-sumiiro dark:text-japanese-shironezu focus:outline-hidden focus:border-japanese-sumiiro dark:focus:border-japanese-shironezu rounded-xs"
         />
         {error && (
           <p className="text-xs text-red-500 mb-4" role="alert">
@@ -61,7 +61,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full px-4 py-2 text-sm bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 disabled:opacity-30 transition-opacity rounded-sm"
+          className="w-full px-4 py-2 text-sm bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
         >
           {submitting ? "Logging in..." : "Log in"}
         </button>

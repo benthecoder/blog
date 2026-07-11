@@ -15,7 +15,7 @@ export default function CopyButton({ code }: { code: string }) {
     <button
       onClick={copy}
       aria-label={copied ? "Copied" : "Copy code"}
-      className="absolute top-2 right-2 p-1.5 rounded text-japanese-ginnezu hover:text-japanese-sumiiro dark:text-japanese-ginnezu dark:hover:text-japanese-shironezu hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-150"
+      className="absolute top-2 right-2 p-1.5 rounded-sm text-japanese-ginnezu hover:text-japanese-sumiiro dark:text-japanese-ginnezu dark:hover:text-japanese-shironezu hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-150"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +29,7 @@ export default function CopyButton({ code }: { code: string }) {
         strokeLinejoin="round"
         className={`absolute transition-[opacity,transform,filter] duration-150 ${
           copied
-            ? "opacity-0 scale-[0.8] blur-[4px]"
+            ? "opacity-0 scale-[0.8] blur-xs"
             : "opacity-100 scale-100 blur-none"
         }`}
       >
@@ -50,7 +50,7 @@ export default function CopyButton({ code }: { code: string }) {
         className={`absolute transition-[opacity,transform,filter] duration-150 ${
           copied
             ? "opacity-100 scale-100 blur-none"
-            : "opacity-0 scale-[0.8] blur-[4px]"
+            : "opacity-0 scale-[0.8] blur-xs"
         }`}
       >
         <polyline points="20 6 9 17 4 12" />

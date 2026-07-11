@@ -8,7 +8,7 @@ export default function PostImage({ src, alt }: { src: string; alt: string }) {
 
   return (
     <figure className="my-1">
-      <div className="w-full overflow-hidden rounded-sm">
+      <div className="w-full overflow-hidden rounded-xs">
         <Image
           src={src}
           alt={alt}

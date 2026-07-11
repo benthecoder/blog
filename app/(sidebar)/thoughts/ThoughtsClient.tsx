@@ -126,7 +126,7 @@ export default function ThoughtsClient({
                     <span className="text-xs text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 shrink-0 select-none w-10">
                       {time}
                     </span>
-                    <p className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu leading-relaxed break-words whitespace-pre-wrap flex-1">
+                    <p className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu leading-relaxed wrap-break-word whitespace-pre-wrap flex-1">
                       {parseContent(entry.content)}
                     </p>
                   </div>
