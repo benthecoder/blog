@@ -11,7 +11,7 @@ if (!process.env.POSTGRES_URL) {
 import { processAllPosts } from "@/utils/chunking/processAllPosts";
 import { neon } from "@neondatabase/serverless";
 const sql = neon(process.env.POSTGRES_URL!);
-import { v4 as uuidv4 } from "uuid";
+import { randomUUID } from "crypto";
 import chalk from "chalk";
 import ora from "ora";
 
@@ -247,7 +247,7 @@ async function generateEmbeddingsForSingleFile(
       }
 
       // Store chunk IDs to track overlaps
-      const chunkIds = batchChunks.map(() => uuidv4());
+      const chunkIds = batchChunks.map(() => randomUUID());
 
       // Cast frontmatter to proper type for this scope
       const typedFrontmatter = frontmatter as PostFrontmatter;
@@ -460,7 +460,7 @@ async function generateEmbeddingsForAllFiles() {
               id, post_slug, post_title, content, chunk_type,
               metadata, sequence, embedding, published_date, tags
             ) VALUES (
-              ${uuidv4()},
+              ${randomUUID()},
               ${filePath},
               ${frontmatter?.title || filePath},
               ${chunk.content},

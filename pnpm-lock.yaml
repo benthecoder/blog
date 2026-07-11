@@ -103,12 +103,6 @@ importers:
       swr:
         specifier: ^2.3.6
         version: 2.3.6(react@19.2.7)
-      tsx:
-        specifier: ^4.22.4
-        version: 4.22.4
-      typescript:
-        specifier: ^5.7.3
-        version: 5.9.3
       umap-js:
         specifier: ^1.4.0
         version: 1.4.0
@@ -118,9 +112,6 @@ importers:
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.0.0
-      uuid:
-        specifier: ^14.0.0
-        version: 14.0.0
       voyageai:
         specifier: ^0.3.1
         version: 0.3.1
@@ -173,9 +164,6 @@ importers:
       ora:
         specifier: ^9.0.0
         version: 9.0.0
-      postcss:
-        specifier: ^8.5.15
-        version: 8.5.15
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
@@ -185,6 +173,12 @@ importers:
       tailwindcss:
         specifier: ^4.3.2
         version: 4.3.2
+      tsx:
+        specifier: ^4.22.4
+        version: 4.22.4
+      typescript:
+        specifier: ^5.7.3
+        version: 5.9.3
 
 packages:
 
@@ -3203,10 +3197,6 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
-
-  uuid@14.0.0:
-    resolution: {integrity: sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==}
-    hasBin: true
 
   vfile-location@5.0.3:
     resolution: {integrity: sha512-5yXvWDEgqeiYiBe1lbxYF7UMAIm/IcopxMHrMQDq3nvKcjPKIhZklUKL+AE7J7uApI4kwe2snsK+eI6UTj9EHg==}
@@ -6743,8 +6733,6 @@ snapshots:
       react: 19.2.7
 
   util-deprecate@1.0.2: {}
-
-  uuid@14.0.0: {}
 
   vfile-location@5.0.3:
     dependencies:
