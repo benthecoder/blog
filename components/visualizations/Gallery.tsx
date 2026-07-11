@@ -287,7 +287,7 @@ export default function Gallery({ images }: GalleryProps) {
     >
       <Link
         href="/"
-        className="absolute bottom-4 left-4 z-20 w-10 h-10 flex items-center justify-center bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-colors duration-150"
+        className="absolute bottom-4 left-4 z-20 w-10 h-10 flex items-center justify-center bg-white/10 backdrop-blur-xs rounded-full text-white hover:bg-white/20 transition-colors duration-150"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -352,7 +352,7 @@ export default function Gallery({ images }: GalleryProps) {
 
       {hoveredImage && (
         <div
-          className={`fixed z-50 pointer-events-none px-2 py-1 backdrop-blur-sm rounded text-[11px] ${
+          className={`fixed z-50 pointer-events-none px-2 py-1 backdrop-blur-xs rounded text-[11px] ${
             hoveredImage.image.usedInPosts.length > 0
               ? "bg-white/90 text-black font-medium"
               : "bg-black/80 text-white"

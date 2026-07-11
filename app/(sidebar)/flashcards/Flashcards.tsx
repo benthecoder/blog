@@ -91,7 +91,7 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
 
   const tabBase = "px-3 py-1 rounded-full text-xs transition-colors border";
   const tabOn =
-    "border-japanese-sumiiro/30 dark:border-japanese-shironezu/30 text-japanese-sumiiro dark:text-japanese-shironezu bg-japanese-sumiiro/[0.06] dark:bg-japanese-shironezu/[0.08]";
+    "border-japanese-sumiiro/30 dark:border-japanese-shironezu/30 text-japanese-sumiiro dark:text-japanese-shironezu bg-japanese-sumiiro/6 dark:bg-japanese-shironezu/8";
   const tabOff =
     "border-transparent text-light-text/45 dark:text-dark-text/45 hover:text-light-text/80 dark:hover:text-dark-text/80";
 
@@ -137,11 +137,11 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
       </div>
 
       {/* Flip card */}
-      <div className="w-full max-w-xl [perspective:1800px]">
+      <div className="w-full max-w-xl perspective-[1800px]">
         <button
           onClick={flip}
           aria-label="Flip card"
-          className="group relative w-full min-h-[24rem] text-left outline-none cursor-pointer"
+          className="group relative w-full min-h-96 text-left outline-hidden cursor-pointer"
           style={{
             transformStyle: "preserve-3d",
             transform: flipped ? "rotateY(180deg)" : "none",
@@ -149,7 +149,7 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
           }}
         >
           {/* Front */}
-          <div className="absolute inset-0 [backface-visibility:hidden] overflow-y-auto rounded-2xl border border-light-border dark:border-dark-tag bg-japanese-hakuji dark:bg-dark-tag shadow-sm group-hover:shadow-md transition-shadow">
+          <div className="absolute inset-0 backface-hidden overflow-y-auto rounded-2xl border border-light-border dark:border-dark-tag bg-japanese-hakuji dark:bg-dark-tag shadow-xs group-hover:shadow-md transition-shadow">
             <div className="min-h-full flex items-center justify-center px-8 py-10">
               <div
                 className={`flashcard-body text-center leading-snug text-japanese-sumiiro dark:text-japanese-nyuhakushoku ${fontSize(card.front)}`}
@@ -159,7 +159,7 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
           </div>
 
           {/* Back */}
-          <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] overflow-y-auto rounded-2xl border border-japanese-sumiiro/20 dark:border-japanese-shironezu/15 bg-japanese-kinairo dark:bg-dark-bg shadow-sm">
+          <div className="absolute inset-0 backface-hidden transform-[rotateY(180deg)] overflow-y-auto rounded-2xl border border-japanese-sumiiro/20 dark:border-japanese-shironezu/15 bg-japanese-kinairo dark:bg-dark-bg shadow-xs">
             <div className="min-h-full flex items-center justify-center px-8 py-10">
               <div
                 className={`flashcard-body text-center leading-snug text-japanese-sumiiro dark:text-japanese-shironezu ${fontSize(card.back)}`}

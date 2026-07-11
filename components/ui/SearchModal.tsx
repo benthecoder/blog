@@ -118,19 +118,19 @@ export default function SearchModal() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]"
+      className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh]"
       onClick={() => setOpen(false)}
     >
-      <div className="absolute inset-0 bg-japanese-kinairo/80 dark:bg-[#111]/80 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-japanese-kinairo/80 dark:bg-[#111]/80 backdrop-blur-xs" />
 
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Search posts"
-        className="relative w-full max-w-lg mx-4 bg-japanese-kinairo dark:bg-[#1c1c1c] border border-japanese-shiraumenezu dark:border-white/[0.08] shadow-lg"
+        className="relative w-full max-w-lg mx-4 bg-japanese-kinairo dark:bg-[#1c1c1c] border border-japanese-shiraumenezu dark:border-white/8 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center border-b border-japanese-shiraumenezu dark:border-white/[0.06] px-3 gap-2">
+        <div className="flex items-center border-b border-japanese-shiraumenezu dark:border-white/6 px-3 gap-2">
           <svg
             className="w-4 h-4 text-japanese-sumiiro/30 dark:text-japanese-shironezu/30 shrink-0"
             fill="none"
@@ -146,7 +146,7 @@ export default function SearchModal() {
             onChange={(e) => handleInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="search posts…"
-            className="flex-1 py-3 text-sm bg-transparent outline-none text-japanese-sumiiro dark:text-japanese-shironezu placeholder:text-japanese-sumiiro/30 dark:placeholder:text-japanese-shironezu/30"
+            className="flex-1 py-3 text-sm bg-transparent outline-hidden text-japanese-sumiiro dark:text-japanese-shironezu placeholder:text-japanese-sumiiro/30 dark:placeholder:text-japanese-shironezu/30"
           />
           <div className="flex items-center gap-1 shrink-0">
             {(["keyword", "semantic"] as SearchType[]).map((t) => (
@@ -209,7 +209,7 @@ export default function SearchModal() {
         )}
 
         {results.length > 0 && (
-          <div className="border-t border-japanese-shiraumenezu dark:border-white/[0.06] px-4 py-2 flex gap-3 text-[10px] text-japanese-sumiiro/30 dark:text-japanese-shironezu/30">
+          <div className="border-t border-japanese-shiraumenezu dark:border-white/6 px-4 py-2 flex gap-3 text-[10px] text-japanese-sumiiro/30 dark:text-japanese-shironezu/30">
             <span>↑↓ navigate</span>
             <span>↵ open</span>
             <span>esc close</span>

@@ -23,7 +23,7 @@ type LinkSectionProps = {
 
 const LinkSection = ({ icon: Icon, links }: LinkSectionProps) => (
   <div className="flex items-center gap-2">
-    <Icon className="opacity-40 text-sm flex-shrink-0" />
+    <Icon className="opacity-40 text-sm shrink-0" />
     <div>
       {links.map((link, idx) => (
         <span key={link.href}>

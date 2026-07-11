@@ -18,7 +18,7 @@ export default function SearchResult({ result, query }: SearchResultProps) {
   return (
     <Link
       href={`/posts/${result.post_slug}`}
-      className="group block mb-4 p-4 border border-light-border/40 dark:border-dark-tag/40 bg-japanese-hakuji/40 dark:bg-dark-tag/20 hover:border-light-accent/60 dark:hover:border-dark-accent/60 hover:bg-japanese-unoharairo/60 dark:hover:bg-dark-tag/40 transition-[border-color,background-color,box-shadow] duration-200 hover:shadow-sm"
+      className="group block mb-4 p-4 border border-light-border/40 dark:border-dark-tag/40 bg-japanese-hakuji/40 dark:bg-dark-tag/20 hover:border-light-accent/60 dark:hover:border-dark-accent/60 hover:bg-japanese-unoharairo/60 dark:hover:bg-dark-tag/40 transition-[border-color,background-color,box-shadow] duration-200 hover:shadow-xs"
     >
       <div className="space-y-2">
         <div className="flex items-center justify-between gap-3">
@@ -33,7 +33,7 @@ export default function SearchResult({ result, query }: SearchResultProps) {
         </div>
 
         {result.chunk_type === "code" ? (
-          <pre className="mt-2 bg-japanese-soshoku/40 dark:bg-japanese-sumiiro/20 p-3 rounded-sm text-sm overflow-x-auto">
+          <pre className="mt-2 bg-japanese-soshoku/40 dark:bg-japanese-sumiiro/20 p-3 rounded-xs text-sm overflow-x-auto">
             <code>{snippet}</code>
           </pre>
         ) : (

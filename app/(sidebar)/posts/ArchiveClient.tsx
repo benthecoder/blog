@@ -160,7 +160,7 @@ export default function ArchiveClient({
           {starredPosts.length > 0 && (
             <>
               <p className={`${labelCls} mb-2`}>favorites ✰</p>
-              <div className="space-y-1 mb-6 pb-6 border-b border-japanese-shiraumenezu dark:border-white/[0.06]">
+              <div className="space-y-1 mb-6 pb-6 border-b border-japanese-shiraumenezu dark:border-white/6">
                 {starredPosts.map((post) => (
                   <PostPreview key={post.slug} {...post} />
                 ))}
@@ -170,7 +170,7 @@ export default function ArchiveClient({
 
           <div className="flex items-center justify-between mb-2">
             <p className={labelCls}>all</p>
-            <div className="flex items-center border border-japanese-shiraumenezu dark:border-white/[0.08] divide-x divide-japanese-shiraumenezu dark:divide-white/[0.08]">
+            <div className="flex items-center border border-japanese-shiraumenezu dark:border-white/8 divide-x divide-japanese-shiraumenezu dark:divide-white/8">
               {(["date", "views", "length"] as Sort[]).map((s) => (
                 <button
                   key={s}
@@ -210,7 +210,7 @@ export default function ArchiveClient({
                     className={`w-7 h-7 text-xs tabular-nums border transition-[border-color,color] duration-150 ${
                       p === page
                         ? "border-japanese-sumiiro/60 dark:border-japanese-shironezu/60 text-japanese-sumiiro dark:text-japanese-shironezu"
-                        : "border-japanese-shiraumenezu dark:border-white/[0.08] text-japanese-sumiiro/40 dark:text-japanese-shironezu/40 hover:border-japanese-sumiiro/40 dark:hover:border-japanese-shironezu/40"
+                        : "border-japanese-shiraumenezu dark:border-white/8 text-japanese-sumiiro/40 dark:text-japanese-shironezu/40 hover:border-japanese-sumiiro/40 dark:hover:border-japanese-shironezu/40"
                     }`}
                   >
                     {p}

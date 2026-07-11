@@ -1,6 +1,74 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-japanese-gofuniro: #fffffc;
+  --color-japanese-hakuji: #f8fbfb;
+  --color-japanese-unoharairo: #f7fcfe;
+  --color-japanese-kinairo: #fbfaf5;
+  --color-japanese-shironeri: #f3f3f2;
+  --color-japanese-soshoku: #eae5e3;
+  --color-japanese-shiraumenezu: #e5e4e6;
+  --color-japanese-shironezu: #dcdddd;
+  --color-japanese-nyuhakushoku: #f3f3f3;
+  --color-japanese-murasakisuishiyou: #e7e7eb;
+  --color-japanese-nezumiiro: #949495;
+  --color-japanese-ginnezu: #91989c;
+  --color-japanese-sumiiro: #595857;
+
+  --color-light-bg: #fbfaf5;
+  --color-light-text: #2c353d;
+  --color-light-accent: #595857;
+  --color-light-border: #e5e4e6;
+  --color-light-tag: #f7fcfe;
+  --color-light-highlight: #e7e7eb;
+
+  --color-dark-bg: #1a1a1a;
+  --color-dark-text: #d1d1d1;
+  --color-dark-accent: #999999;
+  --color-dark-border: #333333;
+  --color-dark-tag: #242424;
+  --color-dark-highlight: #e8e8e8;
+
+  --font-serif: var(--font-averia);
+
+  --animate-typing: typing 1.5s infinite;
+  --animate-typing-middle: typing 1.5s infinite 0.2s;
+  --animate-typing-last: typing 1.5s infinite 0.4s;
+
+  @keyframes typing {
+    0% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.3;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 /* Flashcards: let card text inherit the themed color instead of Anki's
    hard-coded inline colors, and give pinyin/meaning lines room to breathe. */
@@ -159,7 +227,7 @@ body {
 
 .dark .prose a {
   background-image: url("../public/underline-dark.png");
-  color: theme("colors.dark.text");
+  color: var(--color-dark-text);
 }
 
 .prose a:hover {
@@ -227,7 +295,7 @@ body {
   margin-top: 2em;
   margin-bottom: 2em;
   border-width: 0.1px;
-  border-color: theme("colors.japanese.shiraumenezu");
+  border-color: var(--color-japanese-shiraumenezu);
 }
 
 .dark .prose blockquote {

@@ -30,7 +30,7 @@ const RenderPost = ({
 
   return (
     <div>
-      <div className="p-5 bg-japanese-hakuji dark:bg-dark-tag shadow-sm rounded-md dark:text-japanese-nyuhakushoku">
+      <div className="p-5 bg-japanese-hakuji dark:bg-dark-tag shadow-xs rounded-md dark:text-japanese-nyuhakushoku">
         <div className="text-center mb-4">
           {slug ? (
             <Link href={`/posts/${slug}`}>
@@ -91,7 +91,7 @@ const RenderPost = ({
           </div>
         </div>
 
-        <article className="prose dark:prose-invert dark:text-japanese-shironezu text-sm md:text-base leading-relaxed max-w-none selection:bg-japanese-unoharairo/30 dark:selection:bg-japanese-murasakisuishiyou/20 prose-a:text-japanese-sumiiro prose-a:decoration-japanese-soshoku/50 hover:prose-a:text-japanese-sumiiro/70 hover:prose-a:decoration-japanese-sumiiro prose-headings:text-japanese-sumiiro dark:prose-headings:text-japanese-murasakisuishiyou">
+        <article className="prose dark:prose-invert dark:text-japanese-shironezu text-sm md:text-base leading-relaxed max-w-none selection:bg-japanese-unoharairo/30 dark:selection:bg-japanese-murasakisuishiyou/20 prose-a:text-japanese-sumiiro prose-a:decoration-japanese-soshoku/50 prose-a:hover:text-japanese-sumiiro/70 prose-a:hover:decoration-japanese-sumiiro prose-headings:text-japanese-sumiiro dark:prose-headings:text-japanese-murasakisuishiyou">
           {children}
         </article>
       </div>

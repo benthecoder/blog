@@ -395,7 +395,7 @@ export default function KnowledgeMap({
         placeholder="search..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="absolute top-4 left-4 z-20 w-36 px-2 py-1 text-xs bg-japanese-kinairo/90 dark:bg-dark-bg/90 text-japanese-sumiiro dark:text-japanese-shironezu border border-japanese-shiraumenezu dark:border-white/[0.08] focus:outline-none placeholder:text-japanese-sumiiro/25 dark:placeholder:text-japanese-shironezu/25 backdrop-blur-sm"
+        className="absolute top-4 left-4 z-20 w-36 px-2 py-1 text-xs bg-japanese-kinairo/90 dark:bg-dark-bg/90 text-japanese-sumiiro dark:text-japanese-shironezu border border-japanese-shiraumenezu dark:border-white/8 focus:outline-hidden placeholder:text-japanese-sumiiro/25 dark:placeholder:text-japanese-shironezu/25 backdrop-blur-xs"
       />
 
       {/* Canvas */}
@@ -408,10 +408,10 @@ export default function KnowledgeMap({
       {/* ArticleNode detail panel — hover preview or pinned detail */}
       {displayArticleNode && (
         <div
-          className={`absolute z-20 bg-japanese-kinairo/95 dark:bg-dark-bg/95 p-3 border shadow-sm w-[200px] sm:w-56 backdrop-blur-sm transition-[border-color] duration-150 pointer-events-none ${
+          className={`absolute z-20 bg-japanese-kinairo/95 dark:bg-dark-bg/95 p-3 border shadow-xs w-[200px] sm:w-56 backdrop-blur-xs transition-[border-color] duration-150 pointer-events-none ${
             isPinned
-              ? "border-japanese-sumiiro/25 dark:border-white/[0.15]"
-              : "border-japanese-shiraumenezu dark:border-white/[0.08]"
+              ? "border-japanese-sumiiro/25 dark:border-white/15"
+              : "border-japanese-shiraumenezu dark:border-white/8"
           }`}
           style={getPanelPosition()}
         >
@@ -477,7 +477,7 @@ export default function KnowledgeMap({
         <div className="absolute bottom-4 right-4 z-10">
           <button
             onClick={() => setShowLegend(!showLegend)}
-            className="bg-japanese-kinairo/90 dark:bg-dark-bg/90 px-2 py-1 border border-japanese-shiraumenezu dark:border-white/[0.08] text-xs text-japanese-sumiiro/60 dark:text-japanese-shironezu/60 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors backdrop-blur-sm"
+            className="bg-japanese-kinairo/90 dark:bg-dark-bg/90 px-2 py-1 border border-japanese-shiraumenezu dark:border-white/8 text-xs text-japanese-sumiiro/60 dark:text-japanese-shironezu/60 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors backdrop-blur-xs"
           >
             {showLegend
               ? "hide"
@@ -486,11 +486,11 @@ export default function KnowledgeMap({
                 : "clusters"}
           </button>
           {showLegend && (
-            <div className="absolute bottom-8 right-0 bg-japanese-kinairo/95 dark:bg-dark-bg/95 px-3 py-2 border border-japanese-shiraumenezu dark:border-white/[0.08] max-h-[60vh] overflow-y-auto shadow-sm min-w-[200px] backdrop-blur-sm">
+            <div className="absolute bottom-8 right-0 bg-japanese-kinairo/95 dark:bg-dark-bg/95 px-3 py-2 border border-japanese-shiraumenezu dark:border-white/8 max-h-[60vh] overflow-y-auto shadow-xs min-w-[200px] backdrop-blur-xs">
               {selectedCluster !== null && (
                 <button
                   onClick={() => setSelectedCluster(null)}
-                  className="w-full mb-2 px-2 py-1 text-xs bg-japanese-shiraumenezu/30 dark:bg-white/[0.06] hover:bg-japanese-shiraumenezu/50 dark:hover:bg-white/[0.10] transition-colors"
+                  className="w-full mb-2 px-2 py-1 text-xs bg-japanese-shiraumenezu/30 dark:bg-white/6 hover:bg-japanese-shiraumenezu/50 dark:hover:bg-white/10 transition-colors"
                 >
                   show all clusters
                 </button>
@@ -510,8 +510,8 @@ export default function KnowledgeMap({
                         onClick={() => setSelectedCluster(isActive ? null : id)}
                         className={`w-full flex items-center gap-2 text-xs py-0.5 px-1 rounded transition-colors ${
                           isActive
-                            ? "bg-japanese-shiraumenezu/40 dark:bg-white/[0.06]"
-                            : "hover:bg-japanese-shiraumenezu/20 dark:hover:bg-white/[0.04]"
+                            ? "bg-japanese-shiraumenezu/40 dark:bg-white/6"
+                            : "hover:bg-japanese-shiraumenezu/20 dark:hover:bg-white/4"
                         }`}
                       >
                         <div
@@ -539,7 +539,7 @@ export default function KnowledgeMap({
       )}
 
       {/* Instructions */}
-      <div className="absolute bottom-4 left-4 z-10 bg-japanese-kinairo/80 dark:bg-dark-bg/80 px-3 py-1 border border-japanese-shiraumenezu dark:border-white/[0.08] text-xs text-japanese-sumiiro/40 dark:text-japanese-shironezu/40 pointer-events-none backdrop-blur-sm">
+      <div className="absolute bottom-4 left-4 z-10 bg-japanese-kinairo/80 dark:bg-dark-bg/80 px-3 py-1 border border-japanese-shiraumenezu dark:border-white/8 text-xs text-japanese-sumiiro/40 dark:text-japanese-shironezu/40 pointer-events-none backdrop-blur-xs">
         {isTouchDevice ? "pinch · drag · tap" : "scroll · drag · click"}
       </div>
     </div>

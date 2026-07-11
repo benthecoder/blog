@@ -69,7 +69,7 @@ export default function SpotifyNowPlaying() {
                   alt=""
                   width={40}
                   height={40}
-                  className="not-prose rounded-sm opacity-90 shrink-0"
+                  className="not-prose rounded-xs opacity-90 shrink-0"
                   unoptimized
                 />
               )}

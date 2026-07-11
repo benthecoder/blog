@@ -51,7 +51,7 @@ export default function UMAPLoader({ className = "" }: { className?: string }) {
         ))}
       </svg>
 
-      <div className="absolute bottom-4 left-4 z-10 bg-japanese-kinairo/90 dark:bg-dark-bg/90 px-3 py-1 rounded border border-japanese-shiraumenezu dark:border-dark-border text-xs text-japanese-ginnezu dark:text-japanese-ginnezu">
+      <div className="absolute bottom-4 left-4 z-10 bg-japanese-kinairo/90 dark:bg-dark-bg/90 px-3 py-1 rounded-sm border border-japanese-shiraumenezu dark:border-dark-border text-xs text-japanese-ginnezu dark:text-japanese-ginnezu">
         loading knowledge map...
       </div>
     </div>

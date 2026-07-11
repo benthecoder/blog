@@ -93,7 +93,7 @@ const StartPage = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`open ${current.text}`}
-                className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity ![background-image:none]"
+                className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity bg-none!"
               >
                 <ExternalLinkIcon />
               </a>
@@ -101,7 +101,7 @@ const StartPage = () => {
               <Link
                 href={current.href}
                 aria-label={`open ${current.text}`}
-                className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity ![background-image:none]"
+                className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity bg-none!"
               >
                 <ExternalLinkIcon />
               </Link>
@@ -122,7 +122,7 @@ const StartPage = () => {
         </p>
       </article>
 
-      <div className="h-[60vh] mt-8 overflow-hidden border border-japanese-shiraumenezu dark:border-white/[0.08]">
+      <div className="h-[60vh] mt-8 overflow-hidden border border-japanese-shiraumenezu dark:border-white/8">
         <KnowledgeMap className="w-full h-full" />
       </div>
     </div>
