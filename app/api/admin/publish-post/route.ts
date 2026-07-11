@@ -1,14 +1,16 @@
 import fs from "fs";
 import path from "path";
+import sizeOf from "image-size";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import {
-  IMAGES_DIR,
   IMAGES_DRAFTS_DIR,
   getPostPath,
   getDraftPath,
   isSafeSlug,
 } from "@/config/paths";
+import { r2PutImage } from "@/utils/r2";
+import { addToGalleryManifest } from "@/utils/content/galleryManifest";
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -53,18 +55,31 @@ export async function POST(request: NextRequest) {
     // Delete the draft file
     fs.unlinkSync(draftPath);
 
-    // Move associated images from drafts to published
+    // Publish associated images: local drafts -> R2 + gallery manifest
     if (fs.existsSync(IMAGES_DRAFTS_DIR)) {
       const draftImages = fs.readdirSync(IMAGES_DRAFTS_DIR);
       const postImages = draftImages.filter((file) =>
         file.startsWith(`${slug}-`)
       );
 
-      postImages.forEach((imageFile) => {
+      for (const imageFile of postImages) {
         const sourcePath = path.join(IMAGES_DRAFTS_DIR, imageFile);
-        const destPath = path.join(IMAGES_DIR, imageFile);
-        fs.renameSync(sourcePath, destPath);
-      });
+        const body = fs.readFileSync(sourcePath);
+        await r2PutImage(imageFile, body);
+
+        let width = 1;
+        let height = 1;
+        try {
+          const dim = sizeOf(new Uint8Array(body));
+          width = dim.width || 1;
+          height = dim.height || 1;
+        } catch {
+          // non-fatal: 1x1 fallback
+        }
+        addToGalleryManifest({ filename: imageFile, width, height });
+
+        fs.unlinkSync(sourcePath);
+      }
     }
 
     return NextResponse.json({ success: true, slug });

@@ -1,7 +1,8 @@
 import fs from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
-import { IMAGES_DIR, IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
+import { IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
+import { r2ListImages } from "@/utils/r2";
 
 export async function GET(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -29,13 +30,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Check published images folder
-    if (fs.existsSync(IMAGES_DIR)) {
-      const publishedFiles = fs.readdirSync(IMAGES_DIR);
-      postImages.push(
-        ...publishedFiles.filter((file) => file.startsWith(`${slug}-`))
-      );
-    }
+    // Check published images in R2
+    postImages.push(...(await r2ListImages(`${slug}-`)));
 
     return NextResponse.json(postImages);
   } catch (error) {

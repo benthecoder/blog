@@ -2,7 +2,9 @@ import fs from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
-import { IMAGES_DIR, IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
+import { IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
+import { r2ListImages, r2DeleteImage } from "@/utils/r2";
+import { removeFromGalleryManifest } from "@/utils/content/galleryManifest";
 
 export async function DELETE(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -23,16 +25,18 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Invalid file name" }, { status: 400 });
     }
 
-    // Check both drafts and published folders
+    // Check local drafts first, then published images in R2
     const draftPath = path.join(IMAGES_DRAFTS_DIR, fileName);
-    const publishedPath = path.join(IMAGES_DIR, fileName);
 
     if (fs.existsSync(draftPath)) {
       fs.unlinkSync(draftPath);
-    } else if (fs.existsSync(publishedPath)) {
-      fs.unlinkSync(publishedPath);
     } else {
-      return NextResponse.json({ error: "File not found" }, { status: 404 });
+      const published = await r2ListImages(fileName);
+      if (!published.includes(fileName)) {
+        return NextResponse.json({ error: "File not found" }, { status: 404 });
+      }
+      await r2DeleteImage(fileName);
+      removeFromGalleryManifest(fileName);
     }
 
     return NextResponse.json({ success: true });
