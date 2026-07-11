@@ -41,32 +41,32 @@ export const metadata: Metadata = {
 const averia = localFont({
   src: [
     {
-      path: "../public/fonts/AveriaSerifLibre-Light.ttf",
+      path: "../public/fonts/AveriaSerifLibre-Light.woff2",
       weight: "300",
       style: "normal",
     },
     {
-      path: "../public/fonts/AveriaSerifLibre-LightItalic.ttf",
+      path: "../public/fonts/AveriaSerifLibre-LightItalic.woff2",
       weight: "300",
       style: "italic",
     },
     {
-      path: "../public/fonts/AveriaSerifLibre-Regular.ttf",
+      path: "../public/fonts/AveriaSerifLibre-Regular.woff2",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../public/fonts/AveriaSerifLibre-Italic.ttf",
+      path: "../public/fonts/AveriaSerifLibre-Italic.woff2",
       weight: "400",
       style: "italic",
     },
     {
-      path: "../public/fonts/AveriaSerifLibre-Bold.ttf",
+      path: "../public/fonts/AveriaSerifLibre-Bold.woff2",
       weight: "700",
       style: "normal",
     },
     {
-      path: "../public/fonts/AveriaSerifLibre-BoldItalic.ttf",
+      path: "../public/fonts/AveriaSerifLibre-BoldItalic.woff2",
       weight: "700",
       style: "italic",
     },
