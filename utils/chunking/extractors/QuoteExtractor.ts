@@ -12,7 +12,12 @@
 
 import { Node } from "unist";
 import { visit } from "unist-util-visit";
-import { ChunkExtractor, ChunkContext, ProcessedChunk } from "@/types/chunks";
+import {
+  ChunkExtractor,
+  ChunkContext,
+  MdNode,
+  ProcessedChunk,
+} from "@/types/chunks";
 import { MIN_QUOTE_LENGTH } from "@/config/constants";
 
 export class QuoteExtractor implements ChunkExtractor {
@@ -22,7 +27,7 @@ export class QuoteExtractor implements ChunkExtractor {
     const chunks: ProcessedChunk[] = [];
     let sequence = 100; // Start quotes at 100 to leave room for sections
 
-    visit(tree, "blockquote", (node: any) => {
+    visit(tree, "blockquote", (node: MdNode) => {
       const quoteText = this.extractQuoteText(node);
 
       // Keep quotes above minimum length
@@ -42,12 +47,12 @@ export class QuoteExtractor implements ChunkExtractor {
     return chunks;
   }
 
-  private extractQuoteText(blockquoteNode: any): string {
+  private extractQuoteText(blockquoteNode: MdNode): string {
     const texts: string[] = [];
 
     // Recursively extract all text from quote
-    const extractText = (node: any): void => {
-      if (node.type === "text") {
+    const extractText = (node: MdNode): void => {
+      if (node.type === "text" && node.value) {
         texts.push(node.value);
       } else if (node.children) {
         node.children.forEach(extractText);

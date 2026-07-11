@@ -39,12 +39,15 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
   const [pos, setPos] = useState(0);
   const [flipped, setFlipped] = useState(false);
 
-  // Rebuild the ordering whenever the active pool changes (deck switch).
-  useEffect(() => {
+  // Rebuild the ordering when the deck switches — render-time adjustment
+  // (react.dev "adjusting state when a prop changes"), no effect needed.
+  const [prevDeck, setPrevDeck] = useState(deck);
+  if (deck !== prevDeck) {
+    setPrevDeck(deck);
     setOrder(pool.map((_, i) => i));
     setPos(0);
     setFlipped(false);
-  }, [pool]);
+  }
 
   const card = pool[order[pos]];
 

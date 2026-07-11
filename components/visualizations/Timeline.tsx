@@ -79,6 +79,8 @@ const ImageLinkComponent: FC<{ link: ImageLink }> = ({ link }) => {
       {isOpen && (
         <FloatingPortal>
           <div
+            // floating-ui's refs object exposes callback refs by design
+            // eslint-disable-next-line react-hooks/refs
             ref={refs.setFloating}
             style={floatingStyles}
             {...getFloatingProps()}

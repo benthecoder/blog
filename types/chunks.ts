@@ -1,4 +1,14 @@
 import { Node } from "unist";
+
+// Loose structural view of mdast nodes — enough for the extractors without
+// depending on @types/mdast directly.
+export interface MdNode {
+  type: string;
+  value?: string;
+  depth?: number;
+  lang?: string;
+  children?: MdNode[];
+}
 import { PostFrontmatter } from "./post";
 
 export type ChunkType = "full-post" | "section" | "quote" | "code";

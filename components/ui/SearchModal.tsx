@@ -23,17 +23,29 @@ export default function SearchModal() {
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openRef = useRef(false);
 
-  // Open on cmd+K / ctrl+K, or custom "openSearch" event (from sidebar button)
+  // Open on cmd+K / ctrl+K, or custom "openSearch" event (from sidebar button).
+  // State resets happen when opening, so a fresh modal is shown each time.
   useEffect(() => {
+    const openFresh = () => {
+      setQuery("");
+      setResults([]);
+      setActiveIndex(0);
+      setOpen(true);
+    };
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setOpen((o) => !o);
+        if (openRef.current) {
+          setOpen(false);
+        } else {
+          openFresh();
+        }
       }
       if (e.key === "Escape") setOpen(false);
     };
-    const onOpen = () => setOpen(true);
+    const onOpen = () => openFresh();
     document.addEventListener("keydown", onKey);
     document.addEventListener("openSearch", onOpen);
     return () => {
@@ -43,13 +55,10 @@ export default function SearchModal() {
   }, []);
 
   useEffect(() => {
+    openRef.current = open;
     if (open) {
       const raf = requestAnimationFrame(() => inputRef.current?.focus());
       return () => cancelAnimationFrame(raf);
-    } else {
-      setQuery("");
-      setResults([]);
-      setActiveIndex(0);
     }
   }, [open]);
 

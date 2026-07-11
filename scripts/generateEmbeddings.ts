@@ -96,9 +96,9 @@ const setupTable = async () => {
 interface EmbeddingResponse {
   data: Array<{
     embedding: number[];
-    [key: string]: any;
+    [key: string]: unknown;
   }>;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -267,7 +267,7 @@ async function generateEmbeddingsForSingleFile(
           positionInSequence: string;
           published_date?: string;
           tags?: string[];
-          [key: string]: any; // Allow for other metadata properties
+          [key: string]: unknown; // Allow for other metadata properties
         }
 
         // Enhanced metadata (non-date/tag specific info)

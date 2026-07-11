@@ -23,6 +23,10 @@ function SearchContent() {
     ""
   );
 
+  // Restore query/results from sessionStorage after hydration. Lazy
+  // initializers would touch sessionStorage during SSR or mismatch the
+  // server HTML, so a mount effect is the right tool here.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const urlQuery = searchParams.get("q");
     const urlChunkType = searchParams.get("chunkType");
@@ -40,15 +44,17 @@ function SearchContent() {
     // mount-only: intentionally not re-running on searchParams changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
-  const handleSearch = async (e?: FormEvent) => {
-    if (e) e.preventDefault();
+  // Takes explicit filter values so filter-change handlers can search with
+  // the new value immediately instead of waiting a render for state.
+  const performSearch = async (type: SearchType, chunkType: ChunkType | "") => {
     if (!query.trim()) return;
 
     const params = new URLSearchParams();
     params.set("q", query.trim());
-    if (selectedChunkType) {
-      params.set("chunkType", selectedChunkType);
+    if (chunkType) {
+      params.set("chunkType", chunkType);
     }
     replace(`${pathname}?${params.toString()}`);
 
@@ -62,8 +68,8 @@ function SearchContent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           query: query.trim(),
-          searchType,
-          chunkType: selectedChunkType || undefined,
+          searchType: type,
+          chunkType: chunkType || undefined,
         }),
       });
 
@@ -92,20 +98,32 @@ function SearchContent() {
     }
   };
 
+  const handleSearch = (e?: FormEvent) => {
+    if (e) e.preventDefault();
+    performSearch(searchType, selectedChunkType);
+  };
+
+  const handleSearchTypeChange = (type: SearchType) => {
+    setSearchType(type);
+    if (query.trim()) {
+      setResults([]);
+      performSearch(type, selectedChunkType);
+    }
+  };
+
+  const handleChunkTypeChange = (chunkType: ChunkType | "") => {
+    setSelectedChunkType(chunkType);
+    if (query.trim()) {
+      setResults([]);
+      performSearch(searchType, chunkType);
+    }
+  };
+
   const clearFilters = () => {
     setSelectedChunkType("");
     setResults([]);
     setHasSearched(false);
   };
-
-  useEffect(() => {
-    if (query.trim()) {
-      setResults([]);
-      handleSearch();
-    }
-    // intentionally re-runs only when filter changes, not on every handleSearch re-creation
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchType, selectedChunkType]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -136,9 +154,9 @@ function SearchContent() {
 
       <SearchFilters
         searchType={searchType}
-        onSearchTypeChange={setSearchType}
+        onSearchTypeChange={handleSearchTypeChange}
         selectedChunkType={selectedChunkType}
-        onChunkTypeChange={setSelectedChunkType}
+        onChunkTypeChange={handleChunkTypeChange}
         onClearFilters={clearFilters}
       />
 

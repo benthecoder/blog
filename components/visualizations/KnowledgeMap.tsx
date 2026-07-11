@@ -42,6 +42,8 @@ export default function KnowledgeMap({
   const zoomBehaviorRef = useRef<ZoomBehavior<Element, unknown> | null>(null);
   const selectedArticleNodeRef = useRef<ArticleNode | null>(null);
 
+  // matchMedia is client-only; reading it in an initializer would run
+  // during SSR/hydration and mismatch.
   useEffect(() => {
     setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
   }, []);

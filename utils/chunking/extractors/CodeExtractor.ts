@@ -9,7 +9,12 @@
 
 import { Node } from "unist";
 import { visit } from "unist-util-visit";
-import { ChunkExtractor, ChunkContext, ProcessedChunk } from "@/types/chunks";
+import {
+  ChunkExtractor,
+  ChunkContext,
+  MdNode,
+  ProcessedChunk,
+} from "@/types/chunks";
 
 export class CodeExtractor implements ChunkExtractor {
   readonly chunkType = "code" as const;
@@ -18,7 +23,7 @@ export class CodeExtractor implements ChunkExtractor {
     const chunks: ProcessedChunk[] = [];
     let sequence = 200; // Start code blocks at 200
 
-    visit(tree, "code", (node: any) => {
+    visit(tree, "code", (node: MdNode) => {
       const codeText = node.value?.trim();
 
       if (codeText && codeText.length > 0) {
