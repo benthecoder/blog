@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import type {
   DragEvent,
   ClipboardEvent,
@@ -173,7 +173,8 @@ export default function EditPostPage() {
     }
   }, [slug, isNew, searchParams]);
 
-  const handleSave = async () => {
+  // Stable identity required: dep of the cmd+S keydown effect below
+  const handleSave = useCallback(async () => {
     setSaving(true);
     setMessage("");
 
@@ -233,7 +234,7 @@ export default function EditPostPage() {
     } finally {
       setSaving(false);
     }
-  };
+  }, [slug, isNew, searchParams, date, markdown, router, isDraft]);
 
   const handlePublish = async () => {
     // Save first if there are unsaved changes
@@ -415,21 +416,20 @@ export default function EditPostPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleSave]);
 
-  // Refresh images list
-  const refreshImages = () => {
+  // Refresh images list; stable identity so the effect below can depend on it
+  const refreshImages = useCallback(() => {
     if (isNew) return;
 
     fetch(`/api/admin/list-images?slug=${slug}`)
       .then((res) => res.json())
       .then((images: string[]) => setPostImages(images))
       .catch((err) => console.error("Error loading images:", err));
-  };
+  }, [slug, isNew]);
 
-  // Load images on mount / slug change; refreshImages identity is not
-  // stable across renders, so depend on what it actually reads instead.
+  // Load images for this post on mount
   useEffect(() => {
     refreshImages();
-  }, [slug, isNew]);
+  }, [refreshImages]);
 
   const handleDeleteImage = async (fileName: string) => {
     try {

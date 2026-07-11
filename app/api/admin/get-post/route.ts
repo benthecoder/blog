@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       content,
       isDraft,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Post not found" }, { status: 404 });
   }
 }

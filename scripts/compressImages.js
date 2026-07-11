@@ -3,7 +3,6 @@ const fs = require("fs");
 const path = require("path");
 
 const imagesDir = path.join(process.cwd(), "public", "images");
-const targetSizeKB = 500; // Target max size of 500KB per image
 
 async function compressImage(filePath) {
   const ext = path.extname(filePath).toLowerCase();

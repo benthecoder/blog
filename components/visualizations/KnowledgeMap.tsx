@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { scaleLinear } from "d3-scale";
@@ -99,15 +99,19 @@ export default function KnowledgeMap({
     return true;
   });
 
-  const getClusterColor = (cluster: number, isDark: boolean): string => {
-    if (cluster === -1) {
-      return isDark ? "#91989C" : "#595857";
-    }
-    const hue = (cluster * 137.5) % 360;
-    const saturation = isDark ? 52 : 47;
-    const lightness = isDark ? 62 : 50;
-    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-  };
+  // Stable identity required: dep of the canvas render effect below
+  const getClusterColor = useCallback(
+    (cluster: number, isDark: boolean): string => {
+      if (cluster === -1) {
+        return isDark ? "#91989C" : "#595857";
+      }
+      const hue = (cluster * 137.5) % 360;
+      const saturation = isDark ? 52 : 47;
+      const lightness = isDark ? 62 : 50;
+      return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    },
+    []
+  );
 
   const transformRef = useRef(transform);
   const hoveredArticleNodeRef = useRef(hoveredArticleNode);

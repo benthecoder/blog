@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import type { ReactNode } from "react";
 import type { Thought } from "@/types/thoughts";
 
@@ -57,7 +57,8 @@ export default function ThoughtsClient({
 
   const dates = Object.keys(groupedByDate);
 
-  const loadMore = async () => {
+  // Stable identity required: dep of the IntersectionObserver effect below
+  const loadMore = useCallback(async () => {
     if (loading || !hasMore) return;
 
     setLoading(true);
@@ -79,7 +80,7 @@ export default function ThoughtsClient({
     } finally {
       setLoading(false);
     }
-  };
+  }, [loading, hasMore, thoughts]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
