@@ -7,8 +7,10 @@ export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const postTitle = searchParams.get("title");
 
+  // Satori (ImageResponse) can't read woff2, so this route keeps its own
+  // TTF copy; it renders server-side only and never ships to browsers.
   const font = fetch(
-    new URL("../../public/fonts/AveriaSerifLibre-Bold.ttf", import.meta.url)
+    new URL("./AveriaSerifLibre-Bold.ttf", import.meta.url)
   ).then((res) => res.arrayBuffer());
   const fontData = await font;
 
