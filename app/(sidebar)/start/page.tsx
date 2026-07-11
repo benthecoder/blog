@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
@@ -51,7 +51,7 @@ const StartPage = () => {
     setIndex(Math.floor(Math.random() * INTERESTS.length));
   }, []);
 
-  const cycle = useCallback(() => {
+  const cycle = () => {
     setIndex((prev) => {
       if (INTERESTS.length <= 1) return prev;
       let next = prev;
@@ -60,7 +60,7 @@ const StartPage = () => {
       }
       return next;
     });
-  }, []);
+  };
 
   const current = INTERESTS[index];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import type {
   DragEvent,
   ClipboardEvent,
@@ -173,7 +173,7 @@ export default function EditPostPage() {
     }
   }, [slug, isNew, searchParams]);
 
-  const handleSave = useCallback(async () => {
+  const handleSave = async () => {
     setSaving(true);
     setMessage("");
 
@@ -233,9 +233,9 @@ export default function EditPostPage() {
     } finally {
       setSaving(false);
     }
-  }, [slug, isNew, searchParams, date, markdown, router, isDraft]);
+  };
 
-  const handlePublish = useCallback(async () => {
+  const handlePublish = async () => {
     // Save first if there are unsaved changes
     if (hasUnsavedChanges) {
       await handleSave();
@@ -275,9 +275,9 @@ export default function EditPostPage() {
     } finally {
       setPublishing(false);
     }
-  }, [slug, isNew, searchParams, hasUnsavedChanges, handleSave]);
+  };
 
-  const handleUnpublish = useCallback(async () => {
+  const handleUnpublish = async () => {
     setPublishing(true);
     setMessage("");
 
@@ -302,9 +302,9 @@ export default function EditPostPage() {
     } finally {
       setPublishing(false);
     }
-  }, [slug]);
+  };
 
-  const handleDelete = useCallback(async () => {
+  const handleDelete = async () => {
     setModalConfig({
       title: "Delete Post",
       message: `Are you sure you want to delete this post? This action cannot be undone.`,
@@ -341,7 +341,7 @@ export default function EditPostPage() {
       },
     });
     setShowModal(true);
-  }, [slug, router, searchParams]);
+  };
 
   useEffect(() => {
     const hasChanged = markdown !== initialContentRef.current.markdown;
@@ -416,14 +416,14 @@ export default function EditPostPage() {
   }, [handleSave]);
 
   // Refresh images list
-  const refreshImages = useCallback(() => {
+  const refreshImages = () => {
     if (isNew) return;
 
     fetch(`/api/admin/list-images?slug=${slug}`)
       .then((res) => res.json())
       .then((images: string[]) => setPostImages(images))
       .catch((err) => console.error("Error loading images:", err));
-  }, [slug, isNew]);
+  };
 
   // Load images for this post on mount
   useEffect(() => {

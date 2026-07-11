@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PostMetadata } from "@/types/post";
 import { countTagFrequency } from "@/utils/content/tags";
 import PostPreview from "@/components/posts/PostPreview";
@@ -49,14 +49,12 @@ export default function ArchiveClient({
   const [viewsLoading, setViewsLoading] = useState(false);
 
   const view = (searchParams.get("view") as View) || "list";
-  const selectedYear = useMemo(() => {
-    const param = searchParams.get("year");
-    return param
-      ? parseInt(param, 10)
-      : allPosts.length > 0
-        ? new Date(allPosts[0].date).getFullYear()
-        : new Date().getFullYear();
-  }, [searchParams, allPosts]);
+  const yearParam = searchParams.get("year");
+  const selectedYear = yearParam
+    ? parseInt(yearParam, 10)
+    : allPosts.length > 0
+      ? new Date(allPosts[0].date).getFullYear()
+      : new Date().getFullYear();
 
   useEffect(() => {
     if (sort !== "views" || viewCounts !== null || viewsLoading) return;
@@ -87,18 +85,12 @@ export default function ArchiveClient({
     setPage(1);
   };
 
-  const sortedTags = useMemo(
-    () => countTagFrequency(allPosts, ["✰"]),
-    [allPosts]
-  );
+  const sortedTags = countTagFrequency(allPosts, ["✰"]);
 
-  const { starredPosts, regularPosts } = useMemo(() => {
-    const starred = allPosts.filter((p) => p.tags.includes("✰"));
-    const regular = allPosts.filter((p) => !p.tags.includes("✰"));
-    return { starredPosts: starred, regularPosts: regular };
-  }, [allPosts]);
+  const starredPosts = allPosts.filter((p) => p.tags.includes("✰"));
+  const regularPosts = allPosts.filter((p) => !p.tags.includes("✰"));
 
-  const sortedRegular = useMemo(() => {
+  const sortedRegular = (() => {
     if (sort === "length") {
       return [...regularPosts].sort((a, b) => b.wordcount - a.wordcount);
     }
@@ -110,17 +102,14 @@ export default function ArchiveClient({
     return [...regularPosts].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-  }, [regularPosts, sort, viewCounts]);
+  })();
 
   const totalPages = Math.ceil(sortedRegular.length / PAGE_SIZE);
   const pagedRegular = sortedRegular.slice(
     (page - 1) * PAGE_SIZE,
     page * PAGE_SIZE
   );
-  const totalWords = useMemo(
-    () => allPosts.reduce((sum, p) => sum + p.wordcount, 0),
-    [allPosts]
-  );
+  const totalWords = allPosts.reduce((sum, p) => sum + p.wordcount, 0);
 
   return (
     <div>

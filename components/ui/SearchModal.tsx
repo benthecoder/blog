@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
@@ -53,7 +53,7 @@ export default function SearchModal() {
     }
   }, [open]);
 
-  const search = useCallback(async (q: string, type: SearchType) => {
+  const search = async (q: string, type: SearchType) => {
     if (!q.trim()) {
       setResults([]);
       return;
@@ -81,7 +81,7 @@ export default function SearchModal() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   const handleInput = (value: string) => {
     setQuery(value);
