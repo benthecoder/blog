@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Shuffle, ChevronLeft, ChevronRight, RotateCw } from "lucide-react";
 import type { Flashcard } from "@/types/flashcards";
 
@@ -30,16 +30,10 @@ function fontSize(html: string): string {
 }
 
 export default function Flashcards({ cards }: { cards: Flashcard[] }) {
-  const decks = useMemo(
-    () => Array.from(new Set(cards.map((c) => c.deck))).sort(),
-    [cards]
-  );
+  const decks = Array.from(new Set(cards.map((c) => c.deck))).sort();
 
   const [deck, setDeck] = useState<string>("all");
-  const pool = useMemo(
-    () => (deck === "all" ? cards : cards.filter((c) => c.deck === deck)),
-    [cards, deck]
-  );
+  const pool = deck === "all" ? cards : cards.filter((c) => c.deck === deck);
 
   const [order, setOrder] = useState<number[]>(() => cards.map((_, i) => i));
   const [pos, setPos] = useState(0);
@@ -54,29 +48,26 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
 
   const card = pool[order[pos]];
 
-  const go = useCallback(
-    (delta: number) => {
-      setFlipped(false);
-      setPos((p) =>
-        order.length ? (p + delta + order.length) % order.length : 0
-      );
-    },
-    [order.length]
-  );
+  const go = (delta: number) => {
+    setFlipped(false);
+    setPos((p) =>
+      order.length ? (p + delta + order.length) % order.length : 0
+    );
+  };
 
-  const flip = useCallback(() => setFlipped((f) => !f), []);
+  const flip = () => setFlipped((f) => !f);
 
-  const shuffle = useCallback(() => {
+  const shuffle = () => {
     setFlipped(false);
     setPos(0);
     setOrder(shuffledIndices(pool.length));
-  }, [pool.length]);
+  };
 
-  const reset = useCallback(() => {
+  const reset = () => {
     setFlipped(false);
     setPos(0);
     setOrder(pool.map((_, i) => i));
-  }, [pool]);
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

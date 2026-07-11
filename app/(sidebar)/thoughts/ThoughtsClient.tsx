@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import type { Thought } from "@/types/thoughts";
 
@@ -41,25 +41,23 @@ export default function ThoughtsClient({
   const [hasMore, setHasMore] = useState(initialThoughts.length === PAGE_SIZE);
   const observerRef = useRef<HTMLDivElement>(null);
 
-  const groupedByDate = useMemo(
-    () =>
-      thoughts.reduce(
-        (acc, entry) => {
-          const dateStr = new Date(entry.created_at).toLocaleDateString(
-            "en-US",
-            { timeZone: TZ, year: "2-digit", month: "2-digit", day: "2-digit" }
-          );
-          (acc[dateStr] ??= []).push(entry);
-          return acc;
-        },
-        {} as Record<string, Thought[]>
-      ),
-    [thoughts]
+  const groupedByDate = thoughts.reduce(
+    (acc, entry) => {
+      const dateStr = new Date(entry.created_at).toLocaleDateString("en-US", {
+        timeZone: TZ,
+        year: "2-digit",
+        month: "2-digit",
+        day: "2-digit",
+      });
+      (acc[dateStr] ??= []).push(entry);
+      return acc;
+    },
+    {} as Record<string, Thought[]>
   );
 
-  const dates = useMemo(() => Object.keys(groupedByDate), [groupedByDate]);
+  const dates = Object.keys(groupedByDate);
 
-  const loadMore = useCallback(async () => {
+  const loadMore = async () => {
     if (loading || !hasMore) return;
 
     setLoading(true);
@@ -81,7 +79,7 @@ export default function ThoughtsClient({
     } finally {
       setLoading(false);
     }
-  }, [loading, hasMore, thoughts]);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(

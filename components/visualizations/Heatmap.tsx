@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, Fragment } from "react";
+import { useState, Fragment } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PostMetadata } from "@/types/post";
@@ -58,18 +58,15 @@ const Heatmap = ({
   const effectiveMaxYear = Math.max(maxYear, currentYear);
 
   // Group posts by date
-  const postsByDate = useMemo(() => {
-    const map: { [key: string]: PostMetadata[] } = {};
-    posts.forEach((post) => {
-      const date = new Date(post.date);
-      const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
-      (map[dateKey] ??= []).push(post);
-    });
-    return map;
-  }, [posts]);
+  const postsByDate: { [key: string]: PostMetadata[] } = {};
+  posts.forEach((post) => {
+    const date = new Date(post.date);
+    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+    (postsByDate[dateKey] ??= []).push(post);
+  });
 
   // Generate all days in the year, organized by weeks
-  const weeks = useMemo(() => {
+  const weeks: DayData[][] = (() => {
     const firstDayOfYear = new Date(year, 0, 1);
     const lastDayOfYear = new Date(year, 11, 31);
 
@@ -111,23 +108,20 @@ const Heatmap = ({
     }
 
     return result;
-  }, [year, postsByDate]);
+  })();
 
   // Month labels - find first day of each month
-  const monthLabels = useMemo(() => {
-    const labels: { month: string; weekIndex: number }[] = [];
-    weeks.forEach((week, weekIndex) => {
-      week.forEach((day) => {
-        if (day.date.getDate() === 1 && day.date.getFullYear() === year) {
-          labels.push({
-            month: MONTH_NAMES[day.date.getMonth()],
-            weekIndex,
-          });
-        }
-      });
+  const monthLabels: { month: string; weekIndex: number }[] = [];
+  weeks.forEach((week, weekIndex) => {
+    week.forEach((day) => {
+      if (day.date.getDate() === 1 && day.date.getFullYear() === year) {
+        monthLabels.push({
+          month: MONTH_NAMES[day.date.getMonth()],
+          weekIndex,
+        });
+      }
     });
-    return labels;
-  }, [weeks, year]);
+  });
 
   // Get color based on total word count for the day
   const getColor = (posts: PostMetadata[]) => {
