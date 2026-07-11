@@ -44,6 +44,8 @@ export interface KnowledgeMapOutput {
   numClusters: number;
   clusterLabels?: Record<number, string>;
   generatedAt: string;
+  // count:max(created_at) of embedding rows — lets builds skip regeneration
+  sourceFingerprint?: string;
 }
 
 export interface ClusterLabelingOptions {

@@ -28,6 +28,17 @@ import path from "path";
 
 const sql = neon(process.env.POSTGRES_URL!);
 
+// Cheap DB fingerprint: the map only changes when embeddings do, so a
+// count + latest timestamp is enough to decide whether to regenerate.
+async function getSourceFingerprint(): Promise<string> {
+  const rows = (await sql`
+    SELECT count(*) AS count, max(created_at) AS latest
+    FROM content_chunks
+    WHERE embedding IS NOT NULL
+  `) as unknown as { count: string; latest: string | null }[];
+  return `${rows[0].count}:${rows[0].latest ?? "none"}`;
+}
+
 async function generateKnowledgeMap() {
   try {
     // Check if database connection is available
@@ -38,6 +49,25 @@ async function generateKnowledgeMap() {
         "⚠️  Knowledge map will use existing data or fail gracefully"
       );
       return;
+    }
+
+    const outputPath = path.join(DATA_DIR, "knowledge-map.json");
+    const sourceFingerprint = await getSourceFingerprint();
+
+    if (fs.existsSync(outputPath)) {
+      try {
+        const existing = JSON.parse(
+          fs.readFileSync(outputPath, "utf8")
+        ) as KnowledgeMapOutput;
+        if (existing.sourceFingerprint === sourceFingerprint) {
+          console.log(
+            `✓ Knowledge map up to date (fingerprint ${sourceFingerprint}), skipping generation`
+          );
+          return;
+        }
+      } catch {
+        // unreadable/corrupt file: fall through and regenerate
+      }
     }
 
     console.log("Fetching embeddings from database...");
@@ -186,9 +216,6 @@ async function generateKnowledgeMap() {
       fs.mkdirSync(DATA_DIR, { recursive: true });
     }
 
-    // Write to file
-    const outputPath = path.join(DATA_DIR, "knowledge-map.json");
-
     const output: KnowledgeMapOutput = {
       success: true,
       data: processedData,
@@ -197,6 +224,7 @@ async function generateKnowledgeMap() {
       numClusters,
       clusterLabels,
       generatedAt: new Date().toISOString(),
+      sourceFingerprint,
     };
 
     fs.writeFileSync(outputPath, JSON.stringify(output));
