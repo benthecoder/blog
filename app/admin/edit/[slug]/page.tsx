@@ -425,10 +425,11 @@ export default function EditPostPage() {
       .catch((err) => console.error("Error loading images:", err));
   };
 
-  // Load images for this post on mount
+  // Load images on mount / slug change; refreshImages identity is not
+  // stable across renders, so depend on what it actually reads instead.
   useEffect(() => {
     refreshImages();
-  }, [refreshImages]);
+  }, [slug, isNew]);
 
   const handleDeleteImage = async (fileName: string) => {
     try {
