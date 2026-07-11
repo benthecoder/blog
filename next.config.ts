@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   poweredByHeader: false,
   images: {
-    formats: ["image/webp"],
+    formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000,
@@ -24,6 +24,16 @@ const nextConfig: NextConfig = {
       source: "/rss.xml",
       destination: "/api/rss",
     },
+    // Published images live in R2. This runs after the public/ file check,
+    // so local files (e.g. /images/drafts/*) still win when present.
+    ...(process.env.R2_PUBLIC_URL
+      ? [
+          {
+            source: "/images/:path*",
+            destination: `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/images/:path*`,
+          },
+        ]
+      : []),
   ],
   headers: async () => [
     {

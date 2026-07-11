@@ -4,12 +4,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import {
   DRAFTS_DIR,
-  IMAGES_DIR,
   IMAGES_DRAFTS_DIR,
   getPostPath,
   getDraftPath,
   isSafeSlug,
 } from "@/config/paths";
+import { r2ListImages, r2GetImage, r2DeleteImage } from "@/utils/r2";
+import { removeFromGalleryManifest } from "@/utils/content/galleryManifest";
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -63,22 +64,17 @@ export async function POST(request: NextRequest) {
     // Delete the published file
     fs.unlinkSync(publishedPath);
 
-    // Move associated images back to drafts
+    // Move associated images back to local drafts: R2 -> filesystem
     if (!fs.existsSync(IMAGES_DRAFTS_DIR)) {
       fs.mkdirSync(IMAGES_DRAFTS_DIR, { recursive: true });
     }
 
-    if (fs.existsSync(IMAGES_DIR)) {
-      const publishedImages = fs.readdirSync(IMAGES_DIR);
-      const postImages = publishedImages.filter((file) =>
-        file.startsWith(`${slug}-`)
-      );
-
-      postImages.forEach((imageFile) => {
-        const sourcePath = path.join(IMAGES_DIR, imageFile);
-        const destPath = path.join(IMAGES_DRAFTS_DIR, imageFile);
-        fs.renameSync(sourcePath, destPath);
-      });
+    const postImages = await r2ListImages(`${slug}-`);
+    for (const imageFile of postImages) {
+      const body = await r2GetImage(imageFile);
+      fs.writeFileSync(path.join(IMAGES_DRAFTS_DIR, imageFile), body);
+      await r2DeleteImage(imageFile);
+      removeFromGalleryManifest(imageFile);
     }
 
     return NextResponse.json({ success: true, slug });

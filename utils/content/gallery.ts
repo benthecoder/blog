@@ -1,8 +1,6 @@
-import fs from "fs";
-import path from "path";
-import sizeOf from "image-size";
-import { IMAGES_DIR, POSTS_DIR } from "@/config/paths";
+import { POSTS_DIR } from "@/config/paths";
 import { scanMarkdownDir } from "./markdown";
+import { readGalleryManifest } from "./galleryManifest";
 
 export interface GalleryImage {
   filename: string;
@@ -13,12 +11,9 @@ export interface GalleryImage {
   aspectRatio: number;
 }
 
+// Published images live in R2, so filenames + dimensions come from the
+// committed manifest instead of scanning public/images.
 export function getGalleryImages(): GalleryImage[] {
-  const imageFiles = fs
-    .readdirSync(IMAGES_DIR)
-    .filter((file) => /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(file))
-    .sort();
-
   const imageToPostsMap = new Map<string, { slug: string; title: string }[]>();
 
   scanMarkdownDir(POSTS_DIR).forEach(({ slug, data, content }) => {
@@ -33,25 +28,12 @@ export function getGalleryImages(): GalleryImage[] {
     }
   });
 
-  return imageFiles.map((filename) => {
-    const imagePath = path.join(IMAGES_DIR, filename);
-    let width = 1;
-    let height = 1;
-    try {
-      const buffer = fs.readFileSync(imagePath);
-      const dimensions = sizeOf(new Uint8Array(buffer));
-      width = dimensions.width || 1;
-      height = dimensions.height || 1;
-    } catch {
-      // non-fatal: use default 1×1
-    }
-    return {
-      filename,
-      path: `/images/${filename}`,
-      usedInPosts: imageToPostsMap.get(filename) || [],
-      width,
-      height,
-      aspectRatio: width / height,
-    };
-  });
+  return readGalleryManifest().map(({ filename, width, height }) => ({
+    filename,
+    path: `/images/${filename}`,
+    usedInPosts: imageToPostsMap.get(filename) || [],
+    width,
+    height,
+    aspectRatio: width / height,
+  }));
 }
