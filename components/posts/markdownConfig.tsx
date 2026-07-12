@@ -1,6 +1,7 @@
 import type { Components } from "react-markdown";
 import type { PluggableList } from "unified";
 import rehypeRaw from "rehype-raw";
+import rehypeSlug from "rehype-slug";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
@@ -11,6 +12,7 @@ import "katex/dist/katex.min.css";
 export const remarkPlugins: PluggableList = [remarkMath, remarkGfm];
 export const rehypePlugins: PluggableList = [
   rehypeRaw,
+  rehypeSlug,
   [rehypeKatex, { strict: false }],
 ];
 
