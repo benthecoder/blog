@@ -3,8 +3,9 @@ import { getRelatedPosts } from "@/utils/content/related";
 import { getPostPreviewData } from "@/utils/content/preview";
 import { SITE_URL } from "@/config/site";
 import RenderPost from "@/components/posts/RenderPost";
-import RelatedPosts from "@/components/posts/RelatedPosts";
 import MarkdownContent from "@/components/posts/MarkdownContent";
+import { extractToc } from "@/utils/content/toc";
+import { splitLeadingImage } from "@/utils/content/hero";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -68,6 +69,7 @@ const PostPage = async ({ params }: { params: Params }) => {
   }
 
   const postContent = getPostContent(slug);
+  const { hero, body } = splitLeadingImage(postContent.content);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
@@ -95,10 +97,12 @@ const PostPage = async ({ params }: { params: Params }) => {
         next={post.next}
         slug={slug}
         wordcount={post.wordcount}
+        toc={extractToc(postContent.content)}
+        related={getRelatedPosts(slug)}
+        hero={hero ? <MarkdownContent content={hero} /> : undefined}
       >
-        <MarkdownContent content={postContent.content} />
+        <MarkdownContent content={body} />
       </RenderPost>
-      <RelatedPosts posts={getRelatedPosts(slug)} />
     </>
   );
 };
