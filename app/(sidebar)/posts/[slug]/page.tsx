@@ -1,5 +1,7 @@
 import { getPostContent, getPostMetadata } from "@/utils/content/posts";
+import { getRelatedPosts } from "@/utils/content/related";
 import RenderPost from "@/components/posts/RenderPost";
+import RelatedPosts from "@/components/posts/RelatedPosts";
 import MarkdownContent from "@/components/posts/MarkdownContent";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -88,6 +90,7 @@ const PostPage = async ({ params }: { params: Params }) => {
       >
         <MarkdownContent content={postContent.content} />
       </RenderPost>
+      <RelatedPosts posts={getRelatedPosts(slug)} />
     </>
   );
 };
