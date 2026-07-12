@@ -1,8 +1,20 @@
 import ReactMarkdown from "react-markdown";
 import type { Components } from "react-markdown";
 import { codeToHtml } from "shiki";
+import { isSafeSlug } from "@/config/paths";
+import { getPostPreviewData } from "@/utils/content/preview";
 import CopyButton from "./CopyButton";
+import PostLinkPreview from "./PostLinkPreview";
 import { baseComponents, remarkPlugins, rehypePlugins } from "./markdownConfig";
+
+// Internal post links get a hover preview card. Matches relative and absolute
+// forms; anything else falls through to a plain anchor.
+function postSlugFromHref(href: string): string | null {
+  const match = href.match(/^(?:https?:\/\/bneo\.xyz)?\/posts\/([^/#?]+)$/);
+  if (!match) return null;
+  const slug = decodeURIComponent(match[1]);
+  return isSafeSlug(slug) ? slug : null;
+}
 
 // Server component: fenced code is highlighted with shiki at render time
 // (build time for static pages), so no highlighting JS ships to the client.
@@ -38,6 +50,14 @@ async function CodeBlock({
 
 const components: Components = {
   ...baseComponents,
+  a({ href, children }) {
+    const slug = href ? postSlugFromHref(href) : null;
+    const preview = slug ? getPostPreviewData(slug) : null;
+    if (preview) {
+      return <PostLinkPreview preview={preview}>{children}</PostLinkPreview>;
+    }
+    return <a href={href}>{children}</a>;
+  },
   pre({ node, children }) {
     const codeNode = node?.children[0] as
       | {
