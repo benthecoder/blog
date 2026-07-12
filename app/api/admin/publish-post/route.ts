@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import sizeOf from "image-size";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import {
@@ -10,7 +9,6 @@ import {
   isSafeSlug,
 } from "@/config/paths";
 import { r2PutImage } from "@/utils/r2";
-import { addToGalleryManifest } from "@/utils/content/galleryManifest";
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -64,20 +62,7 @@ export async function POST(request: NextRequest) {
 
       for (const imageFile of postImages) {
         const sourcePath = path.join(IMAGES_DRAFTS_DIR, imageFile);
-        const body = fs.readFileSync(sourcePath);
-        await r2PutImage(imageFile, body);
-
-        let width = 1;
-        let height = 1;
-        try {
-          const dim = sizeOf(new Uint8Array(body));
-          width = dim.width || 1;
-          height = dim.height || 1;
-        } catch {
-          // non-fatal: 1x1 fallback
-        }
-        addToGalleryManifest({ filename: imageFile, width, height });
-
+        await r2PutImage(imageFile, fs.readFileSync(sourcePath));
         fs.unlinkSync(sourcePath);
       }
     }

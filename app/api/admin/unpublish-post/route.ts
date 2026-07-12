@@ -10,7 +10,6 @@ import {
   isSafeSlug,
 } from "@/config/paths";
 import { r2ListImages, r2GetImage, r2DeleteImage } from "@/utils/r2";
-import { removeFromGalleryManifest } from "@/utils/content/galleryManifest";
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -74,7 +73,6 @@ export async function POST(request: NextRequest) {
       const body = await r2GetImage(imageFile);
       fs.writeFileSync(path.join(IMAGES_DRAFTS_DIR, imageFile), body);
       await r2DeleteImage(imageFile);
-      removeFromGalleryManifest(imageFile);
     }
 
     return NextResponse.json({ success: true, slug });

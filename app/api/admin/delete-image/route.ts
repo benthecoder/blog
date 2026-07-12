@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
 import { r2ListImages, r2DeleteImage } from "@/utils/r2";
-import { removeFromGalleryManifest } from "@/utils/content/galleryManifest";
 
 export async function DELETE(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -36,7 +35,6 @@ export async function DELETE(request: NextRequest) {
         return NextResponse.json({ error: "File not found" }, { status: 404 });
       }
       await r2DeleteImage(fileName);
-      removeFromGalleryManifest(fileName);
     }
 
     return NextResponse.json({ success: true });
