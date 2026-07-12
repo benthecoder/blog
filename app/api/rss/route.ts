@@ -6,6 +6,7 @@ import remarkRehype from "remark-rehype";
 import rehypeRaw from "rehype-raw";
 import rehypeStringify from "rehype-stringify";
 import { getPostMetadata, getPostContent } from "@/utils/content/posts";
+import { SITE_URL } from "@/config/site";
 
 export const dynamic = "force-static";
 
@@ -23,7 +24,7 @@ const processor = unified()
 
 export async function GET() {
   try {
-    const rootUrl = process.env.NEXT_PUBLIC_ROOT_URL;
+    const rootUrl = SITE_URL;
     const feedUrl = `${rootUrl}/rss.xml`;
     const posts = getPostMetadata();
 

@@ -1,5 +1,7 @@
 import { getPostContent, getPostMetadata } from "@/utils/content/posts";
 import { getRelatedPosts } from "@/utils/content/related";
+import { getPostPreviewData } from "@/utils/content/preview";
+import { SITE_URL } from "@/config/site";
 import RenderPost from "@/components/posts/RenderPost";
 import RelatedPosts from "@/components/posts/RelatedPosts";
 import MarkdownContent from "@/components/posts/MarkdownContent";
@@ -24,15 +26,21 @@ export async function generateMetadata({
   }
 
   const { title, date: publishedTime } = post;
-  const ogImage = `https://bneo.xyz/og?title=${encodeURIComponent(title)}`;
+  const ogImage = `${SITE_URL}/og?title=${encodeURIComponent(title)}`;
+  const description = getPostPreviewData(slug)?.excerpt.slice(0, 160);
 
   return {
     title,
+    description,
+    alternates: {
+      canonical: `/posts/${slug}`,
+    },
     openGraph: {
       title,
+      description,
       type: "article",
       publishedTime,
-      url: `https://bneo.xyz/posts/${slug}`,
+      url: `${SITE_URL}/posts/${slug}`,
       images: [{ url: ogImage }],
     },
     twitter: {
