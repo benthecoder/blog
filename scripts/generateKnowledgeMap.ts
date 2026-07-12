@@ -15,7 +15,7 @@ import {
   CLUSTERING_UMAP_COMPONENTS,
   SIMILARITY_EDGE_THRESHOLD,
 } from "../config/constants";
-import { DATA_DIR } from "../config/paths";
+import { DATA_DIR, KNOWLEDGE_MAP_JSON } from "../config/paths";
 import type {
   KnowledgeMapOutput,
   ArticleNode,
@@ -24,7 +24,6 @@ import type {
 } from "../types/knowledgeMap";
 import type { ChunkRow } from "../types/chunks";
 import fs from "fs";
-import path from "path";
 
 const sql = neon(process.env.POSTGRES_URL!);
 
@@ -51,7 +50,7 @@ async function generateKnowledgeMap() {
       return;
     }
 
-    const outputPath = path.join(DATA_DIR, "knowledge-map.json");
+    const outputPath = KNOWLEDGE_MAP_JSON;
     const sourceFingerprint = await getSourceFingerprint();
 
     if (fs.existsSync(outputPath)) {
