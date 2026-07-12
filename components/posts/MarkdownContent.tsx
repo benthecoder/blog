@@ -54,7 +54,11 @@ const components: Components = {
     const slug = href ? postSlugFromHref(href) : null;
     const preview = slug ? getPostPreviewData(slug) : null;
     if (preview) {
-      return <PostLinkPreview preview={preview}>{children}</PostLinkPreview>;
+      return (
+        <PostLinkPreview slug={preview.slug} preview={preview}>
+          {children}
+        </PostLinkPreview>
+      );
     }
     return <a href={href}>{children}</a>;
   },

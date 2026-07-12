@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import {
@@ -19,20 +19,38 @@ import {
 } from "@floating-ui/react";
 import type { PostPreviewData } from "@/utils/content/preview";
 
-// Hover card for internal post links inside markdown. The preview data is
-// resolved on the server (see MarkdownContent) so this ships no fetch logic.
+// Hover card for internal post links. Markdown links pass `preview` resolved
+// on the server; list contexts with too many posts to inline (e.g. the
+// archive) pass only `slug` and the data is fetched once on first hover.
 const PostLinkPreview = ({
-  preview,
+  slug,
+  preview: initialPreview,
+  className,
   children,
 }: {
-  preview: PostPreviewData;
+  slug: string;
+  preview?: PostPreviewData;
+  className?: string;
   children: ReactNode;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [preview, setPreview] = useState(initialPreview ?? null);
+  const fetched = useRef(false);
+
+  const onOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (open && !preview && !fetched.current) {
+      fetched.current = true;
+      fetch(`/api/post-preview/${slug}`)
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => data && setPreview(data))
+        .catch(() => {});
+    }
+  };
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
-    onOpenChange: setIsOpen,
+    onOpenChange,
     placement: "top",
     whileElementsMounted: autoUpdate,
     middleware: [
@@ -61,13 +79,14 @@ const PostLinkPreview = ({
   return (
     <>
       <Link
-        href={`/posts/${preview.slug}`}
+        href={`/posts/${slug}`}
         ref={refs.setReference}
+        className={className}
         {...getReferenceProps()}
       >
         {children}
       </Link>
-      {isOpen && (
+      {isOpen && preview && (
         <FloatingPortal>
           <div
             // floating-ui's refs object exposes callback refs by design
