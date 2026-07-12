@@ -5,7 +5,12 @@ import { isSafeSlug } from "@/config/paths";
 import { getPostPreviewData } from "@/utils/content/preview";
 import CopyButton from "./CopyButton";
 import PostLinkPreview from "./PostLinkPreview";
-import { baseComponents, remarkPlugins, rehypePlugins } from "./markdownConfig";
+import { getImageMeta } from "@/utils/content/imageMeta";
+import {
+  createBaseComponents,
+  remarkPlugins,
+  rehypePlugins,
+} from "./markdownConfig";
 
 // Internal post links get a hover preview card. Matches relative and absolute
 // forms; anything else falls through to a plain anchor.
@@ -49,7 +54,7 @@ async function CodeBlock({
 }
 
 const components: Components = {
-  ...baseComponents,
+  ...createBaseComponents(getImageMeta),
   a({ href, children }) {
     const slug = href ? postSlugFromHref(href) : null;
     const preview = slug ? getPostPreviewData(slug) : null;

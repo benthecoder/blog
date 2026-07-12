@@ -97,6 +97,8 @@ function Tile({
             alt={post?.title ?? image.filename}
             fill
             sizes={sizes}
+            placeholder={image.meta ? "blur" : "empty"}
+            blurDataURL={image.meta?.blurDataURL}
             className="object-cover"
           />
         </div>
@@ -104,9 +106,11 @@ function Tile({
         <Image
           src={image.path}
           alt={post?.title ?? image.filename}
-          width={800}
-          height={800}
+          width={image.meta?.width ?? 800}
+          height={image.meta?.height ?? 800}
           sizes={sizes}
+          placeholder={image.meta ? "blur" : "empty"}
+          blurDataURL={image.meta?.blurDataURL}
           className="w-full h-auto bg-japanese-shironeri dark:bg-dark-tag"
         />
       )}
