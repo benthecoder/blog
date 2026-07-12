@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const ADMIN_COOKIE = "admin_session";
+import {
+  ADMIN_COOKIE,
+  sessionToken,
+  verifyAdminPassword,
+} from "@/utils/adminAuth";
 
 export async function POST(request: NextRequest) {
   const secret = process.env.ADMIN_SECRET;
@@ -14,12 +17,12 @@ export async function POST(request: NextRequest) {
 
   const { password } = await request.json();
 
-  if (password !== secret) {
+  if (typeof password !== "string" || !verifyAdminPassword(password, secret)) {
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
 
   const response = NextResponse.json({ success: true });
-  response.cookies.set(ADMIN_COOKIE, secret, {
+  response.cookies.set(ADMIN_COOKIE, sessionToken(secret), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
