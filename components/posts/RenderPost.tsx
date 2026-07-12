@@ -1,8 +1,12 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ParsedPost, PostMetadata } from "@/types/post";
+import type { RelatedPost } from "@/utils/content/related";
+import type { TocEntry } from "@/utils/content/toc";
 import { extractTags } from "@/utils/content/tags";
 import PostViewTracker from "./PostViewTracker";
+import RelatedPosts from "./RelatedPosts";
+import TableOfContents from "./TableOfContents";
 
 interface RenderPostProps {
   post: ParsedPost;
@@ -10,8 +14,14 @@ interface RenderPostProps {
   next: PostMetadata | null;
   slug: string | null;
   wordcount?: number;
+  toc?: TocEntry[];
+  related?: RelatedPost[];
+  hero?: ReactNode;
   children: ReactNode;
 }
+
+const proseClasses =
+  "prose dark:prose-invert dark:text-japanese-shironezu text-base leading-relaxed max-w-none prose-headings:scroll-mt-8 selection:bg-japanese-unoharairo/30 dark:selection:bg-japanese-murasakisuishiyou/20 prose-a:text-japanese-sumiiro prose-a:decoration-japanese-soshoku/50 prose-a:hover:text-japanese-sumiiro/70 prose-a:hover:decoration-japanese-sumiiro prose-headings:text-japanese-sumiiro dark:prose-headings:text-japanese-murasakisuishiyou";
 
 const RenderPost = ({
   post,
@@ -19,6 +29,9 @@ const RenderPost = ({
   next,
   slug,
   wordcount,
+  toc,
+  related,
+  hero,
   children,
 }: RenderPostProps) => {
   const { title, date } = post.data;
@@ -28,106 +41,94 @@ const RenderPost = ({
       ? Math.max(1, Math.round(wordcount / 200))
       : null;
 
-  return (
-    <div>
-      <div className="p-5 bg-japanese-hakuji dark:bg-dark-tag shadow-xs rounded-md dark:text-japanese-nyuhakushoku">
-        <div className="text-center mb-4">
-          {slug ? (
-            <Link href={`/posts/${slug}`}>
-              <h2 className="font-bold text-xl md:text-2xl text-japanese-sumiiro dark:text-japanese-nyuhakushoku">
-                {title as string}
-              </h2>
-            </Link>
-          ) : (
-            <h2 className="font-bold text-xl md:text-2xl text-japanese-sumiiro dark:text-japanese-nyuhakushoku">
-              {title as string}
-            </h2>
-          )}
+  const meta = [
+    date &&
+      new Date(date as string).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      }),
+    readingTime && `${readingTime} min read`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
-          <div className="flex items-center justify-center gap-2 mt-1 flex-wrap">
-            {date && (
-              <span className="text-japanese-ginnezu dark:text-japanese-ginnezu text-xs">
-                {new Date(date as string).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+  const heading = (
+    <h1 className="font-bold text-2xl md:text-4xl tracking-tight text-balance text-japanese-sumiiro dark:text-japanese-nyuhakushoku">
+      {title as string}
+    </h1>
+  );
+
+  return (
+    <div className="relative max-w-[65ch] mx-auto">
+      <header className="mb-10">
+        {slug ? <Link href={`/posts/${slug}`}>{heading}</Link> : heading}
+        {meta && <p className="mt-2 text-sm text-japanese-ginnezu">{meta}</p>}
+      </header>
+
+      {hero && (
+        <div className={`${proseClasses} mb-8 [&_figure]:my-0`}>{hero}</div>
+      )}
+
+      {toc && <TableOfContents items={toc} />}
+
+      <article className={proseClasses}>{children}</article>
+
+      <footer className="mt-12 pt-5 border-t border-light-border dark:border-dark-border text-xs">
+        {(tags.length > 0 || slug) && (
+          <div className="flex items-center gap-x-3 gap-y-1 flex-wrap text-japanese-ginnezu">
+            {tags.map((tag) => (
+              <Link
+                href={`/tags/${tag}`}
+                key={tag}
+                className="hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors duration-150"
+              >
+                #{tag}
+              </Link>
+            ))}
+            {slug && (
+              <span className="ml-auto">
+                <PostViewTracker slug={slug} />
               </span>
             )}
-            {tags.length > 0 && (
-              <>
-                <span className="text-japanese-shiraumenezu dark:text-japanese-sumiiro/50 text-xs">
-                  ·
-                </span>
-                {tags.map((tag) => (
-                  <Link
-                    href={`/tags/${tag}`}
-                    key={tag}
-                    className="text-xs text-japanese-ginnezu dark:text-japanese-ginnezu hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors duration-150"
-                  >
-                    #{tag}
-                  </Link>
-                ))}
-              </>
-            )}
-            {readingTime && (
-              <>
-                <span className="text-japanese-shiraumenezu dark:text-japanese-sumiiro/50 text-xs">
-                  ·
-                </span>
-                <span className="text-japanese-ginnezu dark:text-japanese-ginnezu text-xs">
-                  {readingTime} min read
-                </span>
-              </>
-            )}
-            {slug && (
-              <>
-                <span className="text-japanese-shiraumenezu dark:text-japanese-sumiiro/50 text-xs">
-                  ·
-                </span>
-                <PostViewTracker slug={slug} />
-              </>
-            )}
           </div>
+        )}
+
+        {related && related.length > 0 && <RelatedPosts posts={related} />}
+
+        <div className="mt-8 flex justify-between gap-4">
+          {prev ? (
+            <div className="flex flex-col flex-1">
+              <p className="text-light-text/40 dark:text-dark-text/40 mb-1">
+                Previous
+              </p>
+              <Link
+                href={`/posts/${prev.slug}`}
+                className="text-light-text dark:text-dark-text hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+              >
+                {prev.title}
+              </Link>
+            </div>
+          ) : (
+            <div className="flex-1" />
+          )}
+          {next ? (
+            <div className="flex flex-col flex-1 text-right">
+              <p className="text-light-text/40 dark:text-dark-text/40 mb-1">
+                Next
+              </p>
+              <Link
+                href={`/posts/${next.slug}`}
+                className="text-light-text dark:text-dark-text hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+              >
+                {next.title}
+              </Link>
+            </div>
+          ) : (
+            <div className="flex-1" />
+          )}
         </div>
-
-        <article className="prose dark:prose-invert dark:text-japanese-shironezu text-sm md:text-base leading-relaxed max-w-none selection:bg-japanese-unoharairo/30 dark:selection:bg-japanese-murasakisuishiyou/20 prose-a:text-japanese-sumiiro prose-a:decoration-japanese-soshoku/50 prose-a:hover:text-japanese-sumiiro/70 prose-a:hover:decoration-japanese-sumiiro prose-headings:text-japanese-sumiiro dark:prose-headings:text-japanese-murasakisuishiyou">
-          {children}
-        </article>
-      </div>
-
-      <div className="mt-8 flex justify-between text-xs gap-4">
-        {prev ? (
-          <div className="flex flex-col flex-1">
-            <p className="text-light-text/40 dark:text-dark-text/40 mb-1">
-              Previous
-            </p>
-            <Link
-              href={`/posts/${prev.slug}`}
-              className="text-light-text dark:text-dark-text hover:text-light-accent dark:hover:text-dark-accent transition-colors"
-            >
-              {prev.title}
-            </Link>
-          </div>
-        ) : (
-          <div className="flex-1" />
-        )}
-        {next ? (
-          <div className="flex flex-col flex-1 text-right">
-            <p className="text-light-text/40 dark:text-dark-text/40 mb-1">
-              Next
-            </p>
-            <Link
-              href={`/posts/${next.slug}`}
-              className="text-light-text dark:text-dark-text hover:text-light-accent dark:hover:text-dark-accent transition-colors"
-            >
-              {next.title}
-            </Link>
-          </div>
-        ) : (
-          <div className="flex-1" />
-        )}
-      </div>
+      </footer>
     </div>
   );
 };
