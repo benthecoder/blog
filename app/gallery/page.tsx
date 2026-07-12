@@ -9,8 +9,8 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-static";
 
-export default function GalleryPage() {
-  const images = getGalleryImages();
+export default async function GalleryPage() {
+  const images = await getGalleryImages();
 
   return <Gallery images={images} />;
 }

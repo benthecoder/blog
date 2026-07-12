@@ -10,12 +10,6 @@ const PUBLIC_DIR = path.join(ROOT_DIR, "public");
 export const IMAGES_DIR = path.join(PUBLIC_DIR, "images");
 export const IMAGES_DRAFTS_DIR = path.join(IMAGES_DIR, "drafts");
 export const DATA_DIR = path.join(PUBLIC_DIR, "data");
-// Published images live in R2; this committed manifest carries the
-// filename + dimensions the gallery needs at build time.
-export const GALLERY_MANIFEST = path.join(
-  ROOT_DIR,
-  "data/gallery-manifest.json"
-);
 
 export const LIBRARY_MD = path.join(
   ROOT_DIR,
