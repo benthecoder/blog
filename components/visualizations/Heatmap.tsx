@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Fragment } from "react";
+import { useState, Fragment, type CSSProperties } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { PostMetadata } from "@/types/post";
@@ -85,7 +85,7 @@ function DayCell({
 }) {
   return (
     <div
-      className={`w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-xs ${wordCountColor(day.posts)} ${
+      className={`w-(--hm-cell) h-(--hm-cell) rounded-xs ${wordCountColor(day.posts)} ${
         day.posts.length > 0
           ? "cursor-pointer hover:ring-1 hover:ring-japanese-sumiiro dark:hover:ring-japanese-shironezu"
           : ""
@@ -128,7 +128,7 @@ function HoverInfo({ day }: { day: DayData }) {
 }
 
 function Legend() {
-  const cell = "w-[9px] h-[9px] lg:w-[12px] lg:h-[12px] rounded-xs";
+  const cell = "w-(--hm-cell) h-(--hm-cell) rounded-xs";
   return (
     <div className="flex items-center justify-between text-xs">
       <div className="flex items-center gap-2">
@@ -184,7 +184,13 @@ const Heatmap = ({
   };
 
   return (
-    <div>
+    // The cell size is computed from the container width so the grid spans
+    // exactly the content column on md+ (9px + horizontal scroll below md).
+    // Everything (cells, labels, legend) reads the same --hm-cell variable.
+    <div
+      className="[container-type:inline-size] [--hm-cell:9px] md:[--hm-cell:calc((100cqw_-_15px_-_(var(--hm-n)_-_1)*1px)/var(--hm-n))]"
+      style={{ "--hm-n": weeks.length } as CSSProperties}
+    >
       {showNavigation && (
         <YearNav
           year={year}
@@ -196,7 +202,7 @@ const Heatmap = ({
 
       <div className="overflow-x-auto md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         <div
-          className="grid gap-px md:gap-[0.5px] lg:gap-px [--hm-cell:9px] lg:[--hm-cell:12px]"
+          className="grid gap-px"
           style={{
             gridTemplateColumns: `15px repeat(${weeks.length}, var(--hm-cell))`,
           }}
@@ -206,7 +212,7 @@ const Heatmap = ({
           {weeks.map((_, weekIndex) => (
             <div
               key={`month-${weekIndex}`}
-              className="text-[8px] md:text-[10px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 h-[12px] md:h-[14px] w-[9px] lg:w-[12px] overflow-visible"
+              className="text-[8px] md:text-[10px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 h-[12px] md:h-[14px] w-[9px] md:w-auto overflow-visible whitespace-nowrap"
             >
               {monthLabels.get(weekIndex) || ""}
             </div>
@@ -215,7 +221,7 @@ const Heatmap = ({
           {/* Rows 1-7: Day labels + day cells */}
           {DAY_LABELS.map((label, dayOfWeek) => (
             <Fragment key={dayOfWeek}>
-              <div className="text-[8px] md:text-[11px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 flex items-center pr-0.5 md:pr-1 h-[9px] lg:h-[12px]">
+              <div className="text-[8px] md:text-[10px] leading-none text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 flex items-center pr-0.5 md:pr-1 h-(--hm-cell)">
                 {label}
               </div>
               {weeks.map((week, weekIndex) => {
