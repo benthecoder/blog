@@ -1,11 +1,13 @@
 import { POSTS_DIR } from "@/config/paths";
 import { scanMarkdownDir } from "./markdown";
+import { getImageMeta, type ImageMeta } from "./imageMeta";
 import { r2ListImages } from "@/utils/r2";
 
 export interface GalleryImage {
   filename: string;
   path: string;
   usedInPosts: { slug: string; title: string; date: string }[];
+  meta: ImageMeta | null;
 }
 
 // Published images live in R2; the gallery lists the bucket at build time.
@@ -46,6 +48,7 @@ export async function getGalleryImages(): Promise<GalleryImage[]> {
     filename,
     path: `/images/${filename}`,
     usedInPosts: imageToPostsMap.get(filename) || [],
+    meta: getImageMeta(`/images/${filename}`),
   }));
 
   // Chronological like a photo library: oldest at the top, newest at the
