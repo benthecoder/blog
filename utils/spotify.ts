@@ -26,7 +26,18 @@ interface SpotifyRecentItem {
   played_at: string;
 }
 
+// Access tokens last an hour, so they're held in module memory and reused
+// across requests. Without this every visitor to /now would trigger its own
+// refresh call against Spotify. Refreshing is server-side only — the client
+// id/secret/refresh token never leave the server, and visitors never see an
+// OAuth flow.
+let cachedToken: { value: string; expiresAt: number } | null = null;
+
 async function getAccessToken(): Promise<{ access_token: string }> {
+  if (cachedToken && Date.now() < cachedToken.expiresAt) {
+    return { access_token: cachedToken.value };
+  }
+
   const response = await fetch(TOKEN_ENDPOINT, {
     method: "POST",
     headers: {
@@ -40,7 +51,25 @@ async function getAccessToken(): Promise<{ access_token: string }> {
     cache: "no-store",
   });
 
-  return response.json();
+  const data = await response.json();
+
+  // A revoked or expired refresh token comes back as 400 invalid_grant. Left
+  // unchecked it yields `Bearer undefined` on the next call, which fails as a
+  // generic 401 and hides the real cause — so surface it here instead.
+  if (!response.ok || !data.access_token) {
+    throw new Error(
+      `Spotify token refresh failed (${response.status} ${data.error ?? "unknown"}): ${data.error_description ?? "no description"}`
+    );
+  }
+
+  // Expire a minute early so an in-flight request can't use a stale token.
+  const ttl = (data.expires_in ?? 3600) * 1000;
+  cachedToken = {
+    value: data.access_token,
+    expiresAt: Date.now() + ttl - 60_000,
+  };
+
+  return data;
 }
 
 export async function getRecentlyPlayed(limit = 5) {
@@ -53,8 +82,10 @@ export async function getRecentlyPlayed(limit = 5) {
     cache: "no-store",
   });
 
-  if (response.status > 400) {
-    return { tracks: [] };
+  if (!response.ok) {
+    throw new Error(
+      `Spotify recently-played failed: ${response.status} ${response.statusText}`
+    );
   }
 
   const data = await response.json();

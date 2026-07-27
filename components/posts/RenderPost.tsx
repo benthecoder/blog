@@ -54,7 +54,7 @@ const RenderPost = ({
     .join(" · ");
 
   const heading = (
-    <h1 className="font-bold text-2xl md:text-4xl tracking-tight text-balance text-ink dark:text-chalk-strong">
+    <h1 className="font-bold text-2xl md:text-4xl leading-tight tracking-tight text-balance text-ink dark:text-chalk-strong">
       {title as string}
     </h1>
   );

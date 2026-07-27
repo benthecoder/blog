@@ -69,7 +69,10 @@ export function SidebarNav() {
 
   return (
     <>
-      <nav className="flex flex-row gap-2 justify-center lg:flex-col lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-6 lg:mb-0">
+      {/* Extra bottom gap on small screens: the nav used to sit against a
+          white content card that separated it from the page title, and
+          without that card the two run together. */}
+      <nav className="flex flex-row gap-2 justify-center lg:flex-col lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0">
         {links.map(({ path, text, icon }) => (
           <Link
             key={path}

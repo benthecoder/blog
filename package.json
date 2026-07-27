@@ -17,6 +17,7 @@
     "prebuild": "pnpm run generate:knowledge-map",
     "postbuild": "next-sitemap",
     "generate-embeddings": "tsx scripts/generateEmbeddings.ts",
+    "spotify-auth": "tsx scripts/spotifyAuth.ts",
     "sync-anki": "tsx scripts/syncAnki.ts",
     "sync": "tsx scripts/syncAnki.ts",
     "analyze-vector-db": "tsx scripts/analyzeVectorDB.ts",

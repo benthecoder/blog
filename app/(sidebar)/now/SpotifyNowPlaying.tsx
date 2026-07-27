@@ -54,7 +54,9 @@ export default function SpotifyNowPlaying() {
         <div className="flex flex-col gap-2.5">
           {recentlyPlayed.tracks.slice(0, 10).map((track, i) => (
             <a
-              key={track.songUrl}
+              // The same track can appear more than once in recently-played,
+              // so the URL alone collides — playedAt is unique per play.
+              key={`${track.songUrl}-${track.playedAt}`}
               href={track.songUrl}
               target="_blank"
               rel="noopener noreferrer"
