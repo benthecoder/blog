@@ -165,6 +165,10 @@ export default function KnowledgeMap({
     const dotHover = readToken(
       isDark ? "--color-chalk-strong" : "--color-ink-strong"
     );
+    const edgeColor = readToken(isDark ? "--color-chalk" : "--color-ink-muted");
+    const labelColor = readToken(
+      isDark ? "--color-chalk" : "--color-ink-muted"
+    );
 
     ctx.save();
     ctx.translate(transform.x, transform.y);
@@ -185,11 +189,11 @@ export default function KnowledgeMap({
             yScale(focusedArticleNode.y)
           );
           ctx.lineTo(xScale(other.x), yScale(other.y));
-          ctx.strokeStyle = isDark
-            ? `rgba(145, 152, 156, ${alpha})`
-            : `rgba(89, 88, 87, ${alpha})`;
+          ctx.globalAlpha = alpha;
+          ctx.strokeStyle = edgeColor;
           ctx.lineWidth = 0.8 / transform.k;
           ctx.stroke();
+          ctx.globalAlpha = 1;
         }
       );
     }
@@ -216,8 +220,10 @@ export default function KnowledgeMap({
       const fontSize = Math.max(7, 9 / transform.k);
       ctx.font = `${fontSize}px ui-serif, Georgia, serif`;
       const labelY = cy - 12 / transform.k;
-      ctx.fillStyle = isDark ? "rgba(220,221,221,0.38)" : "rgba(89,88,87,0.38)";
+      ctx.globalAlpha = 0.38;
+      ctx.fillStyle = labelColor;
       ctx.fillText(label, cx, labelY);
+      ctx.globalAlpha = 1;
     });
 
     // Dots — circles only

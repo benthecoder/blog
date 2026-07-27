@@ -130,13 +130,13 @@ export default function SearchModal() {
       className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh]"
       onClick={() => setOpen(false)}
     >
-      <div className="absolute inset-0 bg-paper/80 dark:bg-[#111]/80 backdrop-blur-xs" />
+      <div className="absolute inset-0 bg-paper/80 dark:bg-night/80 backdrop-blur-xs" />
 
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Search posts"
-        className="relative w-full max-w-lg mx-4 bg-paper dark:bg-[#1c1c1c] border border-rule dark:border-white/8 shadow-lg"
+        className="relative w-full max-w-lg mx-4 bg-paper dark:bg-night-raised border border-rule dark:border-white/8 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center border-b border-rule dark:border-white/6 px-3 gap-2">
