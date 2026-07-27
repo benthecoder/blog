@@ -36,13 +36,13 @@
   --color-night-rule: #333333; /* borders, dividers */
 
   /* -- Ink on paper (palette-driven) -------------------------------------- */
-  --color-ink-muted: #77869c; /* quietest: quotes, markers */
-  --color-ink-soft: #6690b3; /* secondary: hover, selection */
+  --color-ink-muted: #49749e; /* quietest: quotes, markers */
+  --color-ink-soft: #3f6d99; /* secondary: hover, selection */
   --color-ink: #3f6d99; /* primary: links, headings */
   --color-ink-strong: #365d82; /* highest contrast: body copy */
 
   /* -- Chalk on night (palette-driven) ------------------------------------ */
-  --color-chalk-muted: #6f879b; /* quietest: captions, meta */
+  --color-chalk-muted: #7790a6; /* quietest: captions, meta */
   --color-chalk: #9dbedb; /* primary */
   --color-chalk-soft: #b1cbe2; /* secondary: hover, emphasis */
   --color-chalk-strong: #c4d8e9; /* highest contrast: body copy */
@@ -75,67 +75,67 @@
    palette means adding a block here and its id to PALETTES in app/providers.
    ========================================================================== */
 :root[data-palette="indigo"] {
-  --color-ink-muted: #838aa5;
-  --color-ink-soft: #7b89b8;
+  --color-ink-muted: #5f6fa8;
+  --color-ink-soft: #5667a3;
   --color-ink: #4d5f9e;
   --color-ink-strong: #415186;
   --color-chalk: #a8b3dd;
-  --color-chalk-muted: #7b83a1;
+  --color-chalk-muted: #838cac;
   --color-chalk-soft: #b9c2e4;
   --color-chalk-strong: #cbd1eb;
 }
 
 :root[data-palette="olive"] {
-  --color-ink-muted: #7d8566;
-  --color-ink-soft: #6f7a4f;
+  --color-ink-muted: #6e755b;
+  --color-ink-soft: #646c50;
   --color-ink: #47502f;
   --color-ink-strong: #3c4428;
   --color-chalk: #aab98a;
-  --color-chalk-muted: #7e8966;
+  --color-chalk-muted: #86926d;
   --color-chalk-soft: #bbc7a1;
   --color-chalk-strong: #ccd5b9;
 }
 
 :root[data-palette="gold"] {
-  --color-ink-muted: #a08a52;
-  --color-ink-soft: #b08b2e;
+  --color-ink-muted: #8d6d1f;
+  --color-ink-soft: #896818;
   --color-ink: #896818;
   --color-ink-strong: #745814;
   --color-chalk: #d9b65a;
-  --color-chalk-muted: #9a8140;
+  --color-chalk-muted: #a58a44;
   --color-chalk-soft: #e1c57b;
   --color-chalk-strong: #e8d39c;
 }
 
 :root[data-palette="steel"] {
-  --color-ink-muted: #77869c;
-  --color-ink-soft: #6690b3;
+  --color-ink-muted: #49749e;
+  --color-ink-soft: #3f6d99;
   --color-ink: #3f6d99;
   --color-ink-strong: #365d82;
   --color-chalk: #9dbedb;
-  --color-chalk-muted: #6f879b;
+  --color-chalk-muted: #7790a6;
   --color-chalk-soft: #b1cbe2;
   --color-chalk-strong: #c4d8e9;
 }
 
 :root[data-palette="vermillion"] {
-  --color-ink-muted: #b06e50;
-  --color-ink-soft: #c26744;
+  --color-ink-muted: #b35638;
+  --color-ink-soft: #ae4b2b;
   --color-ink: #ab4322;
   --color-ink-strong: #91391d;
   --color-chalk: #e08a5f;
-  --color-chalk-muted: #ba734f;
+  --color-chalk-muted: #c57954;
   --color-chalk-soft: #e6a17f;
   --color-chalk-strong: #ecb99f;
 }
 
 :root[data-palette="rose"] {
-  --color-ink-muted: #a1727e;
-  --color-ink-soft: #ac6879;
+  --color-ink-muted: #a05f70;
+  --color-ink-soft: #995466;
   --color-ink: #93495c;
   --color-ink-strong: #7d3e4e;
   --color-chalk: #d391a1;
-  --color-chalk-muted: #ab7582;
+  --color-chalk-muted: #b57d8a;
   --color-chalk-soft: #dca7b4;
   --color-chalk-strong: #e5bdc7;
 }
