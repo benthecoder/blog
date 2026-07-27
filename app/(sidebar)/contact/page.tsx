@@ -93,12 +93,15 @@ const SECTIONS: LinkSectionProps[] = [
 const ContactPage = () => (
   <div>
     <article className="prose">
+      {/* `not-prose` opts out of the 65vh cap that keeps inline post images
+          from dominating a page — here the photo is the point, so it runs
+          the full column width. */}
       <Image
         src="/images/havetea.jpeg"
         alt="have tea"
         width={800}
         height={600}
-        className="mb-4 w-full h-auto"
+        className="not-prose mb-4 w-full h-auto rounded-sm shadow-xs"
         priority
       />
 

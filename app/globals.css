@@ -233,6 +233,9 @@ body {
   font-size: 1.1rem;
 }
 
+.prose h1,
+.prose h2,
+.prose h3,
 .prose h4,
 .prose h5,
 .prose h6,
@@ -259,6 +262,23 @@ body {
 .dark .prose strong {
   color: var(--color-chalk-soft);
   font-weight: bold;
+}
+
+/* Highlights default to the browser's fixed yellow, which ignores the theme.
+   A translucent wash of the palette's own ink keeps the highlighter feel
+   while sitting correctly on whichever surface it lands on. */
+.prose mark {
+  background-color: color-mix(in oklab, var(--color-ink) 20%, transparent);
+  color: var(--color-ink-strong);
+  padding: 0.05em 0.15em;
+  border-radius: 0.15em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.dark .prose mark {
+  background-color: color-mix(in oklab, var(--color-chalk) 24%, transparent);
+  color: var(--color-chalk-strong);
 }
 
 /* -- Links ----------------------------------------------------------------- */
