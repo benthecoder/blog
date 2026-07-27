@@ -4,35 +4,49 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ==========================================================================
+   DESIGN TOKENS
+
+   Colors are organised in two tiers:
+
+   1. SURFACES — the "paper stock". Fixed across every palette, the way the
+      Didion covers all share one cream card. `paper-*` are the light-mode
+      surfaces, `night-*` the dark-mode ones, `rule` the divider.
+
+   2. INK — the printed color, and the only tier a palette changes.
+      `ink-*` is ink on paper (light mode), `chalk-*` is ink on night
+      (dark mode). Both run muted → soft → base → strong, where "strong"
+      is the highest-contrast end used for body copy and headings.
+
+   The values below are the defaults (steel). Every palette overrides the
+   ink tier in the PALETTES block; nothing else needs to change.
+   ========================================================================== */
 @theme {
-  --color-japanese-gofuniro: #fffffc;
-  --color-japanese-hakuji: #f8fbfb;
-  --color-japanese-unoharairo: #f7fcfe;
-  --color-japanese-kinairo: #fbfaf5;
-  --color-japanese-shironeri: #f3f3f2;
-  --color-japanese-soshoku: #eae5e3;
-  --color-japanese-shiraumenezu: #e5e4e6;
-  --color-japanese-shironezu: #dcdddd;
-  --color-japanese-nyuhakushoku: #f3f3f3;
-  --color-japanese-murasakisuishiyou: #e7e7eb;
-  --color-japanese-nezumiiro: #949495;
-  --color-japanese-ginnezu: #91989c;
-  --color-japanese-sumiiro: #595857;
+  /* -- Surfaces: light ---------------------------------------------------- */
+  --color-paper: #fbfaf5; /* page + card background */
+  --color-paper-raised: #f8fbfb; /* raised card */
+  --color-paper-sunken: #f3f3f2; /* code blocks, inset fills */
+  --color-paper-tint: #f7fcfe; /* inline code, tags */
+  --color-paper-warm: #eae5e3; /* warm divider */
+  --color-rule: #e5e4e6; /* borders, dividers */
 
-  --color-light-bg: #fbfaf5;
-  --color-light-text: #2c353d;
-  --color-light-accent: #595857;
-  --color-light-border: #e5e4e6;
-  --color-light-tag: #f7fcfe;
-  --color-light-highlight: #e7e7eb;
+  /* -- Surfaces: dark ----------------------------------------------------- */
+  --color-night: #1a1a1a; /* page background */
+  --color-night-raised: #242424; /* cards, inline code */
+  --color-night-rule: #333333; /* borders, dividers */
 
-  --color-dark-bg: #1a1a1a;
-  --color-dark-text: #d1d1d1;
-  --color-dark-accent: #999999;
-  --color-dark-border: #333333;
-  --color-dark-tag: #242424;
-  --color-dark-highlight: #e8e8e8;
+  /* -- Ink on paper (palette-driven) -------------------------------------- */
+  --color-ink-muted: #77869c; /* quietest: quotes, markers */
+  --color-ink-soft: #6690b3; /* secondary: hover, selection */
+  --color-ink: #3f6d99; /* primary: links, headings */
+  --color-ink-strong: #27435e; /* highest contrast: body copy */
 
+  /* -- Chalk on night (palette-driven) ------------------------------------ */
+  --color-chalk: #9dbedb; /* primary */
+  --color-chalk-soft: #cddceb; /* secondary: hover, emphasis */
+  --color-chalk-strong: #e9f0f7; /* highest contrast: body copy */
+
+  /* -- Type & motion ------------------------------------------------------ */
   --font-serif: var(--font-averia);
 
   --animate-typing: typing 1.5s infinite;
@@ -52,6 +66,77 @@
   }
 }
 
+/* ==========================================================================
+   PALETTES
+
+   One row per palette, set on <html data-palette="…"> by the palette
+   provider. This is the single source of truth for theme color — adding a
+   palette means adding a block here and its id to PALETTES in app/providers.
+   ========================================================================== */
+:root[data-palette="indigo"] {
+  --color-ink-muted: #8b93b0;
+  --color-ink-soft: #7b89b8;
+  --color-ink: #4d5f9e;
+  --color-ink-strong: #2f3a5e;
+  --color-chalk: #a8b3dd;
+  --color-chalk-soft: #c7cdec;
+  --color-chalk-strong: #e8ebf7;
+}
+
+:root[data-palette="olive"] {
+  --color-ink-muted: #7d8566;
+  --color-ink-soft: #6f7a4f;
+  --color-ink: #47502f;
+  --color-ink-strong: #2e331e;
+  --color-chalk: #aab98a;
+  --color-chalk-soft: #d3d9bd;
+  --color-chalk-strong: #eef1e3;
+}
+
+:root[data-palette="gold"] {
+  --color-ink-muted: #a08a52;
+  --color-ink-soft: #b08b2e;
+  --color-ink: #96721a;
+  --color-ink-strong: #574212;
+  --color-chalk: #d9b65a;
+  --color-chalk-soft: #ecd9a8;
+  --color-chalk-strong: #f7eed6;
+}
+
+:root[data-palette="steel"] {
+  --color-ink-muted: #77869c;
+  --color-ink-soft: #6690b3;
+  --color-ink: #3f6d99;
+  --color-ink-strong: #27435e;
+  --color-chalk: #9dbedb;
+  --color-chalk-soft: #cddceb;
+  --color-chalk-strong: #e9f0f7;
+}
+
+:root[data-palette="vermillion"] {
+  --color-ink-muted: #b06e50;
+  --color-ink-soft: #c26744;
+  --color-ink: #ab4322;
+  --color-ink-strong: #6b2a15;
+  --color-chalk: #e08a5f;
+  --color-chalk-soft: #f0cbb8;
+  --color-chalk-strong: #fae5db;
+}
+
+:root[data-palette="rose"] {
+  --color-ink-muted: #a1727e;
+  --color-ink-soft: #ac6879;
+  --color-ink: #93495c;
+  --color-ink-strong: #5c2d3a;
+  --color-chalk: #d391a1;
+  --color-chalk-soft: #edd0d8;
+  --color-chalk-strong: #f9ebef;
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
 /*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
@@ -70,41 +155,51 @@
   }
 }
 
-/* Flashcards: let card text inherit the themed color instead of Anki's
-   hard-coded inline colors, and give pinyin/meaning lines room to breathe. */
-.flashcard-body,
-.flashcard-body * {
-  color: inherit !important;
-  background: transparent !important;
-}
-.flashcard-body > div + div {
-  margin-top: 0.4em;
-}
-
 body {
   background: linear-gradient(
     135deg,
-    #f3f3f2 0%,
-    /* Silk white - shironeri */ #fbfaf5 50%,
-    /* Natural dough - kinairo */ #f8fbfb 100% /* White porcelain - hakuji */
+    var(--color-paper-sunken) 0%,
+    var(--color-paper) 50%,
+    var(--color-paper-raised) 100%
   );
   min-height: 100vh;
   background-attachment: fixed;
 }
 
 .dark body {
-  background: #1a1a1a;
+  background: var(--color-night);
 }
 
+::selection {
+  background-color: var(--color-chalk);
+}
+
+.dark ::selection {
+  background-color: var(--color-ink);
+}
+
+/* ==========================================================================
+   PROSE
+
+   Tailwind Typography colors most elements through its own --tw-prose-*
+   variables. Those can't be reassigned from author CSS (the v4 compiler
+   strips --tw-* declarations), so each themed element is set directly below.
+   The plugin wraps its selectors in :where(), so a plain descendant
+   selector always wins.
+   ========================================================================== */
 .prose {
-  color: #595857; /* sumiiro - ink color */
+  color: var(--color-ink);
   width: 100%;
   min-width: 100%;
   padding: 0 0.5rem;
   position: relative;
 }
 
-/* Add subtle paper texture */
+.dark .prose {
+  color: var(--color-chalk-strong);
+}
+
+/* Subtle paper texture */
 .prose::before {
   content: "";
   position: absolute;
@@ -117,19 +212,110 @@ body {
   pointer-events: none;
 }
 
-.dark .prose {
-  color: #f3f3f3; /* nyuhakushoku - milky white */
+/* -- Headings -------------------------------------------------------------- */
+.prose h1 {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
+.prose h2 {
+  font-size: 1.2rem;
+}
+
+.prose h3 {
+  font-size: 1.1rem;
+}
+
+.prose h4,
+.prose h5,
+.prose h6,
+.prose thead th {
+  color: var(--color-ink);
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6,
+.dark .prose thead th {
+  color: var(--color-chalk-strong);
+}
+
+/* -- Emphasis -------------------------------------------------------------- */
 .prose strong {
+  color: var(--color-ink);
   font-weight: bolder;
 }
 
 .dark .prose strong {
-  color: #e7e7eb; /* murasakisuishiyou */
+  color: var(--color-chalk-soft);
   font-weight: bold;
 }
 
+/* -- Links ----------------------------------------------------------------- */
+/* The hand-drawn underline is a solid-black SVG, so it's applied as a mask
+   over a themed color rather than as a background image — one asset then
+   tints itself for every palette and for dark mode. */
+.prose a {
+  color: var(--color-ink);
+  position: relative;
+  padding-bottom: 0.05rem;
+  text-decoration: none;
+}
+
+.prose a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  pointer-events: none;
+  background-color: var(--color-ink-soft);
+  -webkit-mask-image: url("../public/underline.svg");
+  mask-image: url("../public/underline.svg");
+  -webkit-mask-size: 100% 4px;
+  mask-size: 100% 4px;
+  -webkit-mask-position: bottom;
+  mask-position: bottom;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.prose a:hover {
+  color: var(--color-ink-strong);
+}
+
+.dark .prose a {
+  color: var(--color-chalk);
+}
+
+.dark .prose a::after {
+  background-color: var(--color-chalk-soft);
+}
+
+.dark .prose a:hover {
+  color: var(--color-chalk-strong);
+}
+
+/* Looks identical to a real link — clicking it cycles instead of navigating */
+.prose button.start-interest {
+  display: inline;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 2px;
+}
+
+/* -- Lists ----------------------------------------------------------------- */
 .prose ul {
   list-style: none;
   padding-left: 1rem;
@@ -139,12 +325,91 @@ body {
   padding-left: 0.75rem;
 }
 
+.prose ul li::before {
+  content: "\25E6"; /* small circle */
+  color: var(--color-ink-muted);
+  display: inline-block;
+  width: 0.75em;
+  margin-left: -0.75em;
+}
+
+/* Task list items carry a checkbox instead of a bullet */
+.prose ul li.task-list-item::before {
+  content: none;
+}
+
+.prose ul li.task-list-item {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.prose figcaption,
+.prose ol > li::marker {
+  color: var(--color-ink-muted);
+}
+
+.dark .prose ul li::before,
+.dark .prose figcaption,
+.dark .prose ol > li::marker {
+  color: var(--color-chalk);
+}
+
+/* -- Quotes & rules -------------------------------------------------------- */
+.prose blockquote {
+  margin: 0 0.1em 0 0.1em;
+  padding: 0 0em 0 1em;
+  border-left: 3px solid var(--color-rule);
+  quotes: none;
+  font-style: normal;
+  font-weight: normal;
+  color: var(--color-ink-muted);
+}
+
+.dark .prose blockquote {
+  border-color: var(--color-chalk);
+  color: var(--color-chalk-soft);
+}
+
+.prose hr {
+  margin-top: 2em;
+  margin-bottom: 2em;
+  border-width: 0.1px;
+  border-color: var(--color-rule);
+}
+
+.dark .prose hr {
+  border-color: var(--color-night-rule);
+}
+
+.prose thead,
+.prose tbody tr,
+.prose tfoot {
+  border-color: var(--color-rule);
+}
+
+.dark .prose thead,
+.dark .prose tbody tr,
+.dark .prose tfoot {
+  border-color: var(--color-night-rule);
+}
+
+/* -- Code ------------------------------------------------------------------ */
 .prose code {
-  background-color: #f7fcfe; /* unoharairo */
-  color: #595857; /* sumiiro */
+  background-color: var(--color-paper-tint);
+  color: var(--color-ink);
   padding: 0.2em 0.2em;
   border-radius: 0.3em;
   font-size: 0.85em;
+}
+
+.prose code::before,
+.prose code::after {
+  content: "";
+}
+
+.dark .prose code {
+  background-color: var(--color-night-raised);
+  color: var(--color-chalk);
 }
 
 .prose pre {
@@ -166,7 +431,14 @@ body {
   margin: 0;
   max-width: 100%;
   border-radius: 0;
-  background-color: #f3f3f2 !important;
+  background-color: var(--color-paper-sunken) !important;
+}
+
+.dark .prose pre {
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+  overflow-x: auto;
 }
 
 .dark .prose pre.shiki,
@@ -178,131 +450,18 @@ body {
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
-.prose code::before {
-  content: "";
-}
-
-.prose code::after {
-  content: "";
-}
-
-.dark .prose code {
-  background-color: #2a2a2a;
-  color: #dcdddd; /* shironezu - light grey */
-}
-
-.dark .prose pre {
-  border: none !important;
-  box-shadow: none !important;
-  outline: none !important;
-  overflow-x: auto;
-}
-
-.prose ul li::before {
-  content: "\25E6"; /* Unicode for a small circle */
-  color: slategrey;
-  display: inline-block;
-  width: 0.75em;
-  margin-left: -0.75em;
-}
-
-/* Remove bullets from task list items (checkboxes) */
-.prose ul li.task-list-item::before {
-  content: none;
-}
-
-.prose ul li.task-list-item {
-  margin-left: 0;
-  padding-left: 0;
-}
-
-.prose a {
-  background-image: url("../public/underline.svg");
-  background-size: 100% 4px;
-  background-position: bottom;
-  background-repeat: no-repeat;
-  padding-bottom: 0.05rem;
-  text-decoration: none;
-}
-
-.dark .prose a {
-  background-image: url("../public/underline-dark.png");
-  color: var(--color-dark-text);
-}
-
-.prose a:hover {
-  color: #595857; /* sumiiro */
-}
-
-.dark .prose a:hover {
-  color: #91989c; /* ginnezu */
-}
-
-/* Looks identical to a real link — clicking it cycles instead of navigating */
-.prose button.start-interest {
-  display: inline;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  color: inherit;
-  border: none;
-  background: none;
-  cursor: pointer;
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 2px;
-}
-
+/* -- Selection ------------------------------------------------------------- */
 .prose ::selection {
-  background-color: #91989c !important; /* ginnezu - silver mouse */
-  color: #2c353d !important; /* force dark text so blockquote gray stays readable */
+  background-color: var(--color-ink-soft) !important;
+  color: var(--color-paper) !important; /* keep muted quote text readable */
 }
 
 .dark .prose ::selection {
-  background-color: #595857 !important; /* sumiiro - ink color, darker for contrast */
+  background-color: var(--color-ink) !important;
+  color: var(--color-chalk-strong) !important;
 }
 
-.prose h1 {
-  font-size: 1.5rem /* 24px */;
-  line-height: 2rem /* 32px */;
-}
-
-.prose h2 {
-  font-size: 1.2rem;
-}
-
-.prose h3 {
-  font-size: 1.1rem;
-}
-
-.dark .prose h1,
-.dark .prose h2,
-.dark .prose h3 {
-  color: #fffffc; /* gofuniro - chalk white */
-}
-
-.prose blockquote {
-  margin: 0 0.1em 0 0.1em;
-  padding: 0 0em 0 1em;
-  border-left: 3px solid #e5e4e6; /* shiraumenezu */
-  quotes: none;
-  font-style: normal;
-  font-weight: normal;
-  color: #949495; /* nezumiiro */
-}
-
-.prose hr {
-  margin-top: 2em;
-  margin-bottom: 2em;
-  border-width: 0.1px;
-  border-color: var(--color-japanese-shiraumenezu);
-}
-
-.dark .prose blockquote {
-  border-color: #91989c; /* ginnezu */
-  color: #e7e7eb; /* murasakisuishiyou */
-}
-
+/* -- Images ---------------------------------------------------------------- */
 .prose img:not(.not-prose) {
   width: auto;
   max-width: 100%;
@@ -329,16 +488,23 @@ body {
   }
 }
 
-::selection {
-  background-color: #dcdddd; /* shironezu - white grey */
+/* ==========================================================================
+   COMPONENTS
+   ========================================================================== */
+
+/* Flashcards: let card text inherit the themed color instead of Anki's
+   hard-coded inline colors, and give pinyin/meaning lines room to breathe. */
+.flashcard-body,
+.flashcard-body * {
+  color: inherit !important;
+  background: transparent !important;
 }
 
-/* Removed global mark styles - now handled in component */
-
-.dark ::selection {
-  background-color: #595857; /* sumiiro - ink color */
+.flashcard-body > div + div {
+  margin-top: 0.4em;
 }
 
+/* Hover image previews on wiki/post links */
 .hover-container {
   display: inline-block;
   position: relative;
@@ -396,6 +562,9 @@ body {
   }
 }
 
+/* ==========================================================================
+   ANIMATIONS
+   ========================================================================== */
 @keyframes loading-bar {
   0% {
     transform: translateX(-100%);

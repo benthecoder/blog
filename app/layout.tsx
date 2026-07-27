@@ -6,6 +6,7 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "./providers";
 import ThemeSwitch from "@/components/ui/ThemeSwitch";
+import PaletteSwitch from "@/components/ui/PaletteSwitch";
 import SearchModal from "@/components/ui/SearchModal";
 import { RandomPostListener } from "@/components/layout/RandomPostListener";
 
@@ -84,7 +85,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <body className="antialiased">
         <Providers>
-          <div className="fixed top-4 right-4 z-50">
+          <div className="fixed top-4 right-4 z-50 flex items-center gap-3">
+            <PaletteSwitch />
             <ThemeSwitch />
           </div>
           <SearchModal />

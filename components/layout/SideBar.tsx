@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { SidebarNav } from "./SidebarNav";
+import { SketchIcon, ENAME_RATIO, CNAME_RATIO } from "../ui/SketchIcon";
 
 // Server component: the name header is static; only the nav needs the client
 // (pathname active state, hover tooltips, dice spin).
@@ -12,23 +12,19 @@ export function Sidebar() {
         <div className="font-bold text-center lg:text-left mt-4 mb-2 lg:mt-0">
           <div className="flex flex-row lg:flex-col items-center justify-center lg:justify-start gap-2">
             <Link href="/">
-              <Image
+              <SketchIcon
                 src="/icons/ename.svg"
-                alt="BENEDICT NEO"
-                width={10}
-                height={10}
-                className="w-24 lg:w-28 h-auto dark:invert"
-                priority
+                label="BENEDICT NEO"
+                className="w-24 lg:w-28"
+                style={{ aspectRatio: ENAME_RATIO }}
               />
             </Link>
             <Link href="/about">
-              <Image
+              <SketchIcon
                 src="/icons/cname.svg"
-                alt="梁耀恩"
-                width={10}
-                height={10}
-                className="w-24 lg:w-28 h-auto dark:invert"
-                priority
+                label="梁耀恩"
+                className="w-24 lg:w-28"
+                style={{ aspectRatio: CNAME_RATIO }}
               />
             </Link>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
-import Image from "next/image";
+import { SketchIcon } from "./SketchIcon";
 
 // Hydration-safe mounted flag: false during SSR/hydration, true after.
 function useMounted() {
@@ -28,12 +28,10 @@ const ThemeSwitcher = () => {
       onClick={toggleTheme}
       className="w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
     >
-      <Image
+      <SketchIcon
         src={`/icons/${icon}`}
-        alt={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} mode`}
-        width={10}
-        height={10}
-        className="inline-block w-6 h-6 md:w-12 md:h-12 dark:invert transition-opacity duration-200 opacity-80 hover:opacity-100"
+        label={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} mode`}
+        className="w-6 h-6 md:w-12 md:h-12 transition-opacity duration-200 opacity-80 hover:opacity-100"
       />
     </button>
   );
