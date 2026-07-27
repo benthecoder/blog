@@ -39,13 +39,13 @@
   --color-ink-muted: #77869c; /* quietest: quotes, markers */
   --color-ink-soft: #6690b3; /* secondary: hover, selection */
   --color-ink: #3f6d99; /* primary: links, headings */
-  --color-ink-strong: #27435e; /* highest contrast: body copy */
+  --color-ink-strong: #365d82; /* highest contrast: body copy */
 
   /* -- Chalk on night (palette-driven) ------------------------------------ */
   --color-chalk-muted: #6f879b; /* quietest: captions, meta */
   --color-chalk: #9dbedb; /* primary */
-  --color-chalk-soft: #cddceb; /* secondary: hover, emphasis */
-  --color-chalk-strong: #e9f0f7; /* highest contrast: body copy */
+  --color-chalk-soft: #b1cbe2; /* secondary: hover, emphasis */
+  --color-chalk-strong: #c4d8e9; /* highest contrast: body copy */
 
   /* -- Type & motion ------------------------------------------------------ */
   --font-serif: var(--font-averia);
@@ -78,66 +78,66 @@
   --color-ink-muted: #838aa5;
   --color-ink-soft: #7b89b8;
   --color-ink: #4d5f9e;
-  --color-ink-strong: #2f3a5e;
+  --color-ink-strong: #415186;
   --color-chalk: #a8b3dd;
   --color-chalk-muted: #7b83a1;
-  --color-chalk-soft: #c7cdec;
-  --color-chalk-strong: #e8ebf7;
+  --color-chalk-soft: #b9c2e4;
+  --color-chalk-strong: #cbd1eb;
 }
 
 :root[data-palette="olive"] {
   --color-ink-muted: #7d8566;
   --color-ink-soft: #6f7a4f;
   --color-ink: #47502f;
-  --color-ink-strong: #2e331e;
+  --color-ink-strong: #3c4428;
   --color-chalk: #aab98a;
   --color-chalk-muted: #7e8966;
-  --color-chalk-soft: #d3d9bd;
-  --color-chalk-strong: #eef1e3;
+  --color-chalk-soft: #bbc7a1;
+  --color-chalk-strong: #ccd5b9;
 }
 
 :root[data-palette="gold"] {
   --color-ink-muted: #a08a52;
   --color-ink-soft: #b08b2e;
   --color-ink: #896818;
-  --color-ink-strong: #574212;
+  --color-ink-strong: #745814;
   --color-chalk: #d9b65a;
   --color-chalk-muted: #9a8140;
-  --color-chalk-soft: #ecd9a8;
-  --color-chalk-strong: #f7eed6;
+  --color-chalk-soft: #e1c57b;
+  --color-chalk-strong: #e8d39c;
 }
 
 :root[data-palette="steel"] {
   --color-ink-muted: #77869c;
   --color-ink-soft: #6690b3;
   --color-ink: #3f6d99;
-  --color-ink-strong: #27435e;
+  --color-ink-strong: #365d82;
   --color-chalk: #9dbedb;
   --color-chalk-muted: #6f879b;
-  --color-chalk-soft: #cddceb;
-  --color-chalk-strong: #e9f0f7;
+  --color-chalk-soft: #b1cbe2;
+  --color-chalk-strong: #c4d8e9;
 }
 
 :root[data-palette="vermillion"] {
   --color-ink-muted: #b06e50;
   --color-ink-soft: #c26744;
   --color-ink: #ab4322;
-  --color-ink-strong: #6b2a15;
+  --color-ink-strong: #91391d;
   --color-chalk: #e08a5f;
   --color-chalk-muted: #ba734f;
-  --color-chalk-soft: #f0cbb8;
-  --color-chalk-strong: #fae5db;
+  --color-chalk-soft: #e6a17f;
+  --color-chalk-strong: #ecb99f;
 }
 
 :root[data-palette="rose"] {
   --color-ink-muted: #a1727e;
   --color-ink-soft: #ac6879;
   --color-ink: #93495c;
-  --color-ink-strong: #5c2d3a;
+  --color-ink-strong: #7d3e4e;
   --color-chalk: #d391a1;
   --color-chalk-muted: #ab7582;
-  --color-chalk-soft: #edd0d8;
-  --color-chalk-strong: #f9ebef;
+  --color-chalk-soft: #dca7b4;
+  --color-chalk-strong: #e5bdc7;
 }
 
 /* ==========================================================================
@@ -462,7 +462,13 @@ body {
    so each mode pairs a wash from one end of the ink ramp with text from the
    other, rather than two neighbouring tones of the same hue. */
 .prose ::selection {
-  background-color: var(--color-chalk-soft) !important;
+  /* A wash mixed down from ink stays pale no matter where the ramp moves,
+     so the pairing can't collapse the way two fixed ramp steps can. */
+  background-color: color-mix(
+    in oklab,
+    var(--color-ink) 22%,
+    var(--color-paper)
+  ) !important;
   color: var(--color-ink-strong) !important;
 }
 
