@@ -4,28 +4,25 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { DRAWINGS_URL } from "@/config/constants";
+import { SketchIcon, ENAME_RATIO, CNAME_RATIO } from "./SketchIcon";
 
 const NameHeader = () => (
   <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50">
     <div className="flex flex-col items-center gap-3">
       <Link href="/">
-        <Image
+        <SketchIcon
           src="/icons/ename.svg"
-          alt="BENEDICT NEO"
-          width={10}
-          height={10}
-          className="w-28 md:w-36 h-auto dark:invert"
-          priority
+          label="BENEDICT NEO"
+          className="w-28 md:w-36"
+          style={{ aspectRatio: ENAME_RATIO }}
         />
       </Link>
       <Link href="/about">
-        <Image
+        <SketchIcon
           src="/icons/cname.svg"
-          alt="梁耀恩"
-          width={10}
-          height={10}
-          className="w-20 md:w-24 h-auto dark:invert"
-          priority
+          label="梁耀恩"
+          className="w-20 md:w-24"
+          style={{ aspectRatio: CNAME_RATIO }}
         />
       </Link>
     </div>

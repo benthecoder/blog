@@ -3,8 +3,8 @@
 import type { MouseEvent } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import { SketchIcon } from "../ui/SketchIcon";
 
 const links = [
   { path: "/posts", text: "archive", icon: "archive.svg" },
@@ -89,12 +89,10 @@ export function SidebarNav() {
             }
           >
             {icon ? (
-              <Image
+              <SketchIcon
                 src={`/icons/${icon}`}
-                alt={text}
-                width={10}
-                height={10}
-                className={`w-full h-full dark:invert${path === "/random" && spinning ? " dice-spin" : ""}`}
+                label={text}
+                className={`w-full h-full${path === "/random" && spinning ? " dice-spin" : ""}`}
               />
             ) : (
               text
