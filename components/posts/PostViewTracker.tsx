@@ -45,11 +45,8 @@ const PostViewTracker = ({ slug }: PostViewTrackerProps) => {
 
   if (count === null) return null;
 
-  return (
-    <span className="text-ink-soft dark:text-chalk-muted text-xs tabular-nums">
-      {count.toLocaleString()} views
-    </span>
-  );
+  // Colour and size come from the metadata row so the whole line stays uniform.
+  return <span className="tabular-nums">{count.toLocaleString()} views</span>;
 };
 
 export default PostViewTracker;

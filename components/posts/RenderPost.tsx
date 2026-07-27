@@ -4,6 +4,14 @@ import { ParsedPost, PostMetadata } from "@/types/post";
 import { extractTags } from "@/utils/content/tags";
 import PostViewTracker from "./PostViewTracker";
 
+// Separator between metadata facts. Dimmed so the eye groups the line as one
+// unit instead of counting four items.
+const Dot = () => (
+  <span aria-hidden="true" className="opacity-40">
+    ·
+  </span>
+);
+
 interface RenderPostProps {
   post: ParsedPost;
   prev: PostMetadata | null;
@@ -44,51 +52,47 @@ const RenderPost = ({
             </h2>
           )}
 
-          <div className="flex items-center justify-center gap-2 mt-1 flex-wrap">
+          {/* Passive facts: read once, then ignored — so they share one quiet
+              line at a single weight, well below the title. */}
+          <div className="mt-2 flex items-center justify-center gap-1.5 text-[11px] leading-none text-ink-muted dark:text-chalk-muted">
             {date && (
-              <span className="text-ink-soft dark:text-chalk-muted text-xs">
+              <time dateTime={new Date(date as string).toISOString()}>
                 {new Date(date as string).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
                 })}
-              </span>
-            )}
-            {tags.length > 0 && (
-              <>
-                <span className="text-rule dark:text-chalk-muted/50 text-xs">
-                  ·
-                </span>
-                {tags.map((tag) => (
-                  <Link
-                    href={`/tags/${tag}`}
-                    key={tag}
-                    className="text-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk transition-colors duration-150"
-                  >
-                    #{tag}
-                  </Link>
-                ))}
-              </>
+              </time>
             )}
             {readingTime && (
               <>
-                <span className="text-rule dark:text-chalk-muted/50 text-xs">
-                  ·
-                </span>
-                <span className="text-ink-soft dark:text-chalk-muted text-xs">
-                  {readingTime} min read
-                </span>
+                <Dot />
+                <span className="tabular-nums">{readingTime} min read</span>
               </>
             )}
             {slug && (
               <>
-                <span className="text-rule dark:text-chalk-muted/50 text-xs">
-                  ·
-                </span>
+                <Dot />
                 <PostViewTracker slug={slug} />
               </>
             )}
           </div>
+
+          {/* Tags are navigation, not metadata — given their own row and a
+              tappable shape so they don't read as more of the same. */}
+          {tags.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-1.5">
+              {tags.map((tag) => (
+                <Link
+                  href={`/tags/${tag}`}
+                  key={tag}
+                  className="rounded-full bg-ink/6 px-2 py-0.5 text-[11px] leading-5 text-ink transition-colors duration-150 hover:bg-ink/12 hover:text-ink-strong dark:bg-chalk/10 dark:text-chalk dark:hover:bg-chalk/20 dark:hover:text-chalk-strong"
+                >
+                  #{tag}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         <article className="prose dark:prose-invert dark:text-chalk text-sm md:text-base leading-relaxed max-w-none selection:bg-paper-tint/30 dark:selection:bg-chalk-soft/20 prose-a:text-ink prose-a:decoration-paper-warm/50 prose-a:hover:text-ink/70 prose-a:hover:decoration-ink prose-headings:text-ink dark:prose-headings:text-chalk-soft">
