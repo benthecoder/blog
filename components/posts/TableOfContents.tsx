@@ -50,10 +50,14 @@ const TableOfContents = ({ items }: { items: TocEntry[] }) => {
             <li key={item.id} className={item.depth === 3 ? "pl-3" : ""}>
               <a
                 href={`#${item.id}`}
+                // Active has to differ from idle by more than hue: `ink` and
+                // `ink-soft` are the same value in some palettes, so light
+                // mode leaned on a distinction that wasn't there. Weight plus
+                // a muted→strong jump reads in both modes.
                 className={`block transition-colors duration-150 ${
                   activeId === item.id
-                    ? "text-ink dark:text-chalk-strong"
-                    : "text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
+                    ? "font-medium text-ink-strong dark:text-chalk-strong"
+                    : "text-ink-muted dark:text-chalk-muted hover:text-ink-strong dark:hover:text-chalk"
                 }`}
               >
                 {item.text}

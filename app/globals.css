@@ -194,11 +194,13 @@ body {
    The plugin wraps its selectors in :where(), so a plain descendant
    selector always wins.
    ========================================================================== */
+/* No horizontal padding: the post header, body and footer are siblings, so
+   any inset here would indent the body relative to the title. The page
+   gutter comes from the layout container instead. */
 .prose {
   color: var(--color-ink);
   width: 100%;
   min-width: 100%;
-  padding: 0 0.5rem;
   position: relative;
 }
 
