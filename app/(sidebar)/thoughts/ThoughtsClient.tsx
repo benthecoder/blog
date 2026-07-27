@@ -104,7 +104,7 @@ export default function ThoughtsClient({
       <div className="space-y-8">
         {dates.map((date) => (
           <div key={date} className="relative">
-            <div className="mb-2 pb-2 border-b border-rule dark:border-ink-soft/30">
+            <div className="mb-2 pb-2 border-b border-rule dark:border-chalk-muted/30">
               <p className="text-xs text-ink/50 dark:text-chalk/50 tracking-wide lowercase text-center">
                 {date}
               </p>

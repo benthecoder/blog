@@ -46,7 +46,7 @@ const RenderPost = ({
 
           <div className="flex items-center justify-center gap-2 mt-1 flex-wrap">
             {date && (
-              <span className="text-ink-soft dark:text-ink-soft text-xs">
+              <span className="text-ink-soft dark:text-chalk-muted text-xs">
                 {new Date(date as string).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
@@ -56,12 +56,14 @@ const RenderPost = ({
             )}
             {tags.length > 0 && (
               <>
-                <span className="text-rule dark:text-ink/50 text-xs">·</span>
+                <span className="text-rule dark:text-chalk-muted/50 text-xs">
+                  ·
+                </span>
                 {tags.map((tag) => (
                   <Link
                     href={`/tags/${tag}`}
                     key={tag}
-                    className="text-xs text-ink-soft dark:text-ink-soft hover:text-ink dark:hover:text-chalk transition-colors duration-150"
+                    className="text-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk transition-colors duration-150"
                   >
                     #{tag}
                   </Link>
@@ -70,15 +72,19 @@ const RenderPost = ({
             )}
             {readingTime && (
               <>
-                <span className="text-rule dark:text-ink/50 text-xs">·</span>
-                <span className="text-ink-soft dark:text-ink-soft text-xs">
+                <span className="text-rule dark:text-chalk-muted/50 text-xs">
+                  ·
+                </span>
+                <span className="text-ink-soft dark:text-chalk-muted text-xs">
                   {readingTime} min read
                 </span>
               </>
             )}
             {slug && (
               <>
-                <span className="text-rule dark:text-ink/50 text-xs">·</span>
+                <span className="text-rule dark:text-chalk-muted/50 text-xs">
+                  ·
+                </span>
                 <PostViewTracker slug={slug} />
               </>
             )}

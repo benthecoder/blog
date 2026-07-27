@@ -10,7 +10,7 @@ const PostPreview = (props: PostMetadata) => {
       <p className="text-ink dark:text-chalk group-hover:underline">
         {props.title}
       </p>
-      <p className="text-ink-muted dark:text-ink-soft shrink-0 ml-4">
+      <p className="text-ink-muted dark:text-chalk-muted shrink-0 ml-4">
         {props.date}
       </p>
     </PostLinkPreview>

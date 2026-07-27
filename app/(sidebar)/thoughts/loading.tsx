@@ -3,7 +3,7 @@ export default function Loading() {
     <div className="max-w-3xl mx-auto px-6 py-12">
       <div className="space-y-8">
         <div className="relative">
-          <div className="mb-6 pb-2 border-b border-rule dark:border-ink-soft/30">
+          <div className="mb-6 pb-2 border-b border-rule dark:border-chalk-muted/30">
             <div className="h-3 w-16 bg-ink/10 dark:bg-chalk/10 rounded-sm animate-pulse" />
           </div>
           <div className="space-y-6">

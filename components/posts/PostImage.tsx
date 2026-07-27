@@ -38,7 +38,7 @@ export default function PostImage({
         />
       </div>
       {alt && (
-        <figcaption className="text-center text-ink-soft dark:text-ink-soft text-xs mt-1">
+        <figcaption className="text-center text-ink-soft dark:text-chalk-muted text-xs mt-1">
           {alt}
         </figcaption>
       )}
