@@ -17,14 +17,14 @@ export function ImageStrip({
   onDelete: (fileName: string) => void;
 }) {
   return (
-    <div className="border-b border-japanese-shiraumenezu dark:border-gray-700 px-6 py-3 bg-japanese-kinairo dark:bg-gray-800/50">
+    <div className="border-b border-rule dark:border-gray-700 px-6 py-3 bg-paper dark:bg-gray-800/50">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs text-japanese-ginnezu dark:text-gray-500 uppercase tracking-wider">
+        <span className="text-xs text-ink-soft dark:text-gray-500 uppercase tracking-wider">
           Images ({images.length})
         </span>
         <button
           onClick={onClose}
-          className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu"
+          className="text-ink-soft dark:text-gray-500 hover:text-ink dark:hover:text-chalk"
         >
           <X size={14} />
         </button>
@@ -40,7 +40,7 @@ export function ImageStrip({
                 alt={img}
                 width={80}
                 height={80}
-                className="h-20 w-20 object-cover rounded-sm border border-japanese-shiraumenezu dark:border-gray-700"
+                className="h-20 w-20 object-cover rounded-sm border border-rule dark:border-gray-700"
               />
               <button
                 onClick={() => onDelete(img)}
@@ -49,7 +49,7 @@ export function ImageStrip({
               >
                 <X size={12} />
               </button>
-              <div className="text-[10px] text-japanese-ginnezu dark:text-gray-500 mt-1 truncate w-20">
+              <div className="text-[10px] text-ink-soft dark:text-gray-500 mt-1 truncate w-20">
                 {img.replace(`${slug}-`, "")}
               </div>
             </div>

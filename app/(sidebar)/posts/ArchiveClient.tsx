@@ -14,7 +14,7 @@ const PAGE_SIZE = 50;
 const VIEWS: View[] = ["list", "year", "tags"];
 
 const labelCls =
-  "text-[10px] tracking-widest uppercase text-japanese-sumiiro/30 dark:text-japanese-shironezu/30";
+  "text-[10px] tracking-widest uppercase text-ink/30 dark:text-chalk/30";
 
 function paginationRange(current: number, total: number): (number | "…")[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
@@ -126,8 +126,8 @@ export default function ArchiveClient({
               onClick={() => setView(v)}
               className={`transition-[color] duration-150 ${
                 view === v
-                  ? "text-japanese-sumiiro dark:text-japanese-shironezu"
-                  : "text-japanese-sumiiro/35 dark:text-japanese-shironezu/35 hover:text-japanese-sumiiro/70 dark:hover:text-japanese-shironezu/70"
+                  ? "text-ink dark:text-chalk"
+                  : "text-ink/35 dark:text-chalk/35 hover:text-ink/70 dark:hover:text-chalk/70"
               }`}
             >
               {v}
@@ -135,13 +135,13 @@ export default function ArchiveClient({
           ))}
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-japanese-sumiiro/40 dark:text-japanese-shironezu/40 tabular-nums">
+          <span className="text-xs text-ink/40 dark:text-chalk/40 tabular-nums">
             {allPosts.length} posts ·{" "}
             {new Intl.NumberFormat().format(totalWords)} words
           </span>
           <Link
             href="/search"
-            className="text-japanese-sumiiro/35 dark:text-japanese-shironezu/35 hover:text-japanese-sumiiro/70 dark:hover:text-japanese-shironezu/70 transition-[color] duration-150"
+            className="text-ink/35 dark:text-chalk/35 hover:text-ink/70 dark:hover:text-chalk/70 transition-[color] duration-150"
             aria-label="search"
           >
             <svg
@@ -165,7 +165,7 @@ export default function ArchiveClient({
           {starredPosts.length > 0 && (
             <>
               <p className={`${labelCls} mb-2`}>favorites ✰</p>
-              <div className="space-y-1 mb-6 pb-6 border-b border-japanese-shiraumenezu dark:border-white/6">
+              <div className="space-y-1 mb-6 pb-6 border-b border-rule dark:border-white/6">
                 {starredPosts.map((post) => (
                   <PostPreview key={post.slug} {...post} />
                 ))}
@@ -175,15 +175,15 @@ export default function ArchiveClient({
 
           <div className="flex items-center justify-between mb-2">
             <p className={labelCls}>all</p>
-            <div className="flex items-center border border-japanese-shiraumenezu dark:border-white/8 divide-x divide-japanese-shiraumenezu dark:divide-white/8">
+            <div className="flex items-center border border-rule dark:border-white/8 divide-x divide-rule dark:divide-white/8">
               {(["date", "views", "length"] as Sort[]).map((s) => (
                 <button
                   key={s}
                   onClick={() => handleSort(s)}
                   className={`px-2.5 py-1 text-[10px] transition-[background-color,color] duration-150 ${
                     sort === s
-                      ? "bg-japanese-sumiiro/8 dark:bg-japanese-shironezu/8 text-japanese-sumiiro dark:text-japanese-shironezu"
-                      : "text-japanese-sumiiro/35 dark:text-japanese-shironezu/35 hover:text-japanese-sumiiro/60 dark:hover:text-japanese-shironezu/60"
+                      ? "bg-ink/8 dark:bg-chalk/8 text-ink dark:text-chalk"
+                      : "text-ink/35 dark:text-chalk/35 hover:text-ink/60 dark:hover:text-chalk/60"
                   }`}
                 >
                   {s === "views" && viewsLoading ? "…" : s}
@@ -204,7 +204,7 @@ export default function ArchiveClient({
                 p === "…" ? (
                   <span
                     key={`ellipsis-${i}`}
-                    className="w-7 h-7 flex items-center justify-center text-xs text-japanese-sumiiro/30 dark:text-japanese-shironezu/30"
+                    className="w-7 h-7 flex items-center justify-center text-xs text-ink/30 dark:text-chalk/30"
                   >
                     …
                   </span>
@@ -214,8 +214,8 @@ export default function ArchiveClient({
                     onClick={() => setPage(p)}
                     className={`w-7 h-7 text-xs tabular-nums border transition-[border-color,color] duration-150 ${
                       p === page
-                        ? "border-japanese-sumiiro/60 dark:border-japanese-shironezu/60 text-japanese-sumiiro dark:text-japanese-shironezu"
-                        : "border-japanese-shiraumenezu dark:border-white/8 text-japanese-sumiiro/40 dark:text-japanese-shironezu/40 hover:border-japanese-sumiiro/40 dark:hover:border-japanese-shironezu/40"
+                        ? "border-ink/60 dark:border-chalk/60 text-ink dark:text-chalk"
+                        : "border-rule dark:border-white/8 text-ink/40 dark:text-chalk/40 hover:border-ink/40 dark:hover:border-chalk/40"
                     }`}
                   >
                     {p}
@@ -252,12 +252,12 @@ export default function ArchiveClient({
             <Link
               href={`/tags/${tag}`}
               key={tag}
-              className="border border-light-border dark:border-dark-tag hover:bg-japanese-sumiiro/5 dark:hover:bg-japanese-shironezu/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors duration-150"
+              className="border border-rule dark:border-night-raised hover:bg-ink/5 dark:hover:bg-chalk/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors duration-150"
             >
-              <span className="text-xs text-japanese-sumiiro dark:text-japanese-shironezu truncate">
+              <span className="text-xs text-ink dark:text-chalk truncate">
                 {tag}
               </span>
-              <span className="text-[10px] text-japanese-sumiiro/30 dark:text-japanese-shironezu/30 font-mono shrink-0">
+              <span className="text-[10px] text-ink/30 dark:text-chalk/30 font-mono shrink-0">
                 {count}
               </span>
             </Link>

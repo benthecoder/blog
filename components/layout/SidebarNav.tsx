@@ -103,7 +103,7 @@ export function SidebarNav() {
 
       {hoveredLink && (
         <div
-          className="fixed z-50 pointer-events-none px-2 py-1 bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90 text-japanese-kinairo dark:text-japanese-sumiiro backdrop-blur-xs rounded-sm text-xs font-medium whitespace-nowrap"
+          className="fixed z-50 pointer-events-none px-2 py-1 bg-ink/90 dark:bg-chalk/90 text-paper dark:text-ink backdrop-blur-xs rounded-sm text-xs font-medium whitespace-nowrap"
           style={
             hoveredLink.isMobile
               ? {

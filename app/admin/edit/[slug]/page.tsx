@@ -123,11 +123,11 @@ export default function EditPostPage() {
         className="flex flex-col relative group border-l border-r border-gray-200 dark:border-gray-700"
       >
         {/* Top bar */}
-        <div className="border-b border-japanese-shiraumenezu dark:border-gray-700 px-6 py-3 flex justify-between items-center">
+        <div className="border-b border-rule dark:border-gray-700 px-6 py-3 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <Link
               href={monthParam ? `/admin?month=${monthParam}` : "/admin"}
-              className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+              className="text-ink-soft dark:text-gray-500 hover:text-ink dark:hover:text-chalk transition-colors"
               title="Back to calendar"
             >
               <Calendar size={18} />
@@ -149,7 +149,7 @@ export default function EditPostPage() {
               </span>
             )}
             {images.uploading && (
-              <span className="text-xs text-japanese-ginnezu dark:text-gray-500">
+              <span className="text-xs text-ink-soft dark:text-gray-500">
                 Uploading...
               </span>
             )}
@@ -162,7 +162,7 @@ export default function EditPostPage() {
             {!isNew && images.postImages.length > 0 && (
               <button
                 onClick={() => images.setShowImages(!images.showImages)}
-                className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors relative"
+                className="text-ink-soft dark:text-gray-500 hover:text-ink dark:hover:text-chalk transition-colors relative"
                 title="Manage images"
               >
                 <ImageIcon size={18} />
@@ -173,7 +173,7 @@ export default function EditPostPage() {
             )}
             <button
               onClick={() => setShowPreview(!showPreview)}
-              className="text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+              className="text-ink-soft dark:text-gray-500 hover:text-ink dark:hover:text-chalk transition-colors"
               title={showPreview ? "Edit" : "Preview"}
             >
               {showPreview ? <FileEdit size={18} /> : <Eye size={18} />}
@@ -182,7 +182,7 @@ export default function EditPostPage() {
               <button
                 onClick={draft.handlePublish}
                 disabled={draft.publishing || isNew}
-                className="px-3 py-1.5 text-xs bg-japanese-sumiiro dark:bg-japanese-shironezu text-white dark:text-japanese-sumiiro hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
+                className="px-3 py-1.5 text-xs bg-ink dark:bg-chalk text-white dark:text-ink hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
               >
                 {draft.publishing ? "Publishing..." : "Publish"}
               </button>
@@ -200,7 +200,7 @@ export default function EditPostPage() {
               <button
                 onClick={draft.handleDelete}
                 disabled={draft.deleting}
-                className="text-japanese-ginnezu dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 disabled:opacity-30 transition-colors"
+                className="text-ink-soft dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 disabled:opacity-30 transition-colors"
                 title="Delete post"
               >
                 <Trash2 size={18} />
@@ -261,7 +261,7 @@ export default function EditPostPage() {
               </div>
               {images.isDragging && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="text-2xl text-japanese-sumiiro dark:text-japanese-shironezu font-light tracking-wide">
+                  <div className="text-2xl text-ink dark:text-chalk font-light tracking-wide">
                     Drop images here
                   </div>
                 </div>

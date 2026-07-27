@@ -30,10 +30,10 @@ const FlashcardsPage = () => {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <div className="mb-8 text-center">
-        <h1 className="text-2xl font-bold text-light-text dark:text-dark-text">
+        <h1 className="text-2xl font-bold text-ink-strong dark:text-chalk-strong">
           flashcards
         </h1>
-        <p className="text-xs text-light-text/50 dark:text-dark-text/50 mt-1">
+        <p className="text-xs text-ink-strong/50 dark:text-chalk-strong/50 mt-1">
           {cards.length > 0
             ? `${cards.length} ${cards.length === 1 ? "card" : "cards"}` +
               (deckCount > 1 ? ` · ${deckCount} decks` : "") +
@@ -43,11 +43,11 @@ const FlashcardsPage = () => {
       </div>
 
       {cards.length === 0 ? (
-        <div className="text-center text-sm text-light-text/40 dark:text-dark-text/40 space-y-2">
+        <div className="text-center text-sm text-ink-strong/40 dark:text-chalk-strong/40 space-y-2">
           <p>No cards yet.</p>
           <p className="text-xs font-mono">
             run{" "}
-            <code className="text-light-text/60 dark:text-dark-text/60">
+            <code className="text-ink-strong/60 dark:text-chalk-strong/60">
               pnpm sync-anki
             </code>{" "}
             with Anki open

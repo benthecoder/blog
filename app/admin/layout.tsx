@@ -18,7 +18,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       {!isLoginPage && (
         <button
           onClick={handleLogout}
-          className="fixed top-4 right-4 z-50 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors"
+          className="fixed top-4 right-4 z-50 text-xs text-ink-soft dark:text-gray-500 hover:text-ink dark:hover:text-chalk transition-colors"
         >
           Log out
         </button>

@@ -46,7 +46,7 @@ const PaletteSwitch = () => {
         stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="inline-block w-6 h-6 md:w-12 md:h-12 text-japanese-sumiiro dark:text-japanese-shironezu transition-opacity duration-200 opacity-80 hover:opacity-100"
+        className="inline-block w-6 h-6 md:w-12 md:h-12 text-ink dark:text-chalk transition-opacity duration-200 opacity-80 hover:opacity-100"
       >
         <path
           strokeWidth="1.9"

@@ -35,11 +35,9 @@ export default function CuriusPage() {
   return (
     <div>
       {isLoading ? (
-        <p className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
-          discombobulating...
-        </p>
+        <p className="text-ink/50 dark:text-chalk/50">discombobulating...</p>
       ) : error ? (
-        <p className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
+        <p className="text-ink/50 dark:text-chalk/50">
           couldn&apos;t load links
         </p>
       ) : (
@@ -48,7 +46,7 @@ export default function CuriusPage() {
             stay{" "}
             <a
               href="https://curius.app/benedict-neo"
-              className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
+              className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-ink-soft transition-colors"
             >
               curius
             </a>
@@ -56,18 +54,18 @@ export default function CuriusPage() {
           <ol className="space-y-1 list-none">
             {links.map((link, index) => (
               <li key={link.id} className="flex items-baseline gap-2">
-                <span className="text-japanese-sumiiro dark:text-japanese-shironezu text-sm tabular-nums min-w-[2ch]">
+                <span className="text-ink dark:text-chalk text-sm tabular-nums min-w-[2ch]">
                   {index + 1}.
                 </span>
                 <a
                   href={link.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
+                  className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-ink-soft transition-colors"
                 >
                   {link.title.toLowerCase()}
                 </a>
-                <span className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 text-sm whitespace-nowrap">
+                <span className="text-ink/50 dark:text-chalk/50 text-sm whitespace-nowrap">
                   {formatTime(link.createdDate)}
                 </span>
               </li>

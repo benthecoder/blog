@@ -128,7 +128,7 @@ const StartPage = () => {
         </p>
       </article>
 
-      <div className="h-[60vh] mt-8 overflow-hidden border border-japanese-shiraumenezu dark:border-white/8">
+      <div className="h-[60vh] mt-8 overflow-hidden border border-rule dark:border-white/8">
         <KnowledgeMap className="w-full h-full" />
       </div>
     </div>

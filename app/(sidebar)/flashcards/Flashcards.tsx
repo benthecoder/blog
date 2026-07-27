@@ -98,9 +98,9 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
 
   const tabBase = "px-3 py-1 rounded-full text-xs transition-colors border";
   const tabOn =
-    "border-japanese-sumiiro/30 dark:border-japanese-shironezu/30 text-japanese-sumiiro dark:text-japanese-shironezu bg-japanese-sumiiro/6 dark:bg-japanese-shironezu/8";
+    "border-ink/30 dark:border-chalk/30 text-ink dark:text-chalk bg-ink/6 dark:bg-chalk/8";
   const tabOff =
-    "border-transparent text-light-text/45 dark:text-dark-text/45 hover:text-light-text/80 dark:hover:text-dark-text/80";
+    "border-transparent text-ink-strong/45 dark:text-chalk-strong/45 hover:text-ink-strong/80 dark:hover:text-chalk-strong/80";
 
   return (
     <div className="flex flex-col items-center gap-7">
@@ -132,13 +132,13 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
 
       {/* Progress */}
       <div className="w-full max-w-xl flex items-center gap-3">
-        <div className="h-px flex-1 bg-light-border dark:bg-dark-tag relative overflow-hidden">
+        <div className="h-px flex-1 bg-rule dark:bg-night-raised relative overflow-hidden">
           <div
-            className="absolute inset-y-0 left-0 bg-japanese-sumiiro/40 dark:bg-japanese-shironezu/40 transition-[width] duration-300"
+            className="absolute inset-y-0 left-0 bg-ink/40 dark:bg-chalk/40 transition-[width] duration-300"
             style={{ width: `${((pos + 1) / pool.length) * 100}%` }}
           />
         </div>
-        <span className="text-xs font-mono tabular-nums text-light-text/40 dark:text-dark-text/40 shrink-0">
+        <span className="text-xs font-mono tabular-nums text-ink-strong/40 dark:text-chalk-strong/40 shrink-0">
           {pos + 1} / {pool.length}
         </span>
       </div>
@@ -156,20 +156,20 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
           }}
         >
           {/* Front */}
-          <div className="absolute inset-0 backface-hidden overflow-y-auto rounded-2xl border border-light-border dark:border-dark-tag bg-japanese-hakuji dark:bg-dark-tag shadow-xs group-hover:shadow-md transition-shadow">
+          <div className="absolute inset-0 backface-hidden overflow-y-auto rounded-2xl border border-rule dark:border-night-raised bg-paper-raised dark:bg-night-raised shadow-xs group-hover:shadow-md transition-shadow">
             <div className="min-h-full flex items-center justify-center px-8 py-10">
               <div
-                className={`flashcard-body text-center leading-snug text-japanese-sumiiro dark:text-japanese-nyuhakushoku ${fontSize(card.front)}`}
+                className={`flashcard-body text-center leading-snug text-ink dark:text-chalk-strong ${fontSize(card.front)}`}
                 dangerouslySetInnerHTML={{ __html: card.front }}
               />
             </div>
           </div>
 
           {/* Back */}
-          <div className="absolute inset-0 backface-hidden transform-[rotateY(180deg)] overflow-y-auto rounded-2xl border border-japanese-sumiiro/20 dark:border-japanese-shironezu/15 bg-japanese-kinairo dark:bg-dark-bg shadow-xs">
+          <div className="absolute inset-0 backface-hidden transform-[rotateY(180deg)] overflow-y-auto rounded-2xl border border-ink/20 dark:border-chalk/15 bg-paper dark:bg-night shadow-xs">
             <div className="min-h-full flex items-center justify-center px-8 py-10">
               <div
-                className={`flashcard-body text-center leading-snug text-japanese-sumiiro dark:text-japanese-shironezu ${fontSize(card.back)}`}
+                className={`flashcard-body text-center leading-snug text-ink dark:text-chalk ${fontSize(card.back)}`}
                 dangerouslySetInnerHTML={{ __html: card.back }}
               />
             </div>
@@ -179,7 +179,7 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
 
       {/* Meta: deck (in multi-deck 'all' view) + tags */}
       {((deck === "all" && decks.length > 1) || card.tags.length > 0) && (
-        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-light-text/40 dark:text-dark-text/40 -mt-2">
+        <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-ink-strong/40 dark:text-chalk-strong/40 -mt-2">
           {deck === "all" && decks.length > 1 && <span>{card.deck}</span>}
           {deck === "all" && decks.length > 1 && card.tags.length > 0 && (
             <span>·</span>
@@ -197,29 +197,29 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
         <button
           onClick={() => go(-1)}
           aria-label="Previous card"
-          className="p-2.5 rounded-full text-light-text/50 dark:text-dark-text/50 hover:text-light-text dark:hover:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/60 transition-colors"
+          className="p-2.5 rounded-full text-ink-strong/50 dark:text-chalk-strong/50 hover:text-ink-strong dark:hover:text-chalk-strong hover:bg-rule/40 dark:hover:bg-night-raised/60 transition-colors"
         >
           <ChevronLeft size={20} />
         </button>
         <button
           onClick={flip}
-          className="px-5 py-2 mx-1 text-sm rounded-full border border-light-border dark:border-dark-tag text-light-text/80 dark:text-dark-text/80 hover:border-japanese-sumiiro/40 dark:hover:border-japanese-shironezu/40 transition-colors"
+          className="px-5 py-2 mx-1 text-sm rounded-full border border-rule dark:border-night-raised text-ink-strong/80 dark:text-chalk-strong/80 hover:border-ink/40 dark:hover:border-chalk/40 transition-colors"
         >
           flip
         </button>
         <button
           onClick={() => go(1)}
           aria-label="Next card"
-          className="p-2.5 rounded-full text-light-text/50 dark:text-dark-text/50 hover:text-light-text dark:hover:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/60 transition-colors"
+          className="p-2.5 rounded-full text-ink-strong/50 dark:text-chalk-strong/50 hover:text-ink-strong dark:hover:text-chalk-strong hover:bg-rule/40 dark:hover:bg-night-raised/60 transition-colors"
         >
           <ChevronRight size={20} />
         </button>
-        <span className="mx-2 h-5 w-px bg-light-border dark:bg-dark-tag" />
+        <span className="mx-2 h-5 w-px bg-rule dark:bg-night-raised" />
         <button
           onClick={shuffle}
           aria-label="Shuffle"
           title="Shuffle (s)"
-          className="p-2.5 rounded-full text-light-text/50 dark:text-dark-text/50 hover:text-light-text dark:hover:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/60 transition-colors"
+          className="p-2.5 rounded-full text-ink-strong/50 dark:text-chalk-strong/50 hover:text-ink-strong dark:hover:text-chalk-strong hover:bg-rule/40 dark:hover:bg-night-raised/60 transition-colors"
         >
           <Shuffle size={17} />
         </button>
@@ -227,13 +227,13 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
           onClick={reset}
           aria-label="Reset order"
           title="Reset order"
-          className="p-2.5 rounded-full text-light-text/50 dark:text-dark-text/50 hover:text-light-text dark:hover:text-dark-text hover:bg-light-border/40 dark:hover:bg-dark-tag/60 transition-colors"
+          className="p-2.5 rounded-full text-ink-strong/50 dark:text-chalk-strong/50 hover:text-ink-strong dark:hover:text-chalk-strong hover:bg-rule/40 dark:hover:bg-night-raised/60 transition-colors"
         >
           <RotateCw size={16} />
         </button>
       </div>
 
-      <p className="text-[11px] font-mono text-light-text/30 dark:text-dark-text/30">
+      <p className="text-[11px] font-mono text-ink-strong/30 dark:text-chalk-strong/30">
         space flip · ← → navigate · s shuffle
       </p>
     </div>

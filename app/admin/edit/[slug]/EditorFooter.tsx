@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const navCls =
-  "flex items-center gap-2 text-xs text-japanese-ginnezu dark:text-gray-500 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors";
+  "flex items-center gap-2 text-xs text-ink-soft dark:text-gray-500 hover:text-ink dark:hover:text-chalk transition-colors";
 
 export function EditorFooter({
   isNew,
@@ -34,7 +34,7 @@ export function EditorFooter({
     : nextSlug && `/admin/edit/${nextSlug}${monthQuery("?")}`;
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 border-t border-japanese-shiraumenezu dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2 flex justify-between items-center">
+    <div className="absolute bottom-0 left-0 right-0 border-t border-rule dark:border-gray-700 bg-white dark:bg-gray-900 px-6 py-2 flex justify-between items-center">
       {prevHref ? (
         <Link href={prevHref} className={navCls}>
           <ChevronLeft size={14} />
@@ -47,7 +47,7 @@ export function EditorFooter({
       )}
 
       {date && (
-        <span className="text-xs text-japanese-ginnezu dark:text-gray-500 tracking-wide">
+        <span className="text-xs text-ink-soft dark:text-gray-500 tracking-wide">
           {date}
         </span>
       )}

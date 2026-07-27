@@ -76,11 +76,9 @@ export default function HackerNewsPage() {
   return (
     <div className="w-full">
       {isLoading ? (
-        <p className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
-          flibbertigibbeting...
-        </p>
+        <p className="text-ink/50 dark:text-chalk/50">flibbertigibbeting...</p>
       ) : isError ? (
-        <p className="text-japanese-sumiiro/50 dark:text-japanese-shironezu/50">
+        <p className="text-ink/50 dark:text-chalk/50">
           couldn&apos;t reach hacker news
         </p>
       ) : (
@@ -88,14 +86,14 @@ export default function HackerNewsPage() {
           <ol className="space-y-1 list-none">
             {topStories.map((story, index) => (
               <li key={story.id} className="flex items-baseline gap-2">
-                <span className="text-japanese-sumiiro/30 dark:text-japanese-shironezu/30 text-sm tabular-nums min-w-[2ch]">
+                <span className="text-ink/30 dark:text-chalk/30 text-sm tabular-nums min-w-[2ch]">
                   {currentPage * POSTS_PER_PAGE + index + 1}.
                 </span>
                 <a
                   href={story.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
+                  className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-ink-soft transition-colors"
                 >
                   {story.title.toLowerCase()}
                 </a>
@@ -104,7 +102,7 @@ export default function HackerNewsPage() {
                     href={`https://news.ycombinator.com/item?id=${story.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-japanese-sumiiro/30 dark:text-japanese-shironezu/30 hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors text-sm whitespace-nowrap"
+                    className="text-ink/30 dark:text-chalk/30 hover:text-ink-soft dark:hover:text-ink-soft transition-colors text-sm whitespace-nowrap"
                   >
                     ({story.descendants})
                   </a>
@@ -116,7 +114,7 @@ export default function HackerNewsPage() {
             {currentPage > 0 && (
               <button
                 onClick={handleBackPage}
-                className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
+                className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-ink-soft transition-colors"
               >
                 back
               </button>
@@ -124,7 +122,7 @@ export default function HackerNewsPage() {
             {currentPage < MAX_PAGES - 1 && (
               <button
                 onClick={handleNextPage}
-                className="text-japanese-sumiiro dark:text-japanese-shironezu hover:text-japanese-ginnezu dark:hover:text-japanese-ginnezu transition-colors"
+                className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-ink-soft transition-colors"
               >
                 next
               </button>

@@ -15,7 +15,7 @@ export default function CopyButton({ code }: { code: string }) {
     <button
       onClick={copy}
       aria-label={copied ? "Copied" : "Copy code"}
-      className="absolute top-2 right-2 p-1.5 rounded-sm text-japanese-ginnezu hover:text-japanese-sumiiro dark:text-japanese-ginnezu dark:hover:text-japanese-shironezu hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-150"
+      className="absolute top-2 right-2 p-1.5 rounded-sm text-ink-soft hover:text-ink dark:text-ink-soft dark:hover:text-chalk hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-150"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

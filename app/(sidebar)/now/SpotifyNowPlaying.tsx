@@ -37,7 +37,7 @@ export default function SpotifyNowPlaying() {
 
   if (isLoading) {
     return (
-      <div className="mt-8 pt-6 border-t border-japanese-shiraumenezu dark:border-dark-tag">
+      <div className="mt-8 pt-6 border-t border-rule dark:border-night-raised">
         <Loader text="loading music..." size="sm" />
       </div>
     );
@@ -47,9 +47,9 @@ export default function SpotifyNowPlaying() {
 
   return (
     <div
-      className={`mt-8 text-sm text-japanese-nezumiiro dark:text-japanese-ginnezu leading-relaxed transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
+      className={`mt-8 text-sm text-ink-muted dark:text-ink-soft leading-relaxed transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
-      <div className="border-t border-japanese-shiraumenezu dark:border-dark-border pt-6">
+      <div className="border-t border-rule dark:border-night-rule pt-6">
         <p className="mb-3 text-xs opacity-60">♫ recent</p>
         <div className="flex flex-col gap-2.5">
           {recentlyPlayed.tracks.slice(0, 10).map((track, i) => (

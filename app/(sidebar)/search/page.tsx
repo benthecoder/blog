@@ -134,7 +134,7 @@ function SearchContent() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="search..."
-            className="w-full px-4 py-3 bg-light-bg dark:bg-dark-bg border-2 border-light-border dark:border-dark-tag focus:border-light-accent dark:focus:border-dark-accent transition-colors text-light-text dark:text-dark-text text-lg font-medium placeholder-light-text/40 dark:placeholder-dark-text/40 outline-hidden selection:bg-light-accent selection:text-white dark:selection:bg-dark-accent dark:selection:text-white"
+            className="w-full px-4 py-3 bg-paper dark:bg-night border-2 border-rule dark:border-night-raised focus:border-ink dark:focus:border-chalk-soft transition-colors text-ink-strong dark:text-chalk-strong text-lg font-medium placeholder-ink-strong/40 dark:placeholder-chalk-strong/40 outline-hidden selection:bg-ink selection:text-white dark:selection:bg-chalk-soft dark:selection:text-white"
           />
           {query && (
             <button
@@ -144,7 +144,7 @@ function SearchContent() {
                 setResults([]);
                 setHasSearched(false);
               }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-light-text/40 dark:text-dark-text/40 hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-strong/40 dark:text-chalk-strong/40 hover:text-ink dark:hover:text-chalk-soft transition-colors"
             >
               ✕
             </button>
@@ -173,8 +173,8 @@ function SearchContent() {
 
       {results.length > 0 ? (
         <div>
-          <div className="mb-4 pb-2 border-b border-light-border dark:border-dark-tag">
-            <p className="text-xs text-light-text/60 dark:text-dark-text/60 tracking-wide">
+          <div className="mb-4 pb-2 border-b border-rule dark:border-night-raised">
+            <p className="text-xs text-ink-strong/60 dark:text-chalk-strong/60 tracking-wide">
               {results.length} RESULTS
             </p>
           </div>
@@ -192,14 +192,14 @@ function SearchContent() {
         !isLoading &&
         hasSearched &&
         query && (
-          <div className="text-center py-12 border border-light-border dark:border-dark-tag">
-            <p className="text-light-text/70 dark:text-dark-text/70 mb-2">
+          <div className="text-center py-12 border border-rule dark:border-night-raised">
+            <p className="text-ink-strong/70 dark:text-chalk-strong/70 mb-2">
               No results found for &quot;{query}&quot;
             </p>
             {selectedChunkType && (
               <button
                 onClick={clearFilters}
-                className="mt-4 text-xs text-light-accent dark:text-dark-accent hover:underline"
+                className="mt-4 text-xs text-ink dark:text-chalk-soft hover:underline"
               >
                 clear filters
               </button>
