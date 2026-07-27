@@ -37,30 +37,16 @@ const PaletteSwitch = () => {
       aria-label={`Change color palette to ${PALETTE_LABELS[next]}`}
       className="w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
     >
-      {/* Three overlapping circles, drawn as open paths that overshoot where
-          they close — the same loose, round-capped pen line as the other
-          notebook icons. Inherits the active palette's ink color. */}
-      <svg
-        viewBox="0 0 48 48"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="inline-block w-6 h-6 md:w-12 md:h-12 text-ink dark:text-chalk transition-opacity duration-200 opacity-80 hover:opacity-100"
-      >
-        <path
-          strokeWidth="1.9"
-          d="M8.6 20.1C7.9 14.6 12 9.4 17.6 9.1c5.5-.3 9.6 3.8 9.3 9.2-.3 5.3-4.6 9.3-10 9-4.7-.3-8-3.6-8.4-8.1-.1-.8.1-1.6.5-2.3"
-        />
-        <path
-          strokeWidth="2.1"
-          d="M21.2 17.4c.4-5.4 4.8-8.8 10.1-8.4 5.3.4 8.8 4.6 8.3 9.9-.5 5.3-4.8 9-10.1 8.6-4.9-.4-8.3-4.1-8.4-8.9 0-.6.1-1.2.3-1.8"
-        />
-        <path
-          strokeWidth="2"
-          d="M14.4 30.6c-.6-5.4 3.5-10.2 9-10.5 5.5-.3 9.6 3.8 9.3 9.2-.3 5.3-4.6 9.3-10 9-4.7-.3-8-3.6-8.4-8.1-.1-.8 0-1.6.3-2.3"
-        />
-      </svg>
+      {/* A plain swatch of the palette that's currently active — not an
+          attempt at the hand-drawn style, which only reads as a bad copy
+          next to the real scans. Swap in a drawing at /public/icons and
+          render it through SketchIcon to have it tint like the rest. */}
+      <span className="flex w-6 h-6 md:w-12 md:h-12 items-center justify-center">
+        {/* Small mark in a full-size hit area — the notebook icons are sparse
+            line art, so a solid disc at their bounding-box size overpowers
+            them. */}
+        <span className="block w-3.5 h-3.5 md:w-5 md:h-5 rounded-full bg-ink dark:bg-chalk transition-opacity duration-200 opacity-80 hover:opacity-100" />
+      </span>
     </button>
   );
 };

@@ -167,8 +167,9 @@ export default function KnowledgeMap({
     );
     const edgeColor = readToken(isDark ? "--color-chalk" : "--color-ink-muted");
     const labelColor = readToken(
-      isDark ? "--color-chalk" : "--color-ink-muted"
+      isDark ? "--color-chalk-strong" : "--color-ink-strong"
     );
+    const haloColor = readToken(isDark ? "--color-night" : "--color-paper");
 
     ctx.save();
     ctx.translate(transform.x, transform.y);
@@ -209,23 +210,6 @@ export default function KnowledgeMap({
       centroids[a.cluster].count++;
     });
 
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    Object.entries(centroids).forEach(([clusterId, { sx, sy, count }]) => {
-      const id = Number(clusterId);
-      const label = clusterLabels[id];
-      if (!label || id === -1) return;
-      const cx = xScale(sx / count);
-      const cy = yScale(sy / count);
-      const fontSize = Math.max(7, 9 / transform.k);
-      ctx.font = `${fontSize}px ui-serif, Georgia, serif`;
-      const labelY = cy - 12 / transform.k;
-      ctx.globalAlpha = 0.38;
-      ctx.fillStyle = labelColor;
-      ctx.fillText(label, cx, labelY);
-      ctx.globalAlpha = 1;
-    });
-
     // Dots — circles only
     filtered.forEach((article) => {
       const x = xScale(article.x);
@@ -258,6 +242,48 @@ export default function KnowledgeMap({
       ctx.fill();
       ctx.globalAlpha = 1;
     });
+
+    // Cluster labels go last so the dots can't paint over them, and each is
+    // stroked with the page color first — a halo, so the text stays legible
+    // where it crosses a dense patch of dots.
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    const fontSize = Math.max(9, 10.5 / transform.k);
+    ctx.font = `500 ${fontSize}px ui-serif, Georgia, serif`;
+    ctx.lineJoin = "round";
+    ctx.lineWidth = fontSize * 0.3;
+    ctx.strokeStyle = haloColor;
+    ctx.fillStyle = labelColor;
+    ctx.globalAlpha = 0.85;
+
+    // Biggest clusters get first claim on the space; a smaller label that
+    // would collide is dropped rather than drawn on top of its neighbour.
+    const placed: { x1: number; y1: number; x2: number; y2: number }[] = [];
+    Object.entries(centroids)
+      .filter(([id]) => Number(id) !== -1 && clusterLabels[Number(id)])
+      .sort((a, b) => b[1].count - a[1].count)
+      .forEach(([clusterId, { sx, sy, count }]) => {
+        const label = clusterLabels[Number(clusterId)];
+        const cx = xScale(sx / count);
+        const cy = yScale(sy / count) - 14 / transform.k;
+        const half = ctx.measureText(label).width / 2;
+        const pad = 2 / transform.k;
+        const box = {
+          x1: cx - half - pad,
+          y1: cy - fontSize / 2 - pad,
+          x2: cx + half + pad,
+          y2: cy + fontSize / 2 + pad,
+        };
+        const collides = placed.some(
+          (p) =>
+            box.x1 < p.x2 && box.x2 > p.x1 && box.y1 < p.y2 && box.y2 > p.y1
+        );
+        if (collides) return;
+        placed.push(box);
+        ctx.strokeText(label, cx, cy);
+        ctx.fillText(label, cx, cy);
+      });
+    ctx.globalAlpha = 1;
 
     ctx.restore();
   }, [

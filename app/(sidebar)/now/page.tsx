@@ -9,7 +9,9 @@ export default function NowPage() {
           this is a <a href="https://sive.rs/nowff">now</a> page
         </p>
         <p>
-          📌 Miami, FL, time is <Clock />
+          Location: Miami, FL
+          <br />
+          Time: <Clock />
         </p>
         <ul className="list-disc">
           <li>
@@ -30,7 +32,7 @@ export default function NowPage() {
           </li>
         </ul>
         <p className="text-sm text-ink/60 dark:text-chalk/60 mt-6">
-          Last updated: Feb 22, 2026
+          Last updated: Jul 27, 2026
         </p>
       </article>
 
