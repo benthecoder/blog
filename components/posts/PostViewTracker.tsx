@@ -46,7 +46,7 @@ const PostViewTracker = ({ slug }: PostViewTrackerProps) => {
   if (count === null) return null;
 
   return (
-    <span className="text-japanese-ginnezu dark:text-japanese-ginnezu text-xs tabular-nums">
+    <span className="text-ink-soft dark:text-ink-soft text-xs tabular-nums">
       {count.toLocaleString()} views
     </span>
   );

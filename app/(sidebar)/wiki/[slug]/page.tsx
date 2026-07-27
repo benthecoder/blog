@@ -51,7 +51,7 @@ const WikiSlugPage = async ({ params }: { params: Params }) => {
       <div className="mb-2">
         <Link
           href="/wiki"
-          className="text-[10px] font-mono tracking-widest text-light-text/40 dark:text-dark-text/40 hover:text-light-accent dark:hover:text-dark-accent transition-colors uppercase"
+          className="text-[10px] font-mono tracking-widest text-ink-strong/40 dark:text-chalk-strong/40 hover:text-ink dark:hover:text-chalk-soft transition-colors uppercase"
         >
           ← Wiki
         </Link>
@@ -59,26 +59,26 @@ const WikiSlugPage = async ({ params }: { params: Params }) => {
 
       <div className="mb-8">
         {meta.tags.length > 0 && (
-          <p className="text-[10px] text-light-text/40 dark:text-dark-text/40 tracking-widest font-mono uppercase mb-1">
+          <p className="text-[10px] text-ink-strong/40 dark:text-chalk-strong/40 tracking-widest font-mono uppercase mb-1">
             {meta.tags.join(" · ")}
           </p>
         )}
-        <h1 className="text-2xl font-bold text-light-text dark:text-dark-text">
+        <h1 className="text-2xl font-bold text-ink-strong dark:text-chalk-strong">
           {meta.title}
         </h1>
         {meta.description && (
-          <p className="text-sm text-light-text/60 dark:text-dark-text/60 mt-1">
+          <p className="text-sm text-ink-strong/60 dark:text-chalk-strong/60 mt-1">
             {meta.description}
           </p>
         )}
         {meta.lastUpdated && (
-          <p className="text-[10px] font-mono text-light-text/30 dark:text-dark-text/30 mt-2">
+          <p className="text-[10px] font-mono text-ink-strong/30 dark:text-chalk-strong/30 mt-2">
             last updated {meta.lastUpdated}
           </p>
         )}
       </div>
 
-      <article className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-light-text dark:prose-headings:text-dark-text prose-a:text-light-accent dark:prose-a:text-dark-accent prose-a:no-underline prose-a:hover:underline">
+      <article className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-ink-strong dark:prose-headings:text-chalk-strong prose-a:text-ink dark:prose-a:text-chalk-soft prose-a:no-underline prose-a:hover:underline">
         <MarkdownContent content={content.content} />
       </article>
     </div>

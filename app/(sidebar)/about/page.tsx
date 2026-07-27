@@ -13,7 +13,7 @@ const ChronologyPage = () => (
   <div className="min-h-screen font-serif">
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <div className="mb-8 pb-4">
-        <h1 className="text-base text-japanese-sumiiro dark:text-japanese-shironezu">
+        <h1 className="text-base text-ink dark:text-chalk">
           my life made up of small, meaningful moments
         </h1>
       </div>

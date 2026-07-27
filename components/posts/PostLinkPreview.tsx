@@ -94,19 +94,19 @@ const PostLinkPreview = ({
             ref={refs.setFloating}
             style={floatingStyles}
             {...getFloatingProps()}
-            className="z-50 max-w-xs p-3 rounded-md shadow-md border border-japanese-shiraumenezu dark:border-white/10 bg-japanese-hakuji dark:bg-dark-tag"
+            className="z-50 max-w-xs p-3 rounded-md shadow-md border border-rule dark:border-white/10 bg-paper-raised dark:bg-night-raised"
           >
-            <p className="text-xs font-bold text-japanese-sumiiro dark:text-japanese-nyuhakushoku mb-0.5">
+            <p className="text-xs font-bold text-ink dark:text-chalk-strong mb-0.5">
               {preview.title}
             </p>
-            <p className="text-[10px] text-japanese-ginnezu mb-1.5">
+            <p className="text-[10px] text-ink-soft mb-1.5">
               {new Date(preview.date).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
               })}
             </p>
-            <p className="text-[11px] leading-relaxed text-japanese-nezumiiro dark:text-japanese-ginnezu">
+            <p className="text-[11px] leading-relaxed text-ink-muted dark:text-ink-soft">
               {preview.excerpt}
             </p>
           </div>

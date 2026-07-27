@@ -9,6 +9,14 @@ import { select } from "d3-selection";
 import type { ArticleNode, KnowledgeMapOutput } from "@/types/knowledgeMap";
 import UMAPLoader from "./UMAPLoader";
 
+// Canvas can't use CSS classes, so palette colors are read off the document
+// element — which is where the [data-palette] custom properties resolve.
+function readToken(name: string): string {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+}
+
 export default function KnowledgeMap({
   className = "",
 }: {
@@ -105,7 +113,7 @@ export default function KnowledgeMap({
   const getClusterColor = useCallback(
     (cluster: number, isDark: boolean): string => {
       if (cluster === -1) {
-        return isDark ? "#91989C" : "#595857";
+        return readToken(isDark ? "--color-chalk" : "--color-ink-muted");
       }
       const hue = (cluster * 137.5) % 360;
       const saturation = isDark ? 52 : 47;
@@ -153,11 +161,10 @@ export default function KnowledgeMap({
     const yScale = scaleLinear().domain([0, 1000]).range([0, height]);
     const isDark = theme === "dark";
 
-    const styles = getComputedStyle(document.documentElement);
-    const dotDefault = isDark
-      ? styles.getPropertyValue("--color-japanese-ginnezu").trim() || "#91989C"
-      : styles.getPropertyValue("--color-japanese-sumiiro").trim() || "#595857";
-    const dotHover = isDark ? "#DCDDDD" : "#000000";
+    const dotDefault = readToken(isDark ? "--color-chalk" : "--color-ink");
+    const dotHover = readToken(
+      isDark ? "--color-chalk-strong" : "--color-ink-strong"
+    );
 
     ctx.save();
     ctx.translate(transform.x, transform.y);
@@ -395,7 +402,7 @@ export default function KnowledgeMap({
   return (
     <div
       ref={containerRef}
-      className={`relative ${className} bg-japanese-kinairo dark:bg-dark-bg`}
+      className={`relative ${className} bg-paper dark:bg-night`}
     >
       {/* Search */}
       <input
@@ -403,7 +410,7 @@ export default function KnowledgeMap({
         placeholder="search..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="absolute top-4 left-4 z-20 w-36 px-2 py-1 text-xs bg-japanese-kinairo/90 dark:bg-dark-bg/90 text-japanese-sumiiro dark:text-japanese-shironezu border border-japanese-shiraumenezu dark:border-white/8 focus:outline-hidden placeholder:text-japanese-sumiiro/25 dark:placeholder:text-japanese-shironezu/25 backdrop-blur-xs"
+        className="absolute top-4 left-4 z-20 w-36 px-2 py-1 text-xs bg-paper/90 dark:bg-night/90 text-ink dark:text-chalk border border-rule dark:border-white/8 focus:outline-hidden placeholder:text-ink/25 dark:placeholder:text-chalk/25 backdrop-blur-xs"
       />
 
       {/* Canvas */}
@@ -416,10 +423,10 @@ export default function KnowledgeMap({
       {/* ArticleNode detail panel — hover preview or pinned detail */}
       {displayArticleNode && (
         <div
-          className={`absolute z-20 bg-japanese-kinairo/95 dark:bg-dark-bg/95 p-3 border shadow-xs w-[200px] sm:w-56 backdrop-blur-xs transition-[border-color] duration-150 pointer-events-none ${
+          className={`absolute z-20 bg-paper/95 dark:bg-night/95 p-3 border shadow-xs w-[200px] sm:w-56 backdrop-blur-xs transition-[border-color] duration-150 pointer-events-none ${
             isPinned
-              ? "border-japanese-sumiiro/25 dark:border-white/15"
-              : "border-japanese-shiraumenezu dark:border-white/8"
+              ? "border-ink/25 dark:border-white/15"
+              : "border-rule dark:border-white/8"
           }`}
           style={getPanelPosition()}
         >
@@ -430,17 +437,17 @@ export default function KnowledgeMap({
                 setClickPos(null);
               }}
               aria-label="close"
-              className="pointer-events-auto absolute top-1.5 right-2 text-japanese-sumiiro/30 hover:text-japanese-sumiiro/70 dark:text-japanese-shironezu/30 dark:hover:text-japanese-shironezu/70 transition-colors text-base leading-none"
+              className="pointer-events-auto absolute top-1.5 right-2 text-ink/30 hover:text-ink/70 dark:text-chalk/30 dark:hover:text-chalk/70 transition-colors text-base leading-none"
             >
               ×
             </button>
           )}
 
-          <h3 className="font-medium text-sm leading-tight mb-2 text-japanese-sumiiro dark:text-japanese-shironezu pr-4">
+          <h3 className="font-medium text-sm leading-tight mb-2 text-ink dark:text-chalk pr-4">
             {displayArticleNode.postTitle}
           </h3>
 
-          <div className="space-y-1 text-xs text-japanese-sumiiro/60 dark:text-japanese-shironezu/60">
+          <div className="space-y-1 text-xs text-ink/60 dark:text-chalk/60">
             {clusterLabels[displayArticleNode.cluster] && (
               <div className="flex items-center gap-1.5">
                 <div
@@ -468,12 +475,12 @@ export default function KnowledgeMap({
           {isPinned ? (
             <Link
               href={`/posts/${displayArticleNode.postSlug}`}
-              className="pointer-events-auto mt-3 flex items-center gap-1 text-xs text-japanese-sumiiro/50 hover:text-japanese-sumiiro dark:text-japanese-shironezu/50 dark:hover:text-japanese-shironezu transition-colors"
+              className="pointer-events-auto mt-3 flex items-center gap-1 text-xs text-ink/50 hover:text-ink dark:text-chalk/50 dark:hover:text-chalk transition-colors"
             >
               read →
             </Link>
           ) : (
-            <p className="mt-2 text-[10px] text-japanese-sumiiro/25 dark:text-japanese-shironezu/25">
+            <p className="mt-2 text-[10px] text-ink/25 dark:text-chalk/25">
               {isTouchDevice ? "tap again to read" : "click to pin"}
             </p>
           )}
@@ -485,7 +492,7 @@ export default function KnowledgeMap({
         <div className="absolute bottom-4 right-4 z-10">
           <button
             onClick={() => setShowLegend(!showLegend)}
-            className="bg-japanese-kinairo/90 dark:bg-dark-bg/90 px-2 py-1 border border-japanese-shiraumenezu dark:border-white/8 text-xs text-japanese-sumiiro/60 dark:text-japanese-shironezu/60 hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors backdrop-blur-xs"
+            className="bg-paper/90 dark:bg-night/90 px-2 py-1 border border-rule dark:border-white/8 text-xs text-ink/60 dark:text-chalk/60 hover:text-ink dark:hover:text-chalk transition-colors backdrop-blur-xs"
           >
             {showLegend
               ? "hide"
@@ -494,11 +501,11 @@ export default function KnowledgeMap({
                 : "clusters"}
           </button>
           {showLegend && (
-            <div className="absolute bottom-8 right-0 bg-japanese-kinairo/95 dark:bg-dark-bg/95 px-3 py-2 border border-japanese-shiraumenezu dark:border-white/8 max-h-[60vh] overflow-y-auto shadow-xs min-w-[200px] backdrop-blur-xs">
+            <div className="absolute bottom-8 right-0 bg-paper/95 dark:bg-night/95 px-3 py-2 border border-rule dark:border-white/8 max-h-[60vh] overflow-y-auto shadow-xs min-w-[200px] backdrop-blur-xs">
               {selectedCluster !== null && (
                 <button
                   onClick={() => setSelectedCluster(null)}
-                  className="w-full mb-2 px-2 py-1 text-xs bg-japanese-shiraumenezu/30 dark:bg-white/6 hover:bg-japanese-shiraumenezu/50 dark:hover:bg-white/10 transition-colors"
+                  className="w-full mb-2 px-2 py-1 text-xs bg-rule/30 dark:bg-white/6 hover:bg-rule/50 dark:hover:bg-white/10 transition-colors"
                 >
                   show all clusters
                 </button>
@@ -518,8 +525,8 @@ export default function KnowledgeMap({
                         onClick={() => setSelectedCluster(isActive ? null : id)}
                         className={`w-full flex items-center gap-2 text-xs py-0.5 px-1 rounded transition-colors ${
                           isActive
-                            ? "bg-japanese-shiraumenezu/40 dark:bg-white/6"
-                            : "hover:bg-japanese-shiraumenezu/20 dark:hover:bg-white/4"
+                            ? "bg-rule/40 dark:bg-white/6"
+                            : "hover:bg-rule/20 dark:hover:bg-white/4"
                         }`}
                       >
                         <div
@@ -531,9 +538,9 @@ export default function KnowledgeMap({
                             ),
                           }}
                         />
-                        <span className="text-japanese-sumiiro/70 dark:text-japanese-shironezu/70 text-left">
+                        <span className="text-ink/70 dark:text-chalk/70 text-left">
                           {label}{" "}
-                          <span className="text-japanese-sumiiro/40 dark:text-japanese-shironezu/40">
+                          <span className="text-ink/40 dark:text-chalk/40">
                             ({count})
                           </span>
                         </span>
@@ -547,7 +554,7 @@ export default function KnowledgeMap({
       )}
 
       {/* Instructions */}
-      <div className="absolute bottom-4 left-4 z-10 bg-japanese-kinairo/80 dark:bg-dark-bg/80 px-3 py-1 border border-japanese-shiraumenezu dark:border-white/8 text-xs text-japanese-sumiiro/40 dark:text-japanese-shironezu/40 pointer-events-none backdrop-blur-xs">
+      <div className="absolute bottom-4 left-4 z-10 bg-paper/80 dark:bg-night/80 px-3 py-1 border border-rule dark:border-white/8 text-xs text-ink/40 dark:text-chalk/40 pointer-events-none backdrop-blur-xs">
         {isTouchDevice ? "pinch · drag · tap" : "scroll · drag · click"}
       </div>
     </div>

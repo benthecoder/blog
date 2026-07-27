@@ -102,18 +102,18 @@ export function totalWordCount(posts: PostMetadata[]): number {
 
 /** Word-count buckets → cell color classes (light and dark). */
 export const WORD_COUNT_SCALE: { max: number; className: string }[] = [
-  { max: 0, className: "bg-japanese-shiraumenezu/20 dark:bg-dark-border/20" },
+  { max: 0, className: "bg-rule/20 dark:bg-night-rule/20" },
   {
     max: 300,
-    className: "bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30",
+    className: "bg-ink/30 dark:bg-chalk/30",
   },
   {
     max: 800,
-    className: "bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60",
+    className: "bg-ink/60 dark:bg-chalk/60",
   },
   {
     max: Infinity,
-    className: "bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90",
+    className: "bg-ink/90 dark:bg-chalk/90",
   },
 ];
 

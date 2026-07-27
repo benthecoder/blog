@@ -19,7 +19,7 @@ function parseContent(content: string): ReactNode[] {
           href={part}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline underline-offset-2 hover:text-japanese-sumiiro/70 dark:hover:text-japanese-shironezu/70 transition-colors break-all"
+          className="underline underline-offset-2 hover:text-ink/70 dark:hover:text-chalk/70 transition-colors break-all"
         >
           {part}
         </a>
@@ -104,8 +104,8 @@ export default function ThoughtsClient({
       <div className="space-y-8">
         {dates.map((date) => (
           <div key={date} className="relative">
-            <div className="mb-2 pb-2 border-b border-japanese-shiraumenezu dark:border-japanese-ginnezu/30">
-              <p className="text-xs text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 tracking-wide lowercase text-center">
+            <div className="mb-2 pb-2 border-b border-rule dark:border-ink-soft/30">
+              <p className="text-xs text-ink/50 dark:text-chalk/50 tracking-wide lowercase text-center">
                 {date}
               </p>
             </div>
@@ -124,10 +124,10 @@ export default function ThoughtsClient({
 
                 return (
                   <div key={entry.id} className="flex gap-4 items-baseline">
-                    <span className="text-xs text-japanese-sumiiro/50 dark:text-japanese-shironezu/50 shrink-0 select-none w-10">
+                    <span className="text-xs text-ink/50 dark:text-chalk/50 shrink-0 select-none w-10">
                       {time}
                     </span>
-                    <p className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu leading-relaxed wrap-break-word whitespace-pre-wrap flex-1">
+                    <p className="text-sm text-ink dark:text-chalk leading-relaxed wrap-break-word whitespace-pre-wrap flex-1">
                       {parseContent(entry.content)}
                     </p>
                   </div>
@@ -139,16 +139,14 @@ export default function ThoughtsClient({
 
         {thoughts.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu">
-              empty stream...
-            </p>
+            <p className="text-sm text-ink dark:text-chalk">empty stream...</p>
           </div>
         )}
 
         {hasMore && (
           <div ref={observerRef} className="py-12 text-center">
             {loading && (
-              <p className="text-xs text-japanese-sumiiro dark:text-japanese-shironezu tracking-wide">
+              <p className="text-xs text-ink dark:text-chalk tracking-wide">
                 loading more...
               </p>
             )}
@@ -157,7 +155,7 @@ export default function ThoughtsClient({
 
         {!hasMore && thoughts.length > 0 && (
           <div className="py-12 text-center">
-            <p className="text-xs text-japanese-sumiiro dark:text-japanese-shironezu tracking-wide">
+            <p className="text-xs text-ink dark:text-chalk tracking-wide">
               ~ end of stream ~
             </p>
           </div>

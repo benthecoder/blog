@@ -72,7 +72,7 @@ const ImageLinkComponent: FC<{ link: ImageLink }> = ({ link }) => {
       <span
         ref={refs.setReference}
         {...getReferenceProps()}
-        className="underline decoration-solid decoration-1 cursor-pointer decoration-japanese-ginnezu/40 underline-offset-2 transition-[text-decoration-color] duration-150 hover:decoration-japanese-ginnezu"
+        className="underline decoration-solid decoration-1 cursor-pointer decoration-ink-soft/40 underline-offset-2 transition-[text-decoration-color] duration-150 hover:decoration-ink-soft"
       >
         {link.text}
       </span>
@@ -137,7 +137,7 @@ const Timeline: FC<TimelineProps> = ({ events }) => (
   <div className="space-y-6 font-serif">
     {events.map((event) => (
       <div key={event.period} className="group/year">
-        <div className="flex gap-2 sm:gap-4 text-japanese-sumiiro dark:text-japanese-nyuhakushoku">
+        <div className="flex gap-2 sm:gap-4 text-ink dark:text-chalk-strong">
           <div className="min-w-[60px] sm:min-w-[70px] pt-0.5">
             <span className="text-sm opacity-50 transition-opacity group-hover/year:opacity-70">
               {event.period}

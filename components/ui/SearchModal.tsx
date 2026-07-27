@@ -130,18 +130,18 @@ export default function SearchModal() {
       className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh]"
       onClick={() => setOpen(false)}
     >
-      <div className="absolute inset-0 bg-japanese-kinairo/80 dark:bg-[#111]/80 backdrop-blur-xs" />
+      <div className="absolute inset-0 bg-paper/80 dark:bg-[#111]/80 backdrop-blur-xs" />
 
       <div
         role="dialog"
         aria-modal="true"
         aria-label="Search posts"
-        className="relative w-full max-w-lg mx-4 bg-japanese-kinairo dark:bg-[#1c1c1c] border border-japanese-shiraumenezu dark:border-white/8 shadow-lg"
+        className="relative w-full max-w-lg mx-4 bg-paper dark:bg-[#1c1c1c] border border-rule dark:border-white/8 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center border-b border-japanese-shiraumenezu dark:border-white/6 px-3 gap-2">
+        <div className="flex items-center border-b border-rule dark:border-white/6 px-3 gap-2">
           <svg
-            className="w-4 h-4 text-japanese-sumiiro/30 dark:text-japanese-shironezu/30 shrink-0"
+            className="w-4 h-4 text-ink/30 dark:text-chalk/30 shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -155,7 +155,7 @@ export default function SearchModal() {
             onChange={(e) => handleInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="search posts…"
-            className="flex-1 py-3 text-sm bg-transparent outline-hidden text-japanese-sumiiro dark:text-japanese-shironezu placeholder:text-japanese-sumiiro/30 dark:placeholder:text-japanese-shironezu/30"
+            className="flex-1 py-3 text-sm bg-transparent outline-hidden text-ink dark:text-chalk placeholder:text-ink/30 dark:placeholder:text-chalk/30"
           />
           <div className="flex items-center gap-1 shrink-0">
             {(["keyword", "semantic"] as SearchType[]).map((t) => (
@@ -164,8 +164,8 @@ export default function SearchModal() {
                 onClick={() => handleTypeToggle(t)}
                 className={`text-[10px] px-1.5 py-0.5 tracking-wide transition-[color,border-color] duration-150 border ${
                   searchType === t
-                    ? "border-japanese-sumiiro/50 dark:border-japanese-shironezu/50 text-japanese-sumiiro dark:text-japanese-shironezu"
-                    : "border-transparent text-japanese-sumiiro/30 dark:text-japanese-shironezu/30 hover:text-japanese-sumiiro/60 dark:hover:text-japanese-shironezu/60"
+                    ? "border-ink/50 dark:border-chalk/50 text-ink dark:text-chalk"
+                    : "border-transparent text-ink/30 dark:text-chalk/30 hover:text-ink/60 dark:hover:text-chalk/60"
                 }`}
               >
                 {t}
@@ -175,13 +175,13 @@ export default function SearchModal() {
         </div>
 
         {loading && (
-          <div className="px-4 py-3 text-xs text-japanese-sumiiro/40 dark:text-japanese-shironezu/40">
+          <div className="px-4 py-3 text-xs text-ink/40 dark:text-chalk/40">
             searching…
           </div>
         )}
 
         {!loading && query.trim() && results.length === 0 && (
-          <div className="px-4 py-3 text-xs text-japanese-sumiiro/40 dark:text-japanese-shironezu/40">
+          <div className="px-4 py-3 text-xs text-ink/40 dark:text-chalk/40">
             no results
           </div>
         )}
@@ -194,16 +194,14 @@ export default function SearchModal() {
                   onClick={() => navigate(r.post_slug)}
                   onMouseEnter={() => setActiveIndex(i)}
                   className={`w-full text-left px-4 py-2.5 transition-[background-color] duration-100 ${
-                    i === activeIndex
-                      ? "bg-japanese-sumiiro/5 dark:bg-japanese-shironezu/5"
-                      : ""
+                    i === activeIndex ? "bg-ink/5 dark:bg-chalk/5" : ""
                   }`}
                 >
-                  <div className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu truncate">
+                  <div className="text-sm text-ink dark:text-chalk truncate">
                     {r.post_title}
                   </div>
                   {r.published_date && (
-                    <div className="text-[10px] text-japanese-sumiiro/35 dark:text-japanese-shironezu/35 mt-0.5 tabular-nums">
+                    <div className="text-[10px] text-ink/35 dark:text-chalk/35 mt-0.5 tabular-nums">
                       {new Date(r.published_date).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -218,7 +216,7 @@ export default function SearchModal() {
         )}
 
         {results.length > 0 && (
-          <div className="border-t border-japanese-shiraumenezu dark:border-white/6 px-4 py-2 flex gap-3 text-[10px] text-japanese-sumiiro/30 dark:text-japanese-shironezu/30">
+          <div className="border-t border-rule dark:border-white/6 px-4 py-2 flex gap-3 text-[10px] text-ink/30 dark:text-chalk/30">
             <span>↑↓ navigate</span>
             <span>↵ open</span>
             <span>esc close</span>

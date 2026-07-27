@@ -37,9 +37,8 @@ function YearNav({
 }) {
   const sep = navigationPath.includes("?") ? "&" : "?";
   const linkCls =
-    "text-sm text-japanese-nezumiiro dark:text-japanese-ginnezu hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors";
-  const disabledCls =
-    "text-sm text-japanese-nezumiiro/30 dark:text-japanese-ginnezu/30";
+    "text-sm text-ink-muted dark:text-ink-soft hover:text-ink dark:hover:text-chalk transition-colors";
+  const disabledCls = "text-sm text-ink-muted/30 dark:text-ink-soft/30";
 
   return (
     <div className="flex items-center justify-between mb-4">
@@ -53,9 +52,7 @@ function YearNav({
       ) : (
         <span className={disabledCls}>← {year - 1}</span>
       )}
-      <h1 className="text-sm text-japanese-sumiiro dark:text-japanese-shironezu">
-        {year}
-      </h1>
+      <h1 className="text-sm text-ink dark:text-chalk">{year}</h1>
       {year < maxYear ? (
         <Link
           href={`${navigationPath}${sep}year=${year + 1}&month=0`}
@@ -87,7 +84,7 @@ function DayCell({
     <div
       className={`w-(--hm-cell) h-(--hm-cell) rounded-xs ${wordCountColor(day.posts)} ${
         day.posts.length > 0
-          ? "cursor-pointer hover:ring-1 hover:ring-japanese-sumiiro dark:hover:ring-japanese-shironezu"
+          ? "cursor-pointer hover:ring-1 hover:ring-ink dark:hover:ring-chalk"
           : ""
       } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-[box-shadow] duration-150`}
       onMouseEnter={() => day.posts.length > 0 && onHover(day)}
@@ -101,7 +98,7 @@ function DayCell({
 function HoverInfo({ day }: { day: DayData }) {
   return (
     <div className="text-xs">
-      <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
+      <span className="text-ink-muted dark:text-ink-soft">
         {day.date.toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
@@ -113,13 +110,13 @@ function HoverInfo({ day }: { day: DayData }) {
           {idx > 0 && ", "}
           <Link
             href={`/posts/${post.slug}`}
-            className="text-japanese-sumiiro dark:text-japanese-shironezu hover:underline"
+            className="text-ink dark:text-chalk hover:underline"
           >
             {post.title}
           </Link>
         </span>
       ))}
-      <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu">
+      <span className="text-ink-muted dark:text-ink-soft">
         {" "}
         · {totalWordCount(day.posts)} words
       </span>
@@ -133,19 +130,13 @@ function Legend() {
     <div className="flex items-center justify-between text-xs">
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
-          <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[9px] md:text-[10px]">
+          <span className="text-ink-muted dark:text-ink-soft text-[9px] md:text-[10px]">
             short
           </span>
-          <div
-            className={`${cell} bg-japanese-sumiiro/30 dark:bg-japanese-shironezu/30`}
-          />
-          <div
-            className={`${cell} bg-japanese-sumiiro/60 dark:bg-japanese-shironezu/60`}
-          />
-          <div
-            className={`${cell} bg-japanese-sumiiro/90 dark:bg-japanese-shironezu/90`}
-          />
-          <span className="text-japanese-nezumiiro dark:text-japanese-ginnezu text-[9px] md:text-[10px]">
+          <div className={`${cell} bg-ink/30 dark:bg-chalk/30`} />
+          <div className={`${cell} bg-ink/60 dark:bg-chalk/60`} />
+          <div className={`${cell} bg-ink/90 dark:bg-chalk/90`} />
+          <span className="text-ink-muted dark:text-ink-soft text-[9px] md:text-[10px]">
             long
           </span>
         </div>
@@ -212,7 +203,7 @@ const Heatmap = ({
           {weeks.map((_, weekIndex) => (
             <div
               key={`month-${weekIndex}`}
-              className="text-[8px] md:text-[10px] text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 h-[12px] md:h-[14px] w-[9px] md:w-auto overflow-visible whitespace-nowrap"
+              className="text-[8px] md:text-[10px] text-ink-muted/60 dark:text-ink-soft/60 h-[12px] md:h-[14px] w-[9px] md:w-auto overflow-visible whitespace-nowrap"
             >
               {monthLabels.get(weekIndex) || ""}
             </div>
@@ -221,7 +212,7 @@ const Heatmap = ({
           {/* Rows 1-7: Day labels + day cells */}
           {DAY_LABELS.map((label, dayOfWeek) => (
             <Fragment key={dayOfWeek}>
-              <div className="text-[8px] md:text-[10px] leading-none text-japanese-nezumiiro/60 dark:text-japanese-ginnezu/60 flex items-center pr-0.5 md:pr-1 h-(--hm-cell)">
+              <div className="text-[8px] md:text-[10px] leading-none text-ink-muted/60 dark:text-ink-soft/60 flex items-center pr-0.5 md:pr-1 h-(--hm-cell)">
                 {label}
               </div>
               {weeks.map((week, weekIndex) => {

@@ -33,7 +33,7 @@ export default function UMAPLoader({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`relative ${className} bg-japanese-kinairo dark:bg-dark-bg`}
+      className={`relative ${className} bg-paper dark:bg-night`}
       style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E")`,
       }}
@@ -45,13 +45,13 @@ export default function UMAPLoader({ className = "" }: { className?: string }) {
             cx={`${dot.x}%`}
             cy={`${dot.y}%`}
             r="3"
-            className="fill-japanese-sumiiro dark:fill-japanese-shironezu transition-opacity duration-200"
+            className="fill-ink dark:fill-chalk transition-opacity duration-200"
             style={{ opacity: dot.opacity }}
           />
         ))}
       </svg>
 
-      <div className="absolute bottom-4 left-4 z-10 bg-japanese-kinairo/90 dark:bg-dark-bg/90 px-3 py-1 rounded-sm border border-japanese-shiraumenezu dark:border-dark-border text-xs text-japanese-ginnezu dark:text-japanese-ginnezu">
+      <div className="absolute bottom-4 left-4 z-10 bg-paper/90 dark:bg-night/90 px-3 py-1 rounded-sm border border-rule dark:border-night-rule text-xs text-ink-soft dark:text-ink-soft">
         loading knowledge map...
       </div>
     </div>

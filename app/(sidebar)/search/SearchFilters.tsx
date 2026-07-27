@@ -22,8 +22,8 @@ export default function SearchFilters({
   return (
     <div className="mb-8 space-y-4">
       {/* Search Type Filter */}
-      <div className="border-t border-light-border dark:border-dark-tag pt-4">
-        <label className="block text-xs font-medium text-light-text/70 dark:text-dark-text/70 mb-2 tracking-wide">
+      <div className="border-t border-rule dark:border-night-raised pt-4">
+        <label className="block text-xs font-medium text-ink-strong/70 dark:text-chalk-strong/70 mb-2 tracking-wide">
           SEARCH TYPE
         </label>
         <div className="flex flex-wrap gap-2">
@@ -34,8 +34,8 @@ export default function SearchFilters({
               onClick={() => onSearchTypeChange(type)}
               className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
                 searchType === type
-                  ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-light-accent dark:text-dark-text font-medium"
-                  : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
+                  ? "border-ink dark:border-chalk-soft bg-ink/20 dark:bg-chalk-soft/20 text-ink dark:text-chalk-strong font-medium"
+                  : "border-rule dark:border-night-raised text-ink-strong/60 dark:text-chalk-strong/60 hover:border-ink/50 dark:hover:border-chalk-soft/50"
               }`}
             >
               {type}
@@ -46,7 +46,7 @@ export default function SearchFilters({
 
       {/* Content Type Filter */}
       <div className="pt-4">
-        <label className="block text-xs font-medium text-light-text/70 dark:text-dark-text/70 mb-2 tracking-wide">
+        <label className="block text-xs font-medium text-ink-strong/70 dark:text-chalk-strong/70 mb-2 tracking-wide">
           CONTENT TYPE
         </label>
         <div className="flex flex-wrap gap-2">
@@ -55,8 +55,8 @@ export default function SearchFilters({
             onClick={() => onChunkTypeChange("")}
             className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
               selectedChunkType === ""
-                ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-light-accent dark:text-dark-text font-medium"
-                : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
+                ? "border-ink dark:border-chalk-soft bg-ink/20 dark:bg-chalk-soft/20 text-ink dark:text-chalk-strong font-medium"
+                : "border-rule dark:border-night-raised text-ink-strong/60 dark:text-chalk-strong/60 hover:border-ink/50 dark:hover:border-chalk-soft/50"
             }`}
           >
             all
@@ -68,8 +68,8 @@ export default function SearchFilters({
               onClick={() => onChunkTypeChange(type)}
               className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
                 selectedChunkType === type
-                  ? "border-light-accent dark:border-dark-accent bg-light-accent/20 dark:bg-dark-accent/20 text-light-accent dark:text-dark-text font-medium"
-                  : "border-light-border dark:border-dark-tag text-light-text/60 dark:text-dark-text/60 hover:border-light-accent/50 dark:hover:border-dark-accent/50"
+                  ? "border-ink dark:border-chalk-soft bg-ink/20 dark:bg-chalk-soft/20 text-ink dark:text-chalk-strong font-medium"
+                  : "border-rule dark:border-night-raised text-ink-strong/60 dark:text-chalk-strong/60 hover:border-ink/50 dark:hover:border-chalk-soft/50"
               }`}
             >
               {formatChunkTypeLabel(type)}
@@ -84,7 +84,7 @@ export default function SearchFilters({
           <button
             type="button"
             onClick={onClearFilters}
-            className="text-xs text-light-text/50 dark:text-dark-text/50 hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+            className="text-xs text-ink-strong/50 dark:text-chalk-strong/50 hover:text-ink dark:hover:text-chalk-soft transition-colors"
           >
             clear filters
           </button>

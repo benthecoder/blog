@@ -30,23 +30,23 @@ const RenderPost = ({
 
   return (
     <div>
-      <div className="p-5 bg-japanese-hakuji dark:bg-dark-tag shadow-xs rounded-md dark:text-japanese-nyuhakushoku">
+      <div className="p-5 bg-paper-raised dark:bg-night-raised shadow-xs rounded-md dark:text-chalk-strong">
         <div className="text-center mb-4">
           {slug ? (
             <Link href={`/posts/${slug}`}>
-              <h2 className="font-bold text-xl md:text-2xl text-japanese-sumiiro dark:text-japanese-nyuhakushoku">
+              <h2 className="font-bold text-xl md:text-2xl text-ink dark:text-chalk-strong">
                 {title as string}
               </h2>
             </Link>
           ) : (
-            <h2 className="font-bold text-xl md:text-2xl text-japanese-sumiiro dark:text-japanese-nyuhakushoku">
+            <h2 className="font-bold text-xl md:text-2xl text-ink dark:text-chalk-strong">
               {title as string}
             </h2>
           )}
 
           <div className="flex items-center justify-center gap-2 mt-1 flex-wrap">
             {date && (
-              <span className="text-japanese-ginnezu dark:text-japanese-ginnezu text-xs">
+              <span className="text-ink-soft dark:text-ink-soft text-xs">
                 {new Date(date as string).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
@@ -56,14 +56,12 @@ const RenderPost = ({
             )}
             {tags.length > 0 && (
               <>
-                <span className="text-japanese-shiraumenezu dark:text-japanese-sumiiro/50 text-xs">
-                  ·
-                </span>
+                <span className="text-rule dark:text-ink/50 text-xs">·</span>
                 {tags.map((tag) => (
                   <Link
                     href={`/tags/${tag}`}
                     key={tag}
-                    className="text-xs text-japanese-ginnezu dark:text-japanese-ginnezu hover:text-japanese-sumiiro dark:hover:text-japanese-shironezu transition-colors duration-150"
+                    className="text-xs text-ink-soft dark:text-ink-soft hover:text-ink dark:hover:text-chalk transition-colors duration-150"
                   >
                     #{tag}
                   </Link>
@@ -72,26 +70,22 @@ const RenderPost = ({
             )}
             {readingTime && (
               <>
-                <span className="text-japanese-shiraumenezu dark:text-japanese-sumiiro/50 text-xs">
-                  ·
-                </span>
-                <span className="text-japanese-ginnezu dark:text-japanese-ginnezu text-xs">
+                <span className="text-rule dark:text-ink/50 text-xs">·</span>
+                <span className="text-ink-soft dark:text-ink-soft text-xs">
                   {readingTime} min read
                 </span>
               </>
             )}
             {slug && (
               <>
-                <span className="text-japanese-shiraumenezu dark:text-japanese-sumiiro/50 text-xs">
-                  ·
-                </span>
+                <span className="text-rule dark:text-ink/50 text-xs">·</span>
                 <PostViewTracker slug={slug} />
               </>
             )}
           </div>
         </div>
 
-        <article className="prose dark:prose-invert dark:text-japanese-shironezu text-sm md:text-base leading-relaxed max-w-none selection:bg-japanese-unoharairo/30 dark:selection:bg-japanese-murasakisuishiyou/20 prose-a:text-japanese-sumiiro prose-a:decoration-japanese-soshoku/50 prose-a:hover:text-japanese-sumiiro/70 prose-a:hover:decoration-japanese-sumiiro prose-headings:text-japanese-sumiiro dark:prose-headings:text-japanese-murasakisuishiyou">
+        <article className="prose dark:prose-invert dark:text-chalk text-sm md:text-base leading-relaxed max-w-none selection:bg-paper-tint/30 dark:selection:bg-chalk-soft/20 prose-a:text-ink prose-a:decoration-paper-warm/50 prose-a:hover:text-ink/70 prose-a:hover:decoration-ink prose-headings:text-ink dark:prose-headings:text-chalk-soft">
           {children}
         </article>
       </div>
@@ -99,12 +93,12 @@ const RenderPost = ({
       <div className="mt-8 flex justify-between text-xs gap-4">
         {prev ? (
           <div className="flex flex-col flex-1">
-            <p className="text-light-text/40 dark:text-dark-text/40 mb-1">
+            <p className="text-ink-strong/40 dark:text-chalk-strong/40 mb-1">
               Previous
             </p>
             <Link
               href={`/posts/${prev.slug}`}
-              className="text-light-text dark:text-dark-text hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+              className="text-ink-strong dark:text-chalk-strong hover:text-ink dark:hover:text-chalk-soft transition-colors"
             >
               {prev.title}
             </Link>
@@ -114,12 +108,12 @@ const RenderPost = ({
         )}
         {next ? (
           <div className="flex flex-col flex-1 text-right">
-            <p className="text-light-text/40 dark:text-dark-text/40 mb-1">
+            <p className="text-ink-strong/40 dark:text-chalk-strong/40 mb-1">
               Next
             </p>
             <Link
               href={`/posts/${next.slug}`}
-              className="text-light-text dark:text-dark-text hover:text-light-accent dark:hover:text-dark-accent transition-colors"
+              className="text-ink-strong dark:text-chalk-strong hover:text-ink dark:hover:text-chalk-soft transition-colors"
             >
               {next.title}
             </Link>
