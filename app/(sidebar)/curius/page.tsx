@@ -46,7 +46,7 @@ export default function CuriusPage() {
             stay{" "}
             <a
               href="https://curius.app/benedict-neo"
-              className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-ink-soft transition-colors"
+              className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
             >
               curius
             </a>
@@ -61,7 +61,7 @@ export default function CuriusPage() {
                   href={link.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-ink-soft transition-colors"
+                  className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
                 >
                   {link.title.toLowerCase()}
                 </a>

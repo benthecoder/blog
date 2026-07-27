@@ -93,7 +93,7 @@ export default function HackerNewsPage() {
                   href={story.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-ink-soft transition-colors"
+                  className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
                 >
                   {story.title.toLowerCase()}
                 </a>
@@ -102,7 +102,7 @@ export default function HackerNewsPage() {
                     href={`https://news.ycombinator.com/item?id=${story.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-ink/30 dark:text-chalk/30 hover:text-ink-soft dark:hover:text-ink-soft transition-colors text-sm whitespace-nowrap"
+                    className="text-ink/30 dark:text-chalk/30 hover:text-ink-soft dark:hover:text-chalk-muted transition-colors text-sm whitespace-nowrap"
                   >
                     ({story.descendants})
                   </a>
@@ -114,7 +114,7 @@ export default function HackerNewsPage() {
             {currentPage > 0 && (
               <button
                 onClick={handleBackPage}
-                className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-ink-soft transition-colors"
+                className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
               >
                 back
               </button>
@@ -122,7 +122,7 @@ export default function HackerNewsPage() {
             {currentPage < MAX_PAGES - 1 && (
               <button
                 onClick={handleNextPage}
-                className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-ink-soft transition-colors"
+                className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
               >
                 next
               </button>

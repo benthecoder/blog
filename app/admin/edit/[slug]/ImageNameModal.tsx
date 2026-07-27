@@ -38,7 +38,7 @@ export function ImageNameModal({
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-1.5 text-sm bg-ink dark:bg-chalk text-white dark:text-ink hover:opacity-90 transition-opacity rounded-xs"
+            className="px-4 py-1.5 text-sm bg-ink dark:bg-chalk text-white dark:text-night hover:opacity-90 transition-opacity rounded-xs"
           >
             Upload
           </button>

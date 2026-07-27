@@ -106,7 +106,7 @@ const PostLinkPreview = ({
                 day: "numeric",
               })}
             </p>
-            <p className="text-[11px] leading-relaxed text-ink-muted dark:text-ink-soft">
+            <p className="text-[11px] leading-relaxed text-ink-muted dark:text-chalk-muted">
               {preview.excerpt}
             </p>
           </div>

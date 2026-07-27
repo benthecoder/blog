@@ -134,7 +134,7 @@ function SearchContent() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="search..."
-            className="w-full px-4 py-3 bg-paper dark:bg-night border-2 border-rule dark:border-night-raised focus:border-ink dark:focus:border-chalk-soft transition-colors text-ink-strong dark:text-chalk-strong text-lg font-medium placeholder-ink-strong/40 dark:placeholder-chalk-strong/40 outline-hidden selection:bg-ink selection:text-white dark:selection:bg-chalk-soft dark:selection:text-white"
+            className="w-full px-4 py-3 bg-paper dark:bg-night border-2 border-rule dark:border-night-raised focus:border-ink dark:focus:border-chalk-soft transition-colors text-ink-strong dark:text-chalk-strong text-lg font-medium placeholder-ink-strong/40 dark:placeholder-chalk-strong/40 outline-hidden selection:bg-ink selection:text-white dark:selection:bg-chalk-soft dark:selection:text-night"
           />
           {query && (
             <button

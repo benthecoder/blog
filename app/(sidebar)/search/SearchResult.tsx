@@ -33,7 +33,7 @@ export default function SearchResult({ result, query }: SearchResultProps) {
         </div>
 
         {result.chunk_type === "code" ? (
-          <pre className="mt-2 bg-paper-warm/40 dark:bg-ink/20 p-3 rounded-xs text-sm overflow-x-auto">
+          <pre className="mt-2 bg-paper-warm/40 dark:bg-night-raised p-3 rounded-xs text-sm overflow-x-auto">
             <code>{snippet}</code>
           </pre>
         ) : (

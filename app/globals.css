@@ -42,6 +42,7 @@
   --color-ink-strong: #27435e; /* highest contrast: body copy */
 
   /* -- Chalk on night (palette-driven) ------------------------------------ */
+  --color-chalk-muted: #6f879b; /* quietest: captions, meta */
   --color-chalk: #9dbedb; /* primary */
   --color-chalk-soft: #cddceb; /* secondary: hover, emphasis */
   --color-chalk-strong: #e9f0f7; /* highest contrast: body copy */
@@ -74,11 +75,12 @@
    palette means adding a block here and its id to PALETTES in app/providers.
    ========================================================================== */
 :root[data-palette="indigo"] {
-  --color-ink-muted: #8b93b0;
+  --color-ink-muted: #838aa5;
   --color-ink-soft: #7b89b8;
   --color-ink: #4d5f9e;
   --color-ink-strong: #2f3a5e;
   --color-chalk: #a8b3dd;
+  --color-chalk-muted: #7b83a1;
   --color-chalk-soft: #c7cdec;
   --color-chalk-strong: #e8ebf7;
 }
@@ -89,6 +91,7 @@
   --color-ink: #47502f;
   --color-ink-strong: #2e331e;
   --color-chalk: #aab98a;
+  --color-chalk-muted: #7e8966;
   --color-chalk-soft: #d3d9bd;
   --color-chalk-strong: #eef1e3;
 }
@@ -96,9 +99,10 @@
 :root[data-palette="gold"] {
   --color-ink-muted: #a08a52;
   --color-ink-soft: #b08b2e;
-  --color-ink: #96721a;
+  --color-ink: #896818;
   --color-ink-strong: #574212;
   --color-chalk: #d9b65a;
+  --color-chalk-muted: #9a8140;
   --color-chalk-soft: #ecd9a8;
   --color-chalk-strong: #f7eed6;
 }
@@ -109,6 +113,7 @@
   --color-ink: #3f6d99;
   --color-ink-strong: #27435e;
   --color-chalk: #9dbedb;
+  --color-chalk-muted: #6f879b;
   --color-chalk-soft: #cddceb;
   --color-chalk-strong: #e9f0f7;
 }
@@ -119,6 +124,7 @@
   --color-ink: #ab4322;
   --color-ink-strong: #6b2a15;
   --color-chalk: #e08a5f;
+  --color-chalk-muted: #ba734f;
   --color-chalk-soft: #f0cbb8;
   --color-chalk-strong: #fae5db;
 }
@@ -129,6 +135,7 @@
   --color-ink: #93495c;
   --color-ink-strong: #5c2d3a;
   --color-chalk: #d391a1;
+  --color-chalk-muted: #ab7582;
   --color-chalk-soft: #edd0d8;
   --color-chalk-strong: #f9ebef;
 }
@@ -451,14 +458,17 @@ body {
 }
 
 /* -- Selection ------------------------------------------------------------- */
+/* Highlight and text must contrast against each other, not just the page —
+   so each mode pairs a wash from one end of the ink ramp with text from the
+   other, rather than two neighbouring tones of the same hue. */
 .prose ::selection {
-  background-color: var(--color-ink-soft) !important;
-  color: var(--color-paper) !important; /* keep muted quote text readable */
+  background-color: var(--color-chalk-soft) !important;
+  color: var(--color-ink-strong) !important;
 }
 
 .dark .prose ::selection {
   background-color: var(--color-ink) !important;
-  color: var(--color-chalk-strong) !important;
+  color: var(--color-paper) !important;
 }
 
 /* -- Images ---------------------------------------------------------------- */

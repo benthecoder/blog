@@ -182,7 +182,7 @@ export default function EditPostPage() {
               <button
                 onClick={draft.handlePublish}
                 disabled={draft.publishing || isNew}
-                className="px-3 py-1.5 text-xs bg-ink dark:bg-chalk text-white dark:text-ink hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
+                className="px-3 py-1.5 text-xs bg-ink dark:bg-chalk text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
               >
                 {draft.publishing ? "Publishing..." : "Publish"}
               </button>

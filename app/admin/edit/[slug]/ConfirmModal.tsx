@@ -31,7 +31,7 @@ export function ConfirmModal({
           </button>
           <button
             onClick={config.onConfirm}
-            className="px-4 py-1.5 text-sm border border-ink dark:border-chalk text-ink dark:text-chalk hover:bg-ink hover:text-white dark:hover:bg-chalk dark:hover:text-ink transition-colors"
+            className="px-4 py-1.5 text-sm border border-ink dark:border-chalk text-ink dark:text-chalk hover:bg-ink hover:text-white dark:hover:bg-chalk dark:hover:text-night transition-colors"
           >
             Confirm
           </button>
