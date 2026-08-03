@@ -4,6 +4,7 @@ import type { MouseEvent } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { play } from "cuelume";
 import { SketchIcon } from "../ui/SketchIcon";
 
 const links = [
@@ -47,6 +48,12 @@ export function SidebarNav() {
   const handleMouseEnter = (e: MouseEvent<HTMLAnchorElement>, text: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const isMobile = window.innerWidth < 1024;
+
+    // Not data-cuelume-hover: its 150ms throttle is global, so fast sweeps
+    // drop ticks. Pointer check skips touch, where taps emulate mouseenter.
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      play("tick");
+    }
 
     if (isMobile) {
       // Position below and centered on mobile
