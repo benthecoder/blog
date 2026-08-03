@@ -5,6 +5,13 @@ import { upstashRequest } from "@/utils/upstash";
 export const dynamic = "force-dynamic";
 const VIEW_TTL_SECONDS = 24 * 60 * 60;
 
+// Dedupe keys deliberately sit outside the `views:` namespace. They outnumber
+// the counters by orders of magnitude (one per viewer per post per day), so
+// sharing a prefix would make the archive's SCAN walk all of them.
+const viewKey = (slug: string) => `views:${slug}`;
+const dedupeKey = (slug: string, viewer: string) =>
+  `viewdedupe:${slug}:${viewer}`;
+
 const parseSlug = (value: unknown): string | null => {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
@@ -46,24 +53,26 @@ export async function GET(request: NextRequest) {
         keys.push(...result[1]);
       } while (cursor !== "0");
 
-      const viewKeys = keys.filter((k) => !k.startsWith("views:dedupe:"));
-      if (viewKeys.length === 0) return NextResponse.json({ results: [] });
+      if (keys.length === 0) return NextResponse.json({ results: [] });
 
-      const counts = (await upstashRequest(["MGET", ...viewKeys])) as Array<
+      const counts = (await upstashRequest(["MGET", ...keys])) as Array<
         string | null
       >;
-      const results = viewKeys
+      const results = keys
         .map((key, i) => ({
-          slug: key.replace("views:", ""),
+          slug: key.slice("views:".length),
           count: Number(counts[i] ?? 0),
         }))
         .sort((a, b) => b.count - a.count);
 
+      // A whole-keyspace SCAN behind a leaderboard nobody reads in real time.
+      // An hour of edge cache turns this from per-visitor into per-hour.
       return NextResponse.json(
         { results },
         {
           headers: {
-            "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600",
+            "Cache-Control":
+              "public, s-maxage=3600, stale-while-revalidate=86400",
           },
         }
       );
@@ -77,8 +86,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const viewKey = `views:${slug}`;
-    const result = await upstashRequest(["GET", viewKey]);
+    const result = await upstashRequest(["GET", viewKey(slug)]);
     const count = Number(result ?? 0);
 
     return NextResponse.json(
@@ -115,27 +123,20 @@ export async function POST(request: NextRequest) {
 
   try {
     const viewerHash = getViewerHash(request);
-    const viewKey = `views:${slug}`;
-    const dedupeKey = `views:dedupe:${slug}:${viewerHash}`;
+    const key = viewKey(slug);
 
     const setResult = await upstashRequest([
       "SET",
-      dedupeKey,
+      dedupeKey(slug, viewerHash),
       "1",
       "EX",
       VIEW_TTL_SECONDS,
       "NX",
     ]);
 
-    let count: number;
-
-    if (setResult === "OK") {
-      const incremented = await upstashRequest(["INCR", viewKey]);
-      count = Number(incremented ?? 0);
-    } else {
-      const existing = await upstashRequest(["GET", viewKey]);
-      count = Number(existing ?? 0);
-    }
+    const count = Number(
+      (await upstashRequest([setResult === "OK" ? "INCR" : "GET", key])) ?? 0
+    );
 
     return NextResponse.json({ slug, count });
   } catch (error) {
