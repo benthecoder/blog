@@ -3,7 +3,11 @@ import fs from "fs";
 import path from "path";
 import { POSTS_DIR, getPostPath } from "@/config/paths";
 import type { PostFrontmatter, PostMetadata } from "@/types/post";
-import { readMarkdownFile, scanMarkdownDir } from "./markdown";
+import {
+  readMarkdownFile,
+  scanMarkdownDir,
+  scanMarkdownSlugs,
+} from "./markdown";
 import { extractTags } from "./tags";
 
 function calculateWordCount(content: string): number {
@@ -32,6 +36,10 @@ export function getAllPosts(includeDrafts = false): string[] {
 
 export const getPostContent = cache(function getPostContent(slug: string) {
   return readMarkdownFile(getPostPath(slug));
+});
+
+export const getPostSlugs = cache(function getPostSlugs(): string[] {
+  return scanMarkdownSlugs(POSTS_DIR);
 });
 
 export const getPostMetadata = cache(function getPostMetadata(

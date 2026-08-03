@@ -3,11 +3,26 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 
+// Fetched at most once per page load, then reused for every subsequent press.
+let slugsPromise: Promise<string[]> | null = null;
+
+function loadSlugs(): Promise<string[]> {
+  slugsPromise ??= fetch("/api/post-slugs")
+    .then((res) => res.json())
+    .then((data: { slugs: string[] }) => data.slugs)
+    .catch((err) => {
+      slugsPromise = null; // let the next press retry
+      throw err;
+    });
+  return slugsPromise;
+}
+
 async function goRandom(router: ReturnType<typeof useRouter>) {
   window.dispatchEvent(new CustomEvent("random-spin"));
-  const res = await fetch("/api/random", { cache: "no-store" });
-  const data = await res.json();
-  router.push(`/posts/${data.slug}`);
+  const slugs = await loadSlugs();
+  if (!slugs.length) return;
+  const slug = slugs[Math.floor(Math.random() * slugs.length)];
+  router.push(`/posts/${slug}`);
 }
 
 export function useRandomPost() {

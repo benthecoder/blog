@@ -6,8 +6,13 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // Every distinct (source, width, quality, format) is a billed Vercel
+    // transformation, and Hobby only includes 5k/month. The gallery alone has
+    // ~290 sources, so each extra bucket here costs ~290 transformations.
+    // These six widths are one per real layout breakpoint, nothing in between.
+    deviceSizes: [640, 828, 1200, 1920],
+    imageSizes: [256, 384],
+    qualities: [65, 75],
     minimumCacheTTL: 31536000,
   },
 
