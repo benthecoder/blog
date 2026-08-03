@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { DRAWINGS_URL } from "@/config/constants";
 import { SketchIcon, ENAME_RATIO, CNAME_RATIO } from "./SketchIcon";
 
@@ -47,16 +47,52 @@ const SKETCHES = [
 
 const SKETCH_PATHS = SKETCHES.map((f) => `${DRAWINGS_URL}/${f}`);
 
-const INTERVAL = 4000;
+const INTERVAL = 1000;
+
+function altOf(index: number) {
+  return (
+    SKETCHES[index].replace(/\.[^.]+$/, "").replace(/[-_]/g, " ") + " sketch"
+  );
+}
+
+type Layer = { index: number; id: number };
 
 export default function ArtworkRotation() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // `current` is on screen; `pending` is the next drawing, mounted invisible
+  // only so the browser fetches and decodes it. Ids are monotonic, so a slow
+  // decode that resolves after it has been superseded is simply ignored.
+  const [current, setCurrent] = useState<Layer>({ index: 0, id: 0 });
+  const [pending, setPending] = useState<Layer | null>(null);
+  const [paused, setPaused] = useState(false);
+  const currentId = useRef(0);
+
   useEffect(() => {
+    if (paused) return;
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % SKETCH_PATHS.length);
+      setCurrent((shown) => {
+        setPending({
+          index: (shown.index + 1) % SKETCH_PATHS.length,
+          id: shown.id + 1,
+        });
+        return shown;
+      });
     }, INTERVAL);
     return () => clearInterval(timer);
-  }, []);
+  }, [paused]);
+
+  // Promote only once the pixels are paintable — onLoad means fetched, not
+  // decoded, and cutting to a not-yet-decoded image flashes blank. Both
+  // layers keep their key across the promotion, so React reuses the same
+  // node and the cut costs one attribute flip.
+  const promote = (layer: Layer, img: HTMLImageElement) => {
+    const swap = () => {
+      if (layer.id <= currentId.current) return;
+      currentId.current = layer.id;
+      setCurrent(layer);
+      setPending((p) => (p && p.id === layer.id ? null : p));
+    };
+    img.decode().then(swap, swap);
+  };
 
   return (
     <>
@@ -66,25 +102,31 @@ export default function ArtworkRotation() {
           <Link
             href="/sketch"
             className="relative w-full aspect-square max-h-[calc(100vh-320px)] md:max-h-[calc(100vh-280px)] cursor-pointer"
+            onPointerEnter={() => setPaused(true)}
+            onPointerLeave={() => setPaused(false)}
           >
-            <Image
-              key={currentIndex}
-              src={SKETCH_PATHS[currentIndex]}
-              alt={
-                SKETCHES[currentIndex]
-                  .replace(/\.[^.]+$/, "")
-                  .replace(/[-_]/g, " ") + " sketch"
-              }
-              fill
-              className="object-contain select-none"
-              style={{
-                animation:
-                  "artworkFadeIn 800ms cubic-bezier(0.23,1,0.32,1) forwards",
-              }}
-              priority
-              draggable={false}
-              sizes="(max-width: 768px) 85vw, 60vw"
-            />
+            {/* opacity-90 sits on the wrapper, not the layers, so the
+                pending layer can't add its own alpha on top of the current
+                one while both are mounted. */}
+            <div className="absolute inset-0 opacity-90">
+              {[current, pending].map((layer) =>
+                layer ? (
+                  <Image
+                    key={layer.id}
+                    src={SKETCH_PATHS[layer.index]}
+                    alt={layer.id === current.id ? altOf(layer.index) : ""}
+                    aria-hidden={layer.id !== current.id}
+                    fill
+                    className="artwork-layer object-contain select-none"
+                    data-shown={layer.id === current.id ? "true" : "false"}
+                    onLoad={(e) => promote(layer, e.currentTarget)}
+                    priority={layer.id === 0}
+                    draggable={false}
+                    sizes="(max-width: 768px) 85vw, 60vw"
+                  />
+                ) : null
+              )}
+            </div>
           </Link>
 
           <div className="flex flex-col items-center gap-2 pb-2">
