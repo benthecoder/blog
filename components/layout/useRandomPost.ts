@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { play } from "cuelume";
 
 // Fetched at most once per page load, then reused for every subsequent press.
 let slugsPromise: Promise<string[]> | null = null;
@@ -18,6 +19,7 @@ function loadSlugs(): Promise<string[]> {
 }
 
 async function goRandom(router: ReturnType<typeof useRouter>) {
+  play("sparkle");
   window.dispatchEvent(new CustomEvent("random-spin"));
   const slugs = await loadSlugs();
   if (!slugs.length) return;
