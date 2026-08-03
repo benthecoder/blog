@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { ThemeProvider } from "next-themes";
+import { bind, setVolume } from "cuelume";
 
 export const PALETTES = [
   "indigo",
@@ -84,6 +85,19 @@ export function usePalette() {
   return ctx;
 }
 
+const SOUND_VOLUME = 0.6;
+
+// bind() delegates from `document`, so one call covers every
+// data-cuelume-* element, including ones added by later navigations.
+function SoundCues() {
+  useEffect(() => {
+    setVolume(SOUND_VOLUME);
+    bind();
+  }, []);
+
+  return null;
+}
+
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider
@@ -91,7 +105,10 @@ export function Providers({ children }: { children: ReactNode }) {
       enableSystem={false}
       disableTransitionOnChange
     >
-      <PaletteProvider>{children}</PaletteProvider>
+      <PaletteProvider>
+        <SoundCues />
+        {children}
+      </PaletteProvider>
     </ThemeProvider>
   );
 }
