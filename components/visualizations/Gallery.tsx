@@ -16,6 +16,21 @@ type ViewMode = "grid" | "original";
 const COLUMN_STEPS = [2, 3, 4, 6, 8];
 const DEFAULT_STEP = 2; // 4 columns
 
+// Two width classes, not one per zoom step. A `sizes` derived straight from
+// the column count means each of the five steps asks for a different width,
+// and every distinct width is a separate billed Vercel transformation across
+// all ~290 photos — a single pinch sweep used to mint five sets. Collapsing to
+// two keeps a sweep mostly on images the browser already has, while still
+// serving something sharp at both ends (one fixed width would blur the
+// 2-column step or badly over-serve the 8-column one).
+const SIZES_LARGE = "(max-width: 640px) 50vw, 34vw"; // 2–4 columns
+const SIZES_SMALL = "(max-width: 640px) 25vw, 17vw"; // 6–8 columns
+const LARGE_UP_TO_COLS = 4;
+const THUMB_QUALITY = 65;
+
+const thumbSizes = (cols: number) =>
+  cols <= LARGE_UP_TO_COLS ? SIZES_LARGE : SIZES_SMALL;
+
 // Strong curves per animations.dev: ease-out for entrances, ease-in-out for
 // on-screen morphs. UI motion stays under 300ms.
 const EASE_OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
@@ -97,6 +112,7 @@ function Tile({
             alt={post?.title ?? image.filename}
             fill
             sizes={sizes}
+            quality={THUMB_QUALITY}
             placeholder={image.meta ? "blur" : "empty"}
             blurDataURL={image.meta?.blurDataURL}
             className="object-cover"
@@ -109,6 +125,7 @@ function Tile({
           width={image.meta?.width ?? 800}
           height={image.meta?.height ?? 800}
           sizes={sizes}
+          quality={THUMB_QUALITY}
           placeholder={image.meta ? "blur" : "empty"}
           blurDataURL={image.meta?.blurDataURL}
           className="w-full h-auto bg-paper-sunken dark:bg-night-raised"
@@ -289,7 +306,7 @@ export default function Gallery({ images }: GalleryProps) {
   const pendingFlip = useRef<Map<number, DOMRect> | null>(null);
 
   const cols = COLUMN_STEPS[step];
-  const sizes = `${Math.ceil(100 / cols)}vw`;
+  const sizes = thumbSizes(cols);
 
   // Capture on-screen tile rects (presentation values — mid-animation rects
   // included, so an interrupting pinch continues from where things are).
