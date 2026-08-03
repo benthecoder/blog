@@ -637,13 +637,16 @@ body {
   animation: diceSpin 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-@keyframes artworkFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 0.9;
-  }
+/* Home page artwork: a hard cut, deliberately not a crossfade. The drawings
+   have different footprints inside the square box, so fading one into the
+   next reads as two mismatched objects overlapping. The incoming layer is
+   held invisible until it has decoded, then swapped in on one frame. */
+.artwork-layer {
+  opacity: 0;
+}
+
+.artwork-layer[data-shown="true"] {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

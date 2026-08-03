@@ -27,7 +27,7 @@ const ThemeSwitcher = () => {
     <button
       onClick={toggleTheme}
       data-cuelume-toggle="toggle"
-      className="w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
+      className="flex w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
     >
       <SketchIcon
         src={`/icons/${icon}`}
