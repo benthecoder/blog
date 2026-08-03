@@ -33,6 +33,7 @@ const PaletteSwitch = () => {
   return (
     <button
       onClick={() => setPalette(next)}
+      data-cuelume-toggle="bloom"
       title={`${PALETTE_LABELS[palette]} → ${PALETTE_LABELS[next]}`}
       aria-label={`Change color palette to ${PALETTE_LABELS[next]}`}
       className="w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"

@@ -14,6 +14,7 @@ export default function CopyButton({ code }: { code: string }) {
   return (
     <button
       onClick={copy}
+      data-cuelume-toggle="success"
       aria-label={copied ? "Copied" : "Copy code"}
       className="absolute top-2 right-2 p-1.5 rounded-sm text-ink-soft hover:text-ink dark:text-chalk-muted dark:hover:text-chalk hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-150"
     >
