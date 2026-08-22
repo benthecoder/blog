@@ -131,9 +131,6 @@ importers:
       remark-rehype:
         specifier: ^11.1.2
         version: 11.1.2
-      sharp:
-        specifier: ^0.35.3
-        version: 0.35.3(@types/node@24.13.3)
       shiki:
         specifier: ^4.3.1
         version: 4.3.1
@@ -204,6 +201,9 @@ importers:
       prettier:
         specifier: ^3.6.2
         version: 3.6.2
+      sharp:
+        specifier: ^0.35.3
+        version: 0.35.3(@types/node@24.13.3)
       tailwindcss:
         specifier: ^4.3.2
         version: 4.3.2
