@@ -17,6 +17,7 @@ export const PALETTES = [
   "steel",
   "vermillion",
   "rose",
+  "graphite",
 ] as const;
 
 export type Palette = (typeof PALETTES)[number];

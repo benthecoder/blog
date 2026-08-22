@@ -134,6 +134,17 @@
   --color-chalk-strong: #ecb99f;
 }
 
+:root[data-palette="graphite"] {
+  --color-ink-muted: #6f6f6f;
+  --color-ink-soft: #656565;
+  --color-ink: #4f4f4f;
+  --color-ink-strong: #434343;
+  --color-chalk: #b4b4b4;
+  --color-chalk-muted: #8e8e8e;
+  --color-chalk-soft: #c9c9c9;
+  --color-chalk-strong: #dedede;
+}
+
 :root[data-palette="rose"] {
   --color-ink-muted: #a05f70;
   --color-ink-soft: #995466;
@@ -143,6 +154,31 @@
   --color-chalk-muted: #b57d8a;
   --color-chalk-soft: #dca7b4;
   --color-chalk-strong: #e5bdc7;
+}
+
+/* Swatch dots in the palette picker. Each shows its own palette's ink, which
+   can't come from a var — the picker shows every palette at once, not just
+   the active one. */
+.swatch[data-palette="indigo"] {
+  background-color: #4d5f9e;
+}
+.swatch[data-palette="olive"] {
+  background-color: #47502f;
+}
+.swatch[data-palette="gold"] {
+  background-color: #896818;
+}
+.swatch[data-palette="steel"] {
+  background-color: #3f6d99;
+}
+.swatch[data-palette="vermillion"] {
+  background-color: #ab4322;
+}
+.swatch[data-palette="rose"] {
+  background-color: #93495c;
+}
+.swatch[data-palette="graphite"] {
+  background-color: #4f4f4f;
 }
 
 /* ==========================================================================
