@@ -355,8 +355,10 @@ body {
    adding to the row of rules running down the page. */
 .prose button.start-interest {
   display: inline;
-  padding: 0.05em 0.25em;
-  margin: 0 -0.15em; /* pull back the padding so word spacing stays even */
+  /* No vertical padding: an inline box is already as tall as the font's em
+     box, so any adds straight onto a band that's taller than the letters. */
+  padding: 0 0.22em;
+  margin: 0 -0.14em; /* pull back the padding so word spacing stays even */
   font: inherit;
   color: inherit;
   border: none;
