@@ -45,20 +45,50 @@ const ExternalLinkIcon = () => (
   </svg>
 );
 
-/** How far the story has unfolded. Each click reveals the next beat. */
-const LAST_STEP = 3;
+/**
+ * The story unfolds in three beats: "corner" opens it, "about me" completes
+ * it, and the rest of the page arrives together. Only the first two words
+ * advance anything — the interest below just cycles.
+ */
+const LAST_STEP = 2;
 /** Reveal the rest on its own if nobody has poked it in this long. */
 const IDLE_REVEAL_MS = 6000;
 
 /**
- * Wraps a beat of the story. The 0fr -> 1fr row animates height without the
- * page jumping, and the content stays in the DOM throughout so the reveal is
- * a presentation detail rather than a gate on the navigation.
+ * One beat. The 0fr -> 1fr row animates height so lines grow into place
+ * instead of the page jumping, and the content stays in the DOM throughout,
+ * so the reveal is presentation rather than a gate on the navigation.
  */
-const Beat = ({ shown, children }: { shown: boolean; children: ReactNode }) => (
-  <div className="reveal" data-shown={shown} aria-hidden={!shown}>
+const Beat = ({
+  shown,
+  delay = 0,
+  children,
+}: {
+  shown: boolean;
+  delay?: number;
+  children: ReactNode;
+}) => (
+  <div
+    className="reveal"
+    data-shown={shown}
+    aria-hidden={!shown}
+    style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+  >
     <div>{children}</div>
   </div>
+);
+
+/** A word you can poke: carries the wash, and reads as a button. */
+const Poke = ({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: ReactNode;
+}) => (
+  <button type="button" onClick={onClick} className="wash">
+    {children}
+  </button>
 );
 
 const StartPage = () => {
@@ -75,8 +105,8 @@ const StartPage = () => {
     setIndex(Math.floor(Math.random() * INTERESTS.length));
   }, []);
 
-  // Any interaction restarts the idle clock, so someone working through the
-  // story at their own pace never gets fast-forwarded past it.
+  // Any advance restarts the idle clock, so someone working through the story
+  // at their own pace never gets fast-forwarded past it.
   useEffect(() => {
     if (step >= LAST_STEP) return;
     idle.current = setTimeout(() => setStep(LAST_STEP), IDLE_REVEAL_MS);
@@ -85,8 +115,8 @@ const StartPage = () => {
     };
   }, [step]);
 
+  /** Only swaps the interest — the story has already finished by here. */
   const cycle = () => {
-    advance();
     setIndex((prev) => {
       if (INTERESTS.length <= 1) return prev;
       let next = prev;
@@ -98,40 +128,36 @@ const StartPage = () => {
   };
 
   const current = INTERESTS[index];
+  const told = step >= LAST_STEP;
 
   return (
     <div>
       <article className="prose">
-        <p>welcome to my corner on the internet</p>
-
-        {/* Clicking "about me" completes the sentence; the link then lives
-            on "born", so the phrase you poked isn't also the thing you
-            navigate with. */}
         <p>
-          a little{" "}
-          {step >= 1 ? (
-            "about me"
-          ) : (
-            <button
-              type="button"
-              onClick={advance}
-              className="start-interest"
-              aria-expanded={false}
-            >
-              about me
-            </button>
-          )}
-          {step >= 1 && (
-            <>
-              , i was <Link href="/about">born</Link> in KL, Malaysia.
-            </>
-          )}
+          welcome to my{" "}
+          {step >= 1 ? "corner" : <Poke onClick={advance}>corner</Poke>} on the
+          internet
         </p>
 
         <Beat shown={step >= 1}>
           <p>
+            a little{" "}
+            {step >= 2 ? "about me" : <Poke onClick={advance}>about me</Poke>}
+          </p>
+        </Beat>
+
+        {/* The link lives on "born", so the word you poked to get here isn't
+            also the word that navigates away. */}
+        <Beat shown={told}>
+          <p>
+            i was <Link href="/about">born</Link> in KL, Malaysia.
+          </p>
+        </Beat>
+
+        <Beat shown={told} delay={120}>
+          <p>
             i like{" "}
-            <button type="button" onClick={cycle} className="start-interest">
+            <button type="button" onClick={cycle} className="wash">
               {current.text}
             </button>
             {current.href &&
@@ -157,7 +183,7 @@ const StartPage = () => {
           </p>
         </Beat>
 
-        <Beat shown={step >= 2}>
+        <Beat shown={told} delay={240}>
           <p>
             see what i&apos;m up to <Link href="/now">now</Link>, what i&apos;m{" "}
             <Link href="/library">reading</Link>, or what i{" "}
@@ -165,7 +191,7 @@ const StartPage = () => {
           </p>
         </Beat>
 
-        <Beat shown={step >= 3}>
+        <Beat shown={told} delay={360}>
           <p>
             browse the <Link href="/posts">archives</Link>.{" "}
             <span className="text-xs opacity-40">
@@ -175,9 +201,14 @@ const StartPage = () => {
         </Beat>
       </article>
 
-      <div className="h-[60vh] mt-8 overflow-hidden border border-rule dark:border-white/8">
-        <KnowledgeMap className="w-full h-full" />
-      </div>
+      {/* Mounted only once the story lands. It is a dynamic import drawing a
+          thousand-odd points, so keeping it out of the first paint is a real
+          saving, not just staging. */}
+      {told && (
+        <div className="map-in h-[60vh] mt-8 overflow-hidden border border-rule dark:border-white/8">
+          <KnowledgeMap className="w-full h-full" />
+        </div>
+      )}
     </div>
   );
 };
