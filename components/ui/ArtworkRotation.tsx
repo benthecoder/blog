@@ -105,10 +105,12 @@ export default function ArtworkRotation() {
             onPointerEnter={() => setPaused(true)}
             onPointerLeave={() => setPaused(false)}
           >
-            {/* opacity-90 sits on the wrapper, not the layers, so the
-                pending layer can't add its own alpha on top of the current
-                one while both are mounted. */}
-            <div className="absolute inset-0 opacity-90">
+            {/* No opacity here: any value below 1 opens a stacking context,
+                which isolates the layers' mix-blend-mode so they'd composite
+                against this box instead of the page — leaving the scan's
+                white paper visible as a rectangle. The blend does the
+                softening that the old opacity-90 was there for. */}
+            <div className="absolute inset-0">
               {[current, pending].map((layer) =>
                 layer ? (
                   <Image
