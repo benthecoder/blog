@@ -349,6 +349,33 @@ body {
 }
 
 /* Looks identical to a real link — clicking it cycles instead of navigating */
+/* Start page story beats. The 0fr -> 1fr row animates the height so each
+   line grows into place rather than the page jumping as it appears; the
+   content is in the DOM the whole time, so the reveal never gates access. */
+.reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 450ms cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 350ms ease-out;
+}
+
+.reveal > * {
+  overflow: hidden;
+}
+
+.reveal[data-shown="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: opacity 150ms ease-out;
+  }
+}
+
 /* Cycles through interests on click. A wash rather than an underline: the
    page's underlines all mean "this navigates somewhere", and this doesn't —
    it swaps the word in place. The tint reads as something to poke without
