@@ -47,6 +47,11 @@
   --color-chalk-soft: #b1cbe2; /* secondary: hover, emphasis */
   --color-chalk-strong: #c4d8e9; /* highest contrast: body copy */
 
+  /* -- Shape -------------------------------------------------------------- */
+  /* Single source for photo corners, so the <img> and the wrapper that clips
+     it can't drift apart. Also available as `rounded-image`. */
+  --radius-image: 0.5rem;
+
   /* -- Type & motion ------------------------------------------------------ */
   --font-serif: var(--font-averia);
 
@@ -292,6 +297,12 @@ body {
   position: relative;
   padding-bottom: 0.05rem;
   text-decoration: none;
+  /* Without this, a link whose text wraps onto a second line loses its
+     underline entirely — the ::after mask below anchors to the element's
+     single bounding box, not each wrapped line, unless every line gets its
+     own decoration box. Same fix as .prose mark above. */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 
 .prose a::after {
@@ -500,29 +511,85 @@ body {
 }
 
 /* -- Images ---------------------------------------------------------------- */
-.prose img:not(.not-prose) {
-  width: 100%;
+/* Photos sit on the page like prints laid on paper: a hairline edge and a
+   soft drop, both mixed from the active ink rather than neutral black, so a
+   vermillion post gets a warm halo and an indigo one a cool grey. Pure black
+   shadows read as a foreign element against tinted paper. */
+/* Bare <img> in markdown (not routed through PostImage). Constrained on both
+   axes so a tall one can't run away with the page. `.not-prose *` is excluded
+   too, matching Typography's own semantics, so the framed photos below opt
+   out of this entirely. */
+.prose img:not(.not-prose, .not-prose *) {
+  width: auto;
+  max-width: 100%;
   height: auto;
-  margin: 0;
+  max-height: min(65vh, 34rem);
+  margin-inline: auto;
   display: block;
-  border-radius: 0.2rem;
+  border-radius: var(--radius-image);
   box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.05),
-    0 1px 10px 0 rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  transition:
-    transform 150ms ease-out,
-    box-shadow 150ms ease-out;
+    0 0 0 1px color-mix(in oklab, var(--color-ink) 12%, transparent),
+    0 1px 2px color-mix(in oklab, var(--color-ink) 10%, transparent),
+    0 10px 26px -8px color-mix(in oklab, var(--color-ink) 22%, transparent);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .prose img:not(.not-prose):hover {
-    transform: scale(1.01);
-    box-shadow:
-      0 0 0 1px rgba(0, 0, 0, 0.07),
-      0 4px 16px 0 rgba(0, 0, 0, 0.13),
-      0 2px 6px -1px rgba(0, 0, 0, 0.08);
-  }
+/* On a dark page a tinted drop shadow is invisible, so the edge does the
+   work and the drop just deepens the ground behind the print. */
+.dark .prose img:not(.not-prose, .not-prose *) {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--color-chalk) 16%, transparent),
+    0 10px 26px -8px rgba(0, 0, 0, 0.55);
+}
+
+/* ---- Framed photograph -------------------------------------------------
+   A print behind glass: a wide mat around the image, a hairline frame, and
+   a soft drop mixed from the active ink so the whole thing belongs to the
+   page rather than sitting on top of it. No hover motion — the plate hangs
+   still, and clicking it opens the full work. */
+.photo-frame {
+  /* The shadow is taken most of the way to neutral before it's faded out.
+     Mixing straight from the ink made the print glow in the theme colour
+     instead of casting a shadow; this keeps only a hint of the palette. */
+  --photo-shadow: color-mix(in oklab, var(--color-ink) 22%, #1b1b1b);
+  padding: clamp(0.75rem, 2.5vw, 1.25rem);
+  background-color: var(--color-paper-raised);
+  border: 1px solid color-mix(in oklab, var(--color-ink) 8%, transparent);
+  border-radius: var(--radius-image);
+  box-shadow:
+    0 1px 2px color-mix(in oklab, var(--photo-shadow) 7%, transparent),
+    0 10px 24px -12px color-mix(in oklab, var(--photo-shadow) 16%, transparent);
+}
+
+.dark .photo-frame {
+  background-color: var(--color-night-raised);
+  border-color: color-mix(in oklab, var(--color-chalk) 12%, transparent);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    0 10px 24px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* The plate itself, inset in the mat. A hairline inner edge reads as the
+   lip of the mat board where it meets the print. */
+.photo-plate {
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--color-ink) 7%, transparent);
+}
+
+.dark .photo-plate {
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--color-chalk) 9%, transparent);
+}
+
+/* Museum wall label. */
+.photo-label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  color: var(--color-ink-muted);
+}
+
+.dark .photo-label {
+  color: var(--color-chalk-muted);
 }
 
 /* ==========================================================================
@@ -641,8 +708,19 @@ body {
    have different footprints inside the square box, so fading one into the
    next reads as two mismatched objects overlapping. The incoming layer is
    held invisible until it has decoded, then swapped in on one frame. */
+/* The sketches are scans on white paper. Dropped onto the page as-is they
+   read as a white rectangle pasted over the cream — you can see the edges.
+   `multiply` lets the page show through anywhere the scan is light, so only
+   the graphite survives and the drawing sits *on* the paper. Dark mode
+   inverts first, then `screen` drops the (now black) ground instead. */
 .artwork-layer {
   opacity: 0;
+  mix-blend-mode: multiply;
+}
+
+.dark .artwork-layer {
+  filter: invert(1);
+  mix-blend-mode: screen;
 }
 
 .artwork-layer[data-shown="true"] {
