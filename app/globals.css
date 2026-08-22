@@ -305,6 +305,14 @@ body {
   -webkit-box-decoration-break: clone;
 }
 
+/* A link wrapping only an icon gets no underline — the rule would be drawn
+   under the glyph, which reads as a mistake. Matching on content rather than
+   a class means any future icon link is covered without remembering to opt
+   out. */
+.prose a:has(> svg:only-child)::after {
+  content: none;
+}
+
 .prose a::after {
   content: "";
   position: absolute;
@@ -341,18 +349,37 @@ body {
 }
 
 /* Looks identical to a real link — clicking it cycles instead of navigating */
+/* Cycles through interests on click. A wash rather than an underline: the
+   page's underlines all mean "this navigates somewhere", and this doesn't —
+   it swaps the word in place. The tint reads as something to poke without
+   adding to the row of rules running down the page. */
 .prose button.start-interest {
   display: inline;
-  padding: 0;
-  margin: 0;
+  padding: 0.05em 0.25em;
+  margin: 0 -0.15em; /* pull back the padding so word spacing stays even */
   font: inherit;
   color: inherit;
   border: none;
-  background: none;
   cursor: pointer;
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 2px;
+  text-decoration: none;
+  border-radius: 0.2em;
+  background-color: color-mix(in oklab, var(--color-ink) 10%, transparent);
+  /* Each line of a wrapped interest gets its own rounded wash. */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: background-color 150ms ease;
+}
+
+.prose button.start-interest:hover {
+  background-color: color-mix(in oklab, var(--color-ink) 18%, transparent);
+}
+
+.dark .prose button.start-interest {
+  background-color: color-mix(in oklab, var(--color-chalk) 14%, transparent);
+}
+
+.dark .prose button.start-interest:hover {
+  background-color: color-mix(in oklab, var(--color-chalk) 24%, transparent);
 }
 
 /* -- Lists ----------------------------------------------------------------- */
