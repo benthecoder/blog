@@ -96,7 +96,7 @@ const StartPage = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`open ${current.text}`}
-                className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity bg-none!"
+                className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity"
               >
                 <ExternalLinkIcon />
               </a>
@@ -104,7 +104,7 @@ const StartPage = () => {
               <Link
                 href={current.href}
                 aria-label={`open ${current.text}`}
-                className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity bg-none!"
+                className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity"
               >
                 <ExternalLinkIcon />
               </Link>
@@ -112,13 +112,12 @@ const StartPage = () => {
         </p>
 
         <p>
-          see what i&apos;m up to <Link href="/now">now</Link>, what i&apos;m{" "}
-          <Link href="/library">reading</Link>, or what i{" "}
+          see what i&apos;m up to now, what i&apos;m reading, or what i{" "}
           <Link href="/uses">use</Link>.
         </p>
 
         <p>
-          browse the <Link href="/posts">archives</Link>.{" "}
+          browse the archives.{" "}
           <span className="text-xs opacity-40">
             {/* explicit string: turbopack's server/client compiles disagree
                 about the space between </code> and the entity-bearing text */}
