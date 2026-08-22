@@ -8,8 +8,8 @@ import { SketchIcon, ENAME_RATIO, CNAME_RATIO } from "./SketchIcon";
 import { SidebarNav } from "../layout/SidebarNav";
 
 const NameHeader = () => (
-  <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50">
-    <div className="flex flex-col items-center gap-3">
+  <div className="fixed top-8 inset-x-0 z-50 flex justify-center pointer-events-none">
+    <div className="flex flex-col items-center gap-3 pointer-events-auto">
       <Link href="/">
         <SketchIcon
           src="/icons/ename.svg"
@@ -106,7 +106,9 @@ export default function ArtworkRotation() {
     <>
       <NameHeader />
       <div className="h-screen w-full flex flex-col items-center justify-center pt-10 px-4 md:px-8 overflow-hidden">
-        <div className="flex flex-col items-center justify-center gap-4 md:gap-6 w-full max-w-[min(85vw,700px)] md:max-w-[min(60vw,600px)]">
+        {/* Generous gap: sitting tight under the drawing, "start here" read as
+            part of it rather than the way onward. */}
+        <div className="flex flex-col items-center justify-center gap-10 md:gap-14 w-full max-w-[min(85vw,700px)] md:max-w-[min(60vw,600px)]">
           <Link
             href="/sketch"
             className="relative w-full aspect-square max-h-[calc(100vh-390px)] md:max-h-[calc(100vh-350px)] cursor-pointer"
