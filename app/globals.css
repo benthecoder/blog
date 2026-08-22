@@ -365,6 +365,23 @@ body {
   overflow: hidden;
 }
 
+/* Each beat clips its content, which opens a new block formatting context and
+   stops paragraph margins collapsing with their neighbours — so the gaps came
+   out doubled. The story owns its own rhythm instead: paragraphs carry no
+   margin, and each beat's spacing sits *inside* the clipped box so it
+   collapses away with the line rather than holding the gap open. */
+.story p {
+  margin-block: 0;
+}
+
+/* Margin on the paragraph, not padding on the wrapper: padding is part of the
+   box and keeps the grid track from collapsing to zero, so every unopened
+   beat held a gap open. A margin inside the clipped box gets clipped with
+   it. */
+.story .reveal p {
+  margin-top: 1.25em;
+}
+
 .reveal[data-shown="true"] {
   grid-template-rows: 1fr;
   opacity: 1;
@@ -379,7 +396,7 @@ body {
 /* The knowledge map is mounted only when the story lands, so it fades in on
    mount rather than transitioning between two states. */
 .map-in {
-  animation: beat-in 600ms cubic-bezier(0.23, 1, 0.32, 1) 480ms both;
+  animation: beat-in 600ms cubic-bezier(0.23, 1, 0.32, 1) 1800ms both;
 }
 
 @keyframes beat-in {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -17,6 +17,7 @@ interface Interest {
 }
 
 const INTERESTS: Interest[] = [
+  { text: "writing" },
   { text: "miso" },
   { text: "making fun websites", href: "/projects" },
   { text: "lifting heavy things" },
@@ -46,14 +47,11 @@ const ExternalLinkIcon = () => (
 );
 
 /**
- * The story unfolds in three beats: "corner" opens it, "about me" completes
- * it, and the rest of the page arrives together. Only the first two words
- * advance anything — the interest below just cycles.
+ * Four beats: "corner" opens it, "about me" places him, "writing" opens up
+ * what he's into. Once that last one has been opened it stops advancing and
+ * just switches between interests.
  */
-const LAST_STEP = 2;
-/** Reveal the rest on its own if nobody has poked it in this long. */
-const IDLE_REVEAL_MS = 6000;
-
+const LAST_STEP = 3;
 /**
  * One beat. The 0fr -> 1fr row animates height so lines grow into place
  * instead of the page jumping, and the content stays in the DOM throughout,
@@ -94,28 +92,17 @@ const Poke = ({
 const StartPage = () => {
   const [index, setIndex] = useState(0);
   const [step, setStep] = useState(0);
-  const idle = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const advance = () => setStep((s) => Math.min(s + 1, LAST_STEP));
 
-  // Randomize only after hydration; random in render/initializer would
-  // mismatch the server HTML.
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIndex(Math.floor(Math.random() * INTERESTS.length));
-  }, []);
+  /** Opens the interests the first time, then switches between them. */
+  const onInterest = () => {
+    if (step < LAST_STEP) {
+      advance();
+      return;
+    }
+    cycle();
+  };
 
-  // Any advance restarts the idle clock, so someone working through the story
-  // at their own pace never gets fast-forwarded past it.
-  useEffect(() => {
-    if (step >= LAST_STEP) return;
-    idle.current = setTimeout(() => setStep(LAST_STEP), IDLE_REVEAL_MS);
-    return () => {
-      if (idle.current) clearTimeout(idle.current);
-    };
-  }, [step]);
-
-  /** Only swaps the interest — the story has already finished by here. */
   const cycle = () => {
     setIndex((prev) => {
       if (INTERESTS.length <= 1) return prev;
@@ -132,7 +119,7 @@ const StartPage = () => {
 
   return (
     <div>
-      <article className="prose">
+      <article className="prose story">
         <p>
           welcome to my{" "}
           {step >= 1 ? "corner" : <Poke onClick={advance}>corner</Poke>} on the
@@ -148,16 +135,16 @@ const StartPage = () => {
 
         {/* The link lives on "born", so the word you poked to get here isn't
             also the word that navigates away. */}
-        <Beat shown={told}>
+        <Beat shown={step >= 2}>
           <p>
             i was <Link href="/about">born</Link> in KL, Malaysia.
           </p>
         </Beat>
 
-        <Beat shown={told} delay={120}>
+        <Beat shown={step >= 2} delay={450}>
           <p>
             i like{" "}
-            <button type="button" onClick={cycle} className="wash">
+            <button type="button" onClick={onInterest} className="wash">
               {current.text}
             </button>
             {current.href &&
@@ -183,15 +170,7 @@ const StartPage = () => {
           </p>
         </Beat>
 
-        <Beat shown={told} delay={240}>
-          <p>
-            see what i&apos;m up to <Link href="/now">now</Link>, what i&apos;m{" "}
-            <Link href="/library">reading</Link>, or what i{" "}
-            <Link href="/uses">use</Link>.
-          </p>
-        </Beat>
-
-        <Beat shown={told} delay={360}>
+        <Beat shown={told} delay={450}>
           <p>
             browse the <Link href="/posts">archives</Link>.{" "}
             <span className="text-xs opacity-40">
