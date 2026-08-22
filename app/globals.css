@@ -580,11 +580,11 @@ body {
     color-mix(in oklab, var(--color-chalk) 9%, transparent);
 }
 
-/* Museum wall label. */
+/* Caption under a framed photo. Quieter than body text, but only just — the
+   0.08em tracking this had read as a gallery placard rather than a caption,
+   and made the words look stretched next to the post's own type. */
 .photo-label {
-  font-size: 0.6875rem;
-  letter-spacing: 0.08em;
-  text-transform: lowercase;
+  font-size: 0.75rem;
   color: var(--color-ink-muted);
 }
 
