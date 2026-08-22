@@ -73,15 +73,8 @@ const StartPage = () => {
         <p>welcome to my corner on the internet</p>
 
         <p>
-          a little <Link href="/about">about me</Link>, i was born in{" "}
-          <a
-            href="https://en.wikipedia.org/wiki/Kuala_Lumpur"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Kuala Lumpur, Malaysia
-          </a>
-          .
+          a little <Link href="/about">about me</Link>, i was born in KL,
+          Malaysia.
         </p>
 
         <p>
@@ -112,17 +105,15 @@ const StartPage = () => {
         </p>
 
         <p>
-          see what i&apos;m up to now, what i&apos;m reading, or what i{" "}
+          see what i&apos;m up to <Link href="/now">now</Link>, what i&apos;m{" "}
+          <Link href="/library">reading</Link>, or what i{" "}
           <Link href="/uses">use</Link>.
         </p>
 
         <p>
-          browse the archives.{" "}
+          browse the <Link href="/posts">archives</Link>.{" "}
           <span className="text-xs opacity-40">
-            {/* explicit string: turbopack's server/client compiles disagree
-                about the space between </code> and the entity-bearing text */}
-            (hint: press <code>r</code>
-            {" if you're feeling lucky)"}
+            (hint: press <code>r</code>)
           </span>
         </p>
       </article>
