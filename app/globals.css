@@ -662,3 +662,27 @@ body {
     animation-duration: 2.5s;
   }
 }
+/* Thin scrollbar for admin scroll containers (calendar page, post preview,
+   the CodeMirror scroller). The thumb is a custom property rather than a
+   literal so the editor theme in the admin page can reference the same value
+   instead of repeating it, and so it tracks the active palette. */
+:root {
+  --scrollbar-thumb: color-mix(
+    in oklab,
+    var(--color-ink-muted) 45%,
+    transparent
+  );
+}
+
+.dark {
+  --scrollbar-thumb: color-mix(
+    in oklab,
+    var(--color-chalk-muted) 45%,
+    transparent
+  );
+}
+
+.admin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}

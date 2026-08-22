@@ -20,18 +20,29 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
 
-    const postImages: string[] = [];
+    // Each entry carries its own url. The caller can't infer it from the
+    // post's draft/published state: a published post can still have images
+    // sitting in drafts (uploaded before it was published), and guessing
+    // from post state is what left those thumbnails broken.
+    const postImages: { name: string; url: string }[] = [];
 
     // Check drafts folder
     if (fs.existsSync(IMAGES_DRAFTS_DIR)) {
       const draftFiles = fs.readdirSync(IMAGES_DRAFTS_DIR);
       postImages.push(
-        ...draftFiles.filter((file) => file.startsWith(`${slug}-`))
+        ...draftFiles
+          .filter((file) => file.startsWith(`${slug}-`))
+          .map((name) => ({ name, url: `/images/drafts/${name}` }))
       );
     }
 
     // Check published images in R2
-    postImages.push(...(await r2ListImages(`${slug}-`)));
+    const publishedImages = await r2ListImages(`${slug}-`);
+    postImages.push(
+      ...publishedImages
+        .filter((name) => !postImages.some((i) => i.name === name))
+        .map((name) => ({ name, url: `/images/${name}` }))
+    );
 
     return NextResponse.json(postImages);
   } catch (error) {
