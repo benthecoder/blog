@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -8,10 +8,16 @@ import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
 import matter from "gray-matter";
 import { Calendar, Eye, FileEdit, ImageIcon, Trash2 } from "lucide-react";
+import CodeMirror, { EditorView } from "@uiw/react-codemirror";
+import type { ReactCodeMirrorRef } from "@uiw/react-codemirror";
+import { markdown, markdownKeymap } from "@codemirror/lang-markdown";
+import { keymap } from "@codemirror/view";
+import { Prec } from "@codemirror/state";
+import { indentWithTab } from "@codemirror/commands";
 import { usePostDraft } from "./usePostDraft";
 import { useImageManager } from "./useImageManager";
 import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
-import { ImageNameModal } from "./ImageNameModal";
+import { ImageCropModal } from "./ImageCropModal";
 import { ImageStrip } from "./ImageStrip";
 import { EditorFooter } from "./EditorFooter";
 
@@ -26,7 +32,7 @@ export default function EditPostPage() {
   const [showPreview, setShowPreview] = useState(false);
   const [editorWidth, setEditorWidth] = useState(700);
   const [modalConfig, setModalConfig] = useState<ConfirmConfig | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const cmRef = useRef<ReactCodeMirrorRef>(null);
   const isResizing = useRef(false);
 
   const notify = (msg: string, autoClear = false) => {
@@ -60,14 +66,14 @@ export default function EditPostPage() {
   });
 
   const insertMarkdown = (snippet: string) => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      const cursorPos = textarea.selectionStart;
-      draft.setMarkdown(
-        draft.markdown.substring(0, cursorPos) +
-          snippet +
-          draft.markdown.substring(cursorPos)
-      );
+    const view = cmRef.current?.view;
+    if (view) {
+      const pos = view.state.selection.main.head;
+      view.dispatch({
+        changes: { from: pos, insert: snippet },
+        selection: { anchor: pos + snippet.length },
+      });
+      view.focus();
     } else {
       draft.setMarkdown(draft.markdown + "\n" + snippet);
     }
@@ -76,10 +82,73 @@ export default function EditPostPage() {
   const images = useImageManager({
     slug,
     isNew,
+    isPublished: !draft.isDraft && !isNew,
     searchParams,
     insertMarkdown,
     notify,
   });
+
+  // Kept in a ref (not a useMemo dep) so the CodeMirror `extensions` array
+  // stays referentially stable across renders — passing a new array on
+  // every render makes @uiw/react-codemirror rebuild editor state and lose
+  // undo history.
+  const handleImagePasteRef = useRef(images.handlePaste);
+  handleImagePasteRef.current = images.handlePaste;
+
+  const extensions = useMemo(
+    () => [
+      // bundles pasteURLAsLink (paste URL over a selection -> link).
+      // SetextHeading is removed because frontmatter (text immediately
+      // followed by a bare "---" line) is valid CommonMark for an H2
+      // heading, so without this every post's frontmatter block would be
+      // highlighted as a heading.
+      markdown({ extensions: { remove: ["SetextHeading"] } }),
+      EditorView.lineWrapping,
+      // `indentWithTab` binds Tab to indent, which means Tab no longer moves
+      // focus out of the editor. Escape releases it, so the editor is still
+      // escapable by keyboard alone: Escape, then Tab.
+      Prec.highest(
+        keymap.of([
+          {
+            key: "Escape",
+            run: (view) => {
+              view.contentDOM.blur();
+              return true;
+            },
+          },
+          indentWithTab,
+          ...markdownKeymap,
+        ])
+      ),
+      EditorView.domEventHandlers({
+        paste: (event) => {
+          const items = Array.from(event.clipboardData?.items ?? []);
+          const hasImage = items.some((item) => item.type.startsWith("image/"));
+          if (hasImage) {
+            handleImagePasteRef.current(event);
+            return true;
+          }
+          return false;
+        },
+      }),
+      EditorView.theme({
+        "&": { backgroundColor: "transparent", height: "100%" },
+        ".cm-content": {
+          padding: "1rem",
+          caretColor: "currentColor",
+          fontFamily: "inherit",
+          fontSize: "inherit",
+        },
+        ".cm-scroller": {
+          fontFamily: "inherit",
+          scrollbarWidth: "thin",
+          scrollbarColor: "var(--scrollbar-thumb) transparent",
+        },
+        "&.cm-focused": { outline: "none" },
+      }),
+    ],
+    []
+  );
 
   const handleResizeStart = (e: ReactMouseEvent, side: "left" | "right") => {
     e.preventDefault();
@@ -117,27 +186,24 @@ export default function EditPostPage() {
   const monthParam = searchParams.get("month");
 
   return (
-    <div className="h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+    <div className="h-screen flex items-center justify-center bg-paper dark:bg-night">
       <div
-        style={{ width: `${editorWidth}px`, height: "calc(100vh - 4rem)" }}
-        className="flex flex-col relative group border-l border-r border-gray-200 dark:border-gray-700"
+        style={{
+          width: showPreview ? "min(900px, 100vw - 4rem)" : `${editorWidth}px`,
+          height: "calc(100vh - 4rem)",
+        }}
+        className="flex flex-col relative group border-l border-r border-rule dark:border-night-rule transition-[width] duration-200"
       >
         {/* Top bar */}
-        <div className="border-b border-rule dark:border-gray-700 px-6 py-3 flex justify-between items-center">
+        <div className="border-b border-rule dark:border-night-rule px-6 py-3 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <Link
               href={monthParam ? `/admin?month=${monthParam}` : "/admin"}
-              className="text-ink-soft dark:text-gray-500 hover:text-ink dark:hover:text-chalk transition-colors"
+              className="text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk transition-colors"
               title="Back to calendar"
             >
               <Calendar size={18} />
             </Link>
-            {draft.isDraft && !isNew && (
-              <div
-                className="w-1.5 h-1.5 rounded-full bg-blue-500 dark:bg-blue-400"
-                title="Draft"
-              />
-            )}
           </div>
 
           <div className="flex gap-3 items-center">
@@ -149,7 +215,7 @@ export default function EditPostPage() {
               </span>
             )}
             {images.uploading && (
-              <span className="text-xs text-ink-soft dark:text-gray-500">
+              <span className="text-xs text-ink-soft dark:text-chalk-muted">
                 Uploading...
               </span>
             )}
@@ -159,30 +225,35 @@ export default function EditPostPage() {
                 title="Unsaved changes (⌘S to save)"
               />
             )}
-            {!isNew && images.postImages.length > 0 && (
+            <div className="flex items-center gap-1">
+              {!isNew && images.postImages.length > 0 && (
+                <button
+                  onClick={() => images.setShowImages(!images.showImages)}
+                  className="p-1.5 rounded-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90 relative"
+                  title="Manage images"
+                >
+                  <ImageIcon size={18} />
+                  <span className="absolute top-0.5 right-0.5 w-3 h-3 bg-ink dark:bg-chalk rounded-full text-[8px] text-white dark:text-night flex items-center justify-center">
+                    {images.postImages.length}
+                  </span>
+                </button>
+              )}
               <button
-                onClick={() => images.setShowImages(!images.showImages)}
-                className="text-ink-soft dark:text-gray-500 hover:text-ink dark:hover:text-chalk transition-colors relative"
-                title="Manage images"
+                onClick={() => setShowPreview(!showPreview)}
+                className="p-1.5 rounded-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90"
+                title={showPreview ? "Edit" : "Preview"}
               >
-                <ImageIcon size={18} />
-                <span className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full text-[8px] text-white flex items-center justify-center">
-                  {images.postImages.length}
-                </span>
+                {showPreview ? <FileEdit size={18} /> : <Eye size={18} />}
               </button>
-            )}
-            <button
-              onClick={() => setShowPreview(!showPreview)}
-              className="text-ink-soft dark:text-gray-500 hover:text-ink dark:hover:text-chalk transition-colors"
-              title={showPreview ? "Edit" : "Preview"}
-            >
-              {showPreview ? <FileEdit size={18} /> : <Eye size={18} />}
-            </button>
+            </div>
+
+            <div className="w-px self-stretch bg-rule dark:bg-night-rule" />
+
             {draft.isDraft && (
               <button
                 onClick={draft.handlePublish}
                 disabled={draft.publishing || isNew}
-                className="px-3 py-1.5 text-xs bg-ink dark:bg-chalk text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
+                className="px-3 py-1.5 text-xs font-medium bg-ink dark:bg-chalk text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-[opacity,transform] active:scale-97 rounded-xs"
               >
                 {draft.publishing ? "Publishing..." : "Publish"}
               </button>
@@ -191,7 +262,7 @@ export default function EditPostPage() {
               <button
                 onClick={draft.handleUnpublish}
                 disabled={draft.publishing}
-                className="px-3 py-1.5 text-xs text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 disabled:opacity-30 transition-colors rounded-xs"
+                className="px-3 py-1.5 text-xs text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 disabled:opacity-30 transition-[background-color,transform] active:scale-97 rounded-xs"
               >
                 {draft.publishing ? "Moving..." : "Unpublish"}
               </button>
@@ -200,7 +271,7 @@ export default function EditPostPage() {
               <button
                 onClick={draft.handleDelete}
                 disabled={draft.deleting}
-                className="text-ink-soft dark:text-gray-500 hover:text-red-600 dark:hover:text-red-500 disabled:opacity-30 transition-colors"
+                className="p-1.5 rounded-xs text-ink-soft dark:text-chalk-muted hover:text-red-600 dark:hover:text-red-500 hover:bg-paper dark:hover:bg-night-raised disabled:opacity-30 transition-[color,background-color,transform] active:scale-90"
                 title="Delete post"
               >
                 <Trash2 size={18} />
@@ -212,7 +283,6 @@ export default function EditPostPage() {
         {images.showImages && !isNew && (
           <ImageStrip
             slug={slug}
-            isDraft={draft.isDraft}
             images={images.postImages}
             onClose={() => images.setShowImages(false)}
             onDelete={images.handleDeleteImage}
@@ -222,7 +292,7 @@ export default function EditPostPage() {
         {/* Editor / preview pane */}
         <div className={`flex-1 overflow-hidden ${isNew ? "pb-0" : "pb-10"}`}>
           {showPreview ? (
-            <div className="h-full overflow-y-auto p-8">
+            <div className="h-full overflow-y-auto p-8 admin-scrollbar">
               {(() => {
                 const { data: frontmatter, content } = matter(draft.markdown);
 
@@ -250,13 +320,29 @@ export default function EditPostPage() {
                 onDragLeave={images.handleDragLeave}
                 onDrop={images.handleDrop}
               >
-                <textarea
-                  ref={textareaRef}
+                <CodeMirror
+                  ref={cmRef}
                   value={draft.markdown}
-                  onChange={(e) => draft.setMarkdown(e.target.value)}
-                  onPaste={images.handlePaste}
-                  placeholder="---&#10;title: &#10;tags: &#10;date: &#10;---&#10;&#10;Write your content here..."
-                  className="w-full h-full font-mono text-base p-4 resize-none focus:outline-hidden bg-transparent"
+                  onChange={(value) => draft.setMarkdown(value)}
+                  extensions={extensions}
+                  theme="none"
+                  basicSetup={{
+                    lineNumbers: false,
+                    foldGutter: false,
+                    highlightActiveLine: false,
+                    highlightActiveLineGutter: false,
+                    highlightSelectionMatches: false,
+                    // Bracket/quote auto-pairing is a code-editor habit; in
+                    // prose it silently inserts a phantom closing quote
+                    // whenever you type an apostrophe (e.g. "Jesus'"),
+                    // which shifts characters and can corrupt a markdown
+                    // link's "](url)" right after it.
+                    closeBrackets: false,
+                  }}
+                  placeholder={
+                    "---\ntitle: \ntags: \ndate: \n---\n\nWrite your content here..."
+                  }
+                  className="w-full h-full font-mono text-base text-ink-strong dark:text-chalk-strong"
                 />
               </div>
               {images.isDragging && (
@@ -270,15 +356,19 @@ export default function EditPostPage() {
           )}
         </div>
 
-        {/* Resize handles */}
-        <div
-          className="absolute left-0 top-0 bottom-0 w-4 cursor-ew-resize"
-          onMouseDown={(e) => handleResizeStart(e, "left")}
-        />
-        <div
-          className="absolute right-0 top-0 bottom-0 w-4 cursor-ew-resize"
-          onMouseDown={(e) => handleResizeStart(e, "right")}
-        />
+        {/* Resize handles (editing only — preview width is fixed) */}
+        {!showPreview && (
+          <>
+            <div
+              className="absolute left-0 top-0 bottom-0 w-4 cursor-ew-resize"
+              onMouseDown={(e) => handleResizeStart(e, "left")}
+            />
+            <div
+              className="absolute right-0 top-0 bottom-0 w-4 cursor-ew-resize"
+              onMouseDown={(e) => handleResizeStart(e, "right")}
+            />
+          </>
+        )}
 
         <EditorFooter
           isNew={isNew}
@@ -290,12 +380,14 @@ export default function EditPostPage() {
           monthParam={monthParam}
         />
 
-        {images.showImageNameModal && (
-          <ImageNameModal
-            value={images.imageNameInput}
-            onChange={images.setImageNameInput}
+        {images.showImageNameModal && images.pendingImageFile && (
+          <ImageCropModal
+            file={images.pendingImageFile}
+            name={images.imageNameInput}
+            onNameChange={images.setImageNameInput}
             onConfirm={images.confirmImageUpload}
             onCancel={images.cancelImageUpload}
+            uploading={images.uploading}
           />
         )}
 
