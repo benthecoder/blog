@@ -20,7 +20,12 @@ const links = [
   { path: "/gallery", text: "gallery", icon: "gallery.svg" },
 ];
 
-export function SidebarNav() {
+/**
+ * `rail` is the site layout: a row on small screens, a fixed left rail from
+ * lg up. `row` is the homepage, which sits outside that layout and wants the
+ * icons centred under the name rather than pinned to the edge.
+ */
+export function SidebarNav({ layout = "rail" }: { layout?: "rail" | "row" }) {
   const pathname = usePathname();
   const [spinning, setSpinning] = useState(false);
   const spinTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -47,7 +52,7 @@ export function SidebarNav() {
 
   const handleMouseEnter = (e: MouseEvent<HTMLAnchorElement>, text: string) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const isMobile = window.innerWidth < 1024;
+    const below = layout === "row" || window.innerWidth < 1024;
 
     // Not data-cuelume-hover: its 150ms throttle is global, so fast sweeps
     // drop ticks. Pointer check skips touch, where taps emulate mouseenter.
@@ -55,8 +60,8 @@ export function SidebarNav() {
       play("tick");
     }
 
-    if (isMobile) {
-      // Position below and centered on mobile
+    if (below) {
+      // Centred underneath: the only sane spot in a horizontal row
       setHoveredLink({
         text,
         x: rect.left + rect.width / 2,
@@ -76,17 +81,26 @@ export function SidebarNav() {
 
   return (
     <>
-      {/* Extra bottom gap on small screens: the nav used to sit against a
-          white content card that separated it from the page title, and
-          without that card the two run together. */}
-      <nav className="flex flex-row gap-2 justify-center lg:flex-col lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0">
+      {/* Extra bottom gap on small screens in rail mode: the nav used to sit
+          against a white content card that separated it from the page title,
+          and without that card the two run together. */}
+      <nav
+        aria-label="Sections"
+        className={
+          layout === "row"
+            ? "flex flex-row flex-nowrap gap-1.5 justify-center"
+            : "flex flex-row gap-2 justify-center lg:flex-col lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0"
+        }
+      >
         {links.map(({ path, text, icon }) => (
           <Link
             key={path}
             href={path}
-            className={`inline-flex w-8 h-8 lg:w-11 lg:h-11 transition-opacity ${
-              pathname === path ? "opacity-50" : "hover:opacity-70"
-            }`}
+            className={`inline-flex transition-opacity ${
+              layout === "row"
+                ? "w-7 h-7 md:w-8 md:h-8"
+                : "w-8 h-8 lg:w-11 lg:h-11"
+            } ${pathname === path ? "opacity-50" : "hover:opacity-70"}`}
             onMouseEnter={(e) => handleMouseEnter(e, text)}
             onMouseLeave={() => setHoveredLink(null)}
             onClick={

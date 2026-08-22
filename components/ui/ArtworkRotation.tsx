@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { DRAWINGS_URL } from "@/config/constants";
 import { SketchIcon, ENAME_RATIO, CNAME_RATIO } from "./SketchIcon";
+import { SidebarNav } from "../layout/SidebarNav";
 
 const NameHeader = () => (
   <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50">
@@ -25,6 +26,13 @@ const NameHeader = () => (
           style={{ aspectRatio: CNAME_RATIO }}
         />
       </Link>
+
+      {/* The homepage sits outside the sidebar layout, so without this it
+          offers no way into the other twelve sections — analytics had 183
+          visitors landing here against 20 reaching /start. */}
+      <div className="mt-1">
+        <SidebarNav layout="row" />
+      </div>
     </div>
   </div>
 );
@@ -101,7 +109,7 @@ export default function ArtworkRotation() {
         <div className="flex flex-col items-center justify-center gap-4 md:gap-6 w-full max-w-[min(85vw,700px)] md:max-w-[min(60vw,600px)]">
           <Link
             href="/sketch"
-            className="relative w-full aspect-square max-h-[calc(100vh-320px)] md:max-h-[calc(100vh-280px)] cursor-pointer"
+            className="relative w-full aspect-square max-h-[calc(100vh-390px)] md:max-h-[calc(100vh-350px)] cursor-pointer"
             onPointerEnter={() => setPaused(true)}
             onPointerLeave={() => setPaused(false)}
           >
