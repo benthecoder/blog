@@ -15,17 +15,17 @@ export function ConfirmModal({
 }) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-900 border border-rule dark:border-gray-700 p-8 max-w-md mx-4">
+      <div className="bg-paper dark:bg-night border border-rule dark:border-night-rule p-8 max-w-md mx-4">
         <h2 className="text-lg font-light mb-4 text-ink dark:text-chalk tracking-wide">
           {config.title}
         </h2>
-        <p className="text-sm text-ink-soft dark:text-gray-400 mb-8">
+        <p className="text-sm text-ink-soft dark:text-chalk-muted mb-8">
           {config.message}
         </p>
         <div className="flex gap-3 justify-end">
           <button
             onClick={onCancel}
-            className="px-4 py-1.5 text-sm border border-rule dark:border-gray-700 text-ink dark:text-chalk hover:border-ink dark:hover:border-chalk transition-colors"
+            className="px-4 py-1.5 text-sm border border-rule dark:border-night-rule text-ink dark:text-chalk hover:border-ink dark:hover:border-chalk transition-colors"
           >
             Cancel
           </button>

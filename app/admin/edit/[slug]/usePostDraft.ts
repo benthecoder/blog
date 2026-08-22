@@ -124,6 +124,9 @@ export function usePostDraft({
           `date: ${formattedDate}`
         );
         setMarkdown(templateWithDate);
+        // Baseline is the untouched template, not "" — otherwise a fresh
+        // new-post page reports unsaved changes before any typing happens.
+        initialContentRef.current = { markdown: templateWithDate };
 
         const savedDraft = localStorage.getItem(draftKey);
         if (savedDraft) {

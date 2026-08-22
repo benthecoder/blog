@@ -37,10 +37,10 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-paper dark:bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-paper dark:bg-night">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm p-8 border border-rule dark:border-gray-700 bg-white dark:bg-gray-800"
+        className="w-full max-w-sm p-8 border border-rule dark:border-night-rule bg-paper-raised dark:bg-night-raised"
       >
         <h1 className="text-lg font-light mb-6 text-ink dark:text-chalk tracking-wide">
           Admin Login
@@ -51,7 +51,7 @@ function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           autoFocus
-          className="w-full px-3 py-2 mb-4 border border-rule dark:border-gray-700 bg-transparent text-ink dark:text-chalk focus:outline-hidden focus:border-ink dark:focus:border-chalk rounded-xs"
+          className="w-full px-3 py-2 mb-4 border border-rule dark:border-night-rule bg-transparent text-ink dark:text-chalk focus:outline-hidden focus:border-ink dark:focus:border-chalk rounded-xs"
         />
         {error && (
           <p className="text-xs text-red-500 mb-4" role="alert">

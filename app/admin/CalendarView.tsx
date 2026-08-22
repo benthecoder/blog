@@ -117,19 +117,19 @@ export default function CalendarView({ posts }: CalendarViewProps) {
         <div className="flex gap-3">
           <button
             onClick={prevMonth}
-            className="px-4 py-2 border border-rule dark:border-gray-700 rounded-xs hover:bg-paper dark:hover:bg-gray-800 transition-colors text-ink dark:text-chalk"
+            className="px-4 py-2 border border-rule dark:border-night-rule rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-ink dark:text-chalk"
           >
             ←
           </button>
           <button
             onClick={() => setCurrentDate(new Date())}
-            className="px-4 py-2 border border-rule dark:border-gray-700 rounded-xs hover:bg-paper dark:hover:bg-gray-800 transition-colors text-ink dark:text-chalk"
+            className="px-4 py-2 border border-rule dark:border-night-rule rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-ink dark:text-chalk"
           >
             今日
           </button>
           <button
             onClick={nextMonth}
-            className="px-4 py-2 border border-rule dark:border-gray-700 rounded-xs hover:bg-paper dark:hover:bg-gray-800 transition-colors text-ink dark:text-chalk"
+            className="px-4 py-2 border border-rule dark:border-night-rule rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-ink dark:text-chalk"
           >
             →
           </button>
@@ -140,7 +140,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
         {dayNames.map((day) => (
           <div
             key={day}
-            className="text-center text-xs font-light tracking-wider text-ink-soft dark:text-gray-500 pb-3 uppercase"
+            className="text-center text-xs font-light tracking-wider text-ink-soft dark:text-chalk-muted pb-3 uppercase"
           >
             {day}
           </div>
@@ -165,10 +165,10 @@ export default function CalendarView({ posts }: CalendarViewProps) {
               className={`
                 aspect-square border rounded-xs p-3 flex flex-col items-start justify-between relative
                 hover:border-ink dark:hover:border-chalk hover:shadow-xs transition-[border-color,box-shadow]
-                ${isTodayDate ? "border-ink dark:border-chalk bg-chalk-soft dark:bg-gray-800 shadow-xs" : "border-rule dark:border-gray-700"}
+                ${isTodayDate ? "border-ink dark:border-chalk bg-chalk-soft dark:bg-night-raised shadow-xs" : "border-rule dark:border-night-rule"}
                 ${isDraft ? "border-2 border-dashed border-blue-400 dark:border-blue-500 bg-blue-50 dark:bg-blue-950/20" : ""}
-                ${post && !isTodayDate && !isDraft ? "bg-paper dark:bg-gray-800/50" : ""}
-                ${!post && !isTodayDate ? "bg-white dark:bg-gray-900" : ""}
+                ${post && !isTodayDate && !isDraft ? "bg-paper dark:bg-night-raised/50" : ""}
+                ${!post && !isTodayDate ? "bg-paper-raised dark:bg-night" : ""}
               `}
             >
               <div className="flex items-start justify-between w-full">
@@ -178,7 +178,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
                       ? "text-ink dark:text-chalk font-medium"
                       : post
                         ? "text-ink dark:text-chalk"
-                        : "text-ink-soft dark:text-gray-500"
+                        : "text-ink-soft dark:text-chalk-muted"
                   }`}
                 >
                   {day}
@@ -189,7 +189,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
                   </span>
                 )}
                 {!post && (
-                  <span className="text-ink-soft dark:text-gray-600 text-xs opacity-60">
+                  <span className="text-ink-soft dark:text-chalk-muted text-xs opacity-60">
                     +
                   </span>
                 )}
