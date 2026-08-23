@@ -1,10 +1,12 @@
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import type { Components } from "react-markdown";
 import { codeToHtml } from "shiki";
 import { isSafeSlug } from "@/config/paths";
 import { getPostPreviewData } from "@/utils/content/preview";
 import CopyButton from "./CopyButton";
 import PostLinkPreview from "./PostLinkPreview";
+import WikiLink from "./WikiLink";
+import { WIKILINK_SCHEME, decodeWikiLinkHref } from "./remarkWikiLink";
 import { getImageMeta } from "@/utils/content/imageMeta";
 import {
   createBaseComponents,
@@ -56,6 +58,10 @@ async function CodeBlock({
 const components: Components = {
   ...createBaseComponents(getImageMeta),
   a({ href, children }) {
+    const wikiTarget = href ? decodeWikiLinkHref(href) : null;
+    if (wikiTarget !== null) {
+      return <WikiLink target={wikiTarget}>{children}</WikiLink>;
+    }
     const slug = href ? postSlugFromHref(href) : null;
     const preview = slug ? getPostPreviewData(slug) : null;
     if (preview) {
@@ -96,6 +102,11 @@ export default function MarkdownContent({ content }: { content: string }) {
       components={components}
       remarkPlugins={remarkPlugins}
       rehypePlugins={rehypePlugins}
+      // Keep react-markdown's URL sanitizing, but let our `wikilink:` sentinel
+      // scheme through so the `a` handler can resolve it.
+      urlTransform={(url) =>
+        url.startsWith(WIKILINK_SCHEME) ? url : defaultUrlTransform(url)
+      }
     >
       {content}
     </ReactMarkdown>

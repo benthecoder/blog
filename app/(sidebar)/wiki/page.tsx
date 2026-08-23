@@ -1,56 +1,47 @@
 import Link from "next/link";
-import { getWikiMetadata } from "@/utils/content/wiki";
+import { getWikiByCategory } from "@/utils/content/wiki";
 import type { Metadata } from "next";
 
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title: "wiki",
-  description: "Living notes on topics I keep coming back to",
+  description: "A directory of things I've written up",
 };
 
 const WikiPage = () => {
-  const pages = getWikiMetadata();
+  const categories = getWikiByCategory();
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-ink-strong dark:text-chalk-strong">
-          wiki
-        </h1>
-        <p className="text-xs text-ink-strong/50 dark:text-chalk-strong/50 mt-1">
-          {pages.length} {pages.length === 1 ? "topic" : "topics"}
-        </p>
-      </div>
+      <h1 className="text-2xl font-bold text-ink-strong dark:text-chalk-strong mb-14 lowercase">
+        wiki
+      </h1>
 
-      {pages.length === 0 ? (
+      {categories.length === 0 ? (
         <p className="text-sm text-ink-strong/40 dark:text-chalk-strong/40">
           Nothing here yet.
         </p>
       ) : (
-        <div className="divide-y divide-rule dark:divide-night-rule">
-          {pages.map((page) => (
-            <Link
-              key={page.slug}
-              href={`/wiki/${page.slug}`}
-              className="group flex items-center justify-between py-3 gap-4"
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <span className="text-sm text-ink-strong dark:text-chalk-strong group-hover:text-ink dark:group-hover:text-chalk-soft transition-colors truncate">
-                  {page.title}
-                </span>
-                {page.tags.length > 0 && (
-                  <span className="text-[10px] font-mono text-ink-strong/30 dark:text-chalk-strong/30 shrink-0">
-                    {page.tags.join(", ")}
-                  </span>
-                )}
-              </div>
-              {page.lastUpdated && (
-                <span className="text-[10px] font-mono text-ink-strong/30 dark:text-chalk-strong/30 shrink-0">
-                  {page.lastUpdated}
-                </span>
-              )}
-            </Link>
+        <div className="space-y-12">
+          {categories.map((category) => (
+            <section key={category.name}>
+              <h2 className="text-sm text-ink-strong/40 dark:text-chalk-strong/40 mb-4 lowercase">
+                {category.name}
+              </h2>
+              <ul className="space-y-2.5">
+                {category.pages.map((page) => (
+                  <li key={page.slug}>
+                    <Link
+                      href={`/wiki/${page.slug}`}
+                      className="text-sm text-ink dark:text-chalk-soft hover:underline underline-offset-2 lowercase"
+                    >
+                      {page.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
           ))}
         </div>
       )}

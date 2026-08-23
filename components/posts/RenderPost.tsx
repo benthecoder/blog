@@ -17,6 +17,7 @@ interface RenderPostProps {
   toc?: TocEntry[];
   related?: RelatedPost[];
   hero?: ReactNode;
+  backlinks?: ReactNode;
   children: ReactNode;
 }
 
@@ -32,6 +33,7 @@ const RenderPost = ({
   toc,
   related,
   hero,
+  backlinks,
   children,
 }: RenderPostProps) => {
   const { title, date } = post.data;
@@ -77,6 +79,8 @@ const RenderPost = ({
       {toc && <TableOfContents items={toc} />}
 
       <article className={proseClasses}>{children}</article>
+
+      {backlinks}
 
       <footer className="mt-12 pt-5 border-t border-rule dark:border-night-rule text-xs">
         {(tags.length > 0 || slug) && (

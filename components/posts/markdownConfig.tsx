@@ -6,10 +6,15 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import PostImage from "./PostImage";
+import remarkWikiLink from "./remarkWikiLink";
 import type { ImageMeta } from "@/utils/content/imageMeta";
 import "katex/dist/katex.min.css";
 
-export const remarkPlugins: PluggableList = [remarkMath, remarkGfm];
+export const remarkPlugins: PluggableList = [
+  remarkMath,
+  remarkGfm,
+  remarkWikiLink,
+];
 export const rehypePlugins: PluggableList = [
   rehypeRaw,
   rehypeSlug,
