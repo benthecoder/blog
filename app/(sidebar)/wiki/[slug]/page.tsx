@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getWikiMetadata, getWikiContent } from "@/utils/content/wiki";
 import MarkdownContent from "@/components/posts/MarkdownContent";
+import Backlinks from "@/components/content/Backlinks";
 
 export const dynamic = "force-static";
 
@@ -81,6 +82,8 @@ const WikiSlugPage = async ({ params }: { params: Params }) => {
       <article className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-ink-strong dark:prose-headings:text-chalk-strong prose-a:text-ink dark:prose-a:text-chalk-soft prose-a:no-underline prose-a:hover:underline">
         <MarkdownContent content={content.content} />
       </article>
+
+      <Backlinks contentRef={{ kind: "wiki", slug }} />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { getPostPreviewData } from "@/utils/content/preview";
 import { SITE_URL } from "@/config/site";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownContent from "@/components/posts/MarkdownContent";
+import Backlinks from "@/components/content/Backlinks";
 import { extractToc } from "@/utils/content/toc";
 import { splitLeadingImage } from "@/utils/content/hero";
 import { notFound } from "next/navigation";
@@ -100,6 +101,7 @@ const PostPage = async ({ params }: { params: Params }) => {
         toc={extractToc(postContent.content)}
         related={getRelatedPosts(slug)}
         hero={hero ? <MarkdownContent content={hero} /> : undefined}
+        backlinks={<Backlinks contentRef={{ kind: "post", slug }} />}
       >
         <MarkdownContent content={body} />
       </RenderPost>
