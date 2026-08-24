@@ -1,9 +1,8 @@
 ---
 title: Tea
 description: Leaves of Camellia sinensis, and everything steeped from them.
-category: Beverages
+category: cuisine
 tags: drinks
-lastUpdated: Aug 23, 2026
 ---
 
 All true **tea** comes from one plant, *Camellia sinensis*. What makes green,
