@@ -1,6 +1,6 @@
 ---
 title: Malaysian cuisine
-category: cuisine
+category: food
 tags: food
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: Nuclear power
-category: sciences/physics
+category: sciences
 tags: energy
 ---
 

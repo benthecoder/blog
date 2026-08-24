@@ -1,7 +1,7 @@
 ---
 title: Coffee
 description: Roasted, ground, and brewed seeds of the coffee cherry.
-category: cuisine
+category: food
 tags: drinks
 ---
 
