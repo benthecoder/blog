@@ -1,9 +1,8 @@
 ---
 title: Coffee
 description: Roasted, ground, and brewed seeds of the coffee cherry.
-category: Beverages
+category: cuisine
 tags: drinks
-lastUpdated: Aug 23, 2026
 ---
 
 **Coffee** is brewed from the roasted seeds ("beans") of the coffee cherry. The
