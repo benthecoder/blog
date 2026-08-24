@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 
@@ -16,6 +17,7 @@ interface Interest {
 }
 
 const INTERESTS: Interest[] = [
+  { text: "writing" },
   { text: "miso" },
   { text: "making fun websites", href: "/projects" },
   { text: "lifting heavy things" },
@@ -44,15 +46,62 @@ const ExternalLinkIcon = () => (
   </svg>
 );
 
+/**
+ * Four beats: "corner" opens it, "about me" places him, "writing" opens up
+ * what he's into. Once that last one has been opened it stops advancing and
+ * just switches between interests.
+ */
+const LAST_STEP = 3;
+/**
+ * One beat. The 0fr -> 1fr row animates height so lines grow into place
+ * instead of the page jumping, and the content stays in the DOM throughout,
+ * so the reveal is presentation rather than a gate on the navigation.
+ */
+const Beat = ({
+  shown,
+  delay = 0,
+  children,
+}: {
+  shown: boolean;
+  delay?: number;
+  children: ReactNode;
+}) => (
+  <div
+    className="reveal"
+    data-shown={shown}
+    aria-hidden={!shown}
+    style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+  >
+    <div>{children}</div>
+  </div>
+);
+
+/** A word you can poke: carries the wash, and reads as a button. */
+const Poke = ({
+  onClick,
+  children,
+}: {
+  onClick: () => void;
+  children: ReactNode;
+}) => (
+  <button type="button" onClick={onClick} className="wash">
+    {children}
+  </button>
+);
+
 const StartPage = () => {
   const [index, setIndex] = useState(0);
+  const [step, setStep] = useState(0);
+  const advance = () => setStep((s) => Math.min(s + 1, LAST_STEP));
 
-  // Randomize only after hydration; random in render/initializer would
-  // mismatch the server HTML.
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIndex(Math.floor(Math.random() * INTERESTS.length));
-  }, []);
+  /** Opens the interests the first time, then switches between them. */
+  const onInterest = () => {
+    if (step < LAST_STEP) {
+      advance();
+      return;
+    }
+    cycle();
+  };
 
   const cycle = () => {
     setIndex((prev) => {
@@ -66,71 +115,79 @@ const StartPage = () => {
   };
 
   const current = INTERESTS[index];
+  const told = step >= LAST_STEP;
 
   return (
     <div>
-      <article className="prose">
-        <p>welcome to my corner on the internet</p>
-
+      <article className="prose story">
         <p>
-          a little <Link href="/about">about me</Link>, i was born in{" "}
-          <a
-            href="https://en.wikipedia.org/wiki/Kuala_Lumpur"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Kuala Lumpur, Malaysia
-          </a>
-          .
+          welcome to my{" "}
+          {step >= 1 ? "corner" : <Poke onClick={advance}>corner</Poke>} on the
+          internet
         </p>
 
-        <p>
-          i like{" "}
-          <button type="button" onClick={cycle} className="start-interest">
-            {current.text}
-          </button>
-          {current.href &&
-            (current.external ? (
-              <a
-                href={current.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`open ${current.text}`}
-                className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity bg-none!"
-              >
-                <ExternalLinkIcon />
-              </a>
-            ) : (
-              <Link
-                href={current.href}
-                aria-label={`open ${current.text}`}
-                className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity bg-none!"
-              >
-                <ExternalLinkIcon />
-              </Link>
-            ))}
-        </p>
+        <Beat shown={step >= 1}>
+          <p>
+            a little{" "}
+            {step >= 2 ? "about me" : <Poke onClick={advance}>about me</Poke>}
+          </p>
+        </Beat>
 
-        <p>
-          see what i&apos;m up to <Link href="/now">now</Link>, what i&apos;m{" "}
-          <Link href="/library">reading</Link>, or what i{" "}
-          <Link href="/uses">use</Link>.
-        </p>
+        {/* The link lives on "born", so the word you poked to get here isn't
+            also the word that navigates away. */}
+        <Beat shown={step >= 2}>
+          <p>
+            i was <Link href="/about">born</Link> in KL, Malaysia.
+          </p>
+        </Beat>
 
-        <p>
-          browse the <Link href="/posts">archives</Link>.{" "}
-          <span className="text-xs opacity-40">
-            {/* explicit string: turbopack's server/client compiles disagree
-                about the space between </code> and the entity-bearing text */}
-            (hint: press <code>r</code>
-            {" if you're feeling lucky)"}
-          </span>
-        </p>
+        <Beat shown={step >= 2} delay={450}>
+          <p>
+            i like{" "}
+            <button type="button" onClick={onInterest} className="wash">
+              {current.text}
+            </button>
+            {current.href &&
+              (current.external ? (
+                <a
+                  href={current.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`open ${current.text}`}
+                  className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity"
+                >
+                  <ExternalLinkIcon />
+                </a>
+              ) : (
+                <Link
+                  href={current.href}
+                  aria-label={`open ${current.text}`}
+                  className="inline-flex items-center ml-1 opacity-40 hover:opacity-80 transition-opacity"
+                >
+                  <ExternalLinkIcon />
+                </Link>
+              ))}
+          </p>
+        </Beat>
+
+        <Beat shown={told} delay={450}>
+          <p>
+            browse the <Link href="/posts">archives</Link>.{" "}
+            <span className="text-xs opacity-40">
+              (hint: press <code>r</code>)
+            </span>
+          </p>
+        </Beat>
       </article>
 
-      <div className="h-[60vh] mt-8 overflow-hidden border border-rule dark:border-white/8">
-        <KnowledgeMap className="w-full h-full" />
-      </div>
+      {/* Mounted only once the story lands. It is a dynamic import drawing a
+          thousand-odd points, so keeping it out of the first paint is a real
+          saving, not just staging. */}
+      {told && (
+        <div className="map-in h-[60vh] mt-8 overflow-hidden border border-rule dark:border-white/8">
+          <KnowledgeMap className="w-full h-full" />
+        </div>
+      )}
     </div>
   );
 };

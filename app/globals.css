@@ -134,6 +134,17 @@
   --color-chalk-strong: #ecb99f;
 }
 
+:root[data-palette="graphite"] {
+  --color-ink-muted: #6f6f6f;
+  --color-ink-soft: #656565;
+  --color-ink: #4f4f4f;
+  --color-ink-strong: #434343;
+  --color-chalk: #b4b4b4;
+  --color-chalk-muted: #8e8e8e;
+  --color-chalk-soft: #c9c9c9;
+  --color-chalk-strong: #dedede;
+}
+
 :root[data-palette="rose"] {
   --color-ink-muted: #a05f70;
   --color-ink-soft: #995466;
@@ -143,6 +154,31 @@
   --color-chalk-muted: #b57d8a;
   --color-chalk-soft: #dca7b4;
   --color-chalk-strong: #e5bdc7;
+}
+
+/* Swatch dots in the palette picker. Each shows its own palette's ink, which
+   can't come from a var — the picker shows every palette at once, not just
+   the active one. */
+.swatch[data-palette="indigo"] {
+  background-color: #4d5f9e;
+}
+.swatch[data-palette="olive"] {
+  background-color: #47502f;
+}
+.swatch[data-palette="gold"] {
+  background-color: #896818;
+}
+.swatch[data-palette="steel"] {
+  background-color: #3f6d99;
+}
+.swatch[data-palette="vermillion"] {
+  background-color: #ab4322;
+}
+.swatch[data-palette="rose"] {
+  background-color: #93495c;
+}
+.swatch[data-palette="graphite"] {
+  background-color: #4f4f4f;
 }
 
 /* ==========================================================================
@@ -305,6 +341,14 @@ body {
   -webkit-box-decoration-break: clone;
 }
 
+/* A link wrapping only an icon gets no underline — the rule would be drawn
+   under the glyph, which reads as a mistake. Matching on content rather than
+   a class means any future icon link is covered without remembering to opt
+   out. */
+.prose a:has(> svg:only-child)::after {
+  content: none;
+}
+
 .prose a::after {
   content: "";
   position: absolute;
@@ -341,18 +385,107 @@ body {
 }
 
 /* Looks identical to a real link — clicking it cycles instead of navigating */
-.prose button.start-interest {
+/* Start page story beats. The 0fr -> 1fr row animates the height so each
+   line grows into place rather than the page jumping as it appears; the
+   content is in the DOM the whole time, so the reveal never gates access. */
+.reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 450ms cubic-bezier(0.23, 1, 0.32, 1),
+    opacity 350ms ease-out;
+}
+
+.reveal > * {
+  overflow: hidden;
+}
+
+/* Each beat clips its content, which opens a new block formatting context and
+   stops paragraph margins collapsing with their neighbours — so the gaps came
+   out doubled. The story owns its own rhythm instead: paragraphs carry no
+   margin, and each beat's spacing sits *inside* the clipped box so it
+   collapses away with the line rather than holding the gap open. */
+.story p {
+  margin-block: 0;
+}
+
+/* Margin on the paragraph, not padding on the wrapper: padding is part of the
+   box and keeps the grid track from collapsing to zero, so every unopened
+   beat held a gap open. A margin inside the clipped box gets clipped with
+   it. */
+.story .reveal p {
+  margin-top: 1.25em;
+}
+
+.reveal[data-shown="true"] {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    transition: opacity 150ms ease-out;
+  }
+}
+
+/* The knowledge map is mounted only when the story lands, so it fades in on
+   mount rather than transitioning between two states. */
+.map-in {
+  animation: beat-in 600ms cubic-bezier(0.23, 1, 0.32, 1) 1800ms both;
+}
+
+@keyframes beat-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-in {
+    animation: none;
+  }
+}
+
+/* A word you can poke — the interest cycler, and the two words that open
+   the start page's story. A wash rather than an underline: the
+   page's underlines all mean "this navigates somewhere", and this doesn't —
+   it swaps the word in place. The tint reads as something to poke without
+   adding to the row of rules running down the page. */
+.prose button.wash {
   display: inline;
-  padding: 0;
-  margin: 0;
+  /* No vertical padding: an inline box is already as tall as the font's em
+     box, so any adds straight onto a band that's taller than the letters. */
+  padding: 0 0.22em;
+  margin: 0 -0.14em; /* pull back the padding so word spacing stays even */
   font: inherit;
   color: inherit;
   border: none;
-  background: none;
   cursor: pointer;
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
-  text-decoration-thickness: 2px;
+  text-decoration: none;
+  border-radius: 0.2em;
+  background-color: color-mix(in oklab, var(--color-ink) 10%, transparent);
+  /* Each line of a wrapped interest gets its own rounded wash. */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: background-color 150ms ease;
+}
+
+.prose button.wash:hover {
+  background-color: color-mix(in oklab, var(--color-ink) 18%, transparent);
+}
+
+.dark .prose button.wash {
+  background-color: color-mix(in oklab, var(--color-chalk) 14%, transparent);
+}
+
+.dark .prose button.wash:hover {
+  background-color: color-mix(in oklab, var(--color-chalk) 24%, transparent);
 }
 
 /* -- Lists ----------------------------------------------------------------- */
