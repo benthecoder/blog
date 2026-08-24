@@ -1,7 +1,7 @@
 ---
 title: Tea
 description: Leaves of Camellia sinensis, and everything steeped from them.
-category: cuisine
+category: food
 tags: drinks
 ---
 

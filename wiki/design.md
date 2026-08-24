@@ -1,6 +1,6 @@
 ---
 title: Design
-category: arts
+category: arts & design
 tags: design
 ---
 

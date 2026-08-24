@@ -1,6 +1,6 @@
 ---
 title: Architecture
-category: arts
+category: arts & design
 tags: design
 ---
 
