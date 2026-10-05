@@ -3,18 +3,6 @@ import plistlib, uuid
 ASK = str(uuid.uuid4()).upper()
 POST = str(uuid.uuid4()).upper()
 
-def var_input():  # Shortcut Input (share sheet)
-    return {"Value": {"Type": "ExtensionInput"}, "WFSerializationType": "WFTextTokenAttachment"}
-
-def var_action(name, uid):
-    return {"Value": {"Type": "ActionOutput", "OutputName": name, "OutputUUID": uid},
-            "WFSerializationType": "WFTextTokenAttachment"}
-
-def item(key, value):
-    return {"WFItemType": 0,
-            "WFKey": {"Value": {"string": key}, "WFSerializationType": "WFTextTokenString"},
-            "WFValue": {"Value": value, "WFSerializationType": "WFTextTokenAttachment"}}
-
 wf = {
     "WFWorkflowClientVersion": "2900",
     "WFWorkflowMinimumClientVersion": 900,

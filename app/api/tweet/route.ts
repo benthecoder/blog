@@ -4,33 +4,21 @@ const sql = neon(process.env.POSTGRES_URL!);
 
 export const runtime = "edge";
 
-const URL_RE = /https?:\/\/[^\s]+/;
+import { fetchTitle, parsePublicUrl } from "@/utils/tweets/link";
 
-async function fetchTitle(url: string): Promise<string | null> {
-  try {
-    const res = await fetch(url, {
-      signal: AbortSignal.timeout(4000),
-      headers: { "User-Agent": "Mozilla/5.0" },
-    });
-    const html = (await res.text()).slice(0, 200_000);
-    const m = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-    return m ? m[1].replace(/\s+/g, " ").trim().slice(0, 300) : null;
-  } catch {
-    return null;
-  }
-}
+const URL_RE = /https?:\/\/[^\s]+/;
 
 export async function POST(request: Request) {
   const body = await request.json();
   let content: string = (body.body || "").slice(0, 700);
-  let link: string | null =
-    typeof body.link === "string" && body.link.trim() ? body.link.trim() : null;
+  let link = typeof body.link === "string" ? parsePublicUrl(body.link) : null;
 
   // No explicit link: lift the first URL out of the text.
   if (!link) {
     const found = content.match(URL_RE);
-    if (found) {
-      link = found[0];
+    const parsed = found && parsePublicUrl(found[0]);
+    if (found && parsed) {
+      link = parsed;
       content = content.replace(found[0], "").replace(/\s+/g, " ").trim();
     }
   }
