@@ -199,6 +199,8 @@ export default function EditPostPage() {
   // Day the photo panel looks at: DDMMYY slug, else the new-post date param,
   // else whatever date the loaded post carries.
   const photoDate = useMemo(() => {
+    // The PhotoKit helper only runs locally; the photo routes 404 in production.
+    if (process.env.NODE_ENV === "production") return null;
     const m = slug.match(/^(\d{2})(\d{2})(\d{2})$/);
     if (m) return `20${m[3]}-${m[2]}-${m[1]}`;
     const param = searchParams.get("date");

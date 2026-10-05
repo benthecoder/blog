@@ -49,6 +49,14 @@ function runHelper(args: string[], timeout: number): Promise<unknown> {
 const dayCache = new Map<string, IndexedPhoto[]>();
 const dayInflight = new Map<string, Promise<PhotosResult>>();
 
+/** Local YYYY-MM-DD. Today (or later) can still gain photos, so it isn't cached. */
+function isPastDay(date: string): boolean {
+  const now = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  return date < today;
+}
+
 /** Photos taken on `date` (YYYY-MM-DD). Also writes their thumbnails. */
 export function getPhotosForDate(date: string): Promise<PhotosResult> {
   const cached = dayCache.get(date);
@@ -62,7 +70,7 @@ export function getPhotosForDate(date: string): Promise<PhotosResult> {
     pending = runHelper(["day", date, PHOTO_THUMBS_DIR], 60_000)
       .then((out): PhotosResult => {
         if (Array.isArray(out)) {
-          dayCache.set(date, out as IndexedPhoto[]);
+          if (isPastDay(date)) dayCache.set(date, out as IndexedPhoto[]);
           return { ok: true, photos: out as IndexedPhoto[] };
         }
         const error = (out as { error?: string })?.error;
