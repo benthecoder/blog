@@ -48,33 +48,28 @@ const WikiSlugPage = async ({ params }: { params: Params }) => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
-      <div className="mb-2">
+    <div className="mx-auto max-w-xl px-4 py-12">
+      <div className="mb-10">
         <Link
           href="/wiki"
-          className="text-[10px] font-mono tracking-widest text-ink-strong/40 dark:text-chalk-strong/40 hover:text-ink dark:hover:text-chalk-soft transition-colors uppercase"
+          className="text-xs lowercase tracking-wide text-ink-soft dark:text-chalk-muted transition-colors hover:text-ink-strong dark:hover:text-chalk-strong"
         >
-          ← Wiki
+          ← wiki
         </Link>
       </div>
 
-      <div className="mb-8">
+      <div className="mb-10">
         {meta.tags.length > 0 && (
-          <p className="text-[10px] text-ink-strong/40 dark:text-chalk-strong/40 tracking-widest font-mono uppercase mb-1">
+          <p className="mb-2 text-xs lowercase tracking-wide text-ink-soft dark:text-chalk-muted">
             {meta.tags.join(" · ")}
           </p>
         )}
-        <h1 className="text-2xl font-bold text-ink-strong dark:text-chalk-strong">
+        <h1 className="text-2xl font-bold lowercase text-ink-strong dark:text-chalk-strong">
           {meta.title}
         </h1>
         {meta.description && (
-          <p className="text-sm text-ink-strong/60 dark:text-chalk-strong/60 mt-1">
+          <p className="mt-2 text-sm text-ink-soft dark:text-chalk-muted">
             {meta.description}
-          </p>
-        )}
-        {meta.lastUpdated && (
-          <p className="text-[10px] font-mono text-ink-strong/30 dark:text-chalk-strong/30 mt-2">
-            last updated {meta.lastUpdated}
           </p>
         )}
       </div>
