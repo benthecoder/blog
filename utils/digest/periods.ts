@@ -1,4 +1,5 @@
 import type { LinkItem } from "./types";
+import type { PeriodKind } from "./schedule";
 import { renderWeekly } from "./renderWeekly";
 import { renderMonthly } from "./renderMonthly";
 import { renderQuarterly } from "./renderQuarterly";
@@ -143,4 +144,8 @@ const quarterly: Period = {
   },
 };
 
-export const PERIODS: Record<string, Period> = { weekly, monthly, quarterly };
+export const PERIODS: Record<PeriodKind, Period> = {
+  weekly,
+  monthly,
+  quarterly,
+};

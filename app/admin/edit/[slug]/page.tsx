@@ -28,6 +28,8 @@ import { ImageCropModal } from "./ImageCropModal";
 import { ImageStrip } from "./ImageStrip";
 import { EditorFooter } from "./EditorFooter";
 import { PhotoPanel } from "./PhotoPanel";
+import { TemplatePicker } from "./TemplatePicker";
+import { suggestPeriods } from "@/utils/digest/schedule";
 import { formatDraft } from "@/utils/content/formatDraft";
 
 export default function EditPostPage() {
@@ -75,6 +77,16 @@ export default function EditPostPage() {
     confirmAction,
     notify,
   });
+
+  const dateParam = searchParams.get("date");
+  const newPostDate =
+    isNew && dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)
+      ? new Date(
+          Number(dateParam.slice(0, 4)),
+          Number(dateParam.slice(5, 7)) - 1,
+          Number(dateParam.slice(8, 10))
+        )
+      : null;
 
   const insertMarkdown = (snippet: string) => {
     const view = cmRef.current?.view;
@@ -253,6 +265,14 @@ export default function EditPostPage() {
             >
               <Calendar size={18} />
             </Link>
+            {isNew && newPostDate && (
+              <TemplatePicker
+                value={draft.template}
+                loading={draft.templateLoading}
+                suggested={suggestPeriods(newPostDate)}
+                onChange={draft.switchTemplate}
+              />
+            )}
           </div>
 
           <div className="flex gap-3 items-center">
