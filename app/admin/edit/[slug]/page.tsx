@@ -247,6 +247,7 @@ export default function EditPostPage() {
               href={monthParam ? `/admin?month=${monthParam}` : "/admin"}
               className="text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk transition-colors"
               title="Back to calendar"
+              aria-label="Back to calendar"
             >
               <Calendar size={18} />
             </Link>
@@ -277,6 +278,7 @@ export default function EditPostPage() {
                   onClick={() => images.setShowImages(!images.showImages)}
                   className="p-1.5 rounded-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90 relative"
                   title="Manage images"
+                  aria-label="Manage images"
                 >
                   <ImageIcon size={18} />
                   <span className="absolute top-0.5 right-0.5 w-3 h-3 bg-ink dark:bg-chalk rounded-full text-[8px] text-white dark:text-night flex items-center justify-center">
@@ -287,16 +289,20 @@ export default function EditPostPage() {
               {photoDate && (
                 <button
                   onClick={() => setPhotosToggle(!photosOpen)}
-                  className="p-1.5 rounded-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90"
+                  className={`p-1.5 rounded-xs transition-[color,background-color,transform] active:scale-90 ${photosOpen && !showPreview ? "text-ink-strong bg-paper-sunken dark:text-chalk-strong dark:bg-night-raised" : "text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised"}`}
                   title="Photos from this day"
+                  aria-label="Photos from this day"
+                  aria-pressed={photosOpen && !showPreview}
                 >
                   <Camera size={18} />
                 </button>
               )}
               <button
                 onClick={() => setShowPreview(!showPreview)}
-                className="p-1.5 rounded-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90"
+                className={`p-1.5 rounded-xs transition-[color,background-color,transform] active:scale-90 ${showPreview ? "text-ink-strong bg-paper-sunken dark:text-chalk-strong dark:bg-night-raised" : "text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised"}`}
                 title={showPreview ? "Edit" : "Preview"}
+                aria-label={showPreview ? "Edit" : "Preview"}
+                aria-pressed={showPreview}
               >
                 {showPreview ? <FileEdit size={18} /> : <Eye size={18} />}
               </button>
@@ -308,7 +314,7 @@ export default function EditPostPage() {
               <button
                 onClick={handleFormat}
                 className="px-3 py-1.5 text-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-97 rounded-xs"
-                title="Normalize to house style"
+                title="Format markdown"
               >
                 Format
               </button>
@@ -337,6 +343,7 @@ export default function EditPostPage() {
                 disabled={draft.deleting}
                 className="p-1.5 rounded-xs text-ink-soft dark:text-chalk-muted hover:text-red-600 dark:hover:text-red-500 hover:bg-paper dark:hover:bg-night-raised disabled:opacity-30 transition-[color,background-color,transform] active:scale-90"
                 title="Delete post"
+                aria-label="Delete post"
               >
                 <Trash2 size={18} />
               </button>
