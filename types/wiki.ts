@@ -7,3 +7,8 @@ export interface WikiMetadata {
   lastUpdated: string;
   slug: string;
 }
+
+export interface WikiEditorPage extends WikiMetadata {
+  content: string;
+  version: string;
+}

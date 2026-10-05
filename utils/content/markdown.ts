@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { randomUUID } from "crypto";
 
 interface MarkdownFile {
   slug: string;
@@ -13,6 +14,25 @@ export function readMarkdownFile(filePath: string) {
   const raw = fs.readFileSync(filePath, "utf8");
   const { orig, ...result } = matter(raw);
   return result;
+}
+
+/** Write a complete markdown file atomically; exclusive creates never replace a page. */
+export function writeMarkdownFile(
+  filePath: string,
+  data: Record<string, unknown>,
+  content: string,
+  { exclusive = false }: { exclusive?: boolean } = {}
+) {
+  const directory = path.dirname(filePath);
+  fs.mkdirSync(directory, { recursive: true });
+  const temporaryPath = path.join(directory, `.${randomUUID()}.tmp`);
+  try {
+    fs.writeFileSync(temporaryPath, matter.stringify(content, data), "utf8");
+    if (exclusive) fs.linkSync(temporaryPath, filePath);
+    else fs.renameSync(temporaryPath, filePath);
+  } finally {
+    fs.rmSync(temporaryPath, { force: true });
+  }
 }
 
 // Slugs only — a readdir with no file reads and no frontmatter parsing. Use

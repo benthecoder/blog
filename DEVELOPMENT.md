@@ -2,6 +2,21 @@
 
 This document tracks the development progress, TODO items, and setup instructions for the blog.
 
+## Writing wiki pages
+
+Run `pnpm dev` and open `/admin/wiki` (or choose Wiki from `/admin`). Create a
+page, fill in its title, category, description and comma-separated tags, then
+write Markdown in the editor. Categories can be nested, such as
+`religion/christianity`. Use `[[Page title]]` or `[[Page title|label]]` to connect
+existing wiki pages or posts; Preview shows the resolved links.
+
+Save with the button or Cmd/Ctrl+S. Pages are written to `wiki/<address>.md` in
+this checkout. Saving updates an existing page only if it has not changed since
+you opened it, and a new page cannot overwrite an existing address. Commit and
+push the Markdown files to update the live site. The editor is a local tool;
+production does not accept wiki saves. Wiki pages have no blog draft or publish
+step, and can still be edited directly in an IDE.
+
 ## TODO
 
 ### Roadmap (in order)
