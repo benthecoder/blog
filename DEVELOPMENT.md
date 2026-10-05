@@ -17,7 +17,7 @@ This document tracks the development progress, TODO items, and setup instruction
    - [ ] Sunday links workflow (`feat/sunday-links`, in `~/blog-links`)
    - [ ] Wiki page work (`feat/wiki-christianity`, in `~/blog-wiki`)
 3. [ ] **Publish every draft** (~121 in `posts/drafts/`, about half of them stubs). Use the admin editor's photo panel to add each day's photos, run Format, spell-check, and publish.
-4. [ ] **photos.bneo.xyz.** A photostream site in the style of the Sesame head of design's (reference link TBD). Its photos would come from R2.
+4. [ ] **photos.bneo.xyz.** A photostream site modeled on [paulstamatiou.com/photos](https://paulstamatiou.com/photos). It has two parts: a chronological **photostream**, and **photosets** grouped into trip collections. Each collection shows stats (photos taken, days, km) and has day-by-day sets. This fits our day-based journal: each day's photos can link to its post. Photos would come from R2.
 
 ### Improvements
 
