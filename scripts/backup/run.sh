@@ -15,6 +15,13 @@ if ! mount | grep -q " on $MOUNT ("; then
   exit 0
 fi
 
+if ! ls "$DEST" > /dev/null 2>&1 && ! mkdir -p "$DEST" 2> /dev/null; then
+  # Mounted but unreadable: macOS hasn't granted removable-volume access.
+  echo "cannot access $DEST (removable-volume permission?)" | tee -a "$LOG"
+  osascript -e 'display notification "Blog backup FAILED: no access to chonky, see log" with title "Blog backup"'
+  exit 1
+fi
+
 if [ "$1" != "--force" ] && [ -f "$DEST/backup-log.jsonl" ]; then
   last=$(grep '"ok":true' "$DEST/backup-log.jsonl" | tail -1 | sed -n 's/.*"endMs":\([0-9]*\).*/\1/p')
   now=$(date +%s)
