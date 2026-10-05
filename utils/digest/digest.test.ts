@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { mergeLinks } from "./merge";
 import { renderWeekly } from "./renderWeekly";
+import { parseFooter } from "./notes";
 
 const d = (s: string) => new Date(s);
 
@@ -59,5 +60,19 @@ describe("renderWeekly", () => {
     expect(out).toContain("  - take:");
     expect(out).toContain("  > q1\n  >\n  > q2");
     expect(out).toMatch(/also\n\n- \[B\]/);
+  });
+});
+
+describe("parseFooter", () => {
+  const post =
+    "- [a](https://a.com)\n\nread\n\n- book one\n- \n\nwatch\n\n- film one\n- film two\n\nnote";
+
+  it("returns only bullets under the requested heading, skipping empty ones", () => {
+    expect(parseFooter(post, "read")).toEqual(["- book one"]);
+    expect(parseFooter(post, "watch")).toEqual(["- film one", "- film two"]);
+  });
+
+  it("ignores bullets before any heading", () => {
+    expect(parseFooter("- stray\n\nwatch\n\n- x", "read")).toEqual([]);
   });
 });

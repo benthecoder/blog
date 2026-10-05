@@ -8,17 +8,20 @@ export const dynamic = "force-dynamic";
 const sql = neon(process.env.POSTGRES_URL!);
 
 export default async function Tweet() {
-  const recent = (await sql`
-    SELECT id, content, link, link_title, created_at
-    FROM tweets
-    ORDER BY id DESC
-    LIMIT 20
-  `) as unknown as Thought[];
+  const isDev = process.env.NODE_ENV !== "production";
+  const recent = isDev
+    ? ((await sql`
+        SELECT id, content, link, link_title, created_at
+        FROM tweets
+        ORDER BY id DESC
+        LIMIT 20
+      `) as unknown as Thought[])
+    : [];
 
   return (
     <section>
       <Form />
-      {process.env.NODE_ENV !== "production" && (
+      {isDev && (
         <RecentList
           items={recent.map((t) => ({
             id: t.id,

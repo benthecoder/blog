@@ -38,7 +38,7 @@ export default function RecentList({ items }: { items: Item[] }) {
         >
           <span className="flex-1 break-words">
             {t.content}
-            {t.link && (
+            {t.link && /^https?:\/\//.test(t.link) && (
               <a
                 href={t.link}
                 target="_blank"
