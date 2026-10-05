@@ -33,23 +33,34 @@ export const PROJECTS_MD = path.join(
 );
 
 export function getPostPath(slug: string): string {
-  return path.join(POSTS_DIR, `${slug}.md`);
+  return getMarkdownPath(POSTS_DIR, slug);
 }
 
 export function getDraftPath(slug: string): string {
-  return path.join(DRAFTS_DIR, `${slug}.md`);
+  return getMarkdownPath(DRAFTS_DIR, slug);
 }
 
 export function getWikiPath(slug: string): string {
-  return path.join(WIKI_DIR, `${slug}.md`);
+  return getMarkdownPath(WIKI_DIR, slug);
+}
+
+function getMarkdownPath(directory: string, slug: string): string {
+  if (!isSafeSlug(slug)) throw new Error("Invalid slug");
+  const filePath = path.resolve(directory, `${slug}.md`);
+  if (path.dirname(filePath) !== path.resolve(directory)) {
+    throw new Error("Path outside content directory");
+  }
+  return filePath;
 }
 
 /**
  * Guard against path traversal for any user-supplied slug or filename used to
  * build a filesystem path. Rejects directory separators and `..` segments.
  */
-export function isSafeSlug(value: string): boolean {
+export function isSafeSlug(value: unknown): value is string {
   return (
+    typeof value === "string" &&
+    value.length > 0 &&
     !value.includes("..") &&
     !value.includes("/") &&
     !value.includes("\\") &&
