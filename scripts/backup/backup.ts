@@ -168,7 +168,8 @@ async function exportThoughts(file: string) {
 const README = `# bneo-blog-backup
 
 Backup of bneo.xyz, written by scripts/backup/backup.ts in the blog repo.
-Run \`pnpm backup\` in the main checkout, or plug this drive in (launchd agent).
+Plug this drive in and run \`pnpm backup\` in the blog repo. Snapshot names
+are UTC timestamps (YYYYMMDD_HHMMSS).
 
 - r2/images/...            additive mirror of the R2 bucket. Never deletes.
                            Restore: upload the files back with the same keys.

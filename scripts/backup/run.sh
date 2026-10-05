@@ -1,6 +1,6 @@
 #!/bin/sh
-# `pnpm backup` entry point: run it after plugging in chonky. Skips if the
-# drive is missing or the last good backup is under 6 hours old, unless --force.
+# `pnpm backup`: run after plugging in chonky. Backs up from the main checkout
+# (where the gitignored drafts and .env live), whichever worktree this runs from.
 export PATH="/opt/homebrew/bin:$HOME/Library/pnpm:/usr/bin:/bin:/sbin"
 
 MOUNT="${BACKUP_MOUNT:-/Volumes/chonky}"
@@ -20,15 +20,6 @@ if ! ls "$DEST" > /dev/null 2>&1 && ! mkdir -p "$DEST" 2> /dev/null; then
   echo "cannot access $DEST (removable-volume permission?)" | tee -a "$LOG"
   osascript -e 'display notification "Blog backup FAILED: no access to chonky, see log" with title "Blog backup"'
   exit 1
-fi
-
-if [ "$1" != "--force" ] && [ -f "$DEST/backup-log.jsonl" ]; then
-  last=$(grep '"ok":true' "$DEST/backup-log.jsonl" | tail -1 | sed -n 's/.*"endMs":\([0-9]*\).*/\1/p')
-  now=$(date +%s)
-  if [ -n "$last" ] && [ $((now - last / 1000)) -lt 21600 ]; then
-    echo "last backup under 6 hours ago, skipping (use --force)"
-    exit 0
-  fi
 fi
 
 out=$(mktemp)
