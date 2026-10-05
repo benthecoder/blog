@@ -6,12 +6,11 @@ This document tracks the development progress, TODO items, and setup instruction
 
 ### Roadmap (in order)
 
-1. [ ] **Hard-drive backup script.** Plug in an external drive and have it auto-export everything that has no second copy:
-   - [ ] R2 images: 336 files, 142 MB. R2 has no versioning or backups, and about 90 of these exist nowhere else.
-   - [ ] Drafts: `posts/drafts/*.md` and `public/images/drafts/`. These are gitignored and live only on this Mac.
-   - [ ] Published posts and wiki (also in git), and `/thoughts` from Neon.
-   - [ ] Run it automatically on mount (launchd `StartOnMount`, checking the drive name).
-   - [ ] Once a verified copy exists, delete `~/blog-purge-backup/`.
+1. [x] **Hard-drive backup script.** Plug in the drive "chonky" and run `pnpm backup` (`feat/drive-backup`, in `~/blog-backup`; merge to main). The first verified backup was made 2026-10-04. It writes to `/Volumes/chonky/bneo-blog-backup/`:
+   - [x] R2 images: an additive mirror of all 336 files. R2 has no versioning or backups, and about 90 of these exist nowhere else.
+   - [x] Dated snapshots, hard-linked so unchanged files cost no space, of posts, drafts (gitignored, so this Mac is otherwise the only copy), draft images, `/thoughts` from Neon and a git bundle of every branch.
+   - [ ] ~~Auto-run on mount~~: dropped. macOS blocks background jobs from removable drives unless they run as an approved named app. It stays manual unless revisited.
+   - [ ] Delete `~/blog-purge-backup/`. It's safe to do now that the drive copy is verified.
 2. [ ] **Finish the in-flight work**, one git worktree per session:
    - [x] Draft photo panel + Format button (`feat/draft-photo-panel`, in `~/blog`). Merge to main.
    - [ ] Sunday links workflow (`feat/sunday-links`, in `~/blog-links`)
