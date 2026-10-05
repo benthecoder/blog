@@ -17,10 +17,6 @@ import {
 } from "lucide-react";
 import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import type { ReactCodeMirrorRef } from "@uiw/react-codemirror";
-import { markdown, markdownKeymap } from "@codemirror/lang-markdown";
-import { keymap } from "@codemirror/view";
-import { Prec } from "@codemirror/state";
-import { indentWithTab } from "@codemirror/commands";
 import { usePostDraft } from "./usePostDraft";
 import { useImageManager } from "./useImageManager";
 import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
@@ -31,6 +27,10 @@ import { PhotoPanel } from "./PhotoPanel";
 import { TemplatePicker } from "./TemplatePicker";
 import { suggestPeriods } from "@/utils/digest/schedule";
 import { formatDraft } from "@/utils/content/formatDraft";
+import {
+  markdownEditorExtensions,
+  markdownEditorSetup,
+} from "@/components/admin/markdownEditorConfig";
 
 export default function EditPostPage() {
   const params = useParams();
@@ -120,29 +120,7 @@ export default function EditPostPage() {
 
   const extensions = useMemo(
     () => [
-      // bundles pasteURLAsLink (paste URL over a selection -> link).
-      // SetextHeading is removed because frontmatter (text immediately
-      // followed by a bare "---" line) is valid CommonMark for an H2
-      // heading, so without this every post's frontmatter block would be
-      // highlighted as a heading.
-      markdown({ extensions: { remove: ["SetextHeading"] } }),
-      EditorView.lineWrapping,
-      // `indentWithTab` binds Tab to indent, which means Tab no longer moves
-      // focus out of the editor. Escape releases it, so the editor is still
-      // escapable by keyboard alone: Escape, then Tab.
-      Prec.highest(
-        keymap.of([
-          {
-            key: "Escape",
-            run: (view) => {
-              view.contentDOM.blur();
-              return true;
-            },
-          },
-          indentWithTab,
-          ...markdownKeymap,
-        ])
-      ),
+      ...markdownEditorExtensions,
       EditorView.domEventHandlers({
         paste: (event) => {
           const items = Array.from(event.clipboardData?.items ?? []);
@@ -153,21 +131,6 @@ export default function EditPostPage() {
           }
           return false;
         },
-      }),
-      EditorView.theme({
-        "&": { backgroundColor: "transparent", height: "100%" },
-        ".cm-content": {
-          padding: "1rem",
-          caretColor: "currentColor",
-          fontFamily: "inherit",
-          fontSize: "inherit",
-        },
-        ".cm-scroller": {
-          fontFamily: "inherit",
-          scrollbarWidth: "thin",
-          scrollbarColor: "var(--scrollbar-thumb) transparent",
-        },
-        "&.cm-focused": { outline: "none" },
       }),
     ],
     []
@@ -419,19 +382,7 @@ export default function EditPostPage() {
                   onChange={(value) => draft.setMarkdown(value)}
                   extensions={extensions}
                   theme="none"
-                  basicSetup={{
-                    lineNumbers: false,
-                    foldGutter: false,
-                    highlightActiveLine: false,
-                    highlightActiveLineGutter: false,
-                    highlightSelectionMatches: false,
-                    // Bracket/quote auto-pairing is a code-editor habit; in
-                    // prose it silently inserts a phantom closing quote
-                    // whenever you type an apostrophe (e.g. "Jesus'"),
-                    // which shifts characters and can corrupt a markdown
-                    // link's "](url)" right after it.
-                    closeBrackets: false,
-                  }}
+                  basicSetup={markdownEditorSetup}
                   placeholder={
                     "---\ntitle: \ntags: \ndate: \n---\n\nWrite your content here..."
                   }

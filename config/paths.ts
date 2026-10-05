@@ -46,7 +46,13 @@ export function getWikiPath(slug: string): string {
 
 function getMarkdownPath(directory: string, slug: string): string {
   if (!isSafeSlug(slug)) throw new Error("Invalid slug");
-  const filePath = path.resolve(directory, `${slug}.md`);
+  const root = path.resolve(directory);
+  const filePath = path.resolve(root, `${slug}.md`);
+  // Check the normalized path itself before returning it to filesystem callers.
+  // Include the separator so a sibling directory with the same prefix is rejected.
+  if (!filePath.startsWith(root + path.sep)) {
+    throw new Error("Path outside content directory");
+  }
   if (path.dirname(filePath) !== path.resolve(directory)) {
     throw new Error("Path outside content directory");
   }
