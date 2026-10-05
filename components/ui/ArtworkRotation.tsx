@@ -123,6 +123,7 @@ export default function ArtworkRotation() {
                     data-shown={layer.id === current.id ? "true" : "false"}
                     onLoad={(e) => promote(layer, e.currentTarget)}
                     priority={layer.id === 0}
+                    loading="eager"
                     draggable={false}
                     sizes="(max-width: 768px) 85vw, 60vw"
                   />
