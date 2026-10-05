@@ -1,5 +1,8 @@
 name: Generate Blog Post Embeddings
 
+permissions:
+  contents: read
+
 on:
   push:
     paths:
@@ -41,19 +44,27 @@ jobs:
         uses: tj-actions/changed-files@v46.0.1
         with:
           files: "posts/*.md"
+          separator: "\n"
 
       - name: Generate embeddings for changed files
         if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
         run: |
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+            if [[ ! "$file" =~ ^posts/([a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)*)\.md$ ]]; then
+              echo "Skipping unsupported post filename"
+              continue
+            fi
             echo "Processing: $file"
-            filename=$(basename "$file")
-            # Remove .md extension to get just the slug
-            slug="${filename%.md}"
+            slug="${BASH_REMATCH[1]}"
             npx tsx scripts/generateEmbeddings.ts "$slug"
-          done
+          done <<< "$CHANGED_FILES"
 
       - name: Trigger Vercel deployment to update knowledge map
         if: steps.changed-files.outputs.any_changed == 'true'
+        env:
+          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOKS }}
         run: |
-          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOKS }}"
+          curl --fail --silent --show-error -X POST "$VERCEL_DEPLOY_HOOK"

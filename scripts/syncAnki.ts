@@ -15,6 +15,7 @@ import path from "path";
 import { DATA_DIR } from "../config/paths";
 import { ANKI_CONNECT_URL, ANKI_DECK } from "../config/constants";
 import type { Flashcard, FlashcardsData } from "../types/flashcards";
+import { sanitizeFlashcardHtml } from "../utils/content/flashcardHtml";
 
 async function ankiConnect<T>(action: string, params: object = {}): Promise<T> {
   let res: Response;
@@ -34,28 +35,6 @@ async function ankiConnect<T>(action: string, params: object = {}): Promise<T> {
   const json = (await res.json()) as { result: T; error: string | null };
   if (json.error) throw new Error(`AnkiConnect: ${json.error}`);
   return json.result;
-}
-
-/**
- * Anki fields are HTML and may reference local media that isn't served by the
- * blog. Strip scripts/styles, inline event handlers, audio refs, and <img>
- * tags so the remaining markup is safe and self-contained.
- */
-function cleanHtml(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/\[sound:[^\]]*\]/g, "") // audio media refs
-    .replace(/\[anki:[^\]]*\]/g, "") // tts / play-button placeholders
-    .replace(/<img[^>]*>/gi, "")
-    .replace(/\son\w+\s*=\s*"[^"]*"/gi, "")
-    .replace(/\son\w+\s*=\s*'[^']*'/gi, "")
-    .replace(/\sstyle\s*=\s*"[^"]*"/gi, "") // drop inline colors/fonts; theme owns styling
-    .replace(/\sstyle\s*=\s*'[^']*'/gi, "")
-    .replace(/\sclass\s*=\s*"[^"]*"/gi, "")
-    .replace(/\sclass\s*=\s*'[^']*'/gi, "")
-    .replace(/\s+/g, " ")
-    .trim();
 }
 
 /**
@@ -110,8 +89,8 @@ async function main() {
     cards = cardsInfo
       .map((c) => ({
         id: c.cardId,
-        front: cleanHtml(c.question),
-        back: cleanHtml(extractBack(c.answer)),
+        front: sanitizeFlashcardHtml(c.question),
+        back: sanitizeFlashcardHtml(extractBack(c.answer)),
         deck: c.deckName,
         tags: tagsByNote.get(c.note) ?? [],
       }))
