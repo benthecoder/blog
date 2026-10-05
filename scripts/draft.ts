@@ -8,41 +8,24 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import fs from "fs";
-import { DRAFTS_DIR, POSTS_DIR, getDraftPath } from "@/config/paths";
-import { scanMarkdownDir } from "@/utils/content/markdown";
-import { SOURCES } from "@/utils/digest/sources";
-import { mergeLinks } from "@/utils/digest/merge";
+import { DRAFTS_DIR, getDraftPath } from "@/config/paths";
+import { collectLinks, nextIssueNumber } from "@/utils/digest/collect";
 import { PERIODS } from "@/utils/digest/periods";
+import type { PeriodKind } from "@/utils/digest/schedule";
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
   return i > -1 ? process.argv[i + 1] : undefined;
 }
 
-function nextIssueNumber(): number {
-  const titles = [POSTS_DIR, DRAFTS_DIR]
-    .flatMap((d) => scanMarkdownDir(d))
-    .map((f) => String(f.data.title ?? "").match(/^sunday links #(\d+)/i));
-  return Math.max(0, ...titles.map((m) => (m ? Number(m[1]) : 0))) + 1;
-}
-
-async function collectLinks(since: Date, until: Date) {
-  const names = (arg("sources") ?? Object.keys(SOURCES).join(",")).split(",");
-  const batches = await Promise.all(
-    names.map(async (name) => {
-      const source = SOURCES[name];
-      if (!source) throw new Error(`unknown source: ${name}`);
-      const items = await source.fetch(since, until);
-      console.log(`${name}: ${items.length}`);
-      return { source: name, items };
-    })
-  );
-  return mergeLinks(batches);
+function collect(since: Date, until: Date) {
+  const names = arg("sources")?.split(",");
+  return collectLinks(since, until, names);
 }
 
 async function main() {
   const kind = process.argv[2];
-  const period = PERIODS[kind];
+  const period = PERIODS[kind as PeriodKind];
   if (!period) {
     throw new Error(`usage: pnpm draft <${Object.keys(PERIODS).join("|")}>`);
   }
@@ -52,7 +35,7 @@ async function main() {
     now,
     days: Number(arg("days") ?? 7),
     month: arg("month"),
-    collectLinks,
+    collectLinks: collect,
     nextIssue: nextIssueNumber,
   });
 
