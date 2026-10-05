@@ -154,6 +154,13 @@ export function useImageManager({
     }
   };
 
+  /** Routes an already-picked file (e.g. from the photo panel) through the same crop -> name -> upload flow as a drop. */
+  const openCropModalWith = (file: File, name: string) => {
+    setPendingImageFile(file);
+    setImageNameInput(name);
+    setShowImageNameModal(true);
+  };
+
   /** The modal hands back the original file plus the region to cut from it. */
   const confirmImageUpload = async (
     original?: File,
@@ -216,6 +223,7 @@ export function useImageManager({
     handleDragLeave,
     handleDrop,
     handlePaste,
+    openCropModalWith,
     confirmImageUpload,
     cancelImageUpload,
   };

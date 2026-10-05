@@ -43,6 +43,9 @@ public/images/drafts/*
 
 .vscode
 
+# PhotoKit helper binary + photo thumbnails (admin photo panel)
+.cache/
+
 public/robots.txt
 public/sitemap*
 

@@ -8,6 +8,7 @@ import { Providers } from "./providers";
 import ThemeSwitch from "@/components/ui/ThemeSwitch";
 import PaletteSwitch from "@/components/ui/PaletteSwitch";
 import SearchModal from "@/components/ui/SearchModal";
+import { FloatingControls } from "@/components/layout/FloatingControls";
 import { RandomPostListener } from "@/components/layout/RandomPostListener";
 
 export const metadata: Metadata = {
@@ -85,10 +86,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <body className="antialiased">
         <Providers>
-          <div className="fixed top-4 right-4 z-50 flex items-center gap-3">
+          <FloatingControls>
             <PaletteSwitch />
             <ThemeSwitch />
-          </div>
+          </FloatingControls>
           <SearchModal />
           <RandomPostListener />
           {children}
