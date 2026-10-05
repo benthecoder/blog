@@ -1,6 +1,6 @@
 #!/bin/sh
-# Launchd entry point (also `pnpm backup`). Skips if the drive is missing or
-# the last good backup is under 6 hours old, unless --force.
+# `pnpm backup` entry point: run it after plugging in chonky. Skips if the
+# drive is missing or the last good backup is under 6 hours old, unless --force.
 export PATH="/opt/homebrew/bin:$HOME/Library/pnpm:/usr/bin:/bin:/sbin"
 
 MOUNT="${BACKUP_MOUNT:-/Volumes/chonky}"

@@ -20,8 +20,6 @@
     "spotify-auth": "tsx scripts/spotifyAuth.ts",
     "sync-anki": "tsx scripts/syncAnki.ts",
     "backup": "sh scripts/backup/run.sh --force",
-    "backup:install": "sh scripts/backup/install.sh",
-    "backup:uninstall": "sh scripts/backup/uninstall.sh",
     "sync": "tsx scripts/syncAnki.ts",
     "analyze-vector-db": "tsx scripts/analyzeVectorDB.ts",
     "prepare": "husky",
