@@ -1,4 +1,0 @@
----
-title: Christianity
-category: humanities
----
