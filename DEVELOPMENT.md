@@ -4,6 +4,21 @@ This document tracks the development progress, TODO items, and setup instruction
 
 ## TODO
 
+### Roadmap (in order)
+
+1. [ ] **Hard-drive backup script.** Plug in an external drive and have it auto-export everything that has no second copy:
+   - [ ] R2 images: 336 files, 142 MB. R2 has no versioning or backups, and about 90 of these exist nowhere else.
+   - [ ] Drafts: `posts/drafts/*.md` and `public/images/drafts/`. These are gitignored and live only on this Mac.
+   - [ ] Published posts and wiki (also in git), and `/thoughts` from Neon.
+   - [ ] Run it automatically on mount (launchd `StartOnMount`, checking the drive name).
+   - [ ] Once a verified copy exists, delete `~/blog-purge-backup/`.
+2. [ ] **Finish the in-flight work**, one git worktree per session:
+   - [x] Draft photo panel + Format button (`feat/draft-photo-panel`, in `~/blog`). Merge to main.
+   - [ ] Sunday links workflow (`feat/sunday-links`, in `~/blog-links`)
+   - [ ] Wiki page work (`feat/wiki-christianity`, in `~/blog-wiki`)
+3. [ ] **Publish every draft** (~121 in `posts/drafts/`, about half of them stubs). Use the admin editor's photo panel to add each day's photos, run Format, spell-check, and publish.
+4. [ ] **photos.bneo.xyz.** A photostream site in the style of the Sesame head of design's (reference link TBD). Its photos would come from R2.
+
 ### Improvements
 
 - [x] Syntax highlight https://bionicjulia.com/blog/setting-up-nextjs-markdown-blog-with-typescript
