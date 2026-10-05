@@ -19,6 +19,7 @@
     "generate-embeddings": "tsx scripts/generateEmbeddings.ts",
     "spotify-auth": "tsx scripts/spotifyAuth.ts",
     "sync-anki": "tsx scripts/syncAnki.ts",
+    "backup": "sh scripts/backup/run.sh",
     "sync": "tsx scripts/syncAnki.ts",
     "analyze-vector-db": "tsx scripts/analyzeVectorDB.ts",
     "prepare": "husky",
