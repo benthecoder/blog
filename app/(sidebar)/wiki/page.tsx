@@ -10,39 +10,48 @@ export const metadata: Metadata = {
 };
 
 const TreeNode = ({ node }: { node: WikiTreeNode }) => (
-  <div>
-    <h2 className="text-sm text-ink-strong/40 dark:text-chalk-strong/40 mb-3 lowercase">
-      {node.name}
-    </h2>
-    <div className="pl-4 space-y-2.5">
+  <section>
+    <div className="flex items-center gap-4">
+      <h2 className="shrink-0 text-xs tracking-[0.18em] lowercase text-ink-soft dark:text-chalk-muted">
+        {node.name}
+      </h2>
+      <div className="flex-1 border-t border-rule dark:border-night-rule" />
+    </div>
+
+    <ul className="mt-6 space-y-3.5">
       {node.pages.map((page) => (
-        <div key={page.slug}>
+        <li key={page.slug}>
           <Link
             href={`/wiki/${page.slug}`}
-            className="text-sm text-ink dark:text-chalk-soft hover:underline underline-offset-2 lowercase"
+            className="text-[15px] lowercase text-ink dark:text-chalk-soft transition-colors hover:text-ink-strong dark:hover:text-chalk-strong"
           >
             {page.title}
           </Link>
-        </div>
+        </li>
       ))}
-      {node.children.map((child) => (
-        <TreeNode key={child.name} node={child} />
-      ))}
-    </div>
-  </div>
+    </ul>
+
+    {node.children.length > 0 && (
+      <div className="mt-8 space-y-10 border-l border-rule dark:border-night-rule pl-6">
+        {node.children.map((child) => (
+          <TreeNode key={child.name} node={child} />
+        ))}
+      </div>
+    )}
+  </section>
 );
 
 const WikiPage = () => {
   const tree = getWikiTree();
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-10">
+    <div className="mx-auto max-w-xl px-4 py-12">
       {tree.length === 0 ? (
         <p className="text-sm text-ink-strong/40 dark:text-chalk-strong/40">
           Nothing here yet.
         </p>
       ) : (
-        <div className="space-y-10">
+        <div className="space-y-16">
           {tree.map((node) => (
             <TreeNode key={node.name} node={node} />
           ))}
