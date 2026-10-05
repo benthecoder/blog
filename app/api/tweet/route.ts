@@ -4,7 +4,7 @@ const sql = neon(process.env.POSTGRES_URL!);
 
 export const runtime = "edge";
 
-import { fetchTitle, parsePublicUrl } from "@/utils/tweets/link";
+import { parsePublicUrl } from "@/utils/tweets/link";
 
 const URL_RE = /https?:\/\/[^\s]+/;
 
@@ -23,7 +23,12 @@ export async function POST(request: Request) {
     }
   }
 
-  const title = link ? await fetchTitle(link) : null;
+  // The server never fetches the link; the draft script resolves missing titles
+  // locally. A client (e.g. the shortcut) may send one.
+  const title =
+    link && typeof body.title === "string"
+      ? body.title.replace(/\s+/g, " ").trim().slice(0, 300) || null
+      : null;
 
   try {
     const result =
