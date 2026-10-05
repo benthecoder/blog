@@ -7,7 +7,14 @@ import Link from "next/link";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
 import matter from "gray-matter";
-import { Calendar, Eye, FileEdit, ImageIcon, Trash2 } from "lucide-react";
+import {
+  Calendar,
+  Camera,
+  Eye,
+  FileEdit,
+  ImageIcon,
+  Trash2,
+} from "lucide-react";
 import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import type { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import { markdown, markdownKeymap } from "@codemirror/lang-markdown";
@@ -20,6 +27,8 @@ import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
 import { ImageCropModal } from "./ImageCropModal";
 import { ImageStrip } from "./ImageStrip";
 import { EditorFooter } from "./EditorFooter";
+import { PhotoPanel } from "./PhotoPanel";
+import { formatDraft } from "@/utils/content/formatDraft";
 
 export default function EditPostPage() {
   const params = useParams();
@@ -31,6 +40,8 @@ export default function EditPostPage() {
   const [message, setMessage] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [editorWidth, setEditorWidth] = useState(700);
+  // null = never toggled, so the default (open for drafts) applies.
+  const [photosToggle, setPhotosToggle] = useState<boolean | null>(null);
   const [modalConfig, setModalConfig] = useState<ConfirmConfig | null>(null);
   const cmRef = useRef<ReactCodeMirrorRef>(null);
   const isResizing = useRef(false);
@@ -185,6 +196,41 @@ export default function EditPostPage() {
 
   const monthParam = searchParams.get("month");
 
+  // Day the photo panel looks at: DDMMYY slug, else the new-post date param,
+  // else whatever date the loaded post carries.
+  const photoDate = useMemo(() => {
+    const m = slug.match(/^(\d{2})(\d{2})(\d{2})$/);
+    if (m) return `20${m[3]}-${m[2]}-${m[1]}`;
+    const param = searchParams.get("date");
+    if (isNew && param && /^\d{4}-\d{2}-\d{2}$/.test(param)) return param;
+    const parsed = draft.date ? new Date(draft.date) : null;
+    if (parsed && !isNaN(parsed.getTime())) {
+      const pad = (n: number) => String(n).padStart(2, "0");
+      return `${parsed.getFullYear()}-${pad(parsed.getMonth() + 1)}-${pad(parsed.getDate())}`;
+    }
+    return null;
+  }, [slug, isNew, searchParams, draft.date]);
+
+  // Published posts start with the panel closed; wait for the load so the
+  // default doesn't flash open before isDraft is known.
+  const photosOpen =
+    photosToggle ?? (draft.isDraft && (isNew || draft.date !== ""));
+
+  const handleFormat = () => {
+    const view = cmRef.current?.view;
+    if (!view) return;
+    const current = view.state.doc.toString();
+    const formatted = formatDraft(current);
+    if (formatted === current) {
+      notify("✓ Already formatted", true);
+      return;
+    }
+    // Dispatched through the view so ⌘Z undoes it.
+    view.dispatch({
+      changes: { from: 0, to: view.state.doc.length, insert: formatted },
+    });
+  };
+
   return (
     <div className="h-screen flex items-center justify-center bg-paper dark:bg-night">
       <div
@@ -238,6 +284,15 @@ export default function EditPostPage() {
                   </span>
                 </button>
               )}
+              {photoDate && (
+                <button
+                  onClick={() => setPhotosToggle(!photosOpen)}
+                  className="p-1.5 rounded-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90"
+                  title="Photos from this day"
+                >
+                  <Camera size={18} />
+                </button>
+              )}
               <button
                 onClick={() => setShowPreview(!showPreview)}
                 className="p-1.5 rounded-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90"
@@ -249,6 +304,15 @@ export default function EditPostPage() {
 
             <div className="w-px self-stretch bg-rule dark:bg-night-rule" />
 
+            {!showPreview && (
+              <button
+                onClick={handleFormat}
+                className="px-3 py-1.5 text-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-97 rounded-xs"
+                title="Normalize to house style"
+              >
+                Format
+              </button>
+            )}
             {draft.isDraft && (
               <button
                 onClick={draft.handlePublish}
@@ -398,6 +462,14 @@ export default function EditPostPage() {
           />
         )}
       </div>
+
+      {photoDate && photosOpen && !showPreview && (
+        <PhotoPanel
+          date={photoDate}
+          onPick={images.openCropModalWith}
+          onClose={() => setPhotosToggle(false)}
+        />
+      )}
     </div>
   );
 }
