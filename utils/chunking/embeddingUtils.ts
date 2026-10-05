@@ -10,7 +10,7 @@ export function parseEmbedding(embedding: unknown): number[] {
       if (Array.isArray(parsed)) return parsed;
     } catch {
       // Parse PostgreSQL vector format [x,y,z]
-      const cleaned = embedding.replace(/[\[\]]/g, "");
+      const cleaned = embedding.replace(/[[\]]/g, "");
       return cleaned.split(",").map(Number);
     }
   }

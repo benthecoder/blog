@@ -1,0 +1,37 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "oxc",
+    "react",
+    "nextjs",
+    "jsx-a11y",
+    "import"
+  ],
+  "categories": { "correctness": "error" },
+  "rules": {
+    "react/exhaustive-deps": "warn",
+    "react/set-state-in-effect": "warn",
+    "react/refs": "warn",
+    "react/purity": "warn",
+    "no-unused-vars": [
+      "error",
+      { "ignoreRestSiblings": true, "argsIgnorePattern": "^_" }
+    ],
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "jsx-a11y/prefer-tag-over-role": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/no-autofocus": "off"
+  },
+  "env": { "builtin": true, "browser": true, "node": true },
+  "ignorePatterns": [
+    ".next",
+    "node_modules",
+    "public",
+    "next-env.d.ts",
+    "next-sitemap.config.js"
+  ]
+}
