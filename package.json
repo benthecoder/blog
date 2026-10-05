@@ -20,6 +20,7 @@
     "spotify-auth": "tsx scripts/spotifyAuth.ts",
     "sync-anki": "tsx scripts/syncAnki.ts",
     "sync": "tsx scripts/syncAnki.ts",
+    "draft": "tsx scripts/draft.ts",
     "analyze-vector-db": "tsx scripts/analyzeVectorDB.ts",
     "prepare": "husky",
     "promote-images": "tsx scripts/promoteStrandedImages.ts"
