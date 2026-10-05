@@ -21,6 +21,7 @@
     "sync-anki": "tsx scripts/syncAnki.ts",
     "backup": "sh scripts/backup/run.sh",
     "sync": "tsx scripts/syncAnki.ts",
+    "draft": "tsx scripts/draft.ts",
     "analyze-vector-db": "tsx scripts/analyzeVectorDB.ts",
     "prepare": "husky",
     "promote-images": "tsx scripts/promoteStrandedImages.ts",
