@@ -6,6 +6,16 @@ export const POSTS_DIR = path.join(ROOT_DIR, "posts");
 export const DRAFTS_DIR = path.join(POSTS_DIR, "drafts");
 export const WIKI_DIR = path.join(ROOT_DIR, "wiki");
 
+// Local-only helper + cache for the admin "photos from this day" panel.
+export const PHOTOKIT_BIN = path.join(ROOT_DIR, ".cache", "bin", "photokit");
+export const PHOTO_THUMBS_DIR = path.join(
+  ROOT_DIR,
+  ".cache",
+  "photos",
+  "thumbs"
+);
+export const PHOTO_FULL_DIR = path.join(ROOT_DIR, ".cache", "photos", "full");
+
 const PUBLIC_DIR = path.join(ROOT_DIR, "public");
 export const IMAGES_DIR = path.join(PUBLIC_DIR, "images");
 export const IMAGES_DRAFTS_DIR = path.join(IMAGES_DIR, "drafts");

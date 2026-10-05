@@ -4,6 +4,20 @@ This document tracks the development progress, TODO items, and setup instruction
 
 ## TODO
 
+### Roadmap (in order)
+
+1. [x] **Hard-drive backup script.** Plug in the drive "chonky" and run `pnpm backup` (`feat/drive-backup`, in `~/blog-backup`; merge to main). The first verified backup was made 2026-10-04. It writes to `/Volumes/chonky/bneo-blog-backup/`:
+   - [x] R2 images: an additive mirror of all 336 files. R2 has no versioning or backups, and about 90 of these exist nowhere else.
+   - [x] Dated snapshots, hard-linked so unchanged files cost no space, of posts, drafts (gitignored, so this Mac is otherwise the only copy), draft images, `/thoughts` from Neon and a git bundle of every branch.
+   - [ ] ~~Auto-run on mount~~: dropped. macOS blocks background jobs from removable drives unless they run as an approved named app. It stays manual unless revisited.
+   - [ ] Delete `~/blog-purge-backup/`. It's safe to do now that the drive copy is verified.
+2. [ ] **Finish the in-flight work**, one git worktree per session:
+   - [x] Draft photo panel + Format button (`feat/draft-photo-panel`, in `~/blog`). Merge to main.
+   - [ ] Sunday links workflow (`feat/sunday-links`, in `~/blog-links`)
+   - [ ] Wiki page work (`feat/wiki-christianity`, in `~/blog-wiki`)
+3. [ ] **Publish every draft** (~121 in `posts/drafts/`, about half of them stubs). Use the admin editor's photo panel to add each day's photos, run Format, spell-check, and publish.
+4. [ ] **photos.bneo.xyz.** A photostream site modeled on [paulstamatiou.com/photos](https://paulstamatiou.com/photos). It has two parts: a chronological **photostream**, and **photosets** grouped into trip collections. Each collection shows stats (photos taken, days, km) and has day-by-day sets. This fits our day-based journal: each day's photos can link to its post. Photos would come from R2.
+
 ### Improvements
 
 - [x] Syntax highlight https://bionicjulia.com/blog/setting-up-nextjs-markdown-blog-with-typescript
