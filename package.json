@@ -19,11 +19,13 @@
     "generate-embeddings": "tsx scripts/generateEmbeddings.ts",
     "spotify-auth": "tsx scripts/spotifyAuth.ts",
     "sync-anki": "tsx scripts/syncAnki.ts",
+    "backup": "sh scripts/backup/run.sh",
     "sync": "tsx scripts/syncAnki.ts",
+    "draft": "tsx scripts/draft.ts",
     "analyze-vector-db": "tsx scripts/analyzeVectorDB.ts",
     "prepare": "husky",
-    "draft": "tsx scripts/draft.ts",
-    "promote-images": "tsx scripts/promoteStrandedImages.ts"
+    "promote-images": "tsx scripts/promoteStrandedImages.ts",
+    "photos:build": "sh scripts/photokit/build.sh"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",

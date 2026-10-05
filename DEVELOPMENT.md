@@ -4,6 +4,20 @@ This document tracks the development progress, TODO items, and setup instruction
 
 ## TODO
 
+### Roadmap (in order)
+
+1. [x] **Hard-drive backup script.** Plug in the drive "chonky" and run `pnpm backup` (`feat/drive-backup`, in `~/blog-backup`; merge to main). The first verified backup was made 2026-10-04. It writes to `/Volumes/chonky/bneo-blog-backup/`:
+   - [x] R2 images: an additive mirror of all 336 files. R2 has no versioning or backups, and about 90 of these exist nowhere else.
+   - [x] Dated snapshots, hard-linked so unchanged files cost no space, of posts, drafts (gitignored, so this Mac is otherwise the only copy), draft images, `/thoughts` from Neon and a git bundle of every branch.
+   - [ ] ~~Auto-run on mount~~: dropped. macOS blocks background jobs from removable drives unless they run as an approved named app. It stays manual unless revisited.
+   - [ ] Delete `~/blog-purge-backup/`. It's safe to do now that the drive copy is verified.
+2. [ ] **Finish the in-flight work**, one git worktree per session:
+   - [x] Draft photo panel + Format button (`feat/draft-photo-panel`, in `~/blog`). Merge to main.
+   - [ ] Sunday links workflow (`feat/sunday-links`, in `~/blog-links`)
+   - [ ] Wiki page work (`feat/wiki-christianity`, in `~/blog-wiki`)
+3. [ ] **Publish every draft** (~121 in `posts/drafts/`, about half of them stubs). Use the admin editor's photo panel to add each day's photos, run Format, spell-check, and publish.
+4. [ ] **photos.bneo.xyz.** A photostream site modeled on [paulstamatiou.com/photos](https://paulstamatiou.com/photos). It has two parts: a chronological **photostream**, and **photosets** grouped into trip collections. Each collection shows stats (photos taken, days, km) and has day-by-day sets. This fits our day-based journal: each day's photos can link to its post. Photos would come from R2.
+
 ### Improvements
 
 - [x] Syntax highlight https://bionicjulia.com/blog/setting-up-nextjs-markdown-blog-with-typescript
@@ -37,6 +51,31 @@ This document tracks the development progress, TODO items, and setup instruction
 - [ ] breadcrumb navigation
   - [ ] https://jake.isnt.online/
 - ~~Setup contentlayer~~ — abandoned project (no Next.js 15 support); current `utils/content/markdown.ts` approach is fine
+
+### Writing system (goal: weekly links, monthly overview, quarterly reflection)
+
+Source of truth is the blog. Capture is cheap and happens in the moment; the AI only collects and formats, it never writes the takes.
+
+- [ ] **Capture**: Curius is the link inbox. `https://curius.app/api/users/2790/links?page=N` (public, paginated 30/page) returns `highlights[]` and `comments[]` per link; `searchLinks` does not. Filter by `createdDate`.
+- [ ] **Quick takes**: /tweet (local) should capture a link plus a one-line reaction as structured rows, not one text blob (see "Link takes" below).
+- [ ] **Weekly: `sunday links #N`** (resumes at #17; the series ended at #16 on 2025-07-20)
+  - [x] `pnpm draft weekly` pulls last 7 days from Curius + link takes, writes a draft `posts/DDMMYY.md`
+  - [x] each link: highlight as blockquote, take beneath it (empty `- take:` slot if none), "also" list for no-take links, read/watch footer
+  - [ ] ~7 items with real takes, not 30. Delete what you saved but didn't read
+  - [ ] lowercase title, open with a photo + caption or a verse, no intro paragraph, takes 1-3 sentences, no article summaries
+- [ ] **Monthly: `highlights, {month} {year}`** (first Sunday)
+  - [x] `pnpm draft monthly` gathers the month's sunday links posts, Curius highlights, `journal`-tagged posts, /thoughts
+  - [x] drafts sections: things i enjoyed reading, things i enjoyed watching, plot (candidate events only, I write the prose)
+  - [ ] publish on the blog first, then paste into Substack by hand
+- [ ] **Quarterly: `q1/q2/q3/q4 reflection`**
+  - [x] `pnpm draft quarterly` gathers the quarter's monthly highlights posts + thoughts + journal posts into a draft with prompts, no generated reflections
+- [ ] **Decision**: drafts land as unpublished files (`posts/drafts/`) edited locally, or as a PR reviewed on phone?
+
+#### Link takes (reworking /tweet)
+
+- [ ] new table `link_takes(id, url, title, take, created_at)`; /tweet detects a URL in the input, fetches the title, and stores the take separately from the link
+- [ ] /thoughts keeps rendering plain thoughts; link takes feed the weekly script
+- [ ] /tweet lists recent entries with a delete button (dev only)
 
 ## Inspirations
 

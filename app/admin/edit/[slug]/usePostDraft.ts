@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import type { useRouter, useSearchParams } from "next/navigation";
 import matter from "gray-matter";
 import { DEFAULT_POST_TEMPLATE } from "../post-template";
+import { suggestPeriods, type PeriodKind } from "@/utils/digest/schedule";
 
 interface UsePostDraftArgs {
   slug: string;
@@ -43,7 +44,63 @@ export function usePostDraft({
   const [isDraft, setIsDraft] = useState(true);
   const [prevSlug, setPrevSlug] = useState<string | null>(null);
   const [nextSlug, setNextSlug] = useState<string | null>(null);
+  const [template, setTemplate] = useState<PeriodKind | "blank">("blank");
+  const [templateLoading, setTemplateLoading] = useState(false);
   const initialContentRef = useRef({ markdown: "" });
+
+  // Replace the editor with the blank daily template or a period template
+  // (sunday links / highlights / reflection) built server-side.
+  async function loadTemplate(
+    kind: PeriodKind | "blank",
+    dateParam: string,
+    formattedDate: string
+  ) {
+    const apply = (md: string) => {
+      setMarkdown(md);
+      initialContentRef.current = { markdown: md };
+      setTemplate(kind);
+    };
+
+    if (kind === "blank") {
+      apply(DEFAULT_POST_TEMPLATE.replace("date:", `date: ${formattedDate}`));
+      return;
+    }
+
+    setTemplateLoading(true);
+    try {
+      const res = await fetch(
+        `/api/admin/period-template?kind=${kind}&date=${dateParam}`
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      apply(
+        matter.stringify(data.body, {
+          title: data.title,
+          tags: data.tags,
+          date: formattedDate,
+        })
+      );
+    } catch (err) {
+      notify(`✗ Template: ${err instanceof Error ? err.message : err}`);
+    } finally {
+      setTemplateLoading(false);
+    }
+  }
+
+  const switchTemplate = (kind: PeriodKind | "blank") => {
+    const dateParam = searchParams.get("date");
+    if (!dateParam || kind === template) return;
+    const run = () => loadTemplate(kind, dateParam, date);
+    if (hasUnsavedChanges) {
+      confirmAction(
+        "Replace content",
+        "Switching template replaces what you've typed. Continue?",
+        run
+      );
+    } else {
+      run();
+    }
+  };
 
   // Fetch all posts to determine prev/next for existing posts
   useEffect(() => {
@@ -128,11 +185,13 @@ export function usePostDraft({
         // new-post page reports unsaved changes before any typing happens.
         initialContentRef.current = { markdown: templateWithDate };
 
+        let hasSavedDraft = false;
         const savedDraft = localStorage.getItem(draftKey);
         if (savedDraft) {
           const draft = JSON.parse(savedDraft);
           // Only show the draft if it's from the same date
           if (draft.date === formattedDate) {
+            hasSavedDraft = true;
             confirmAction(
               "Draft Found",
               `Found unsaved draft from ${new Date(draft.timestamp).toLocaleString()}. Restore it?`,
@@ -143,6 +202,13 @@ export function usePostDraft({
             localStorage.removeItem(draftKey);
           }
         }
+
+        // Sundays, month ends and quarter ends open with their own template
+        // (unless a saved draft is waiting to be restored).
+        const suggested = hasSavedDraft
+          ? undefined
+          : suggestPeriods(dateObj)[0];
+        if (suggested) loadTemplate(suggested, newDateParam, formattedDate);
       }
     }
     // confirmAction/notify are page-level helpers, not load triggers
@@ -402,6 +468,9 @@ export function usePostDraft({
     deleting,
     hasUnsavedChanges,
     isDraft,
+    template,
+    templateLoading,
+    switchTemplate,
     prevSlug,
     nextSlug,
     prevDate,
