@@ -11,23 +11,26 @@ export default function ColophonPage() {
       <h1>colophon</h1>
       <ul>
         <li>
-          type:{" "}
+          Fonts:{" "}
           <a href="https://fonts.google.com/specimen/Averia+Serif+Libre">
             Averia Serif Libre
           </a>
         </li>
-        <li>hand-drawn navigation</li>
+        <li>Colors: indigo, olive, gold, steel, vermillion, rose</li>
+        <li>Icons: my drawings</li>
         <li>
-          sounds: <a href="https://github.com/Danilaa1/cuelume">Cuelume</a>
+          Sounds: <a href="https://github.com/Danilaa1/cuelume">Cuelume</a>
         </li>
         <li>
-          <a href="https://nextjs.org/">Next.js</a> +{" "}
+          Tech: <a href="https://nextjs.org/">Next.js</a>,{" "}
           <a href="https://tailwindcss.com/">Tailwind CSS</a>
         </li>
-        <li>Markdown + Git</li>
-        <li>hosted on Vercel</li>
         <li>
-          <a href="https://github.com/benthecoder/blog">source</a>
+          Host: <a href="https://vercel.com/">Vercel</a>
+        </li>
+        <li>
+          Github:{" "}
+          <a href="https://github.com/benthecoder/blog">benthecoder/blog</a>
         </li>
       </ul>
     </article>
