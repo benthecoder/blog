@@ -28,14 +28,3 @@ export function writeStoredString(
     return false;
   }
 }
-
-export function removeStoredValue(
-  key: string,
-  kind: StorageKind = "local"
-): void {
-  try {
-    storage(kind).removeItem(key);
-  } catch {
-    /* Cache removal is best effort. */
-  }
-}
