@@ -14,7 +14,9 @@ export const generateStaticParams = async () => {
 
 const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   const params = await props.params;
-  const tag = decodeURIComponent(params.slug);
+  // Next's route matcher already decodes this segment. A tag can contain a
+  // literal percent sign or "%2F"; decoding again changes its meaning.
+  const tag = params.slug;
   const filteredPosts = getPostMetadata().filter((post) =>
     post.tags.includes(tag)
   );

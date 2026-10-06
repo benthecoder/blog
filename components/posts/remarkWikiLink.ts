@@ -1,6 +1,7 @@
 import { visit, SKIP } from "unist-util-visit";
 import type { Root, Text, Link, PhrasingContent } from "mdast";
 import { splitOnWikiLinks } from "@/utils/links/parse";
+import { tryDecodeUrlComponent } from "@/utils/links/url";
 
 /**
  * Sentinel URL scheme for an unresolved `[[wikilink]]`. The target is
@@ -16,7 +17,7 @@ function encodeWikiLinkHref(target: string): string {
 
 export function decodeWikiLinkHref(href: string): string | null {
   if (!href.startsWith(WIKILINK_SCHEME)) return null;
-  return decodeURIComponent(href.slice(WIKILINK_SCHEME.length));
+  return tryDecodeUrlComponent(href.slice(WIKILINK_SCHEME.length));
 }
 
 /**

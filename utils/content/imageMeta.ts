@@ -1,5 +1,6 @@
 import fs from "fs";
 import { IMAGE_META_JSON } from "@/config/paths";
+import { tryDecodeUrlComponent } from "@/utils/links/url";
 
 export interface ImageMeta {
   width: number;
@@ -12,11 +13,14 @@ export interface ImageMeta {
 let manifest: Record<string, ImageMeta> | null = null;
 
 export function getImageMeta(src: string): ImageMeta | null {
+  const match = src.match(/^\/images\/([^/]+)$/);
+  if (!match) return null;
+  const filename = tryDecodeUrlComponent(match[1]);
+  if (filename === null) return null;
   if (!manifest) {
     manifest = fs.existsSync(IMAGE_META_JSON)
       ? JSON.parse(fs.readFileSync(IMAGE_META_JSON, "utf8"))
       : {};
   }
-  const match = src.match(/^\/images\/([^/]+)$/);
-  return match ? (manifest![decodeURIComponent(match[1])] ?? null) : null;
+  return manifest![filename] ?? null;
 }
