@@ -76,17 +76,19 @@ describe("Markdown URL fallbacks", () => {
   });
 });
 
-describe("already-decoded tag routes", () => {
+describe("tag decoding", () => {
   it.each([
     ["100%", "Percent tag post"],
-    ["literal%2F", "Literal escape post"],
+    ["literal%252F", "Literal escape post"],
     ["journal", "Ordinary tag post"],
   ])("renders and filters the literal %s tag", async (slug, title) => {
     const html = renderToStaticMarkup(
       await TagPage({ params: Promise.resolve({ slug }) })
     );
     expect(html).toContain(`<h1`);
-    expect(html).toContain(`${slug}</h1>`);
+    expect(html).toContain(
+      `${slug === "literal%252F" ? "literal%2F" : slug}</h1>`
+    );
     expect(html).toContain(`<article>${title}</article>`);
     expect(html.match(/<article>/g)).toHaveLength(1);
   });

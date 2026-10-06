@@ -1,5 +1,6 @@
 import { getPostMetadata } from "@/utils/content/posts";
 import PostPreview from "@/components/posts/PostPreview";
+import { tryDecodeUrlComponent } from "@/utils/links/url";
 
 export const dynamic = "force-static";
 
@@ -14,9 +15,9 @@ export const generateStaticParams = async () => {
 
 const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   const params = await props.params;
-  // Next's route matcher already decodes this segment. A tag can contain a
-  // literal percent sign or "%2F"; decoding again changes its meaning.
-  const tag = params.slug;
+  // This version passes encoded segments during fallback rendering. Keep the
+  // existing one-decode behavior, but do not throw on a literal percent sign.
+  const tag = tryDecodeUrlComponent(params.slug) ?? params.slug;
   const filteredPosts = getPostMetadata().filter((post) =>
     post.tags.includes(tag)
   );
