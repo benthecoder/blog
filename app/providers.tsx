@@ -9,7 +9,7 @@ import {
 } from "react";
 import { ThemeProvider } from "next-themes";
 import { bind, setEnabled, setVolume } from "cuelume";
-import { readStoredString, writeStoredString } from "@/utils/browserStorage";
+import { readStoredString } from "@/utils/browserStorage";
 
 export const PALETTES = [
   "indigo",
@@ -88,48 +88,16 @@ export function usePalette() {
 
 const SOUND_VOLUME = 0.6;
 const SOUND_STORAGE_KEY = "sound-enabled";
-const SoundContext = createContext<
-  | {
-      enabled: boolean;
-      toggle: () => void;
-    }
-  | undefined
->(undefined);
-
-export function useSound() {
-  const context = useContext(SoundContext);
-  if (!context) throw new Error("useSound must be used within Providers");
-  return context;
-}
-
 // bind() delegates from `document`, so one call covers every
 // data-cuelume-* element, including ones added by later navigations.
 function SoundProvider({ children }: { children: ReactNode }) {
-  const [enabled, updateEnabled] = useState(
-    () => readStoredString(SOUND_STORAGE_KEY) !== "false"
-  );
-
   useEffect(() => {
     setVolume(SOUND_VOLUME);
+    setEnabled(readStoredString(SOUND_STORAGE_KEY) !== "false");
     bind();
   }, []);
 
-  useEffect(() => {
-    setEnabled(enabled);
-  }, [enabled]);
-
-  const toggle = () => {
-    const next = !enabled;
-    setEnabled(next);
-    updateEnabled(next);
-    writeStoredString(SOUND_STORAGE_KEY, String(next));
-  };
-
-  return (
-    <SoundContext.Provider value={{ enabled, toggle }}>
-      {children}
-    </SoundContext.Provider>
-  );
+  return children;
 }
 
 export function Providers({ children }: { children: ReactNode }) {
