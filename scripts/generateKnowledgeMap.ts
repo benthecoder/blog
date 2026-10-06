@@ -15,7 +15,12 @@ import {
   CLUSTERING_UMAP_COMPONENTS,
   SIMILARITY_EDGE_THRESHOLD,
 } from "../config/constants";
-import { DATA_DIR, KNOWLEDGE_MAP_JSON } from "../config/paths";
+import {
+  DATA_DIR,
+  KNOWLEDGE_MAP_JSON,
+  KNOWLEDGE_MAP_NODES_JSON,
+} from "../config/paths";
+import { splitKnowledgeMap } from "../utils/chunking/mapAssets";
 import type {
   KnowledgeMapOutput,
   ArticleNode,
@@ -24,6 +29,14 @@ import type {
 } from "../types/knowledgeMap";
 import type { ChunkRow } from "../types/chunks";
 import fs from "fs";
+import path from "path";
+
+function writeBrowserAssets(map: KnowledgeMapOutput) {
+  const { previewJson, edgesJson, edgesFilename } = splitKnowledgeMap(map);
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(path.join(DATA_DIR, edgesFilename), edgesJson);
+  fs.writeFileSync(KNOWLEDGE_MAP_NODES_JSON, previewJson);
+}
 
 const sql = neon(process.env.POSTGRES_URL!);
 
@@ -47,6 +60,13 @@ async function generateKnowledgeMap() {
       console.warn(
         "⚠️  Knowledge map will use existing data or fail gracefully"
       );
+      if (fs.existsSync(KNOWLEDGE_MAP_JSON)) {
+        writeBrowserAssets(
+          JSON.parse(
+            fs.readFileSync(KNOWLEDGE_MAP_JSON, "utf8")
+          ) as KnowledgeMapOutput
+        );
+      }
       return;
     }
 
@@ -59,6 +79,7 @@ async function generateKnowledgeMap() {
           fs.readFileSync(outputPath, "utf8")
         ) as KnowledgeMapOutput;
         if (existing.sourceFingerprint === sourceFingerprint) {
+          writeBrowserAssets(existing);
           console.log(
             `✓ Knowledge map up to date (fingerprint ${sourceFingerprint}), skipping generation`
           );
@@ -227,6 +248,7 @@ async function generateKnowledgeMap() {
     };
 
     fs.writeFileSync(outputPath, JSON.stringify(output));
+    writeBrowserAssets(output);
 
     console.log(`✓ Knowledge map generated: ${outputPath}`);
     console.log(`  ${processedData.length} articles processed`);

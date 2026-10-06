@@ -52,3 +52,10 @@ export interface ClusterLabelingOptions {
   maxSamplesPerCluster?: number;
   model?: string;
 }
+
+export type KnowledgeMapPreview = Omit<
+  KnowledgeMapOutput,
+  "similarityEdges"
+> & {
+  similarityEdgesUrl: string;
+};
