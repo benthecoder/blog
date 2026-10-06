@@ -11,6 +11,7 @@ import {
   shift,
   useHover,
   useFocus,
+  useClick,
   useDismiss,
   useRole,
   useInteractions,
@@ -57,25 +58,29 @@ const ImageLinkComponent: FC<{ link: ImageLink }> = ({ link }) => {
 
   const hover = useHover(context, { move: false });
   const focus = useFocus(context);
+  const click = useClick(context, { ignoreMouse: true });
   const dismiss = useDismiss(context);
   const role = useRole(context, { role: "tooltip" });
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     hover,
     focus,
+    click,
     dismiss,
     role,
   ]);
 
   return (
     <>
-      <span
+      <button
+        type="button"
+        aria-expanded={isOpen}
         ref={refs.setReference}
         {...getReferenceProps()}
-        className="underline decoration-solid decoration-1 cursor-pointer decoration-ink-soft/40 underline-offset-2 transition-[text-decoration-color] duration-150 hover:decoration-ink-soft"
+        className="inline text-left underline decoration-solid decoration-1 cursor-pointer decoration-ink-soft/40 dark:decoration-chalk-soft/40 underline-offset-2 transition-[text-decoration-color] duration-150 hover:decoration-ink-soft dark:hover:decoration-chalk-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
       >
         {link.text}
-      </span>
+      </button>
       {isOpen && (
         <FloatingPortal>
           <div
@@ -92,7 +97,7 @@ const ImageLinkComponent: FC<{ link: ImageLink }> = ({ link }) => {
               className="image-hover"
               width={400}
               height={600}
-              style={{ maxWidth: "90vw", height: "auto" }}
+              loading="eager"
             />
           </div>
         </FloatingPortal>
