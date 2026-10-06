@@ -79,7 +79,8 @@
    provider. This is the single source of truth for theme color — adding a
    palette means adding a block here and its id to PALETTES in app/providers.
    ========================================================================== */
-:root[data-palette="indigo"] {
+:root[data-palette="indigo"],
+.colophon-swatch[data-palette="indigo"] {
   --color-ink-muted: #5f6fa8;
   --color-ink-soft: #5667a3;
   --color-ink: #4d5f9e;
@@ -90,7 +91,8 @@
   --color-chalk-strong: #cbd1eb;
 }
 
-:root[data-palette="olive"] {
+:root[data-palette="olive"],
+.colophon-swatch[data-palette="olive"] {
   --color-ink-muted: #6e755b;
   --color-ink-soft: #646c50;
   --color-ink: #47502f;
@@ -101,7 +103,8 @@
   --color-chalk-strong: #ccd5b9;
 }
 
-:root[data-palette="gold"] {
+:root[data-palette="gold"],
+.colophon-swatch[data-palette="gold"] {
   --color-ink-muted: #8d6d1f;
   --color-ink-soft: #896818;
   --color-ink: #896818;
@@ -112,7 +115,8 @@
   --color-chalk-strong: #e8d39c;
 }
 
-:root[data-palette="steel"] {
+:root[data-palette="steel"],
+.colophon-swatch[data-palette="steel"] {
   --color-ink-muted: #49749e;
   --color-ink-soft: #3f6d99;
   --color-ink: #3f6d99;
@@ -123,7 +127,8 @@
   --color-chalk-strong: #c4d8e9;
 }
 
-:root[data-palette="vermillion"] {
+:root[data-palette="vermillion"],
+.colophon-swatch[data-palette="vermillion"] {
   --color-ink-muted: #b35638;
   --color-ink-soft: #ae4b2b;
   --color-ink: #ab4322;
@@ -134,7 +139,8 @@
   --color-chalk-strong: #ecb99f;
 }
 
-:root[data-palette="rose"] {
+:root[data-palette="rose"],
+.colophon-swatch[data-palette="rose"] {
   --color-ink-muted: #a05f70;
   --color-ink-soft: #995466;
   --color-ink: #93495c;

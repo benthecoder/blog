@@ -5,6 +5,15 @@ export const metadata: Metadata = {
   description: "Colophon for bneo.xyz.",
 };
 
+const inks = [
+  ["indigo", "#4d5f9e"],
+  ["olive", "#47502f"],
+  ["gold", "#896818"],
+  ["steel", "#3f6d99"],
+  ["vermillion", "#ab4322"],
+  ["rose", "#93495c"],
+] as const;
+
 export default function ColophonPage() {
   return (
     <article className="prose max-w-none">
@@ -16,8 +25,26 @@ export default function ColophonPage() {
             Averia Serif Libre
           </a>
         </li>
-        <li>Colors: indigo, olive, gold, steel, vermillion, rose</li>
-        <li>Icons: my drawings</li>
+        <li>
+          Colors:{" "}
+          <span className="inline-flex flex-wrap gap-x-3 gap-y-1 align-middle">
+            {inks.map(([name, hex]) => (
+              <span
+                key={name}
+                className="inline-flex items-center gap-1.5"
+                title={name}
+              >
+                <span
+                  data-palette={name}
+                  className="colophon-swatch inline-block size-2.5 rounded-full bg-ink"
+                  aria-hidden="true"
+                />
+                <span className="font-mono text-xs">{hex}</span>
+              </span>
+            ))}
+          </span>
+        </li>
+        <li>Icons: homemade</li>
         <li>
           Sounds: <a href="https://github.com/Danilaa1/cuelume">Cuelume</a>
         </li>
