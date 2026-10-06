@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { FC, ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   useFloating,
   autoUpdate,
@@ -28,6 +29,7 @@ type TimelineItem = {
   month?: string;
   day?: string;
   description: string;
+  postSlug?: string;
   imageLinks?: ImageLink[];
 };
 
@@ -161,11 +163,21 @@ const Timeline: FC<TimelineProps> = ({ events }) => (
                   className="group/item flex gap-2 sm:gap-4"
                 >
                   <div className="min-w-[80px] sm:min-w-[90px]">
-                    {dateDetail && (
-                      <span className="text-sm opacity-30 transition-opacity group-hover/item:opacity-50">
-                        {dateDetail}
-                      </span>
-                    )}
+                    {dateDetail &&
+                      (item.postSlug ? (
+                        <Link
+                          href={`/posts/${encodeURIComponent(item.postSlug)}`}
+                          prefetch={false}
+                          aria-label={`Read journal entry: ${item.description}`}
+                          className="text-sm text-ink-soft dark:text-chalk-muted underline decoration-dotted underline-offset-4 hover:text-ink dark:hover:text-chalk focus-visible:outline-2 focus-visible:outline-offset-2"
+                        >
+                          {dateDetail}
+                        </Link>
+                      ) : (
+                        <span className="text-sm opacity-30 transition-opacity group-hover/item:opacity-50">
+                          {dateDetail}
+                        </span>
+                      ))}
                   </div>
                   <span className="flex-1">
                     {renderDescription(item, itemIndex)}

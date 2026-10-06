@@ -47,7 +47,7 @@ The hardware and financial ideas are proposals. No devices, bank accounts, priva
 
 The important change is reducing the number of decisions between “I noticed something” and “I wrote it down.”
 
-1. Make the document the center of the editor. Keep save, preview, and exit visible. Put photos, formatting, templates, and publication settings in a clearly named tools area. Add a focus mode that can be exited with the keyboard.
+1. Make the document the center of the editor. Keep save, preview, and exit visible. Templates use a quiet text trigger, Format sits beside the word count, and publication actions sit under draft/live status. No expanding Tools row. Focus mode can be exited with the keyboard.
 2. Show a quiet word count and reading estimate; use these for orientation, not a target. Metadata and Markdown syntax should not inflate the count.
 3. Offer optional prompts, not automatic prose: “What happened?”, “What did I notice?”, “What changed my mind?”, or the five ML-paper questions. Templates should be explicitly chosen, preserve existing text, and never silently overwrite a draft.
 4. Make recovery trustworthy. Catch malformed saved drafts, report failed persistence, keep stale-save protections, and make the difference between a browser recovery copy and a Markdown file on disk explicit.
@@ -55,18 +55,21 @@ The important change is reducing the number of decisions between “I noticed so
 
 ## First implementation pass
 
-The foundation pass adds a factual colophon, wiki/colophon links within the introduction (navigation icons await your drawings), a persistent interface-sound setting in the colophon, and Knip with deliberate script entry points. It removes the unused wiki tree builder and the undocumented one-off table-drop script, makes internal helpers private, removes an unused direct CodeMirror dependency, and declares the `server-only` marker explicitly.
+PR #45 adds a concise colophon with real color swatches, plus Knip with deliberate script entry points. No generic navigation icons, text footer links, or sound checkbox were retained. It removes the unused wiki tree builder and the undocumented one-off table-drop script, removes an unused direct CodeMirror dependency, and declares the `server-only` marker explicitly. The shared wiki address validator remains exported because the writing-check endpoint uses it.
 
-Reliability fixes cover JSON-LD closing-tag escaping, malformed search-result caches, and blocked browser storage for search and palette reads. Regression tests use hostile script titles, wrong-shaped caches, and a storage getter that throws.
+Reliability fixes cover JSON-LD closing-tag escaping and optional preference storage. Search validation and stale-request handling live in #48. Archive/RSS payload reductions and deployed metadata reuse live in #45. Its `pnpm image` command consolidates three old image scripts, with optional dithering and explicit output paths that preserve originals.
 
-Still to implement and verify: the writing desk changes above and an initial playful experiment. The guestbook remains later work, as requested. No framework migration has been performed.
+The writing desk is implemented in #47, including preview-before-insert photos, drag insertion, recovery, cancellation, and a bounded photo-day cache. Wiki paper/reading-note prompts and local writing checks live in #50; production capture authentication lives in #46. These are review branches, not claims that everything is deployed. The garden prototype (#49) is paused after feedback. The guestbook remains later work. No framework migration has been performed.
 
 ## Design direction clarified during the preview
 
 Keep the sidebar entirely illustrated: no text footer and no generic icon additions.
 You will draw new wiki/colophon navigation marks. Dithering, scanned drawings,
-and tactile interactions are central. Next work should include a small garden
-using your existing flower drawings, a stronger projects page with real
-experiments, and more life-timeline material grounded in journal posts and
-photos. The palette control works for now; a more expressive treatment comes
-after its visual language is settled.
+and tactile interactions are central. The peony was too complicated for the
+garden; wait for the intended flower drawings and interaction direction rather
+than treating that prototype as accepted. Projects now include the blog,
+drawings/photos, and the existing Nativity sketch alongside apps. Eight additional
+timeline entries are grounded in journal accounts, with dates linked to their
+source posts and three existing image previews. Further life events need the
+same source/date checks. The palette control works for now; a more expressive
+treatment comes after its visual language is settled.
