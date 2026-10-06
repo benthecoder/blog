@@ -10,12 +10,7 @@ export type PhotosResult =
   | { ok: true; photos: IndexedPhoto[] }
   | { ok: false; reason: "not-built" | "denied" };
 
-const PHOTO_ID_RE =
-  /^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}\/L0\/\d{3}$/i;
-
-export function isValidPhotoId(id: unknown): id is string {
-  return typeof id === "string" && PHOTO_ID_RE.test(id);
-}
+export { isValidPhotoId } from "./photoId";
 
 export function isValidDate(date: unknown): date is string {
   return typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date);

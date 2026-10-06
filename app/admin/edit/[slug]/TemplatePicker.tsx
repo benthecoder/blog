@@ -1,7 +1,6 @@
 import { PERIOD_LABELS, type PeriodKind } from "@/utils/digest/schedule";
 
 type Choice = PeriodKind | "blank";
-
 const CHOICES: Choice[] = ["blank", "weekly", "monthly", "quarterly"];
 
 export function TemplatePicker({
@@ -12,31 +11,27 @@ export function TemplatePicker({
 }: {
   value: Choice;
   loading: boolean;
-  /** Templates that fit this date, shown with a dot. */
   suggested: PeriodKind[];
   onChange: (choice: Choice) => void;
 }) {
   return (
-    <div
-      className={`flex items-center gap-1 text-xs ${loading ? "opacity-60" : ""}`}
-    >
-      {CHOICES.map((c) => (
-        <button
-          key={c}
-          type="button"
-          disabled={loading}
-          onClick={() => onChange(c)}
-          aria-pressed={value === c}
-          className={`px-2 py-0.5 transition-colors ${
-            value === c
-              ? "bg-ink text-paper dark:bg-chalk dark:text-night"
-              : "text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
-          }`}
-        >
-          {c === "blank" ? "daily" : PERIOD_LABELS[c]}
-          {c !== "blank" && suggested.includes(c) && value !== c ? " •" : ""}
-        </button>
-      ))}
-    </div>
+    <label className="inline-flex items-center gap-2 text-xs text-ink-soft dark:text-chalk-muted">
+      <span>Template</span>
+      <select
+        value={value}
+        disabled={loading}
+        onChange={(event) => onChange(event.target.value as Choice)}
+        className="min-h-11 sm:min-h-9 max-w-40 bg-paper dark:bg-night text-ink dark:text-chalk border border-rule dark:border-night-rule rounded-xs px-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+      >
+        {CHOICES.map((choice) => (
+          <option key={choice} value={choice}>
+            {choice === "blank" ? "daily" : PERIOD_LABELS[choice]}
+            {choice !== "blank" && suggested.includes(choice)
+              ? " · suggested"
+              : ""}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }

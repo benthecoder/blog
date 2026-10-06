@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useId } from "react";
 import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
 import type { Crop, PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
@@ -47,14 +47,26 @@ export function ImageCropModal({
   onConfirm,
   onCancel,
   uploading,
+  error,
 }: {
   file: File;
   name: string;
   onNameChange: (value: string) => void;
-  onConfirm: (file: File, crop: CropRect | null) => void;
+  onConfirm: (
+    file: File,
+    crop: CropRect | null
+  ) => Promise<boolean | undefined>;
   onCancel: () => void;
   uploading: boolean;
+  error: string;
 }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    dialog?.showModal();
+    return () => dialog?.close();
+  }, []);
   const [src, setSrc] = useState("");
   const [crop, setCrop] = useState<Crop>();
   const [completed, setCompleted] = useState<PixelCrop>();
@@ -84,7 +96,7 @@ export function ImageCropModal({
     if (img) setCrop(centeredCrop(img.width, img.height, next));
   };
 
-  const confirm = () => {
+  const confirm = async () => {
     const img = imgRef.current;
     if (!img || !completed?.width || !completed?.height) return;
     const rect = toSourceRect(img, completed);
@@ -95,96 +107,110 @@ export function ImageCropModal({
       rect.width === img.naturalWidth &&
       rect.height === img.naturalHeight;
     setBusy(true);
-    onConfirm(file, full ? null : rect);
+    try {
+      await onConfirm(file, full ? null : rect);
+    } finally {
+      setBusy(false);
+    }
   };
 
   const disabled = busy || uploading;
 
   return (
-    <div
-      className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4"
-      onKeyDown={(e) => {
-        if (e.key === "Escape" && !disabled) onCancel();
+    <dialog
+      ref={dialogRef}
+      aria-labelledby={titleId}
+      className="m-auto bg-paper dark:bg-night border border-rule dark:border-night-rule p-6 w-[calc(100vw-2rem)] max-w-2xl max-h-[calc(100dvh-2rem)] overflow-y-auto admin-scrollbar rounded-xs backdrop:bg-black/40"
+      onCancel={(event) => {
+        event.preventDefault();
+        if (!disabled) onCancel();
       }}
     >
-      <div className="bg-paper dark:bg-night border border-rule dark:border-night-rule p-6 w-full max-w-2xl max-h-full overflow-y-auto admin-scrollbar rounded-xs">
-        <h2 className="text-lg font-light mb-4 text-ink dark:text-chalk tracking-wide">
-          Crop image
-        </h2>
+      <h2
+        id={titleId}
+        className="text-lg font-light mb-4 text-ink dark:text-chalk tracking-wide"
+      >
+        Crop image
+      </h2>
 
-        <div className="flex items-center justify-center bg-paper-sunken dark:bg-night-raised rounded-xs p-2 mb-4">
-          {src && (
-            <ReactCrop
-              crop={crop}
-              onChange={(_, percentCrop) => setCrop(percentCrop)}
-              onComplete={(c) => setCompleted(c)}
-              aspect={aspect}
-              keepSelection
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                ref={imgRef}
-                src={src}
-                alt="Crop preview"
-                onLoad={onImageLoad}
-                style={{ maxHeight: "55vh", width: "auto" }}
-              />
-            </ReactCrop>
-          )}
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          {(
-            [
-              ["square", 1],
-              ["4:3", 4 / 3],
-              ["3:4", 3 / 4],
-              ["free", undefined],
-            ] as const
-          ).map(([label, value]) => (
-            <button
-              key={label}
-              onClick={() => changeAspect(value)}
-              className={`px-2.5 py-1 text-xs rounded-xs border transition-colors ${
-                aspect === value
-                  ? "border-ink dark:border-chalk text-ink dark:text-chalk"
-                  : "border-rule dark:border-night-rule text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => onNameChange(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !disabled) confirm();
-          }}
-          placeholder="image-name"
-          autoFocus
-          className="w-full px-3 py-2 mb-6 border border-rule dark:border-night-rule bg-transparent text-ink dark:text-chalk focus:outline-hidden focus:border-ink dark:focus:border-chalk rounded-xs"
-        />
-
-        <div className="flex gap-3 justify-end">
-          <button
-            onClick={onCancel}
-            disabled={disabled}
-            className="px-4 py-1.5 text-sm text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 transition-colors"
+      <div className="flex items-center justify-center bg-paper-sunken dark:bg-night-raised rounded-xs p-2 mb-4">
+        {src && (
+          <ReactCrop
+            crop={crop}
+            onChange={(_, percentCrop) => setCrop(percentCrop)}
+            onComplete={(c) => setCompleted(c)}
+            aspect={aspect}
+            keepSelection
           >
-            Cancel
-          </button>
-          <button
-            onClick={confirm}
-            disabled={disabled || !completed?.width}
-            className="px-4 py-1.5 text-sm bg-ink dark:bg-chalk text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
-          >
-            {disabled ? "Uploading..." : "Upload"}
-          </button>
-        </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              ref={imgRef}
+              src={src}
+              alt="Crop preview"
+              onLoad={onImageLoad}
+              style={{ maxHeight: "55vh", width: "auto" }}
+            />
+          </ReactCrop>
+        )}
       </div>
-    </div>
+
+      <div className="flex flex-wrap items-center gap-2 mb-4">
+        {(
+          [
+            ["square", 1],
+            ["4:3", 4 / 3],
+            ["3:4", 3 / 4],
+            ["free", undefined],
+          ] as const
+        ).map(([label, value]) => (
+          <button
+            key={label}
+            onClick={() => changeAspect(value)}
+            className={`px-2.5 py-1 text-xs rounded-xs border transition-colors ${
+              aspect === value
+                ? "border-ink dark:border-chalk text-ink dark:text-chalk"
+                : "border-rule dark:border-night-rule text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => onNameChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !disabled) confirm();
+        }}
+        aria-label="Image name"
+        placeholder="image-name"
+        autoFocus
+        className="w-full px-3 py-2 mb-6 border border-rule dark:border-night-rule bg-transparent text-ink dark:text-chalk focus:outline-hidden focus:border-ink dark:focus:border-chalk rounded-xs"
+      />
+
+      {error && (
+        <p role="alert" className="mb-4 text-sm text-ink dark:text-chalk">
+          {error}
+        </p>
+      )}
+      <div className="flex gap-3 justify-end">
+        <button
+          onClick={onCancel}
+          disabled={disabled}
+          className="min-h-11 px-4 py-1.5 text-sm text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 transition-colors"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={confirm}
+          disabled={disabled || !completed?.width}
+          className="min-h-11 px-4 py-1.5 text-sm bg-ink dark:bg-chalk text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
+        >
+          {disabled ? "Uploading..." : "Upload"}
+        </button>
+      </div>
+    </dialog>
   );
 }
