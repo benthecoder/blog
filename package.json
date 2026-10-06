@@ -14,6 +14,7 @@
     "format:check": "prettier --check .",
     "generate:knowledge-map": "tsx scripts/generateKnowledgeMap.ts",
     "generate:image-meta": "tsx scripts/generateImageMeta.ts",
+    "image": "tsx scripts/prepareImage.ts",
     "prebuild": "pnpm run generate:knowledge-map",
     "postbuild": "next-sitemap",
     "generate-embeddings": "tsx scripts/generateEmbeddings.ts",
