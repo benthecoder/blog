@@ -42,19 +42,24 @@ const scanEntries = cache(function scanEntries(): IndexedEntry[] {
   return [...wiki, ...posts];
 });
 
-/** All linkable pages plus a resolver over them. */
+function linkableEntry({ ref, title, href }: IndexedEntry): LinkableEntry {
+  return { ref, title, href };
+}
+
+/** Link metadata only: these entries also cross the server/client boundary. */
 export const getLinkIndex = cache(function getLinkIndex(): {
   entries: LinkableEntry[];
   resolve: Resolver;
 } {
-  const entries = scanEntries();
+  const entries = scanEntries().map(linkableEntry);
   return { entries, resolve: createResolver(entries) };
 });
 
 /** The directed link graph across all content. */
 export const getLinkGraph = cache(function getLinkGraph(): LinkGraph {
-  const entries = scanEntries();
-  const bodyOf = new Map(entries.map((e) => [refKey(e.ref), e.content]));
+  const indexed = scanEntries();
+  const entries = indexed.map(linkableEntry);
+  const bodyOf = new Map(indexed.map((e) => [refKey(e.ref), e.content]));
   return buildLinkGraph(entries, (ref) => bodyOf.get(refKey(ref)) ?? "");
 });
 
