@@ -13,14 +13,7 @@ import Link from "next/link";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
 import matter from "gray-matter";
-import {
-  Calendar,
-  Camera,
-  Eye,
-  FileEdit,
-  ImageIcon,
-  Trash2,
-} from "lucide-react";
+import { Calendar, Camera, Eye, FileEdit, ImageIcon } from "lucide-react";
 import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import type { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import { usePostDraft } from "./usePostDraft";
@@ -31,6 +24,7 @@ import { ImageStrip } from "./ImageStrip";
 import { EditorFooter } from "./EditorFooter";
 import { PhotoPanel } from "./PhotoPanel";
 import { TemplatePicker } from "./TemplatePicker";
+import { EditorPopover } from "@/components/admin/EditorPopover";
 import { suggestPeriods } from "@/utils/digest/schedule";
 import {
   imageInsertionPoint,
@@ -70,7 +64,6 @@ export default function EditPostPage() {
   );
   const [message, setMessage] = useState("");
   const [focusMode, setFocusMode] = useState(false);
-  const [showTools, setShowTools] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [editorWidth, setEditorWidth] = useState(700);
   // null = never toggled, so the default (open for drafts) applies.
@@ -409,15 +402,56 @@ export default function EditPostPage() {
             >
               {focusMode ? "Leave focus" : "Focus"}
             </button>
-            {!focusMode && (
-              <button
-                onClick={() => setShowTools(!showTools)}
-                aria-expanded={showTools}
-                aria-controls="writing-tools"
-                className="min-h-11 sm:min-h-9 px-2 py-1.5 text-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
+            {!focusMode && !isNew && (
+              <EditorPopover
+                label={draft.isDraft ? "draft" : "live"}
+                name="Post status and publishing"
+                align="end"
               >
-                Tools
-              </button>
+                {(close) => (
+                  <div className="text-sm">
+                    <p className="px-2 pb-2 text-[11px] text-ink-muted dark:text-chalk-muted">
+                      {draft.isDraft ? "saved draft" : "published post"}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        close();
+                        if (draft.isDraft) void draft.handlePublish();
+                        else void draft.handleUnpublish();
+                      }}
+                      disabled={
+                        draft.loading ||
+                        draft.saving ||
+                        draft.publishing ||
+                        draft.templateLoading ||
+                        images.uploading ||
+                        images.showImageNameModal
+                      }
+                      className="w-full px-2 py-3 text-left hover:bg-paper-sunken dark:hover:bg-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+                    >
+                      {draft.publishing
+                        ? "Working…"
+                        : draft.isDraft
+                          ? "Publish post"
+                          : "Move back to drafts"}
+                    </button>
+                    <div className="mt-2 pt-2 border-t border-rule dark:border-night-rule">
+                      <button
+                        type="button"
+                        disabled={draft.deleting}
+                        onClick={() => {
+                          close();
+                          void draft.handleDelete();
+                        }}
+                        className="w-full px-2 py-3 text-left text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+                      >
+                        {draft.deleting ? "Deleting…" : "Delete post…"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </EditorPopover>
             )}
             <button
               onClick={draft.handleSave}
@@ -433,65 +467,27 @@ export default function EditPostPage() {
             </button>
           </div>
         </div>
-        {!focusMode && showTools && (
-          <div
-            id="writing-tools"
-            className="border-b border-rule dark:border-night-rule px-6 py-3 flex flex-wrap gap-3 items-center"
-          >
-            {!showPreview && (
-              <button
-                onClick={handleFormat}
-                className="px-3 py-1.5 text-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-97 rounded-xs"
-                title="Format markdown"
-              >
-                Format
-              </button>
-            )}
-            {draft.isDraft && (
-              <button
-                onClick={draft.handlePublish}
-                disabled={
-                  draft.loading ||
-                  draft.saving ||
-                  draft.publishing ||
-                  draft.templateLoading ||
-                  images.uploading ||
-                  images.showImageNameModal ||
-                  isNew
-                }
-                className="px-3 py-1.5 text-xs font-medium bg-ink dark:bg-chalk text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-[opacity,transform] active:scale-97 rounded-xs"
-              >
-                {draft.publishing ? "Publishing..." : "Publish"}
-              </button>
-            )}
-            {!draft.isDraft && !isNew && (
-              <button
-                onClick={draft.handleUnpublish}
-                disabled={draft.publishing}
-                className="px-3 py-1.5 text-xs text-orange-600 dark:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-950/20 disabled:opacity-30 transition-[background-color,transform] active:scale-97 rounded-xs"
-              >
-                {draft.publishing ? "Moving..." : "Unpublish"}
-              </button>
-            )}
-            {!isNew && (
-              <button
-                onClick={draft.handleDelete}
-                disabled={draft.deleting}
-                className="min-h-11 min-w-11 sm:min-h-9 sm:min-w-9 inline-flex items-center justify-center rounded-xs text-ink-soft dark:text-chalk-muted hover:text-red-600 dark:hover:text-red-500 hover:bg-paper dark:hover:bg-night-raised disabled:opacity-30 transition-[color,background-color,transform] active:scale-90"
-                title="Delete post"
-                aria-label="Delete post"
-              >
-                <Trash2 size={18} />
-              </button>
-            )}
-          </div>
-        )}
         {(!focusMode || !draft.backupAvailable) && (
           <div className="px-6 py-2 flex flex-wrap justify-between gap-2 text-xs text-ink-soft dark:text-chalk-muted">
-            <span>
-              {bodyWords} words · {Math.max(1, Math.ceil(bodyWords / 200))} min
-              read
-            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <span>
+                {bodyWords} words · {Math.max(1, Math.ceil(bodyWords / 200))}{" "}
+                min read
+              </span>
+              {!focusMode && !showPreview && (
+                <button
+                  type="button"
+                  onClick={handleFormat}
+                  aria-label="Format markdown"
+                  disabled={
+                    draft.loading || draft.saving || draft.templateLoading
+                  }
+                  className="underline decoration-dotted underline-offset-4 hover:decoration-solid hover:text-ink dark:hover:text-chalk disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+                >
+                  format
+                </button>
+              )}
+            </div>
             <span role="status">
               {draft.loading
                 ? "Loading…"

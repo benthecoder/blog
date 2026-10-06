@@ -11,8 +11,8 @@
 
 ## Editor
 
-- Keep writing central. Save stays visible; secondary actions belong under Tools.
-- Templates use one labeled field. Changing one must confirm before replacing unsaved writing.
+- Keep writing central. Save stays visible; publishing belongs to the draft/live status control. Format sits beside the word count. Do not add an expanding Tools row.
+- Templates use a quiet text trigger and a short typographic list, without a boxed native select. Changing one must confirm before replacing unsaved writing.
 - Focus hides panels and navigation, has a visible exit, and exits on Escape.
 - A photo click previews. Insert is explicit. Dragging retains the text position through crop and upload; moving the cursor later cannot redirect that insertion.
 - Support keyboard browsing, native modal focus containment, clear errors, retry after failed upload, and usable narrow layouts.
