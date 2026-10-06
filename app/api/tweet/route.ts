@@ -1,16 +1,41 @@
+import { NextRequest, NextResponse } from "next/server";
+import { checkCaptureAuth } from "@/utils/captureAuth";
 import { neon } from "@neondatabase/serverless";
 
 const sql = neon(process.env.POSTGRES_URL!);
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 import { parsePublicUrl } from "@/utils/tweets/link";
 
 const URL_RE = /https?:\/\/[^\s]+/;
 
-export async function POST(request: Request) {
-  const body = await request.json();
-  let content: string = (body.body || "").slice(0, 700);
+export async function POST(request: NextRequest) {
+  const authError = checkCaptureAuth(request);
+  if (authError) return authError;
+
+  let raw: unknown;
+  try {
+    raw = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+    return NextResponse.json({ error: "Invalid capture" }, { status: 400 });
+  }
+  const body = raw as Record<string, unknown>;
+  if (
+    ["body", "link", "title"].some(
+      (key) => body[key] !== undefined && typeof body[key] !== "string"
+    )
+  ) {
+    return NextResponse.json(
+      { error: "Capture fields must be strings" },
+      { status: 400 }
+    );
+  }
+  let content =
+    typeof body.body === "string" ? body.body.slice(0, 700).trim() : "";
   let link = typeof body.link === "string" ? parsePublicUrl(body.link) : null;
 
   // No explicit link: lift the first URL out of the text.
@@ -30,6 +55,12 @@ export async function POST(request: Request) {
       ? body.title.replace(/\s+/g, " ").trim().slice(0, 300) || null
       : null;
 
+  if (!content && !link) {
+    return NextResponse.json(
+      { error: "Content or a valid link is required" },
+      { status: 400 }
+    );
+  }
   try {
     const result =
       await sql`INSERT INTO tweets(content, link, link_title, created_at) VALUES(${content}, ${link}, ${title}, NOW()) RETURNING *`;
