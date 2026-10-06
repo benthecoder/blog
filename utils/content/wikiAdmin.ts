@@ -14,7 +14,7 @@ export class WikiEditError extends Error {
   }
 }
 
-export function isWikiEditorSlug(value: unknown): value is string {
+function isWikiEditorSlug(value: unknown): value is string {
   return (
     isSafeSlug(value) &&
     value !== "new" &&

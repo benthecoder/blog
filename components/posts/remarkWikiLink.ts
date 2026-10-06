@@ -10,7 +10,7 @@ import { splitOnWikiLinks } from "@/utils/links/parse";
  */
 export const WIKILINK_SCHEME = "wikilink:";
 
-export function encodeWikiLinkHref(target: string): string {
+function encodeWikiLinkHref(target: string): string {
   return WIKILINK_SCHEME + encodeURIComponent(target);
 }
 

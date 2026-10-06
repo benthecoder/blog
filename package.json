@@ -25,14 +25,14 @@
     "analyze-vector-db": "tsx scripts/analyzeVectorDB.ts",
     "prepare": "husky",
     "promote-images": "tsx scripts/promoteStrandedImages.ts",
-    "photos:build": "sh scripts/photokit/build.sh"
+    "photos:build": "sh scripts/photokit/build.sh",
+    "check:unused": "knip"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@aws-sdk/client-s3": "^3.1085.0",
     "@codemirror/commands": "^6.10.4",
     "@codemirror/lang-markdown": "^6.5.2",
-    "@codemirror/language": "^6.12.4",
     "@codemirror/state": "^6.7.1",
     "@codemirror/view": "^6.43.8",
     "@floating-ui/react": "^0.27.19",
@@ -67,6 +67,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "sanitize-html": "^2.18.0",
+    "server-only": "^0.0.1",
     "shiki": "^4.3.1",
     "swr": "^2.3.6",
     "umap-js": "^1.4.0",
@@ -91,6 +92,7 @@
     "eslint": "^9.18.0",
     "eslint-config-next": "16.3.6",
     "husky": "^9.1.7",
+    "knip": "^6.39.0",
     "lint-staged": "^16.2.5",
     "next-sitemap": "^4.2.3",
     "ora": "^9.0.0",

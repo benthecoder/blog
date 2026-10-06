@@ -8,7 +8,8 @@ import {
   type ReactNode,
 } from "react";
 import { ThemeProvider } from "next-themes";
-import { bind, setVolume } from "cuelume";
+import { bind, setEnabled, setVolume } from "cuelume";
+import { readStoredString, writeStoredString } from "@/utils/browserStorage";
 
 export const PALETTES = [
   "indigo",
@@ -39,7 +40,7 @@ const PaletteContext = createContext<PaletteContextValue | undefined>(
 // minimal provider instead.
 function readStoredPalette(): Palette {
   if (typeof window === "undefined") return DEFAULT_PALETTE;
-  const stored = window.localStorage.getItem(STORAGE_KEY);
+  const stored = readStoredString(STORAGE_KEY);
   return (PALETTES as readonly string[]).includes(stored ?? "")
     ? (stored as Palette)
     : DEFAULT_PALETTE;
@@ -86,16 +87,49 @@ export function usePalette() {
 }
 
 const SOUND_VOLUME = 0.6;
+const SOUND_STORAGE_KEY = "sound-enabled";
+const SoundContext = createContext<
+  | {
+      enabled: boolean;
+      toggle: () => void;
+    }
+  | undefined
+>(undefined);
+
+export function useSound() {
+  const context = useContext(SoundContext);
+  if (!context) throw new Error("useSound must be used within Providers");
+  return context;
+}
 
 // bind() delegates from `document`, so one call covers every
 // data-cuelume-* element, including ones added by later navigations.
-function SoundCues() {
+function SoundProvider({ children }: { children: ReactNode }) {
+  const [enabled, updateEnabled] = useState(
+    () => readStoredString(SOUND_STORAGE_KEY) !== "false"
+  );
+
   useEffect(() => {
     setVolume(SOUND_VOLUME);
     bind();
   }, []);
 
-  return null;
+  useEffect(() => {
+    setEnabled(enabled);
+  }, [enabled]);
+
+  const toggle = () => {
+    const next = !enabled;
+    setEnabled(next);
+    updateEnabled(next);
+    writeStoredString(SOUND_STORAGE_KEY, String(next));
+  };
+
+  return (
+    <SoundContext.Provider value={{ enabled, toggle }}>
+      {children}
+    </SoundContext.Provider>
+  );
 }
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -106,8 +140,7 @@ export function Providers({ children }: { children: ReactNode }) {
       disableTransitionOnChange
     >
       <PaletteProvider>
-        <SoundCues />
-        {children}
+        <SoundProvider>{children}</SoundProvider>
       </PaletteProvider>
     </ThemeProvider>
   );

@@ -8,7 +8,7 @@
  * - Post-level understanding
  */
 
-import { Node } from "unist";
+import type { Node } from "unist";
 import { ChunkExtractor, ChunkContext, ProcessedChunk } from "@/types/chunks";
 import { MAX_WHOLE_POST_LENGTH } from "@/config/constants";
 

@@ -1,4 +1,4 @@
-import { Node } from "unist";
+import type { Node } from "unist";
 
 // Loose structural view of mdast nodes — enough for the extractors without
 // depending on @types/mdast directly.

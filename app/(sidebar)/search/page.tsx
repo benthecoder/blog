@@ -1,5 +1,11 @@
 "use client";
 
+import {
+  readStoredString,
+  writeStoredString,
+  removeStoredValue,
+} from "@/utils/browserStorage";
+import { parseSearchCache } from "@/utils/searchCache";
 import { useState, useEffect, Suspense } from "react";
 import type { FormEvent } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
@@ -31,16 +37,21 @@ function SearchContent() {
     const urlQuery = searchParams.get("q");
     const urlChunkType = searchParams.get("chunkType");
 
-    setQuery(urlQuery || sessionStorage.getItem("lastQuery") || "");
+    setQuery(urlQuery || readStoredString("lastQuery", "session") || "");
 
     if (urlChunkType) {
       setSelectedChunkType(urlChunkType as ChunkType);
     }
 
-    const cached = sessionStorage.getItem("searchResults");
-    if (cached) setResults(JSON.parse(cached));
+    const cached = parseSearchCache(
+      readStoredString("searchResults", "session")
+    );
+    if (cached) setResults(cached);
+    else removeStoredValue("searchResults", "session");
 
-    setHasSearched(sessionStorage.getItem("hasSearched") === "true");
+    setHasSearched(
+      cached !== null && readStoredString("hasSearched", "session") === "true"
+    );
     // mount-only: intentionally not re-running on searchParams changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -58,7 +69,7 @@ function SearchContent() {
     }
     replace(`${pathname}?${params.toString()}`);
 
-    sessionStorage.setItem("lastQuery", query.trim());
+    writeStoredString("lastQuery", query.trim(), "session");
     setIsLoading(true);
     setError("");
 
@@ -85,14 +96,18 @@ function SearchContent() {
       }
 
       setResults(data.results);
-      sessionStorage.setItem("searchResults", JSON.stringify(data.results));
+      writeStoredString(
+        "searchResults",
+        JSON.stringify(data.results),
+        "session"
+      );
       setHasSearched(true);
-      sessionStorage.setItem("hasSearched", "true");
+      writeStoredString("hasSearched", "true", "session");
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Search failed";
       setError(errorMessage);
       setHasSearched(true);
-      sessionStorage.setItem("hasSearched", "true");
+      writeStoredString("hasSearched", "true", "session");
     } finally {
       setIsLoading(false);
     }

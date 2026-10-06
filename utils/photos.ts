@@ -4,7 +4,7 @@ import path from "path";
 import { execFile } from "child_process";
 import { PHOTOKIT_BIN, PHOTO_FULL_DIR, PHOTO_THUMBS_DIR } from "@/config/paths";
 
-export type IndexedPhoto = { id: string; name: string; time: string };
+type IndexedPhoto = { id: string; name: string; time: string };
 
 export type PhotosResult =
   | { ok: true; photos: IndexedPhoto[] }
@@ -22,7 +22,7 @@ export function isValidDate(date: unknown): date is string {
 }
 
 // Only call with ids that passed isValidPhotoId.
-export const safeId = (id: string) => id.replace(/\//g, "_");
+const safeId = (id: string) => id.replace(/\//g, "_");
 
 export const thumbPath = (id: string) =>
   path.join(PHOTO_THUMBS_DIR, `${safeId(id)}.jpg`);
