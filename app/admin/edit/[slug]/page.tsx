@@ -627,6 +627,7 @@ export default function EditPostPage() {
 
       {!focusMode && photoDate && photosOpen && !showPreview && (
         <PhotoPanel
+          key={photoDate}
           date={photoDate}
           onPick={(file, name) => {
             if (!desktop) setPhotosToggle(false);

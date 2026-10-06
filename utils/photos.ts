@@ -41,7 +41,9 @@ function runHelper(args: string[], timeout: number): Promise<unknown> {
   });
 }
 
-const dayCache = new Map<string, IndexedPhoto[]>();
+const DAY_CACHE_TTL = 5 * 60_000;
+const DAY_CACHE_LIMIT = 32;
+const dayCache = new Map<string, { photos: IndexedPhoto[]; expires: number }>();
 const dayInflight = new Map<string, Promise<PhotosResult>>();
 
 /** Local YYYY-MM-DD. Today (or later) can still gain photos, so it isn't cached. */
@@ -55,7 +57,13 @@ function isPastDay(date: string): boolean {
 /** Photos taken on `date` (YYYY-MM-DD). Also writes their thumbnails. */
 export function getPhotosForDate(date: string): Promise<PhotosResult> {
   const cached = dayCache.get(date);
-  if (cached) return Promise.resolve({ ok: true, photos: cached });
+  if (cached) {
+    dayCache.delete(date);
+    if (cached.expires > Date.now()) {
+      dayCache.set(date, cached);
+      return Promise.resolve({ ok: true, photos: cached.photos });
+    }
+  }
   if (!fs.existsSync(PHOTOKIT_BIN)) {
     return Promise.resolve({ ok: false, reason: "not-built" });
   }
@@ -65,7 +73,17 @@ export function getPhotosForDate(date: string): Promise<PhotosResult> {
     pending = runHelper(["day", date, PHOTO_THUMBS_DIR], 60_000)
       .then((out): PhotosResult => {
         if (Array.isArray(out)) {
-          if (isPastDay(date)) dayCache.set(date, out as IndexedPhoto[]);
+          if (isPastDay(date)) {
+            // Older dates can gain imported photos too. Bound both staleness
+            // and memory while keeping recently visited days quick to reopen.
+            dayCache.set(date, {
+              photos: out as IndexedPhoto[],
+              expires: Date.now() + DAY_CACHE_TTL,
+            });
+            if (dayCache.size > DAY_CACHE_LIMIT) {
+              dayCache.delete(dayCache.keys().next().value!);
+            }
+          }
           return { ok: true, photos: out as IndexedPhoto[] };
         }
         const error = (out as { error?: string })?.error;

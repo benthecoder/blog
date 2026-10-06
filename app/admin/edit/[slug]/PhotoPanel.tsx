@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ImageOff, Loader2, X } from "lucide-react";
 
 import { PHOTO_TRANSFER_TYPE, photoFileUrl } from "@/utils/photoTransfer";
@@ -30,8 +30,8 @@ const statusCls = "text-xs text-center text-ink-soft dark:text-chalk-muted";
 
 /**
  * Photos taken on the draft's date. The day fetch writes the thumbnails, so
- * every tile can render at once; clicking one hands a large JPEG to the
- * existing crop/name/upload flow.
+ * every tile can render at once. Clicking previews; Insert hands a large JPEG
+ * to the existing crop/name/upload flow.
  */
 export function PhotoPanel({
   date,
@@ -49,54 +49,70 @@ export function PhotoPanel({
   const [error, setError] = useState("");
   const [previewId, setPreviewId] = useState<string | null>(null);
   const [picking, setPicking] = useState<string | null>(null);
+  const [reload, setReload] = useState(0);
+  const pickRequest = useRef<AbortController | null>(null);
 
   // Reset-and-load on date change: a fetch keyed to the prop is effect-driven.
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
     setLoading(true);
     setError("");
     setPhotos([]);
     setPreviewId(null);
+    setPicking(null);
 
     (async () => {
       try {
         const res = await fetch(
-          `/api/admin/photos?date=${encodeURIComponent(date)}`
+          `/api/admin/photos?date=${encodeURIComponent(date)}`,
+          { signal: controller.signal }
         );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: { status: typeof status; photos: Photo[] } =
           await res.json();
-        if (cancelled) return;
+        if (controller.signal.aborted) return;
         setStatus(data.status);
         setPhotos(data.photos);
       } catch (err) {
-        if (!cancelled) setError(`Couldn't load photos (${err})`);
+        if (!controller.signal.aborted)
+          setError(`Couldn't load photos (${err})`);
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     })();
 
     return () => {
-      cancelled = true;
+      controller.abort();
+      pickRequest.current?.abort();
+      pickRequest.current = null;
     };
-  }, [date]);
+  }, [date, reload]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const handlePick = async (photo: Photo) => {
-    if (picking) return;
+    if (pickRequest.current) return;
+    const controller = new AbortController();
+    pickRequest.current = controller;
+    setError("");
     setPicking(photo.id);
     try {
-      const res = await fetch(photoFileUrl(photo.id, "full"));
+      const res = await fetch(photoFileUrl(photo.id, "full"), {
+        signal: controller.signal,
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const blob = await res.blob();
+      if (controller.signal.aborted) return;
       const name = slugifyName(photo.name);
       setPreviewId(null);
       onPick(new File([blob], `${name}.jpg`, { type: "image/jpeg" }), name);
     } catch (err) {
-      setError(`Couldn't fetch photo (${err})`);
+      if (!controller.signal.aborted) setError(`Couldn't fetch photo (${err})`);
     } finally {
-      setPicking(null);
+      if (pickRequest.current === controller) {
+        pickRequest.current = null;
+        setPicking(null);
+      }
     }
   };
 
@@ -140,7 +156,18 @@ export function PhotoPanel({
           </div>
         )}
         {error && (
-          <p className="text-xs text-red-600 dark:text-red-500 mb-2">{error}</p>
+          <div className="mb-2 text-xs" role="alert">
+            <p className="text-red-600 dark:text-red-500">{error}</p>
+            {!loading && photos.length === 0 && (
+              <button
+                type="button"
+                onClick={() => setReload((value) => value + 1)}
+                className="min-h-11 underline underline-offset-2 text-ink dark:text-chalk focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                Try again
+              </button>
+            )}
+          </div>
         )}
         {empty && (
           <>
@@ -251,7 +278,12 @@ export function PhotoPanel({
                 setPreviewId(photos[index + 1].id);
               }}
               onInsert={() => handlePick(photos[index])}
-              onClose={() => setPreviewId(null)}
+              onClose={() => {
+                pickRequest.current?.abort();
+                pickRequest.current = null;
+                setPicking(null);
+                setPreviewId(null);
+              }}
             />
           );
         })()}
