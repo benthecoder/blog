@@ -6,7 +6,11 @@ import { useTheme } from "next-themes";
 import { scaleLinear } from "d3-scale";
 import { zoom as d3Zoom, ZoomBehavior } from "d3-zoom";
 import { select } from "d3-selection";
-import type { ArticleNode, KnowledgeMapOutput } from "@/types/knowledgeMap";
+import type {
+  ArticleNode,
+  KnowledgeMapPreview,
+  SimilarityEdge,
+} from "@/types/knowledgeMap";
 import UMAPLoader from "./UMAPLoader";
 
 // Canvas can't use CSS classes, so palette colors are read off the document
@@ -25,6 +29,8 @@ export default function KnowledgeMap({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [articles, setArticles] = useState<ArticleNode[]>([]);
+  const [edgesUrl, setEdgesUrl] = useState<string | null>(null);
+  const [connectionsLoaded, setConnectionsLoaded] = useState(false);
   const [neighborsById, setNeighborsById] = useState<
     Map<string, { id: string; sim: number }[]>
   >(new Map());
@@ -60,18 +66,44 @@ export default function KnowledgeMap({
     selectedArticleNodeRef.current = selectedArticleNode;
   }, [selectedArticleNode]);
 
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch("/data/knowledge-map.json");
-      const result: KnowledgeMapOutput = await response.json();
-      if (result.success) {
+  useEffect(() => {
+    const controller = new AbortController();
+    async function load() {
+      try {
+        const response = await fetch("/data/knowledge-map-nodes.json", {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error("Map unavailable");
+        const result: KnowledgeMapPreview = await response.json();
+        if (controller.signal.aborted) return;
+        if (!result.success) throw new Error("Map unavailable");
         setArticles(result.data);
+        setEdgesUrl(result.similarityEdgesUrl);
+        setClusterLabels(result.clusterLabels || {});
+      } catch {
+        if (!controller.signal.aborted) setError("error loading data");
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    }
+    void load();
+    return () => controller.abort();
+  }, []);
+
+  const hasFocusedNode = Boolean(selectedArticleNode ?? hoveredArticleNode);
+  useEffect(() => {
+    if (!hasFocusedNode || !edgesUrl || connectionsLoaded) return;
+    const controller = new AbortController();
+    async function loadConnections() {
+      try {
+        const response = await fetch(edgesUrl!, { signal: controller.signal });
+        if (!response.ok) throw new Error("Connections unavailable");
+        const edges: SimilarityEdge[] = await response.json();
+        if (controller.signal.aborted) return;
         const neighbors = new Map<string, { id: string; sim: number }[]>();
-        for (const [i, j, sim] of result.similarityEdges ?? []) {
-          const a = result.data[i]?.id;
-          const b = result.data[j]?.id;
+        for (const [i, j, sim] of edges) {
+          const a = articles[i]?.id;
+          const b = articles[j]?.id;
           if (!a || !b) continue;
           if (!neighbors.has(a)) neighbors.set(a, []);
           if (!neighbors.has(b)) neighbors.set(b, []);
@@ -79,22 +111,14 @@ export default function KnowledgeMap({
           neighbors.get(b)!.push({ id: a, sim });
         }
         setNeighborsById(neighbors);
-        setClusterLabels(result.clusterLabels || {});
-      } else {
-        setError("failed to load");
+        setConnectionsLoaded(true);
+      } catch {
+        // Nodes remain usable. A later hover/selection retries connections.
       }
-    } catch {
-      setError("error loading data");
-    } finally {
-      setLoading(false);
     }
-  };
-
-  // Run once on mount; fetchData identity is not stable across renders
-  // (the compiler bails on this component), so it must not be a dep.
-  useEffect(() => {
-    fetchData();
-  }, []);
+    void loadConnections();
+    return () => controller.abort();
+  }, [hasFocusedNode, edgesUrl, connectionsLoaded, articles]);
 
   const filtered = articles.filter((article) => {
     if (
