@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { DRAWINGS_URL } from "@/config/constants";
 
 const SKETCHES = [
@@ -27,6 +28,14 @@ export default function SketchPage() {
     <div>
       <h1 className="font-bold text-left mb-10 text-2xl">Sketches</h1>
       <p className="mb-5">Drawn with reMarkable 2</p>
+      <p className="mb-8">
+        <Link
+          href="/garden"
+          className="text-ink dark:text-chalk underline underline-offset-4"
+        >
+          plant a peony
+        </Link>
+      </p>
 
       <div className="columns-1 md:columns-2 space-y-1 rounded-md">
         {SKETCHES.map((sketch) => (

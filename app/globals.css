@@ -713,6 +713,47 @@ body {
    `multiply` lets the page show through anywhere the scan is light, so only
    the graphite survives and the drawing sits *on* the paper. Dark mode
    inverts first, then `screen` drops the (now black) ground instead. */
+.garden-drawing {
+  /* Frame the plant within its original scan; keep the source unmodified. */
+  height: 117.74% !important;
+  top: -11.5% !important;
+}
+
+.dark .garden-drawing {
+  filter: invert(1);
+}
+
+.garden-plant {
+  transform-origin: bottom center;
+  mix-blend-mode: multiply;
+}
+
+.dark .garden-plant {
+  mix-blend-mode: screen;
+}
+
+.garden-bloom-new {
+  transform-origin: bottom center;
+  animation: garden-grow 550ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes garden-grow {
+  from {
+    transform: scale(0.08);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garden-bloom-new {
+    animation: none;
+  }
+}
+
 .artwork-layer {
   opacity: 0;
   mix-blend-mode: multiply;
