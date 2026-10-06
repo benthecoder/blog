@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { slug as slugify } from "github-slugger";
 import CodeMirror from "@uiw/react-codemirror";
+import type { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
 import {
@@ -13,11 +14,12 @@ import {
 } from "@/components/admin/markdownEditorConfig";
 import type { WikiEditorPage } from "@/types/wiki";
 import type { LinkableEntry } from "@/types/links";
+import WritingTools from "./WritingTools";
 
-function pageForm(page: WikiEditorPage | null) {
+function pageForm(page: WikiEditorPage | null, initialTitle = "") {
   return {
-    slug: page?.slug ?? "",
-    title: page?.title ?? "",
+    slug: page?.slug ?? slugify(initialTitle).slice(0, 120),
+    title: page?.title ?? initialTitle,
     category: page?.category ?? "",
     description: page?.description ?? "",
     tags: page?.tags.join(", ") ?? "",
@@ -36,14 +38,16 @@ const wikiEditorExtensions = [
 export default function WikiEditor({
   initialPage,
   linkEntries,
+  initialTitle = "",
 }: {
   initialPage: WikiEditorPage | null;
   linkEntries: LinkableEntry[];
+  initialTitle?: string;
 }) {
   const router = useRouter();
-  const [form, setForm] = useState(() => pageForm(initialPage));
+  const [form, setForm] = useState(() => pageForm(initialPage, initialTitle));
   const [saved, setSaved] = useState(() =>
-    JSON.stringify(pageForm(initialPage))
+    JSON.stringify(pageForm(initialPage, initialTitle))
   );
   const [version, setVersion] = useState(initialPage?.version ?? "");
   const [isNew, setIsNew] = useState(initialPage === null);
@@ -52,7 +56,26 @@ export default function WikiEditor({
   const [preview, setPreview] = useState(false);
   const [message, setMessage] = useState("");
   const [failed, setFailed] = useState(false);
+  const [tools, setTools] = useState(false);
+  const editorRef = useRef<ReactCodeMirrorRef>(null);
   const dirty = JSON.stringify(form) !== saved;
+  const jumpToLine = (line: number) => {
+    setPreview(false);
+    const reveal = () => {
+      const view = editorRef.current?.view;
+      if (!view) return;
+      view.dispatch({
+        selection: {
+          anchor: view.state.doc.line(Math.min(line, view.state.doc.lines))
+            .from,
+        },
+        scrollIntoView: true,
+      });
+      view.focus();
+    };
+    if (preview) requestAnimationFrame(reveal);
+    else reveal();
+  };
 
   const save = useCallback(async () => {
     if (saving || !form.title.trim() || !form.slug) return;
@@ -133,6 +156,15 @@ export default function WikiEditor({
             )}
             <button
               type="button"
+              aria-expanded={tools}
+              aria-controls="wiki-writing-tools"
+              onClick={() => setTools(!tools)}
+              className="min-h-11 text-sm text-ink-soft dark:text-chalk-muted hover:underline"
+            >
+              Tools
+            </button>
+            <button
+              type="button"
               aria-pressed={preview}
               onClick={() => setPreview(!preview)}
               className="text-sm text-ink-soft dark:text-chalk-muted hover:underline"
@@ -151,6 +183,17 @@ export default function WikiEditor({
             </button>
           </div>
         </header>
+        {tools && (
+          <WritingTools
+            isNew={isNew}
+            saving={saving}
+            form={form}
+            onTemplate={(content) =>
+              setForm((current) => ({ ...current, content }))
+            }
+            onJump={jumpToLine}
+          />
+        )}
 
         <h1 className="mb-4 text-xl text-ink-strong dark:text-chalk-strong">
           {isNew ? "New wiki page" : "Edit wiki page"}
@@ -190,10 +233,7 @@ export default function WikiEditor({
           </div>
         ) : (
           <>
-            <fieldset
-              disabled={saving}
-              className="mb-6 grid gap-4 sm:grid-cols-2"
-            >
+            <fieldset disabled={saving} className="mb-4">
               <label className="text-xs text-ink-soft dark:text-chalk-muted">
                 Title
                 <input
@@ -204,75 +244,87 @@ export default function WikiEditor({
                     setForm((current) => ({
                       ...current,
                       title,
-                      ...(slugTouched ? {} : { slug: slugify(title) }),
+                      ...(slugTouched
+                        ? {}
+                        : { slug: slugify(title).slice(0, 120) }),
                     }));
                   }}
-                  className={`${fieldClass} mt-1`}
-                />
-              </label>
-              <label className="text-xs text-ink-soft dark:text-chalk-muted">
-                Page address
-                <input
-                  value={form.slug}
-                  readOnly={!isNew}
-                  maxLength={120}
-                  onChange={(event) => {
-                    setSlugTouched(true);
-                    setForm((current) => ({
-                      ...current,
-                      slug: event.target.value,
-                    }));
-                  }}
-                  className={`${fieldClass} mt-1`}
-                />
-                <span className="mt-1 block">
-                  /wiki/{form.slug || "your-topic"}
-                </span>
-              </label>
-              <label className="text-xs text-ink-soft dark:text-chalk-muted">
-                Category
-                <input
-                  value={form.category}
-                  maxLength={200}
-                  placeholder="religion/christianity"
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      category: event.target.value,
-                    }))
-                  }
-                  className={`${fieldClass} mt-1`}
-                />
-              </label>
-              <label className="text-xs text-ink-soft dark:text-chalk-muted">
-                Tags, separated by commas
-                <input
-                  value={form.tags}
-                  maxLength={1000}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      tags: event.target.value,
-                    }))
-                  }
-                  className={`${fieldClass} mt-1`}
-                />
-              </label>
-              <label className="sm:col-span-2 text-xs text-ink-soft dark:text-chalk-muted">
-                Description
-                <input
-                  value={form.description}
-                  maxLength={1000}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      description: event.target.value,
-                    }))
-                  }
                   className={`${fieldClass} mt-1`}
                 />
               </label>
             </fieldset>
+            <details className="mb-6">
+              <summary className="cursor-pointer text-sm text-ink-soft dark:text-chalk-muted min-h-11">
+                Page details
+              </summary>
+              <fieldset
+                disabled={saving}
+                className="grid gap-4 sm:grid-cols-2 pb-4"
+              >
+                <label className="text-xs text-ink-soft dark:text-chalk-muted">
+                  Page address
+                  <input
+                    value={form.slug}
+                    readOnly={!isNew}
+                    maxLength={120}
+                    onChange={(event) => {
+                      setSlugTouched(true);
+                      setForm((current) => ({
+                        ...current,
+                        slug: event.target.value,
+                      }));
+                    }}
+                    className={`${fieldClass} mt-1`}
+                  />
+                  <span className="mt-1 block">
+                    /wiki/{form.slug || "your-topic"}
+                  </span>
+                </label>
+                <label className="text-xs text-ink-soft dark:text-chalk-muted">
+                  Category
+                  <input
+                    value={form.category}
+                    maxLength={200}
+                    placeholder="ai/papers"
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        category: event.target.value,
+                      }))
+                    }
+                    className={`${fieldClass} mt-1`}
+                  />
+                </label>
+                <label className="text-xs text-ink-soft dark:text-chalk-muted">
+                  Tags, separated by commas
+                  <input
+                    value={form.tags}
+                    maxLength={1000}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        tags: event.target.value,
+                      }))
+                    }
+                    className={`${fieldClass} mt-1`}
+                  />
+                </label>
+                <label className="sm:col-span-2 text-xs text-ink-soft dark:text-chalk-muted">
+                  Description
+                  <input
+                    value={form.description}
+                    maxLength={1000}
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        description: event.target.value,
+                      }))
+                    }
+                    className={`${fieldClass} mt-1`}
+                  />
+                </label>
+              </fieldset>
+            </details>
             <p
               id="wiki-content-label"
               className="mb-2 text-xs text-ink-soft dark:text-chalk-muted"
@@ -281,6 +333,7 @@ export default function WikiEditor({
             </p>
             <div className="min-h-[45vh] flex-1 border border-rule dark:border-night-rule rounded-xs">
               <CodeMirror
+                ref={editorRef}
                 id="wiki-content"
                 value={form.content}
                 readOnly={saving}

@@ -7,10 +7,17 @@ export const dynamic = "force-dynamic";
 
 export default async function WikiEditPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ title?: string | string[] }>;
 }) {
   const { slug } = await params;
+  const query = await searchParams;
+  const initialTitle =
+    slug === "new" && typeof query.title === "string"
+      ? query.title.slice(0, 200)
+      : "";
   let page = null;
   if (slug !== "new") {
     try {
@@ -22,7 +29,8 @@ export default async function WikiEditPage({
   }
   return (
     <WikiEditor
-      key={slug}
+      key={`${slug}:${initialTitle}`}
+      initialTitle={initialTitle}
       initialPage={page}
       linkEntries={getLinkIndex().entries}
     />
