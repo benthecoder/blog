@@ -189,9 +189,6 @@ importers:
       '@types/sanitize-html':
         specifier: ^2.16.2
         version: 2.16.2
-      '@types/unist':
-        specifier: ^3.0.3
-        version: 3.0.3
       babel-plugin-react-compiler:
         specifier: ^1.0.0
         version: 1.0.0
