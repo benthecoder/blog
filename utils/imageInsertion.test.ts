@@ -1,6 +1,7 @@
 import { EditorState } from "@codemirror/state";
 import { describe, expect, it } from "vitest";
 import {
+  asBlock,
   imageInsertionPoint,
   setImageInsertion,
 } from "@/components/admin/imageInsertion";
@@ -23,4 +24,16 @@ describe("asynchronous image insertion", () => {
     state = state.update({ effects: setImageInsertion.of(null) }).state;
     expect(state.field(imageInsertionPoint)).toBeNull();
   });
+});
+
+describe("image blocks", () => {
+  it.each([
+    ["", "", "![](a)\n"],
+    ["text", "more", "\n\n![](a)\n\n"],
+    ["para\n\n", "\n\nnext", "![](a)"],
+    ["line\n", "\nnext", "\n![](a)\n"],
+    ["text", "", "\n\n![](a)\n"],
+  ])("pads only as needed: %j | %j", (before, after, expected) =>
+    expect(asBlock("![](a)", before, after)).toBe(expected)
+  );
 });

@@ -17,7 +17,7 @@ interface UseImageManagerArgs {
   /** True once the post has been published (i.e. no longer a draft). */
   isPublished: boolean;
   searchParams: ReturnType<typeof useSearchParams>;
-  /** Insert a markdown snippet at the editor cursor. */
+  /** Insert an image as its own paragraph at the drop point or cursor. */
   insertMarkdown: (snippet: string) => void;
   markInsertion: (coordinates?: { x: number; y: number }) => void;
   clearInsertion: () => void;
@@ -136,7 +136,7 @@ export function useImageManager({
       if (controller.signal.aborted) return false;
 
       if (response.ok) {
-        insertMarkdown(`\n\n![](${data.url})\n\n`);
+        insertMarkdown(`![](${data.url})`);
         notify(`✓ Image uploaded: ${data.fileName}`);
         refreshImages();
         return true;

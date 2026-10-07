@@ -27,6 +27,7 @@ import { TemplatePicker } from "./TemplatePicker";
 import { EditorPopover } from "@/components/admin/EditorPopover";
 import { suggestPeriods } from "@/utils/digest/schedule";
 import {
+  asBlock,
   imageInsertionPoint,
   setImageInsertion,
 } from "@/components/admin/imageInsertion";
@@ -112,11 +113,17 @@ export default function EditPostPage() {
         )
       : null;
 
-  const insertMarkdown = (snippet: string) => {
+  const insertMarkdown = (image: string) => {
     const view = cmRef.current?.view;
     if (view) {
+      const { doc } = view.state;
       const pos =
         view.state.field(imageInsertionPoint) ?? view.state.selection.main.head;
+      const snippet = asBlock(
+        image,
+        doc.sliceString(Math.max(0, pos - 2), pos),
+        doc.sliceString(pos, pos + 2)
+      );
       view.dispatch({
         changes: { from: pos, insert: snippet },
         selection: { anchor: pos + snippet.length },
@@ -124,7 +131,7 @@ export default function EditPostPage() {
       });
       view.focus();
     } else {
-      draft.setMarkdown(draft.markdown + "\n" + snippet);
+      draft.setMarkdown(draft.markdown + "\n\n" + image + "\n");
     }
   };
 
@@ -281,7 +288,10 @@ export default function EditPostPage() {
 
   useEffect(() => {
     const exitFocus = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setFocusMode(false);
+      // Let dialogs and popovers handle their own Escape first.
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      if (document.querySelector("dialog[open], [role=dialog]")) return;
+      setFocusMode(false);
     };
     window.addEventListener("keydown", exitFocus);
     return () => window.removeEventListener("keydown", exitFocus);
@@ -303,7 +313,10 @@ export default function EditPostPage() {
       <div
         style={{
           width: showPreview ? "900px" : `${editorWidth}px`,
-          maxWidth: "100vw",
+          maxWidth:
+            desktop && photoDate && photosOpen && !showPreview && !focusMode
+              ? "calc(100vw - 20rem)"
+              : "100vw",
           height: "100dvh",
         }}
         className="shrink-0 min-w-0 flex flex-col relative group border-l border-r border-rule dark:border-night-rule transition-[width] duration-200"
@@ -321,6 +334,56 @@ export default function EditPostPage() {
                 >
                   <Calendar size={18} />
                 </Link>
+                {!isNew && (
+                  <EditorPopover
+                    label={draft.isDraft ? "draft" : "live"}
+                    name="Post status and publishing"
+                  >
+                    {(close) => (
+                      <div className="text-sm">
+                        <p className="px-2 pb-2 text-[11px] text-ink-muted dark:text-chalk-muted">
+                          {draft.isDraft ? "saved draft" : "published post"}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            close();
+                            if (draft.isDraft) void draft.handlePublish();
+                            else void draft.handleUnpublish();
+                          }}
+                          disabled={
+                            draft.loading ||
+                            draft.saving ||
+                            draft.publishing ||
+                            draft.templateLoading ||
+                            images.uploading ||
+                            images.showImageNameModal
+                          }
+                          className="w-full px-2 py-3 text-left hover:bg-paper-sunken dark:hover:bg-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+                        >
+                          {draft.publishing
+                            ? "Working…"
+                            : draft.isDraft
+                              ? "Publish post"
+                              : "Move back to drafts"}
+                        </button>
+                        <div className="mt-2 pt-2 border-t border-rule dark:border-night-rule">
+                          <button
+                            type="button"
+                            disabled={draft.deleting}
+                            onClick={() => {
+                              close();
+                              void draft.handleDelete();
+                            }}
+                            className="w-full px-2 py-3 text-left text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+                          >
+                            {draft.deleting ? "Deleting…" : "Delete post…"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </EditorPopover>
+                )}
                 {isNew && newPostDate && (
                   <TemplatePicker
                     value={draft.template}
@@ -351,12 +414,6 @@ export default function EditPostPage() {
               <span className="text-xs text-ink-soft dark:text-chalk-muted">
                 Uploading...
               </span>
-            )}
-            {draft.hasUnsavedChanges && !draft.saving && !message && (
-              <div
-                className="w-1.5 h-1.5 rounded-full bg-orange-500"
-                title="Unsaved changes (⌘S to save)"
-              />
             )}
             <div className="flex items-center gap-1">
               {!focusMode && !isNew && images.postImages.length > 0 && (
@@ -402,57 +459,6 @@ export default function EditPostPage() {
             >
               {focusMode ? "Leave focus" : "Focus"}
             </button>
-            {!focusMode && !isNew && (
-              <EditorPopover
-                label={draft.isDraft ? "draft" : "live"}
-                name="Post status and publishing"
-                align="end"
-              >
-                {(close) => (
-                  <div className="text-sm">
-                    <p className="px-2 pb-2 text-[11px] text-ink-muted dark:text-chalk-muted">
-                      {draft.isDraft ? "saved draft" : "published post"}
-                    </p>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        close();
-                        if (draft.isDraft) void draft.handlePublish();
-                        else void draft.handleUnpublish();
-                      }}
-                      disabled={
-                        draft.loading ||
-                        draft.saving ||
-                        draft.publishing ||
-                        draft.templateLoading ||
-                        images.uploading ||
-                        images.showImageNameModal
-                      }
-                      className="w-full px-2 py-3 text-left hover:bg-paper-sunken dark:hover:bg-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
-                    >
-                      {draft.publishing
-                        ? "Working…"
-                        : draft.isDraft
-                          ? "Publish post"
-                          : "Move back to drafts"}
-                    </button>
-                    <div className="mt-2 pt-2 border-t border-rule dark:border-night-rule">
-                      <button
-                        type="button"
-                        disabled={draft.deleting}
-                        onClick={() => {
-                          close();
-                          void draft.handleDelete();
-                        }}
-                        className="w-full px-2 py-3 text-left text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
-                      >
-                        {draft.deleting ? "Deleting…" : "Delete post…"}
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </EditorPopover>
-            )}
             <button
               onClick={draft.handleSave}
               disabled={
@@ -461,7 +467,12 @@ export default function EditPostPage() {
                 draft.publishing ||
                 draft.templateLoading
               }
-              className="min-h-11 sm:min-h-9 px-3 py-1.5 text-xs bg-ink text-paper dark:bg-chalk dark:text-night disabled:opacity-30 rounded-xs"
+              title="Save (⌘S)"
+              className={`min-h-11 sm:min-h-9 px-3 py-1.5 text-xs rounded-xs border disabled:opacity-30 ${
+                isNew || draft.hasUnsavedChanges
+                  ? "bg-ink text-paper border-ink dark:bg-chalk dark:text-night dark:border-chalk"
+                  : "border-rule text-ink-soft hover:text-ink dark:border-night-rule dark:text-chalk-muted dark:hover:text-chalk"
+              }`}
             >
               {draft.saving ? "Saving…" : "Save"}
             </button>
@@ -490,12 +501,12 @@ export default function EditPostPage() {
             </div>
             <span role="status">
               {draft.loading
-                ? "Loading…"
+                ? "loading…"
                 : draft.hasUnsavedChanges
                   ? draft.backupAvailable
-                    ? "Unsaved · browser copy kept"
-                    : "Unsaved · browser backup unavailable; save to file"
-                  : "No unsaved changes"}
+                    ? "unsaved · browser copy kept"
+                    : "unsaved · no browser copy, save to keep it"
+                  : ""}
             </span>
           </div>
         )}
@@ -555,9 +566,7 @@ export default function EditPostPage() {
                 <CodeMirror
                   ref={cmRef}
                   value={draft.markdown}
-                  editable={
-                    !draft.loading && !draft.saving && !draft.templateLoading
-                  }
+                  editable={!draft.loading && !draft.templateLoading}
                   onChange={(value) => draft.setMarkdown(value)}
                   extensions={extensions}
                   theme="none"

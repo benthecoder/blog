@@ -14,3 +14,14 @@ export const imageInsertionPoint = StateField.define<number | null>({
     return next;
   },
 });
+
+/**
+ * Pads a block snippet (an image) with only the newlines it needs to sit in
+ * its own paragraph, given the text on either side of the insertion point.
+ */
+export function asBlock(snippet: string, before: string, after: string) {
+  const pad = (run: string) => "\n".repeat(Math.max(0, 2 - run.length));
+  const lead = before === "" ? "" : pad(before.match(/\n*$/)![0]);
+  const trail = after === "" ? "\n" : pad(after.match(/^\n*/)![0]);
+  return lead + snippet + trail;
+}

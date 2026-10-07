@@ -48,6 +48,7 @@ export function usePostDraft({
   const [backupAvailable, setBackupAvailable] = useState(true);
   const latestMarkdownRef = useRef("");
   const saveInFlight = useRef(false);
+  const wasDirtyRef = useRef(false);
   const templateRequestRef = useRef<AbortController | null>(null);
   const [date, setDate] = useState("");
   const [markdown, setMarkdown] = useState("");
@@ -168,6 +169,7 @@ export function usePostDraft({
     const controller = new AbortController();
     setLoadedKey(null);
     setTemplateLoading(false);
+    wasDirtyRef.current = false;
     const offerRecovery = (formattedDate: string, baseline: string) => {
       const backup =
         readDraftBackup(draftKey) ??
@@ -470,7 +472,11 @@ export function usePostDraft({
         date,
       };
       setBackupAvailable(writeDraftBackup(draftKey, draft));
+    } else if (wasDirtyRef.current) {
+      // Undone back to the saved text: the copy no longer holds anything.
+      removeDraftBackup(recoveryKey);
     }
+    wasDirtyRef.current = hasChanged;
   }, [markdown, recoveryKey, date, loading]);
 
   useEffect(() => {
