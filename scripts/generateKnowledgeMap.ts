@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { neon } from "@neondatabase/serverless";
+import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
 import {
   computeClusteringProjection,
   computeVisualizationUMAP,
@@ -39,11 +39,11 @@ function writeBrowserAssets(map: KnowledgeMapOutput) {
   fs.writeFileSync(KNOWLEDGE_MAP_NODES_JSON, previewJson);
 }
 
-const sql = neon(process.env.POSTGRES_URL!);
-
 // Cheap DB fingerprint: the map only changes when embeddings do, so a
 // count + latest timestamp is enough to decide whether to regenerate.
-async function getSourceFingerprint(): Promise<string> {
+async function getSourceFingerprint(
+  sql: NeonQueryFunction<false, false>
+): Promise<string> {
   const rows = (await sql`
     SELECT count(*) AS count, max(created_at) AS latest
     FROM content_chunks
@@ -66,6 +66,23 @@ function previousClusterLabels(
 
 async function generateKnowledgeMap() {
   try {
+    // Deployment builds consume versioned assets, not mutable provider data.
+    // Regenerate locally and commit the snapshot when embeddings change.
+    if (process.env.VERCEL === "1") {
+      if (!fs.existsSync(KNOWLEDGE_MAP_JSON)) {
+        throw new Error(
+          "Committed knowledge-map.json is missing; generate it locally and commit it before deploying"
+        );
+      }
+      const existing = JSON.parse(
+        fs.readFileSync(KNOWLEDGE_MAP_JSON, "utf8")
+      ) as KnowledgeMapOutput;
+      writeBrowserAssets(existing);
+      console.log(
+        "✓ Using committed knowledge map; no provider query during deployment prebuild"
+      );
+      return;
+    }
     // Check if database connection is available
     if (!process.env.POSTGRES_URL) {
       console.warn("⚠️  POSTGRES_URL not available during build");
@@ -84,7 +101,8 @@ async function generateKnowledgeMap() {
     }
 
     const outputPath = KNOWLEDGE_MAP_JSON;
-    const sourceFingerprint = await getSourceFingerprint();
+    const sql = neon(process.env.POSTGRES_URL);
+    const sourceFingerprint = await getSourceFingerprint(sql);
 
     let existing: KnowledgeMapOutput | undefined;
     if (fs.existsSync(outputPath)) {

@@ -22,3 +22,9 @@ Single commands and pipelines share one transport with explicit no-store caching
 - Lint, Knip, TypeScript and the full production build passed.
 
 See [Upstash's Lua documentation](https://upstash.com/blog/lua-scripting-on-upstash-redis-atomic-operations-over-http) and [REST pipeline documentation](https://upstash.com/docs/redis/features/restapi). The improvement is fewer HTTP round trips and more reliable counting; Redis command billing and deployed latency have not been measured. Upstash uses global locking for Lua by default, so the script is deliberately short with no loops or archive reads.
+
+## Deployment build reliability
+
+The first Vercel preview failed before Next.js compilation: `getSourceFingerprint` in the map prebuild timed out against Neon. Deployment prebuilds now derive browser assets from the committed full map without constructing a Neon client or querying providers. Local map generation still refreshes from embeddings as before; commit regenerated snapshots when those embeddings change. A missing snapshot fails with an explicit instruction rather than attempting remote regeneration.
+
+An isolated child-process check uses an intentionally invalid database URL and confirms the generated node/edge assets match the committed map exactly. This avoids the identified prebuild dependency; it does not make every part of the site independent of its database. The thoughts page still queries Neon when its initial ISR snapshot is built.
