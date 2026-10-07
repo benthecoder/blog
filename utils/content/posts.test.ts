@@ -20,10 +20,15 @@ const fixtures = vi.hoisted(() => ({
     },
   ],
   scan: vi.fn(),
+  slugs: vi.fn(),
 }));
-vi.mock("./markdown", () => ({ scanMarkdownDir: fixtures.scan }));
+vi.mock("./markdown", () => ({
+  scanMarkdownDir: fixtures.scan,
+  scanMarkdownSlugs: fixtures.slugs,
+}));
 beforeEach(() => {
   vi.resetModules();
+  fixtures.slugs.mockReset().mockReturnValue(["newer", "older"]);
   fixtures.scan
     .mockReset()
     .mockImplementation((directory: string) =>
@@ -35,6 +40,31 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllEnvs());
 
 describe("published metadata index", () => {
+  it("reuses the deployed slug list without reading or parsing post bodies", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("VERCEL", "1");
+    const { getPostSlugs } = await import("./posts");
+    expect(getPostSlugs()).toEqual(["newer", "older"]);
+    getPostSlugs();
+    expect(fixtures.slugs).toHaveBeenCalledTimes(1);
+    expect(fixtures.scan).not.toHaveBeenCalled();
+  });
+  it.each([
+    ["development", "1"],
+    ["test", "1"],
+    ["production", ""],
+  ])(
+    "refreshes slugs after a local publish in %s (VERCEL=%s)",
+    async (environment, vercel) => {
+      vi.stubEnv("NODE_ENV", environment);
+      vi.stubEnv("VERCEL", vercel);
+      const { getPostSlugs } = await import("./posts");
+      expect(getPostSlugs()).toEqual(["newer", "older"]);
+      fixtures.slugs.mockReturnValue(["newer", "older", "just-published"]);
+      expect(getPostSlugs()).toEqual(["newer", "older", "just-published"]);
+      expect(fixtures.slugs).toHaveBeenCalledTimes(2);
+    }
+  );
   it("reuses immutable Vercel files across separate calls", async () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("VERCEL", "1");
