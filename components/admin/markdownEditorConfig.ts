@@ -31,6 +31,9 @@ export const markdownEditorExtensions = [
     ".cm-scroller": {
       fontFamily: "inherit",
       scrollbarWidth: "thin",
+      scrollbarColor: "var(--scrollbar-thumb-quiet) transparent",
+    },
+    ".cm-scroller:hover": {
       scrollbarColor: "var(--scrollbar-thumb) transparent",
     },
     "&.cm-focused": { outline: "none" },

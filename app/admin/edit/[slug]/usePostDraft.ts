@@ -21,6 +21,7 @@ interface UsePostDraftArgs {
   confirmAction: (
     title: string,
     message: string,
+    labels: [cancel: string, confirm: string],
     onConfirm: () => void
   ) => void;
   /** Surface a status message in the top bar. */
@@ -115,8 +116,9 @@ export function usePostDraft({
     const run = () => loadTemplate(kind, dateParam, date);
     if (hasUnsavedChanges) {
       confirmAction(
-        "Replace content",
-        "Switching template replaces what you've typed. Continue?",
+        "replace your writing?",
+        "Switching template replaces what you've typed.",
+        ["keep mine", "replace"],
         run
       );
     } else {
@@ -181,8 +183,9 @@ export function usePostDraft({
       )
         return false;
       confirmAction(
-        "Recover unsaved writing",
-        `Found a browser copy from ${new Date(backup.timestamp).toLocaleString()}. Restore it?`,
+        "restore unsaved writing?",
+        `This browser kept a copy from ${new Date(backup.timestamp).toLocaleString()} that was never saved to the file.`,
+        ["not now", "restore"],
         () => setMarkdown(backup.markdown)
       );
       return true;
@@ -422,8 +425,9 @@ export function usePostDraft({
 
   const handleDelete = () => {
     confirmAction(
-      "Delete Post",
-      "Are you sure you want to delete this post? This action cannot be undone.",
+      "delete this post?",
+      "The file is removed and this can't be undone.",
+      ["keep", "delete"],
       async () => {
         setDeleting(true);
         notify("");
@@ -504,8 +508,9 @@ export function usePostDraft({
         e.stopPropagation();
 
         confirmAction(
-          "Unsaved Changes",
-          "You have unsaved changes. Are you sure you want to leave?",
+          "leave without saving?",
+          "Your unsaved changes stay in this browser's copy, not the file.",
+          ["stay", "leave"],
           () => {
             // Temporarily disable beforeunload warning before navigating
             setHasUnsavedChanges(false);

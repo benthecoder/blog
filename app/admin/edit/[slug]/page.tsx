@@ -82,11 +82,13 @@ export default function EditPostPage() {
   const confirmAction = (
     title: string,
     confirmMessage: string,
+    labels: ConfirmConfig["labels"],
     onConfirm: () => void
   ) => {
     setModalConfig({
       title,
       message: confirmMessage,
+      labels,
       onConfirm: () => {
         setModalConfig(null);
         onConfirm();
@@ -319,10 +321,16 @@ export default function EditPostPage() {
               : "100vw",
           height: "100dvh",
         }}
-        className="shrink-0 min-w-0 flex flex-col relative group border-l border-r border-rule dark:border-night-rule transition-[width] duration-200"
+        className={`shrink-0 min-w-0 flex flex-col relative group transition-[width] duration-200 ${focusMode ? "" : "border-l border-r border-rule dark:border-night-rule"}`}
       >
         {/* Top bar */}
-        <div className="border-b border-rule dark:border-night-rule px-4 sm:px-6 py-3 flex flex-wrap gap-3 justify-between items-center">
+        <div
+          className={`min-h-14 border-b px-4 sm:px-6 py-2 flex flex-wrap gap-3 justify-between items-center ${
+            focusMode
+              ? "border-transparent opacity-0 hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200"
+              : "border-rule dark:border-night-rule"
+          }`}
+        >
           <div className="flex items-center gap-4">
             {!focusMode && (
               <>
@@ -362,11 +370,22 @@ export default function EditPostPage() {
                           className="w-full px-2 py-3 text-left hover:bg-paper-sunken dark:hover:bg-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
                         >
                           {draft.publishing
-                            ? "Working…"
+                            ? "working…"
                             : draft.isDraft
-                              ? "Publish post"
-                              : "Move back to drafts"}
+                              ? "publish"
+                              : "move to drafts"}
                         </button>
+                        {!draft.isDraft && (
+                          <a
+                            href={`/posts/${slug}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={close}
+                            className="block w-full px-2 py-3 text-left hover:bg-paper-sunken dark:hover:bg-night focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+                          >
+                            view on site <span aria-hidden="true">↗</span>
+                          </a>
+                        )}
                         <div className="mt-2 pt-2 border-t border-rule dark:border-night-rule">
                           <button
                             type="button"
@@ -377,7 +396,7 @@ export default function EditPostPage() {
                             }}
                             className="w-full px-2 py-3 text-left text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
                           >
-                            {draft.deleting ? "Deleting…" : "Delete post…"}
+                            {draft.deleting ? "deleting…" : "delete…"}
                           </button>
                         </div>
                       </div>
@@ -412,7 +431,7 @@ export default function EditPostPage() {
             )}
             {images.uploading && (
               <span className="text-xs text-ink-soft dark:text-chalk-muted">
-                Uploading...
+                uploading…
               </span>
             )}
             <div className="flex items-center gap-1">
@@ -455,9 +474,11 @@ export default function EditPostPage() {
               onClick={() => setFocusMode(!focusMode)}
               aria-pressed={focusMode}
               className="min-h-11 sm:min-h-9 px-2 py-1.5 text-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
-              title="Escape to leave focus mode"
+              title={
+                focusMode ? "esc to leave" : "hide everything but the text"
+              }
             >
-              {focusMode ? "Leave focus" : "Focus"}
+              {focusMode ? "leave focus" : "focus"}
             </button>
             <button
               onClick={draft.handleSave}
@@ -474,7 +495,7 @@ export default function EditPostPage() {
                   : "border-rule text-ink-soft hover:text-ink dark:border-night-rule dark:text-chalk-muted dark:hover:text-chalk"
               }`}
             >
-              {draft.saving ? "Saving…" : "Save"}
+              {draft.saving ? "saving…" : "save"}
             </button>
           </div>
         </div>
@@ -635,15 +656,27 @@ export default function EditPostPage() {
       </div>
 
       {!focusMode && photoDate && photosOpen && !showPreview && (
-        <PhotoPanel
-          key={photoDate}
-          date={photoDate}
-          onPick={(file, name) => {
-            if (!desktop) setPhotosToggle(false);
-            images.openCropModalWith(file, name);
-          }}
-          onClose={() => setPhotosToggle(false)}
-        />
+        <>
+          {!desktop && (
+            // The drawer covers the text on narrow screens; tapping the rest
+            // of the page closes it.
+            <button
+              type="button"
+              aria-label="Close photos"
+              onClick={() => setPhotosToggle(false)}
+              className="fixed inset-0 z-20 bg-black/20"
+            />
+          )}
+          <PhotoPanel
+            key={photoDate}
+            date={photoDate}
+            onPick={(file, name) => {
+              if (!desktop) setPhotosToggle(false);
+              images.openCropModalWith(file, name);
+            }}
+            onClose={() => setPhotosToggle(false)}
+          />
+        </>
       )}
     </div>
   );

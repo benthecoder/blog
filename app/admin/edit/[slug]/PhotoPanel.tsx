@@ -121,11 +121,11 @@ export function PhotoPanel({
   return (
     <aside
       aria-label="Photos from this day"
-      className="fixed bottom-0 right-0 z-30 h-[70dvh] w-full sm:w-80 lg:static lg:h-dvh lg:z-auto shrink-0 flex flex-col border-l border-t lg:border-t-0 border-rule dark:border-night-rule bg-paper dark:bg-night"
+      className="fixed bottom-0 right-0 z-30 h-[70dvh] w-full sm:w-80 shadow-[0_-8px_24px_rgb(0_0_0/0.08)] lg:shadow-none lg:static lg:h-dvh lg:z-auto shrink-0 flex flex-col border-l border-t lg:border-t-0 lg:border-r border-rule dark:border-night-rule bg-paper dark:bg-night"
     >
-      <div className="h-[55px] shrink-0 border-b border-rule dark:border-night-rule px-4 flex items-center justify-between">
-        <span className="text-xs text-ink-soft dark:text-chalk-muted uppercase tracking-wider">
-          Photos · {formatDay(date)}
+      <div className="h-14 shrink-0 border-b border-rule dark:border-night-rule px-4 flex items-center justify-between">
+        <span className="text-xs text-ink-soft dark:text-chalk-muted lowercase">
+          photos · {formatDay(date)}
           {photos.length > 0 && (
             <span className="ml-1.5 tabular-nums text-ink-muted dark:text-chalk-muted/70">
               {photos.length}
@@ -164,7 +164,7 @@ export function PhotoPanel({
                 onClick={() => setReload((value) => value + 1)}
                 className="min-h-11 underline underline-offset-2 text-ink dark:text-chalk focus-visible:outline-2 focus-visible:outline-offset-2"
               >
-                Try again
+                try again
               </button>
             )}
           </div>
@@ -197,7 +197,7 @@ export function PhotoPanel({
 
         <div className="grid grid-cols-2 gap-3">
           {photos.map((photo) => (
-            <div key={photo.id} className="min-w-0">
+            <div key={photo.id} className="min-w-0 group/tile">
               <button
                 type="button"
                 onClick={() => {
@@ -249,9 +249,9 @@ export function PhotoPanel({
                   onClick={() => handlePick(photo)}
                   disabled={picking !== null}
                   aria-label={`Insert ${photo.name}`}
-                  className="min-h-11 min-w-11 px-1 text-xs text-ink dark:text-chalk hover:underline disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+                  className="min-h-11 min-w-11 px-1 text-xs text-ink dark:text-chalk hover:underline disabled:opacity-30 pointer-fine:opacity-0 pointer-fine:group-hover/tile:opacity-100 pointer-fine:focus-visible:opacity-100 transition-opacity focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
                 >
-                  Insert
+                  insert
                 </button>
               </div>
             </div>

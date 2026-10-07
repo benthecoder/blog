@@ -749,6 +749,11 @@ body {
     in oklab,
     var(--color-ink-muted) 45%,
     transparent
+  ); /* At rest the thumb is just a hint; hovering the pane brings it back. */
+  --scrollbar-thumb-quiet: color-mix(
+    in oklab,
+    var(--color-ink-muted) 18%,
+    transparent
   );
 }
 
@@ -758,9 +763,17 @@ body {
     var(--color-chalk-muted) 45%,
     transparent
   );
+  --scrollbar-thumb-quiet: color-mix(
+    in oklab,
+    var(--color-chalk-muted) 18%,
+    transparent
+  );
 }
 
 .admin-scrollbar {
   scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-quiet) transparent;
+}
+.admin-scrollbar:hover {
   scrollbar-color: var(--scrollbar-thumb) transparent;
 }

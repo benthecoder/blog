@@ -6,6 +6,8 @@ export interface ConfirmConfig {
   title: string;
   message: string;
   onConfirm: () => void;
+  /** Button labels; name the action, not "confirm". */
+  labels: [cancel: string, confirm: string];
 }
 
 export function ConfirmModal({
@@ -51,13 +53,13 @@ export function ConfirmModal({
           onClick={onCancel}
           className="min-h-11 px-4 py-1.5 text-sm border border-rule dark:border-night-rule text-ink dark:text-chalk hover:border-ink dark:hover:border-chalk transition-colors"
         >
-          Cancel
+          {config.labels[0]}
         </button>
         <button
           onClick={config.onConfirm}
           className="min-h-11 px-4 py-1.5 text-sm border border-ink dark:border-chalk text-ink dark:text-chalk hover:bg-ink hover:text-white dark:hover:bg-chalk dark:hover:text-night transition-colors"
         >
-          Confirm
+          {config.labels[1]}
         </button>
       </div>
     </dialog>

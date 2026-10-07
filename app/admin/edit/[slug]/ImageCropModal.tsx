@@ -61,10 +61,13 @@ export function ImageCropModal({
   error: string;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
   const titleId = useId();
   useEffect(() => {
     const dialog = dialogRef.current;
     dialog?.showModal();
+    // showModal() focuses the first button; the name is what you type next.
+    nameRef.current?.select();
     return () => dialog?.close();
   }, []);
   const [src, setSrc] = useState("");
@@ -130,10 +133,11 @@ export function ImageCropModal({
         id={titleId}
         className="text-lg font-light mb-4 text-ink dark:text-chalk tracking-wide"
       >
-        Crop image
+        crop image
       </h2>
 
-      <div className="flex items-center justify-center bg-paper-sunken dark:bg-night-raised rounded-xs p-2 mb-4">
+      {/* Fixed height so the dialog doesn't jump when the image decodes. */}
+      <div className="h-[55vh] flex items-center justify-center bg-paper-sunken dark:bg-night-raised rounded-xs p-2 mb-4">
         {src && (
           <ReactCrop
             crop={crop}
@@ -148,7 +152,7 @@ export function ImageCropModal({
               src={src}
               alt="Crop preview"
               onLoad={onImageLoad}
-              style={{ maxHeight: "55vh", width: "auto" }}
+              style={{ maxHeight: "calc(55vh - 1rem)", width: "auto" }}
             />
           </ReactCrop>
         )}
@@ -165,8 +169,10 @@ export function ImageCropModal({
         ).map(([label, value]) => (
           <button
             key={label}
+            type="button"
+            aria-pressed={aspect === value}
             onClick={() => changeAspect(value)}
-            className={`px-2.5 py-1 text-xs rounded-xs border transition-colors ${
+            className={`px-2.5 py-1 text-xs rounded-xs border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:focus-visible:outline-chalk ${
               aspect === value
                 ? "border-ink dark:border-chalk text-ink dark:text-chalk"
                 : "border-rule dark:border-night-rule text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
@@ -186,7 +192,7 @@ export function ImageCropModal({
         }}
         aria-label="Image name"
         placeholder="image-name"
-        autoFocus
+        ref={nameRef}
         className="w-full px-3 py-2 mb-6 border border-rule dark:border-night-rule bg-transparent text-ink dark:text-chalk focus:outline-hidden focus:border-ink dark:focus:border-chalk rounded-xs"
       />
 
@@ -201,14 +207,14 @@ export function ImageCropModal({
           disabled={disabled}
           className="min-h-11 px-4 py-1.5 text-sm text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 transition-colors"
         >
-          Cancel
+          cancel
         </button>
         <button
           onClick={confirm}
           disabled={disabled || !completed?.width}
           className="min-h-11 px-4 py-1.5 text-sm bg-ink dark:bg-chalk text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
         >
-          {disabled ? "Uploading..." : "Upload"}
+          {disabled ? "uploading…" : "upload"}
         </button>
       </div>
     </dialog>

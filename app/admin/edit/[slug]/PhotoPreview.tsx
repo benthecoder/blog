@@ -137,7 +137,7 @@ export function PhotoPreview({
           disabled={busy || !ready}
           className="min-h-11 px-4 text-sm bg-ink text-paper dark:bg-chalk dark:text-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
         >
-          {busy ? "Opening…" : "Insert photo"}
+          {busy ? "opening…" : "insert"}
         </button>
       </footer>
     </dialog>
