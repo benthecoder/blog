@@ -131,9 +131,10 @@ async function callModelForLabel(
         },
         body: JSON.stringify({
           model,
-          // headroom for reasoning models; the label itself is a few tokens
-          max_tokens: 1000,
-          reasoning: { exclude: true },
+          max_tokens: 50,
+          // nemotron reasons by default: slow (30s+) and the thinking leaks
+          // into the reply instead of the label
+          reasoning: { enabled: false },
           messages: [{ role: "user", content: prompt }],
         }),
       });
