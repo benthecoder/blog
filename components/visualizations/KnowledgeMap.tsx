@@ -396,7 +396,6 @@ export default function KnowledgeMap({
       canvas.style.cursor = closest ? "pointer" : "crosshair";
       setHoveredArticleNode(closest);
     };
-    const handleMouseLeave = () => setHoveredArticleNode(null);
 
     const handleClick = (e: MouseEvent) => {
       const closest = hitTest(e.clientX, e.clientY);
@@ -418,14 +417,12 @@ export default function KnowledgeMap({
 
     window.addEventListener("resize", handleResize);
     canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("mouseleave", handleMouseLeave);
     canvas.addEventListener("click", handleClick);
 
     return () => {
       window.removeEventListener("resize", handleResize);
       selection.on(".zoom", null);
       canvas.removeEventListener("mousemove", handleMouseMove);
-      canvas.removeEventListener("mouseleave", handleMouseLeave);
       canvas.removeEventListener("click", handleClick);
     };
   }, [articles.length]);
@@ -442,11 +439,6 @@ export default function KnowledgeMap({
 
   const displayArticleNode = selectedArticleNode ?? hoveredArticleNode;
   const isPinned = selectedArticleNode !== null;
-  const clearFocus = () => {
-    setSelectedArticleNode(null);
-    setHoveredArticleNode(null);
-    setClickPos(null);
-  };
 
   const getPanelPosition = () => {
     if (!isPinned || !clickPos || !containerRef.current)
@@ -473,10 +465,7 @@ export default function KnowledgeMap({
         type="text"
         placeholder="search..."
         value={searchQuery}
-        onChange={(e) => {
-          setSearchQuery(e.target.value);
-          clearFocus();
-        }}
+        onChange={(e) => setSearchQuery(e.target.value)}
         className="absolute top-4 left-4 z-20 w-36 px-2 py-1 text-xs bg-paper/90 dark:bg-night/90 text-ink dark:text-chalk border border-rule dark:border-white/8 focus:outline-hidden placeholder:text-ink/25 dark:placeholder:text-chalk/25 backdrop-blur-xs"
       />
 
@@ -571,10 +560,7 @@ export default function KnowledgeMap({
             <div className="absolute bottom-8 right-0 bg-paper/95 dark:bg-night/95 px-3 py-2 border border-rule dark:border-white/8 max-h-[60vh] overflow-y-auto shadow-xs min-w-[200px] backdrop-blur-xs">
               {selectedCluster !== null && (
                 <button
-                  onClick={() => {
-                    setSelectedCluster(null);
-                    clearFocus();
-                  }}
+                  onClick={() => setSelectedCluster(null)}
                   className="w-full mb-2 px-2 py-1 text-xs bg-rule/30 dark:bg-white/6 hover:bg-rule/50 dark:hover:bg-white/10 transition-colors"
                 >
                   show all clusters
@@ -592,10 +578,7 @@ export default function KnowledgeMap({
                     return (
                       <button
                         key={clusterId}
-                        onClick={() => {
-                          setSelectedCluster(isActive ? null : id);
-                          clearFocus();
-                        }}
+                        onClick={() => setSelectedCluster(isActive ? null : id)}
                         className={`w-full flex items-center gap-2 text-xs py-0.5 px-1 rounded transition-colors ${
                           isActive
                             ? "bg-rule/40 dark:bg-white/6"
