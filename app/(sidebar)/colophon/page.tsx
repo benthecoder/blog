@@ -31,12 +31,12 @@ export default function ColophonPage() {
             {inks.map(([name, hex]) => (
               <span
                 key={name}
-                className="inline-flex items-center gap-1.5"
+                data-palette={name}
+                className="colophon-swatch inline-flex items-center gap-1.5 text-ink dark:text-chalk"
                 title={name}
               >
                 <span
-                  data-palette={name}
-                  className="colophon-swatch inline-block size-2.5 rounded-full bg-ink"
+                  className="inline-block size-3.5 rounded-full bg-ink dark:bg-chalk"
                   aria-hidden="true"
                 />
                 <span className="font-mono text-xs">{hex}</span>
