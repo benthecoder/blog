@@ -6,10 +6,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
-    // Every distinct (source, width, quality, format) is a billed Vercel
-    // transformation, and Hobby only includes 5k/month. The gallery alone has
-    // ~290 sources, so each extra bucket here costs ~290 transformations.
-    // These six widths are one per real layout breakpoint, nothing in between.
+    // Limit generated variants to the sizes and qualities the site uses.
     deviceSizes: [640, 828, 1200, 1920],
     imageSizes: [256, 384],
     qualities: [65, 75],
@@ -18,11 +15,7 @@ const nextConfig: NextConfig = {
 
   outputFileTracingExcludes: {
     "*": ["public/**/*", ".git/**/*"],
-    "/posts": ["public/**/*"],
-    "/posts/[slug]": ["public/**/*"],
-    "/tags": ["public/**/*"],
-    "/tags/[slug]": ["public/**/*"],
-    "/api/**": ["public/**/*", "app/og/*.jpg"],
+    "/api/**": ["app/og/*.jpg"],
   },
   rewrites: async () => [
     {
