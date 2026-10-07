@@ -88,7 +88,10 @@ export default function PostImage({
             src={src}
             alt={alt}
             fill
-            sizes="(max-width: 800px) 100vw, 800px"
+            // Lazy images can choose from their actual laid-out slot. Older
+            // browsers retain the existing fallback; artwork stays untouched.
+            loading="lazy"
+            sizes="auto, (max-width: 800px) 100vw, 800px"
             placeholder={meta?.blurDataURL ? "blur" : "empty"}
             blurDataURL={meta?.blurDataURL}
             onLoad={() => setLoaded(true)}

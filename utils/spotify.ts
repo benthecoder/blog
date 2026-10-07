@@ -1,3 +1,5 @@
+import "server-only";
+
 const client_id = process.env.SPOTIFY_CLIENT_ID!;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET!;
 const refresh_token = process.env.SPOTIFY_REFRESH_TOKEN!;
@@ -32,12 +34,19 @@ interface SpotifyRecentItem {
 // id/secret/refresh token never leave the server, and visitors never see an
 // OAuth flow.
 let cachedToken: { value: string; expiresAt: number } | null = null;
+let tokenRefresh: Promise<{ access_token: string }> | null = null;
 
 async function getAccessToken(): Promise<{ access_token: string }> {
   if (cachedToken && Date.now() < cachedToken.expiresAt) {
     return { access_token: cachedToken.value };
   }
+  tokenRefresh ??= refreshAccessToken().finally(() => {
+    tokenRefresh = null;
+  });
+  return tokenRefresh;
+}
 
+async function refreshAccessToken(): Promise<{ access_token: string }> {
   const response = await fetch(TOKEN_ENDPOINT, {
     method: "POST",
     headers: {
@@ -72,7 +81,7 @@ async function getAccessToken(): Promise<{ access_token: string }> {
   return data;
 }
 
-export async function getRecentlyPlayed(limit = 5) {
+async function fetchRecentlyPlayed(limit: number) {
   const { access_token } = await getAccessToken();
 
   const response = await fetch(`${RECENTLY_PLAYED_ENDPOINT}?limit=${limit}`, {
@@ -100,4 +109,31 @@ export async function getRecentlyPlayed(limit = 5) {
   }));
 
   return { tracks };
+}
+
+const TRACK_TTL_MS = 5 * 60 * 1000;
+type RecentTracks = Awaited<ReturnType<typeof fetchRecentlyPlayed>>;
+const trackCache = new Map<
+  number,
+  { value: RecentTracks; expiresAt: number }
+>();
+const trackRequests = new Map<number, Promise<RecentTracks>>();
+
+export function getRecentlyPlayed(limit = 5): Promise<RecentTracks> {
+  if (!Number.isInteger(limit) || limit < 1 || limit > 50) {
+    return Promise.reject(new Error("Invalid Spotify track limit"));
+  }
+  const cached = trackCache.get(limit);
+  if (cached && Date.now() < cached.expiresAt)
+    return Promise.resolve(cached.value);
+  const pending = trackRequests.get(limit);
+  if (pending) return pending;
+  const request = fetchRecentlyPlayed(limit)
+    .then((value) => {
+      trackCache.set(limit, { value, expiresAt: Date.now() + TRACK_TTL_MS });
+      return value;
+    })
+    .finally(() => trackRequests.delete(limit));
+  trackRequests.set(limit, request);
+  return request;
 }

@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { isSafeSlug } from "@/config/paths";
-import { getPostMetadata } from "@/utils/content/posts";
 import { getPostPreviewData } from "@/utils/content/preview";
 
-// Prerendered per post so archive-page hover cards don't need every excerpt
-// shipped in the page payload.
+// Generate and cache a preview on its first request. Full articles remain
+// prerendered, but deployments needn't build an endpoint for every hover card.
 export const dynamic = "force-static";
+export const dynamicParams = true;
 
 export const generateStaticParams = async () => {
-  return getPostMetadata().map((post) => ({ slug: post.slug }));
+  return [];
 };
 
 export async function GET(
