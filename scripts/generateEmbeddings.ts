@@ -85,12 +85,11 @@ async function main() {
     rows = await prepareEmbeddings(
       posts,
       (texts) =>
-        withEmbeddingRetry(() =>
-          client.embed({
-            model: VOYAGE_MODEL,
-            input: texts,
-            inputType: "document",
-          })
+        withEmbeddingRetry((signal) =>
+          client.embed(
+            { model: VOYAGE_MODEL, input: texts, inputType: "document" },
+            { abortSignal: signal, maxRetries: 0 }
+          )
         ),
       specificFile ? 50 : 120,
       () => wait(DELAY_BETWEEN_BATCHES)
