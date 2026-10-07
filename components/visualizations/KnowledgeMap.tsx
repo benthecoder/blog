@@ -1,5 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { findNearestMapNode } from "@/utils/chunking/mapHitTest";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
@@ -26,6 +29,7 @@ export default function KnowledgeMap({
 }: {
   className?: string;
 }) {
+  const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [articles, setArticles] = useState<ArticleNode[]>([]);
@@ -369,26 +373,13 @@ export default function KnowledgeMap({
       const x = (clientX - r.left - t.x) / t.k;
       const y = (clientY - r.top - t.y) / t.k;
 
-      const xScale = scaleLinear().domain([0, 1000]).range([0, r.width]);
-      const yScale = scaleLinear().domain([0, 1000]).range([0, r.height]);
-
       const isTouch = window.matchMedia("(pointer: coarse)").matches;
-      const threshold = isTouch ? 24 : 12;
-
-      let closest: ArticleNode | null = null;
-      let minDist = threshold;
-
-      filteredRef.current.forEach((article) => {
-        const dx = xScale(article.x) - x;
-        const dy = yScale(article.y) - y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < minDist) {
-          minDist = dist;
-          closest = article;
-        }
-      });
-
-      return closest;
+      return findNearestMapNode(
+        filteredRef.current,
+        { x, y },
+        { width: r.width, height: r.height },
+        isTouch ? 24 : 12
+      );
     }
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -407,7 +398,7 @@ export default function KnowledgeMap({
       }
 
       if (selectedArticleNodeRef.current?.id === closest.id) {
-        window.location.href = `/posts/${closest.postSlug}`;
+        router.push(`/posts/${encodeURIComponent(closest.postSlug)}`);
       } else {
         const cr = containerRef.current!.getBoundingClientRect();
         setClickPos({ x: e.clientX - cr.left, y: e.clientY - cr.top });
@@ -425,7 +416,7 @@ export default function KnowledgeMap({
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("click", handleClick);
     };
-  }, [articles.length]);
+  }, [articles.length, router]);
 
   if (loading) return <UMAPLoader className={className} />;
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
-import { upstashRequest } from "@/utils/upstash";
+import { upstashRequest, upstashPipeline } from "@/utils/upstash";
+import { COUNT_VIEW_SCRIPT } from "@/utils/viewCounter";
 import { isSafeSlug } from "@/config/paths";
 import { getPostSlugs } from "@/utils/content/posts";
 
@@ -46,26 +47,25 @@ export async function GET(request: NextRequest) {
 
   if (!slug) {
     try {
-      const results: { slug: string; count: number }[] = [];
-      // Redis SCAN walks the entire keyspace even with MATCH. Published names
-      // come from filenames only; no Markdown bodies or viewer keys are read.
+      // Published filenames bound the read; no Redis keyspace scan is needed.
+      const batches: string[][] = [];
       for (
         let offset = 0;
         offset < publishedSlugs.length;
         offset += READ_BATCH_SIZE
       ) {
-        const batch = publishedSlugs.slice(offset, offset + READ_BATCH_SIZE);
-        const counts = (await upstashRequest([
-          "MGET",
-          ...batch.map(viewKey),
-        ])) as Array<string | null>;
-        results.push(
-          ...batch.map((postSlug, i) => ({
-            slug: postSlug,
-            count: Number(counts[i] ?? 0),
-          }))
-        );
+        batches.push(publishedSlugs.slice(offset, offset + READ_BATCH_SIZE));
       }
+      const counts = await upstashPipeline(
+        batches.map((batch) => ["MGET", ...batch.map(viewKey)])
+      );
+      const results = batches.flatMap((batch, batchIndex) => {
+        const values = counts[batchIndex] as Array<string | null>;
+        return batch.map((postSlug, i) => ({
+          slug: postSlug,
+          count: Number(values[i] ?? 0),
+        }));
+      });
       results.sort((a, b) => b.count - a.count);
 
       // Popularity sorting does not need real-time updates.
@@ -134,17 +134,15 @@ export async function POST(request: NextRequest) {
     const viewerHash = getViewerHash(request);
     const key = viewKey(slug);
 
-    const setResult = await upstashRequest([
-      "SET",
-      dedupeKey(slug, viewerHash),
-      "1",
-      "EX",
-      VIEW_TTL_SECONDS,
-      "NX",
-    ]);
-
     const count = Number(
-      (await upstashRequest([setResult === "OK" ? "INCR" : "GET", key])) ?? 0
+      await upstashRequest([
+        "EVAL",
+        COUNT_VIEW_SCRIPT,
+        2,
+        key,
+        dedupeKey(slug, viewerHash),
+        VIEW_TTL_SECONDS,
+      ])
     );
 
     return NextResponse.json({ slug, count });
