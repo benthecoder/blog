@@ -3,22 +3,27 @@ import { neon } from "@neondatabase/serverless";
 
 const sql = neon(process.env.POSTGRES_URL!);
 
-export const runtime = "edge";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const rawCursor = searchParams.get("cursor");
+    if (
+      rawCursor !== null &&
+      (!/^\d+$/.test(rawCursor) || !Number.isSafeInteger(Number(rawCursor)))
+    ) {
+      return NextResponse.json(
+        { error: "Invalid cursor" },
+        { status: 400, headers: { "Cache-Control": "no-store" } }
+      );
+    }
     const rawLimit = parseInt(searchParams.get("limit") ?? "100", 10);
     const limit = Number.isFinite(rawLimit)
       ? Math.min(Math.max(1, rawLimit), 200)
       : 100;
 
-    const cursor =
-      rawCursor !== null && /^\d+$/.test(rawCursor)
-        ? parseInt(rawCursor, 10)
-        : null;
+    const cursor = rawCursor !== null ? Number(rawCursor) : null;
 
     const thoughts =
       cursor !== null
@@ -36,12 +41,18 @@ export async function GET(request: NextRequest) {
             LIMIT ${limit}
           `;
 
-    return NextResponse.json(thoughts);
+    // Public data only. Browsers recheck; shared caches absorb repeated reads.
+    return NextResponse.json(thoughts, {
+      headers: {
+        "Cache-Control":
+          "public, max-age=0, s-maxage=60, stale-while-revalidate=60",
+      },
+    });
   } catch (error) {
     console.error("Error fetching thoughts:", error);
     return NextResponse.json(
       { error: "Failed to fetch thoughts" },
-      { status: 500 }
+      { status: 500, headers: { "Cache-Control": "no-store" } }
     );
   }
 }

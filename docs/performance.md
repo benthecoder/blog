@@ -32,3 +32,15 @@ Compiler caches and machine load differ between runs, so overall build wall time
 Reproduce the normal checks with `pnpm test`, `pnpm lint`, `pnpm check:unused`, and `VERCEL=1 pnpm build`. Deployment snapshots are enabled only when both `NODE_ENV=production` and `VERCEL=1`; development and standalone local editing retain fresh filesystem reads.
 
 After deployment, compare project-specific Vercel origin transfer, ISR usage, image transformations and build duration over comparable traffic periods. The team-wide usage dashboard alone cannot attribute those costs to this blog.
+
+## Public feed caching follow-up
+
+The thoughts page previously combined the Edge runtime with `revalidate = 3600`. That combination cannot use ISR. It now uses Node's default runtime and explicitly prerenders with the same hourly interval. The production prerender manifest confirms `/thoughts` has `initialRevalidateSeconds: 3600`. New thoughts may take up to an hour to appear in this initial snapshot, followed by regeneration on the next visit; this preserves the interval originally declared by the page.
+
+The public pagination API returns successful reads with `max-age=0, s-maxage=60, stale-while-revalidate=60`. Invalid cursors are rejected before querying; database failures use `no-store`. The Curius proxy explicitly caches successful public responses for one hour at the CDN, bounds upstream requests with a ten-second timeout, and returns uncached generic 502 responses for HTTP, network, or JSON failures. Neither route caches authenticated content.
+
+This follows [Next.js's existing caching model](https://nextjs.org/docs/app/guides/caching-without-cache-components) and [Vercel's response cache rules](https://vercel.com/docs/caching/cache-control-headers). The application has not enabled Cache Components; enabling it would require a separate migration of existing segment configuration.
+
+Follow-up validation: 259 tests across 37 files passed, lint passed with the same five existing warnings, and the full production build passed. Unit checks cover query bounds, invalid cursors, response shape, cache headers and upstream failures. Local Next response checks can verify headers and ISR output; CDN hit rates and reduced invocation counts require deployment measurements.
+
+A live Curius response contained 3,117 links and was 2,788,081 bytes uncompressed. Keeping every link's `id`, `title`, `link` and `createdDate`, in the same order, reduces the response to 542,899 bytes (80.5% smaller). Unused snippets and crawler metadata are omitted. The page's fetcher now rejects HTTP failures so its existing error handling runs. This does not change the list's rendering. Compressed transfer and production cache statistics still need measurement.

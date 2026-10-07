@@ -8,7 +8,11 @@ interface CuriusLink {
   createdDate: string;
 }
 
-const fetcher = (url: string) => fetch(url).then((r) => r.json());
+const fetcher = async (url: string) => {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Failed to fetch bookmarks");
+  return response.json();
+};
 
 function formatTime(dateString: string): string {
   const diffInSeconds = Math.floor(
