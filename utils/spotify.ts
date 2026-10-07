@@ -119,6 +119,15 @@ const trackCache = new Map<
 >();
 const trackRequests = new Map<number, Promise<RecentTracks>>();
 
+// Edge caching must expire with the stored response, rather than extending
+// a nearly five-minute-old result by another full five minutes.
+export function getRecentlyPlayedCacheSeconds(limit: number): number {
+  return Math.max(
+    0,
+    Math.floor(((trackCache.get(limit)?.expiresAt ?? 0) - Date.now()) / 1000)
+  );
+}
+
 export function getRecentlyPlayed(limit = 5): Promise<RecentTracks> {
   if (!Number.isInteger(limit) || limit < 1 || limit > 50) {
     return Promise.reject(new Error("Invalid Spotify track limit"));

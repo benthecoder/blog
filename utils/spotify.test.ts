@@ -99,7 +99,10 @@ describe("Spotify caching", () => {
     const { GET } = await import("@/app/api/spotify/recently-played/route");
     const good = await GET();
     expect(good.headers.get("cache-control")).toContain("s-maxage=300");
-    vi.advanceTimersByTime(300000);
+    vi.advanceTimersByTime(299000);
+    const nearlyExpired = await GET();
+    expect(nearlyExpired.headers.get("cache-control")).toContain("s-maxage=1,");
+    vi.advanceTimersByTime(1000);
     fetchMock.mockRejectedValueOnce(new Error("upstream failure"));
     const failed = await GET();
     expect(failed.status).toBe(502);

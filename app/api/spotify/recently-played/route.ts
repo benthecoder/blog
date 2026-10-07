@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { getRecentlyPlayed } from "@/utils/spotify";
+import {
+  getRecentlyPlayed,
+  getRecentlyPlayedCacheSeconds,
+} from "@/utils/spotify";
 
 export const dynamic = "force-dynamic";
 
@@ -8,8 +11,7 @@ export async function GET() {
     const response = await getRecentlyPlayed(10);
     return NextResponse.json(response, {
       headers: {
-        "Cache-Control":
-          "public, max-age=0, s-maxage=300, stale-while-revalidate=60",
+        "Cache-Control": `public, max-age=0, s-maxage=${getRecentlyPlayedCacheSeconds(10)}, stale-while-revalidate=60`,
       },
     });
   } catch {
