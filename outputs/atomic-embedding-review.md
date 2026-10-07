@@ -4,7 +4,7 @@ Branch: `fix/atomic-embedding-replacement`, based on PR #67. Includes the provid
 
 Before: the script deletes old chunks before generating embeddings; per-row insertion failures are caught and counted, then the CLI exits successfully. Full rebuilds can empty or partially populate the index.
 
-After: read posts, prepare every vector, validate provider results, then use a connected Neon session for BEGIN, transaction advisory lock, scoped DELETE, bulk INSERT batches, and COMMIT. Any write failure attempts ROLLBACK and exits unsuccessfully. No database session is held while provider requests run. All-post and single-post modes share this implementation.
+After: read posts, prepare every vector, validate provider results, then use a connected Neon session for BEGIN, transaction advisory lock, scoped DELETE, bulk INSERT batches, and COMMIT. Any write failure attempts ROLLBACK and exits unsuccessfully. No database session is held while provider requests run. The embedding workflow now uses Node 24, matching CI and providing the built-in WebSocket needed by the session client. All-post and single-post modes share this implementation.
 
 ## Verification
 
