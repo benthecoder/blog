@@ -185,6 +185,9 @@ export async function POST(request: Request) {
     );
 
     if (searchType === "hybrid") {
+      // Split the unfiltered text/vector OR so text matching can use its GIN
+      // index. Selective tag filters already prune cheaply with the old plan.
+      // Only fixed SQL fragments vary here; all input values remain parameters.
       const results = await sql.query(
         `
         WITH RankedResults AS (
@@ -192,8 +195,20 @@ export async function POST(request: Request) {
             1 - (embedding <=> $1::vector) as vector_similarity,
             ts_rank(to_tsvector('english', content || ' ' || post_title), plainto_tsquery('english', $2)) as text_rank
           FROM content_chunks
-          WHERE (to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', $2)
-            OR 1 - (embedding <=> $1::vector) > $3)
+          WHERE ${
+            tags.length
+              ? `(to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', $2)
+                  OR 1 - (embedding <=> $1::vector) > $3)`
+              : `id IN (
+                  SELECT id FROM content_chunks
+                  WHERE to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', $2)
+                    AND ($8::text IS NULL OR chunk_type = $8::text)
+                  UNION
+                  SELECT id FROM content_chunks
+                  WHERE 1 - (embedding <=> $1::vector) > $3
+                    AND ($8::text IS NULL OR chunk_type = $8::text)
+                )`
+          }
             AND ($7::jsonb = '[]'::jsonb OR metadata->'tags' ?| ARRAY(SELECT jsonb_array_elements_text($7::jsonb)))
             AND ($8::text IS NULL OR chunk_type = $8::text)
         )
