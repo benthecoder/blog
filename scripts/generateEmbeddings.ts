@@ -105,12 +105,11 @@ interface EmbeddingResponse {
  * Wrapper for embedding with retry using VoyageAI
  */
 async function embedWithRetry(texts: string[]): Promise<EmbeddingResponse> {
-  return withEmbeddingRetry(async () => {
-    return (await client.embed({
-      model: VOYAGE_MODEL,
-      input: texts,
-      inputType: "document",
-    })) as Promise<EmbeddingResponse>;
+  return withEmbeddingRetry(async (signal) => {
+    return (await client.embed(
+      { model: VOYAGE_MODEL, input: texts, inputType: "document" },
+      { abortSignal: signal, maxRetries: 0 }
+    )) as EmbeddingResponse;
   });
 }
 
