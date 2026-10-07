@@ -9,6 +9,8 @@ vi.mock("@neondatabase/serverless", () => ({
   neon: () => ({ query: mocks.query }),
 }));
 vi.mock("@/utils/clients", () => ({ getVoyageClient: mocks.client }));
+vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
+vi.mock("server-only", () => ({}));
 import { POST } from "@/app/api/search/route";
 
 const row = {
@@ -33,7 +35,7 @@ beforeEach(() => {
   mocks.query.mockReset().mockResolvedValue([row]);
   mocks.embed
     .mockReset()
-    .mockResolvedValue({ data: [{ embedding: [0.1, 0.2] }] });
+    .mockResolvedValue({ data: [{ embedding: Array(1024).fill(0.1) }] });
   mocks.client.mockImplementation(() => ({ embed: mocks.embed }));
 });
 
@@ -132,9 +134,14 @@ describe("parameterized search filters", () => {
     expect((await response.json()).results[0].score_type).toBe("hybrid");
   });
   it("reports missing embeddings without querying the database", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
     mocks.embed.mockResolvedValue({ data: [] });
-    expect((await POST(request({ query: "jazz" }))).status).toBe(500);
-    expect(mocks.query).not.toHaveBeenCalled();
+    try {
+      expect((await POST(request({ query: "jazz" }))).status).toBe(500);
+      expect(mocks.query).not.toHaveBeenCalled();
+    } finally {
+      log.mockRestore();
+    }
   });
   it("does not expose database errors to visitors", async () => {
     const log = vi.spyOn(console, "error").mockImplementation(() => {});

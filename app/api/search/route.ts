@@ -1,6 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
-import { getVoyageClient } from "@/utils/clients";
+import { getSearchEmbedding } from "@/utils/searchEmbedding";
 import { formatEmbeddingForPostgres } from "@/utils/chunking/embeddingUtils";
 import {
   SEARCH_RESULT_LIMIT,
@@ -9,7 +9,6 @@ import {
   SEMANTIC_SIMILARITY_THRESHOLD_STRICT,
   HYBRID_VECTOR_WEIGHT,
   HYBRID_KEYWORD_WEIGHT,
-  VOYAGE_MODEL,
 } from "@/config/constants";
 
 const sql = neon(process.env.POSTGRES_URL!);
@@ -167,21 +166,8 @@ export async function POST(request: Request) {
       });
     }
 
-    const queryEmbedding = await getVoyageClient().embed({
-      model: VOYAGE_MODEL,
-      input: query,
-      inputType: "document",
-    });
-
-    if (!queryEmbedding?.data?.[0]?.embedding) {
-      return NextResponse.json(
-        { error: "Failed to generate embedding for query" },
-        { status: 500 }
-      );
-    }
-
     const formattedEmbedding = formatEmbeddingForPostgres(
-      queryEmbedding.data[0].embedding
+      await getSearchEmbedding(query)
     );
 
     if (searchType === "hybrid") {
