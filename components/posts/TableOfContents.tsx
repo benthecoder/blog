@@ -12,28 +12,31 @@ const TableOfContents = ({ items }: { items: TocEntry[] }) => {
   useEffect(() => {
     if (items.length === 0) return;
 
-    let ticking = false;
+    const headings = items.map((item) => ({
+      id: item.id,
+      element: document.getElementById(item.id),
+    }));
+    let frame: number | null = null;
     const update = () => {
-      ticking = false;
+      frame = null;
       let current: string | null = null;
-      for (const item of items) {
-        const el = document.getElementById(item.id);
+      for (const { id, element: el } of headings) {
         if (el && el.getBoundingClientRect().top <= 120) {
-          current = item.id;
+          current = id;
         }
       }
       setActiveId(current);
     };
     const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(update);
-      }
+      if (frame === null) frame = requestAnimationFrame(update);
     };
 
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
   }, [items]);
 
   if (items.length === 0) return null;

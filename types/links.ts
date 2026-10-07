@@ -5,11 +5,10 @@
  *   ContentRef     identity of a linkable page      (the atom)
  *   LinkableEntry  a page you can link TO           (ref + how to show/reach it)
  *   ParsedLink     a `[[...]]` occurrence           (pure syntax, unresolved)
- *   ResolvedLink   a ParsedLink pointed at a ref    (or null when unresolved)
  *   LinkGraph      every arrow, plus backlinks      (derived from the above)
  */
 
-export type ContentKind = "wiki" | "post";
+type ContentKind = "wiki" | "post";
 
 /** Identity of any linkable page. Everything else is defined in terms of this. */
 export interface ContentRef {
@@ -31,12 +30,6 @@ export interface ParsedLink {
   target: string;
   /** What to display: the part after `|`, or `target` when there is none. */
   label: string;
-}
-
-/** A ParsedLink after resolution against the link index. */
-export interface ResolvedLink extends ParsedLink {
-  /** The page this points at, or `null` when no page matches (not yet written). */
-  entry: LinkableEntry | null;
 }
 
 /** Resolves a raw link target to a page. Title-first, slug fallback. */

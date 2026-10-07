@@ -3,7 +3,8 @@ import { Metadata } from "next";
 import ThoughtsClient from "./ThoughtsClient";
 import type { Thought } from "@/types/thoughts";
 
-export const runtime = "edge";
+// ISR requires the Node runtime; Edge ignored the hourly revalidation.
+export const dynamic = "force-static";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {

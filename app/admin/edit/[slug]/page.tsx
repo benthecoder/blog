@@ -12,7 +12,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
-import matter from "gray-matter";
+import { parseFrontmatter } from "@/utils/content/frontmatter";
 import { Calendar, Camera, Eye, FileEdit, ImageIcon } from "lucide-react";
 import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import type { ReactCodeMirrorRef } from "@uiw/react-codemirror";
@@ -550,7 +550,7 @@ export default function EditPostPage() {
               {(() => {
                 let parsed;
                 try {
-                  parsed = matter(draft.markdown);
+                  parsed = parseFrontmatter(draft.markdown);
                 } catch {
                   return (
                     <p role="alert">

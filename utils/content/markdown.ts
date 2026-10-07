@@ -1,6 +1,9 @@
 import fs from "fs";
 import path from "path";
-import matter from "gray-matter";
+import {
+  parseFrontmatter,
+  stringifyFrontmatter,
+} from "@/utils/content/frontmatter";
 import { randomUUID } from "crypto";
 
 interface MarkdownFile {
@@ -9,11 +12,10 @@ interface MarkdownFile {
   content: string;
 }
 
-// Strips `orig` (Uint8Array) so the result is serializable to client components.
+// Return only the parsed metadata and body, both serializable to clients.
 export function readMarkdownFile(filePath: string) {
   const raw = fs.readFileSync(filePath, "utf8");
-  const { orig, ...result } = matter(raw);
-  return result;
+  return parseFrontmatter(raw);
 }
 
 /** Write a complete markdown file atomically; exclusive creates never replace a page. */
@@ -27,7 +29,11 @@ export function writeMarkdownFile(
   fs.mkdirSync(directory, { recursive: true });
   const temporaryPath = path.join(directory, `.${randomUUID()}.tmp`);
   try {
-    fs.writeFileSync(temporaryPath, matter.stringify(content, data), "utf8");
+    fs.writeFileSync(
+      temporaryPath,
+      stringifyFrontmatter(content, data),
+      "utf8"
+    );
     if (exclusive) fs.linkSync(temporaryPath, filePath);
     else fs.renameSync(temporaryPath, filePath);
   } finally {
@@ -52,7 +58,7 @@ export function scanMarkdownDir(dir: string): MarkdownFile[] {
     .readdirSync(dir)
     .filter((f) => f.endsWith(".md"))
     .map((fileName) => {
-      const { data, content } = matter(
+      const { data, content } = parseFrontmatter(
         fs.readFileSync(path.join(dir, fileName), "utf8")
       );
       return { slug: fileName.replace(".md", ""), data, content };

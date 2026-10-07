@@ -10,7 +10,7 @@
  * - Users specifically search for quotes
  */
 
-import { Node } from "unist";
+import type { Node } from "unist";
 import { visit } from "unist-util-visit";
 import {
   ChunkExtractor,

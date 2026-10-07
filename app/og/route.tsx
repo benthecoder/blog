@@ -1,7 +1,17 @@
+import { readFile } from "node:fs/promises";
+import { OG_FONT_PATH } from "@/config/paths";
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 
-export const runtime = "edge";
+// One file read per warm process, shared by concurrent image requests.
+// Retry on failure rather than retaining a rejected promise indefinitely.
+let fontPromise: Promise<Buffer> | undefined;
+function getFont() {
+  return (fontPromise ??= readFile(OG_FONT_PATH).catch((error) => {
+    fontPromise = undefined;
+    throw error;
+  }));
+}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -9,10 +19,7 @@ export async function GET(req: NextRequest) {
 
   // Satori (ImageResponse) can't read woff2, so this route keeps its own
   // TTF copy; it renders server-side only and never ships to browsers.
-  const font = fetch(
-    new URL("./AveriaSerifLibre-Bold.ttf", import.meta.url)
-  ).then((res) => res.arrayBuffer());
-  const fontData = await font;
+  const fontData = await getFont();
 
   const imageResponse = new ImageResponse(
     (
@@ -58,10 +65,14 @@ export async function GET(req: NextRequest) {
     }
   );
 
+  // Finish rendering before returning cacheable success headers. A failed
+  // render must remain a server error, rather than a partially streamed 200.
   return new Response(await imageResponse.arrayBuffer(), {
     headers: {
       "Content-Type": "image/png",
       "Cache-Control": "public, max-age=31536000, immutable",
+      "Vercel-CDN-Cache-Control":
+        "max-age=86400, stale-while-revalidate=604800",
     },
   });
 }

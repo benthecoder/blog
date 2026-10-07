@@ -1,7 +1,7 @@
 import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
-import matter from "gray-matter";
+import { parseFrontmatter } from "@/utils/content/frontmatter";
 import fs from "fs";
 import path from "path";
 
@@ -27,7 +27,8 @@ export async function processMarkdownFile(
   try {
     // Read and parse file
     const content = fs.readFileSync(filePath, "utf8");
-    const { data: frontmatter, content: markdownContent } = matter(content);
+    const { data: frontmatter, content: markdownContent } =
+      parseFrontmatter(content);
     const slug = path.basename(filePath, ".md");
 
     // Parse markdown into AST

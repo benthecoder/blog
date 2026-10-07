@@ -1,6 +1,21 @@
 import { UMAP } from "umap-js";
 import { kmeans } from "ml-kmeans";
 
+// Fixed seed so the same posts always produce the same clusters and layout —
+// keeps cluster labels reusable across builds and stops the map reshuffling.
+const SEED = 42;
+
+// mulberry32: tiny deterministic PRNG with the Math.random() signature
+function seededRandom(seed: number = SEED): () => number {
+  let a = seed;
+  return () => {
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 export interface UMAPPosition {
   x: number;
   y: number;
@@ -31,6 +46,7 @@ export function computeClusteringProjection(
     nNeighbors,
     minDist: 0.0, // force points into tight clusters — ideal before k-means
     spread: 1.0,
+    random: seededRandom(),
   });
 
   return umap.fit(embeddings);
@@ -60,6 +76,7 @@ export function computeVisualizationUMAP(
     nNeighbors,
     minDist,
     spread,
+    random: seededRandom(),
   });
 
   const projection = umap.fit(embeddings);
@@ -113,6 +130,7 @@ export function computeKMeans(
   const result = kmeans(embeddings, numClusters, {
     initialization: "kmeans++",
     maxIterations: 300,
+    seed: SEED,
   });
 
   return {

@@ -2,7 +2,10 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { useRouter, useSearchParams } from "next/navigation";
-import matter from "gray-matter";
+import {
+  parseFrontmatter,
+  stringifyFrontmatter,
+} from "@/utils/content/frontmatter";
 import {
   draftRecoveryKey,
   readDraftBackup,
@@ -96,7 +99,7 @@ export function usePostDraft({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       apply(
-        matter.stringify(data.body, {
+        stringifyFrontmatter(data.body, {
           title: data.title,
           tags: data.tags,
           date: formattedDate,
@@ -202,7 +205,7 @@ export function usePostDraft({
         })
         .then((data) => {
           if (controller.signal.aborted) return;
-          const rawContent = matter.stringify(data.content, {
+          const rawContent = stringifyFrontmatter(data.content, {
             title: data.title,
             tags: data.tags,
             date: data.date,
@@ -276,7 +279,7 @@ export function usePostDraft({
     notify("");
 
     try {
-      const { data: frontmatter, content } = matter(markdown);
+      const { data: frontmatter, content } = parseFrontmatter(markdown);
 
       const parsedTitle = (frontmatter.title || "").toString().trim();
       const parsedTags = (frontmatter.tags || "").toString().trim();

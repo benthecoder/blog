@@ -46,12 +46,12 @@ const CONTENT_TYPES: Record<string, string> = {
   ".svg": "image/svg+xml",
 };
 
-export function imageContentType(fileName: string): string {
+function imageContentType(fileName: string): string {
   const ext = fileName.slice(fileName.lastIndexOf(".")).toLowerCase();
   return CONTENT_TYPES[ext] ?? "application/octet-stream";
 }
 
-export function imageKey(fileName: string): string {
+function imageKey(fileName: string): string {
   return `images/${fileName}`;
 }
 

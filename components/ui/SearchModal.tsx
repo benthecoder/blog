@@ -3,26 +3,31 @@
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
+import { useLatestSearch } from "@/components/hooks/useLatestSearch";
 
 type SearchType = "keyword" | "semantic";
-
-interface SearchResult {
-  post_slug: string;
-  post_title: string;
-  published_date?: string;
-  content?: string;
-}
 
 export default function SearchModal() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [searchType, setSearchType] = useState<SearchType>("keyword");
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
+  const {
+    results: chunks,
+    error,
+    isLoading: loading,
+    hasSearched,
+    execute,
+    cancel,
+  } = useLatestSearch();
+  const results = chunks
+    .filter(
+      (r, i) =>
+        chunks.findIndex((entry) => entry.post_slug === r.post_slug) === i
+    )
+    .slice(0, 8);
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const openRef = useRef(false);
 
   // Open on cmd+K / ctrl+K, or custom "openSearch" event (from sidebar button).
@@ -30,7 +35,7 @@ export default function SearchModal() {
   useEffect(() => {
     const openFresh = () => {
       setQuery("");
-      setResults([]);
+      cancel();
       setActiveIndex(0);
       setOpen(true);
     };
@@ -52,7 +57,7 @@ export default function SearchModal() {
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("openSearch", onOpen);
     };
-  }, []);
+  }, [cancel]);
 
   useEffect(() => {
     openRef.current = open;
@@ -62,53 +67,34 @@ export default function SearchModal() {
     }
   }, [open]);
 
-  const search = async (q: string, type: SearchType) => {
-    if (!q.trim()) {
-      setResults([]);
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: q, searchType: type }),
-      });
-      const data = await res.json();
-      const seen = new Set<string>();
-      const deduped: SearchResult[] = [];
-      for (const r of data.results ?? []) {
-        if (!seen.has(r.post_slug)) {
-          seen.add(r.post_slug);
-          deduped.push(r);
-        }
-      }
-      setResults(deduped.slice(0, 8));
-      setActiveIndex(0);
-    } catch {
-      setResults([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    cancel();
+    if (!open || !query.trim()) return;
+    const timer = setTimeout(() => {
+      void execute({ query, searchType });
+    }, 300);
+    return () => {
+      clearTimeout(timer);
+      cancel();
+    };
+  }, [open, query, searchType, execute, cancel]);
 
   const handleInput = (value: string) => {
+    cancel();
     setQuery(value);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      search(value, searchType);
-    }, 300);
+    setActiveIndex(0);
   };
 
   const handleTypeToggle = (type: SearchType) => {
+    cancel();
     setSearchType(type);
-    if (query.trim()) search(query, type);
+    setActiveIndex(0);
   };
 
   const handleKeyDown = (e: ReactKeyboardEvent) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((i) => Math.min(i + 1, results.length - 1));
+      setActiveIndex((i) => Math.max(0, Math.min(i + 1, results.length - 1)));
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActiveIndex((i) => Math.max(i - 1, 0));
@@ -150,6 +136,7 @@ export default function SearchModal() {
             <path d="m21 21-4.35-4.35" strokeWidth="2" strokeLinecap="round" />
           </svg>
           <input
+            aria-label="Search posts"
             ref={inputRef}
             value={query}
             onChange={(e) => handleInput(e.target.value)}
@@ -160,6 +147,7 @@ export default function SearchModal() {
           <div className="flex items-center gap-1 shrink-0">
             {(["keyword", "semantic"] as SearchType[]).map((t) => (
               <button
+                aria-pressed={searchType === t}
                 key={t}
                 onClick={() => handleTypeToggle(t)}
                 className={`text-[10px] px-1.5 py-0.5 tracking-wide transition-[color,border-color] duration-150 border ${
@@ -180,11 +168,24 @@ export default function SearchModal() {
           </div>
         )}
 
-        {!loading && query.trim() && results.length === 0 && (
-          <div className="px-4 py-3 text-xs text-ink/40 dark:text-chalk/40">
-            no results
-          </div>
+        {error && (
+          <p
+            role="alert"
+            className="px-4 py-3 text-xs text-ink dark:text-chalk"
+          >
+            {error}
+          </p>
         )}
+
+        {!loading &&
+          !error &&
+          hasSearched &&
+          query.trim() &&
+          results.length === 0 && (
+            <div className="px-4 py-3 text-xs text-ink/40 dark:text-chalk/40">
+              no results
+            </div>
+          )}
 
         {!loading && results.length > 0 && (
           <ul>

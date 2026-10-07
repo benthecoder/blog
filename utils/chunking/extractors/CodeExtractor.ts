@@ -7,7 +7,7 @@
  * Code blocks are naturally well-bounded semantic units.
  */
 
-import { Node } from "unist";
+import type { Node } from "unist";
 import { visit } from "unist-util-visit";
 import {
   ChunkExtractor,

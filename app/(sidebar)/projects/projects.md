@@ -1,5 +1,11 @@
+ongoing
+
+- [this blog](/colophon)
+- [drawings + photos](/gallery)
+
 done?
 
+- [the nativity](/posts/christmas-seattle): a christmas sketch
 - [scribesystem](https://scribesystem.vercel.app): retro writing assistant with custom styles
 - [aha](https://github.com/benthecoder/aha): chrome extension that explains anything with llama 3.1 + exa.ai api
 - [deeptalks](https://deeptalks.vercel.app): an app for introspective questions for you and your loved ones

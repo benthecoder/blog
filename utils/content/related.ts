@@ -1,54 +1,28 @@
 import fs from "fs";
 import { KNOWLEDGE_MAP_JSON } from "@/config/paths";
 import type { KnowledgeMapOutput } from "@/types/knowledgeMap";
-
-export interface RelatedPost {
-  slug: string;
-  title: string;
-  similarity: number;
-}
+import { buildRelatedIndex, type RelatedPost } from "./relatedIndex";
+export type { RelatedPost } from "./relatedIndex";
+const RETAINED_LIMIT = 4;
 
 // slug → most similar posts, built once from the knowledge map's similarity
 // edges (already thresholded at build time) and reused across pages.
 let relatedBySlug: Map<string, RelatedPost[]> | null = null;
 
-function buildIndex(): Map<string, RelatedPost[]> {
-  const index = new Map<string, RelatedPost[]>();
-  if (!fs.existsSync(KNOWLEDGE_MAP_JSON)) return index;
+function buildIndex(limit = RETAINED_LIMIT): Map<string, RelatedPost[]> {
+  if (!fs.existsSync(KNOWLEDGE_MAP_JSON)) return new Map();
 
   const map: KnowledgeMapOutput = JSON.parse(
     fs.readFileSync(KNOWLEDGE_MAP_JSON, "utf8")
   );
 
-  const add = (from: number, to: number, similarity: number) => {
-    const source = map.data[from];
-    const target = map.data[to];
-    if (!source || !target || source.postSlug === target.postSlug) return;
-    let related = index.get(source.postSlug);
-    if (!related) {
-      related = [];
-      index.set(source.postSlug, related);
-    }
-    related.push({
-      slug: target.postSlug,
-      title: target.postTitle,
-      similarity,
-    });
-  };
-
-  for (const [a, b, similarity] of map.similarityEdges) {
-    add(a, b, similarity);
-    add(b, a, similarity);
-  }
-
-  for (const posts of index.values()) {
-    posts.sort((x, y) => y.similarity - x.similarity);
-  }
-
-  return index;
+  return buildRelatedIndex(map, limit);
 }
 
 export function getRelatedPosts(slug: string, limit = 4): RelatedPost[] {
+  // Current pages request four. Preserve larger explicit requests without
+  // retaining every connection in memory for the lifetime of each worker.
+  if (limit > RETAINED_LIMIT) return buildIndex(limit).get(slug) ?? [];
   relatedBySlug ??= buildIndex();
   return (relatedBySlug.get(slug) ?? []).slice(0, limit);
 }

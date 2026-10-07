@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { neon } from "@neondatabase/serverless";
+import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
 import {
   computeClusteringProjection,
   computeVisualizationUMAP,
@@ -15,21 +15,35 @@ import {
   CLUSTERING_UMAP_COMPONENTS,
   SIMILARITY_EDGE_THRESHOLD,
 } from "../config/constants";
-import { DATA_DIR, KNOWLEDGE_MAP_JSON } from "../config/paths";
+import {
+  DATA_DIR,
+  KNOWLEDGE_MAP_JSON,
+  KNOWLEDGE_MAP_NODES_JSON,
+} from "../config/paths";
+import { splitKnowledgeMap } from "../utils/chunking/mapAssets";
 import type {
   KnowledgeMapOutput,
   ArticleNode,
   ArticleData,
   SimilarityEdge,
+  PreviousClusterLabel,
 } from "../types/knowledgeMap";
 import type { ChunkRow } from "../types/chunks";
 import fs from "fs";
+import path from "path";
 
-const sql = neon(process.env.POSTGRES_URL!);
+function writeBrowserAssets(map: KnowledgeMapOutput) {
+  const { previewJson, edgesJson, edgesFilename } = splitKnowledgeMap(map);
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  fs.writeFileSync(path.join(DATA_DIR, edgesFilename), edgesJson);
+  fs.writeFileSync(KNOWLEDGE_MAP_NODES_JSON, previewJson);
+}
 
 // Cheap DB fingerprint: the map only changes when embeddings do, so a
 // count + latest timestamp is enough to decide whether to regenerate.
-async function getSourceFingerprint(): Promise<string> {
+async function getSourceFingerprint(
+  sql: NeonQueryFunction<false, false>
+): Promise<string> {
   const rows = (await sql`
     SELECT count(*) AS count, max(created_at) AS latest
     FROM content_chunks
@@ -38,8 +52,37 @@ async function getSourceFingerprint(): Promise<string> {
   return `${rows[0].count}:${rows[0].latest ?? "none"}`;
 }
 
+function previousClusterLabels(
+  existing: KnowledgeMapOutput | undefined
+): PreviousClusterLabel[] {
+  if (!existing?.clusterLabels) return [];
+  return Object.entries(existing.clusterLabels).map(([id, label]) => ({
+    label,
+    slugs: existing.data
+      .filter((node) => node.cluster === Number(id))
+      .map((node) => node.postSlug),
+  }));
+}
+
 async function generateKnowledgeMap() {
   try {
+    // Deployment builds consume versioned assets, not mutable provider data.
+    // Regenerate locally and commit the snapshot when embeddings change.
+    if (process.env.VERCEL === "1") {
+      if (!fs.existsSync(KNOWLEDGE_MAP_JSON)) {
+        throw new Error(
+          "Committed knowledge-map.json is missing; generate it locally and commit it before deploying"
+        );
+      }
+      const existing = JSON.parse(
+        fs.readFileSync(KNOWLEDGE_MAP_JSON, "utf8")
+      ) as KnowledgeMapOutput;
+      writeBrowserAssets(existing);
+      console.log(
+        "✓ Using committed knowledge map; no provider query during deployment prebuild"
+      );
+      return;
+    }
     // Check if database connection is available
     if (!process.env.POSTGRES_URL) {
       console.warn("⚠️  POSTGRES_URL not available during build");
@@ -47,18 +90,28 @@ async function generateKnowledgeMap() {
       console.warn(
         "⚠️  Knowledge map will use existing data or fail gracefully"
       );
+      if (fs.existsSync(KNOWLEDGE_MAP_JSON)) {
+        writeBrowserAssets(
+          JSON.parse(
+            fs.readFileSync(KNOWLEDGE_MAP_JSON, "utf8")
+          ) as KnowledgeMapOutput
+        );
+      }
       return;
     }
 
     const outputPath = KNOWLEDGE_MAP_JSON;
-    const sourceFingerprint = await getSourceFingerprint();
+    const sql = neon(process.env.POSTGRES_URL);
+    const sourceFingerprint = await getSourceFingerprint(sql);
 
+    let existing: KnowledgeMapOutput | undefined;
     if (fs.existsSync(outputPath)) {
       try {
-        const existing = JSON.parse(
+        existing = JSON.parse(
           fs.readFileSync(outputPath, "utf8")
         ) as KnowledgeMapOutput;
         if (existing.sourceFingerprint === sourceFingerprint) {
+          writeBrowserAssets(existing);
           console.log(
             `✓ Knowledge map up to date (fingerprint ${sourceFingerprint}), skipping generation`
           );
@@ -148,24 +201,21 @@ async function generateKnowledgeMap() {
       });
     });
 
-    // Stage 4: Label clusters using Anthropic API
+    // Stage 4: Label clusters, reusing the previous map's labels where the
+    // membership still matches so only new/changed clusters hit the model
     let clusterLabels: Record<number, string> | undefined;
 
-    if (process.env.ANTHROPIC_API_KEY) {
-      try {
-        const labelsMap = await labelClusters(clusterMap);
-        if (labelsMap) {
-          clusterLabels = Object.fromEntries(labelsMap);
-        }
-      } catch (error) {
-        console.warn("⚠️  Cluster labeling failed, continuing without labels");
-        console.warn(
-          "⚠️  Error:",
-          error instanceof Error ? error.message : error
-        );
-      }
-    } else {
-      console.warn("⚠️  ANTHROPIC_API_KEY not set, skipping cluster labeling");
+    try {
+      const labelsMap = await labelClusters(clusterMap, {
+        previous: previousClusterLabels(existing),
+      });
+      if (labelsMap.size > 0) clusterLabels = Object.fromEntries(labelsMap);
+    } catch (error) {
+      console.warn("⚠️  Cluster labeling failed, continuing without labels");
+      console.warn(
+        "⚠️  Error:",
+        error instanceof Error ? error.message : error
+      );
     }
 
     // Stage 5: Separate 2D UMAP for visualization (larger spread, minDist > 0)
@@ -227,6 +277,7 @@ async function generateKnowledgeMap() {
     };
 
     fs.writeFileSync(outputPath, JSON.stringify(output));
+    writeBrowserAssets(output);
 
     console.log(`✓ Knowledge map generated: ${outputPath}`);
     console.log(`  ${processedData.length} articles processed`);

@@ -48,7 +48,21 @@ export interface KnowledgeMapOutput {
   sourceFingerprint?: string;
 }
 
+export interface PreviousClusterLabel {
+  slugs: string[];
+  label: string;
+}
+
 export interface ClusterLabelingOptions {
   maxSamplesPerCluster?: number;
   model?: string;
+  // labels from the last generated map, reused for clusters that still match
+  previous?: PreviousClusterLabel[];
 }
+
+export type KnowledgeMapPreview = Omit<
+  KnowledgeMapOutput,
+  "similarityEdges"
+> & {
+  similarityEdgesUrl: string;
+};

@@ -1,6 +1,13 @@
 import path from "path";
 
-export const ROOT_DIR = process.cwd();
+const ROOT_DIR = process.cwd();
+
+export const OG_FONT_PATH = path.join(
+  ROOT_DIR,
+  "app",
+  "og",
+  "AveriaSerifLibre-Bold.ttf"
+);
 
 export const POSTS_DIR = path.join(ROOT_DIR, "posts");
 export const DRAFTS_DIR = path.join(POSTS_DIR, "drafts");
@@ -21,6 +28,10 @@ export const IMAGES_DIR = path.join(PUBLIC_DIR, "images");
 export const IMAGES_DRAFTS_DIR = path.join(IMAGES_DIR, "drafts");
 export const DATA_DIR = path.join(PUBLIC_DIR, "data");
 export const KNOWLEDGE_MAP_JSON = path.join(DATA_DIR, "knowledge-map.json");
+export const KNOWLEDGE_MAP_NODES_JSON = path.join(
+  DATA_DIR,
+  "knowledge-map-nodes.json"
+);
 export const IMAGE_META_JSON = path.join(DATA_DIR, "image-meta.json");
 
 export const LIBRARY_MD = path.join(

@@ -19,7 +19,7 @@ export interface Draft {
   body: string;
 }
 
-export interface PeriodContext {
+interface PeriodContext {
   now: Date;
   /** Weekly only: window length in days. */
   days: number;

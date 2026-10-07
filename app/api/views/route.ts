@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
-import { upstashRequest } from "@/utils/upstash";
+import { upstashRequest, upstashPipeline } from "@/utils/upstash";
+import { COUNT_VIEW_SCRIPT } from "@/utils/viewCounter";
+import { isSafeSlug } from "@/config/paths";
+import { getPostSlugs } from "@/utils/content/posts";
 
 export const dynamic = "force-dynamic";
 const VIEW_TTL_SECONDS = 24 * 60 * 60;
+const READ_BATCH_SIZE = 200;
 
-// Dedupe keys deliberately sit outside the `views:` namespace. They outnumber
-// the counters by orders of magnitude (one per viewer per post per day), so
-// sharing a prefix would make the archive's SCAN walk all of them.
+// Keep short-lived viewer deduplication separate from persistent counters.
 const viewKey = (slug: string) => `views:${slug}`;
 const dedupeKey = (slug: string, viewer: string) =>
   `viewdedupe:${slug}:${viewer}`;
@@ -15,7 +17,7 @@ const dedupeKey = (slug: string, viewer: string) =>
 const parseSlug = (value: unknown): string | null => {
   if (typeof value !== "string") return null;
   const trimmed = value.trim();
-  return trimmed.length > 0 ? trimmed : null;
+  return trimmed.length <= 255 && isSafeSlug(trimmed) ? trimmed : null;
 };
 
 const getViewerHash = (request: NextRequest) => {
@@ -35,38 +37,38 @@ const getViewerHash = (request: NextRequest) => {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const slug = parseSlug(searchParams.get("slug"));
+  if (searchParams.has("slug") && !slug) {
+    return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+  }
+  const publishedSlugs = getPostSlugs();
+  if (slug && !publishedSlugs.includes(slug)) {
+    return NextResponse.json({ error: "Post not found" }, { status: 404 });
+  }
 
   if (!slug) {
     try {
-      let cursor = "0";
-      const keys: string[] = [];
-      do {
-        const result = (await upstashRequest([
-          "SCAN",
-          cursor,
-          "MATCH",
-          "views:*",
-          "COUNT",
-          200,
-        ])) as [string, string[]];
-        cursor = result[0];
-        keys.push(...result[1]);
-      } while (cursor !== "0");
+      // Published filenames bound the read; no Redis keyspace scan is needed.
+      const batches: string[][] = [];
+      for (
+        let offset = 0;
+        offset < publishedSlugs.length;
+        offset += READ_BATCH_SIZE
+      ) {
+        batches.push(publishedSlugs.slice(offset, offset + READ_BATCH_SIZE));
+      }
+      const counts = await upstashPipeline(
+        batches.map((batch) => ["MGET", ...batch.map(viewKey)])
+      );
+      const results = batches.flatMap((batch, batchIndex) => {
+        const values = counts[batchIndex] as Array<string | null>;
+        return batch.map((postSlug, i) => ({
+          slug: postSlug,
+          count: Number(values[i] ?? 0),
+        }));
+      });
+      results.sort((a, b) => b.count - a.count);
 
-      if (keys.length === 0) return NextResponse.json({ results: [] });
-
-      const counts = (await upstashRequest(["MGET", ...keys])) as Array<
-        string | null
-      >;
-      const results = keys
-        .map((key, i) => ({
-          slug: key.slice("views:".length),
-          count: Number(counts[i] ?? 0),
-        }))
-        .sort((a, b) => b.count - a.count);
-
-      // A whole-keyspace SCAN behind a leaderboard nobody reads in real time.
-      // An hour of edge cache turns this from per-visitor into per-hour.
+      // Popularity sorting does not need real-time updates.
       return NextResponse.json(
         { results },
         {
@@ -115,27 +117,32 @@ export async function POST(request: NextRequest) {
     body = {};
   }
 
-  const slug = parseSlug((body as { slug?: unknown }).slug);
+  const slug = parseSlug(
+    body && typeof body === "object" && !Array.isArray(body)
+      ? (body as { slug?: unknown }).slug
+      : undefined
+  );
 
   if (!slug) {
     return NextResponse.json({ error: "Slug required" }, { status: 400 });
+  }
+  if (!getPostSlugs().includes(slug)) {
+    return NextResponse.json({ error: "Post not found" }, { status: 404 });
   }
 
   try {
     const viewerHash = getViewerHash(request);
     const key = viewKey(slug);
 
-    const setResult = await upstashRequest([
-      "SET",
-      dedupeKey(slug, viewerHash),
-      "1",
-      "EX",
-      VIEW_TTL_SECONDS,
-      "NX",
-    ]);
-
     const count = Number(
-      (await upstashRequest([setResult === "OK" ? "INCR" : "GET", key])) ?? 0
+      await upstashRequest([
+        "EVAL",
+        COUNT_VIEW_SCRIPT,
+        2,
+        key,
+        dedupeKey(slug, viewerHash),
+        VIEW_TTL_SECONDS,
+      ])
     );
 
     return NextResponse.json({ slug, count });

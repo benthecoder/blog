@@ -9,14 +9,16 @@ function subscribe(onTick: () => void) {
   return () => clearInterval(id);
 }
 
+const timeFormatter = new Intl.DateTimeFormat("en-US", {
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  timeZone: TIMEZONE,
+  hour12: true,
+});
+
 function getTime() {
-  return new Intl.DateTimeFormat("en-US", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    timeZone: TIMEZONE,
-    hour12: true,
-  }).format(new Date());
+  return timeFormatter.format(new Date());
 }
 
 export default function Clock() {

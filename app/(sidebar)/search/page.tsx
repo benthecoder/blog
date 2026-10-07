@@ -1,101 +1,75 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import type { FormEvent } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import Loader from "@/components/ui/Loader";
 import SearchResult from "./SearchResult";
 import SearchFilters from "./SearchFilters";
-import type { SearchResultItem, SearchType } from "@/types/search";
+import type { SearchType } from "@/types/search";
 import type { ChunkType } from "@/types/chunks";
+import { useLatestSearch } from "@/components/hooks/useLatestSearch";
 
 function SearchContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const { results, error, isLoading, hasSearched, execute, cancel } =
+    useLatestSearch();
+  const addressRef = useRef<string | null>(null);
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchResultItem[]>([]);
-  const [hasSearched, setHasSearched] = useState(false);
   const [searchType, setSearchType] = useState<SearchType>("hybrid");
   const [selectedChunkType, setSelectedChunkType] = useState<ChunkType | "">(
     ""
   );
 
-  // Restore query/results from sessionStorage after hydration. Lazy
-  // initializers would touch sessionStorage during SSR or mismatch the
-  // server HTML, so a mount effect is the right tool here.
-  /* eslint-disable react-hooks/set-state-in-effect */
+  // URL state is authoritative. Cached results from another query are never restored.
   useEffect(() => {
-    const urlQuery = searchParams.get("q");
-    const urlChunkType = searchParams.get("chunkType");
+    const address = searchParams.toString();
+    if (addressRef.current === address) return;
+    addressRef.current = address;
+    const urlQuery = searchParams.get("q") ?? "";
+    const rawType = searchParams.get("type");
+    const type: SearchType =
+      rawType === "keyword" || rawType === "semantic" ? rawType : "hybrid";
+    const rawChunk = searchParams.get("chunkType");
+    const chunk: ChunkType | "" =
+      rawChunk === "full-post" ||
+      rawChunk === "section" ||
+      rawChunk === "quote" ||
+      rawChunk === "code"
+        ? rawChunk
+        : "";
+    cancel();
+    setQuery(urlQuery);
+    setSearchType(type);
+    setSelectedChunkType(chunk);
+    if (urlQuery.trim())
+      void execute({ query: urlQuery, searchType: type, chunkType: chunk });
+    return () => {
+      if (addressRef.current === address) addressRef.current = null;
+    };
+  }, [searchParams, execute, cancel]);
 
-    setQuery(urlQuery || sessionStorage.getItem("lastQuery") || "");
-
-    if (urlChunkType) {
-      setSelectedChunkType(urlChunkType as ChunkType);
+  const performSearch = (type: SearchType, chunkType: ChunkType | "") => {
+    if (!query.trim()) {
+      cancel();
+      return;
     }
-
-    const cached = sessionStorage.getItem("searchResults");
-    if (cached) setResults(JSON.parse(cached));
-
-    setHasSearched(sessionStorage.getItem("hasSearched") === "true");
-    // mount-only: intentionally not re-running on searchParams changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
-
-  // Takes explicit filter values so filter-change handlers can search with
-  // the new value immediately instead of waiting a render for state.
-  const performSearch = async (type: SearchType, chunkType: ChunkType | "") => {
-    if (!query.trim()) return;
-
-    const params = new URLSearchParams();
-    params.set("q", query.trim());
-    if (chunkType) {
-      params.set("chunkType", chunkType);
-    }
+    const params = new URLSearchParams({ q: query.trim(), type });
+    if (chunkType) params.set("chunkType", chunkType);
+    addressRef.current = params.toString();
     replace(`${pathname}?${params.toString()}`);
+    void execute({ query, searchType: type, chunkType });
+  };
 
-    sessionStorage.setItem("lastQuery", query.trim());
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: query.trim(),
-          searchType: type,
-          chunkType: chunkType || undefined,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(`Search failed: ${data.error || response.statusText}`);
-      }
-
-      if (!data.results || !Array.isArray(data.results)) {
-        setResults([]);
-        return;
-      }
-
-      setResults(data.results);
-      sessionStorage.setItem("searchResults", JSON.stringify(data.results));
-      setHasSearched(true);
-      sessionStorage.setItem("hasSearched", "true");
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Search failed";
-      setError(errorMessage);
-      setHasSearched(true);
-      sessionStorage.setItem("hasSearched", "true");
-    } finally {
-      setIsLoading(false);
-    }
+  const clearQuery = () => {
+    cancel();
+    setQuery("");
+    setSearchType("hybrid");
+    setSelectedChunkType("");
+    addressRef.current = "";
+    replace(pathname);
   };
 
   const handleSearch = (e?: FormEvent) => {
@@ -106,7 +80,6 @@ function SearchContent() {
   const handleSearchTypeChange = (type: SearchType) => {
     setSearchType(type);
     if (query.trim()) {
-      setResults([]);
       performSearch(type, selectedChunkType);
     }
   };
@@ -114,15 +87,14 @@ function SearchContent() {
   const handleChunkTypeChange = (chunkType: ChunkType | "") => {
     setSelectedChunkType(chunkType);
     if (query.trim()) {
-      setResults([]);
       performSearch(searchType, chunkType);
     }
   };
 
   const clearFilters = () => {
+    cancel();
     setSelectedChunkType("");
-    setResults([]);
-    setHasSearched(false);
+    if (query.trim()) performSearch(searchType, "");
   };
 
   return (
@@ -130,20 +102,21 @@ function SearchContent() {
       <form onSubmit={handleSearch} className="mb-6">
         <div className="relative">
           <input
+            aria-label="Search posts"
             type="text"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              cancel();
+              setQuery(e.target.value);
+            }}
             placeholder="search..."
             className="w-full px-4 py-3 bg-paper dark:bg-night border-2 border-rule dark:border-night-raised focus:border-ink dark:focus:border-chalk-soft transition-colors text-ink-strong dark:text-chalk-strong text-lg font-medium placeholder-ink-strong/40 dark:placeholder-chalk-strong/40 outline-hidden selection:bg-ink selection:text-white dark:selection:bg-chalk-soft dark:selection:text-night"
           />
           {query && (
             <button
               type="button"
-              onClick={() => {
-                setQuery("");
-                setResults([]);
-                setHasSearched(false);
-              }}
+              aria-label="Clear search"
+              onClick={clearQuery}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-strong/40 dark:text-chalk-strong/40 hover:text-ink dark:hover:text-chalk-soft transition-colors"
             >
               ✕
@@ -166,7 +139,10 @@ function SearchContent() {
         </div>
       )}
       {error && (
-        <div className="text-red-500 dark:text-red-400 mb-4 p-4 border-l-2 border-red-500">
+        <div
+          role="alert"
+          className="text-red-500 dark:text-red-400 mb-4 p-4 border-l-2 border-red-500"
+        >
           {error}
         </div>
       )}
@@ -190,6 +166,7 @@ function SearchContent() {
         </div>
       ) : (
         !isLoading &&
+        !error &&
         hasSearched &&
         query && (
           <div className="text-center py-12 border border-rule dark:border-night-raised">

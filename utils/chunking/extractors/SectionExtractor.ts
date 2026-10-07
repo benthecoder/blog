@@ -10,7 +10,7 @@
  * - Study notes organized by concept
  */
 
-import { Node } from "unist";
+import type { Node } from "unist";
 import { visit } from "unist-util-visit";
 import {
   ChunkExtractor,

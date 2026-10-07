@@ -1,13 +1,8 @@
 import fs from "fs";
-import matter from "gray-matter";
+import { writeMarkdownFile } from "@/utils/content/markdown";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
-import {
-  DRAFTS_DIR,
-  getPostPath,
-  getDraftPath,
-  isSafeSlug,
-} from "@/config/paths";
+import { getPostPath, getDraftPath, isSafeSlug } from "@/config/paths";
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -50,17 +45,18 @@ export async function POST(request: NextRequest) {
     const isPublished = fs.existsSync(publishedPath);
     const filePath = isPublished ? publishedPath : draftPath;
 
-    // Ensure drafts directory exists
-    if (!isPublished && !fs.existsSync(DRAFTS_DIR)) {
-      fs.mkdirSync(DRAFTS_DIR, { recursive: true });
-    }
-
-    const fileContent = matter.stringify(content, { title, tags, date });
-
-    fs.writeFileSync(filePath, fileContent, "utf8");
+    writeMarkdownFile(filePath, { title, tags, date }, content, {
+      exclusive: Boolean(isNew),
+    });
 
     return NextResponse.json({ success: true, slug, isDraft: !isPublished });
   } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "EEXIST") {
+      return NextResponse.json(
+        { error: "A post or draft already exists for this date" },
+        { status: 409 }
+      );
+    }
     console.error("Save error:", error);
     return NextResponse.json({ error: "Failed to save post" }, { status: 500 });
   }

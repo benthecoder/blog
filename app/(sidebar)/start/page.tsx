@@ -118,7 +118,8 @@ const StartPage = () => {
         </p>
 
         <p>
-          browse the <Link href="/posts">archives</Link>.{" "}
+          browse the <Link href="/posts">archives</Link> or wander through the{" "}
+          <Link href="/wiki">wiki</Link>.{" "}
           <span className="text-xs opacity-40">
             {/* explicit string: turbopack's server/client compiles disagree
                 about the space between </code> and the entity-bearing text */}

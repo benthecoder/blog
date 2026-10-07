@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { FC, ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   useFloating,
   autoUpdate,
@@ -11,6 +12,7 @@ import {
   shift,
   useHover,
   useFocus,
+  useClick,
   useDismiss,
   useRole,
   useInteractions,
@@ -27,6 +29,7 @@ type TimelineItem = {
   month?: string;
   day?: string;
   description: string;
+  postSlug?: string;
   imageLinks?: ImageLink[];
 };
 
@@ -57,25 +60,29 @@ const ImageLinkComponent: FC<{ link: ImageLink }> = ({ link }) => {
 
   const hover = useHover(context, { move: false });
   const focus = useFocus(context);
+  const click = useClick(context, { ignoreMouse: true });
   const dismiss = useDismiss(context);
   const role = useRole(context, { role: "tooltip" });
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     hover,
     focus,
+    click,
     dismiss,
     role,
   ]);
 
   return (
     <>
-      <span
+      <button
+        type="button"
+        aria-expanded={isOpen}
         ref={refs.setReference}
         {...getReferenceProps()}
-        className="underline decoration-solid decoration-1 cursor-pointer decoration-ink-soft/40 underline-offset-2 transition-[text-decoration-color] duration-150 hover:decoration-ink-soft"
+        className="inline text-left underline decoration-solid decoration-1 cursor-pointer decoration-ink-soft/40 dark:decoration-chalk-soft/40 underline-offset-2 transition-[text-decoration-color] duration-150 hover:decoration-ink-soft dark:hover:decoration-chalk-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
       >
         {link.text}
-      </span>
+      </button>
       {isOpen && (
         <FloatingPortal>
           <div
@@ -92,7 +99,7 @@ const ImageLinkComponent: FC<{ link: ImageLink }> = ({ link }) => {
               className="image-hover"
               width={400}
               height={600}
-              style={{ maxWidth: "90vw", height: "auto" }}
+              loading="eager"
             />
           </div>
         </FloatingPortal>
@@ -156,11 +163,21 @@ const Timeline: FC<TimelineProps> = ({ events }) => (
                   className="group/item flex gap-2 sm:gap-4"
                 >
                   <div className="min-w-[80px] sm:min-w-[90px]">
-                    {dateDetail && (
-                      <span className="text-sm opacity-30 transition-opacity group-hover/item:opacity-50">
-                        {dateDetail}
-                      </span>
-                    )}
+                    {dateDetail &&
+                      (item.postSlug ? (
+                        <Link
+                          href={`/posts/${encodeURIComponent(item.postSlug)}`}
+                          prefetch={false}
+                          aria-label={`Read journal entry: ${item.description}`}
+                          className="text-sm text-ink-soft dark:text-chalk-muted underline decoration-dotted underline-offset-4 hover:text-ink dark:hover:text-chalk focus-visible:outline-2 focus-visible:outline-offset-2"
+                        >
+                          {dateDetail}
+                        </Link>
+                      ) : (
+                        <span className="text-sm opacity-30 transition-opacity group-hover/item:opacity-50">
+                          {dateDetail}
+                        </span>
+                      ))}
                   </div>
                   <span className="flex-1">
                     {renderDescription(item, itemIndex)}
