@@ -37,6 +37,7 @@
     "@codemirror/view": "^6.43.8",
     "@floating-ui/react": "^0.27.19",
     "@neondatabase/serverless": "^1.1.0",
+    "@shikijs/themes": "4.3.1",
     "@types/d3-force": "^3.0.10",
     "@uiw/react-codemirror": "^4.25.11",
     "@vercel/analytics": "^2.0.1",
