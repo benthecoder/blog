@@ -1,5 +1,5 @@
 import fs from "fs";
-import matter from "gray-matter";
+import { readMarkdownFile } from "@/utils/content/markdown";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { getPostPath, getDraftPath, isSafeSlug } from "@/config/paths";
@@ -36,8 +36,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    const fileContent = fs.readFileSync(filePath, "utf8");
-    const { data, content } = matter(fileContent);
+    const { data, content } = readMarkdownFile(filePath);
 
     return NextResponse.json({
       title: data.title || "",

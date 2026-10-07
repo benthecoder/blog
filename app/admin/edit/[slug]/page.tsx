@@ -6,7 +6,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
-import matter from "gray-matter";
+import { parseFrontmatter } from "@/utils/content/frontmatter";
 import {
   Calendar,
   Camera,
@@ -350,7 +350,9 @@ export default function EditPostPage() {
           {showPreview ? (
             <div className="h-full overflow-y-auto p-8 admin-scrollbar">
               {(() => {
-                const { data: frontmatter, content } = matter(draft.markdown);
+                const { data: frontmatter, content } = parseFrontmatter(
+                  draft.markdown
+                );
 
                 const post = {
                   data: {
