@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
     "/posts/[slug]": ["public/**/*"],
     "/tags": ["public/**/*"],
     "/tags/[slug]": ["public/**/*"],
-    "/api/**": ["public/**/*"],
+    "/api/**": ["public/**/*", "app/og/*.jpg"],
   },
   rewrites: async () => [
     {
