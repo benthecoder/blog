@@ -59,3 +59,10 @@ export interface ClusterLabelingOptions {
   // labels from the last generated map, reused for clusters that still match
   previous?: PreviousClusterLabel[];
 }
+
+export type KnowledgeMapPreview = Omit<
+  KnowledgeMapOutput,
+  "similarityEdges"
+> & {
+  similarityEdgesUrl: string;
+};
