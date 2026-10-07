@@ -4,7 +4,7 @@ import {
   parseFrontmatter,
   stringifyFrontmatter,
 } from "@/utils/content/frontmatter";
-import { randomUUID } from "crypto";
+import { writeAtomicFile } from "./atomicFile";
 
 interface MarkdownFile {
   slug: string;
@@ -25,20 +25,7 @@ export function writeMarkdownFile(
   content: string,
   { exclusive = false }: { exclusive?: boolean } = {}
 ) {
-  const directory = path.dirname(filePath);
-  fs.mkdirSync(directory, { recursive: true });
-  const temporaryPath = path.join(directory, `.${randomUUID()}.tmp`);
-  try {
-    fs.writeFileSync(
-      temporaryPath,
-      stringifyFrontmatter(content, data),
-      "utf8"
-    );
-    if (exclusive) fs.linkSync(temporaryPath, filePath);
-    else fs.renameSync(temporaryPath, filePath);
-  } finally {
-    fs.rmSync(temporaryPath, { force: true });
-  }
+  writeAtomicFile(filePath, stringifyFrontmatter(content, data), { exclusive });
 }
 
 // Slugs only — a readdir with no file reads and no frontmatter parsing. Use
