@@ -9,7 +9,24 @@ export async function GET() {
       signal: AbortSignal.timeout(10_000),
     });
     if (!res.ok) throw new Error("Curius request failed");
-    const data: unknown = await res.json();
+    const source = (await res.json()) as {
+      links: {
+        id: string | number;
+        title: string;
+        link: string;
+        createdDate: string;
+      }[];
+    };
+    // Snippets and crawler metadata dominate the upstream payload but are
+    // unused by the public list. Preserve every link and its original order.
+    const data = {
+      links: source.links.map(({ id, title, link, createdDate }) => ({
+        id,
+        title,
+        link,
+        createdDate,
+      })),
+    };
     return Response.json(
       { data },
       {

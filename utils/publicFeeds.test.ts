@@ -50,8 +50,26 @@ describe("public feed cache boundaries", () => {
     }
   });
   it("caches successful Curius data while preserving its response shape", async () => {
-    const data = { links: [{ title: "hello", url: "https://example.test" }] };
-    const fetcher = vi.fn().mockResolvedValue(Response.json(data));
+    const data = {
+      links: [
+        {
+          id: 1,
+          title: "hello",
+          link: "https://example.test",
+          createdDate: "2026-10-07",
+        },
+      ],
+    };
+    const fetcher = vi.fn().mockResolvedValue(
+      Response.json({
+        links: data.links.map((link) => ({
+          ...link,
+          snippet: "large unused body",
+          favorite: true,
+          lastCrawled: "yesterday",
+        })),
+      })
+    );
     vi.stubGlobal("fetch", fetcher);
     const response = await bookmarks();
     expect(await response.json()).toEqual({ data });
