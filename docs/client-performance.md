@@ -6,6 +6,10 @@ The knowledge map uses squared distances and direct coordinate scaling for hit t
 
 The table of contents resolves heading elements when its items change, rather than on every scroll frame. It still measures their current positions each frame, so images changing the layout do not leave stale offsets. Its pending animation frame is cancelled on cleanup.
 
+## CI build parity
+
+GitHub CI uses Node.js 24 and `VERCEL=1` for the production build, matching the deployment runtime and exercising deployment snapshot reuse. The map prebuild consumes committed assets instead of querying providers. Public thoughts still use Neon for their initial build. Superseded CI runs for the same pull request or branch are cancelled.
+
 ## Measurement
 
 Local Node.js diagnostic, median of five runs on October 7, 2026:
