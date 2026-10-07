@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
 import { getVoyageClient } from "@/utils/clients";
@@ -67,6 +68,34 @@ function prepareSearchQuery(input: string, operator = "&"): string {
   return terms.map((t) => t + ":*").join(` ${operator} `);
 }
 
+const searchRequestSchema = z.object({
+  query: z
+    .string()
+    .max(2000)
+    .refine((query) => query.trim().length > 0)
+    .transform((query) => query.trim()),
+  searchType: z
+    .enum(["keyword", "semantic", "hybrid"])
+    .nullish()
+    .transform((value) => value ?? "hybrid"),
+  // Reject oversized arrays before Zod traverses their elements.
+  tags: z
+    .custom<unknown[]>((value) => Array.isArray(value) && value.length <= 20)
+    .pipe(z.array(z.string().min(1).max(99)))
+    .nullish()
+    .transform((value) => value ?? []),
+  chunkType: z
+    .enum(["full-post", "section", "quote", "code"])
+    .nullish()
+    .transform((value) => value ?? null),
+});
+const searchValidationErrors: Record<string, string> = {
+  query: "Query must contain 1–2000 characters",
+  searchType: 'Invalid search type. Use "keyword", "semantic", or "hybrid"',
+  tags: "Tags must be up to 20 strings of 1–99 characters",
+  chunkType: "Invalid chunk type",
+};
+
 export async function POST(request: Request) {
   let body: unknown;
   try {
@@ -74,56 +103,20 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-  if (!body || typeof body !== "object" || Array.isArray(body)) {
+  const parsed = searchRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    const field = parsed.error.issues[0]?.path[0];
     return NextResponse.json(
-      { error: "Expected a search request" },
+      {
+        error:
+          typeof field === "string"
+            ? searchValidationErrors[field]
+            : "Expected a search request",
+      },
       { status: 400 }
     );
   }
-  const input = body as Record<string, unknown>;
-  if (
-    typeof input.query !== "string" ||
-    !input.query.trim() ||
-    input.query.length > 2000
-  ) {
-    return NextResponse.json(
-      { error: "Query must contain 1–2000 characters" },
-      { status: 400 }
-    );
-  }
-  const query = input.query.trim();
-  const searchType = input.searchType ?? "hybrid";
-  if (
-    typeof searchType !== "string" ||
-    !["keyword", "semantic", "hybrid"].includes(searchType)
-  ) {
-    return NextResponse.json(
-      { error: 'Invalid search type. Use "keyword", "semantic", or "hybrid"' },
-      { status: 400 }
-    );
-  }
-  const tags = input.tags ?? [];
-  if (
-    !Array.isArray(tags) ||
-    tags.length > 20 ||
-    !tags.every(
-      (tag: unknown) =>
-        typeof tag === "string" && tag.length > 0 && tag.length < 100
-    )
-  ) {
-    return NextResponse.json(
-      { error: "Tags must be up to 20 strings of 1–99 characters" },
-      { status: 400 }
-    );
-  }
-  const chunkType = input.chunkType ?? null;
-  if (
-    chunkType !== null &&
-    (typeof chunkType !== "string" ||
-      !["full-post", "section", "quote", "code"].includes(chunkType))
-  ) {
-    return NextResponse.json({ error: "Invalid chunk type" }, { status: 400 });
-  }
+  const { query, searchType, tags, chunkType } = parsed.data;
   // JSON transport avoids depending on the driver's PostgreSQL array encoding.
   const tagsJson = JSON.stringify(tags);
   try {

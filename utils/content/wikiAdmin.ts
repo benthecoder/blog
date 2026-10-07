@@ -1,4 +1,5 @@
 import fs from "fs";
+import { z } from "zod";
 import { createHash } from "crypto";
 import { getWikiPath, isSafeSlug } from "@/config/paths";
 import { readMarkdownFile, writeMarkdownFile } from "./markdown";
@@ -23,12 +24,11 @@ export function isWikiEditorSlug(value: unknown): value is string {
   );
 }
 
+const WIKI_ADDRESS_ERROR =
+  "Use letters, numbers, hyphens or underscores for the page address; ‘new’ is reserved.";
+
 function wikiPath(slug: unknown) {
-  if (!isWikiEditorSlug(slug))
-    throw new WikiEditError(
-      "Use letters, numbers, hyphens or underscores for the page address; ‘new’ is reserved.",
-      400
-    );
+  if (!isWikiEditorSlug(slug)) throw new WikiEditError(WIKI_ADDRESS_ERROR, 400);
   return getWikiPath(slug);
 }
 
@@ -67,29 +67,37 @@ export function getWikiEditorPage(slug: string): WikiEditorPage {
   };
 }
 
+const wikiSaveSchema = z.object({
+  slug: z.string().refine(isWikiEditorSlug),
+  title: z
+    .string()
+    .max(200)
+    .refine((title) => title.trim().length > 0),
+  category: z.string().max(200),
+  description: z.string().max(1000),
+  tags: z.string().max(1000),
+  content: z.string().max(2_000_000),
+  create: z.boolean(),
+  version: z.unknown().optional(),
+});
+
 /** Synchronous read/compare/write keeps saves serialized in the local authoring server. */
 export function saveWikiEditorPage(input: unknown): WikiEditorPage {
-  if (!input || typeof input !== "object" || Array.isArray(input))
-    throw new WikiEditError("Invalid page", 400);
-  const { slug, title, category, description, tags, content, create, version } =
-    input as Record<string, unknown>;
-  const filePath = wikiPath(slug);
-  if (
-    typeof title !== "string" ||
-    !title.trim() ||
-    title.length > 200 ||
-    typeof category !== "string" ||
-    category.length > 200 ||
-    typeof description !== "string" ||
-    description.length > 1000 ||
-    typeof tags !== "string" ||
-    tags.length > 1000 ||
-    typeof content !== "string" ||
-    content.length > 2_000_000 ||
-    typeof create !== "boolean"
-  ) {
-    throw new WikiEditError("Invalid page fields", 400);
+  const parsed = wikiSaveSchema.safeParse(input);
+  if (!parsed.success) {
+    const field = parsed.error.issues[0]?.path[0];
+    throw new WikiEditError(
+      field === "slug"
+        ? WIKI_ADDRESS_ERROR
+        : field === undefined
+          ? "Invalid page"
+          : "Invalid page fields",
+      400
+    );
   }
+  const { slug, title, category, description, tags, content, create, version } =
+    parsed.data;
+  const filePath = wikiPath(slug);
   let existingData: Record<string, unknown> = {};
   if (create) {
     if (fs.existsSync(filePath))
@@ -97,7 +105,7 @@ export function saveWikiEditorPage(input: unknown): WikiEditorPage {
   } else {
     if (typeof version !== "string")
       throw new WikiEditError("Page version required", 400);
-    const existing = readPage(slug as string);
+    const existing = readPage(slug);
     if (versionOf(existing.data, existing.content) !== version)
       throw new WikiEditError(
         "This page changed since you opened it. Reload before saving so those changes are preserved.",
@@ -124,5 +132,5 @@ export function saveWikiEditorPage(input: unknown): WikiEditorPage {
       throw new WikiEditError("A wiki page already uses this address", 409);
     throw error;
   }
-  return getWikiEditorPage(slug as string);
+  return getWikiEditorPage(slug);
 }
