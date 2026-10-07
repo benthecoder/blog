@@ -17,10 +17,10 @@ export function getImageMeta(src: string): ImageMeta | null {
   if (!match) return null;
   const filename = tryDecodeUrlComponent(match[1]);
   if (filename === null) return null;
-  if (!manifest) {
-    manifest = fs.existsSync(IMAGE_META_JSON)
-      ? JSON.parse(fs.readFileSync(IMAGE_META_JSON, "utf8"))
-      : {};
-  }
-  return manifest![filename] ?? null;
+  const metadata: Record<string, ImageMeta> = (manifest ??= fs.existsSync(
+    IMAGE_META_JSON
+  )
+    ? JSON.parse(fs.readFileSync(IMAGE_META_JSON, "utf8"))
+    : {});
+  return Object.hasOwn(metadata, filename) ? metadata[filename] : null;
 }
