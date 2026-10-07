@@ -1,3 +1,4 @@
+import { serializeJsonLd } from "@/utils/jsonLd";
 import { getPostContent, getPostMetadata } from "@/utils/content/posts";
 import { getRelatedPosts } from "@/utils/content/related";
 import { getPostPreviewData } from "@/utils/content/preview";
@@ -90,7 +91,7 @@ const PostPage = async ({ params }: { params: Params }) => {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
       />
       <RenderPost
         post={postContent}

@@ -8,7 +8,8 @@ import {
   type ReactNode,
 } from "react";
 import { ThemeProvider } from "next-themes";
-import { bind, setVolume } from "cuelume";
+import { bind, setEnabled, setVolume } from "cuelume";
+import { readStoredString } from "@/utils/browserStorage";
 
 export const PALETTES = [
   "indigo",
@@ -39,7 +40,7 @@ const PaletteContext = createContext<PaletteContextValue | undefined>(
 // minimal provider instead.
 function readStoredPalette(): Palette {
   if (typeof window === "undefined") return DEFAULT_PALETTE;
-  const stored = window.localStorage.getItem(STORAGE_KEY);
+  const stored = readStoredString(STORAGE_KEY);
   return (PALETTES as readonly string[]).includes(stored ?? "")
     ? (stored as Palette)
     : DEFAULT_PALETTE;
@@ -86,16 +87,17 @@ export function usePalette() {
 }
 
 const SOUND_VOLUME = 0.6;
-
+const SOUND_STORAGE_KEY = "sound-enabled";
 // bind() delegates from `document`, so one call covers every
 // data-cuelume-* element, including ones added by later navigations.
-function SoundCues() {
+function SoundProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setVolume(SOUND_VOLUME);
+    setEnabled(readStoredString(SOUND_STORAGE_KEY) !== "false");
     bind();
   }, []);
 
-  return null;
+  return children;
 }
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -106,8 +108,7 @@ export function Providers({ children }: { children: ReactNode }) {
       disableTransitionOnChange
     >
       <PaletteProvider>
-        <SoundCues />
-        {children}
+        <SoundProvider>{children}</SoundProvider>
       </PaletteProvider>
     </ThemeProvider>
   );

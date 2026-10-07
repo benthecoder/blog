@@ -9,7 +9,11 @@ vi.mock("@/utils/content/wikiAdmin", async (importOriginal) => {
 });
 import { POST } from "@/app/api/admin/wiki/route";
 import { revalidatePath } from "next/cache";
-import { saveWikiEditorPage, WikiEditError } from "@/utils/content/wikiAdmin";
+import {
+  saveWikiEditorPage,
+  WikiEditError,
+  isWikiEditorSlug,
+} from "@/utils/content/wikiAdmin";
 
 function request(headers: Record<string, string> = {}, body = "{}") {
   return new NextRequest("http://localhost:3000/api/admin/wiki", {
@@ -28,6 +32,28 @@ beforeEach(() => {
 });
 afterEach(() => {
   vi.unstubAllEnvs();
+});
+
+describe("wiki page addresses", () => {
+  it("accepts readable Unicode addresses within the length limit", () => {
+    for (const slug of ["faith", "日記", "page_2", "a".repeat(120)]) {
+      expect(isWikiEditorSlug(slug)).toBe(true);
+    }
+  });
+  it("rejects reserved addresses, traversal and malformed values", () => {
+    for (const slug of [
+      "new",
+      "",
+      "../faith",
+      "a/b",
+      ".hidden",
+      "a".repeat(121),
+      null,
+      5,
+    ]) {
+      expect(isWikiEditorSlug(slug)).toBe(false);
+    }
+  });
 });
 
 describe("wiki save endpoint", () => {

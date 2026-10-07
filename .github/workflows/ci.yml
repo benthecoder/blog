@@ -29,6 +29,8 @@ jobs:
 
       - run: pnpm test
 
+      - run: pnpm check:unused
+
       - run: pnpm lint
 
       - run: pnpm build

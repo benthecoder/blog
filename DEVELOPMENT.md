@@ -21,15 +21,16 @@ step, and can still be edited directly in an IDE.
 
 ### Roadmap (in order)
 
-1. [x] **Hard-drive backup script.** Plug in the drive "chonky" and run `pnpm backup` (`feat/drive-backup`, in `~/blog-backup`; merge to main). The first verified backup was made 2026-10-04. It writes to `/Volumes/chonky/bneo-blog-backup/`:
+1. [x] **Hard-drive backup script.** Plug in the drive "chonky" and run `pnpm backup` (merged; run from your main checkout). The first verified backup was made 2026-10-04. It writes to `/Volumes/chonky/bneo-blog-backup/`:
    - [x] R2 images: an additive mirror of all 336 files. R2 has no versioning or backups, and about 90 of these exist nowhere else.
    - [x] Dated snapshots, hard-linked so unchanged files cost no space, of posts, drafts (gitignored, so this Mac is otherwise the only copy), draft images, `/thoughts` from Neon and a git bundle of every branch.
    - [ ] ~~Auto-run on mount~~: dropped. macOS blocks background jobs from removable drives unless they run as an approved named app. It stays manual unless revisited.
    - [ ] Delete `~/blog-purge-backup/`. It's safe to do now that the drive copy is verified.
 2. [ ] **Finish the in-flight work**, one git worktree per session:
-   - [x] Draft photo panel + Format button (`feat/draft-photo-panel`, in `~/blog`). Merge to main.
-   - [ ] Sunday links workflow (`feat/sunday-links`, in `~/blog-links`)
-   - [ ] Wiki page work (`feat/wiki-christianity`, in `~/blog-wiki`)
+   - [x] Draft photo panel + Format button (merged).
+   - [x] Sunday links CLI and admin period templates (merged). Writing and publishing the posts remain manual.
+   - [x] Wiki graph and local editor (merged).
+   - [ ] Write the first wiki topics, starting with Christianity and AI papers.
 3. [ ] **Publish every draft** (~121 in `posts/drafts/`, about half of them stubs). Use the admin editor's photo panel to add each day's photos, run Format, spell-check, and publish.
 4. [ ] **photos.bneo.xyz.** A photostream site modeled on [paulstamatiou.com/photos](https://paulstamatiou.com/photos). It has two parts: a chronological **photostream**, and **photosets** grouped into trip collections. Each collection shows stats (photos taken, days, km) and has day-by-day sets. This fits our day-based journal: each day's photos can link to its post. Photos would come from R2.
 
@@ -84,11 +85,11 @@ Source of truth is the blog. Capture is cheap and happens in the moment; the AI 
   - [ ] publish on the blog first, then paste into Substack by hand
 - [ ] **Quarterly: `q1/q2/q3/q4 reflection`**
   - [x] `pnpm draft quarterly` gathers the quarter's monthly highlights posts + thoughts + journal posts into a draft with prompts, no generated reflections
-- [ ] **Decision**: drafts land as unpublished files (`posts/drafts/`) edited locally, or as a PR reviewed on phone?
+- [x] Drafts live in `posts/drafts/` and are edited locally.
 
 #### Link takes (reworking /tweet)
 
-- [ ] new table `link_takes(id, url, title, take, created_at)`; /tweet detects a URL in the input, fetches the title, and stores the take separately from the link
+- [x] `/tweet` stores reactions and links in Neon’s `tweets` table (`content`, `link`, `link_title`); missing titles are resolved by the local draft script, never by the public API
 - [ ] /thoughts keeps rendering plain thoughts; link takes feed the weekly script
 - [ ] /tweet lists recent entries with a delete button (dev only)
 
@@ -101,26 +102,20 @@ Source of truth is the blog. Capture is cheap and happens in the moment; the AI 
 
 ## Database Setup Instructions
 
-### Setting up Planetscale for /thoughts page
+### Thoughts and link takes
 
-```bash
-brew install planetscale/tap/pscale
-brew install mysql-client
-```
+Thoughts and link takes use Neon Postgres through `@neondatabase/serverless`,
+with `POSTGRES_URL` configured locally and in the deployment environment. The
+current `tweets` table includes `id`, `content`, `link`, `link_title`, and
+`created_at`. See `/api/tweet` for capture and `/api/thoughts` for pagination.
+The public capture API does not fetch URLs. Backup snapshots include this table.
 
-```bash
-pscale shell <DB_NAME> main
-```
+### Code hygiene
 
-Run this to create table:
-
-```sql
-CREATE TABLE tweets (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  content TEXT NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
+Run `pnpm check:unused` for Knip's dependency, file, and export checks. Manual
+maintenance scripts are explicit entry points in `knip.json`; an absent import
+alone does not mean a script is safe to delete. Run `pnpm lint`, `pnpm test`, and
+`pnpm exec tsc --noEmit` before opening a PR.
 
 ### Setting up Neon for embedding search
 

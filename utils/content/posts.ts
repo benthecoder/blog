@@ -42,10 +42,20 @@ export const getPostSlugs = cache(function getPostSlugs(): string[] {
   return scanMarkdownSlugs(POSTS_DIR);
 });
 
+// Published files in a Vercel deployment are immutable. Keep the index across
+// renders in each build/runtime worker; React cache alone only spans one render.
+// Local servers and draft scans must stay fresh for the writing interface.
+let deployedMetadata: PostMetadata[] | null = null;
+
 export const getPostMetadata = cache(function getPostMetadata(
   options: { includeDrafts?: boolean } = {}
 ): PostMetadata[] {
   const { includeDrafts = false } = options;
+  const immutableDeployment =
+    process.env.NODE_ENV === "production" &&
+    process.env.VERCEL === "1" &&
+    !includeDrafts;
+  if (immutableDeployment && deployedMetadata) return deployedMetadata;
   const dirs = includeDrafts
     ? [POSTS_DIR, path.join(POSTS_DIR, "drafts")]
     : [POSTS_DIR];
@@ -68,5 +78,6 @@ export const getPostMetadata = cache(function getPostMetadata(
     post.prev = i < posts.length - 1 ? posts[i + 1] : null;
     post.next = i > 0 ? posts[i - 1] : null;
   });
+  if (immutableDeployment) deployedMetadata = posts;
   return posts;
 });

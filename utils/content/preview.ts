@@ -1,5 +1,6 @@
 import fs from "fs";
-import { getPostPath } from "@/config/paths";
+import { getPostPath, isSafeSlug } from "@/config/paths";
+import { tryDecodeUrlComponent } from "@/utils/links/url";
 import { getPostContent, getPostMetadata } from "./posts";
 
 export interface PostPreviewData {
@@ -10,6 +11,14 @@ export interface PostPreviewData {
 }
 
 const EXCERPT_WORDS = 40;
+
+/** Recognize internal post links without letting malformed escapes crash a page. */
+export function postSlugFromHref(href: string): string | null {
+  const match = href.match(/^(?:https?:\/\/bneo\.xyz)?\/posts\/([^/#?]+)$/);
+  if (!match) return null;
+  const slug = tryDecodeUrlComponent(match[1]);
+  return isSafeSlug(slug) ? slug : null;
+}
 
 /** Rough markdown → plain text, good enough for a short excerpt. */
 function stripMarkdown(markdown: string): string {

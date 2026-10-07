@@ -1,8 +1,7 @@
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import type { Components } from "react-markdown";
 import { codeToHtml } from "shiki";
-import { isSafeSlug } from "@/config/paths";
-import { getPostPreviewData } from "@/utils/content/preview";
+import { getPostPreviewData, postSlugFromHref } from "@/utils/content/preview";
 import CopyButton from "./CopyButton";
 import PostLinkPreview from "./PostLinkPreview";
 import WikiLink from "./WikiLink";
@@ -13,15 +12,6 @@ import {
   remarkPlugins,
   rehypePlugins,
 } from "./markdownConfig";
-
-// Internal post links get a hover preview card. Matches relative and absolute
-// forms; anything else falls through to a plain anchor.
-function postSlugFromHref(href: string): string | null {
-  const match = href.match(/^(?:https?:\/\/bneo\.xyz)?\/posts\/([^/#?]+)$/);
-  if (!match) return null;
-  const slug = decodeURIComponent(match[1]);
-  return isSafeSlug(slug) ? slug : null;
-}
 
 // Server component: fenced code is highlighted with shiki at render time
 // (build time for static pages), so no highlighting JS ships to the client.
@@ -105,7 +95,9 @@ export default function MarkdownContent({ content }: { content: string }) {
       // Keep react-markdown's URL sanitizing, but let our `wikilink:` sentinel
       // scheme through so the `a` handler can resolve it.
       urlTransform={(url) =>
-        url.startsWith(WIKILINK_SCHEME) ? url : defaultUrlTransform(url)
+        url.startsWith(WIKILINK_SCHEME) && decodeWikiLinkHref(url) !== null
+          ? url
+          : defaultUrlTransform(url)
       }
     >
       {content}

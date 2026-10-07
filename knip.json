@@ -1,0 +1,5 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": ["scripts/**/*.{ts,js,mjs}", "next-sitemap.config.js"],
+  "project": ["**/*.{ts,tsx,js,mjs,css}", "!.claude/**"]
+}
