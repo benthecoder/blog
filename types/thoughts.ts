@@ -3,5 +3,5 @@ export interface Thought {
   content: string;
   link?: string | null;
   link_title?: string | null;
-  created_at: Date;
+  created_at: Date | string;
 }
