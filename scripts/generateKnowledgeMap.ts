@@ -21,6 +21,7 @@ import type {
   ArticleNode,
   ArticleData,
   SimilarityEdge,
+  PreviousClusterLabel,
 } from "../types/knowledgeMap";
 import type { ChunkRow } from "../types/chunks";
 import fs from "fs";
@@ -38,6 +39,18 @@ async function getSourceFingerprint(): Promise<string> {
   return `${rows[0].count}:${rows[0].latest ?? "none"}`;
 }
 
+function previousClusterLabels(
+  existing: KnowledgeMapOutput | undefined
+): PreviousClusterLabel[] {
+  if (!existing?.clusterLabels) return [];
+  return Object.entries(existing.clusterLabels).map(([id, label]) => ({
+    label,
+    slugs: existing.data
+      .filter((node) => node.cluster === Number(id))
+      .map((node) => node.postSlug),
+  }));
+}
+
 async function generateKnowledgeMap() {
   try {
     // Check if database connection is available
@@ -53,9 +66,10 @@ async function generateKnowledgeMap() {
     const outputPath = KNOWLEDGE_MAP_JSON;
     const sourceFingerprint = await getSourceFingerprint();
 
+    let existing: KnowledgeMapOutput | undefined;
     if (fs.existsSync(outputPath)) {
       try {
-        const existing = JSON.parse(
+        existing = JSON.parse(
           fs.readFileSync(outputPath, "utf8")
         ) as KnowledgeMapOutput;
         if (existing.sourceFingerprint === sourceFingerprint) {
@@ -148,24 +162,21 @@ async function generateKnowledgeMap() {
       });
     });
 
-    // Stage 4: Label clusters using Anthropic API
+    // Stage 4: Label clusters, reusing the previous map's labels where the
+    // membership still matches so only new/changed clusters hit the model
     let clusterLabels: Record<number, string> | undefined;
 
-    if (process.env.ANTHROPIC_API_KEY) {
-      try {
-        const labelsMap = await labelClusters(clusterMap);
-        if (labelsMap) {
-          clusterLabels = Object.fromEntries(labelsMap);
-        }
-      } catch (error) {
-        console.warn("⚠️  Cluster labeling failed, continuing without labels");
-        console.warn(
-          "⚠️  Error:",
-          error instanceof Error ? error.message : error
-        );
-      }
-    } else {
-      console.warn("⚠️  ANTHROPIC_API_KEY not set, skipping cluster labeling");
+    try {
+      const labelsMap = await labelClusters(clusterMap, {
+        previous: previousClusterLabels(existing),
+      });
+      if (labelsMap.size > 0) clusterLabels = Object.fromEntries(labelsMap);
+    } catch (error) {
+      console.warn("⚠️  Cluster labeling failed, continuing without labels");
+      console.warn(
+        "⚠️  Error:",
+        error instanceof Error ? error.message : error
+      );
     }
 
     // Stage 5: Separate 2D UMAP for visualization (larger spread, minDist > 0)

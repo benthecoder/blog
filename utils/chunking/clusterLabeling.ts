@@ -1,14 +1,53 @@
-import { getAnthropicClient } from "../clients";
 import { withRetry, wait } from "../retry";
 import {
-  ANTHROPIC_CLUSTER_MODEL,
+  CLUSTER_LABEL_MODEL,
   CLUSTER_LABEL_MAX_SAMPLES,
+  CLUSTER_LABEL_REUSE_MIN_OVERLAP,
   CLUSTER_LABEL_TIMEOUT,
 } from "../../config/constants";
 import type {
   ArticleData,
   ClusterLabelingOptions,
+  PreviousClusterLabel,
 } from "../../types/knowledgeMap";
+
+const FALLBACK_LABEL = /^Cluster -?\d+$/;
+
+/**
+ * Carry labels over from the previous map. k-means isn't seeded, so cluster
+ * IDs reshuffle on every run — match by membership instead: each new cluster
+ * takes the label of the previous cluster it shares the most posts with
+ * (Jaccard on post slugs), if the overlap clears `minOverlap`. Each previous
+ * label is used at most once, best matches first.
+ */
+export function matchPreviousLabels(
+  clusters: Map<number, string[]>,
+  previous: PreviousClusterLabel[],
+  minOverlap = CLUSTER_LABEL_REUSE_MIN_OVERLAP
+): Map<number, string> {
+  const candidates: { clusterId: number; prev: number; score: number }[] = [];
+  const prevSets = previous.map((p) => new Set(p.slugs));
+
+  for (const [clusterId, slugs] of clusters) {
+    if (clusterId === -1) continue;
+    prevSets.forEach((prevSet, prev) => {
+      if (FALLBACK_LABEL.test(previous[prev].label)) return;
+      const shared = slugs.filter((s) => prevSet.has(s)).length;
+      const score = shared / (slugs.length + prevSet.size - shared);
+      if (score >= minOverlap) candidates.push({ clusterId, prev, score });
+    });
+  }
+
+  candidates.sort((a, b) => b.score - a.score);
+  const matched = new Map<number, string>();
+  const usedPrev = new Set<number>();
+  for (const { clusterId, prev } of candidates) {
+    if (matched.has(clusterId) || usedPrev.has(prev)) continue;
+    matched.set(clusterId, previous[prev].label);
+    usedPrev.add(prev);
+  }
+  return matched;
+}
 
 /**
  * Pick evenly-spaced samples across the cluster's time range.
@@ -76,37 +115,45 @@ Reply with ONLY the label, nothing else:`;
 }
 
 /**
- * Call Anthropic API with retry logic to generate a cluster label
+ * Call OpenRouter (OpenAI-compatible chat API) with retry logic to generate a cluster label
  */
-async function callAnthropicForLabel(
+async function callModelForLabel(
   prompt: string,
   model: string
 ): Promise<string> {
   return withRetry(
     async () => {
-      const client = getAnthropicClient();
-
-      const message = await client.messages.create({
-        model,
-        max_tokens: 50,
-        messages: [
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model,
+          // headroom for reasoning models; the label itself is a few tokens
+          max_tokens: 1000,
+          reasoning: { exclude: true },
+          messages: [{ role: "user", content: prompt }],
+        }),
       });
 
-      // Extract text from response
-      let label =
-        message.content[0].type === "text"
-          ? message.content[0].text.trim()
-          : "";
+      if (!res.ok) {
+        throw Object.assign(
+          new Error(`OpenRouter ${res.status}: ${await res.text()}`),
+          { status: res.status }
+        );
+      }
 
-      // Take only the first line (in case Claude adds explanation)
+      const data = (await res.json()) as {
+        choices?: { message?: { content?: string } }[];
+      };
+      let label = data.choices?.[0]?.message?.content?.trim() ?? "";
+
+      // Take only the first line (in case the model adds explanation)
       label = label.split("\n")[0].trim();
 
-      // Clean up markdown formatting that Claude might add
+      // Clean up markdown formatting the model might add
       label = label
         .replace(/^\*\*(.+)\*\*$/, "$1") // Remove **bold**
         .replace(/^["'](.+)["']$/, "$1") // Remove quotes
@@ -131,7 +178,7 @@ async function callAnthropicForLabel(
         // Retry on rate limits, timeouts, overloaded errors
         return Boolean(
           err?.status === 429 ||
-            err?.status === 529 ||
+            (err?.status ?? 0) >= 500 ||
             err?.message?.includes("timeout") ||
             err?.message?.includes("overloaded")
         );
@@ -148,34 +195,56 @@ async function callAnthropicForLabel(
 }
 
 /**
- * Generate semantic labels for clusters using Anthropic API
+ * Generate semantic labels for clusters using an OpenRouter model
+ *
+ * Clusters that match one from the previous map keep its label; only the rest
+ * are sent to the model (and only when OPENROUTER_API_KEY is set).
  *
  * @param clusters - Map of cluster ID to array of articles in that cluster
  * @param options - Configuration options
- * @returns Map of cluster ID to label string, or null if labeling failed
+ * @returns Map of cluster ID to label string
  */
 export async function labelClusters(
   clusters: Map<number, ArticleData[]>,
   options: ClusterLabelingOptions = {}
-): Promise<Map<number, string> | null> {
+): Promise<Map<number, string>> {
   const {
     maxSamplesPerCluster = CLUSTER_LABEL_MAX_SAMPLES,
-    model = ANTHROPIC_CLUSTER_MODEL,
+    model = CLUSTER_LABEL_MODEL,
+    previous = [],
   } = options;
 
-  console.log(`\nLabeling ${clusters.size} clusters with Claude...`);
+  const labels = matchPreviousLabels(
+    new Map(
+      Array.from(clusters, ([id, articles]) => [
+        id,
+        articles.map((a) => a.postSlug),
+      ])
+    ),
+    previous
+  );
+  if (clusters.has(-1)) labels.set(-1, "Uncategorized");
 
-  const labels = new Map<number, string>();
-  const clusterIds = Array.from(clusters.keys()).sort((a, b) => a - b);
+  const unlabeled = Array.from(clusters.keys())
+    .filter((id) => !labels.has(id))
+    .sort((a, b) => a - b);
 
-  for (const clusterId of clusterIds) {
+  console.log(
+    `\nReused ${clusters.size - unlabeled.length}/${clusters.size} cluster labels from the previous map`
+  );
+  if (unlabeled.length === 0) return labels;
+
+  if (!process.env.OPENROUTER_API_KEY) {
+    console.warn(
+      `⚠️  OPENROUTER_API_KEY not set, leaving ${unlabeled.length} clusters unlabeled`
+    );
+    return labels;
+  }
+
+  console.log(`Labeling ${unlabeled.length} clusters with ${model}...`);
+
+  for (const clusterId of unlabeled) {
     const articles = clusters.get(clusterId)!;
-
-    // Skip noise cluster (-1)
-    if (clusterId === -1) {
-      labels.set(clusterId, "Uncategorized");
-      continue;
-    }
 
     try {
       // Sample articles
@@ -185,7 +254,7 @@ export async function labelClusters(
       const prompt = buildClusterPrompt(articles, samples);
 
       // Call API
-      const label = await callAnthropicForLabel(prompt, model);
+      const label = await callModelForLabel(prompt, model);
 
       labels.set(clusterId, label);
       console.log(

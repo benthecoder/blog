@@ -127,9 +127,6 @@ const StartPage = () => {
             {" if you're feeling lucky)"}
           </span>
         </p>
-        <p className="text-sm">
-          how this corner is made: <Link href="/colophon">colophon</Link>.
-        </p>
       </article>
 
       <div className="h-[60vh] mt-8 overflow-hidden border border-rule dark:border-white/8">
