@@ -48,7 +48,7 @@
     "d3-zoom": "^3.0.0",
     "dotenv": "^16.4.5",
     "github-slugger": "^2.0.0",
-    "gray-matter": "^4.0.3",
+    "js-yaml": "5.4.1",
     "katex": "^0.16.22",
     "lucide-react": "^1.18.0",
     "ml-kmeans": "^6.0.0",

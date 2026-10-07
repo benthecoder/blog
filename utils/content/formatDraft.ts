@@ -1,4 +1,4 @@
-import matter from "gray-matter";
+import { parseFrontmatter } from "@/utils/content/frontmatter";
 
 // Normalizes a draft's markdown to the house style seen in published posts.
 // Pure and idempotent: format(format(x)) === format(x).
@@ -64,7 +64,7 @@ function formatFrontmatter(raw: string, md: string): string {
     else preamble.push(line);
   }
 
-  const date = formatDate(matter(md).data.date);
+  const date = formatDate(parseFrontmatter(md).data.date);
   const rank = (key: string) => {
     const i = FM_ORDER.indexOf(key);
     return i === -1 ? FM_ORDER.length : i;
