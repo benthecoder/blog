@@ -1,30 +1,9 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const ADMIN_COOKIE = "admin_session";
+import { ADMIN_COOKIE, verifyAdminSession } from "@/utils/adminAuth";
 
-// Must match sessionToken() in utils/adminAuth.ts. Recomputed here with Web
-// Crypto because proxy code can't rely on node:crypto.
-async function sessionToken(secret: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-  const signature = await crypto.subtle.sign(
-    "HMAC",
-    key,
-    encoder.encode(ADMIN_COOKIE)
-  );
-  return Array.from(new Uint8Array(signature))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-export async function proxy(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   // Admin is a local authoring tool; dev runs unauthenticated, same as
@@ -43,10 +22,7 @@ export async function proxy(request: NextRequest) {
 
   const secret = process.env.ADMIN_SECRET;
   const cookie = request.cookies.get(ADMIN_COOKIE)?.value;
-  const authorized =
-    Boolean(secret) &&
-    Boolean(cookie) &&
-    cookie === (await sessionToken(secret!));
+  const authorized = secret && cookie && verifyAdminSession(cookie, secret);
 
   if (authorized) {
     return NextResponse.next();
