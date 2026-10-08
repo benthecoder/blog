@@ -39,7 +39,7 @@ export function EditorFooter({
         <Link href={prevHref} className={navCls}>
           <ChevronLeft size={14} />
           <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-            Previous
+            previous
           </span>
         </Link>
       ) : (
@@ -55,7 +55,7 @@ export function EditorFooter({
       {nextHref ? (
         <Link href={nextHref} className={navCls}>
           <span className="opacity-0 group-hover:opacity-100 transition-opacity">
-            Next
+            next
           </span>
           <ChevronRight size={14} />
         </Link>

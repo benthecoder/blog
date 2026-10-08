@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ImageOff, Loader2, Plus, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ImageOff, Loader2, X } from "lucide-react";
+
+import { PHOTO_TRANSFER_TYPE, photoFileUrl } from "@/utils/photoTransfer";
+import { PhotoPreview } from "./PhotoPreview";
 
 type Photo = { id: string; name: string; time: string };
-
-const fileUrl = (id: string, size: "thumb" | "full") =>
-  `/api/admin/photos/file?id=${encodeURIComponent(id)}&size=${size}`;
 
 /** "IMG_1234.HEIC" -> "img-1234", matching the drop handler's default name. */
 const slugifyName = (filename: string) =>
@@ -30,8 +30,8 @@ const statusCls = "text-xs text-center text-ink-soft dark:text-chalk-muted";
 
 /**
  * Photos taken on the draft's date. The day fetch writes the thumbnails, so
- * every tile can render at once; clicking one hands a large JPEG to the
- * existing crop/name/upload flow.
+ * every tile can render at once. Clicking previews; Insert hands a large JPEG
+ * to the existing crop/name/upload flow.
  */
 export function PhotoPanel({
   date,
@@ -47,53 +47,72 @@ export function PhotoPanel({
   const [status, setStatus] = useState<"ok" | "not-built" | "denied">("ok");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [previewId, setPreviewId] = useState<string | null>(null);
   const [picking, setPicking] = useState<string | null>(null);
+  const [reload, setReload] = useState(0);
+  const pickRequest = useRef<AbortController | null>(null);
 
   // Reset-and-load on date change: a fetch keyed to the prop is effect-driven.
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
     setLoading(true);
     setError("");
     setPhotos([]);
+    setPreviewId(null);
+    setPicking(null);
 
     (async () => {
       try {
         const res = await fetch(
-          `/api/admin/photos?date=${encodeURIComponent(date)}`
+          `/api/admin/photos?date=${encodeURIComponent(date)}`,
+          { signal: controller.signal }
         );
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data: { status: typeof status; photos: Photo[] } =
           await res.json();
-        if (cancelled) return;
+        if (controller.signal.aborted) return;
         setStatus(data.status);
         setPhotos(data.photos);
       } catch (err) {
-        if (!cancelled) setError(`Couldn't load photos (${err})`);
+        if (!controller.signal.aborted)
+          setError(`Couldn't load photos (${err})`);
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     })();
 
     return () => {
-      cancelled = true;
+      controller.abort();
+      pickRequest.current?.abort();
+      pickRequest.current = null;
     };
-  }, [date]);
+  }, [date, reload]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   const handlePick = async (photo: Photo) => {
-    if (picking) return;
+    if (pickRequest.current) return;
+    const controller = new AbortController();
+    pickRequest.current = controller;
+    setError("");
     setPicking(photo.id);
     try {
-      const res = await fetch(fileUrl(photo.id, "full"));
+      const res = await fetch(photoFileUrl(photo.id, "full"), {
+        signal: controller.signal,
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const blob = await res.blob();
+      if (controller.signal.aborted) return;
       const name = slugifyName(photo.name);
+      setPreviewId(null);
       onPick(new File([blob], `${name}.jpg`, { type: "image/jpeg" }), name);
     } catch (err) {
-      setError(`Couldn't fetch photo (${err})`);
+      if (!controller.signal.aborted) setError(`Couldn't fetch photo (${err})`);
     } finally {
-      setPicking(null);
+      if (pickRequest.current === controller) {
+        pickRequest.current = null;
+        setPicking(null);
+      }
     }
   };
 
@@ -101,12 +120,12 @@ export function PhotoPanel({
 
   return (
     <aside
-      style={{ height: "calc(100vh - 4rem)" }}
-      className="w-80 shrink-0 flex flex-col border-r border-rule dark:border-night-rule"
+      aria-label="Photos from this day"
+      className="fixed bottom-0 right-0 z-30 h-[70dvh] w-full sm:w-80 shadow-[0_-8px_24px_rgb(0_0_0/0.08)] lg:shadow-none lg:static lg:h-dvh lg:z-auto shrink-0 flex flex-col border-l border-t lg:border-t-0 lg:border-r border-rule dark:border-night-rule bg-paper dark:bg-night"
     >
-      <div className="h-[55px] shrink-0 border-b border-rule dark:border-night-rule px-4 flex items-center justify-between">
-        <span className="text-xs text-ink-soft dark:text-chalk-muted uppercase tracking-wider">
-          Photos · {formatDay(date)}
+      <div className="h-14 shrink-0 border-b border-rule dark:border-night-rule px-4 flex items-center justify-between">
+        <span className="text-xs text-ink-soft dark:text-chalk-muted lowercase">
+          photos · {formatDay(date)}
           {photos.length > 0 && (
             <span className="ml-1.5 tabular-nums text-ink-muted dark:text-chalk-muted/70">
               {photos.length}
@@ -115,7 +134,7 @@ export function PhotoPanel({
         </span>
         <button
           onClick={onClose}
-          className="p-1.5 rounded-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90"
+          className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90"
           title="Close"
           aria-label="Close photos"
         >
@@ -137,7 +156,18 @@ export function PhotoPanel({
           </div>
         )}
         {error && (
-          <p className="text-xs text-red-600 dark:text-red-500 mb-2">{error}</p>
+          <div className="mb-2 text-xs" role="alert">
+            <p className="text-red-600 dark:text-red-500">{error}</p>
+            {!loading && photos.length === 0 && (
+              <button
+                type="button"
+                onClick={() => setReload((value) => value + 1)}
+                className="min-h-11 underline underline-offset-2 text-ink dark:text-chalk focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                try again
+              </button>
+            )}
+          </div>
         )}
         {empty && (
           <>
@@ -165,45 +195,98 @@ export function PhotoPanel({
           </>
         )}
 
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-3">
           {photos.map((photo) => (
-            <button
-              key={photo.id}
-              onClick={() => handlePick(photo)}
-              disabled={picking !== null}
-              className="text-left group disabled:cursor-wait focus:outline-none"
-              title={photo.name}
-              aria-label={`Insert ${photo.name}, taken ${photo.time}`}
-            >
-              <div className="aspect-square rounded-sm outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-ink dark:group-focus-visible:outline-chalk bg-paper-sunken dark:bg-night-raised overflow-hidden relative transition-[scale] duration-150 ease-out group-active:scale-[0.96]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={fileUrl(photo.id, "thumb")}
-                  alt=""
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                />
-                <span className="absolute bottom-1 left-1 flex items-center gap-0.5 rounded-xs px-1.5 py-0.5 text-[10px] bg-ink text-paper dark:bg-chalk dark:text-night opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-150">
-                  <Plus size={10} aria-hidden />
-                  Insert
+            <div key={photo.id} className="min-w-0 group/tile">
+              <button
+                type="button"
+                onClick={() => {
+                  setError("");
+                  setPreviewId(photo.id);
+                }}
+                draggable={picking === null}
+                onDragStart={(event) => {
+                  event.dataTransfer.effectAllowed = "copy";
+                  const payload = JSON.stringify({
+                    kind: "blog-photo",
+                    id: photo.id,
+                    name: photo.name,
+                  });
+                  event.dataTransfer.setData(PHOTO_TRANSFER_TYPE, payload);
+                  event.dataTransfer.setData("text/plain", payload);
+                }}
+                disabled={picking !== null}
+                className="w-full text-left group disabled:cursor-wait focus-visible:outline-none"
+                title="Preview or drag into the text"
+                aria-label={`Preview ${photo.name}, taken ${photo.time}`}
+              >
+                <div className="aspect-square rounded-sm outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-ink dark:group-focus-visible:outline-chalk bg-paper-sunken dark:bg-night-raised overflow-hidden relative transition-[scale] duration-150 ease-out motion-safe:group-active:scale-[0.96]">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={photoFileUrl(photo.id, "thumb")}
+                    alt=""
+                    loading="lazy"
+                    draggable={false}
+                    className="w-full h-full object-cover"
+                  />
+                  {picking === photo.id && (
+                    <span className="absolute inset-0 flex items-center justify-center bg-paper/60 dark:bg-night/60">
+                      <Loader2
+                        size={18}
+                        className="motion-safe:animate-spin text-ink dark:text-chalk"
+                        aria-hidden
+                      />
+                    </span>
+                  )}
+                </div>
+              </button>
+              <div className="flex items-center justify-between gap-1">
+                <span className="text-[11px] tabular-nums text-ink-soft dark:text-chalk-muted">
+                  {photo.time}
                 </span>
-                {picking === photo.id && (
-                  <span className="absolute inset-0 flex items-center justify-center bg-paper/60 dark:bg-night/60">
-                    <Loader2
-                      size={18}
-                      className="motion-safe:animate-spin text-ink dark:text-chalk"
-                      aria-hidden
-                    />
-                  </span>
-                )}
+                <button
+                  type="button"
+                  onClick={() => handlePick(photo)}
+                  disabled={picking !== null}
+                  aria-label={`Insert ${photo.name}`}
+                  className="min-h-11 min-w-11 px-1 text-xs text-ink dark:text-chalk hover:underline disabled:opacity-30 pointer-fine:opacity-0 pointer-fine:group-hover/tile:opacity-100 pointer-fine:focus-visible:opacity-100 transition-opacity focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+                >
+                  insert
+                </button>
               </div>
-              <div className="text-[11px] tabular-nums text-ink-soft dark:text-chalk-muted mt-1">
-                {photo.time}
-              </div>
-            </button>
+            </div>
           ))}
         </div>
       </div>
+      {previewId &&
+        photos.some((photo) => photo.id === previewId) &&
+        (() => {
+          const index = photos.findIndex((photo) => photo.id === previewId);
+          return (
+            <PhotoPreview
+              photo={photos[index]}
+              busy={picking !== null}
+              error={error}
+              hasPrevious={index > 0}
+              hasNext={index < photos.length - 1}
+              onPrevious={() => {
+                setError("");
+                setPreviewId(photos[index - 1].id);
+              }}
+              onNext={() => {
+                setError("");
+                setPreviewId(photos[index + 1].id);
+              }}
+              onInsert={() => handlePick(photos[index])}
+              onClose={() => {
+                pickRequest.current?.abort();
+                pickRequest.current = null;
+                setPicking(null);
+                setPreviewId(null);
+              }}
+            />
+          );
+        })()}
     </aside>
   );
 }

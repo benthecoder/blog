@@ -1,8 +1,16 @@
 import { PERIOD_LABELS, type PeriodKind } from "@/utils/digest/schedule";
+import { EditorPopover } from "@/components/admin/EditorPopover";
 
 type Choice = PeriodKind | "blank";
-
 const CHOICES: Choice[] = ["blank", "weekly", "monthly", "quarterly"];
+const spans: Record<Choice, string> = {
+  blank: "day",
+  weekly: "week",
+  monthly: "month",
+  quarterly: "quarter",
+};
+const title = (choice: Choice) =>
+  choice === "blank" ? "daily" : PERIOD_LABELS[choice];
 
 export function TemplatePicker({
   value,
@@ -12,31 +20,57 @@ export function TemplatePicker({
 }: {
   value: Choice;
   loading: boolean;
-  /** Templates that fit this date, shown with a dot. */
   suggested: PeriodKind[];
   onChange: (choice: Choice) => void;
 }) {
   return (
-    <div
-      className={`flex items-center gap-1 text-xs ${loading ? "opacity-60" : ""}`}
+    <EditorPopover
+      label={loading ? "loading…" : title(value)}
+      name="Choose post template"
+      disabled={loading}
     >
-      {CHOICES.map((c) => (
-        <button
-          key={c}
-          type="button"
-          disabled={loading}
-          onClick={() => onChange(c)}
-          aria-pressed={value === c}
-          className={`px-2 py-0.5 transition-colors ${
-            value === c
-              ? "bg-ink text-paper dark:bg-chalk dark:text-night"
-              : "text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
-          }`}
-        >
-          {c === "blank" ? "daily" : PERIOD_LABELS[c]}
-          {c !== "blank" && suggested.includes(c) && value !== c ? " •" : ""}
-        </button>
-      ))}
-    </div>
+      {(close) => (
+        <>
+          <p className="px-2 pb-2 text-[11px] text-ink-muted dark:text-chalk-muted">
+            start with
+          </p>
+          <div
+            role="group"
+            aria-label="Post template"
+            className="divide-y divide-rule dark:divide-night-rule"
+          >
+            {CHOICES.map((choice) => (
+              <button
+                key={choice}
+                type="button"
+                aria-pressed={value === choice}
+                onClick={() => {
+                  close();
+                  onChange(choice);
+                }}
+                className="w-full py-3 px-2 flex items-baseline justify-between gap-3 text-left hover:bg-paper-sunken dark:hover:bg-night focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+              >
+                <span
+                  className={
+                    value === choice
+                      ? "italic text-ink-strong dark:text-chalk-strong"
+                      : ""
+                  }
+                >
+                  {title(choice)}
+                </span>
+                <span className="text-[10px] text-ink-muted dark:text-chalk-muted">
+                  {choice !== "blank" && suggested.includes(choice)
+                    ? "today · "
+                    : ""}
+                  {spans[choice]}
+                  {value === choice ? " ✓" : ""}
+                </span>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </EditorPopover>
   );
 }

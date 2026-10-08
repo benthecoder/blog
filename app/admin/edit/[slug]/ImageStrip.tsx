@@ -19,11 +19,12 @@ export function ImageStrip({
   return (
     <div className="border-b border-rule dark:border-night-rule px-6 py-3 bg-paper dark:bg-night-raised/50">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs text-ink-soft dark:text-chalk-muted uppercase tracking-wider">
-          Images ({images.length})
+        <span className="text-xs text-ink-soft dark:text-chalk-muted lowercase">
+          images · {images.length}
         </span>
         <button
           onClick={onClose}
+          aria-label="Close images"
           className="text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
         >
           <X size={14} />
