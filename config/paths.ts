@@ -2,13 +2,6 @@ import path from "path";
 
 const ROOT_DIR = process.cwd();
 
-export const OG_FONT_PATH = path.join(
-  ROOT_DIR,
-  "app",
-  "og",
-  "AveriaSerifLibre-Bold.ttf"
-);
-
 export const POSTS_DIR = path.join(ROOT_DIR, "posts");
 export const DRAFTS_DIR = path.join(POSTS_DIR, "drafts");
 export const WIKI_DIR = path.join(ROOT_DIR, "wiki");
