@@ -195,9 +195,6 @@ importers:
       '@types/sanitize-html':
         specifier: ^2.16.2
         version: 2.16.2
-      '@types/unist':
-        specifier: ^3.0.3
-        version: 3.0.3
       '@typescript/native':
         specifier: npm:typescript@7.0.2
         version: typescript@7.0.2
