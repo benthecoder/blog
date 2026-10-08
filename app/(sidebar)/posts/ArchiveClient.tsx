@@ -43,6 +43,7 @@ export default function ArchiveClient({
   const pathname = usePathname();
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState<Sort>("date");
+  const [prefetchTag, setPrefetchTag] = useState<string | null>(null);
   const [viewCounts, setViewCounts] = useState<Map<string, number> | null>(
     null
   );
@@ -257,6 +258,9 @@ export default function ArchiveClient({
             <Link
               href={`/tags/${tag}`}
               key={tag}
+              prefetch={prefetchTag === tag ? null : false}
+              onMouseEnter={() => setPrefetchTag(tag)}
+              onFocus={() => setPrefetchTag(tag)}
               className="border border-rule dark:border-night-raised hover:bg-ink/5 dark:hover:bg-chalk/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors duration-150"
             >
               <span className="text-xs text-ink dark:text-chalk truncate">
