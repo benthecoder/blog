@@ -23,6 +23,7 @@ const links = [
 export function SidebarNav() {
   const pathname = usePathname();
   const [spinning, setSpinning] = useState(false);
+  const [prefetchPath, setPrefetchPath] = useState<string | null>(null);
   const spinTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -84,10 +85,17 @@ export function SidebarNav() {
           <Link
             key={path}
             href={path}
+            prefetch={
+              path !== "/random" && prefetchPath === path ? null : false
+            }
             className={`inline-flex w-8 h-8 lg:w-11 lg:h-11 transition-opacity ${
               pathname === path ? "opacity-50" : "hover:opacity-70"
             }`}
-            onMouseEnter={(e) => handleMouseEnter(e, text)}
+            onMouseEnter={(e) => {
+              setPrefetchPath(path);
+              handleMouseEnter(e, text);
+            }}
+            onFocus={() => setPrefetchPath(path)}
             onMouseLeave={() => setHoveredLink(null)}
             onClick={
               path === "/random"

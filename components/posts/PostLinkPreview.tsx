@@ -110,6 +110,7 @@ const PostLinkPreview = ({
     <>
       <Link
         href={`/posts/${slug}`}
+        prefetch={isOpen ? null : false}
         ref={refs.setReference}
         onPointerMove={handlePointerMove}
         className={className}
