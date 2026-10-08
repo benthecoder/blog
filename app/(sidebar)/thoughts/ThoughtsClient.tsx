@@ -1,11 +1,24 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useEffectEvent } from "react";
 import type { ReactNode } from "react";
+import { fetchThoughtPage } from "@/utils/thoughtsPage";
 import type { Thought } from "@/types/thoughts";
 
 const TZ = "America/New_York";
 const PAGE_SIZE = 100;
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: TZ,
+  year: "2-digit",
+  month: "2-digit",
+  day: "2-digit",
+});
+const timeFormatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: TZ,
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
 
 function parseContent(content: string): ReactNode[] {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -40,15 +53,11 @@ export default function ThoughtsClient({
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialThoughts.length === PAGE_SIZE);
   const observerRef = useRef<HTMLDivElement>(null);
+  const pendingRequest = useRef<AbortController | null>(null);
 
   const groupedByDate = thoughts.reduce(
     (acc, entry) => {
-      const dateStr = new Date(entry.created_at).toLocaleDateString("en-US", {
-        timeZone: TZ,
-        year: "2-digit",
-        month: "2-digit",
-        day: "2-digit",
-      });
+      const dateStr = dateFormatter.format(new Date(entry.created_at));
       (acc[dateStr] ??= []).push(entry);
       return acc;
     },
@@ -57,17 +66,20 @@ export default function ThoughtsClient({
 
   const dates = Object.keys(groupedByDate);
 
-  // Stable identity required: dep of the IntersectionObserver effect below
-  const loadMore = useCallback(async () => {
-    if (loading || !hasMore) return;
+  // Read current pagination state without reconnecting the observer whenever
+  // loading toggles. Failed pages can retry after leaving/re-entering view.
+  const loadMore = useEffectEvent(async () => {
+    if (pendingRequest.current || !hasMore) return;
+    const controller = new AbortController();
+    pendingRequest.current = controller;
+    const timeout = setTimeout(() => controller.abort(), 10_000);
 
     setLoading(true);
     try {
       const lastId = thoughts[thoughts.length - 1]?.id;
-      const response = await fetch(
-        `/api/thoughts?cursor=${lastId}&limit=${PAGE_SIZE}`
-      );
-      const newThoughts: Thought[] = await response.json();
+      if (lastId === undefined) return;
+      const newThoughts = await fetchThoughtPage(lastId, controller.signal);
+      if (controller.signal.aborted) return;
 
       if (newThoughts.length > 0) {
         setThoughts((prev) => [...prev, ...newThoughts]);
@@ -76,16 +88,23 @@ export default function ThoughtsClient({
         setHasMore(false);
       }
     } catch (error) {
-      console.error("Error loading more thoughts:", error);
+      if (!controller.signal.aborted) {
+        console.error("Error loading more thoughts:", error);
+      }
     } finally {
+      clearTimeout(timeout);
+      pendingRequest.current = null;
       setLoading(false);
     }
-  }, [loading, hasMore, thoughts]);
+  });
+
+  useEffect(() => () => pendingRequest.current?.abort(), []);
 
   useEffect(() => {
+    if (!hasMore) return;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
+        if (entries[0].isIntersecting) {
           loadMore();
         }
       },
@@ -97,7 +116,7 @@ export default function ThoughtsClient({
     }
 
     return () => observer.disconnect();
-  }, [hasMore, loading, loadMore]);
+  }, [hasMore, thoughts.length]);
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
@@ -112,15 +131,7 @@ export default function ThoughtsClient({
 
             <div className="space-y-6">
               {groupedByDate[date].map((entry) => {
-                const time = new Date(entry.created_at).toLocaleString(
-                  "en-GB",
-                  {
-                    timeZone: TZ,
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: false,
-                  }
-                );
+                const time = timeFormatter.format(new Date(entry.created_at));
 
                 return (
                   <div key={entry.id} className="flex gap-4 items-baseline">
