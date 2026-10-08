@@ -1,6 +1,6 @@
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import type { Components } from "react-markdown";
-import { codeToHtml } from "shiki";
+import { codeToHtml } from "@/utils/codeHighlighting";
 import { getPostPreviewData, postSlugFromHref } from "@/utils/content/preview";
 import CopyButton from "./CopyButton";
 import PostLinkPreview from "./PostLinkPreview";
