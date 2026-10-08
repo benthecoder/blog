@@ -6,7 +6,9 @@ import type { LinkSource } from "../types";
 export const tweets: LinkSource = {
   name: "tweets",
   async fetch(since, until) {
-    const sql = neon(process.env.POSTGRES_URL!);
+    const sql = neon(process.env.POSTGRES_URL!, {
+      fetchOptions: { signal: AbortSignal.timeout(10_000) },
+    });
     const rows = (await sql`
       SELECT content, link, link_title, created_at
       FROM tweets

@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 
-const sql = neon(process.env.POSTGRES_URL!);
-
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
@@ -24,6 +22,11 @@ export async function GET(request: NextRequest) {
       : 100;
 
     const cursor = rawCursor !== null ? Number(rawCursor) : null;
+    const sql = neon(process.env.POSTGRES_URL!, {
+      fetchOptions: {
+        signal: AbortSignal.any([request.signal, AbortSignal.timeout(10_000)]),
+      },
+    });
 
     const thoughts =
       cursor !== null
