@@ -126,6 +126,12 @@ export async function POST(request: Request) {
   }
   // JSON transport avoids depending on the driver's PostgreSQL array encoding.
   const tagsJson = JSON.stringify(tags);
+  // The database deadline starts before embedding and is shared by fallback reads.
+  const queryOptions = {
+    fetchOptions: {
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(20_000)]),
+    },
+  };
   try {
     if (searchType === "keyword") {
       const processedQuery = prepareSearchQuery(query, "&");
@@ -152,7 +158,8 @@ export async function POST(request: Request) {
         ORDER BY is_title_match DESC, keyword_score DESC
         LIMIT $2
         `,
-        [processedQuery, SEARCH_RESULT_LIMIT, tagsJson, chunkType]
+        [processedQuery, SEARCH_RESULT_LIMIT, tagsJson, chunkType],
+        queryOptions
       );
 
       if (results.length === 0) {
@@ -210,7 +217,8 @@ export async function POST(request: Request) {
           SEARCH_RESULT_LIMIT,
           tagsJson,
           chunkType,
-        ]
+        ],
+        queryOptions
       );
 
       if (results.length > 0) {
@@ -241,7 +249,8 @@ export async function POST(request: Request) {
           SEARCH_FALLBACK_LIMIT,
           tagsJson,
           chunkType,
-        ]
+        ],
+        queryOptions
       );
 
       return NextResponse.json({
@@ -266,7 +275,8 @@ export async function POST(request: Request) {
         SEARCH_RESULT_LIMIT,
         tagsJson,
         chunkType,
-      ]
+      ],
+      queryOptions
     );
 
     if (results.length > 0) {
@@ -284,7 +294,8 @@ export async function POST(request: Request) {
           AND ($4::text IS NULL OR chunk_type = $4::text)
         ORDER BY vector_similarity DESC LIMIT $2
         `,
-      [formattedEmbedding, SEARCH_FALLBACK_LIMIT, tagsJson, chunkType]
+      [formattedEmbedding, SEARCH_FALLBACK_LIMIT, tagsJson, chunkType],
+      queryOptions
     );
 
     return NextResponse.json({
