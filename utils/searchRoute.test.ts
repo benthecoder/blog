@@ -60,6 +60,23 @@ describe("search request boundary", () => {
     expect(mocks.query).not.toHaveBeenCalled();
     expect(mocks.client).not.toHaveBeenCalled();
   });
+  it("rejects oversized tag arrays before reading their elements", async () => {
+    const tags = Array.from({ length: 21 });
+    Object.defineProperty(tags, "0", {
+      get() {
+        throw new Error("Oversized arrays must not be traversed");
+      },
+    });
+    const input = request({ query: "jazz" });
+    vi.spyOn(input, "json").mockResolvedValue({ query: "jazz", tags });
+    const response = await POST(input);
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({
+      error: "Tags must be up to 20 strings of 1–99 characters",
+    });
+    expect(mocks.query).not.toHaveBeenCalled();
+    expect(mocks.client).not.toHaveBeenCalled();
+  });
   it("rejects malformed JSON", async () => {
     expect(
       (
