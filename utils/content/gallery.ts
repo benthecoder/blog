@@ -60,9 +60,13 @@ export async function getGalleryImages(): Promise<GalleryImage[]> {
     return dates.length ? Math.min(...dates) : 0;
   };
 
+  const postTimes = new Map(
+    images.map((image) => [image.filename, postTime(image)])
+  );
+
   return images.sort((a, b) => {
-    const ta = postTime(a);
-    const tb = postTime(b);
+    const ta = postTimes.get(a.filename)!;
+    const tb = postTimes.get(b.filename)!;
     if (ta !== tb) return ta - tb;
     return a.filename.localeCompare(b.filename);
   });
