@@ -58,6 +58,7 @@ async function refreshAccessToken(): Promise<{ access_token: string }> {
       refresh_token,
     }),
     cache: "no-store",
+    signal: AbortSignal.timeout(10_000),
   });
 
   const data = await response.json();
@@ -89,6 +90,7 @@ async function fetchRecentlyPlayed(limit: number) {
       Authorization: `Bearer ${access_token}`,
     },
     cache: "no-store",
+    signal: AbortSignal.timeout(10_000),
   });
 
   if (!response.ok) {
