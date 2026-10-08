@@ -60,7 +60,10 @@ export default function ArchiveClient({
     if (viewCounts !== null || viewsLoading) return;
     setViewsLoading(true);
     fetch("/api/views")
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error("Failed to fetch view counts");
+        return r.json();
+      })
       .then((d) => {
         const map = new Map<string, number>(
           (d.results ?? []).map((r: { slug: string; count: number }) => [
@@ -70,7 +73,9 @@ export default function ArchiveClient({
         );
         setViewCounts(map);
       })
-      .catch(() => setViewCounts(new Map()))
+      .catch(() => {
+        // Keep counts uncached so selecting views again can retry.
+      })
       .finally(() => setViewsLoading(false));
   };
 
