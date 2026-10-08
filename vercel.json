@@ -1,0 +1,4 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "ignoreCommand": "[ \"$VERCEL_ENV\" = production ] && exit 1; printf '%s' \"$VERCEL_GIT_COMMIT_MESSAGE\" | grep -qF '[preview]' && exit 1; exit 0"
+}
