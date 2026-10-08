@@ -20,11 +20,21 @@ export const curius: LinkSource = {
   name: "curius",
   async fetch(since, until) {
     const out = [];
+    // Bound the whole pagination run as well as each request/body read.
+    const deadline = AbortSignal.timeout(30_000);
     for (let page = 0; page < MAX_PAGES; page++) {
+      deadline.throwIfAborted();
       const res = await fetch(
-        `https://curius.app/api/users/${USER_ID}/links?page=${page}`
+        `https://curius.app/api/users/${USER_ID}/links?page=${page}`,
+        {
+          cache: "no-store",
+          signal: AbortSignal.any([deadline, AbortSignal.timeout(10_000)]),
+        }
       );
-      if (!res.ok) throw new Error(`curius ${res.status}`);
+      if (!res.ok) {
+        await res.body?.cancel();
+        throw new Error(`curius ${res.status}`);
+      }
       const { userSaved }: { userSaved: CuriusLink[] } = await res.json();
       if (!userSaved?.length) break;
 
