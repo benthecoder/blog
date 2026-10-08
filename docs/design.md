@@ -9,6 +9,4 @@
 - Dithering and small drawing interactions are part of the intended direction. An unwired experiment is not automatically dead code.
 - Guestbook is deferred.
 
-The admin writing desk has its own notes in [admin-editor.md](admin-editor.md).
-
 References: [UI Skills](https://www.ui-skills.com/), [better-ui](https://www.ui-skills.com/skills/jakubkrehel/better-ui). Apply the guidance to this site's evidence; do not import a different visual style.
