@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import { revalidatePath } from "next/cache";
 
 const sql = neon(process.env.POSTGRES_URL!);
 
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
   try {
     const result =
       await sql`INSERT INTO tweets(content, link, link_title, created_at) VALUES(${content}, ${link}, ${title}, NOW()) RETURNING *`;
+    revalidatePath("/thoughts");
     return new Response(JSON.stringify({ error: null, tweet: result[0] }), {
       status: 200,
     });
@@ -53,6 +55,7 @@ export async function DELETE(request: Request) {
 
   try {
     await sql`DELETE FROM tweets WHERE id = ${id}`;
+    revalidatePath("/thoughts");
     return new Response(null, { status: 204 });
   } catch (err) {
     console.error(err);
