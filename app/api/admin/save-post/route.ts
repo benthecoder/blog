@@ -1,27 +1,43 @@
 import fs from "fs";
+import { z } from "zod";
 import { writeMarkdownFile } from "@/utils/content/markdown";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { getPostPath, getDraftPath, isSafeSlug } from "@/config/paths";
 
+const postSaveSchema = z.object({
+  slug: z.string().min(1).refine(isSafeSlug),
+  title: z.string().min(1),
+  tags: z.union([z.string(), z.array(z.string())]).optional(),
+  date: z.string().optional(),
+  content: z.string(),
+  isNew: z.boolean().optional(),
+});
+
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
   if (authError) return authError;
+  let input: unknown;
   try {
-    const { slug, title, tags, date, content, isNew } = await request.json();
+    input = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+  const parsed = postSaveSchema.safeParse(input);
+  if (!parsed.success) {
+    return NextResponse.json(
+      {
+        error:
+          parsed.error.issues[0]?.path[0] === "slug"
+            ? "Invalid slug"
+            : "Invalid post fields",
+      },
+      { status: 400 }
+    );
+  }
+  const { slug, title, tags, date, content, isNew } = parsed.data;
 
-    if (!slug || !title) {
-      return NextResponse.json(
-        { error: "Slug and title required" },
-        { status: 400 }
-      );
-    }
-
-    // Security: prevent path traversal
-    if (!isSafeSlug(slug)) {
-      return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
-    }
-
+  try {
     const publishedPath = getPostPath(slug);
     const draftPath = getDraftPath(slug);
 
