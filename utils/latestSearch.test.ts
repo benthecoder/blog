@@ -40,8 +40,11 @@ describe("latest search response", () => {
     });
     expect(fetcher.mock.calls[0][1].signal.aborted).toBe(true);
     expect(second?.results).toEqual([result]);
-    old.resolve(response());
+    const oldResponse = response();
+    const parseOldResponse = vi.spyOn(oldResponse, "json");
+    old.resolve(oldResponse);
     expect(await first).toBeNull();
+    expect(parseOldResponse).not.toHaveBeenCalled();
     expect(JSON.parse(fetcher.mock.calls[1][1].body)).toEqual({
       query: "new",
       searchType: "keyword",
