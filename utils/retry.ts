@@ -17,11 +17,23 @@ const RETRIABLE_ERROR_CODES = [
 const RETRIABLE_ERROR_MESSAGES = ["timeout", "network", "rate limit"];
 
 function isRetriableError(error: unknown): boolean {
-  const e = error as Record<string, unknown> | null;
-  if ((e?.response as Record<string, unknown>)?.status === 429) return true;
-  if (e?.code && RETRIABLE_ERROR_CODES.includes(e.code as string)) return true;
-  const errorMessage = ((e?.message as string | undefined) ?? "").toLowerCase();
-  return RETRIABLE_ERROR_MESSAGES.some((msg) => errorMessage.includes(msg));
+  const e = error as {
+    status?: unknown;
+    statusCode?: unknown;
+    response?: { status?: unknown };
+    code?: unknown;
+    message?: unknown;
+  } | null;
+  const status = e?.statusCode ?? e?.status ?? e?.response?.status;
+  if (
+    status === 429 ||
+    (typeof status === "number" && status >= 500 && status < 600)
+  )
+    return true;
+  if (typeof e?.code === "string" && RETRIABLE_ERROR_CODES.includes(e.code))
+    return true;
+  const message = typeof e?.message === "string" ? e.message.toLowerCase() : "";
+  return RETRIABLE_ERROR_MESSAGES.some((part) => message.includes(part));
 }
 
 interface RetryOptions {
@@ -33,7 +45,7 @@ interface RetryOptions {
 }
 
 export async function withRetry<T>(
-  operation: () => Promise<T>,
+  operation: (signal: AbortSignal) => Promise<T>,
   options: RetryOptions = {}
 ): Promise<T> {
   const {
@@ -48,10 +60,25 @@ export async function withRetry<T>(
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error("Request timed out")), timeout);
-      });
-      return await Promise.race([operation(), timeoutPromise]);
+      const controller = new AbortController();
+      let timer: ReturnType<typeof setTimeout> | undefined;
+      try {
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          timer = setTimeout(() => {
+            const error = Object.assign(new Error("Request timed out"), {
+              code: "ETIMEDOUT",
+            });
+            controller.abort(error);
+            reject(error);
+          }, timeout);
+        });
+        return await Promise.race([
+          operation(controller.signal),
+          timeoutPromise,
+        ]);
+      } finally {
+        clearTimeout(timer);
+      }
     } catch (error) {
       lastError = error;
       if (attempt >= maxRetries || !shouldRetry(error)) throw error;
@@ -72,7 +99,7 @@ export async function withRetry<T>(
 }
 
 export async function withEmbeddingRetry<T>(
-  operation: () => Promise<T>
+  operation: (signal: AbortSignal) => Promise<T>
 ): Promise<T> {
   return withRetry(operation, {
     onRetry: (error, attempt, delay) => {

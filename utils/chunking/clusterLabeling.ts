@@ -122,9 +122,10 @@ async function callModelForLabel(
   model: string
 ): Promise<string> {
   return withRetry(
-    async () => {
+    async (signal) => {
       const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
+        signal,
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           "Content-Type": "application/json",
@@ -175,10 +176,15 @@ async function callModelForLabel(
       maxRetries: 3,
       timeout: CLUSTER_LABEL_TIMEOUT,
       shouldRetry: (error: unknown) => {
-        const err = error as { status?: number; message?: string };
+        const err = error as {
+          status?: number;
+          message?: string;
+          code?: string;
+        };
         // Retry on rate limits, timeouts, overloaded errors
         return Boolean(
-          err?.status === 429 ||
+          err?.code === "ETIMEDOUT" ||
+            err?.status === 429 ||
             (err?.status ?? 0) >= 500 ||
             err?.message?.includes("timeout") ||
             err?.message?.includes("overloaded")
