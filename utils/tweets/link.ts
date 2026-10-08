@@ -1,4 +1,3 @@
-const MAX_HTML = 200_000;
 const MAX_TITLE = 300;
 
 const BLOCKED_HOST =
@@ -50,30 +49,4 @@ export function extractTitle(html: string): string | null {
   if (!m) return null;
   const title = decodeEntities(m[1]).replace(/\s+/g, " ").trim();
   return title ? title.slice(0, MAX_TITLE) : null;
-}
-
-/** Fetch a page and return its <title>, reading at most ~200KB. */
-export async function fetchTitle(url: string): Promise<string | null> {
-  try {
-    const res = await fetch(url, {
-      signal: AbortSignal.timeout(4000),
-      headers: { "User-Agent": "Mozilla/5.0" },
-      redirect: "manual",
-    });
-    if (!res.ok || !res.body) return null;
-
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let html = "";
-    while (html.length < MAX_HTML) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      html += decoder.decode(value, { stream: true });
-      if (/<\/title>/i.test(html)) break;
-    }
-    await reader.cancel().catch(() => {});
-    return extractTitle(html);
-  } catch {
-    return null;
-  }
 }
