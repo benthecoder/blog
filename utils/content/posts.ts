@@ -19,19 +19,23 @@ function calculateWordCount(content: string): number {
 }
 
 export function getAllPosts(includeDrafts = false): string[] {
-  function getMarkdownFiles(dir: string): string[] {
-    const entries = fs.readdirSync(dir, { withFileTypes: true });
-    return entries.reduce<string[]>((files, entry) => {
+  const files: string[] = [];
+  function collect(dir: string): void {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       const fullPath = path.join(dir, entry.name);
-      if (entry.isDirectory()) return [...files, ...getMarkdownFiles(fullPath)];
-      if (entry.name.endsWith(".md")) return [...files, fullPath];
-      return files;
-    }, []);
+      if (entry.isDirectory()) {
+        if (includeDrafts || entry.name !== "drafts") collect(fullPath);
+      } else if (
+        entry.name.endsWith(".md") &&
+        (includeDrafts ||
+          (!fullPath.includes("/drafts/") && !fullPath.includes("\\drafts\\")))
+      ) {
+        files.push(fullPath);
+      }
+    }
   }
-  const all = getMarkdownFiles(POSTS_DIR);
-  return includeDrafts
-    ? all
-    : all.filter((f) => !f.includes("/drafts/") && !f.includes("\\drafts\\"));
+  collect(POSTS_DIR);
+  return files;
 }
 
 export const getPostContent = cache(function getPostContent(slug: string) {
