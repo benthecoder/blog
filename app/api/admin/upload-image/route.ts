@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import sharp from "sharp";
+import sharp, { type Sharp, type Metadata } from "sharp";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   if (authError) return authError;
   try {
     const formData = await request.formData();
-    const file = formData.get("file") as File;
+    const file = formData.get("file");
     const customName = formData.get("name") as string | null;
     const published = formData.get("published") === "true";
 
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    if (!file) {
+    if (!(file instanceof File)) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
@@ -42,61 +42,57 @@ export async function POST(request: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const originalName = file.name;
-    const ext = path.extname(originalName).toLowerCase();
 
-    // Always use .jpg for images to avoid Vercel Image Optimization limits
+    // Uploaded photos use one consistent JPEG encoding.
     const fileName = customName ? `${customName}.jpg` : `${Date.now()}.jpg`;
 
-    // Always compress and convert to JPEG for Vercel free tier optimization
-    let output: Buffer;
-    if ([".jpg", ".jpeg", ".png", ".webp", ".gif"].includes(ext)) {
-      const image = sharp(buffer);
-      const metadata = await image.metadata();
-
-      // Auto-rotate based on EXIF orientation
-      let processor = image.rotate();
-
-      // Orientations 5-8 are quarter turns, so .rotate() swaps the axes. The
-      // crop arrived in the browser's coordinates, and browsers display the
-      // already-oriented image — so compare against the post-rotation size.
-      const turned = (metadata.orientation ?? 1) >= 5;
-      const srcW = (turned ? metadata.height : metadata.width) ?? 0;
-      const srcH = (turned ? metadata.width : metadata.height) ?? 0;
-
-      // Cut the requested region straight out of the original: cropping in
-      // the browser first would have meant a second lossy JPEG pass.
-      if (crop && srcW && srcH) {
-        const left = Math.max(0, Math.min(Math.round(crop.x), srcW - 1));
-        const top = Math.max(0, Math.min(Math.round(crop.y), srcH - 1));
-        const width = Math.max(
-          1,
-          Math.min(Math.round(crop.width), srcW - left)
-        );
-        const height = Math.max(
-          1,
-          Math.min(Math.round(crop.height), srcH - top)
-        );
-        processor = processor.extract({ left, top, width, height });
-      }
-
-      // Resize to max 1600px width to save bandwidth. Measured on the cropped
-      // region, not the original, or a crop out of a large photo would be
-      // shrunk on the strength of pixels that were thrown away.
-      const widthAfterCrop = crop ? Math.round(crop.width) : srcW;
-      if (widthAfterCrop > 1600) {
-        processor = processor.resize(1600, null, {
-          fit: "inside",
-          withoutEnlargement: true,
-        });
-      }
-
-      output = await processor
-        .jpeg({ quality: 90, progressive: true, mozjpeg: true })
-        .toBuffer();
-    } else {
-      output = buffer;
+    // Inspect the bytes, not the filename: every stored .jpg must be a JPEG.
+    let image: Sharp;
+    let metadata: Metadata;
+    try {
+      image = sharp(buffer);
+      metadata = await image.metadata();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid or unsupported image" },
+        { status: 400 }
+      );
     }
+
+    // Auto-rotate based on EXIF orientation
+    let processor = image.rotate();
+
+    // Orientations 5-8 are quarter turns, so .rotate() swaps the axes. The
+    // crop arrived in the browser's coordinates, and browsers display the
+    // already-oriented image — so compare against the post-rotation size.
+    const turned = (metadata.orientation ?? 1) >= 5;
+    const srcW = (turned ? metadata.height : metadata.width) ?? 0;
+    const srcH = (turned ? metadata.width : metadata.height) ?? 0;
+
+    // Cut the requested region straight out of the original: cropping in
+    // the browser first would have meant a second lossy JPEG pass.
+    if (crop && srcW && srcH) {
+      const left = Math.max(0, Math.min(Math.round(crop.x), srcW - 1));
+      const top = Math.max(0, Math.min(Math.round(crop.y), srcH - 1));
+      const width = Math.max(1, Math.min(Math.round(crop.width), srcW - left));
+      const height = Math.max(1, Math.min(Math.round(crop.height), srcH - top));
+      processor = processor.extract({ left, top, width, height });
+    }
+
+    // Resize to max 1600px width to save bandwidth. Measured on the cropped
+    // region, not the original, or a crop out of a large photo would be
+    // shrunk on the strength of pixels that were thrown away.
+    const widthAfterCrop = crop ? Math.round(crop.width) : srcW;
+    if (widthAfterCrop > 1600) {
+      processor = processor.resize(1600, null, {
+        fit: "inside",
+        withoutEnlargement: true,
+      });
+    }
+
+    const output = await processor
+      .jpeg({ quality: 90, progressive: true, mozjpeg: true })
+      .toBuffer();
 
     // Drafts stage locally and get promoted to R2 by publish-post. A post
     // that is already published never runs that step again, so its images
