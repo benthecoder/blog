@@ -1,6 +1,6 @@
 import type { SearchResultItem, SearchType } from "@/types/search";
 import type { ChunkType } from "@/types/chunks";
-import { parseSearchCache } from "./searchCache";
+import { validateSearchResults } from "./searchResults";
 
 export interface SearchInput {
   query: string;
@@ -37,11 +37,13 @@ export class LatestSearch {
           chunkType: input.chunkType || undefined,
         }),
       });
+      if (generation !== this.generation) return null;
       if (!response.ok) throw new Error("Search unavailable");
       const data = await response.json();
-      const results = parseSearchCache(JSON.stringify(data.results));
+      if (generation !== this.generation) return null;
+      const results = validateSearchResults(data.results);
       if (!results) throw new Error("Invalid search response");
-      return generation === this.generation ? { results, error: "" } : null;
+      return { results, error: "" };
     } catch {
       return generation === this.generation
         ? { results: [], error: "Search unavailable. Try again." }

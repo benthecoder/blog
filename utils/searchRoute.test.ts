@@ -9,6 +9,8 @@ vi.mock("@neondatabase/serverless", () => ({
   neon: () => ({ query: mocks.query }),
 }));
 vi.mock("@/utils/clients", () => ({ getVoyageClient: mocks.client }));
+vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
+vi.mock("server-only", () => ({}));
 import { POST } from "@/app/api/search/route";
 
 const row = {
@@ -33,7 +35,7 @@ beforeEach(() => {
   mocks.query.mockReset().mockResolvedValue([row]);
   mocks.embed
     .mockReset()
-    .mockResolvedValue({ data: [{ embedding: [0.1, 0.2] }] });
+    .mockResolvedValue({ data: [{ embedding: Array(1024).fill(0.1) }] });
   mocks.client.mockImplementation(() => ({ embed: mocks.embed }));
 });
 
@@ -55,6 +57,23 @@ describe("search request boundary", () => {
     { query: "jazz", chunkType: "section' OR TRUE" },
   ])("rejects invalid input before external services: %j", async (body) => {
     expect((await POST(request(body))).status).toBe(400);
+    expect(mocks.query).not.toHaveBeenCalled();
+    expect(mocks.client).not.toHaveBeenCalled();
+  });
+  it("rejects oversized tag arrays before reading their elements", async () => {
+    const tags = Array.from({ length: 21 });
+    Object.defineProperty(tags, "0", {
+      get() {
+        throw new Error("Oversized arrays must not be traversed");
+      },
+    });
+    const input = request({ query: "jazz" });
+    vi.spyOn(input, "json").mockResolvedValue({ query: "jazz", tags });
+    const response = await POST(input);
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({
+      error: "Tags must be up to 20 strings of 1–99 characters",
+    });
     expect(mocks.query).not.toHaveBeenCalled();
     expect(mocks.client).not.toHaveBeenCalled();
   });
@@ -132,9 +151,14 @@ describe("parameterized search filters", () => {
     expect((await response.json()).results[0].score_type).toBe("hybrid");
   });
   it("reports missing embeddings without querying the database", async () => {
+    const log = vi.spyOn(console, "error").mockImplementation(() => {});
     mocks.embed.mockResolvedValue({ data: [] });
-    expect((await POST(request({ query: "jazz" }))).status).toBe(500);
-    expect(mocks.query).not.toHaveBeenCalled();
+    try {
+      expect((await POST(request({ query: "jazz" }))).status).toBe(500);
+      expect(mocks.query).not.toHaveBeenCalled();
+    } finally {
+      log.mockRestore();
+    }
   });
   it("does not expose database errors to visitors", async () => {
     const log = vi.spyOn(console, "error").mockImplementation(() => {});

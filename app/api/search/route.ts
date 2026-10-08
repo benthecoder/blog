@@ -1,6 +1,7 @@
+import { z } from "zod";
 import { neon } from "@neondatabase/serverless";
 import { NextResponse } from "next/server";
-import { getVoyageClient } from "@/utils/clients";
+import { getSearchEmbedding } from "@/utils/searchEmbedding";
 import { formatEmbeddingForPostgres } from "@/utils/chunking/embeddingUtils";
 import {
   SEARCH_RESULT_LIMIT,
@@ -9,7 +10,6 @@ import {
   SEMANTIC_SIMILARITY_THRESHOLD_STRICT,
   HYBRID_VECTOR_WEIGHT,
   HYBRID_KEYWORD_WEIGHT,
-  VOYAGE_MODEL,
 } from "@/config/constants";
 
 const sql = neon(process.env.POSTGRES_URL!);
@@ -67,6 +67,34 @@ function prepareSearchQuery(input: string, operator = "&"): string {
   return terms.map((t) => t + ":*").join(` ${operator} `);
 }
 
+const searchRequestSchema = z.object({
+  query: z
+    .string()
+    .max(2000)
+    .refine((query) => query.trim().length > 0)
+    .transform((query) => query.trim()),
+  searchType: z
+    .enum(["keyword", "semantic", "hybrid"])
+    .nullish()
+    .transform((value) => value ?? "hybrid"),
+  // Reject oversized arrays before Zod traverses their elements.
+  tags: z
+    .custom<unknown[]>((value) => Array.isArray(value) && value.length <= 20)
+    .pipe(z.array(z.string().min(1).max(99)))
+    .nullish()
+    .transform((value) => value ?? []),
+  chunkType: z
+    .enum(["full-post", "section", "quote", "code"])
+    .nullish()
+    .transform((value) => value ?? null),
+});
+const searchValidationErrors: Record<string, string> = {
+  query: "Query must contain 1–2000 characters",
+  searchType: 'Invalid search type. Use "keyword", "semantic", or "hybrid"',
+  tags: "Tags must be up to 20 strings of 1–99 characters",
+  chunkType: "Invalid chunk type",
+};
+
 export async function POST(request: Request) {
   let body: unknown;
   try {
@@ -74,56 +102,20 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
-  if (!body || typeof body !== "object" || Array.isArray(body)) {
+  const parsed = searchRequestSchema.safeParse(body);
+  if (!parsed.success) {
+    const field = parsed.error.issues[0]?.path[0];
     return NextResponse.json(
-      { error: "Expected a search request" },
+      {
+        error:
+          typeof field === "string"
+            ? searchValidationErrors[field]
+            : "Expected a search request",
+      },
       { status: 400 }
     );
   }
-  const input = body as Record<string, unknown>;
-  if (
-    typeof input.query !== "string" ||
-    !input.query.trim() ||
-    input.query.length > 2000
-  ) {
-    return NextResponse.json(
-      { error: "Query must contain 1–2000 characters" },
-      { status: 400 }
-    );
-  }
-  const query = input.query.trim();
-  const searchType = input.searchType ?? "hybrid";
-  if (
-    typeof searchType !== "string" ||
-    !["keyword", "semantic", "hybrid"].includes(searchType)
-  ) {
-    return NextResponse.json(
-      { error: 'Invalid search type. Use "keyword", "semantic", or "hybrid"' },
-      { status: 400 }
-    );
-  }
-  const tags = input.tags ?? [];
-  if (
-    !Array.isArray(tags) ||
-    tags.length > 20 ||
-    !tags.every(
-      (tag: unknown) =>
-        typeof tag === "string" && tag.length > 0 && tag.length < 100
-    )
-  ) {
-    return NextResponse.json(
-      { error: "Tags must be up to 20 strings of 1–99 characters" },
-      { status: 400 }
-    );
-  }
-  const chunkType = input.chunkType ?? null;
-  if (
-    chunkType !== null &&
-    (typeof chunkType !== "string" ||
-      !["full-post", "section", "quote", "code"].includes(chunkType))
-  ) {
-    return NextResponse.json({ error: "Invalid chunk type" }, { status: 400 });
-  }
+  const { query, searchType, tags, chunkType } = parsed.data;
   // JSON transport avoids depending on the driver's PostgreSQL array encoding.
   const tagsJson = JSON.stringify(tags);
   try {
@@ -167,24 +159,14 @@ export async function POST(request: Request) {
       });
     }
 
-    const queryEmbedding = await getVoyageClient().embed({
-      model: VOYAGE_MODEL,
-      input: query,
-      inputType: "document",
-    });
-
-    if (!queryEmbedding?.data?.[0]?.embedding) {
-      return NextResponse.json(
-        { error: "Failed to generate embedding for query" },
-        { status: 500 }
-      );
-    }
-
     const formattedEmbedding = formatEmbeddingForPostgres(
-      queryEmbedding.data[0].embedding
+      await getSearchEmbedding(query)
     );
 
     if (searchType === "hybrid") {
+      // Split the unfiltered text/vector OR so text matching can use its GIN
+      // index. Selective tag filters already prune cheaply with the old plan.
+      // Only fixed SQL fragments vary here; all input values remain parameters.
       const results = await sql.query(
         `
         WITH RankedResults AS (
@@ -192,8 +174,20 @@ export async function POST(request: Request) {
             1 - (embedding <=> $1::vector) as vector_similarity,
             ts_rank(to_tsvector('english', content || ' ' || post_title), plainto_tsquery('english', $2)) as text_rank
           FROM content_chunks
-          WHERE (to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', $2)
-            OR 1 - (embedding <=> $1::vector) > $3)
+          WHERE ${
+            tags.length
+              ? `(to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', $2)
+                  OR 1 - (embedding <=> $1::vector) > $3)`
+              : `id IN (
+                  SELECT id FROM content_chunks
+                  WHERE to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', $2)
+                    AND ($8::text IS NULL OR chunk_type = $8::text)
+                  UNION
+                  SELECT id FROM content_chunks
+                  WHERE 1 - (embedding <=> $1::vector) > $3
+                    AND ($8::text IS NULL OR chunk_type = $8::text)
+                )`
+          }
             AND ($7::jsonb = '[]'::jsonb OR metadata->'tags' ?| ARRAY(SELECT jsonb_array_elements_text($7::jsonb)))
             AND ($8::text IS NULL OR chunk_type = $8::text)
         )

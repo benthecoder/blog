@@ -8,7 +8,7 @@ if (!process.env.POSTGRES_URL) {
 }
 
 // Now import modules that depend on environment variables
-import { processAllPosts } from "@/utils/chunking/processAllPosts";
+import { processAllPosts, processPost } from "@/utils/chunking/processPosts";
 import { neon } from "@neondatabase/serverless";
 const sql = neon(process.env.POSTGRES_URL!);
 import { randomUUID } from "crypto";
@@ -115,25 +115,15 @@ async function embedWithRetry(texts: string[]): Promise<EmbeddingResponse> {
 }
 
 async function generateEmbeddingsForSingleFile(
-  filePath: string
+  input: string
 ): Promise<EmbeddingResult> {
-  // Remove .md extension if it exists
-  const normalizedFilePath = filePath.endsWith(".md")
-    ? filePath.substring(0, filePath.length - 3)
-    : filePath;
-
-  const posts = await processAllPosts();
-  const post = posts.find((p) => p.filePath === normalizedFilePath);
-
-  if (!post) {
-    console.error(`File ${normalizedFilePath} not found`);
-    return { successfulChunks: 0, failedChunks: 0 };
-  }
+  const post = await processPost(input);
+  const filePath = post.filePath;
 
   // Delete existing embeddings for this post before generating new ones
   try {
-    console.log(`Removing previous embeddings for ${normalizedFilePath}...`);
-    await sql`DELETE FROM content_chunks WHERE post_slug = ${normalizedFilePath}`;
+    console.log(`Removing previous embeddings for ${filePath}...`);
+    await sql`DELETE FROM content_chunks WHERE post_slug = ${filePath}`;
     console.log(chalk.green(`Previous embeddings removed`));
   } catch (error) {
     console.error("Error removing previous embeddings:", error);

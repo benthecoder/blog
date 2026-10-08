@@ -6,6 +6,12 @@ import {
   parseFrontmatter,
   stringifyFrontmatter,
 } from "@/utils/content/frontmatter";
+import {
+  draftRecoveryKey,
+  readDraftBackup,
+  writeDraftBackup,
+  removeDraftBackup,
+} from "@/utils/content/draftRecovery";
 import { DEFAULT_POST_TEMPLATE } from "../post-template";
 import { suggestPeriods, type PeriodKind } from "@/utils/digest/schedule";
 
@@ -18,6 +24,7 @@ interface UsePostDraftArgs {
   confirmAction: (
     title: string,
     message: string,
+    labels: [cancel: string, confirm: string],
     onConfirm: () => void
   ) => void;
   /** Surface a status message in the top bar. */
@@ -38,6 +45,15 @@ export function usePostDraft({
   confirmAction,
   notify,
 }: UsePostDraftArgs) {
+  const dateParam = isNew ? searchParams.get("date") : null;
+  const recoveryKey = draftRecoveryKey(slug, dateParam);
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const loading = loadedKey !== recoveryKey;
+  const [backupAvailable, setBackupAvailable] = useState(true);
+  const latestMarkdownRef = useRef("");
+  const saveInFlight = useRef(false);
+  const wasDirtyRef = useRef(false);
+  const templateRequestRef = useRef<AbortController | null>(null);
   const [date, setDate] = useState("");
   const [markdown, setMarkdown] = useState("");
   const [saving, setSaving] = useState(false);
@@ -58,13 +74,18 @@ export function usePostDraft({
     dateParam: string,
     formattedDate: string
   ) {
+    templateRequestRef.current?.abort();
+    const controller = new AbortController();
+    templateRequestRef.current = controller;
     const apply = (md: string) => {
+      if (controller.signal.aborted) return;
       setMarkdown(md);
       initialContentRef.current = { markdown: md };
       setTemplate(kind);
     };
 
     if (kind === "blank") {
+      setTemplateLoading(false);
       apply(DEFAULT_POST_TEMPLATE.replace("date:", `date: ${formattedDate}`));
       return;
     }
@@ -72,7 +93,8 @@ export function usePostDraft({
     setTemplateLoading(true);
     try {
       const res = await fetch(
-        `/api/admin/period-template?kind=${kind}&date=${dateParam}`
+        `/api/admin/period-template?kind=${kind}&date=${dateParam}`,
+        { signal: controller.signal }
       );
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
@@ -84,9 +106,10 @@ export function usePostDraft({
         })
       );
     } catch (err) {
-      notify(`✗ Template: ${err instanceof Error ? err.message : err}`);
+      if (!controller.signal.aborted)
+        notify(`✗ Template: ${err instanceof Error ? err.message : err}`);
     } finally {
-      setTemplateLoading(false);
+      if (!controller.signal.aborted) setTemplateLoading(false);
     }
   }
 
@@ -96,8 +119,9 @@ export function usePostDraft({
     const run = () => loadTemplate(kind, dateParam, date);
     if (hasUnsavedChanges) {
       confirmAction(
-        "Replace content",
-        "Switching template replaces what you've typed. Continue?",
+        "replace your writing?",
+        "Switching template replaces what you've typed.",
+        ["keep mine", "replace"],
         run
       );
     } else {
@@ -133,9 +157,9 @@ export function usePostDraft({
   }, [slug, isNew]);
 
   // Prev/next dates for new posts: pure function of the date param
-  const dateParam = isNew ? searchParams.get("date") : null;
   const shiftDate = (base: string, days: number) => {
-    const d = new Date(base);
+    const [year, month, day] = base.split("-").map(Number);
+    const d = new Date(year, month - 1, day);
     d.setDate(d.getDate() + days);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   };
@@ -146,12 +170,41 @@ export function usePostDraft({
   // editor; inherently effect-driven.
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    const draftKey = `draft-${slug}`;
+    const draftKey = recoveryKey;
+    const controller = new AbortController();
+    setLoadedKey(null);
+    setTemplateLoading(false);
+    wasDirtyRef.current = false;
+    const offerRecovery = (formattedDate: string, baseline: string) => {
+      const backup =
+        readDraftBackup(draftKey) ??
+        (isNew ? readDraftBackup("draft-new") : null);
+      if (
+        !backup ||
+        backup.date !== formattedDate ||
+        backup.markdown === baseline
+      )
+        return false;
+      confirmAction(
+        "restore unsaved writing?",
+        `This browser kept a copy from ${new Date(backup.timestamp).toLocaleString()} that was never saved to the file.`,
+        ["not now", "restore"],
+        () => setMarkdown(backup.markdown)
+      );
+      return true;
+    };
 
     if (!isNew) {
-      fetch(`/api/admin/get-post?slug=${slug}`)
-        .then((res) => res.json())
+      fetch(`/api/admin/get-post?slug=${encodeURIComponent(slug)}`, {
+        signal: controller.signal,
+      })
+        .then(async (res) => {
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Could not load post");
+          return data;
+        })
         .then((data) => {
+          if (controller.signal.aborted) return;
           const rawContent = stringifyFrontmatter(data.content, {
             title: data.title,
             tags: data.tags,
@@ -161,10 +214,15 @@ export function usePostDraft({
           setDate(data.date);
           setIsDraft(data.isDraft ?? false);
           initialContentRef.current = { markdown: rawContent };
+          offerRecovery(data.date, rawContent);
+          setLoadedKey(recoveryKey);
         })
-        .catch((err) => console.error("Error loading post:", err));
+        .catch((err) => {
+          if (!controller.signal.aborted)
+            notify(`✗ Load failed: ${err.message}`);
+        });
     } else {
-      const newDateParam = searchParams.get("date");
+      const newDateParam = dateParam;
       if (newDateParam) {
         const [year, month, day] = newDateParam.split("-");
         const dateObj = new Date(
@@ -188,23 +246,8 @@ export function usePostDraft({
         // new-post page reports unsaved changes before any typing happens.
         initialContentRef.current = { markdown: templateWithDate };
 
-        let hasSavedDraft = false;
-        const savedDraft = localStorage.getItem(draftKey);
-        if (savedDraft) {
-          const draft = JSON.parse(savedDraft);
-          // Only show the draft if it's from the same date
-          if (draft.date === formattedDate) {
-            hasSavedDraft = true;
-            confirmAction(
-              "Draft Found",
-              `Found unsaved draft from ${new Date(draft.timestamp).toLocaleString()}. Restore it?`,
-              () => setMarkdown(draft.markdown)
-            );
-          } else {
-            // Remove outdated draft from different date
-            localStorage.removeItem(draftKey);
-          }
-        }
+        const hasSavedDraft = offerRecovery(formattedDate, templateWithDate);
+        setLoadedKey(recoveryKey);
 
         // Sundays, month ends and quarter ends open with their own template
         // (unless a saved draft is waiting to be restored).
@@ -212,15 +255,26 @@ export function usePostDraft({
           ? undefined
           : suggestPeriods(dateObj)[0];
         if (suggested) loadTemplate(suggested, newDateParam, formattedDate);
+      } else {
+        setMarkdown(DEFAULT_POST_TEMPLATE);
+        initialContentRef.current = { markdown: DEFAULT_POST_TEMPLATE };
+        offerRecovery("", DEFAULT_POST_TEMPLATE);
+        setLoadedKey(recoveryKey);
       }
     }
+    return () => {
+      controller.abort();
+      templateRequestRef.current?.abort();
+    };
     // confirmAction/notify are page-level helpers, not load triggers
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug, isNew, searchParams]);
+  }, [slug, isNew, dateParam, recoveryKey]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   // Stable identity required: dep of the cmd+S keydown effect below
   const handleSave = useCallback(async () => {
+    if (loading || templateLoading || saveInFlight.current) return false;
+    saveInFlight.current = true;
     setSaving(true);
     notify("");
 
@@ -261,33 +315,55 @@ export function usePostDraft({
 
       if (response.ok) {
         notify("✓ Saved!", true);
-        setHasUnsavedChanges(false);
+        setHasUnsavedChanges(latestMarkdownRef.current !== markdown);
         setIsDraft(data.isDraft ?? isDraft);
 
-        const draftKey = `draft-${slugToUse}`;
-        localStorage.removeItem(draftKey);
+        if (latestMarkdownRef.current === markdown) {
+          removeDraftBackup(draftRecoveryKey(slug, searchParams.get("date")));
+          removeDraftBackup(`draft-${slugToUse}`);
+          if (isNew) {
+            const legacy = readDraftBackup("draft-new");
+            if (legacy?.date === date) removeDraftBackup("draft-new");
+          }
+        }
         initialContentRef.current = { markdown };
 
+        if (latestMarkdownRef.current !== markdown) {
+          notify("✓ Saved earlier version; newer edits still need saving");
+          return false;
+        }
         if (isNew) {
           router.push(`/admin/edit/${data.slug}`);
         }
+        return true;
       } else {
         notify(`✗ Error: ${data.error}`);
       }
     } catch (error) {
       notify(`✗ Error: ${error}`);
     } finally {
+      saveInFlight.current = false;
       setSaving(false);
     }
+    return false;
     // notify is a page-level helper with stable behavior
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug, isNew, searchParams, date, markdown, router, isDraft]);
+  }, [
+    slug,
+    isNew,
+    searchParams,
+    date,
+    markdown,
+    router,
+    isDraft,
+    loading,
+    templateLoading,
+  ]);
 
   const handlePublish = async () => {
-    // Save first if there are unsaved changes
-    if (hasUnsavedChanges) {
-      await handleSave();
-    }
+    if (loading || saving || publishing || isNew) return;
+    // Publishing must stop when the preceding save fails.
+    if (hasUnsavedChanges && !(await handleSave())) return;
 
     setPublishing(true);
     notify("");
@@ -352,8 +428,9 @@ export function usePostDraft({
 
   const handleDelete = () => {
     confirmAction(
-      "Delete Post",
-      "Are you sure you want to delete this post? This action cannot be undone.",
+      "delete this post?",
+      "The file is removed and this can't be undone.",
+      ["keep", "delete"],
       async () => {
         setDeleting(true);
         notify("");
@@ -389,19 +466,25 @@ export function usePostDraft({
 
   // Track unsaved changes + back up the draft to localStorage
   useEffect(() => {
+    latestMarkdownRef.current = markdown;
+    if (loading) return;
     const hasChanged = markdown !== initialContentRef.current.markdown;
     setHasUnsavedChanges(hasChanged);
 
     if (hasChanged) {
-      const draftKey = `draft-${slug}`;
+      const draftKey = recoveryKey;
       const draft = {
         markdown,
         timestamp: Date.now(),
         date,
       };
-      localStorage.setItem(draftKey, JSON.stringify(draft));
+      setBackupAvailable(writeDraftBackup(draftKey, draft));
+    } else if (wasDirtyRef.current) {
+      // Undone back to the saved text: the copy no longer holds anything.
+      removeDraftBackup(recoveryKey);
     }
-  }, [markdown, slug, date]);
+    wasDirtyRef.current = hasChanged;
+  }, [markdown, recoveryKey, date, loading]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -428,8 +511,9 @@ export function usePostDraft({
         e.stopPropagation();
 
         confirmAction(
-          "Unsaved Changes",
-          "You have unsaved changes. Are you sure you want to leave?",
+          "leave without saving?",
+          "Your unsaved changes stay in this browser's copy, not the file.",
+          ["stay", "leave"],
           () => {
             // Temporarily disable beforeunload warning before navigating
             setHasUnsavedChanges(false);
@@ -464,6 +548,8 @@ export function usePostDraft({
 
   return {
     date,
+    loading,
+    backupAvailable,
     markdown,
     setMarkdown,
     saving,

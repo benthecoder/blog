@@ -2,28 +2,61 @@ name: Generate Blog Post Embeddings
 
 permissions:
   contents: read
+  actions: read
 
 on:
   push:
     paths:
       - "posts/*.md"
-    branches:
-      - main # or your default branch
+    branches: [main]
   workflow_dispatch:
+    inputs:
+      rebuild_all:
+        description: "Regenerate every published post (uses Voyage credits)"
+        type: boolean
+        default: false
+
+# Keep the active writer alive. Pending runs may be replaced, so each run catches
+# up from the last successful sync rather than only processing its own push.
+concurrency:
+  group: blog-embedding-sync
+  cancel-in-progress: false
 
 jobs:
   generate-embeddings:
     runs-on: ubuntu-latest
-
-    env:
-      POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
-      VOYAGE_AI_API_KEY: ${{ secrets.VOYAGE_AI_API_KEY }}
-
     steps:
-      - name: Checkout repository
+      - name: Checkout latest main
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch all history to get changed files
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Find last successful sync
+        id: baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUSH_BEFORE: ${{ github.event.before }}
+          REBUILD_ALL: ${{ inputs.rebuild_all }}
+        run: |
+          if [[ "$REBUILD_ALL" == "true" ]]; then
+            echo "argument=--all" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          base=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/generate-embeddings.yml/runs?status=success&branch=main&per_page=1" --jq '.workflow_runs[0].head_sha // empty')
+          base="${base:-$PUSH_BEFORE}"
+          if [[ ! "$base" =~ ^[a-fA-F0-9]{40}$ || "$base" =~ ^0+$ ]]; then
+            echo "No successful sync baseline; select rebuild_all for the first manual run."
+            exit 1
+          fi
+          if ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            if ! git fetch --no-tags origin "$base"; then
+              echo "Previous sync commit is unavailable; select rebuild_all to establish a new baseline."
+              exit 1
+            fi
+          fi
+          echo "argument=$base" >> "$GITHUB_OUTPUT"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -33,38 +66,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 24
           cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Get changed files
-        id: changed-files
-        uses: tj-actions/changed-files@v46.0.1
-        with:
-          files: "posts/*.md"
-          separator: "\n"
-
-      - name: Generate embeddings for changed files
-        if: steps.changed-files.outputs.any_changed == 'true'
+      - name: Sync changed and deleted posts
         env:
-          CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
-        run: |
-          while IFS= read -r file; do
-            [[ -z "$file" ]] && continue
-            if [[ ! "$file" =~ ^posts/([a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)*)\.md$ ]]; then
-              echo "Skipping unsupported post filename"
-              continue
-            fi
-            echo "Processing: $file"
-            slug="${BASH_REMATCH[1]}"
-            npx tsx scripts/generateEmbeddings.ts "$slug"
-          done <<< "$CHANGED_FILES"
-
-      - name: Trigger Vercel deployment to update knowledge map
-        if: steps.changed-files.outputs.any_changed == 'true'
-        env:
-          VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOKS }}
-        run: |
-          curl --fail --silent --show-error -X POST "$VERCEL_DEPLOY_HOOK"
+          EMBEDDING_ARGUMENT: ${{ steps.baseline.outputs.argument }}
+          POSTGRES_URL: ${{ secrets.POSTGRES_URL }}
+          VOYAGE_AI_API_KEY: ${{ secrets.VOYAGE_AI_API_KEY }}
+        run: pnpm exec tsx scripts/syncPostEmbeddings.ts "$EMBEDDING_ARGUMENT"
