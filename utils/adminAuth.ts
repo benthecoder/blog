@@ -17,6 +17,10 @@ export function sessionToken(secret: string): string {
   return crypto.createHmac("sha256", secret).update(ADMIN_COOKIE).digest("hex");
 }
 
+export function verifyAdminSession(token: string, secret: string): boolean {
+  return safeEqual(token, sessionToken(secret));
+}
+
 export function checkAdminAuth(request: NextRequest): NextResponse | null {
   if (process.env.NODE_ENV !== "production") return null;
 
@@ -34,7 +38,7 @@ export function checkAdminAuth(request: NextRequest): NextResponse | null {
 
   if (
     (token && safeEqual(token, adminSecret)) ||
-    (cookieToken && safeEqual(cookieToken, sessionToken(adminSecret)))
+    (cookieToken && verifyAdminSession(cookieToken, adminSecret))
   ) {
     return null;
   }

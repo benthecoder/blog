@@ -1,7 +1,17 @@
 import { readFile } from "node:fs/promises";
-import { OG_FONT_PATH } from "@/config/paths";
+import path from "node:path";
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
+
+// Keep these paths local: importing the content paths module makes the tracer
+// include the entire post archive in this rendering-only function.
+const OG_FONT_PATH = path.join(
+  process.cwd(),
+  "app",
+  "og",
+  "AveriaSerifLibre-Bold.ttf"
+);
+const OG_BACKGROUND_PATH = path.join(process.cwd(), "app", "og", "og-bg.jpg");
 
 // One file read per warm process, shared by concurrent image requests.
 // Retry on failure rather than retaining a rejected promise indefinitely.
@@ -13,13 +23,27 @@ function getFont() {
   }));
 }
 
+// Inline the existing JPEG so rendering never fetches the site's own CDN.
+let backgroundPromise: Promise<string> | undefined;
+function getBackground() {
+  return (backgroundPromise ??= readFile(OG_BACKGROUND_PATH)
+    .then((image) => `data:image/jpeg;base64,${image.toString("base64")}`)
+    .catch((error) => {
+      backgroundPromise = undefined;
+      throw error;
+    }));
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const postTitle = searchParams.get("title");
 
   // Satori (ImageResponse) can't read woff2, so this route keeps its own
   // TTF copy; it renders server-side only and never ships to browsers.
-  const fontData = await getFont();
+  const [fontData, background] = await Promise.all([
+    getFont(),
+    getBackground(),
+  ]);
 
   const imageResponse = new ImageResponse(
     (
@@ -31,7 +55,7 @@ export async function GET(req: NextRequest) {
           flexDirection: "column",
           alignItems: "flex-start",
           justifyContent: "center",
-          backgroundImage: "url(https://bneo.xyz/og-bg.jpg)",
+          backgroundImage: `url(${background})`,
           fontFamily: '"Averia Serif Libre", serif',
         }}
       >

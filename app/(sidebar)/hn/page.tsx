@@ -1,65 +1,28 @@
 "use client";
-import { useEffect, useState } from "react";
-
-interface HNStory {
-  id: number;
-  title: string;
-  url: string;
-  by: string;
-  time: number;
-  score: number;
-  descendants?: number;
-}
-
-const POSTS_PER_PAGE = 50;
-const MAX_PAGES = 10;
+import { useState } from "react";
+import useSWR from "swr";
+import {
+  fetchHackerNewsPage,
+  HN_POSTS_PER_PAGE as POSTS_PER_PAGE,
+  HN_MAX_PAGES as MAX_PAGES,
+} from "@/utils/hackerNews";
 
 export default function HackerNewsPage() {
-  const [topStories, setTopStories] = useState<HNStory[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-
-  useEffect(() => {
-    const fetchTopStories = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch(
-          "https://hacker-news.firebaseio.com/v0/topstories.json"
-        );
-        const storyIds: number[] = await response.json();
-
-        const startIndex = currentPage * POSTS_PER_PAGE;
-        const endIndex = startIndex + POSTS_PER_PAGE;
-        const currentStoryIds = storyIds.slice(startIndex, endIndex);
-
-        const stories = await Promise.all(
-          currentStoryIds.map(async (id) => {
-            const storyResponse = await fetch(
-              `https://hacker-news.firebaseio.com/v0/item/${id}.json`
-            );
-            const story: HNStory = await storyResponse.json();
-
-            if (!story.url) {
-              story.url = `https://news.ycombinator.com/item?id=${story.id}`;
-            }
-
-            return story;
-          })
-        );
-
-        setTopStories(stories);
-        setIsError(false);
-      } catch (error) {
-        console.error("Failed to fetch HackerNews stories:", error);
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchTopStories();
-  }, [currentPage]);
+  const {
+    data: topStories = [],
+    isLoading,
+    error: isError,
+  } = useSWR(
+    ["hacker-news", currentPage],
+    ([, page]) => fetchHackerNewsPage(page),
+    {
+      dedupingInterval: 60_000,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      shouldRetryOnError: false,
+    }
+  );
 
   const handleNextPage = () => {
     if (currentPage < MAX_PAGES - 1) {

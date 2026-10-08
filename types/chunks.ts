@@ -1,15 +1,4 @@
-import type { Node } from "unist";
-
-// Loose structural view of mdast nodes — enough for the extractors without
-// depending on @types/mdast directly.
-export interface MdNode {
-  type: string;
-  value?: string;
-  depth?: number;
-  lang?: string;
-  children?: MdNode[];
-}
-import { PostFrontmatter } from "./post";
+import type { PostFrontmatter } from "./post";
 
 export type ChunkType = "full-post" | "section" | "quote" | "code";
 
@@ -32,13 +21,8 @@ interface ChunkMetadata {
   language?: string;
   level?: number;
   wordCount?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
-
-export interface ChunkExtractor {
-  readonly chunkType: ChunkType;
-  process(tree: Node, context: ChunkContext): ProcessedChunk[];
+  isOverlapping?: boolean;
+  positionInSequence?: string;
 }
 
 export interface ProcessedPost {

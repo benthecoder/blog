@@ -43,6 +43,7 @@ export default function ArchiveClient({
   const pathname = usePathname();
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState<Sort>("date");
+  const [prefetchTag, setPrefetchTag] = useState<string | null>(null);
   const [viewCounts, setViewCounts] = useState<Map<string, number> | null>(
     null
   );
@@ -60,7 +61,10 @@ export default function ArchiveClient({
     if (viewCounts !== null || viewsLoading) return;
     setViewsLoading(true);
     fetch("/api/views")
-      .then((r) => r.json())
+      .then((r) => {
+        if (!r.ok) throw new Error("Failed to fetch view counts");
+        return r.json();
+      })
       .then((d) => {
         const map = new Map<string, number>(
           (d.results ?? []).map((r: { slug: string; count: number }) => [
@@ -70,7 +74,9 @@ export default function ArchiveClient({
         );
         setViewCounts(map);
       })
-      .catch(() => setViewCounts(new Map()))
+      .catch(() => {
+        // Keep counts uncached so selecting views again can retry.
+      })
       .finally(() => setViewsLoading(false));
   };
 
@@ -252,6 +258,9 @@ export default function ArchiveClient({
             <Link
               href={`/tags/${tag}`}
               key={tag}
+              prefetch={prefetchTag === tag ? null : false}
+              onMouseEnter={() => setPrefetchTag(tag)}
+              onFocus={() => setPrefetchTag(tag)}
               className="border border-rule dark:border-night-raised hover:bg-ink/5 dark:hover:bg-chalk/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors duration-150"
             >
               <span className="text-xs text-ink dark:text-chalk truncate">

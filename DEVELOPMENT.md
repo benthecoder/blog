@@ -89,7 +89,7 @@ Source of truth is the blog. Capture is cheap and happens in the moment; the AI 
 
 #### Link takes (reworking /tweet)
 
-- [x] `/tweet` stores reactions and links in Neon’s `tweets` table (`content`, `link`, `link_title`); missing titles are resolved by the local draft script, never by the public API
+- [x] `/tweet` stores reactions and links in Neon’s `tweets` table (`content`, `link`, `link_title`); missing titles are resolved only by the local draft CLI after merging sources (four requests at a time); public and admin APIs use stored titles or URL fallbacks
 - [ ] /thoughts keeps rendering plain thoughts; link takes feed the weekly script
 - [ ] /tweet lists recent entries with a delete button (dev only)
 

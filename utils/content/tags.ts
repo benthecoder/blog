@@ -19,7 +19,7 @@ export function countTagFrequency(
   posts: PostMetadata[],
   exclude?: string[]
 ): [string, number][] {
-  const counts: Record<string, number> = {};
+  const counts: Record<string, number> = Object.create(null);
   const excluded = new Set(exclude ?? []);
   posts.forEach((post) =>
     post.tags.forEach((tag) => {

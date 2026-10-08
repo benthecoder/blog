@@ -35,4 +35,25 @@ describe("countTagFrequency", () => {
     const result = countTagFrequency([post(["ml", "", "life"])], ["life"]);
     expect(result).toEqual([["ml", 1]]);
   });
+  it("counts prototype names as ordinary tags", () => {
+    expect(
+      countTagFrequency([
+        post(["constructor", "__proto__", "toString"]),
+        post(["constructor", "__proto__"]),
+      ])
+    ).toEqual([
+      ["constructor", 2],
+      ["__proto__", 2],
+      ["toString", 1],
+    ]);
+  });
+
+  it("preserves numeric-key ordering and stable ties", () => {
+    expect(countTagFrequency([post(["10", "2", "life", "books"])])).toEqual([
+      ["2", 1],
+      ["10", 1],
+      ["life", 1],
+      ["books", 1],
+    ]);
+  });
 });

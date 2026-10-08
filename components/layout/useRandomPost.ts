@@ -9,8 +9,17 @@ let slugsPromise: Promise<string[]> | null = null;
 
 function loadSlugs(): Promise<string[]> {
   slugsPromise ??= fetch("/api/post-slugs")
-    .then((res) => res.json())
-    .then((data: { slugs: string[] }) => data.slugs)
+    .then(async (res) => {
+      if (!res.ok) throw new Error("Failed to load post slugs");
+      const data: { slugs?: unknown } | null = await res.json();
+      if (
+        !Array.isArray(data?.slugs) ||
+        !data.slugs.every((slug) => typeof slug === "string" && slug.length > 0)
+      ) {
+        throw new Error("Invalid post slug response");
+      }
+      return data.slugs as string[];
+    })
     .catch((err) => {
       slugsPromise = null; // let the next press retry
       throw err;
@@ -35,9 +44,13 @@ export function useRandomPost() {
     function trigger() {
       if (navigating.current) return;
       navigating.current = true;
-      goRandom(router).finally(() => {
-        navigating.current = false;
-      });
+      void goRandom(router)
+        .catch((error) =>
+          console.error("Random post navigation failed:", error)
+        )
+        .finally(() => {
+          navigating.current = false;
+        });
     }
 
     function onKeyDown(e: KeyboardEvent) {

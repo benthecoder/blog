@@ -9,6 +9,7 @@ dotenv.config();
 
 import fs from "fs";
 import { DRAFTS_DIR, getDraftPath } from "@/config/paths";
+import { resolveLinkTitles } from "./lib/linkTitles";
 import { collectLinks, nextIssueNumber } from "@/utils/digest/collect";
 import { PERIODS } from "@/utils/digest/periods";
 import type { PeriodKind } from "@/utils/digest/schedule";
@@ -18,9 +19,9 @@ function arg(name: string): string | undefined {
   return i > -1 ? process.argv[i + 1] : undefined;
 }
 
-function collect(since: Date, until: Date) {
+async function collect(since: Date, until: Date) {
   const names = arg("sources")?.split(",");
-  return collectLinks(since, until, names);
+  return resolveLinkTitles(await collectLinks(since, until, names));
 }
 
 async function main() {

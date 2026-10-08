@@ -24,6 +24,7 @@ beforeEach(() => {
   vi.stubGlobal("fetch", fetchMock);
 });
 afterEach(() => {
+  vi.restoreAllMocks();
   vi.useRealTimers();
   vi.unstubAllGlobals();
 });
@@ -109,4 +110,66 @@ describe("Spotify caching", () => {
     expect(failed.headers.get("cache-control")).toBe("no-store");
     expect(await failed.json()).toEqual({ tracks: [] });
   });
+  it.each(["token", "tracks"])(
+    "releases stalled %s requests and allows the next request to recover",
+    async (stage) => {
+      let stalledSignal: AbortSignal | undefined;
+      const controllers: AbortController[] = [];
+      vi.spyOn(AbortSignal, "timeout").mockImplementation(() => {
+        const controller = new AbortController();
+        controllers.push(controller);
+        return controller.signal;
+      });
+      let markStarted!: () => void;
+      const started = new Promise<void>((resolve) => {
+        markStarted = resolve;
+      });
+      fetchMock.mockImplementation((url: string, options: RequestInit) => {
+        const isToken = url.includes("/api/token");
+        if (isToken === (stage === "token")) {
+          stalledSignal = options.signal!;
+          markStarted();
+          return new Promise((_resolve, reject) => {
+            options.signal!.addEventListener(
+              "abort",
+              () => reject(options.signal!.reason),
+              { once: true }
+            );
+          });
+        }
+        return Promise.resolve(
+          response({ access_token: "test-token", expires_in: 3600 })
+        );
+      });
+      const { getRecentlyPlayed } = await import("./spotify");
+      const { GET } = await import("@/app/api/spotify/recently-played/route");
+      const pending = getRecentlyPlayed(10);
+      expect(getRecentlyPlayed(10)).toBe(pending);
+      const rejection = expect(pending).rejects.toMatchObject({
+        name: "TimeoutError",
+      });
+      const apiResponse = GET();
+      await started;
+      expect(stalledSignal).toBeDefined();
+      expect(AbortSignal.timeout).toHaveBeenCalledWith(10_000);
+      const stalled = controllers.find(
+        (controller) => controller.signal === stalledSignal
+      )!;
+      stalled.abort(new DOMException("Upstream timed out", "TimeoutError"));
+      await rejection;
+      const failed = await apiResponse;
+      expect(failed.status).toBe(502);
+      expect(failed.headers.get("cache-control")).toBe("no-store");
+      fetchMock.mockImplementation(
+        async (url: string, options: RequestInit) => {
+          expect(options.signal?.aborted).toBe(false);
+          return url.includes("/api/token")
+            ? response({ access_token: "test-token", expires_in: 3600 })
+            : response({ items: [item] });
+        }
+      );
+      await expect(getRecentlyPlayed(10)).resolves.toHaveProperty("tracks");
+      expect(fetchMock).toHaveBeenCalledTimes(3);
+    }
+  );
 });

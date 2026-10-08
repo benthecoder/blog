@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import type { DragEvent } from "react";
 import type { useSearchParams } from "next/navigation";
 import type { PostImage } from "./ImageStrip";
+import {
+  PHOTO_TRANSFER_TYPE,
+  readPhotoTransfer,
+  photoFileUrl,
+} from "@/utils/photoTransfer";
 import type { CropRect } from "./ImageCropModal";
 
 interface UseImageManagerArgs {
@@ -12,8 +17,10 @@ interface UseImageManagerArgs {
   /** True once the post has been published (i.e. no longer a draft). */
   isPublished: boolean;
   searchParams: ReturnType<typeof useSearchParams>;
-  /** Insert a markdown snippet at the editor cursor. */
+  /** Insert an image as its own paragraph at the drop point or cursor. */
   insertMarkdown: (snippet: string) => void;
+  markInsertion: (coordinates?: { x: number; y: number }) => void;
+  clearInsertion: () => void;
   /** Surface a status message in the top bar. */
   notify: (message: string) => void;
 }
@@ -28,8 +35,21 @@ export function useImageManager({
   isPublished,
   searchParams,
   insertMarkdown,
+  markInsertion,
+  clearInsertion,
   notify,
 }: UseImageManagerArgs) {
+  const draftDate = isNew ? searchParams.get("date") : null;
+  const photoRequestRef = useRef<AbortController | null>(null);
+  const uploadRequestRef = useRef<AbortController | null>(null);
+  useEffect(
+    () => () => {
+      photoRequestRef.current?.abort();
+      uploadRequestRef.current?.abort();
+    },
+    [slug, draftDate]
+  );
+  const [uploadError, setUploadError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [postImages, setPostImages] = useState<PostImage[]>([]);
@@ -76,6 +96,10 @@ export function useImageManager({
     customName?: string,
     crop?: CropRect | null
   ) => {
+    if (uploadRequestRef.current) return false;
+    const controller = new AbortController();
+    uploadRequestRef.current = controller;
+    setUploadError("");
     setUploading(true);
     try {
       const formData = new FormData();
@@ -105,26 +129,44 @@ export function useImageManager({
       const response = await fetch("/api/admin/upload-image", {
         method: "POST",
         body: formData,
+        signal: controller.signal,
       });
 
       const data = await response.json();
+      if (controller.signal.aborted) return false;
 
       if (response.ok) {
         insertMarkdown(`![](${data.url})`);
         notify(`✓ Image uploaded: ${data.fileName}`);
         refreshImages();
+        return true;
       } else {
-        notify(`✗ Upload failed: ${data.error}`);
+        const message = `Upload failed: ${data.error}`;
+        setUploadError(message);
+        notify(`✗ ${message}`);
       }
     } catch (error) {
-      notify(`✗ Upload error: ${error}`);
+      if (!controller.signal.aborted) {
+        const message = `Upload error: ${error}`;
+        setUploadError(message);
+        notify(`✗ ${message}`);
+      }
     } finally {
+      if (uploadRequestRef.current === controller)
+        uploadRequestRef.current = null;
       setUploading(false);
     }
+    return false;
   };
 
   const handleDragOver = (e: DragEvent) => {
+    if (
+      !e.dataTransfer.types.includes(PHOTO_TRANSFER_TYPE) &&
+      !e.dataTransfer.types.includes("Files")
+    )
+      return;
     e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
     setIsDragging(true);
   };
 
@@ -133,15 +175,59 @@ export function useImageManager({
     setIsDragging(false);
   };
 
-  const handleDrop = (e: DragEvent) => {
+  const handleDrop = async (e: {
+    dataTransfer: DataTransfer | null;
+    clientX: number;
+    clientY: number;
+    preventDefault: () => void;
+    stopPropagation: () => void;
+  }) => {
+    if (!e.dataTransfer) return;
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
 
+    if (uploading || showImageNameModal || photoRequestRef.current) return;
+    const photo = readPhotoTransfer(
+      e.dataTransfer.getData(PHOTO_TRANSFER_TYPE) ||
+        e.dataTransfer.getData("text/plain")
+    );
+    if (photo) {
+      markInsertion({ x: e.clientX, y: e.clientY });
+      const controller = new AbortController();
+      photoRequestRef.current = controller;
+      try {
+        const response = await fetch(photoFileUrl(photo.id, "full"), {
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error("Could not load photo");
+        const blob = await response.blob();
+        if (controller.signal.aborted) return;
+        const name = photo.name
+          .replace(/\.[^/.]+$/, "")
+          .replace(/[^a-zA-Z0-9-]/g, "-")
+          .toLowerCase();
+        setPendingImageFile(
+          new File([blob], `${name}.jpg`, { type: "image/jpeg" })
+        );
+        setImageNameInput(name);
+        setShowImageNameModal(true);
+      } catch {
+        if (!controller.signal.aborted) {
+          clearInsertion();
+          notify("✗ Could not load the dropped photo. Try again.");
+        }
+      } finally {
+        if (photoRequestRef.current === controller)
+          photoRequestRef.current = null;
+      }
+      return;
+    }
     const files = Array.from(e.dataTransfer.files);
     const imageFiles = files.filter((file) => file.type.startsWith("image/"));
 
     if (imageFiles.length > 0) {
+      markInsertion({ x: e.clientX, y: e.clientY });
       const file = imageFiles[0]; // Handle one at a time
       const defaultName = file.name
         .replace(/\.[^/.]+$/, "")
@@ -156,6 +242,7 @@ export function useImageManager({
 
   /** Routes an already-picked file (e.g. from the photo panel) through the same crop -> name -> upload flow as a drop. */
   const openCropModalWith = (file: File, name: string) => {
+    markInsertion();
     setPendingImageFile(file);
     setImageNameInput(name);
     setShowImageNameModal(true);
@@ -172,14 +259,18 @@ export function useImageManager({
     const rawName = imageNameInput.trim() || file.name.replace(/\.[^/.]+$/, "");
     // Standardize: lowercase and replace spaces with hyphens
     const finalName = rawName.toLowerCase().replace(/\s+/g, "-");
-    await handleImageUpload(file, finalName, crop);
+    const saved = await handleImageUpload(file, finalName, crop);
+    if (!saved) return false;
 
     setShowImageNameModal(false);
     setPendingImageFile(null);
     setImageNameInput("");
+    return true;
   };
 
   const cancelImageUpload = () => {
+    clearInsertion();
+    setUploadError("");
     setShowImageNameModal(false);
     setPendingImageFile(null);
   };
@@ -198,6 +289,7 @@ export function useImageManager({
       e.preventDefault();
       const file = imageItem.getAsFile();
       if (file) {
+        markInsertion();
         // Routed through the crop modal like drops are, rather than uploading
         // straight away — a pasted screenshot is the one most likely to need
         // trimming, and it also gets a real name instead of a timestamp.
@@ -210,6 +302,7 @@ export function useImageManager({
 
   return {
     uploading,
+    uploadError,
     isDragging,
     postImages,
     showImages,

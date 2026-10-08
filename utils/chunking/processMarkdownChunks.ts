@@ -5,15 +5,25 @@ import { parseFrontmatter } from "@/utils/content/frontmatter";
 import fs from "fs";
 import path from "path";
 
-// Import our clean extractor classes
-import { FullPostExtractor } from "./extractors/FullPostExtractor";
-import { SectionExtractor } from "./extractors/SectionExtractor";
-import { QuoteExtractor } from "./extractors/QuoteExtractor";
-import { CodeExtractor } from "./extractors/CodeExtractor";
+import { extractFullPost } from "./extractors/fullPost";
+import { extractSections } from "./extractors/sections";
+import { extractQuotes } from "./extractors/quotes";
+import { extractCode } from "./extractors/code";
+import type {
+  ProcessedPost,
+  ProcessedChunk,
+  ChunkContext,
+} from "@/types/chunks";
+import type { PostFrontmatter } from "@/types/post";
 
-// Import types
-import { ProcessedPost, ProcessedChunk, ChunkContext } from "@/types/chunks";
-import { PostFrontmatter } from "@/types/post";
+const processor = unified().use(remarkParse).use(remarkGfm).freeze();
+
+const EXTRACTORS = [
+  ["full-post", extractFullPost],
+  ["section", extractSections],
+  ["quote", extractQuotes],
+  ["code", extractCode],
+] as const;
 
 /**
  * Process a markdown file into semantic chunks
@@ -32,7 +42,6 @@ export async function processMarkdownFile(
     const slug = path.basename(filePath, ".md");
 
     // Parse markdown into AST
-    const processor = unified().use(remarkParse).use(remarkGfm);
     const tree = processor.parse(markdownContent);
 
     // Create context for extractors
@@ -43,26 +52,15 @@ export async function processMarkdownFile(
       currentSection: "",
     };
 
-    // Initialize all extractors
-    const extractors = [
-      new FullPostExtractor(),
-      new SectionExtractor(),
-      new QuoteExtractor(),
-      new CodeExtractor(),
-    ];
-
     // Run each extractor and collect chunks
     const allChunks: ProcessedChunk[] = [];
 
-    for (const extractor of extractors) {
+    for (const [type, extract] of EXTRACTORS) {
       try {
-        const extractorChunks = extractor.process(tree, context);
+        const extractorChunks = extract(tree, context);
         allChunks.push(...extractorChunks);
       } catch (error) {
-        console.error(
-          `Error in ${extractor.chunkType} extractor for ${slug}:`,
-          error
-        );
+        console.error(`Error in ${type} extractor for ${slug}:`, error);
         // Continue with other extractors even if one fails
       }
     }
@@ -81,7 +79,7 @@ export async function processMarkdownFile(
     console.error(`Error processing ${slug}:`, error);
 
     return {
-      frontmatter: { title: slug } as PostFrontmatter,
+      frontmatter: { title: slug },
       chunks: [],
       filePath: slug,
     };

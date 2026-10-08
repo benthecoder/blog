@@ -1,5 +1,4 @@
 import { neon } from "@neondatabase/serverless";
-import { fetchTitle } from "@/utils/tweets/link";
 import type { LinkSource } from "../types";
 
 // Thoughts that carry a link (posted via /tweet or the iOS shortcut). The
@@ -23,14 +22,9 @@ export const tweets: LinkSource = {
       created_at: string;
     }[];
 
-    // Titles aren't fetched on write, so resolve missing ones here.
-    const titles = await Promise.all(
-      rows.map((r) => r.link_title ?? fetchTitle(r.link))
-    );
-
-    return rows.map((r, i) => ({
+    return rows.map((r) => ({
       url: r.link,
-      title: titles[i] ?? r.link,
+      title: r.link_title ?? r.link,
       savedAt: new Date(r.created_at),
       highlights: [],
       take: r.content.trim() || undefined,
