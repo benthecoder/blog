@@ -66,8 +66,13 @@ const PostLinkPreview = ({
         fetched.current = true;
         fetch(`/api/post-preview/${slug}`)
           .then((res) => (res.ok ? res.json() : null))
-          .then((data) => data && setPreview(data))
-          .catch(() => {});
+          .then((data) => {
+            fetched.current = Boolean(data);
+            if (data) setPreview(data);
+          })
+          .catch(() => {
+            fetched.current = false;
+          });
       }
     },
     placement: "top",
