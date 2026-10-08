@@ -16,6 +16,8 @@ vi.mock("@neondatabase/serverless", () => ({
 vi.mock("@/utils/clients", () => ({
   getVoyageClient: () => ({ embed: mocks.embed }),
 }));
+vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
+vi.mock("server-only", () => ({}));
 import { POST as search } from "@/app/api/search/route";
 import { GET as thoughts } from "@/app/api/thoughts/route";
 import { tweets } from "./digest/sources/tweets";
