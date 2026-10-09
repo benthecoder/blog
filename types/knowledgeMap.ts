@@ -58,6 +58,8 @@ export interface ClusterLabelingOptions {
   model?: string;
   // labels from the last generated map, reused for clusters that still match
   previous?: PreviousClusterLabel[];
+  // distinctive terms per cluster ID
+  terms?: Map<number, string[]>;
 }
 
 export type KnowledgeMapPreview = Omit<

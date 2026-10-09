@@ -28,14 +28,20 @@ export const ANKI_CONNECT_URL =
   process.env.ANKI_CONNECT_URL || "http://127.0.0.1:8765";
 export const ANKI_DECK = process.env.ANKI_DECK || "Default";
 
-// Clustering: k-means on 10D UMAP projection, then 2D for visualization
-export const NUM_CLUSTERS = 10;
-export const CLUSTER_MIN_SIZE = 5; // merge clusters smaller than this into nearest centroid
+// Clustering: HDBSCAN on a 10D UMAP of centered post vectors; 2D layout is
+// supervised by the clusters so each one occupies a contiguous region
 export const CLUSTERING_UMAP_COMPONENTS = 10;
+export const CLUSTERING_UMAP_NEIGHBORS = 10;
+export const CLUSTER_MIN_SIZES = [6, 8, 10, 12]; // swept, best silhouette wins
+export const CLUSTER_MIN_COUNT = 10;
+export const CLUSTER_MAX_COUNT = 30;
+export const CLUSTER_MAX_NOISE = 0.35;
+export const CLUSTER_MAX_FRACTION = 0.15; // split clusters larger than this
 export const SIMILARITY_EDGE_THRESHOLD = 0.7; // min cosine sim for a map edge
 // Free OpenRouter model — free tier is rate limited (~50 req/day without credits)
 export const CLUSTER_LABEL_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free";
-export const CLUSTER_LABEL_MAX_SAMPLES = 15;
+export const CLUSTER_LABEL_MAX_SAMPLES = 12; // posts nearest the centroid
+export const CLUSTER_LABEL_TOP_TERMS = 12;
 // Reuse a previous cluster's label when post overlap (Jaccard) is at least this
 export const CLUSTER_LABEL_REUSE_MIN_OVERLAP = 0.6;
 export const CLUSTER_LABEL_TIMEOUT = 30000;

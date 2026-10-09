@@ -5,6 +5,7 @@ import {
   CLUSTER_LABEL_REUSE_MIN_OVERLAP,
   CLUSTER_LABEL_TIMEOUT,
 } from "../../config/constants";
+import { stripScaffolding } from "./postVectors";
 import type {
   ArticleData,
   ClusterLabelingOptions,
@@ -49,67 +50,50 @@ export function matchPreviousLabels(
   return matched;
 }
 
+const MAX_LISTED_TITLES = 40;
+
 /**
- * Pick evenly-spaced samples across the cluster's time range.
- * Temporal diversity gives the model a representative view of how the cluster
- * evolved, which produces more accurate labels than random or length-based sampling.
+ * Construct prompt for cluster labeling. `articles` must be ordered nearest
+ * the cluster centroid first, so the head of the list is the most typical.
  */
-function selectClusterSamples(
+export function buildClusterPrompt(
   articles: ArticleData[],
-  maxSamples: number
-): ArticleData[] {
-  if (articles.length <= maxSamples) return articles;
-
-  const sorted = [...articles].sort((a, b) => {
-    const da = a.publishedDate ? new Date(a.publishedDate).getTime() : 0;
-    const db = b.publishedDate ? new Date(b.publishedDate).getTime() : 0;
-    return da - db;
-  });
-
-  const step = sorted.length / maxSamples;
-  return Array.from(
-    { length: maxSamples },
-    (_, i) => sorted[Math.floor(i * step)]
-  );
-}
-
-/**
- * Construct prompt for cluster labeling.
- * Passes all titles for pattern recognition + content excerpts from samples for depth.
- */
-function buildClusterPrompt(
-  allArticles: ArticleData[],
-  samples: ArticleData[]
+  samples: ArticleData[],
+  terms: string[] = []
 ): string {
-  const allTitles = allArticles
+  const titles = articles
+    .slice(0, MAX_LISTED_TITLES)
     .map((a, i) => `${i + 1}. ${a.postTitle}`)
     .join("\n");
 
   const sampleDetails = samples
     .map((s) => {
-      const preview = s.content.substring(0, 300).replace(/\s+/g, " ").trim();
-      const tags = s.tags?.length ? s.tags.join(", ") : "none";
-      return `"${s.postTitle}" [tags: ${tags}]\n  ${preview}...`;
+      const preview = stripScaffolding(s.content)
+        .substring(0, 300)
+        .replace(/\s+/g, " ")
+        .trim();
+      return `"${s.postTitle}"\n  ${preview}...`;
     })
     .join("\n\n");
 
-  return `You are labeling a cluster of semantically similar blog posts. Your goal is to find the MOST SPECIFIC shared theme — not the most general one.
+  return `You are naming a cluster of ${articles.length} semantically similar blog posts. Find the specific idea or subject they share.
 
-ALL ${allArticles.length} post titles in this cluster:
-${allTitles}
+Most typical post titles (nearest the cluster centre first):
+${titles}
 
-Detailed excerpts from ${samples.length} representative posts:
+Distinctive terms for this cluster versus the rest of the blog:
+${terms.length ? terms.join(", ") : "none"}
+
+Excerpts from the ${samples.length} most typical posts:
 ${sampleDetails}
 
-What single topic, activity, or subject appears most consistently across these titles? Be as specific as the titles allow.
-
 Rules:
-- ALL LOWERCASE, 2-4 words
-- Name the SPECIFIC topic (not the emotional register or writing style)
-- Prefer concrete nouns over abstract concepts
+- ALL LOWERCASE, 1-4 words
+- Name the subject or idea the posts are about, never their format or medium
+- Concrete and specific beats broad
 
-Good: "machine learning", "book reviews", "sf apartment life", "startup interviews", "travel journals"
-Bad: "personal reflections", "exploring ideas", "learning journeys", "moments of growth"
+Good: "ml infrastructure", "chronic pain and doctors", "church and faith", "conversation skills", "climate tech"
+Bad: "daily logs", "link roundups", "personal reflections", "blog posts", "miscellaneous"
 
 Reply with ONLY the label, nothing else:`;
 }
@@ -187,7 +171,8 @@ async function callModelForLabel(
             err?.status === 429 ||
             (err?.status ?? 0) >= 500 ||
             err?.message?.includes("timeout") ||
-            err?.message?.includes("overloaded")
+            err?.message?.includes("overloaded") ||
+            err?.message?.includes("Invalid label")
         );
       },
       onRetry: (error: unknown, attempt: number, delay: number) => {
@@ -207,7 +192,7 @@ async function callModelForLabel(
  * Clusters that match one from the previous map keep its label; only the rest
  * are sent to the model (and only when OPENROUTER_API_KEY is set).
  *
- * @param clusters - Map of cluster ID to array of articles in that cluster
+ * @param clusters - Map of cluster ID to its articles, nearest the centroid first
  * @param options - Configuration options
  * @returns Map of cluster ID to label string
  */
@@ -219,6 +204,7 @@ export async function labelClusters(
     maxSamplesPerCluster = CLUSTER_LABEL_MAX_SAMPLES,
     model = CLUSTER_LABEL_MODEL,
     previous = [],
+    terms = new Map<number, string[]>(),
   } = options;
 
   const labels = matchPreviousLabels(
@@ -230,15 +216,13 @@ export async function labelClusters(
     ),
     previous
   );
-  if (clusters.has(-1)) labels.set(-1, "Uncategorized");
 
+  // noise (-1) stays unlabeled
   const unlabeled = Array.from(clusters.keys())
-    .filter((id) => !labels.has(id))
+    .filter((id) => id !== -1 && !labels.has(id))
     .sort((a, b) => a - b);
 
-  console.log(
-    `\nReused ${clusters.size - unlabeled.length}/${clusters.size} cluster labels from the previous map`
-  );
+  console.log(`\nReused ${labels.size} labels from the previous map`);
   if (unlabeled.length === 0) return labels;
 
   if (!process.env.OPENROUTER_API_KEY) {
@@ -254,11 +238,12 @@ export async function labelClusters(
     const articles = clusters.get(clusterId)!;
 
     try {
-      // Sample articles
-      const samples = selectClusterSamples(articles, maxSamplesPerCluster);
-
-      // Build prompt
-      const prompt = buildClusterPrompt(articles, samples);
+      const samples = articles.slice(0, maxSamplesPerCluster);
+      const prompt = buildClusterPrompt(
+        articles,
+        samples,
+        terms.get(clusterId)
+      );
 
       // Call API
       const label = await callModelForLabel(prompt, model);
