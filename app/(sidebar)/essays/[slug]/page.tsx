@@ -55,7 +55,7 @@ const EssayPage = async ({ params }: { params: Params }) => {
     .join(" · ");
 
   return (
-    <div className="mx-auto max-w-[65ch] px-4 py-12">
+    <div className="mx-auto max-w-[65ch] py-12">
       <div className="mb-10">
         <Link
           href="/essays"

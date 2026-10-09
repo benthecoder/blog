@@ -18,7 +18,7 @@ const EssaysPage = () => {
   const essays = getEssayMetadata();
 
   return (
-    <div className="mx-auto max-w-xl px-4 py-12">
+    <div className="mx-auto max-w-[65ch] py-12">
       <h1 className="mb-10 text-2xl font-bold lowercase text-ink-strong dark:text-chalk-strong">
         essays
       </h1>
