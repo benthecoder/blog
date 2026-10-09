@@ -9,3 +9,9 @@ export function formatEssayDate(date: string): string {
     timeZone: "UTC",
   });
 }
+
+// Frontmatter dates may parse as Date objects; keep them as YYYY-MM-DD.
+export function toDateString(value: unknown): string {
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  return typeof value === "string" ? value : "";
+}

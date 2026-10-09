@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function AdminNavigation({
   section,
 }: {
-  section: "posts" | "wiki";
+  section: "posts" | "wiki" | "essays";
 }) {
   return (
     <nav
@@ -14,6 +14,7 @@ export default function AdminNavigation({
         [
           ["posts", "/admin", "Posts"],
           ["wiki", "/admin/wiki", "Wiki"],
+          ["essays", "/admin/essays", "Essays"],
         ] as const
       ).map(([id, href, label]) => (
         <Link

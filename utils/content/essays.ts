@@ -1,6 +1,7 @@
 import { cache } from "react";
-import { ESSAYS_DIR, getEssayPath } from "@/config/paths";
+import { ESSAYS_DIR, ESSAY_DRAFTS_DIR, getEssayPath } from "@/config/paths";
 import { readMarkdownFile, scanMarkdownDir } from "./markdown";
+import { toDateString } from "./essayDate";
 import { parseTags } from "./tags";
 
 export interface EssayMetadata {
@@ -14,16 +15,6 @@ export interface EssayMetadata {
   readingTime: number;
 }
 
-// Files starting with "_" are local drafts: visible in dev, never shipped.
-const isListed = (slug: string) =>
-  !slug.startsWith("_") || process.env.NODE_ENV !== "production";
-
-// Frontmatter dates may parse as Date objects; keep them as YYYY-MM-DD.
-function toDateString(value: unknown): string {
-  if (value instanceof Date) return value.toISOString().slice(0, 10);
-  return typeof value === "string" ? value : "";
-}
-
 export function countWords(content: string): number {
   return (content.match(/\b\w+\b/gu) || []).length;
 }
@@ -31,7 +22,6 @@ export function countWords(content: string): number {
 export const getEssayMetadata = cache(
   function getEssayMetadata(): EssayMetadata[] {
     return scanMarkdownDir(ESSAYS_DIR)
-      .filter(({ slug }) => isListed(slug))
       .map(({ slug, data, content }) => {
         const wordcount = countWords(content);
         const updated = toDateString(data.updated);
@@ -51,6 +41,28 @@ export const getEssayMetadata = cache(
 );
 
 export const getEssayContent = cache(function getEssayContent(slug: string) {
-  if (!isListed(slug)) throw new Error("Essay not found");
   return readMarkdownFile(getEssayPath(slug));
 });
+
+export interface EssayAdminEntry {
+  slug: string;
+  title: string;
+  subtitle: string;
+  date: string;
+  isDraft: boolean;
+}
+
+// Admin only: drafts live outside the public loader's folder and never ship.
+export function getEssayAdminList(): EssayAdminEntry[] {
+  const read = (dir: string, isDraft: boolean) =>
+    scanMarkdownDir(dir).map(({ slug, data }) => ({
+      slug,
+      title: (data.title as string) || slug,
+      subtitle: (data.subtitle as string) || "",
+      date: toDateString(data.date),
+      isDraft,
+    }));
+  return [...read(ESSAY_DRAFTS_DIR, true), ...read(ESSAYS_DIR, false)].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+}
