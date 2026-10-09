@@ -27,6 +27,11 @@ import {
   medoid,
   type ClusterAnchor,
 } from "@/utils/chunking/mapPalette";
+import {
+  animateZoom,
+  prefersReducedMotion,
+  type ZoomState,
+} from "@/utils/chunking/mapZoom";
 import UMAPLoader from "./UMAPLoader";
 
 const NOISE_COLOR_LIGHT = "#a3a19b";
@@ -50,6 +55,10 @@ export default function KnowledgeMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const [articles, setArticles] = useState<ArticleNode[]>([]);
   const [edgesUrl, setEdgesUrl] = useState<string | null>(null);
+  const [summariesUrl, setSummariesUrl] = useState<string | null>(null);
+  const [summaries, setSummaries] = useState<Record<string, string> | null>(
+    null
+  );
   const [connectionsLoaded, setConnectionsLoaded] = useState(false);
   const [neighborsById, setNeighborsById] = useState<
     Map<string, { id: string; sim: number }[]>
@@ -77,7 +86,6 @@ export default function KnowledgeMap({
   const zoomBehaviorRef = useRef<ZoomBehavior<Element, unknown> | null>(null);
   const selectedArticleNodeRef = useRef<ArticleNode | null>(null);
   const labelBoxesRef = useRef<PlacedLabel[]>([]);
-  const animationRef = useRef(0);
   const zoomToClusterRef = useRef<(id: number) => void>(() => {});
 
   // matchMedia is client-only; reading it in an initializer would run
@@ -103,6 +111,7 @@ export default function KnowledgeMap({
         if (!result.success) throw new Error("Map unavailable");
         setArticles(result.data);
         setEdgesUrl(result.similarityEdgesUrl);
+        setSummariesUrl(result.summariesUrl ?? null);
         setClusterLabels(result.clusterLabels || {});
       } catch {
         if (!controller.signal.aborted) setError("error loading data");
@@ -143,6 +152,19 @@ export default function KnowledgeMap({
     void loadConnections();
     return () => controller.abort();
   }, [hasFocusedNode, edgesUrl, connectionsLoaded, articles]);
+
+  // One-line summaries load on the first hover, not with the landing payload
+  useEffect(() => {
+    if (!hasFocusedNode || !summariesUrl || summaries) return;
+    const controller = new AbortController();
+    fetch(summariesUrl, { signal: controller.signal })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("summaries"))))
+      .then((data: Record<string, string>) => setSummaries(data))
+      .catch(() => {
+        // the card works without summaries; a later hover retries
+      });
+    return () => controller.abort();
+  }, [hasFocusedNode, summariesUrl, summaries]);
 
   const filtered = articles.filter((article) => {
     if (
@@ -200,38 +222,25 @@ export default function KnowledgeMap({
     filteredRef.current = filtered;
   }, [filtered]);
 
-  const animateTo = useCallback(
-    (target: { k: number; x: number; y: number }) => {
-      const canvas = canvasRef.current;
-      const behavior = zoomBehaviorRef.current;
-      if (!canvas || !behavior) return;
-      cancelAnimationFrame(animationRef.current);
-      const apply = (k: number, x: number, y: number) =>
+  const cancelZoomRef = useRef<() => void>(() => {});
+  const animateTo = useCallback((target: ZoomState) => {
+    const canvas = canvasRef.current;
+    const behavior = zoomBehaviorRef.current;
+    if (!canvas || !behavior) return;
+    cancelZoomRef.current();
+    cancelZoomRef.current = animateZoom(
+      transformRef.current,
+      target,
+      ({ k, x, y }) =>
         select<Element, unknown>(canvas).call(
           behavior.transform,
           zoomIdentity.translate(x, y).scale(k)
-        );
-      const from = transformRef.current;
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        apply(target.k, target.x, target.y);
-        return;
+        ),
+      {
+        reducedMotion: prefersReducedMotion(window.matchMedia.bind(window)),
       }
-      const start = performance.now();
-      const duration = 550;
-      const step = (now: number) => {
-        const p = Math.min(1, (now - start) / duration);
-        const e = p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2;
-        apply(
-          from.k + (target.k - from.k) * e,
-          from.x + (target.x - from.x) * e,
-          from.y + (target.y - from.y) * e
-        );
-        if (p < 1) animationRef.current = requestAnimationFrame(step);
-      };
-      animationRef.current = requestAnimationFrame(step);
-    },
-    []
-  );
+    );
+  }, []);
 
   useEffect(() => {
     zoomToClusterRef.current = (id: number) => {
@@ -243,7 +252,7 @@ export default function KnowledgeMap({
     };
   }, [clusterStats, animateTo]);
 
-  useEffect(() => () => cancelAnimationFrame(animationRef.current), []);
+  useEffect(() => () => cancelZoomRef.current(), []);
 
   // Render
   useEffect(() => {
@@ -560,7 +569,7 @@ export default function KnowledgeMap({
     canvas.addEventListener("mouseleave", handleMouseLeave);
     canvas.addEventListener("click", handleClick);
     // a user gesture interrupts any running zoom animation
-    const stopAnimation = () => cancelAnimationFrame(animationRef.current);
+    const stopAnimation = () => cancelZoomRef.current();
     canvas.addEventListener("wheel", stopAnimation, { passive: true });
     canvas.addEventListener("pointerdown", stopAnimation, { passive: true });
 
@@ -598,7 +607,7 @@ export default function KnowledgeMap({
     const cw = containerRef.current.clientWidth;
     const ch = containerRef.current.clientHeight;
     const W = 240;
-    const H = 160;
+    const H = 230;
     const GAP = 12;
     let left = clickPos.x + GAP;
     let top = clickPos.y + GAP;
@@ -664,6 +673,12 @@ export default function KnowledgeMap({
           <h3 className="font-medium text-sm leading-tight mb-2 text-ink dark:text-chalk pr-4">
             {displayArticleNode.postTitle}
           </h3>
+
+          {summaries?.[displayArticleNode.postSlug] && (
+            <p className="mb-2 text-xs leading-snug text-ink/70 dark:text-chalk/70 line-clamp-4">
+              {summaries[displayArticleNode.postSlug]}
+            </p>
+          )}
 
           <div className="space-y-1 text-xs text-ink/60 dark:text-chalk/60">
             {clusterLabels[displayArticleNode.cluster] && (

@@ -7,6 +7,24 @@ import {
   normalizePositions,
 } from "../utils/chunking/umapUtils";
 import { labelClusters } from "../utils/chunking/clusterLabeling";
+import {
+  cleanPostText,
+  hashText,
+  loadCache,
+  pendingSummaries,
+  readFrontmatter,
+  saveCache,
+  summarizePending,
+  type SummaryCache,
+  type SummaryInput,
+} from "../utils/chunking/postSummaries";
+import {
+  embedTexts,
+  imputeMissing,
+  localEmbedder,
+  type Embedder,
+} from "../utils/chunking/summaryEmbeddings";
+import { hasLlmKey } from "../utils/llm";
 import { parseEmbedding } from "../utils/chunking/embeddingUtils";
 import {
   buildPostVectors,
@@ -15,7 +33,7 @@ import {
 import {
   clusterQuality,
   renumberBySize,
-  selectClustering,
+  wardClustering,
 } from "../utils/chunking/clusterSelect";
 import {
   distinctiveTerms,
@@ -24,12 +42,16 @@ import {
 import {
   CLUSTERING_UMAP_COMPONENTS,
   CLUSTERING_UMAP_NEIGHBORS,
-  CLUSTER_MIN_SIZES,
   CLUSTER_MIN_COUNT,
   CLUSTER_MAX_COUNT,
-  CLUSTER_MAX_NOISE,
   CLUSTER_MAX_FRACTION,
+  CLUSTER_MERGE_THRESHOLD,
+  CLUSTER_NOISE_SILHOUETTE,
+  CLUSTER_MIN_SIZE,
   CLUSTER_LABEL_TOP_TERMS,
+  SUMMARY_BATCH_SIZE,
+  SUMMARY_MAX_REQUESTS,
+  SUMMARY_MAX_CHARS,
   SIMILARITY_EDGE_THRESHOLD,
 } from "../config/constants";
 import {
@@ -38,6 +60,7 @@ import {
   KNOWLEDGE_MAP_NODES_JSON,
 } from "../config/paths";
 import { splitKnowledgeMap } from "../utils/chunking/mapAssets";
+import { POSTS_DIR } from "../config/paths";
 import type {
   KnowledgeMapOutput,
   ArticleNode,
@@ -49,11 +72,53 @@ import type { ChunkRow } from "../types/chunks";
 import fs from "fs";
 import path from "path";
 
+const SUMMARY_CACHE = ".cache/map-summaries.json";
+const SUMMARY_VECTOR_CACHE = ".cache/map-summary-vectors.json";
+
 function writeBrowserAssets(map: KnowledgeMapOutput) {
-  const { previewJson, edgesJson, edgesFilename } = splitKnowledgeMap(map);
+  const {
+    previewJson,
+    edgesJson,
+    edgesFilename,
+    summariesJson,
+    summariesFilename,
+  } = splitKnowledgeMap(map);
   fs.mkdirSync(DATA_DIR, { recursive: true });
+  const keep = new Set([edgesFilename, summariesFilename]);
+  // hashed files from earlier snapshots are dead weight once nodes point elsewhere
+  for (const file of fs.readdirSync(DATA_DIR)) {
+    if (
+      /^knowledge-map-(edges|summaries)-[a-f0-9]{64}\.json$/.test(file) &&
+      !keep.has(file)
+    ) {
+      fs.rmSync(path.join(DATA_DIR, file));
+    }
+  }
   fs.writeFileSync(path.join(DATA_DIR, edgesFilename), edgesJson);
+  if (summariesFilename && summariesJson) {
+    fs.writeFileSync(path.join(DATA_DIR, summariesFilename), summariesJson);
+  }
   fs.writeFileSync(KNOWLEDGE_MAP_NODES_JSON, previewJson);
+}
+
+// Posts are read straight from the markdown files; the slug is the file name.
+function loadSummaryInputs(slugs: string[]) {
+  const items: (SummaryInput & { hash: string })[] = [];
+  for (const slug of slugs) {
+    const file = path.join(POSTS_DIR, `${slug}.md`);
+    if (!fs.existsSync(file)) continue;
+    const markdown = fs.readFileSync(file, "utf8");
+    const { title, tags } = readFrontmatter(markdown);
+    const text = cleanPostText(markdown, SUMMARY_MAX_CHARS);
+    items.push({
+      slug,
+      title,
+      tags,
+      text,
+      hash: hashText(`${title}\n${text}`),
+    });
+  }
+  return items;
 }
 
 // Cheap DB fingerprint: the map only changes when embeddings do, so a
@@ -67,7 +132,7 @@ async function getSourceFingerprint(
     WHERE embedding IS NOT NULL
   `) as unknown as { count: string; latest: string | null }[];
   // bump the suffix when the clustering pipeline changes
-  return `${rows[0].count}:${rows[0].latest ?? "none"}:v3`;
+  return `${rows[0].count}:${rows[0].latest ?? "none"}:v5`;
 }
 
 function previousClusterLabels(
@@ -165,9 +230,14 @@ async function generateKnowledgeMap() {
         const hasFallbackLabel = Object.values(
           existing.clusterLabels ?? {}
         ).some((label) => /^Cluster -?\d+$/.test(label));
+        const summariesPending = pendingSummaries(
+          loadSummaryInputs(existing.data.map((n) => n.postSlug)),
+          loadCache<SummaryCache>(SUMMARY_CACHE, {})
+        ).length;
         if (
           existing.sourceFingerprint === sourceFingerprint &&
-          !hasFallbackLabel
+          !hasFallbackLabel &&
+          (summariesPending === 0 || !process.env.OPENROUTER_API_KEY)
         ) {
           writeBrowserAssets(existing);
           console.log(
@@ -242,7 +312,69 @@ async function generateKnowledgeMap() {
     const embeddings = parsedData.map((item) => item.embedding);
     // Centered + unit-normalized so the shared embedding direction doesn't
     // dominate; used for clustering only
-    const centered = centerAndNormalize(embeddings);
+    const centeredContent = centerAndNormalize(embeddings);
+
+    // Idea summaries: what each post is about, free of logistics. Written by
+    // an LLM in batches (resumable cache), then embedded locally.
+    const summaryInputs = loadSummaryInputs(parsedData.map((p) => p.postSlug));
+    const summaryCache = loadCache<SummaryCache>(SUMMARY_CACHE, {});
+    const pending = pendingSummaries(summaryInputs, summaryCache);
+    if (pending.length > 0 && hasLlmKey()) {
+      console.log(`Summarizing ${pending.length} posts...`);
+      const { requests, stoppedBy } = await summarizePending(
+        pending,
+        summaryCache,
+        (cache) => saveCache(SUMMARY_CACHE, cache),
+        {
+          batchSize: SUMMARY_BATCH_SIZE,
+          maxRequests: SUMMARY_MAX_REQUESTS,
+          delayMs: 6000,
+        }
+      );
+      console.log(`  ${requests} requests, stopped: ${stoppedBy}`);
+    }
+    const inputBySlug = new Map(summaryInputs.map((i) => [i.slug, i]));
+    const summaryOf = (slug: string) => {
+      const entry = summaryCache[slug];
+      return entry && entry.hash === inputBySlug.get(slug)?.hash
+        ? entry.summary
+        : undefined;
+    };
+    const summaries: Record<string, string> = {};
+    parsedData.forEach((p) => {
+      const summary = summaryOf(p.postSlug);
+      if (summary) {
+        summaries[p.postSlug] = summary;
+        (p as { summary?: string }).summary = summary;
+      }
+    });
+    const missingSummaries = parsedData.length - Object.keys(summaries).length;
+    console.log(
+      `Summaries: ${Object.keys(summaries).length}/${parsedData.length} posts (${missingSummaries} fall back to their content vector)`
+    );
+
+    let centered = centeredContent;
+    if (Object.keys(summaries).length > 0) {
+      console.log("Embedding summaries...");
+      const summaryTexts = parsedData.map((p) => summaries[p.postSlug]);
+      const present = summaryTexts.flatMap((t, i) => (t ? [i] : []));
+      const presentTexts = present.map((i) => summaryTexts[i]);
+      // Gemini embeddings exceed the free tier quota on a bulk run, so vectors
+      // come from a small local model (cached by summary hash)
+      const embedder: Embedder = localEmbedder;
+      const result = await embedTexts(
+        presentTexts,
+        SUMMARY_VECTOR_CACHE,
+        embedder
+      );
+      console.log(
+        `  vectors: ${embedder.name}, ${result.embedded} newly embedded`
+      );
+      const embedded = result.vectors;
+      const vectors: (number[] | null)[] = parsedData.map(() => null);
+      present.forEach((postIndex, j) => (vectors[postIndex] = embedded[j]));
+      centered = centerAndNormalize(imputeMissing(vectors, centeredContent));
+    }
 
     console.log(
       `Computing ${CLUSTERING_UMAP_COMPONENTS}D clustering projection...`
@@ -253,17 +385,19 @@ async function generateKnowledgeMap() {
       CLUSTERING_UMAP_NEIGHBORS
     );
 
-    console.log("Clustering with HDBSCAN...");
-    const selection = selectClustering(clusteringProjection, {
-      minClusterSizes: CLUSTER_MIN_SIZES,
-      minClusters: CLUSTER_MIN_COUNT,
-      maxClusters: CLUSTER_MAX_COUNT,
-      maxNoiseFraction: CLUSTER_MAX_NOISE,
-      maxFraction: CLUSTER_MAX_FRACTION,
-    });
-    const finalLabels = renumberBySize(selection.labels);
-    const numClusters = selection.numClusters;
+    console.log("Clustering with Ward linkage...");
+    const finalLabels = renumberBySize(
+      wardClustering(clusteringProjection, {
+        minClusters: CLUSTER_MIN_COUNT,
+        maxClusters: CLUSTER_MAX_COUNT,
+        maxFraction: CLUSTER_MAX_FRACTION,
+        mergeThreshold: CLUSTER_MERGE_THRESHOLD,
+        noiseSilhouette: CLUSTER_NOISE_SILHOUETTE,
+        minSize: CLUSTER_MIN_SIZE,
+      })
+    );
     const quality = clusterQuality(clusteringProjection, finalLabels);
+    const numClusters = quality.numClusters;
 
     const clusterMap = new Map<number, ArticleData[]>();
     const memberIdx = new Map<number, number[]>();
@@ -288,7 +422,10 @@ async function generateKnowledgeMap() {
       new Map(
         Array.from(clusterMap, ([id, arts]) => [
           id,
-          arts.map((a) => ({ title: a.postTitle, content: a.content })),
+          arts.map((a) => ({
+            title: a.postTitle,
+            content: a.summary ?? a.content,
+          })),
         ])
       ),
       CLUSTER_LABEL_TOP_TERMS
@@ -371,6 +508,7 @@ async function generateKnowledgeMap() {
       success: true,
       data: processedData,
       similarityEdges,
+      summaries,
       count: processedData.length,
       numClusters,
       clusterLabels,

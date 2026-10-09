@@ -28,20 +28,33 @@ export const ANKI_CONNECT_URL =
   process.env.ANKI_CONNECT_URL || "http://127.0.0.1:8765";
 export const ANKI_DECK = process.env.ANKI_DECK || "Default";
 
-// Clustering: HDBSCAN on a 10D UMAP of centered post vectors; 2D layout is
-// supervised by the clusters so each one occupies a contiguous region
+// Clustering: Ward linkage on a 10D UMAP of idea-summary vectors, with the
+// cluster count picked by silhouette; the 2D layout is supervised by the
+// clusters so each one occupies a contiguous region
 export const CLUSTERING_UMAP_COMPONENTS = 10;
 export const CLUSTERING_UMAP_NEIGHBORS = 10;
-export const CLUSTER_MIN_SIZES = [6, 8, 10, 12]; // swept, best silhouette wins
-export const CLUSTER_MIN_COUNT = 10;
+export const CLUSTER_MIN_COUNT = 16;
 export const CLUSTER_MAX_COUNT = 30;
-export const CLUSTER_MAX_NOISE = 0.35;
-export const CLUSTER_MAX_FRACTION = 0.15; // split clusters larger than this
+export const CLUSTER_MAX_FRACTION = 0.08; // split clusters larger than this share of posts
+export const CLUSTER_MERGE_THRESHOLD = 0.85; // merge clusters closer than this (see mergeCloseClusters)
+export const CLUSTER_NOISE_SILHOUETTE = 0; // posts scoring below this stay unclustered
+export const CLUSTER_MIN_SIZE = 6; // smaller clusters dissolve into noise
 export const SIMILARITY_EDGE_THRESHOLD = 0.7; // min cosine sim for a map edge
-// Free OpenRouter model — free tier is rate limited (~50 req/day without credits)
-export const CLUSTER_LABEL_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free";
-export const CLUSTER_LABEL_MAX_SAMPLES = 12; // posts nearest the centroid
 export const CLUSTER_LABEL_TOP_TERMS = 12;
+// Offline map pipeline models (Google AI via the AI SDK; free tier)
+// free-tier limits are per model, so these are tried in order as each runs dry
+export const LLM_MODELS = [
+  "gemini-3.5-flash",
+  "gemini-3-flash-preview",
+  "gemini-3.1-flash-lite-preview",
+  "gemini-3.7-flash",
+  "gemini-3.5-flash-lite",
+  "gemini-flash-latest",
+];
+// Idea summaries: batched to stay inside the free tier's limits
+export const SUMMARY_BATCH_SIZE = 20;
+export const SUMMARY_MAX_REQUESTS = 60;
+export const SUMMARY_MAX_CHARS = 900;
 // Reuse a previous cluster's label when post overlap (Jaccard) is at least this
 export const CLUSTER_LABEL_REUSE_MIN_OVERLAP = 0.6;
 export const CLUSTER_LABEL_TIMEOUT = 30000;

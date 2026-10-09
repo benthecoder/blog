@@ -1,14 +1,9 @@
-import { hdbscan } from "./hdbscan";
+import { pointSilhouettes, wardPartitions } from "./ward";
 
 export interface ClusterQuality {
   numClusters: number;
   noiseFraction: number;
   silhouette: number;
-}
-
-export interface ClusterSelection extends ClusterQuality {
-  labels: number[];
-  minClusterSize: number;
 }
 
 function euclid(a: number[], b: number[]): number {
@@ -19,32 +14,12 @@ function euclid(a: number[], b: number[]): number {
 
 /** Mean silhouette over clustered points; noise (-1) is ignored. */
 export function silhouetteScore(points: number[][], labels: number[]): number {
-  const ids = Array.from(new Set(labels.filter((l) => l !== -1)));
-  if (ids.length < 2) return 0;
-  const members = new Map<number, number[]>(ids.map((id) => [id, []]));
-  labels.forEach((l, i) => l !== -1 && members.get(l)!.push(i));
-
-  let total = 0;
-  let count = 0;
-  labels.forEach((l, i) => {
-    if (l === -1) return;
-    const own = members.get(l)!;
-    if (own.length < 2) return;
-    let a = 0;
-    for (const j of own) if (j !== i) a += euclid(points[i], points[j]);
-    a /= own.length - 1;
-    let b = Infinity;
-    for (const id of ids) {
-      if (id === l) continue;
-      const other = members.get(id)!;
-      let s = 0;
-      for (const j of other) s += euclid(points[i], points[j]);
-      b = Math.min(b, s / other.length);
-    }
-    total += (b - a) / Math.max(a, b);
-    count++;
-  });
-  return count === 0 ? 0 : total / count;
+  const keep = labels.flatMap((l, i) => (l === -1 ? [] : [i]));
+  const sub = pointSilhouettes(
+    keep.map((i) => points[i]),
+    keep.map((i) => labels[i])
+  );
+  return sub.length === 0 ? 0 : sub.reduce((s, v) => s + v, 0) / sub.length;
 }
 
 export function clusterQuality(
@@ -59,137 +34,148 @@ export function clusterQuality(
   };
 }
 
-export interface SelectOptions {
-  minClusterSizes: number[];
-  minClusters: number;
-  maxClusters: number;
-  maxNoiseFraction: number;
-  // clusters larger than this share of the points get split further
-  maxFraction: number;
+function centroidOf(points: number[][], members: number[]): number[] {
+  const c = Array.from({ length: points[0].length }, () => 0);
+  for (const m of members)
+    for (let d = 0; d < c.length; d++) c[d] += points[m][d] / members.length;
+  return c;
 }
 
-/** HDBSCAN, then split oversized groups and absorb obvious stragglers. */
-export function clusterPoints(
-  points: number[][],
-  minClusterSize: number,
-  maxFraction: number
-): number[] {
-  const base = hdbscan(points, { minClusterSize });
-  return absorbNoise(
-    points,
-    splitOversized(points, base, minClusterSize, maxFraction)
-  );
+function groups(labels: number[]): Map<number, number[]> {
+  const out = new Map<number, number[]>();
+  labels.forEach((l, i) => {
+    if (l === -1) return;
+    const list = out.get(l);
+    if (list) list.push(i);
+    else out.set(l, [i]);
+  });
+  return out;
+}
+
+/** Pairwise separation between clusters, smallest first: centre distance
+ * divided by the sum of the clusters' mean radii. */
+export function clusterSeparations(points: number[][], labels: number[]) {
+  const stats = Array.from(groups(labels), ([id, idx]) => {
+    const c = centroidOf(points, idx);
+    const r = idx.reduce((s, i) => s + euclid(points[i], c), 0) / idx.length;
+    return { id, c, r };
+  });
+  const out: { a: number; b: number; sep: number }[] = [];
+  for (let i = 0; i < stats.length; i++)
+    for (let j = i + 1; j < stats.length; j++)
+      out.push({
+        a: stats[i].id,
+        b: stats[j].id,
+        sep:
+          euclid(stats[i].c, stats[j].c) /
+          Math.max(stats[i].r + stats[j].r, 1e-9),
+      });
+  return out.sort((x, y) => x.sep - y.sep);
 }
 
 /**
- * Sweep HDBSCAN's min cluster size and keep the run with the best silhouette
- * among those with a readable number of groups and not too much noise.
- * Falls back to the closest-to-acceptable run if none qualify.
+ * Merge clusters whose centres are close compared with how spread out they
+ * are (see clusterSeparations). The closest pair under `threshold` merges
+ * first and the process repeats, so near-duplicate topics collapse.
  */
-export function selectClustering(
+export function mergeCloseClusters(
   points: number[][],
-  options: SelectOptions
-): ClusterSelection {
-  const runs: ClusterSelection[] = options.minClusterSizes.map(
-    (minClusterSize) => {
-      const labels = clusterPoints(points, minClusterSize, options.maxFraction);
-      return { minClusterSize, labels, ...clusterQuality(points, labels) };
-    }
-  );
-  const ok = runs.filter(
-    (r) =>
-      r.numClusters >= options.minClusters &&
-      r.numClusters <= options.maxClusters &&
-      r.noiseFraction <= options.maxNoiseFraction
-  );
-  const pool = ok.length > 0 ? ok : runs;
-  return pool.reduce((a, b) => (b.silhouette > a.silhouette ? b : a));
+  labels: number[],
+  threshold: number
+): number[] {
+  const out = labels.slice();
+  for (;;) {
+    const [closest] = clusterSeparations(points, out);
+    if (!closest || closest.sep >= threshold) return out;
+    out.forEach((l, i) => {
+      if (l === closest.b) out[i] = closest.a;
+    });
+  }
 }
 
 /**
- * Broad clusters hide structure (one blob swallowing half the corpus).
- * Re-cluster any group larger than `maxFraction` of the points using
- * HDBSCAN's finest stable groups; points that don't land in a sub-group
- * stay with the parent cluster so nothing is lost.
+ * Split any cluster holding more than `maxFraction` of the points in two
+ * (Ward again, inside that cluster), repeating until none is too big.
  */
 export function splitOversized(
   points: number[][],
   labels: number[],
-  minClusterSize: number,
-  maxFraction: number
+  maxFraction: number,
+  maxRounds = 4
 ): number[] {
   const out = labels.slice();
   const limit = points.length * maxFraction;
   let nextId = Math.max(-1, ...labels) + 1;
-  for (const id of new Set(labels)) {
-    if (id === -1) continue;
-    const idx = labels.flatMap((l, i) => (l === id ? [i] : []));
-    if (idx.length <= limit) continue;
-    const sub = hdbscan(
-      idx.map((i) => points[i]),
-      { minClusterSize, selection: "leaf" }
-    );
-    const found = new Set(sub.filter((l) => l !== -1));
-    if (found.size < 2) continue;
-    const remap = new Map<number, number>();
-    sub.forEach((l, k) => {
-      if (l === -1) return; // stays with the parent cluster id
-      if (!remap.has(l)) remap.set(l, nextId++);
-      out[idx[k]] = remap.get(l)!;
-    });
+  for (let round = 0; round < maxRounds; round++) {
+    let changed = false;
+    for (const idx of groups(out).values()) {
+      if (idx.length <= limit || idx.length < 4) continue;
+      const halves = wardPartitions(
+        idx.map((i) => points[i]),
+        2,
+        2
+      ).get(2);
+      if (!halves) continue;
+      const newId = nextId++;
+      halves.forEach((h, k) => {
+        if (h === 1) out[idx[k]] = newId;
+      });
+      changed = true;
+    }
+    if (!changed) break;
   }
   return out;
 }
 
+export interface WardOptions {
+  minClusters: number;
+  maxClusters: number;
+  // clusters larger than this share of the points are split
+  maxFraction: number;
+  // clusters closer than this separation are merged (0 = off)
+  mergeThreshold: number;
+  // posts with a silhouette below this are left unclustered
+  noiseSilhouette: number;
+  // clusters left smaller than this after noise removal are dropped
+  minSize: number;
+}
+
 /**
- * Give a noise point to a cluster when most of its nearest clustered
- * neighbours agree and it sits within that cluster's usual spread.
+ * Ward clustering with a self-chosen cluster count: take the count in
+ * [minClusters, maxClusters] with the best silhouette, split oversized
+ * clusters, merge near-duplicates, then mark posts that sit closer to another
+ * cluster than their own (negative silhouette) as unclustered noise.
  */
-export function absorbNoise(
+export function wardClustering(
   points: number[][],
-  labels: number[],
-  { k = 7, agree = 0.7 } = {}
+  options: WardOptions
 ): number[] {
-  const out = labels.slice();
-  const clustered = labels.flatMap((l, i) => (l === -1 ? [] : [i]));
-  if (clustered.length < k) return out;
-
-  // 90th percentile of nearest-neighbour distance inside each cluster
-  const spread = new Map<number, number[]>();
-  for (const i of clustered) {
-    let nearest = Infinity;
-    for (const j of clustered) {
-      if (i === j || labels[j] !== labels[i]) continue;
-      nearest = Math.min(nearest, euclid(points[i], points[j]));
+  const parts = wardPartitions(
+    points,
+    options.minClusters,
+    options.maxClusters
+  );
+  let best: number[] | null = null;
+  let bestScore = -Infinity;
+  for (const labels of parts.values()) {
+    const score = silhouetteScore(points, labels);
+    if (score > bestScore) {
+      bestScore = score;
+      best = labels;
     }
-    if (nearest === Infinity) continue;
-    const list = spread.get(labels[i]);
-    if (list) list.push(nearest);
-    else spread.set(labels[i], [nearest]);
   }
-  const limit = new Map<number, number>();
-  spread.forEach((d, id) => {
-    d.sort((a, b) => a - b);
-    limit.set(id, d[Math.floor(d.length * 0.9)]);
-  });
+  if (!best) return points.map(() => -1);
 
-  labels.forEach((l, i) => {
-    if (l !== -1) return;
-    const near = clustered
-      .map((j) => ({ j, d: euclid(points[i], points[j]) }))
-      .sort((a, b) => a.d - b.d)
-      .slice(0, k);
-    const votes = new Map<number, number>();
-    near.forEach(({ j }) =>
-      votes.set(labels[j], (votes.get(labels[j]) ?? 0) + 1)
-    );
-    const [top, count] = Array.from(votes).sort((a, b) => b[1] - a[1])[0];
-    const nearestSame = near.find(({ j }) => labels[j] === top)!;
-    if (count / k >= agree && nearestSame.d <= (limit.get(top) ?? 0)) {
-      out[i] = top;
-    }
-  });
-  return out;
+  let labels = splitOversized(points, best, options.maxFraction);
+  if (options.mergeThreshold > 0) {
+    labels = mergeCloseClusters(points, labels, options.mergeThreshold);
+  }
+  const sil = pointSilhouettes(points, labels);
+  labels = labels.map((l, i) => (sil[i] < options.noiseSilhouette ? -1 : l));
+  for (const idx of groups(labels).values()) {
+    if (idx.length < options.minSize) idx.forEach((i) => (labels[i] = -1));
+  }
+  return labels;
 }
 
 /** Renumber clusters 0..n-1 by descending size; noise stays -1. */

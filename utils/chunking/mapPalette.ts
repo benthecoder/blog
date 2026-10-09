@@ -1,33 +1,35 @@
-// Muted categorical hues, ordered so neighbours in the list look different.
-// Light tones hold ~3:1 against paper, dark tones against night.
+// Muted categorical hues picked by maximin search: every pair stays at least
+// ΔE 12 apart under normal vision and simulated protanopia, deuteranopia and
+// tritanopia (see mapPalette.test.ts), with ~3:1 contrast against paper and
+// 4.5:1 against night. Order is arbitrary; assignClusterColors spaces repeats.
 export const CLUSTER_COLORS_LIGHT = [
-  "#b5533a",
-  "#3f6d99",
-  "#6f8a2c",
-  "#8a5aae",
-  "#c07a1c",
-  "#2c8a86",
-  "#b8497f",
-  "#4a56b0",
-  "#3e8f58",
-  "#8a6a4a",
-  "#c2493f",
-  "#5f7685",
+  "#7f6339",
+  "#3899bc",
+  "#2a318d",
+  "#86325f",
+  "#7c9c3a",
+  "#5d63b6",
+  "#ad6779",
+  "#71397f",
+  "#c94a96",
+  "#6438bc",
+  "#8d2a3e",
+  "#ad8767",
 ];
 
 export const CLUSTER_COLORS_DARK = [
-  "#e0795f",
-  "#7aaede",
-  "#a9c25a",
-  "#b78be0",
-  "#e3a64f",
-  "#5cc2bc",
-  "#e283b3",
-  "#8f9ae6",
-  "#68c485",
-  "#c4a27c",
-  "#ea7a70",
-  "#9db1bf",
+  "#b47489",
+  "#9fce5a",
+  "#9372d5",
+  "#dec4a6",
+  "#72c8d5",
+  "#ce695a",
+  "#7489b4",
+  "#a6ded3",
+  "#d5a772",
+  "#b2a1e3",
+  "#dee3a1",
+  "#dc8989",
 ];
 
 export interface ClusterAnchor {
