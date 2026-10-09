@@ -3,18 +3,34 @@
 import { useRouter } from "next/navigation";
 import { findNearestMapNode } from "@/utils/chunking/mapHitTest";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { scaleLinear } from "d3-scale";
-import { zoom as d3Zoom, ZoomBehavior } from "d3-zoom";
+import { zoom as d3Zoom, zoomIdentity, ZoomBehavior } from "d3-zoom";
 import { select } from "d3-selection";
 import type {
   ArticleNode,
   KnowledgeMapPreview,
   SimilarityEdge,
 } from "@/types/knowledgeMap";
+import {
+  buildDensityGrid,
+  fitCluster,
+  placeLabels,
+  type PlacedLabel,
+} from "@/utils/chunking/mapLabels";
+import {
+  CLUSTER_COLORS_DARK,
+  CLUSTER_COLORS_LIGHT,
+  assignClusterColors,
+  medoid,
+  type ClusterAnchor,
+} from "@/utils/chunking/mapPalette";
 import UMAPLoader from "./UMAPLoader";
+
+const NOISE_COLOR_LIGHT = "#a3a19b";
+const NOISE_COLOR_DARK = "#707070";
 
 // Canvas can't use CSS classes, so palette colors are read off the document
 // element — which is where the [data-palette] custom properties resolve.
@@ -52,6 +68,7 @@ export default function KnowledgeMap({
   );
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCluster, setSelectedCluster] = useState<number | null>(null);
+  const [hoveredCluster, setHoveredCluster] = useState<number | null>(null);
   const [transform, setTransform] = useState({ k: 1, x: 0, y: 0 });
   const [canvasVersion, setCanvasVersion] = useState(0);
   const [showLegend, setShowLegend] = useState(false);
@@ -59,6 +76,9 @@ export default function KnowledgeMap({
   const { theme } = useTheme();
   const zoomBehaviorRef = useRef<ZoomBehavior<Element, unknown> | null>(null);
   const selectedArticleNodeRef = useRef<ArticleNode | null>(null);
+  const labelBoxesRef = useRef<PlacedLabel[]>([]);
+  const animationRef = useRef(0);
+  const zoomToClusterRef = useRef<(id: number) => void>(() => {});
 
   // matchMedia is client-only; reading it in an initializer would run
   // during SSR/hydration and mismatch.
@@ -137,18 +157,33 @@ export default function KnowledgeMap({
     return true;
   });
 
+  const clusterStats = useMemo(() => {
+    const byCluster = new Map<number, ArticleNode[]>();
+    for (const a of articles) {
+      const list = byCluster.get(a.cluster);
+      if (list) list.push(a);
+      else byCluster.set(a.cluster, [a]);
+    }
+    const anchors: ClusterAnchor[] = [];
+    const medoids = new Map<number, { x: number; y: number }>();
+    byCluster.forEach((members, id) => {
+      if (id === -1) return;
+      const m = medoid(members);
+      medoids.set(id, m);
+      anchors.push({ id, x: m.x, y: m.y, count: members.length });
+    });
+    const slots = assignClusterColors(anchors, CLUSTER_COLORS_LIGHT.length);
+    return { byCluster, medoids, slots };
+  }, [articles]);
+
   // Stable identity required: dep of the canvas render effect below
   const getClusterColor = useCallback(
     (cluster: number, isDark: boolean): string => {
-      if (cluster === -1) {
-        return readToken(isDark ? "--color-chalk" : "--color-ink-muted");
-      }
-      const hue = (cluster * 137.5) % 360;
-      const saturation = isDark ? 52 : 47;
-      const lightness = isDark ? 62 : 50;
-      return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+      if (cluster === -1) return isDark ? NOISE_COLOR_DARK : NOISE_COLOR_LIGHT;
+      const palette = isDark ? CLUSTER_COLORS_DARK : CLUSTER_COLORS_LIGHT;
+      return palette[(clusterStats.slots.get(cluster) ?? 0) % palette.length];
     },
-    []
+    [clusterStats]
   );
 
   const transformRef = useRef(transform);
@@ -164,6 +199,51 @@ export default function KnowledgeMap({
   useEffect(() => {
     filteredRef.current = filtered;
   }, [filtered]);
+
+  const animateTo = useCallback(
+    (target: { k: number; x: number; y: number }) => {
+      const canvas = canvasRef.current;
+      const behavior = zoomBehaviorRef.current;
+      if (!canvas || !behavior) return;
+      cancelAnimationFrame(animationRef.current);
+      const apply = (k: number, x: number, y: number) =>
+        select<Element, unknown>(canvas).call(
+          behavior.transform,
+          zoomIdentity.translate(x, y).scale(k)
+        );
+      const from = transformRef.current;
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        apply(target.k, target.x, target.y);
+        return;
+      }
+      const start = performance.now();
+      const duration = 550;
+      const step = (now: number) => {
+        const p = Math.min(1, (now - start) / duration);
+        const e = p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2;
+        apply(
+          from.k + (target.k - from.k) * e,
+          from.x + (target.x - from.x) * e,
+          from.y + (target.y - from.y) * e
+        );
+        if (p < 1) animationRef.current = requestAnimationFrame(step);
+      };
+      animationRef.current = requestAnimationFrame(step);
+    },
+    []
+  );
+
+  useEffect(() => {
+    zoomToClusterRef.current = (id: number) => {
+      const members = clusterStats.byCluster.get(id);
+      const container = containerRef.current;
+      if (!members || !container) return;
+      const r = container.getBoundingClientRect();
+      animateTo(fitCluster(members, { width: r.width, height: r.height }));
+    };
+  }, [clusterStats, animateTo]);
+
+  useEffect(() => () => cancelAnimationFrame(animationRef.current), []);
 
   // Render
   useEffect(() => {
@@ -227,30 +307,31 @@ export default function KnowledgeMap({
       );
     }
 
-    // Cluster centroid labels
-    const centroids: Record<number, { sx: number; sy: number; count: number }> =
-      {};
-    filtered.forEach((a) => {
-      if (!centroids[a.cluster])
-        centroids[a.cluster] = { sx: 0, sy: 0, count: 0 };
-      centroids[a.cluster].sx += a.x;
-      centroids[a.cluster].sy += a.y;
-      centroids[a.cluster].count++;
-    });
-
-    // Dots — circles only
-    filtered.forEach((article) => {
+    // Dots — circles only; unclustered posts sit underneath, small and quiet
+    const active = hoveredCluster;
+    const drawDot = (article: ArticleNode) => {
       const x = xScale(article.x);
       const y = yScale(article.y);
       const wordCount = article.wordCount;
-      const size = Math.max(2, Math.min(3.5, Math.log(wordCount + 1) * 0.55));
-      const baseOpacity = Math.min(0.78, 0.45 + wordCount / 2500);
+      const isNoise = article.cluster === -1;
+      let size = isNoise
+        ? 1.6
+        : Math.max(2, Math.min(3.5, Math.log(wordCount + 1) * 0.55));
+      let opacity = isNoise ? 0.55 : Math.min(0.78, 0.45 + wordCount / 2500);
 
       const isSelected = article.id === selectedArticleNode?.id;
       const isHovered = article.id === hoveredArticleNode?.id;
 
       let color = getClusterColor(article.cluster, isDark);
-      let opacity = baseOpacity;
+
+      if (active !== null) {
+        if (article.cluster === active) {
+          opacity = 0.95;
+          size += 0.6;
+        } else {
+          opacity *= 0.15;
+        }
+      }
 
       if (isSelected || isHovered) {
         color = dotHover;
@@ -265,55 +346,96 @@ export default function KnowledgeMap({
 
       ctx.globalAlpha = opacity;
       ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.arc(x, y, size / Math.sqrt(transform.k), 0, Math.PI * 2);
       ctx.fillStyle = color;
       ctx.fill();
-      ctx.globalAlpha = 1;
-    });
-
-    // Cluster labels go last so the dots can't paint over them, and each is
-    // stroked with the page color first — a halo, so the text stays legible
-    // where it crosses a dense patch of dots.
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    const fontSize = Math.max(9, 10.5 / transform.k);
-    ctx.font = `500 ${fontSize}px ui-serif, Georgia, serif`;
-    ctx.lineJoin = "round";
-    ctx.lineWidth = fontSize * 0.3;
-    ctx.strokeStyle = haloColor;
-    ctx.fillStyle = labelColor;
-    ctx.globalAlpha = 0.85;
-
-    // Biggest clusters get first claim on the space; a smaller label that
-    // would collide is dropped rather than drawn on top of its neighbour.
-    const placed: { x1: number; y1: number; x2: number; y2: number }[] = [];
-    Object.entries(centroids)
-      .filter(([id]) => Number(id) !== -1 && clusterLabels[Number(id)])
-      .sort((a, b) => b[1].count - a[1].count)
-      .forEach(([clusterId, { sx, sy, count }]) => {
-        const label = clusterLabels[Number(clusterId)];
-        const cx = xScale(sx / count);
-        const cy = yScale(sy / count) - 14 / transform.k;
-        const half = ctx.measureText(label).width / 2;
-        const pad = 2 / transform.k;
-        const box = {
-          x1: cx - half - pad,
-          y1: cy - fontSize / 2 - pad,
-          x2: cx + half + pad,
-          y2: cy + fontSize / 2 + pad,
-        };
-        const collides = placed.some(
-          (p) =>
-            box.x1 < p.x2 && box.x2 > p.x1 && box.y1 < p.y2 && box.y2 > p.y1
-        );
-        if (collides) return;
-        placed.push(box);
-        ctx.strokeText(label, cx, cy);
-        ctx.fillText(label, cx, cy);
-      });
+    };
+    filtered.forEach((a) => a.cluster === -1 && drawDot(a));
+    filtered.forEach((a) => a.cluster !== -1 && drawDot(a));
     ctx.globalAlpha = 1;
 
     ctx.restore();
+
+    // Cluster labels, in screen space after the dots so nothing paints over
+    // them. Each sits at its cluster's medoid, nudged to the sparsest nearby
+    // spot, on a paper-colored pill.
+    const fontFamily = getComputedStyle(container).fontFamily;
+    const k = transform.k;
+    const toScreen = (p: { x: number; y: number }) => ({
+      x: xScale(p.x) * k + transform.x,
+      y: yScale(p.y) * k + transform.y,
+    });
+    const density = buildDensityGrid(filtered.map(toScreen));
+    const counts = new Map<number, number>();
+    filtered.forEach((a) =>
+      counts.set(a.cluster, (counts.get(a.cluster) ?? 0) + 1)
+    );
+
+    const compact = width < 480;
+    const fontFor = (count: number) =>
+      (count >= 25 ? 11 : count >= 12 ? 10 : 9) * (compact ? 0.85 : 1);
+    const padX = 6;
+    const dotGap = 12; // room for the cluster color dot
+    const requests = Array.from(counts)
+      .filter(([id, count]) => {
+        if (id === -1 || !clusterLabels[id] || !clusterStats.medoids.has(id))
+          return false;
+        // tiny clusters only earn a label once zoomed in
+        return id === active || count * Math.sqrt(k) >= (compact ? 18 : 10);
+      })
+      .map(([id, count]) => {
+        ctx.font = `500 ${fontFor(count)}px ${fontFamily}`;
+        const at = toScreen(clusterStats.medoids.get(id)!);
+        return {
+          id,
+          x: at.x,
+          y: at.y,
+          w: ctx.measureText(clusterLabels[id]).width + padX * 2 + dotGap,
+          h: fontFor(count) + 8,
+          weight: count,
+        };
+      })
+      .filter(
+        (r) =>
+          r.x > -r.w && r.x < width + r.w && r.y > -r.h && r.y < height + r.h
+      );
+    // keep clear of the search box and reset button
+    const placed = placeLabels(
+      requests,
+      density,
+      { width, height },
+      { reserved: [{ x1: 0, y1: 0, x2: 230, y2: 48 }] }
+    );
+    labelBoxesRef.current = placed;
+
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    placed.forEach((box) => {
+      const count = counts.get(box.id) ?? 0;
+      const font = fontFor(count);
+      const h = box.y2 - box.y1;
+      ctx.globalAlpha = active === null || active === box.id ? 1 : 0.3;
+      ctx.fillStyle = haloColor;
+      ctx.beginPath();
+      if (ctx.roundRect)
+        ctx.roundRect(box.x1, box.y1, box.x2 - box.x1, h, h / 2);
+      else ctx.rect(box.x1, box.y1, box.x2 - box.x1, h);
+      ctx.globalAlpha *= 0.88;
+      ctx.fill();
+      ctx.globalAlpha = active === null || active === box.id ? 1 : 0.3;
+      ctx.fillStyle = getClusterColor(box.id, isDark);
+      ctx.beginPath();
+      ctx.arc(box.x1 + padX + 2, box.y1 + h / 2, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.font = `500 ${font}px ${fontFamily}`;
+      ctx.fillStyle = labelColor;
+      ctx.fillText(
+        clusterLabels[box.id],
+        box.x1 + padX + dotGap - 2,
+        box.y1 + h / 2 + 0.5
+      );
+    });
+    ctx.globalAlpha = 1;
   }, [
     filtered,
     theme,
@@ -324,6 +446,8 @@ export default function KnowledgeMap({
     neighborsById,
     getClusterColor,
     clusterLabels,
+    clusterStats,
+    hoveredCluster,
     canvasVersion,
   ]);
 
@@ -382,13 +506,38 @@ export default function KnowledgeMap({
       );
     }
 
+    function labelAt(clientX: number, clientY: number): number | null {
+      const r = canvas.getBoundingClientRect();
+      const x = clientX - r.left;
+      const y = clientY - r.top;
+      const hit = labelBoxesRef.current.find(
+        (b) => x >= b.x1 && x <= b.x2 && y >= b.y1 && y <= b.y2
+      );
+      return hit ? hit.id : null;
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
+      const label = labelAt(e.clientX, e.clientY);
+      if (label !== null) {
+        canvas.style.cursor = "pointer";
+        setHoveredArticleNode(null);
+        setHoveredCluster(label);
+        return;
+      }
+      setHoveredCluster(null);
       const closest = hitTest(e.clientX, e.clientY);
       canvas.style.cursor = closest ? "pointer" : "crosshair";
       setHoveredArticleNode(closest);
     };
 
+    const handleMouseLeave = () => setHoveredCluster(null);
+
     const handleClick = (e: MouseEvent) => {
+      const label = labelAt(e.clientX, e.clientY);
+      if (label !== null) {
+        zoomToClusterRef.current(label);
+        return;
+      }
       const closest = hitTest(e.clientX, e.clientY);
 
       if (!closest) {
@@ -408,13 +557,21 @@ export default function KnowledgeMap({
 
     window.addEventListener("resize", handleResize);
     canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseleave", handleMouseLeave);
     canvas.addEventListener("click", handleClick);
+    // a user gesture interrupts any running zoom animation
+    const stopAnimation = () => cancelAnimationFrame(animationRef.current);
+    canvas.addEventListener("wheel", stopAnimation, { passive: true });
+    canvas.addEventListener("pointerdown", stopAnimation, { passive: true });
 
     return () => {
       window.removeEventListener("resize", handleResize);
       selection.on(".zoom", null);
       canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseleave", handleMouseLeave);
       canvas.removeEventListener("click", handleClick);
+      canvas.removeEventListener("wheel", stopAnimation);
+      canvas.removeEventListener("pointerdown", stopAnimation);
     };
   }, [articles.length, router]);
 
@@ -428,6 +585,10 @@ export default function KnowledgeMap({
     );
   }
 
+  const isMoved =
+    Math.abs(transform.k - 1) > 0.01 ||
+    Math.abs(transform.x) > 1 ||
+    Math.abs(transform.y) > 1;
   const displayArticleNode = selectedArticleNode ?? hoveredArticleNode;
   const isPinned = selectedArticleNode !== null;
 
@@ -452,13 +613,23 @@ export default function KnowledgeMap({
       className={`relative ${className} bg-paper dark:bg-night`}
     >
       {/* Search */}
-      <input
-        type="text"
-        placeholder="search..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="absolute top-4 left-4 z-20 w-36 px-2 py-1 text-xs bg-paper/90 dark:bg-night/90 text-ink dark:text-chalk border border-rule dark:border-white/8 focus:outline-hidden placeholder:text-ink/25 dark:placeholder:text-chalk/25 backdrop-blur-xs"
-      />
+      <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+        <input
+          type="text"
+          placeholder="search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-36 px-2 py-1 text-xs bg-paper/90 dark:bg-night/90 text-ink dark:text-chalk border border-rule dark:border-white/8 focus:outline-hidden placeholder:text-ink/25 dark:placeholder:text-chalk/25 backdrop-blur-xs"
+        />
+        {isMoved && (
+          <button
+            onClick={() => animateTo({ k: 1, x: 0, y: 0 })}
+            className="bg-paper/90 dark:bg-night/90 px-2 py-1 border border-rule dark:border-white/8 text-xs text-ink/60 dark:text-chalk/60 hover:text-ink dark:hover:text-chalk transition-colors backdrop-blur-xs"
+          >
+            reset
+          </button>
+        )}
+      </div>
 
       {/* Canvas */}
       <canvas
@@ -544,11 +715,11 @@ export default function KnowledgeMap({
             {showLegend
               ? "hide"
               : selectedCluster !== null
-                ? `cluster: ${clusterLabels[selectedCluster]}`
+                ? `cluster: ${clusterLabels[selectedCluster] ?? "unclustered"}`
                 : "clusters"}
           </button>
           {showLegend && (
-            <div className="absolute bottom-8 right-0 bg-paper/95 dark:bg-night/95 px-3 py-2 border border-rule dark:border-white/8 max-h-[60vh] overflow-y-auto shadow-xs min-w-[200px] backdrop-blur-xs">
+            <div className="absolute bottom-8 right-0 bg-paper/95 dark:bg-night/95 px-3 py-2 border border-rule dark:border-white/8 max-h-[min(60vh,18rem)] overflow-y-auto shadow-xs min-w-[200px] backdrop-blur-xs">
               {selectedCluster !== null && (
                 <button
                   onClick={() => setSelectedCluster(null)}
@@ -559,17 +730,36 @@ export default function KnowledgeMap({
               )}
               <div className="space-y-0.5">
                 {Object.entries(clusterLabels)
-                  .sort(([a], [b]) => Number(a) - Number(b))
-                  .map(([clusterId, label]) => {
-                    const id = Number(clusterId);
-                    const count = articles.filter(
-                      (a) => a.cluster === id
-                    ).length;
+                  .map(([clusterId, label]) => ({
+                    id: Number(clusterId),
+                    label,
+                    count:
+                      clusterStats.byCluster.get(Number(clusterId))?.length ??
+                      0,
+                  }))
+                  .filter((c) => c.id !== -1)
+                  .sort((a, b) => b.count - a.count)
+                  .concat(
+                    clusterStats.byCluster.has(-1)
+                      ? [
+                          {
+                            id: -1,
+                            label: "unclustered",
+                            count: clusterStats.byCluster.get(-1)!.length,
+                          },
+                        ]
+                      : []
+                  )
+                  .map(({ id, label, count }) => {
                     const isActive = selectedCluster === id;
                     return (
                       <button
-                        key={clusterId}
+                        key={id}
                         onClick={() => setSelectedCluster(isActive ? null : id)}
+                        onMouseEnter={() => setHoveredCluster(id)}
+                        onMouseLeave={() => setHoveredCluster(null)}
+                        onFocus={() => setHoveredCluster(id)}
+                        onBlur={() => setHoveredCluster(null)}
                         className={`w-full flex items-center gap-2 text-xs py-0.5 px-1 rounded transition-colors ${
                           isActive
                             ? "bg-rule/40 dark:bg-white/6"

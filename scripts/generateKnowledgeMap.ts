@@ -2,6 +2,7 @@ import "dotenv/config";
 import { neon, type NeonQueryFunction } from "@neondatabase/serverless";
 import {
   computeClusteringProjection,
+  clampOutliers,
   computeVisualizationUMAP,
   normalizePositions,
 } from "../utils/chunking/umapUtils";
@@ -66,7 +67,7 @@ async function getSourceFingerprint(
     WHERE embedding IS NOT NULL
   `) as unknown as { count: string; latest: string | null }[];
   // bump the suffix when the clustering pipeline changes
-  return `${rows[0].count}:${rows[0].latest ?? "none"}:v2`;
+  return `${rows[0].count}:${rows[0].latest ?? "none"}:v3`;
 }
 
 function previousClusterLabels(
@@ -313,15 +314,15 @@ async function generateKnowledgeMap() {
 
     // 2D layout supervised by the clusters so each one stays contiguous
     console.log("Computing 2D visualization UMAP...");
-    const vizPositions = computeVisualizationUMAP(clusteringProjection, {
+    const vizPositions = computeVisualizationUMAP(centered, {
       nNeighbors: 15,
-      minDist: 0.1,
-      spread: 1.0,
+      minDist: 0.4,
+      spread: 3,
       labels: finalLabels,
-      targetWeight: 0.6,
+      targetWeight: 0.4,
     });
     const normalizedPositions = normalizePositions(
-      vizPositions,
+      clampOutliers(vizPositions),
       1000,
       1000,
       50

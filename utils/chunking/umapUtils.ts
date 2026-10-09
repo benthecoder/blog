@@ -91,6 +91,32 @@ export function computeVisualizationUMAP(
 }
 
 /**
+ * Pull the most extreme points (outside the given percentile range on either
+ * axis) onto the range edge so a few strays don't squash everything else
+ * once positions are scaled to the canvas.
+ */
+export function clampOutliers(
+  positions: UMAPPosition[],
+  percentile: number = 0.01
+): UMAPPosition[] {
+  if (positions.length === 0) return [];
+  const bounds = (values: number[]) => {
+    const sorted = [...values].sort((a, b) => a - b);
+    const lo = sorted[Math.floor(percentile * (sorted.length - 1))];
+    const hi = sorted[Math.ceil((1 - percentile) * (sorted.length - 1))];
+    return [lo, hi] as const;
+  };
+  const [x1, x2] = bounds(positions.map((p) => p.x));
+  const [y1, y2] = bounds(positions.map((p) => p.y));
+  const clamp = (v: number, lo: number, hi: number) =>
+    Math.min(hi, Math.max(lo, v));
+  return positions.map((p) => ({
+    x: clamp(p.x, x1, x2),
+    y: clamp(p.y, y1, y2),
+  }));
+}
+
+/**
  * Normalize 2D positions to fit within a canvas.
  */
 export function normalizePositions(
