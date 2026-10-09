@@ -776,3 +776,87 @@ body {
 .admin-scrollbar:hover {
   scrollbar-color: var(--scrollbar-thumb) transparent;
 }
+
+/* -- Essays: long-form reading -------------------------------------------- */
+.essay-prose p {
+  margin-top: 1.4em;
+  margin-bottom: 1.4em;
+}
+
+.essay-prose h2 {
+  margin-top: 2.6em;
+  margin-bottom: 0.8em;
+  font-weight: 700;
+  text-transform: lowercase;
+}
+
+.essay-prose blockquote {
+  margin: 2em 0;
+  padding-left: 1.25em;
+  font-size: 1.02em;
+  line-height: 1.75;
+}
+
+.essay-prose .heading-anchor {
+  margin-left: 0.4em;
+  font-weight: 400;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+.essay-prose h2:hover .heading-anchor,
+.essay-prose h3:hover .heading-anchor,
+.essay-prose .heading-anchor:focus-visible {
+  opacity: 0.5;
+}
+
+.essay-prose sup a[data-footnote-ref] {
+  padding: 0 0.15em;
+  font-size: 0.8em;
+  text-decoration: none;
+  color: var(--color-ink-muted);
+}
+
+.dark .essay-prose sup a[data-footnote-ref] {
+  color: var(--color-chalk);
+}
+
+.essay-prose section[data-footnotes] {
+  margin-top: 4em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--color-rule);
+  font-size: 0.875em;
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+}
+
+.dark .essay-prose section[data-footnotes] {
+  border-color: var(--color-night-rule);
+  color: var(--color-chalk-muted);
+}
+
+.essay-prose section[data-footnotes] ol {
+  padding-left: 1.4em;
+}
+
+.essay-prose section[data-footnotes] li {
+  padding-left: 0.2em;
+}
+
+.essay-prose section[data-footnotes] p {
+  margin: 0.4em 0;
+}
+
+.essay-prose a[data-footnote-backref] {
+  margin-left: 0.3em;
+  text-decoration: none;
+}
+
+.essay-prose li:target {
+  color: var(--color-ink-strong);
+}
+
+.dark .essay-prose li:target {
+  color: var(--color-chalk-strong);
+}
