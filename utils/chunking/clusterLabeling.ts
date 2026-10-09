@@ -1,10 +1,7 @@
-import { withRetry, wait } from "../retry";
-import {
-  CLUSTER_LABEL_MODEL,
-  CLUSTER_LABEL_MAX_SAMPLES,
-  CLUSTER_LABEL_REUSE_MIN_OVERLAP,
-  CLUSTER_LABEL_TIMEOUT,
-} from "../../config/constants";
+import { z } from "zod";
+import { generateStructured, hasLlmKey } from "../llm";
+import { CLUSTER_LABEL_REUSE_MIN_OVERLAP } from "../../config/constants";
+import { stripScaffolding } from "./postVectors";
 import type {
   ArticleData,
   ClusterLabelingOptions,
@@ -49,177 +46,93 @@ export function matchPreviousLabels(
   return matched;
 }
 
-/**
- * Pick evenly-spaced samples across the cluster's time range.
- * Temporal diversity gives the model a representative view of how the cluster
- * evolved, which produces more accurate labels than random or length-based sampling.
- */
-function selectClusterSamples(
-  articles: ArticleData[],
-  maxSamples: number
-): ArticleData[] {
-  if (articles.length <= maxSamples) return articles;
+const SAMPLES_PER_CLUSTER = 5;
 
-  const sorted = [...articles].sort((a, b) => {
-    const da = a.publishedDate ? new Date(a.publishedDate).getTime() : 0;
-    const db = b.publishedDate ? new Date(b.publishedDate).getTime() : 0;
-    return da - db;
-  });
+export interface LabelInput {
+  id: number;
+  size: number;
+  terms: string[];
+  // nearest the cluster centre first
+  articles: ArticleData[];
+}
 
-  const step = sorted.length / maxSamples;
-  return Array.from(
-    { length: maxSamples },
-    (_, i) => sorted[Math.floor(i * step)]
-  );
+function describe(article: ArticleData): string {
+  const text =
+    article.summary ??
+    stripScaffolding(article.content).slice(0, 200).replace(/\s+/g, " ");
+  return `- ${article.postTitle}: ${text}`;
 }
 
 /**
- * Construct prompt for cluster labeling.
- * Passes all titles for pattern recognition + content excerpts from samples for depth.
+ * One prompt for every cluster so the model can keep the labels distinct.
+ * `taken` are labels already assigned (reused from the previous map).
  */
-function buildClusterPrompt(
-  allArticles: ArticleData[],
-  samples: ArticleData[]
+export function buildLabelPrompt(
+  clusters: LabelInput[],
+  taken: string[] = []
 ): string {
-  const allTitles = allArticles
-    .map((a, i) => `${i + 1}. ${a.postTitle}`)
-    .join("\n");
-
-  const sampleDetails = samples
-    .map((s) => {
-      const preview = s.content.substring(0, 300).replace(/\s+/g, " ").trim();
-      const tags = s.tags?.length ? s.tags.join(", ") : "none";
-      return `"${s.postTitle}" [tags: ${tags}]\n  ${preview}...`;
-    })
+  const blocks = clusters
+    .map(
+      (c) =>
+        `## cluster ${c.id} (${c.size} posts)\nDistinctive terms: ${c.terms.join(", ") || "none"}\nMost typical posts:\n${c.articles
+          .slice(0, SAMPLES_PER_CLUSTER)
+          .map(describe)
+          .join("\n")}`
+    )
     .join("\n\n");
+  return `You are naming clusters of a personal blog's posts. Each cluster groups posts about a similar idea or subject.
 
-  return `You are labeling a cluster of semantically similar blog posts. Your goal is to find the MOST SPECIFIC shared theme — not the most general one.
+${blocks}
 
-ALL ${allArticles.length} post titles in this cluster:
-${allTitles}
+${taken.length ? `These labels are already taken, so do not reuse them: ${taken.join("; ")}\n\n` : ""}Rules:
+- one label per cluster, ALL LOWERCASE, 1-4 words
+- name the subject or idea, never the format ("daily logs", "link roundups", "blog posts", "personal reflections" are bad)
+- labels must be clearly different from each other; if two clusters overlap, pick the angle that sets each apart
+- concrete and specific beats broad
 
-Detailed excerpts from ${samples.length} representative posts:
-${sampleDetails}
+Return one label per cluster number, covering every cluster.`;
+}
 
-What single topic, activity, or subject appears most consistently across these titles? Be as specific as the titles allow.
+export const labelSchema = z.object({
+  labels: z.array(z.object({ cluster: z.number(), label: z.string() })),
+});
 
-Rules:
-- ALL LOWERCASE, 2-4 words
-- Name the SPECIFIC topic (not the emotional register or writing style)
-- Prefer concrete nouns over abstract concepts
-
-Good: "machine learning", "book reviews", "sf apartment life", "startup interviews", "travel journals"
-Bad: "personal reflections", "exploring ideas", "learning journeys", "moments of growth"
-
-Reply with ONLY the label, nothing else:`;
+/** Keep valid labels: known id, lowercase, short, and not already used. */
+export function validLabels(
+  reply: z.infer<typeof labelSchema>,
+  ids: number[],
+  taken: string[] = []
+): Map<number, string> {
+  const wanted = new Set(ids);
+  const used = new Set(taken);
+  const out = new Map<number, string>();
+  for (const { cluster, label: raw } of reply.labels) {
+    if (!wanted.has(cluster) || out.has(cluster)) continue;
+    const label = raw
+      .replace(/^["'*]+|["'*]+$/g, "")
+      .toLowerCase()
+      .trim();
+    if (label.length < 2 || label.length > 60 || used.has(label)) continue;
+    used.add(label);
+    out.set(cluster, label);
+  }
+  return out;
 }
 
 /**
- * Call OpenRouter (OpenAI-compatible chat API) with retry logic to generate a cluster label
- */
-async function callModelForLabel(
-  prompt: string,
-  model: string
-): Promise<string> {
-  return withRetry(
-    async (signal) => {
-      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        signal,
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model,
-          max_tokens: 50,
-          // nemotron reasons by default: slow (30s+) and the thinking leaks
-          // into the reply instead of the label
-          reasoning: { enabled: false },
-          messages: [{ role: "user", content: prompt }],
-        }),
-      });
-
-      if (!res.ok) {
-        throw Object.assign(
-          new Error(`OpenRouter ${res.status}: ${await res.text()}`),
-          { status: res.status }
-        );
-      }
-
-      const data = (await res.json()) as {
-        choices?: { message?: { content?: string } }[];
-      };
-      let label = data.choices?.[0]?.message?.content?.trim() ?? "";
-
-      // Take only the first line (in case the model adds explanation)
-      label = label.split("\n")[0].trim();
-
-      // Clean up markdown formatting the model might add
-      label = label
-        .replace(/^\*\*(.+)\*\*$/, "$1") // Remove **bold**
-        .replace(/^["'](.+)["']$/, "$1") // Remove quotes
-        .replace(/^\*(.+)\*$/, "$1") // Remove *italic*
-        .toLowerCase() // Force lowercase
-        .trim();
-
-      // Validate label (2-60 chars)
-      if (!label || label.length < 2 || label.length > 60) {
-        throw new Error(
-          `Invalid label format: "${label}" (${label.length} chars)`
-        );
-      }
-
-      return label;
-    },
-    {
-      maxRetries: 3,
-      timeout: CLUSTER_LABEL_TIMEOUT,
-      shouldRetry: (error: unknown) => {
-        const err = error as {
-          status?: number;
-          message?: string;
-          code?: string;
-        };
-        // Retry on rate limits, timeouts, overloaded errors
-        return Boolean(
-          err?.code === "ETIMEDOUT" ||
-            err?.status === 429 ||
-            (err?.status ?? 0) >= 500 ||
-            err?.message?.includes("timeout") ||
-            err?.message?.includes("overloaded")
-        );
-      },
-      onRetry: (error: unknown, attempt: number, delay: number) => {
-        const err = error as { message?: string };
-        console.log(
-          `Cluster labeling retry ${attempt}/3: ${err.message}. ` +
-            `Waiting ${delay}ms...`
-        );
-      },
-    }
-  );
-}
-
-/**
- * Generate semantic labels for clusters using an OpenRouter model
+ * Generate labels for clusters with a single OpenRouter request.
  *
- * Clusters that match one from the previous map keep its label; only the rest
- * are sent to the model (and only when OPENROUTER_API_KEY is set).
+ * Clusters that match one from the previous map keep its label. The rest are
+ * labeled together (and only when OPENROUTER_API_KEY is set); any the model
+ * skips or duplicates get one more round with the survivors marked as taken.
  *
- * @param clusters - Map of cluster ID to array of articles in that cluster
- * @param options - Configuration options
- * @returns Map of cluster ID to label string
+ * @param clusters - Map of cluster ID to its articles, nearest the centroid first
  */
 export async function labelClusters(
   clusters: Map<number, ArticleData[]>,
   options: ClusterLabelingOptions = {}
 ): Promise<Map<number, string>> {
-  const {
-    maxSamplesPerCluster = CLUSTER_LABEL_MAX_SAMPLES,
-    model = CLUSTER_LABEL_MODEL,
-    previous = [],
-  } = options;
+  const { previous = [], terms = new Map<number, string[]>() } = options;
 
   const labels = matchPreviousLabels(
     new Map(
@@ -230,53 +143,48 @@ export async function labelClusters(
     ),
     previous
   );
-  if (clusters.has(-1)) labels.set(-1, "Uncategorized");
-
-  const unlabeled = Array.from(clusters.keys())
-    .filter((id) => !labels.has(id))
+  // noise (-1) stays unlabeled
+  let unlabeled = Array.from(clusters.keys())
+    .filter((id) => id !== -1 && !labels.has(id))
     .sort((a, b) => a - b);
 
-  console.log(
-    `\nReused ${clusters.size - unlabeled.length}/${clusters.size} cluster labels from the previous map`
-  );
+  console.log(`\nReused ${labels.size} labels from the previous map`);
   if (unlabeled.length === 0) return labels;
 
-  if (!process.env.OPENROUTER_API_KEY) {
+  if (!hasLlmKey()) {
     console.warn(
-      `⚠️  OPENROUTER_API_KEY not set, leaving ${unlabeled.length} clusters unlabeled`
+      `⚠️  GEMINI_API_KEY not set, leaving ${unlabeled.length} clusters unlabeled`
     );
     return labels;
   }
 
-  console.log(`Labeling ${unlabeled.length} clusters with ${model}...`);
-
-  for (const clusterId of unlabeled) {
-    const articles = clusters.get(clusterId)!;
-
+  console.log(`Labeling ${unlabeled.length} clusters in one request...`);
+  let requests = 0;
+  for (let round = 0; round < 2 && unlabeled.length > 0; round++) {
+    const taken = Array.from(labels.values());
+    const prompt = buildLabelPrompt(
+      unlabeled.map((id) => ({
+        id,
+        size: clusters.get(id)!.length,
+        terms: terms.get(id) ?? [],
+        articles: clusters.get(id)!,
+      })),
+      taken
+    );
     try {
-      // Sample articles
-      const samples = selectClusterSamples(articles, maxSamplesPerCluster);
-
-      // Build prompt
-      const prompt = buildClusterPrompt(articles, samples);
-
-      // Call API
-      const label = await callModelForLabel(prompt, model);
-
-      labels.set(clusterId, label);
-      console.log(
-        `  Cluster ${clusterId} (${articles.length} posts): "${label}"`
+      requests++;
+      const reply = await generateStructured({ schema: labelSchema, prompt });
+      validLabels(reply, unlabeled, taken).forEach((label, id) =>
+        labels.set(id, label)
       );
-
-      // Small delay between requests to avoid rate limits
-      await wait(100);
     } catch (error) {
-      console.error(`Failed to label cluster ${clusterId}:`, error);
-      // Use fallback label
-      labels.set(clusterId, `Cluster ${clusterId}`);
+      console.warn(
+        `  labeling failed: ${error instanceof Error ? error.message.slice(0, 120) : error}`
+      );
     }
+    unlabeled = unlabeled.filter((id) => !labels.has(id));
   }
-
-  console.log(`✓ Labeled ${labels.size} clusters`);
+  unlabeled.forEach((id) => labels.set(id, `Cluster ${id}`));
+  console.log(`✓ Labeled ${labels.size} clusters (${requests} requests)`);
   return labels;
 }

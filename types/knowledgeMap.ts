@@ -11,6 +11,8 @@ export interface ArticleData {
   };
   sequence: number;
   embedding: number[];
+  // idea summary used for labeling
+  summary?: string;
   publishedDate?: string;
   tags: string[];
   createdAt: string;
@@ -40,6 +42,8 @@ export interface KnowledgeMapOutput {
   success: boolean;
   data: ArticleNode[];
   similarityEdges: SimilarityEdge[];
+  // one-line idea summary per post slug
+  summaries?: Record<string, string>;
   count: number;
   numClusters: number;
   clusterLabels?: Record<number, string>;
@@ -54,15 +58,16 @@ export interface PreviousClusterLabel {
 }
 
 export interface ClusterLabelingOptions {
-  maxSamplesPerCluster?: number;
-  model?: string;
   // labels from the last generated map, reused for clusters that still match
   previous?: PreviousClusterLabel[];
+  // distinctive terms per cluster ID
+  terms?: Map<number, string[]>;
 }
 
 export type KnowledgeMapPreview = Omit<
   KnowledgeMapOutput,
-  "similarityEdges"
+  "similarityEdges" | "summaries"
 > & {
   similarityEdgesUrl: string;
+  summariesUrl?: string;
 };
