@@ -166,18 +166,22 @@ export default function KnowledgeMap({
     return () => controller.abort();
   }, [hasFocusedNode, summariesUrl, summaries]);
 
-  const filtered = articles.filter((article) => {
-    if (
-      searchQuery &&
-      !article.postTitle.toLowerCase().includes(searchQuery.toLowerCase())
-    ) {
-      return false;
-    }
-    if (selectedCluster !== null && article.cluster !== selectedCluster) {
-      return false;
-    }
-    return true;
-  });
+  const filtered = useMemo(
+    () =>
+      articles.filter((article) => {
+        if (
+          searchQuery &&
+          !article.postTitle.toLowerCase().includes(searchQuery.toLowerCase())
+        ) {
+          return false;
+        }
+        if (selectedCluster !== null && article.cluster !== selectedCluster) {
+          return false;
+        }
+        return true;
+      }),
+    [articles, searchQuery, selectedCluster]
+  );
 
   const clusterStats = useMemo(() => {
     const byCluster = new Map<number, ArticleNode[]>();
@@ -208,13 +212,28 @@ export default function KnowledgeMap({
     [clusterStats]
   );
 
+  // Pan/zoom write here and redraw on the next frame; React state is only
+  // updated when a gesture ends, so dragging never re-renders the tree.
   const transformRef = useRef(transform);
   const hoveredArticleNodeRef = useRef(hoveredArticleNode);
   const filteredRef = useRef(filtered);
-
-  useEffect(() => {
-    transformRef.current = transform;
-  }, [transform]);
+  const drawRef = useRef<() => void>(() => {});
+  const frameRef = useRef(0);
+  const scheduleDraw = useCallback(() => {
+    if (frameRef.current) return;
+    frameRef.current = requestAnimationFrame(() => {
+      frameRef.current = 0;
+      drawRef.current();
+    });
+  }, []);
+  useEffect(() => () => cancelAnimationFrame(frameRef.current), []);
+  const labelCacheRef = useRef<{
+    key: string;
+    filtered: ArticleNode[];
+    labels: Record<number, string>;
+    layoutK: number;
+    boxes: (PlacedLabel & { font: number })[];
+  } | null>(null);
   useEffect(() => {
     hoveredArticleNodeRef.current = hoveredArticleNode;
   }, [hoveredArticleNode]);
@@ -256,199 +275,231 @@ export default function KnowledgeMap({
 
   // Render
   useEffect(() => {
-    if (!canvasRef.current || !containerRef.current) return;
+    drawRef.current = () => {
+      if (!canvasRef.current || !containerRef.current) return;
+      const transform = transformRef.current;
 
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+      const canvas = canvasRef.current;
+      const container = containerRef.current;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const rect = container.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = container.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
 
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
-    ctx.clearRect(0, 0, width, height);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, width, height);
 
-    if (filtered.length === 0) return;
+      if (filtered.length === 0) return;
 
-    const xScale = scaleLinear().domain([0, 1000]).range([0, width]);
-    const yScale = scaleLinear().domain([0, 1000]).range([0, height]);
-    const isDark = theme === "dark";
+      const xScale = scaleLinear().domain([0, 1000]).range([0, width]);
+      const yScale = scaleLinear().domain([0, 1000]).range([0, height]);
+      const isDark = theme === "dark";
 
-    const dotDefault = readToken(isDark ? "--color-chalk" : "--color-ink");
-    const dotHover = readToken(
-      isDark ? "--color-chalk-strong" : "--color-ink-strong"
-    );
-    const edgeColor = readToken(isDark ? "--color-chalk" : "--color-ink-muted");
-    const labelColor = readToken(
-      isDark ? "--color-chalk-strong" : "--color-ink-strong"
-    );
-    const haloColor = readToken(isDark ? "--color-night" : "--color-paper");
-
-    ctx.save();
-    ctx.translate(transform.x, transform.y);
-    ctx.scale(transform.k, transform.k);
-
-    // Similarity connections on hover/select — opacity scales with similarity
-    const focusedArticleNode = selectedArticleNode ?? hoveredArticleNode;
-    if (focusedArticleNode) {
-      const byId = new Map(filtered.map((a) => [a.id, a]));
-      (neighborsById.get(focusedArticleNode.id) ?? []).forEach(
-        ({ id, sim }) => {
-          const other = byId.get(id);
-          if (!other) return;
-          const alpha = Math.max(0.06, (sim - 0.7) * 0.5);
-          ctx.beginPath();
-          ctx.moveTo(
-            xScale(focusedArticleNode.x),
-            yScale(focusedArticleNode.y)
-          );
-          ctx.lineTo(xScale(other.x), yScale(other.y));
-          ctx.globalAlpha = alpha;
-          ctx.strokeStyle = edgeColor;
-          ctx.lineWidth = 0.8 / transform.k;
-          ctx.stroke();
-          ctx.globalAlpha = 1;
-        }
+      const dotDefault = readToken(isDark ? "--color-chalk" : "--color-ink");
+      const dotHover = readToken(
+        isDark ? "--color-chalk-strong" : "--color-ink-strong"
       );
-    }
+      const edgeColor = readToken(
+        isDark ? "--color-chalk" : "--color-ink-muted"
+      );
+      const labelColor = readToken(
+        isDark ? "--color-chalk-strong" : "--color-ink-strong"
+      );
+      const haloColor = readToken(isDark ? "--color-night" : "--color-paper");
 
-    // Dots — circles only; unclustered posts sit underneath, small and quiet
-    const active = hoveredCluster;
-    const drawDot = (article: ArticleNode) => {
-      const x = xScale(article.x);
-      const y = yScale(article.y);
-      const wordCount = article.wordCount;
-      const isNoise = article.cluster === -1;
-      let size = isNoise
-        ? 1.6
-        : Math.max(2, Math.min(3.5, Math.log(wordCount + 1) * 0.55));
-      let opacity = isNoise ? 0.55 : Math.min(0.78, 0.45 + wordCount / 2500);
+      ctx.save();
+      ctx.translate(transform.x, transform.y);
+      ctx.scale(transform.k, transform.k);
 
-      const isSelected = article.id === selectedArticleNode?.id;
-      const isHovered = article.id === hoveredArticleNode?.id;
-
-      let color = getClusterColor(article.cluster, isDark);
-
-      if (active !== null) {
-        if (article.cluster === active) {
-          opacity = 0.95;
-          size += 0.6;
-        } else {
-          opacity *= 0.15;
-        }
+      // Similarity connections on hover/select — opacity scales with similarity
+      const focusedArticleNode = selectedArticleNode ?? hoveredArticleNode;
+      if (focusedArticleNode) {
+        const byId = new Map(filtered.map((a) => [a.id, a]));
+        (neighborsById.get(focusedArticleNode.id) ?? []).forEach(
+          ({ id, sim }) => {
+            const other = byId.get(id);
+            if (!other) return;
+            const alpha = Math.max(0.06, (sim - 0.7) * 0.5);
+            ctx.beginPath();
+            ctx.moveTo(
+              xScale(focusedArticleNode.x),
+              yScale(focusedArticleNode.y)
+            );
+            ctx.lineTo(xScale(other.x), yScale(other.y));
+            ctx.globalAlpha = alpha;
+            ctx.strokeStyle = edgeColor;
+            ctx.lineWidth = 0.8 / transform.k;
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+          }
+        );
       }
 
-      if (isSelected || isHovered) {
-        color = dotHover;
-        opacity = 1;
-      } else if (
-        searchQuery &&
-        article.postTitle.toLowerCase().includes(searchQuery.toLowerCase())
+      // Dots — circles only; unclustered posts sit underneath, small and quiet
+      const active = hoveredCluster;
+      const drawDot = (article: ArticleNode) => {
+        const x = xScale(article.x);
+        const y = yScale(article.y);
+        const wordCount = article.wordCount;
+        const isNoise = article.cluster === -1;
+        let size = isNoise
+          ? 1.6
+          : Math.max(2, Math.min(3.5, Math.log(wordCount + 1) * 0.55));
+        let opacity = isNoise ? 0.55 : Math.min(0.78, 0.45 + wordCount / 2500);
+
+        const isSelected = article.id === selectedArticleNode?.id;
+        const isHovered = article.id === hoveredArticleNode?.id;
+
+        let color = getClusterColor(article.cluster, isDark);
+
+        if (active !== null) {
+          if (article.cluster === active) {
+            opacity = 0.95;
+            size += 0.6;
+          } else {
+            opacity *= 0.15;
+          }
+        }
+
+        if (isSelected || isHovered) {
+          color = dotHover;
+          opacity = 1;
+        } else if (
+          searchQuery &&
+          article.postTitle.toLowerCase().includes(searchQuery.toLowerCase())
+        ) {
+          color = dotDefault;
+          opacity = 0.85;
+        }
+
+        ctx.globalAlpha = opacity;
+        ctx.beginPath();
+        ctx.arc(x, y, size / Math.sqrt(transform.k), 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+      };
+      filtered.forEach((a) => a.cluster === -1 && drawDot(a));
+      filtered.forEach((a) => a.cluster !== -1 && drawDot(a));
+      ctx.globalAlpha = 1;
+
+      ctx.restore();
+
+      // Cluster labels, drawn in screen space after the dots. Layout ignores
+      // panning and is only redone when zoom crosses a quarter-octave step, so
+      // labels glide with the dots instead of re-solving every frame.
+      const k = transform.k;
+      const layoutK = 2 ** (Math.round(Math.log2(k) * 4) / 4);
+      const compact = width < 480;
+      const cacheKey = `${layoutK}|${width}|${height}|${active ?? ""}`;
+      const cache = labelCacheRef.current;
+      let boxes: (PlacedLabel & { font: number })[];
+      if (
+        cache &&
+        cache.key === cacheKey &&
+        cache.filtered === filtered &&
+        cache.labels === clusterLabels
       ) {
-        color = dotDefault;
-        opacity = 0.85;
+        boxes = cache.boxes;
+      } else {
+        const fontFamily = getComputedStyle(container).fontFamily;
+        const toLayout = (p: { x: number; y: number }) => ({
+          x: xScale(p.x) * layoutK,
+          y: yScale(p.y) * layoutK,
+        });
+        const density = buildDensityGrid(filtered.map(toLayout));
+        const counts = new Map<number, number>();
+        filtered.forEach((a) =>
+          counts.set(a.cluster, (counts.get(a.cluster) ?? 0) + 1)
+        );
+        // the biggest groups first; more names appear as you zoom in
+        const limit = Math.round((compact ? 5 : 8) * layoutK);
+        const ranked = Array.from(counts)
+          .filter(
+            ([id]) =>
+              id !== -1 && clusterLabels[id] && clusterStats.medoids.has(id)
+          )
+          .sort((a, b) => b[1] - a[1]);
+        const shown = ranked
+          .slice(0, limit)
+          .concat(ranked.filter(([id], i) => i >= limit && id === active));
+        const font = compact ? 10 : 11;
+        ctx.font = `500 ${font}px ${fontFamily}`;
+        const requests = shown.map(([id, count]) => {
+          const at = toLayout(clusterStats.medoids.get(id)!);
+          return {
+            id,
+            x: at.x,
+            y: at.y,
+            w: ctx.measureText(clusterLabels[id]).width + 4,
+            h: font + 6,
+            weight: count,
+          };
+        });
+        boxes = placeLabels(requests, density, null).map((b) => ({
+          ...b,
+          font,
+        }));
+        labelCacheRef.current = {
+          key: cacheKey,
+          filtered,
+          labels: clusterLabels,
+          layoutK,
+          boxes,
+        };
       }
 
-      ctx.globalAlpha = opacity;
-      ctx.beginPath();
-      ctx.arc(x, y, size / Math.sqrt(transform.k), 0, Math.PI * 2);
-      ctx.fillStyle = color;
-      ctx.fill();
+      // scale the cached layout to the live zoom, then add the pan offset
+      const s = k / layoutK;
+      const fontFamily = getComputedStyle(container).fontFamily;
+      const chrome = [
+        { x1: 0, y1: 0, x2: 200, y2: 48 }, // search
+        { x1: 0, y1: height - 44, x2: 180, y2: height }, // hint
+        { x1: width - 120, y1: height - 44, x2: width, y2: height }, // legend
+      ];
+      const visible: PlacedLabel[] = [];
+      for (const b of boxes) {
+        const w = b.x2 - b.x1;
+        const h = b.y2 - b.y1;
+        const cx = ((b.x1 + b.x2) / 2) * s + transform.x;
+        const cy = ((b.y1 + b.y2) / 2) * s + transform.y;
+        // hide labels whose cluster is off screen; otherwise slide them fully
+        // inside the frame (continuous in pan, so nothing jumps)
+        if (cx < 0 || cx > width || cy < 0 || cy > height) continue;
+        const x1 = Math.min(Math.max(cx - w / 2, 4), width - w - 4);
+        const y1 = Math.min(Math.max(cy - h / 2, 4), height - h - 4);
+        const box = { id: b.id, x1, y1, x2: x1 + w, y2: y1 + h };
+        const midY = y1 + h / 2;
+        if (
+          chrome.some(
+            (c) =>
+              box.x1 < c.x2 && box.x2 > c.x1 && box.y1 < c.y2 && box.y2 > c.y1
+          )
+        )
+          continue;
+        visible.push(box);
+        ctx.globalAlpha = active === null || active === b.id ? 1 : 0.25;
+        ctx.font = `500 ${b.font}px ${fontFamily}`;
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        // a thin page-colored outline keeps text legible over dots, no boxes
+        ctx.lineJoin = "round";
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = haloColor;
+        ctx.strokeText(clusterLabels[b.id], box.x1 + 2, midY + 0.5);
+        ctx.fillStyle = labelColor;
+        ctx.fillText(clusterLabels[b.id], box.x1 + 2, midY + 0.5);
+      }
+      labelBoxesRef.current = visible;
+      ctx.globalAlpha = 1;
     };
-    filtered.forEach((a) => a.cluster === -1 && drawDot(a));
-    filtered.forEach((a) => a.cluster !== -1 && drawDot(a));
-    ctx.globalAlpha = 1;
-
-    ctx.restore();
-
-    // Cluster labels, in screen space after the dots so nothing paints over
-    // them. Each sits at its cluster's medoid, nudged to the sparsest nearby
-    // spot, on a paper-colored pill.
-    const fontFamily = getComputedStyle(container).fontFamily;
-    const k = transform.k;
-    const toScreen = (p: { x: number; y: number }) => ({
-      x: xScale(p.x) * k + transform.x,
-      y: yScale(p.y) * k + transform.y,
-    });
-    const density = buildDensityGrid(filtered.map(toScreen));
-    const counts = new Map<number, number>();
-    filtered.forEach((a) =>
-      counts.set(a.cluster, (counts.get(a.cluster) ?? 0) + 1)
-    );
-
-    const compact = width < 480;
-    const fontFor = (count: number) =>
-      (count >= 25 ? 11 : count >= 12 ? 10 : 9) * (compact ? 0.85 : 1);
-    const padX = 6;
-    const dotGap = 12; // room for the cluster color dot
-    const requests = Array.from(counts)
-      .filter(([id, count]) => {
-        if (id === -1 || !clusterLabels[id] || !clusterStats.medoids.has(id))
-          return false;
-        // tiny clusters only earn a label once zoomed in
-        return id === active || count * Math.sqrt(k) >= (compact ? 18 : 10);
-      })
-      .map(([id, count]) => {
-        ctx.font = `500 ${fontFor(count)}px ${fontFamily}`;
-        const at = toScreen(clusterStats.medoids.get(id)!);
-        return {
-          id,
-          x: at.x,
-          y: at.y,
-          w: ctx.measureText(clusterLabels[id]).width + padX * 2 + dotGap,
-          h: fontFor(count) + 8,
-          weight: count,
-        };
-      })
-      .filter(
-        (r) =>
-          r.x > -r.w && r.x < width + r.w && r.y > -r.h && r.y < height + r.h
-      );
-    // keep clear of the search box and reset button
-    const placed = placeLabels(
-      requests,
-      density,
-      { width, height },
-      { reserved: [{ x1: 0, y1: 0, x2: 230, y2: 48 }] }
-    );
-    labelBoxesRef.current = placed;
-
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-    placed.forEach((box) => {
-      const count = counts.get(box.id) ?? 0;
-      const font = fontFor(count);
-      const h = box.y2 - box.y1;
-      ctx.globalAlpha = active === null || active === box.id ? 1 : 0.3;
-      ctx.fillStyle = haloColor;
-      ctx.beginPath();
-      if (ctx.roundRect)
-        ctx.roundRect(box.x1, box.y1, box.x2 - box.x1, h, h / 2);
-      else ctx.rect(box.x1, box.y1, box.x2 - box.x1, h);
-      ctx.globalAlpha *= 0.88;
-      ctx.fill();
-      ctx.globalAlpha = active === null || active === box.id ? 1 : 0.3;
-      ctx.fillStyle = getClusterColor(box.id, isDark);
-      ctx.beginPath();
-      ctx.arc(box.x1 + padX + 2, box.y1 + h / 2, 2.5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.font = `500 ${font}px ${fontFamily}`;
-      ctx.fillStyle = labelColor;
-      ctx.fillText(
-        clusterLabels[box.id],
-        box.x1 + padX + dotGap - 2,
-        box.y1 + h / 2 + 0.5
-      );
-    });
-    ctx.globalAlpha = 1;
+    drawRef.current();
   }, [
     filtered,
     theme,
-    transform,
     hoveredArticleNode,
     selectedArticleNode,
     searchQuery,
@@ -478,12 +529,11 @@ export default function KnowledgeMap({
     const zoomBehavior = d3Zoom()
       .scaleExtent([0.5, 10])
       .on("zoom", (event) => {
-        setTransform({
-          k: event.transform.k,
-          x: event.transform.x,
-          y: event.transform.y,
-        });
-      });
+        const { k, x, y } = event.transform;
+        transformRef.current = { k, x, y };
+        scheduleDraw();
+      })
+      .on("end", () => setTransform({ ...transformRef.current }));
 
     zoomBehaviorRef.current = zoomBehavior;
     const selection = select<Element, unknown>(canvas);
@@ -582,7 +632,7 @@ export default function KnowledgeMap({
       canvas.removeEventListener("wheel", stopAnimation);
       canvas.removeEventListener("pointerdown", stopAnimation);
     };
-  }, [articles.length, router]);
+  }, [articles.length, router, scheduleDraw]);
 
   if (loading) return <UMAPLoader className={className} />;
 
@@ -650,72 +700,54 @@ export default function KnowledgeMap({
       {/* ArticleNode detail panel — hover preview or pinned detail */}
       {displayArticleNode && (
         <div
-          className={`absolute z-20 bg-paper/95 dark:bg-night/95 p-3 border shadow-xs w-[200px] sm:w-56 backdrop-blur-xs transition-[border-color] duration-150 pointer-events-none ${
-            isPinned
-              ? "border-ink/25 dark:border-white/15"
-              : "border-rule dark:border-white/8"
-          }`}
+          className="absolute z-20 w-60 px-3.5 py-3 bg-paper dark:bg-night border border-rule dark:border-white/10 shadow-[0_6px_20px_rgb(0_0_0/0.06)] pointer-events-none"
           style={getPanelPosition()}
         >
-          {isPinned && (
-            <button
-              onClick={() => {
-                setSelectedArticleNode(null);
-                setClickPos(null);
-              }}
-              aria-label="close"
-              className="pointer-events-auto absolute top-1.5 right-2 text-ink/30 hover:text-ink/70 dark:text-chalk/30 dark:hover:text-chalk/70 transition-colors text-base leading-none"
-            >
-              ×
-            </button>
-          )}
-
-          <h3 className="font-medium text-sm leading-tight mb-2 text-ink dark:text-chalk pr-4">
+          <p className="flex items-baseline justify-between gap-3 text-[11px] lowercase tabular-nums text-ink/50 dark:text-chalk/50">
+            <span className="truncate">
+              {clusterLabels[displayArticleNode.cluster] ?? "unclustered"}
+            </span>
+            {displayArticleNode.publishedDate && (
+              <span className="shrink-0">
+                {new Date(displayArticleNode.publishedDate).toLocaleDateString(
+                  "en-US",
+                  { year: "numeric", month: "short" }
+                )}
+              </span>
+            )}
+          </p>
+          <h3 className="mt-1.5 text-sm font-medium leading-snug text-ink-strong dark:text-chalk-strong">
             {displayArticleNode.postTitle}
           </h3>
-
           {summaries?.[displayArticleNode.postSlug] && (
-            <p className="mb-2 text-xs leading-snug text-ink/70 dark:text-chalk/70 line-clamp-4">
+            <p className="mt-1 text-xs leading-relaxed text-ink/75 dark:text-chalk/75 line-clamp-3">
               {summaries[displayArticleNode.postSlug]}
             </p>
           )}
-
-          <div className="space-y-1 text-xs text-ink/60 dark:text-chalk/60">
-            {clusterLabels[displayArticleNode.cluster] && (
-              <div className="flex items-center gap-1.5">
-                <div
-                  className="w-2 h-2 rounded-full shrink-0"
-                  style={{
-                    backgroundColor: getClusterColor(
-                      displayArticleNode.cluster,
-                      theme === "dark"
-                    ),
-                  }}
-                />
-                <span>{clusterLabels[displayArticleNode.cluster]}</span>
-              </div>
-            )}
-            {displayArticleNode.publishedDate && (
-              <p>
-                {new Date(displayArticleNode.publishedDate).toLocaleDateString(
-                  "en-US",
-                  { year: "numeric", month: "short", day: "numeric" }
-                )}
-              </p>
-            )}
-          </div>
-
           {isPinned ? (
-            <Link
-              href={`/posts/${displayArticleNode.postSlug}`}
-              className="pointer-events-auto mt-3 flex items-center gap-1 text-xs text-ink/50 hover:text-ink dark:text-chalk/50 dark:hover:text-chalk transition-colors"
-            >
-              read →
-            </Link>
+            <div className="pointer-events-auto mt-2.5 flex items-center justify-between text-xs">
+              <Link
+                href={`/posts/${displayArticleNode.postSlug}`}
+                className="text-ink dark:text-chalk underline underline-offset-4 decoration-ink/25 dark:decoration-chalk/25 hover:decoration-current"
+              >
+                read →
+              </Link>
+              <button
+                onClick={() => {
+                  setSelectedArticleNode(null);
+                  setClickPos(null);
+                }}
+                className="text-ink/50 hover:text-ink dark:text-chalk/50 dark:hover:text-chalk"
+              >
+                close
+              </button>
+            </div>
           ) : (
-            <p className="mt-2 text-[10px] text-ink/25 dark:text-chalk/25">
-              {isTouchDevice ? "tap again to read" : "click to pin"}
-            </p>
+            isTouchDevice && (
+              <p className="mt-2 text-[11px] text-ink/40 dark:text-chalk/40">
+                tap again to read
+              </p>
+            )
           )}
         </div>
       )}

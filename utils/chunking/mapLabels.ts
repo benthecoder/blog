@@ -52,7 +52,7 @@ export function buildDensityGrid(
 export function placeLabels(
   requests: LabelRequest[],
   density: (box: Box) => number,
-  bounds: { width: number; height: number },
+  bounds: { width: number; height: number } | null,
   { gap = 3, reserved = [] as Box[] } = {}
 ): PlacedLabel[] {
   const placed: PlacedLabel[] = [];
@@ -74,14 +74,14 @@ export function placeLabels(
     ];
     let best: { box: Box; cost: number } | null = null;
     for (const [ox, oy] of offsets) {
-      const cx = Math.min(
-        Math.max(r.x + ox, r.w / 2 + 2),
-        bounds.width - r.w / 2 - 2
-      );
-      const cy = Math.min(
-        Math.max(r.y + oy, r.h / 2 + 2),
-        bounds.height - r.h / 2 - 2
-      );
+      // Without bounds the layout ignores the viewport, so panning (which
+      // only translates) can never change where a label lands.
+      const cx = bounds
+        ? Math.min(Math.max(r.x + ox, r.w / 2 + 2), bounds.width - r.w / 2 - 2)
+        : r.x + ox;
+      const cy = bounds
+        ? Math.min(Math.max(r.y + oy, r.h / 2 + 2), bounds.height - r.h / 2 - 2)
+        : r.y + oy;
       const box = {
         x1: cx - r.w / 2,
         y1: cy - r.h / 2,
