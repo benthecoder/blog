@@ -12,11 +12,14 @@ import {
   writeDraftBackup,
   removeDraftBackup,
 } from "@/utils/content/draftRecovery";
+import type { ContentKind } from "@/utils/content/kind";
+import { toDateString } from "@/utils/content/essayDate";
 import { DEFAULT_POST_TEMPLATE } from "../post-template";
 import { suggestPeriods, type PeriodKind } from "@/utils/digest/schedule";
 
 interface UsePostDraftArgs {
   slug: string;
+  kind?: ContentKind;
   isNew: boolean;
   searchParams: ReturnType<typeof useSearchParams>;
   router: ReturnType<typeof useRouter>;
@@ -39,6 +42,7 @@ interface UsePostDraftArgs {
  */
 export function usePostDraft({
   slug,
+  kind = "post",
   isNew,
   searchParams,
   router,
@@ -46,7 +50,13 @@ export function usePostDraft({
   notify,
 }: UsePostDraftArgs) {
   const dateParam = isNew ? searchParams.get("date") : null;
-  const recoveryKey = draftRecoveryKey(slug, dateParam);
+  const isEssay = kind === "essay";
+  // Post requests stay exactly as before; essays add a kind marker.
+  const kindQuery = isEssay ? "&kind=essay" : "";
+  const kindBody = isEssay ? { kind } : {};
+  // Essay slugs can't collide with post recovery copies in localStorage.
+  const recoverySlug = isEssay ? `essay-${slug}` : slug;
+  const recoveryKey = draftRecoveryKey(recoverySlug, dateParam);
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const loading = loadedKey !== recoveryKey;
   const [backupAvailable, setBackupAvailable] = useState(true);
@@ -131,7 +141,7 @@ export function usePostDraft({
 
   // Fetch all posts to determine prev/next for existing posts
   useEffect(() => {
-    if (isNew) return;
+    if (isNew || isEssay) return;
 
     const abortController = new AbortController();
 
@@ -154,7 +164,7 @@ export function usePostDraft({
       });
 
     return () => abortController.abort();
-  }, [slug, isNew]);
+  }, [slug, isNew, isEssay]);
 
   // Prev/next dates for new posts: pure function of the date param
   const shiftDate = (base: string, days: number) => {
@@ -195,9 +205,12 @@ export function usePostDraft({
     };
 
     if (!isNew) {
-      fetch(`/api/admin/get-post?slug=${encodeURIComponent(slug)}`, {
-        signal: controller.signal,
-      })
+      fetch(
+        `/api/admin/get-post?slug=${encodeURIComponent(slug)}${kindQuery}`,
+        {
+          signal: controller.signal,
+        }
+      )
         .then(async (res) => {
           const data = await res.json();
           if (!res.ok) throw new Error(data.error || "Could not load post");
@@ -205,11 +218,18 @@ export function usePostDraft({
         })
         .then((data) => {
           if (controller.signal.aborted) return;
-          const rawContent = stringifyFrontmatter(data.content, {
-            title: data.title,
-            tags: data.tags,
-            date: data.date,
-          });
+          const rawContent = stringifyFrontmatter(
+            data.content,
+            isEssay
+              ? {
+                  title: data.title,
+                  subtitle: data.subtitle,
+                  date: data.date,
+                  ...(data.updated ? { updated: data.updated } : {}),
+                  ...(data.tags ? { tags: data.tags } : {}),
+                }
+              : { title: data.title, tags: data.tags, date: data.date }
+          );
           setMarkdown(rawContent);
           setDate(data.date);
           setIsDraft(data.isDraft ?? false);
@@ -268,7 +288,7 @@ export function usePostDraft({
     };
     // confirmAction/notify are page-level helpers, not load triggers
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug, isNew, dateParam, recoveryKey]);
+  }, [slug, isNew, isEssay, kindQuery, dateParam, recoveryKey]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
   // Stable identity required: dep of the cmd+S keydown effect below
@@ -283,7 +303,9 @@ export function usePostDraft({
 
       const parsedTitle = (frontmatter.title || "").toString().trim();
       const parsedTags = (frontmatter.tags || "").toString().trim();
-      const parsedDate = (frontmatter.date || date).toString().trim();
+      const parsedDate = isEssay
+        ? toDateString(frontmatter.date || date)
+        : (frontmatter.date || date).toString().trim();
 
       let slugToUse = slug;
 
@@ -308,6 +330,13 @@ export function usePostDraft({
           date: parsedDate,
           content: content,
           isNew,
+          ...(isEssay
+            ? {
+                ...kindBody,
+                subtitle: (frontmatter.subtitle || "").toString().trim(),
+                updated: toDateString(frontmatter.updated),
+              }
+            : {}),
         }),
       });
 
@@ -319,7 +348,9 @@ export function usePostDraft({
         setIsDraft(data.isDraft ?? isDraft);
 
         if (latestMarkdownRef.current === markdown) {
-          removeDraftBackup(draftRecoveryKey(slug, searchParams.get("date")));
+          removeDraftBackup(
+            draftRecoveryKey(recoverySlug, searchParams.get("date"))
+          );
           removeDraftBackup(`draft-${slugToUse}`);
           if (isNew) {
             const legacy = readDraftBackup("draft-new");
@@ -351,6 +382,8 @@ export function usePostDraft({
   }, [
     slug,
     isNew,
+    isEssay,
+    recoverySlug,
     searchParams,
     date,
     markdown,
@@ -382,7 +415,7 @@ export function usePostDraft({
       const response = await fetch("/api/admin/publish-post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug: slugToUse }),
+        body: JSON.stringify({ slug: slugToUse, ...kindBody }),
       });
 
       const data = await response.json();
@@ -408,7 +441,7 @@ export function usePostDraft({
       const response = await fetch("/api/admin/unpublish-post", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ slug }),
+        body: JSON.stringify({ slug, ...kindBody }),
       });
 
       const data = await response.json();
@@ -428,7 +461,7 @@ export function usePostDraft({
 
   const handleDelete = () => {
     confirmAction(
-      "delete this post?",
+      isEssay ? "delete this essay?" : "delete this post?",
       "The file is removed and this can't be undone.",
       ["keep", "delete"],
       async () => {
@@ -437,19 +470,21 @@ export function usePostDraft({
 
         try {
           const response = await fetch(
-            `/api/admin/delete-post?slug=${encodeURIComponent(slug)}`,
+            `/api/admin/delete-post?slug=${encodeURIComponent(slug)}${kindQuery}`,
             { method: "DELETE" }
           );
 
           const data = await response.json();
 
           if (response.ok) {
-            notify("✓ Post deleted");
+            notify(isEssay ? "✓ Essay deleted" : "✓ Post deleted");
             setTimeout(() => {
               router.push(
-                searchParams.get("month")
-                  ? `/admin?month=${searchParams.get("month")}`
-                  : "/admin"
+                isEssay
+                  ? "/admin/essays"
+                  : searchParams.get("month")
+                    ? `/admin?month=${searchParams.get("month")}`
+                    : "/admin"
               );
             }, 1000);
           } else {

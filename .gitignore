@@ -37,6 +37,7 @@ yarn-error.log*
 next-env.d.ts
 
 posts/drafts/*.md
+essays/drafts/*.md
 drafts
 public/images/drafts/*
 !public/images/drafts/.gitkeep

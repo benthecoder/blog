@@ -21,14 +21,27 @@ function cdata(value: string) {
   return `<![CDATA[${value.replaceAll("]]>", "]]]]><![CDATA[>")}]]>`;
 }
 
+interface FeedOptions {
+  title?: string;
+  description?: string;
+  basePath?: string; // item URLs: SITE_URL + basePath + slug
+  selfPath?: string; // the feed's own URL path
+}
+
 export function buildRssFeed(
-  posts: PostMetadata[],
-  readContent: (slug: string) => string
+  posts: Pick<PostMetadata, "slug" | "title" | "date">[],
+  readContent: (slug: string) => string,
+  {
+    title = "Benedict Neo",
+    description = "Daily writing about learnings, thoughts, and ideas",
+    basePath = "/posts/",
+    selfPath = "/rss.xml",
+  }: FeedOptions = {}
 ): string {
   const recent = posts.slice(0, RSS_POST_LIMIT);
   const items = recent
     .map((post) => {
-      const url = `${SITE_URL}/posts/${encodeURIComponent(post.slug)}`;
+      const url = `${SITE_URL}${basePath}${encodeURIComponent(post.slug)}`;
       const html = String(
         processor.processSync(readContent(post.slug))
       ).replace(/src="\/images\//g, `src="${SITE_URL}/images/`);
@@ -53,8 +66,8 @@ export function buildRssFeed(
     : "";
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
-<channel><title>Benedict Neo</title>
-<description>Daily writing about learnings, thoughts, and ideas</description>
-<link>${SITE_URL}</link><atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml" />
+<channel><title>${title}</title>
+<description>${description}</description>
+<link>${SITE_URL}</link><atom:link href="${SITE_URL}${selfPath}" rel="self" type="application/rss+xml" />
 ${date}${items}</channel></rss>`;
 }

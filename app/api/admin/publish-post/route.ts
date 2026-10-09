@@ -2,12 +2,8 @@ import fs from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
-import {
-  IMAGES_DRAFTS_DIR,
-  getPostPath,
-  getDraftPath,
-  isSafeSlug,
-} from "@/config/paths";
+import { IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
+import { parseKind, contentPaths } from "@/utils/content/kind";
 import { acquirePostTransition } from "@/utils/content/postTransition";
 import { writeAtomicFile } from "@/utils/content/atomicFile";
 import { r2PutImage } from "@/utils/r2";
@@ -17,7 +13,11 @@ export async function POST(request: NextRequest) {
   if (authError) return authError;
   let release: (() => void) | undefined;
   try {
-    const { slug } = await request.json();
+    const { slug, kind: rawKind } = await request.json();
+    const kind = parseKind(rawKind);
+    if (!kind) {
+      return NextResponse.json({ error: "Invalid kind" }, { status: 400 });
+    }
 
     if (!slug) {
       return NextResponse.json({ error: "Slug required" }, { status: 400 });
@@ -37,8 +37,9 @@ export async function POST(request: NextRequest) {
     }
     release = acquired;
 
-    const publishedPath = getPostPath(slug);
-    const draftPath = getDraftPath(slug);
+    const paths = contentPaths(kind);
+    const publishedPath = paths.publishedPath(slug);
+    const draftPath = paths.draftPath(slug);
 
     // Check if already published
     if (fs.existsSync(publishedPath)) {

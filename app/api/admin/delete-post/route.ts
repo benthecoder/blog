@@ -1,14 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
+import { parseKind, contentPaths } from "@/utils/content/kind";
 import { checkAdminAuth } from "@/utils/adminAuth";
-import {
-  IMAGES_DIR,
-  IMAGES_DRAFTS_DIR,
-  getPostPath,
-  getDraftPath,
-  isSafeSlug,
-} from "@/config/paths";
+import { IMAGES_DIR, IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
 
 export async function DELETE(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -26,9 +21,15 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }
 
+    const kind = parseKind(searchParams.get("kind"));
+    if (!kind) {
+      return NextResponse.json({ error: "Invalid kind" }, { status: 400 });
+    }
+
     // Check both drafts and published folders
-    const draftPath = getDraftPath(slug);
-    const publishedPath = getPostPath(slug);
+    const paths = contentPaths(kind);
+    const draftPath = paths.draftPath(slug);
+    const publishedPath = paths.publishedPath(slug);
 
     let deleted = false;
     let deletedFrom = "";

@@ -1,4 +1,5 @@
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
+import type { ComponentPropsWithoutRef } from "react";
 import type { Components } from "react-markdown";
 import { codeToHtml } from "@/utils/codeHighlighting";
 import { getPostPreviewData, postSlugFromHref } from "@/utils/content/preview";
@@ -86,10 +87,47 @@ const components: Components = {
   },
 };
 
-export default function MarkdownContent({ content }: { content: string }) {
+// Long-form pages get a quiet "#" link on h2/h3; ids come from rehype-slug.
+function anchoredHeading(Tag: "h2" | "h3") {
+  return function Heading({
+    node: _node,
+    id,
+    children,
+    ...rest
+  }: ComponentPropsWithoutRef<"h2"> & { node?: unknown }) {
+    return (
+      <Tag id={id} {...rest}>
+        {children}
+        {id && (
+          <a
+            href={`#${id}`}
+            aria-label="link to this section"
+            className="heading-anchor"
+          >
+            #
+          </a>
+        )}
+      </Tag>
+    );
+  };
+}
+
+const anchoredComponents: Components = {
+  ...components,
+  h2: anchoredHeading("h2"),
+  h3: anchoredHeading("h3"),
+};
+
+export default function MarkdownContent({
+  content,
+  anchors = false,
+}: {
+  content: string;
+  anchors?: boolean;
+}) {
   return (
     <ReactMarkdown
-      components={components}
+      components={anchors ? anchoredComponents : components}
       remarkPlugins={remarkPlugins}
       rehypePlugins={rehypePlugins}
       // Keep react-markdown's URL sanitizing, but let our `wikilink:` sentinel

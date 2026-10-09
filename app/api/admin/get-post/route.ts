@@ -1,8 +1,10 @@
 import fs from "fs";
 import { readMarkdownFile } from "@/utils/content/markdown";
 import { NextRequest, NextResponse } from "next/server";
+import { toDateString } from "@/utils/content/essayDate";
 import { checkAdminAuth } from "@/utils/adminAuth";
-import { getPostPath, getDraftPath, isSafeSlug } from "@/config/paths";
+import { isSafeSlug } from "@/config/paths";
+import { parseKind, contentPaths } from "@/utils/content/kind";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -17,11 +19,18 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
   }
 
+  const kind = parseKind(searchParams.get("kind"));
+  if (!kind) {
+    return NextResponse.json({ error: "Invalid kind" }, { status: 400 });
+  }
+
   const authError = checkAdminAuth(request);
   if (authError) return authError;
   try {
-    const publishedPath = getPostPath(slug);
-    const draftPath = getDraftPath(slug);
+    const { publishedPath: getPublished, draftPath: getDraft } =
+      contentPaths(kind);
+    const publishedPath = getPublished(slug);
+    const draftPath = getDraft(slug);
 
     // Check published first, then drafts
     let filePath: string;
@@ -39,9 +48,15 @@ export async function GET(request: NextRequest) {
     const { data, content } = readMarkdownFile(filePath);
 
     return NextResponse.json({
+      ...(kind === "essay"
+        ? {
+            subtitle: data.subtitle || "",
+            updated: data.updated ? toDateString(data.updated) : "",
+          }
+        : {}),
       title: data.title || "",
       tags: data.tags || "",
-      date: data.date || "",
+      date: kind === "essay" ? toDateString(data.date) : data.date || "",
       content,
       isDraft,
     });
