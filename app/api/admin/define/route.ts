@@ -8,7 +8,7 @@ import { DEFINE_BIN, DEFINE_SRC } from "@/config/paths";
 
 const run = promisify(execFile);
 
-// Looks a word up in the Mac's built-in dictionary, offline. The helper
+// Looks a word up in the Mac's built-in dictionary and thesaurus, offline. The helper
 // only exists locally; it's compiled on first use.
 export async function GET(request: NextRequest) {
   if (process.env.NODE_ENV === "production") {
@@ -23,19 +23,31 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    if (!fs.existsSync(DEFINE_BIN)) {
+    // Rebuild when the Swift source is newer than the binary.
+    if (
+      !fs.existsSync(DEFINE_BIN) ||
+      fs.statSync(DEFINE_SRC).mtimeMs > fs.statSync(DEFINE_BIN).mtimeMs
+    ) {
       fs.mkdirSync(path.dirname(DEFINE_BIN), { recursive: true });
       await run("swiftc", ["-O", DEFINE_SRC, "-o", DEFINE_BIN], {
         timeout: 120_000,
       });
     }
-    const { stdout } = await run(DEFINE_BIN, [word], { timeout: 5_000 });
-    return NextResponse.json({ definition: stdout.trim() });
+    // The helper exits 1 when the book has no entry.
+    const lookup = (args: string[]) =>
+      run(DEFINE_BIN, args, { timeout: 5_000 }).then(
+        ({ stdout }) => stdout.trim() || null,
+        (error) => {
+          if ((error as { code?: unknown }).code === 1) return null;
+          throw error;
+        }
+      );
+    const [definition, thesaurus] = await Promise.all([
+      lookup([word]),
+      lookup(["--thesaurus", word]),
+    ]);
+    return NextResponse.json({ definition, thesaurus });
   } catch (error) {
-    // The helper exits 1 when the dictionary has no entry.
-    if ((error as { code?: unknown }).code === 1) {
-      return NextResponse.json({ definition: null });
-    }
     console.error("Define error:", error);
     return NextResponse.json({ error: "Lookup failed" }, { status: 500 });
   }

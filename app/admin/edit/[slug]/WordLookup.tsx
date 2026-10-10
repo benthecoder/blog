@@ -5,7 +5,9 @@ import type { EditorView, ViewUpdate } from "@codemirror/view";
 
 export type WordSelection = { word: string; x: number; y: number };
 
-/** The selected text when it's a single word, with screen coords under it. */
+type Entries = { definition: string | null; thesaurus: string | null };
+
+/** The selected text when it's a single word, with screen coords above it. */
 export function wordSelection(update: ViewUpdate): WordSelection | null {
   const view: EditorView = update.view;
   const { main } = update.state.selection;
@@ -13,16 +15,23 @@ export function wordSelection(update: ViewUpdate): WordSelection | null {
   const word = update.state.sliceDoc(main.from, main.to).trim();
   if (!/^[A-Za-z][A-Za-z'-]{0,39}$/.test(word)) return null;
   const coords = view.coordsAtPos(main.to);
-  return coords ? { word, x: coords.left, y: coords.bottom } : null;
+  return coords ? { word, x: coords.left, y: coords.top } : null;
 }
 
+// Entries come back as one line of text; break senses onto their own lines.
+const formatEntry = (text: string) =>
+  text
+    .replace(/ • /g, "\n• ")
+    .replace(/ (\d{1,2}) (?=[a-z])/g, "\n$1 ")
+    .replace(/ ANTONYMS /g, "\nantonyms: ");
+
 /**
- * A "define" chip under a selected word; clicking it looks the word up in
- * the Mac's built-in dictionary through /api/admin/define (offline).
+ * A "define" chip above a selected word; clicking it shows the Mac's
+ * built-in dictionary and thesaurus entries side by side, offline.
  */
 export function WordLookup({ selection }: { selection: WordSelection }) {
   const [open, setOpen] = useState(false);
-  const [definition, setDefinition] = useState<string | null>(null);
+  const [entries, setEntries] = useState<Entries | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -32,8 +41,8 @@ export function WordLookup({ selection }: { selection: WordSelection }) {
       signal: controller.signal,
     })
       .then((res) => (res.ok ? res.json() : Promise.reject()))
-      .then((data: { definition: string | null }) => {
-        if (data.definition) setDefinition(data.definition);
+      .then((data: Entries) => {
+        if (data.definition || data.thesaurus) setEntries(data);
         else setError("no definition found");
       })
       .catch(() => {
@@ -44,22 +53,36 @@ export function WordLookup({ selection }: { selection: WordSelection }) {
 
   return (
     <div
-      style={{ left: selection.x, top: selection.y + 6 }}
-      className="fixed z-40 -translate-x-1/2 text-xs"
+      style={{ left: selection.x, top: selection.y - 6 }}
+      className="fixed z-40 -translate-x-1/2 -translate-y-full text-xs"
       // Keep the editor selection while clicking.
       onMouseDown={(event) => event.preventDefault()}
     >
       {open ? (
-        <div className="w-80 max-w-[calc(100vw-24px)] p-3 bg-paper dark:bg-night-raised text-ink dark:text-chalk border border-rule dark:border-night-rule shadow-lg">
+        <div
+          className={`${entries?.definition && entries.thesaurus ? "w-[36rem] grid grid-cols-2 gap-4" : "w-80"} max-w-[calc(100vw-24px)] p-3 bg-paper dark:bg-night-raised text-ink dark:text-chalk border border-rule dark:border-night-rule shadow-lg`}
+        >
           {error ? (
             <p className="text-ink-soft dark:text-chalk-muted">{error}</p>
-          ) : !definition ? (
+          ) : !entries ? (
             <p className="text-ink-soft dark:text-chalk-muted">looking up…</p>
           ) : (
-            <p className="max-h-64 overflow-y-auto whitespace-pre-line leading-relaxed">
-              {/* Bullets in the entry mark senses; give each its own line. */}
-              {definition.replace(/ • /g, "\n• ")}
-            </p>
+            [
+              ["dictionary", entries.definition],
+              ["thesaurus", entries.thesaurus],
+            ].map(
+              ([label, text]) =>
+                text && (
+                  <section key={label} className="min-w-0">
+                    <h3 className="mb-1 text-[11px] text-ink-muted dark:text-chalk-muted">
+                      {label}
+                    </h3>
+                    <p className="max-h-64 overflow-y-auto whitespace-pre-line leading-relaxed pr-1 [scrollbar-width:thin] [scrollbar-color:var(--scrollbar-thumb-quiet)_transparent]">
+                      {formatEntry(text)}
+                    </p>
+                  </section>
+                )
+            )
           )}
         </div>
       ) : (
