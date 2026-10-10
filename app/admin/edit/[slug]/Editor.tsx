@@ -27,6 +27,7 @@ import { ImageCropModal } from "./ImageCropModal";
 import { ImageStrip } from "./ImageStrip";
 import { DayNav } from "./DayNav";
 import { PhotoPanel } from "./PhotoPanel";
+import { WordLookup, wordSelection, type WordSelection } from "./WordLookup";
 import { TemplatePicker } from "./TemplatePicker";
 import { EditorPopover } from "@/components/admin/EditorPopover";
 import { suggestPeriods } from "@/utils/digest/schedule";
@@ -73,6 +74,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   const [showPreview, setShowPreview] = useState(false);
   const [photosOpen, setPhotosOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState<ConfirmConfig | null>(null);
+  const [lookup, setLookup] = useState<WordSelection | null>(null);
   const cmRef = useRef<ReactCodeMirrorRef>(null);
   const mounted = useMounted();
   const { resolvedTheme, setTheme } = useTheme();
@@ -216,6 +218,10 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
       ...markdownEditorExtensions,
       ...postEditorExtensions,
       imageInsertionPoint,
+      EditorView.updateListener.of((update) => {
+        if (update.selectionSet || update.focusChanged)
+          setLookup(wordSelection(update));
+      }),
       EditorView.contentAttributes.of({
         "aria-label": isEssay ? "Essay Markdown" : "Post Markdown",
         spellcheck: "true",
@@ -514,7 +520,10 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
 
         {/* Editor / preview pane */}
         <div className="flex-1 min-h-0 relative">
-          <div className="h-full overflow-y-auto [scrollbar-width:none]">
+          <div
+            className="h-full overflow-y-auto [scrollbar-width:none]"
+            onScroll={() => setLookup(null)}
+          >
             {showPreview ? (
               <div className="p-8">
                 {(() => {
@@ -663,6 +672,13 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
             onCancel={images.cancelImageUpload}
             uploading={images.uploading}
             error={images.uploadError}
+          />
+        )}
+
+        {lookup && !showPreview && (
+          <WordLookup
+            key={`${lookup.word}:${lookup.x}:${lookup.y}`}
+            selection={lookup}
           />
         )}
 
