@@ -20,12 +20,15 @@ export function EditorPopover({
   name,
   disabled = false,
   align = "start",
+  plain = false,
 }: {
   label: ReactNode;
   children: (close: () => void) => ReactNode;
   name: string;
   disabled?: boolean;
   align?: "start" | "end";
+  /** Bare trigger: no dotted underline or chevron (for icon-like labels). */
+  plain?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
@@ -53,15 +56,23 @@ export function EditorPopover({
         aria-expanded={open}
         className="min-h-11 sm:min-h-9 inline-flex items-center gap-2 text-sm text-ink dark:text-chalk disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink dark:focus-visible:outline-chalk"
       >
-        <span className="decoration-ink/25 dark:decoration-chalk/25 underline underline-offset-4 decoration-dotted hover:decoration-solid">
+        <span
+          className={
+            plain
+              ? "min-w-9 text-center text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
+              : "decoration-ink/25 dark:decoration-chalk/25 underline underline-offset-4 decoration-dotted hover:decoration-solid"
+          }
+        >
           {label}
         </span>
-        <span
-          aria-hidden="true"
-          className="text-ink-muted dark:text-chalk-muted text-[10px]"
-        >
-          ⌄
-        </span>
+        {!plain && (
+          <span
+            aria-hidden="true"
+            className="text-ink-muted dark:text-chalk-muted text-[10px]"
+          >
+            ⌄
+          </span>
+        )}
       </button>
       {open && (
         <FloatingPortal>
@@ -71,7 +82,7 @@ export function EditorPopover({
               style={floatingStyles}
               {...getFloatingProps()}
               aria-label={name}
-              className="z-110 w-60 max-w-[calc(100vw-24px)] bg-paper dark:bg-night-raised text-ink dark:text-chalk border border-rule dark:border-night-rule shadow-lg p-3"
+              className={`z-110 max-w-[calc(100vw-24px)] bg-paper dark:bg-night-raised text-ink dark:text-chalk border border-rule dark:border-night-rule shadow-lg ${plain ? "w-44 p-1" : "w-60 p-3"}`}
             >
               {children(() => setOpen(false))}
             </div>

@@ -30,15 +30,17 @@ interface UsePostDraftArgs {
     labels: [cancel: string, confirm: string],
     onConfirm: () => void
   ) => void;
-  /** Surface a status message in the top bar. */
+  /** Surface a status message in the bottom bar. */
   notify: (message: string, autoClear?: boolean) => void;
+  /** Normalizes markdown on explicit save/publish, applying it to the editor view. */
+  formatMarkdown: (markdown: string) => string;
 }
 
 /**
  * Owns the post's content lifecycle: loading (or template init for new
  * posts), unsaved-changes tracking with localStorage draft backup,
- * save/publish/unpublish/delete, prev/next navigation targets, and the
- * cmd+S / leave-guard listeners.
+ * save/publish/unpublish/delete, autosave for saved drafts, prev/next
+ * navigation targets, and the cmd+S / leave-guard listeners.
  */
 export function usePostDraft({
   slug,
@@ -48,6 +50,7 @@ export function usePostDraft({
   router,
   confirmAction,
   notify,
+  formatMarkdown,
 }: UsePostDraftArgs) {
   const dateParam = isNew ? searchParams.get("date") : null;
   const isEssay = kind === "essay";
@@ -59,17 +62,20 @@ export function usePostDraft({
   const recoveryKey = draftRecoveryKey(recoverySlug, dateParam);
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
   const loading = loadedKey !== recoveryKey;
-  const [backupAvailable, setBackupAvailable] = useState(true);
   const latestMarkdownRef = useRef("");
   const saveInFlight = useRef(false);
   const wasDirtyRef = useRef(false);
   const templateRequestRef = useRef<AbortController | null>(null);
+  const formatRef = useRef(formatMarkdown);
+  const autoTriedRef = useRef<string | null>(null);
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [date, setDate] = useState("");
   const [markdown, setMarkdown] = useState("");
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [savedFlash, setSavedFlash] = useState(false);
   const [isDraft, setIsDraft] = useState(true);
   const [prevSlug, setPrevSlug] = useState<string | null>(null);
   const [nextSlug, setNextSlug] = useState<string | null>(null);
@@ -291,112 +297,122 @@ export function usePostDraft({
   }, [slug, isNew, isEssay, kindQuery, dateParam, recoveryKey]);
   /* eslint-enable react-hooks/set-state-in-effect */
 
-  // Stable identity required: dep of the cmd+S keydown effect below
-  const handleSave = useCallback(async () => {
-    if (loading || templateLoading || saveInFlight.current) return false;
-    saveInFlight.current = true;
-    setSaving(true);
-    notify("");
+  const saveMarkdown = useCallback(
+    async (toSave: string, auto: boolean) => {
+      saveInFlight.current = true;
+      setSaving(true);
+      if (!auto) notify("");
 
-    try {
-      const { data: frontmatter, content } = parseFrontmatter(markdown);
+      try {
+        const { data: frontmatter, content } = parseFrontmatter(toSave);
 
-      const parsedTitle = (frontmatter.title || "").toString().trim();
-      const parsedTags = (frontmatter.tags || "").toString().trim();
-      const parsedDate = isEssay
-        ? toDateString(frontmatter.date || date)
-        : (frontmatter.date || date).toString().trim();
+        const parsedTitle = (frontmatter.title || "").toString().trim();
+        const parsedTags = (frontmatter.tags || "").toString().trim();
+        const parsedDate = isEssay
+          ? toDateString(frontmatter.date || date)
+          : (frontmatter.date || date).toString().trim();
 
-      let slugToUse = slug;
+        let slugToUse = slug;
 
-      if (isNew) {
-        const newDateParam = searchParams.get("date");
-        if (newDateParam) {
-          const [year, month, day] = newDateParam.split("-");
-          const yy = year.substring(2);
-          slugToUse = `${day}${month}${yy}`;
-        } else {
-          slugToUse = `${Date.now()}`;
-        }
-      }
-
-      const response = await fetch("/api/admin/save-post", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          slug: slugToUse,
-          title: parsedTitle,
-          tags: parsedTags,
-          date: parsedDate,
-          content: content,
-          isNew,
-          ...(isEssay
-            ? {
-                ...kindBody,
-                subtitle: (frontmatter.subtitle || "").toString().trim(),
-                updated: toDateString(frontmatter.updated),
-              }
-            : {}),
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        notify("✓ Saved!", true);
-        setHasUnsavedChanges(latestMarkdownRef.current !== markdown);
-        setIsDraft(data.isDraft ?? isDraft);
-
-        if (latestMarkdownRef.current === markdown) {
-          removeDraftBackup(
-            draftRecoveryKey(recoverySlug, searchParams.get("date"))
-          );
-          removeDraftBackup(`draft-${slugToUse}`);
-          if (isNew) {
-            const legacy = readDraftBackup("draft-new");
-            if (legacy?.date === date) removeDraftBackup("draft-new");
+        if (isNew) {
+          const newDateParam = searchParams.get("date");
+          if (newDateParam) {
+            const [year, month, day] = newDateParam.split("-");
+            const yy = year.substring(2);
+            slugToUse = `${day}${month}${yy}`;
+          } else {
+            slugToUse = `${Date.now()}`;
           }
         }
-        initialContentRef.current = { markdown };
 
-        if (latestMarkdownRef.current !== markdown) {
-          notify("✓ Saved earlier version; newer edits still need saving");
-          return false;
+        const response = await fetch("/api/admin/save-post", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            slug: slugToUse,
+            title: parsedTitle,
+            tags: parsedTags,
+            date: parsedDate,
+            content: content,
+            isNew,
+            ...(isEssay
+              ? {
+                  ...kindBody,
+                  subtitle: (frontmatter.subtitle || "").toString().trim(),
+                  updated: toDateString(frontmatter.updated),
+                }
+              : {}),
+          }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          if (!auto) notify("✓ Saved!", true);
+          setHasUnsavedChanges(latestMarkdownRef.current !== toSave);
+          setIsDraft(data.isDraft ?? isDraft);
+          setSavedFlash(true);
+          if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+          savedTimerRef.current = setTimeout(() => setSavedFlash(false), 2000);
+
+          if (latestMarkdownRef.current === toSave) {
+            removeDraftBackup(
+              draftRecoveryKey(recoverySlug, searchParams.get("date"))
+            );
+            removeDraftBackup(`draft-${slugToUse}`);
+            if (isNew) {
+              const legacy = readDraftBackup("draft-new");
+              if (legacy?.date === date) removeDraftBackup("draft-new");
+            }
+          }
+          initialContentRef.current = { markdown: toSave };
+
+          if (latestMarkdownRef.current !== toSave) {
+            notify("✓ Saved earlier version; newer edits still need saving");
+            return false;
+          }
+          if (isNew) {
+            router.push(`/admin/edit/${data.slug}`);
+          }
+          return true;
+        } else {
+          notify(`✗ Error: ${data.error}`);
         }
-        if (isNew) {
-          router.push(`/admin/edit/${data.slug}`);
-        }
-        return true;
-      } else {
-        notify(`✗ Error: ${data.error}`);
+      } catch (error) {
+        notify(`✗ Error: ${error}`);
+      } finally {
+        saveInFlight.current = false;
+        setSaving(false);
       }
-    } catch (error) {
-      notify(`✗ Error: ${error}`);
-    } finally {
-      saveInFlight.current = false;
-      setSaving(false);
-    }
-    return false;
-    // notify is a page-level helper with stable behavior
+      return false;
+    },
+    // kindBody is derived from isEssay; notify is a page-level helper
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    slug,
-    isNew,
-    isEssay,
-    recoverySlug,
-    searchParams,
-    date,
-    markdown,
-    router,
-    isDraft,
-    loading,
-    templateLoading,
-  ]);
+    [slug, isNew, isEssay, recoverySlug, searchParams, date, router, isDraft]
+  );
+
+  // Stable identity per markdown: dep of the cmd+S keydown effect below.
+  // Explicit saves format first; autosave leaves the text alone so it can't
+  // fight the cursor mid-typing.
+  const handleSave = useCallback(
+    async (options?: { auto?: boolean }) => {
+      if (loading || templateLoading || saveInFlight.current) return false;
+      const auto = options?.auto ?? false;
+      const toSave = auto ? markdown : formatRef.current(markdown);
+      if (toSave !== markdown) {
+        latestMarkdownRef.current = toSave;
+        setMarkdown(toSave);
+      }
+      return saveMarkdown(toSave, auto);
+    },
+    [markdown, loading, templateLoading, saveMarkdown]
+  );
 
   const handlePublish = async () => {
     if (loading || saving || publishing || isNew) return;
-    // Publishing must stop when the preceding save fails.
-    if (hasUnsavedChanges && !(await handleSave())) return;
+    // Publishing must stop when the preceding save fails. Always saves so
+    // the published file is formatted even when autosave already ran.
+    if (!(await handleSave())) return;
 
     setPublishing(true);
     notify("");
@@ -513,13 +529,48 @@ export function usePostDraft({
         timestamp: Date.now(),
         date,
       };
-      setBackupAvailable(writeDraftBackup(draftKey, draft));
+      writeDraftBackup(draftKey, draft);
     } else if (wasDirtyRef.current) {
       // Undone back to the saved text: the copy no longer holds anything.
       removeDraftBackup(recoveryKey);
     }
     wasDirtyRef.current = hasChanged;
   }, [markdown, recoveryKey, date, loading]);
+
+  useEffect(() => {
+    formatRef.current = formatMarkdown;
+  });
+
+  useEffect(
+    () => () => {
+      if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+    },
+    []
+  );
+
+  // Autosave saved drafts 2s after the last edit. Never new files (that would
+  // create one just by opening a day) and never live posts (explicit update).
+  // Each distinct text is tried once, so a failing save doesn't loop.
+  useEffect(() => {
+    if (isNew || !isDraft || !hasUnsavedChanges) return;
+    if (loading || templateLoading || saving || publishing) return;
+    if (autoTriedRef.current === markdown) return;
+    const timer = setTimeout(() => {
+      autoTriedRef.current = markdown;
+      void handleSave({ auto: true });
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [
+    isNew,
+    isDraft,
+    hasUnsavedChanges,
+    loading,
+    templateLoading,
+    saving,
+    publishing,
+    markdown,
+    handleSave,
+  ]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -584,13 +635,13 @@ export function usePostDraft({
   return {
     date,
     loading,
-    backupAvailable,
     markdown,
     setMarkdown,
     saving,
     publishing,
     deleting,
     hasUnsavedChanges,
+    savedFlash,
     isDraft,
     template,
     templateLoading,
