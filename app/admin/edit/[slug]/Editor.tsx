@@ -376,11 +376,9 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
 
   return (
     <div className="h-dvh bg-paper dark:bg-night">
-      <div
-        className={`mx-auto w-full h-full min-w-0 flex flex-col relative max-w-[760px]`}
-      >
+      <div className="mx-auto w-full h-full min-w-0 flex flex-col relative max-w-[760px] sm:border-x border-rule dark:border-night-rule">
         {/* Top bar */}
-        <div className="min-h-14 shrink-0 px-4 sm:px-6 py-2 flex flex-wrap gap-3 justify-between items-center">
+        <div className="min-h-14 shrink-0 border-b border-rule dark:border-night-rule px-4 sm:px-6 py-2 flex flex-wrap gap-3 justify-between items-center">
           <div className="flex items-center gap-4">
             <Link
               href={
@@ -618,7 +616,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         </div>
 
         {/* Bottom bar */}
-        <div className="shrink-0 px-4 sm:px-6 py-2 flex items-center justify-between gap-3 text-xs text-ink-soft dark:text-chalk-muted">
+        <div className="shrink-0 border-t border-rule dark:border-night-rule px-4 sm:px-6 py-2 flex items-center justify-between gap-3 text-xs text-ink-soft dark:text-chalk-muted">
           <span className="tabular-nums">
             {bodyWords} words · {Math.max(1, Math.ceil(bodyWords / 200))} min
             read
