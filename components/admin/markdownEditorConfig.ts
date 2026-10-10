@@ -38,6 +38,18 @@ export const markdownEditorExtensions = [
     },
     "&.cm-focused": { outline: "none" },
   }),
+  // CodeMirror draws its own caret and selection with light-theme colors;
+  // tie them to the text color so both stay visible in dark mode.
+  Prec.highest(
+    EditorView.theme({
+      ".cm-cursor, .cm-dropCursor": {
+        borderLeftColor: "currentColor",
+        borderLeftWidth: "2px",
+      },
+      "& .cm-selectionLayer .cm-selectionBackground, &.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground, & .cm-content ::selection":
+        { background: "color-mix(in srgb, currentColor 22%, transparent)" },
+    })
+  ),
 ];
 
 export const markdownEditorSetup = {
