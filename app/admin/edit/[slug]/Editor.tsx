@@ -7,20 +7,14 @@ import {
   useEffect,
   useSyncExternalStore,
 } from "react";
-import type { MouseEvent as ReactMouseEvent } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
 import { parseFrontmatter } from "@/utils/content/frontmatter";
-import {
-  ArrowLeft,
-  Calendar,
-  Camera,
-  Eye,
-  FileEdit,
-  ImageIcon,
-} from "lucide-react";
+import { ArrowLeft, Calendar, Camera, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useMounted } from "@/components/ui/ThemeSwitch";
 import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import type { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import type { ContentKind } from "@/utils/content/kind";
@@ -31,8 +25,9 @@ import { useImageManager } from "./useImageManager";
 import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
 import { ImageCropModal } from "./ImageCropModal";
 import { ImageStrip } from "./ImageStrip";
-import { EditorFooter } from "./EditorFooter";
+import { DayNav } from "./DayNav";
 import { PhotoPanel } from "./PhotoPanel";
+import { WordLookup, wordSelection, type WordSelection } from "./WordLookup";
 import { TemplatePicker } from "./TemplatePicker";
 import { EditorPopover } from "@/components/admin/EditorPopover";
 import { suggestPeriods } from "@/utils/digest/schedule";
@@ -47,6 +42,7 @@ import {
   markdownEditorExtensions,
   markdownEditorSetup,
 } from "@/components/admin/markdownEditorConfig";
+import { postEditorExtensions } from "@/components/admin/postEditorExtensions";
 
 const desktopQuery = "(min-width: 1024px)";
 function subscribeToDesktop(callback: () => void) {
@@ -75,14 +71,13 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
     serverDesktop
   );
   const [message, setMessage] = useState("");
-  const [focusMode, setFocusMode] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [editorWidth, setEditorWidth] = useState(700);
-  // null = never toggled, so the default (open for drafts) applies.
-  const [photosToggle, setPhotosToggle] = useState<boolean | null>(null);
+  const [photosOpen, setPhotosOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState<ConfirmConfig | null>(null);
+  const [lookup, setLookup] = useState<WordSelection | null>(null);
   const cmRef = useRef<ReactCodeMirrorRef>(null);
-  const isResizing = useRef(false);
+  const mounted = useMounted();
+  const { resolvedTheme, setTheme } = useTheme();
 
   const notify = (msg: string, autoClear = false) => {
     setMessage(msg);
@@ -107,6 +102,38 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
     });
   };
 
+  // Explicit saves and publish run formatDraft. It goes through the
+  // view as a minimal edit so ⌘Z undoes it and the cursor stays put.
+  const formatMarkdown = (markdown: string) => {
+    const formatted = formatDraft(markdown);
+    const view = cmRef.current?.view;
+    if (formatted === markdown || !view) return formatted;
+    const next = formatted;
+    const current = view.state.doc.toString();
+    let from = 0;
+    while (
+      from < current.length &&
+      from < next.length &&
+      current[from] === next[from]
+    )
+      from++;
+    let end = current.length;
+    let nextEnd = next.length;
+    while (
+      end > from &&
+      nextEnd > from &&
+      current[end - 1] === next[nextEnd - 1]
+    ) {
+      end--;
+      nextEnd--;
+    }
+    if (end > from || nextEnd > from)
+      view.dispatch({
+        changes: { from, to: end, insert: next.slice(from, nextEnd) },
+      });
+    return formatted;
+  };
+
   const draft = usePostDraft({
     slug,
     kind,
@@ -115,6 +142,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
     router,
     confirmAction,
     notify,
+    formatMarkdown,
   });
 
   const dateParam = searchParams.get("date");
@@ -188,9 +216,17 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   const extensions = useMemo(
     () => [
       ...markdownEditorExtensions,
+      ...postEditorExtensions,
       imageInsertionPoint,
+      EditorView.updateListener.of((update) => {
+        if (update.selectionSet || update.focusChanged)
+          setLookup(wordSelection(update));
+      }),
       EditorView.contentAttributes.of({
         "aria-label": isEssay ? "Essay Markdown" : "Post Markdown",
+        spellcheck: "true",
+        autocorrect: "on",
+        autocapitalize: "sentences",
       }),
       EditorView.domEventHandlers({
         dragover: (event) => {
@@ -232,46 +268,12 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
     []
   );
 
-  const handleResizeStart = (e: ReactMouseEvent, side: "left" | "right") => {
-    e.preventDefault();
-    e.stopPropagation();
-    isResizing.current = true;
-
-    const startX = e.clientX;
-    const startWidth = editorWidth;
-
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      if (!isResizing.current) return;
-
-      const deltaX =
-        side === "left"
-          ? (startX - moveEvent.clientX) * 2
-          : (moveEvent.clientX - startX) * 2;
-
-      const newWidth = startWidth + deltaX;
-      const minWidth = 400;
-      const maxWidth = window.innerWidth - 100;
-
-      setEditorWidth(Math.min(Math.max(newWidth, minWidth), maxWidth));
-    };
-
-    const handleMouseUp = () => {
-      isResizing.current = false;
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-  };
-
   const monthParam = searchParams.get("month");
 
-  // Day the photo panel looks at: DDMMYY slug, else the new-post date param,
-  // else whatever date the loaded post carries.
-  const photoDate = useMemo(() => {
-    // The PhotoKit helper only runs locally; the photo routes 404 in production.
-    if (process.env.NODE_ENV === "production" || isEssay) return null;
+  // The post's day: DDMMYY slug, else the new-post date param, else
+  // whatever date the loaded post carries.
+  const dayDate = useMemo(() => {
+    if (isEssay) return null;
     const m = slug.match(/^(\d{2})(\d{2})(\d{2})$/);
     if (m) return `20${m[3]}-${m[2]}-${m[1]}`;
     const param = searchParams.get("date");
@@ -283,286 +285,231 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
     }
     return null;
   }, [slug, isNew, isEssay, searchParams, draft.date]);
-
-  // Published posts start with the panel closed; wait for the load so the
-  // default doesn't flash open before isDraft is known.
-  const photosOpen =
-    photosToggle ?? (desktop && draft.isDraft && (isNew || draft.date !== ""));
-
-  const handleFormat = () => {
-    const view = cmRef.current?.view;
-    if (!view) return;
-    const current = view.state.doc.toString();
-    const formatted = formatDraft(current);
-    if (formatted === current) {
-      notify("✓ Already formatted", true);
-      return;
-    }
-    // Dispatched through the view so ⌘Z undoes it.
-    view.dispatch({
-      changes: { from: 0, to: view.state.doc.length, insert: formatted },
-    });
-  };
-
-  useEffect(() => {
-    const exitFocus = (event: KeyboardEvent) => {
-      // Let dialogs and popovers handle their own Escape first.
-      if (event.key !== "Escape" || event.defaultPrevented) return;
-      if (document.querySelector("dialog[open], [role=dialog]")) return;
-      setFocusMode(false);
-    };
-    window.addEventListener("keydown", exitFocus);
-    return () => window.removeEventListener("keydown", exitFocus);
-  }, []);
+  // The PhotoKit helper only runs locally; the photo routes 404 in production.
+  const photoDate = process.env.NODE_ENV === "production" ? null : dayDate;
 
   const bodyWords = useMemo(() => {
     // Count the writing, not frontmatter or Markdown image destinations.
-    const body = draft.markdown
+    const text = draft.markdown
       .replace(/^---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/, "")
       .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
       .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
       .replace(/[`#*>_~|]/g, "")
       .trim();
-    return body ? body.split(/\s+/).length : 0;
+    return text ? text.split(/\s+/).length : 0;
   }, [draft.markdown]);
 
+  const busy =
+    draft.loading ||
+    draft.saving ||
+    draft.publishing ||
+    draft.templateLoading ||
+    images.uploading ||
+    images.showImageNameModal;
+  const publishing = draft.isDraft && !isNew;
+  const runPrimary = () =>
+    publishing ? void draft.handlePublish() : void draft.handleSave();
+
+  // Latest-render handler behind one stable listener. Capture phase so the
+  // editor's own ⌘Enter / ⌘[ / ⌘] bindings don't swallow these first.
+  const onKeyRef = useRef<(event: KeyboardEvent) => void>(() => {});
+  useEffect(() => {
+    onKeyRef.current = (event) => {
+      if (document.querySelector("dialog[open], [role=dialog]")) return;
+      if (event.key === "Escape") {
+        setPhotosOpen(false);
+        return;
+      }
+      if (!(event.metaKey || event.ctrlKey)) return;
+      const key = event.key.toLowerCase();
+      const claim = () => {
+        event.preventDefault();
+        event.stopPropagation();
+      };
+      if (key === "enter") {
+        claim();
+        if (!busy) runPrimary();
+      } else if (key === "p" && event.shiftKey) {
+        claim();
+        setShowPreview((value) => !value);
+      } else if (["[", "]", "{", "}"].includes(key) && !isEssay) {
+        claim();
+        // Click the nav link so the unsaved-changes guard still applies.
+        // Shift turns [ ] into { } on US layouts; shift steps a month.
+        const step = event.shiftKey ? "month" : "day";
+        const dir = key === "[" || key === "{" ? "previous" : "next";
+        document
+          .querySelector<HTMLAnchorElement>(`a[aria-label="${dir} ${step}"]`)
+          ?.click();
+      }
+    };
+  });
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => onKeyRef.current(event);
+    window.addEventListener("keydown", listener, true);
+    return () => window.removeEventListener("keydown", listener, true);
+  }, []);
+
+  const ghostBtn =
+    "min-h-11 sm:min-h-9 px-2 text-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk";
+  const menuItemCls =
+    "block w-full px-3 py-2 text-left rounded-xs hover:bg-paper-sunken dark:hover:bg-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk";
+  const primaryActive = isNew || publishing || draft.hasUnsavedChanges;
+  const primaryLabel = publishing
+    ? draft.publishing
+      ? "publishing…"
+      : "publish"
+    : draft.saving
+      ? "saving…"
+      : isNew
+        ? "save"
+        : "update";
+  const status = draft.loading
+    ? "loading…"
+    : images.uploading
+      ? "uploading…"
+      : draft.saving
+        ? "saving…"
+        : draft.hasUnsavedChanges
+          ? "unsaved"
+          : "saved";
+
   return (
-    <div className="min-h-dvh flex items-center justify-center bg-paper dark:bg-night">
+    <div className="h-dvh bg-paper dark:bg-night">
       <div
-        style={{
-          width: showPreview ? "900px" : `${editorWidth}px`,
-          maxWidth:
-            desktop && photoDate && photosOpen && !showPreview && !focusMode
-              ? "calc(100vw - 20rem)"
-              : "100vw",
-          height: "100dvh",
-        }}
-        className={`shrink-0 min-w-0 flex flex-col relative group transition-[width] duration-200 ${focusMode ? "" : "border-l border-r border-rule dark:border-night-rule"}`}
+        className={`mx-auto w-full h-full min-w-0 flex flex-col relative max-w-[760px]`}
       >
         {/* Top bar */}
-        <div
-          className={`min-h-14 border-b px-4 sm:px-6 py-2 flex flex-wrap gap-3 justify-between items-center ${
-            focusMode
-              ? "border-transparent opacity-0 hover:opacity-100 focus-within:opacity-100 transition-opacity duration-200"
-              : "border-rule dark:border-night-rule"
-          }`}
-        >
+        <div className="min-h-14 shrink-0 px-4 sm:px-6 py-2 flex flex-wrap gap-3 justify-between items-center">
           <div className="flex items-center gap-4">
-            {!focusMode && (
-              <>
-                <Link
-                  href={
-                    isEssay
-                      ? "/admin/essays"
-                      : monthParam
-                        ? `/admin?month=${monthParam}`
-                        : "/admin"
-                  }
-                  className="text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk transition-colors"
-                  title={isEssay ? "Back to essays" : "Back to calendar"}
-                  aria-label={isEssay ? "Back to essays" : "Back to calendar"}
-                >
-                  {isEssay ? <ArrowLeft size={18} /> : <Calendar size={18} />}
-                </Link>
-                {!isNew && (
-                  <EditorPopover
-                    label={draft.isDraft ? "draft" : "live"}
-                    name={
-                      isEssay
-                        ? "Essay status and publishing"
-                        : "Post status and publishing"
-                    }
-                  >
-                    {(close) => (
-                      <div className="text-sm">
-                        <p className="px-2 pb-2 text-[11px] text-ink-muted dark:text-chalk-muted">
-                          {draft.isDraft
-                            ? "saved draft"
-                            : isEssay
-                              ? "published essay"
-                              : "published post"}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            close();
-                            if (draft.isDraft) void draft.handlePublish();
-                            else void draft.handleUnpublish();
-                          }}
-                          disabled={
-                            draft.loading ||
-                            draft.saving ||
-                            draft.publishing ||
-                            draft.templateLoading ||
-                            images.uploading ||
-                            images.showImageNameModal
-                          }
-                          className="w-full px-2 py-3 text-left hover:bg-paper-sunken dark:hover:bg-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
-                        >
-                          {draft.publishing
-                            ? "working…"
-                            : draft.isDraft
-                              ? "publish"
-                              : "move to drafts"}
-                        </button>
-                        {!draft.isDraft && (
-                          <a
-                            href={`${isEssay ? "/essays" : "/posts"}/${slug}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            onClick={close}
-                            className="block w-full px-2 py-3 text-left hover:bg-paper-sunken dark:hover:bg-night focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
-                          >
-                            view on site <span aria-hidden="true">↗</span>
-                          </a>
-                        )}
-                        <div className="mt-2 pt-2 border-t border-rule dark:border-night-rule">
-                          <button
-                            type="button"
-                            disabled={draft.deleting}
-                            onClick={() => {
-                              close();
-                              void draft.handleDelete();
-                            }}
-                            className="w-full px-2 py-3 text-left text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
-                          >
-                            {draft.deleting ? "deleting…" : "delete…"}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </EditorPopover>
-                )}
-                {isNew && newPostDate && (
-                  <TemplatePicker
-                    value={draft.template}
-                    loading={draft.templateLoading}
-                    suggested={suggestPeriods(newPostDate)}
-                    onChange={draft.switchTemplate}
-                  />
-                )}
-              </>
-            )}
-            {focusMode && (
-              <span className="text-xs text-ink-soft dark:text-chalk-muted">
-                {bodyWords} words
+            <Link
+              href={
+                isEssay
+                  ? "/admin/essays"
+                  : monthParam
+                    ? `/admin?month=${monthParam}`
+                    : "/admin"
+              }
+              className="text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk transition-colors"
+              title={isEssay ? "Back to essays" : "Back to calendar"}
+              aria-label={isEssay ? "Back to essays" : "Back to calendar"}
+            >
+              {isEssay ? <ArrowLeft size={18} /> : <Calendar size={18} />}
+            </Link>
+            {!isNew && (
+              <span className="inline-flex items-center gap-1.5 text-xs text-ink-soft dark:text-chalk-muted">
+                <span
+                  aria-hidden="true"
+                  className={`h-1.5 w-1.5 rounded-full ${draft.isDraft ? "bg-ink-muted dark:bg-chalk-muted" : "bg-green-600 dark:bg-green-500"}`}
+                />
+                {draft.isDraft ? "draft" : "live"}
               </span>
+            )}
+            {isNew && newPostDate && (
+              <TemplatePicker
+                value={draft.template}
+                loading={draft.templateLoading}
+                suggested={suggestPeriods(newPostDate)}
+                onChange={draft.switchTemplate}
+              />
             )}
           </div>
 
-          <div className="flex flex-wrap gap-2 items-center">
-            {message && (
-              <span
-                role="status"
-                className={`text-xs ${message.includes("✓") ? "text-green-600 dark:text-green-500" : "text-red-600 dark:text-red-500"}`}
-              >
-                {message}
-              </span>
-            )}
-            {images.uploading && (
-              <span className="text-xs text-ink-soft dark:text-chalk-muted">
-                uploading…
-              </span>
-            )}
-            <div className="flex items-center gap-1">
-              {!focusMode && !isNew && images.postImages.length > 0 && (
-                <button
-                  onClick={() => images.setShowImages(!images.showImages)}
-                  className="min-h-11 min-w-11 sm:min-h-9 sm:min-w-9 inline-flex items-center justify-center rounded-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90 relative"
-                  title="Manage images"
-                  aria-label="Manage images"
-                >
-                  <ImageIcon size={18} />
-                  <span className="absolute top-0.5 right-0.5 w-3 h-3 bg-ink dark:bg-chalk rounded-full text-[8px] text-white dark:text-night flex items-center justify-center">
-                    {images.postImages.length}
-                  </span>
-                </button>
-              )}
-              {!focusMode && photoDate && (
-                <button
-                  onClick={() => setPhotosToggle(!photosOpen)}
-                  className={`min-h-11 min-w-11 sm:min-h-9 sm:min-w-9 inline-flex items-center justify-center rounded-xs transition-[color,background-color,transform] active:scale-90 ${photosOpen && !showPreview ? "text-ink-strong bg-paper-sunken dark:text-chalk-strong dark:bg-night-raised" : "text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised"}`}
-                  title="Photos from this day"
-                  aria-label="Photos from this day"
-                  aria-pressed={photosOpen && !showPreview}
-                >
-                  <Camera size={18} />
-                </button>
-              )}
-              <button
-                onClick={() => setShowPreview(!showPreview)}
-                className={`min-h-11 min-w-11 sm:min-h-9 sm:min-w-9 inline-flex items-center justify-center rounded-xs transition-[color,background-color,transform] active:scale-90 ${showPreview ? "text-ink-strong bg-paper-sunken dark:text-chalk-strong dark:bg-night-raised" : "text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:bg-paper dark:hover:bg-night-raised"}`}
-                title={showPreview ? "Edit" : "Preview"}
-                aria-label={showPreview ? "Edit" : "Preview"}
-                aria-pressed={showPreview}
-              >
-                {showPreview ? <FileEdit size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-
+          <div className="flex items-center gap-2">
             <button
-              onClick={() => setFocusMode(!focusMode)}
-              aria-pressed={focusMode}
-              className="min-h-11 sm:min-h-9 px-2 py-1.5 text-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
-              title={
-                focusMode ? "esc to leave" : "hide everything but the text"
-              }
+              type="button"
+              onClick={() => setShowPreview(!showPreview)}
+              className={ghostBtn}
+              title={showPreview ? "edit (⌘⇧P)" : "preview (⌘⇧P)"}
+              aria-pressed={showPreview}
             >
-              {focusMode ? "leave focus" : "focus"}
+              {showPreview ? "edit" : "preview"}
             </button>
             <button
-              onClick={draft.handleSave}
-              disabled={
-                draft.loading ||
-                draft.saving ||
-                draft.publishing ||
-                draft.templateLoading
-              }
-              title="Save (⌘S)"
+              type="button"
+              onClick={runPrimary}
+              disabled={busy}
+              title={`${publishing ? "publish" : isNew ? "save" : "update"} (⌘⏎)`}
               className={`min-h-11 sm:min-h-9 px-3 py-1.5 text-xs rounded-xs border disabled:opacity-30 ${
-                isNew || draft.hasUnsavedChanges
+                primaryActive
                   ? "bg-ink text-paper border-ink dark:bg-chalk dark:text-night dark:border-chalk"
                   : "border-rule text-ink-soft hover:text-ink dark:border-night-rule dark:text-chalk-muted dark:hover:text-chalk"
               }`}
             >
-              {draft.saving ? "saving…" : "save"}
+              {primaryLabel}
             </button>
+            {!isNew && (
+              <EditorPopover
+                plain
+                align="end"
+                label="⋯"
+                name={isEssay ? "More essay actions" : "More post actions"}
+              >
+                {(close) => (
+                  <div className="text-xs">
+                    {!draft.isDraft && (
+                      <>
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => {
+                            close();
+                            void draft.handleUnpublish();
+                          }}
+                          className={menuItemCls}
+                        >
+                          move to drafts
+                        </button>
+                        <a
+                          href={`${isEssay ? "/essays" : "/posts"}/${slug}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={close}
+                          className={menuItemCls}
+                        >
+                          view on site <span aria-hidden="true">↗</span>
+                        </a>
+                      </>
+                    )}
+                    {images.postImages.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          close();
+                          images.setShowImages(!images.showImages);
+                        }}
+                        className={menuItemCls}
+                      >
+                        images ({images.postImages.length})
+                      </button>
+                    )}
+                    <div
+                      className={
+                        !draft.isDraft || images.postImages.length > 0
+                          ? "mt-1 pt-1 border-t border-rule dark:border-night-rule"
+                          : ""
+                      }
+                    >
+                      <button
+                        type="button"
+                        disabled={draft.deleting}
+                        onClick={() => {
+                          close();
+                          void draft.handleDelete();
+                        }}
+                        className={`${menuItemCls} text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk`}
+                      >
+                        {draft.deleting ? "deleting…" : "delete…"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </EditorPopover>
+            )}
           </div>
         </div>
-        {(!focusMode || !draft.backupAvailable) && (
-          <div className="px-6 py-2 flex flex-wrap justify-between gap-2 text-xs text-ink-soft dark:text-chalk-muted">
-            <div className="flex flex-wrap items-center gap-3">
-              <span>
-                {bodyWords} words · {Math.max(1, Math.ceil(bodyWords / 200))}{" "}
-                min read
-              </span>
-              {!focusMode && !showPreview && (
-                <button
-                  type="button"
-                  onClick={handleFormat}
-                  aria-label="Format markdown"
-                  disabled={
-                    draft.loading || draft.saving || draft.templateLoading
-                  }
-                  className="underline decoration-dotted underline-offset-4 hover:decoration-solid hover:text-ink dark:hover:text-chalk disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
-                >
-                  format
-                </button>
-              )}
-            </div>
-            <span role="status">
-              {draft.loading
-                ? "loading…"
-                : draft.hasUnsavedChanges
-                  ? draft.backupAvailable
-                    ? "unsaved · browser copy kept"
-                    : "unsaved · no browser copy, save to keep it"
-                  : ""}
-            </span>
-          </div>
-        )}
 
-        {!focusMode && images.showImages && !isNew && (
+        {images.showImages && !isNew && (
           <ImageStrip
             slug={slug}
             images={images.postImages}
@@ -572,72 +519,73 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         )}
 
         {/* Editor / preview pane */}
-        <div
-          className={`flex-1 overflow-hidden ${focusMode ? "pb-0" : "pb-10"}`}
-        >
-          {showPreview ? (
-            <div className="h-full overflow-y-auto p-8 admin-scrollbar">
-              {(() => {
-                let parsed;
-                try {
-                  parsed = parseFrontmatter(draft.markdown);
-                } catch {
+        <div className="flex-1 min-h-0 relative">
+          <div
+            className="h-full overflow-y-auto [scrollbar-width:none]"
+            onScroll={() => setLookup(null)}
+          >
+            {showPreview ? (
+              <div className="p-8">
+                {(() => {
+                  let parsed;
+                  try {
+                    parsed = parseFrontmatter(draft.markdown);
+                  } catch {
+                    return (
+                      <p role="alert">
+                        Frontmatter needs fixing. Return to Edit to correct it.
+                      </p>
+                    );
+                  }
+                  const { data: frontmatter, content } = parsed;
+
+                  if (isEssay) {
+                    const date = formatEssayDate(
+                      toDateString(frontmatter.date || draft.date)
+                    );
+                    return (
+                      <div className="mx-auto max-w-[65ch]">
+                        <header className="mb-10">
+                          <h1 className="text-2xl font-bold lowercase leading-tight tracking-tight text-balance text-ink-strong dark:text-chalk-strong md:text-4xl">
+                            {(frontmatter.title || "Untitled").toString()}
+                          </h1>
+                          {frontmatter.subtitle ? (
+                            <p className="mt-3 text-base text-ink-soft dark:text-chalk-soft">
+                              {frontmatter.subtitle.toString()}
+                            </p>
+                          ) : null}
+                          {date && (
+                            <p className="mt-3 text-xs text-ink-soft/80 dark:text-chalk-muted">
+                              {date}
+                            </p>
+                          )}
+                        </header>
+                        <article className={essayProseClasses}>
+                          <MarkdownPreview content={content} />
+                        </article>
+                      </div>
+                    );
+                  }
+
+                  const post = {
+                    data: {
+                      title: (frontmatter.title || "Untitled").toString(),
+                      tags: (frontmatter.tags || "").toString(),
+                      date: (frontmatter.date || draft.date).toString(),
+                    },
+                    content: content,
+                  };
+
                   return (
-                    <p role="alert">
-                      Frontmatter needs fixing. Return to Edit to correct it.
-                    </p>
+                    <RenderPost post={post} prev={null} next={null} slug={null}>
+                      <MarkdownPreview content={post.content} />
+                    </RenderPost>
                   );
-                }
-                const { data: frontmatter, content } = parsed;
-
-                if (isEssay) {
-                  const date = formatEssayDate(
-                    toDateString(frontmatter.date || draft.date)
-                  );
-                  return (
-                    <div className="mx-auto max-w-[65ch]">
-                      <header className="mb-10">
-                        <h1 className="text-2xl font-bold lowercase leading-tight tracking-tight text-balance text-ink-strong dark:text-chalk-strong md:text-4xl">
-                          {(frontmatter.title || "Untitled").toString()}
-                        </h1>
-                        {frontmatter.subtitle ? (
-                          <p className="mt-3 text-base text-ink-soft dark:text-chalk-soft">
-                            {frontmatter.subtitle.toString()}
-                          </p>
-                        ) : null}
-                        {date && (
-                          <p className="mt-3 text-xs text-ink-soft/80 dark:text-chalk-muted">
-                            {date}
-                          </p>
-                        )}
-                      </header>
-                      <article className={essayProseClasses}>
-                        <MarkdownPreview content={content} />
-                      </article>
-                    </div>
-                  );
-                }
-
-                const post = {
-                  data: {
-                    title: (frontmatter.title || "Untitled").toString(),
-                    tags: (frontmatter.tags || "").toString(),
-                    date: (frontmatter.date || draft.date).toString(),
-                  },
-                  content: content,
-                };
-
-                return (
-                  <RenderPost post={post} prev={null} next={null} slug={null}>
-                    <MarkdownPreview content={post.content} />
-                  </RenderPost>
-                );
-              })()}
-            </div>
-          ) : (
-            <>
+                })()}
+              </div>
+            ) : (
               <div
-                className={`h-full p-4 sm:p-8 transition-colors ${images.isDragging ? "bg-paper-sunken dark:bg-night-raised outline outline-1 outline-dashed outline-ink dark:outline-chalk" : ""}`}
+                className={`px-4 sm:px-8 pt-10 min-h-full transition-colors ${images.isDragging ? "bg-paper-sunken dark:bg-night-raised outline outline-1 outline-dashed outline-ink dark:outline-chalk" : ""}`}
                 onDragOver={images.handleDragOver}
                 onDragLeave={images.handleDragLeave}
                 onDrop={images.handleDrop}
@@ -655,45 +603,65 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                       ? "---\ntitle: \nsubtitle: \ndate: \n---\n\nWrite your essay here..."
                       : "---\ntitle: \ntags: \ndate: \n---\n\nWrite your content here..."
                   }
-                  className="w-full h-full font-mono text-base text-ink-strong dark:text-chalk-strong"
+                  className="w-full text-ink-strong dark:text-chalk-strong"
                 />
               </div>
-              {images.isDragging && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="text-2xl text-ink dark:text-chalk font-light tracking-wide">
-                    Drop images here
-                  </div>
-                </div>
-              )}
-            </>
+            )}
+          </div>
+          {images.isDragging && !showPreview && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div className="text-2xl text-ink dark:text-chalk font-light tracking-wide">
+                Drop images here
+              </div>
+            </div>
           )}
         </div>
 
-        {/* Resize handles (editing only — preview width is fixed) */}
-        {!showPreview && !focusMode && (
-          <>
-            <div
-              className="hidden sm:block absolute left-0 top-0 bottom-0 w-4 cursor-ew-resize"
-              onMouseDown={(e) => handleResizeStart(e, "left")}
-            />
-            <div
-              className="hidden sm:block absolute right-0 top-0 bottom-0 w-4 cursor-ew-resize"
-              onMouseDown={(e) => handleResizeStart(e, "right")}
-            />
-          </>
-        )}
-
-        {!focusMode && !isEssay && (
-          <EditorFooter
-            isNew={isNew}
-            date={draft.date}
-            prevSlug={draft.prevSlug}
-            nextSlug={draft.nextSlug}
-            prevDate={draft.prevDate}
-            nextDate={draft.nextDate}
-            monthParam={monthParam}
-          />
-        )}
+        {/* Bottom bar */}
+        <div className="shrink-0 px-4 sm:px-6 py-2 flex items-center justify-between gap-3 text-xs text-ink-soft dark:text-chalk-muted">
+          <span className="tabular-nums">
+            {bodyWords} words · {Math.max(1, Math.ceil(bodyWords / 200))} min
+            read
+          </span>
+          {message ? (
+            <span
+              role="status"
+              className={
+                message.includes("✓")
+                  ? "text-green-600 dark:text-green-500"
+                  : "text-red-600 dark:text-red-500"
+              }
+            >
+              {message}
+            </span>
+          ) : (
+            <span
+              role="status"
+              className={`transition-opacity duration-700 ${status === "saved" && !draft.savedFlash ? "opacity-0" : "opacity-100"}`}
+            >
+              {status}
+            </span>
+          )}
+          {mounted ? (
+            <button
+              type="button"
+              onClick={() =>
+                setTheme(resolvedTheme === "dark" ? "light" : "dark")
+              }
+              className="min-h-11 min-w-11 sm:min-h-9 sm:min-w-9 -mr-2 inline-flex items-center justify-center rounded-xs hover:text-ink dark:hover:text-chalk"
+              title="toggle dark mode"
+              aria-label="Toggle dark mode"
+            >
+              {resolvedTheme === "dark" ? (
+                <Sun size={16} />
+              ) : (
+                <Moon size={16} />
+              )}
+            </button>
+          ) : (
+            <span className="w-9" aria-hidden="true" />
+          )}
+        </div>
 
         {images.showImageNameModal && images.pendingImageFile && (
           <ImageCropModal
@@ -707,6 +675,13 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
           />
         )}
 
+        {lookup && !showPreview && (
+          <WordLookup
+            key={`${lookup.word}:${lookup.x}:${lookup.y}`}
+            selection={lookup}
+          />
+        )}
+
         {modalConfig && (
           <ConfirmModal
             config={modalConfig}
@@ -715,7 +690,31 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         )}
       </div>
 
-      {!focusMode && photoDate && photosOpen && !showPreview && (
+      {!isEssay && (
+        <DayNav
+          date={dayDate}
+          isNew={isNew}
+          prevSlug={draft.prevSlug}
+          nextSlug={draft.nextSlug}
+          prevDate={draft.prevDate}
+          nextDate={draft.nextDate}
+          monthParam={monthParam}
+        />
+      )}
+
+      {photoDate && !showPreview && !photosOpen && (
+        <button
+          type="button"
+          onClick={() => setPhotosOpen(true)}
+          className="fixed right-0 top-24 z-20 inline-flex flex-col items-center gap-2 rounded-l-xs border border-r-0 border-rule dark:border-night-rule bg-paper dark:bg-night px-1.5 py-3 text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk transition-colors"
+          title="photos from this day"
+          aria-label="Photos from this day"
+        >
+          <Camera size={16} />
+        </button>
+      )}
+
+      {photoDate && photosOpen && !showPreview && (
         <>
           {!desktop && (
             // The drawer covers the text on narrow screens; tapping the rest
@@ -723,7 +722,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
             <button
               type="button"
               aria-label="Close photos"
-              onClick={() => setPhotosToggle(false)}
+              onClick={() => setPhotosOpen(false)}
               className="fixed inset-0 z-20 bg-black/20"
             />
           )}
@@ -731,10 +730,10 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
             key={photoDate}
             date={photoDate}
             onPick={(file, name) => {
-              if (!desktop) setPhotosToggle(false);
+              if (!desktop) setPhotosOpen(false);
               images.openCropModalWith(file, name);
             }}
-            onClose={() => setPhotosToggle(false)}
+            onClose={() => setPhotosOpen(false)}
           />
         </>
       )}

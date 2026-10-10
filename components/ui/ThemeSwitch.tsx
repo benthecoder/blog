@@ -4,7 +4,7 @@ import { useTheme } from "next-themes";
 import { SketchIcon } from "./SketchIcon";
 
 // Hydration-safe mounted flag: false during SSR/hydration, true after.
-function useMounted() {
+export function useMounted() {
   return useSyncExternalStore(
     () => () => {},
     () => true,

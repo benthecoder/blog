@@ -121,7 +121,7 @@ export function PhotoPanel({
   return (
     <aside
       aria-label="Photos from this day"
-      className="fixed bottom-0 right-0 z-30 h-[70dvh] w-full sm:w-80 shadow-[0_-8px_24px_rgb(0_0_0/0.08)] lg:shadow-none lg:static lg:h-dvh lg:z-auto shrink-0 flex flex-col border-l border-t lg:border-t-0 lg:border-r border-rule dark:border-night-rule bg-paper dark:bg-night"
+      className="fixed bottom-0 right-0 z-30 h-[70dvh] w-full sm:w-72 lg:inset-y-0 lg:h-dvh shadow-[0_-8px_24px_rgb(0_0_0/0.08)] lg:shadow-[-8px_0_24px_rgb(0_0_0/0.06)] flex flex-col border-l border-t lg:border-t-0 border-rule dark:border-night-rule bg-paper dark:bg-night"
     >
       <div className="h-14 shrink-0 border-b border-rule dark:border-night-rule px-4 flex items-center justify-between">
         <span className="text-xs text-ink-soft dark:text-chalk-muted lowercase">
@@ -146,8 +146,8 @@ export function PhotoPanel({
         className={`flex-1 overflow-y-auto p-3 admin-scrollbar ${empty ? "flex flex-col items-center justify-center gap-2" : ""}`}
       >
         {loading && (
-          <div className="grid grid-cols-2 gap-2" aria-busy="true">
-            {Array.from({ length: 6 }, (_, i) => (
+          <div className="grid grid-cols-1 gap-2" aria-busy="true">
+            {Array.from({ length: 3 }, (_, i) => (
               <div
                 key={i}
                 className="aspect-square rounded-sm bg-paper-sunken dark:bg-night-raised motion-safe:animate-pulse"
@@ -195,7 +195,7 @@ export function PhotoPanel({
           </>
         )}
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3">
           {photos.map((photo) => (
             <div key={photo.id} className="min-w-0 group/tile">
               <button

@@ -10,6 +10,14 @@ export const ESSAY_DRAFTS_DIR = path.join(ESSAYS_DIR, "drafts");
 
 // Local-only helper + cache for the admin "photos from this day" panel.
 export const PHOTOKIT_BIN = path.join(ROOT_DIR, ".cache", "bin", "photokit");
+// Local-only macOS Dictionary helper for the editor's word lookup.
+export const DEFINE_BIN = path.join(ROOT_DIR, ".cache", "bin", "define");
+export const DEFINE_SRC = path.join(
+  ROOT_DIR,
+  "scripts",
+  "define",
+  "define.swift"
+);
 export const PHOTO_THUMBS_DIR = path.join(
   ROOT_DIR,
   ".cache",
