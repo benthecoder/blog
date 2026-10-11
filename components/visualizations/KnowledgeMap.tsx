@@ -711,7 +711,7 @@ export default function KnowledgeMap({
               <span className="shrink-0">
                 {new Date(displayArticleNode.publishedDate).toLocaleDateString(
                   "en-US",
-                  { year: "numeric", month: "short" }
+                  { year: "numeric", month: "short", timeZone: "UTC" }
                 )}
               </span>
             )}
