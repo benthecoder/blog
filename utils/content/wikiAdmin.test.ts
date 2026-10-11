@@ -118,4 +118,37 @@ describe("local wiki authoring", () => {
       "Original\n"
     );
   });
+  it("writes paper fields and removes cleared ones", () => {
+    saveWikiEditorPage({
+      ...page,
+      slug: "attention",
+      category: "papers/llms-and-agents",
+      paper: {
+        authors: "Vaswani et al.",
+        year: "2017",
+        url: "https://arxiv.org/abs/1706.03762",
+        read: "2026-10-11",
+        source: "",
+      },
+    });
+    const file = readMarkdownFile(path.join(state.root, "attention.md")).data;
+    expect(file).toMatchObject({
+      authors: "Vaswani et al.",
+      year: 2017,
+      read: "2026-10-11",
+    });
+    expect(file).not.toHaveProperty("source");
+    const current = getWikiEditorPage("attention");
+    expect(current.paper.year).toBe("2017");
+    saveWikiEditorPage({
+      ...page,
+      slug: "attention",
+      create: false,
+      version: current.version,
+      paper: { ...current.paper, url: "" },
+    });
+    expect(
+      readMarkdownFile(path.join(state.root, "attention.md")).data
+    ).not.toHaveProperty("url");
+  });
 });
