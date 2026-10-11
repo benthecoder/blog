@@ -25,7 +25,6 @@ export default function PlacesMap({
   const current = useRef({ places, onSelect });
   const [ready, setReady] = useState<MapInstance | null>(null);
   const [error, setError] = useState(false);
-  const [position, setPosition] = useState("");
   useEffect(() => {
     current.current = { places, onSelect };
   }, [places, onSelect]);
@@ -36,7 +35,7 @@ export default function PlacesMap({
     try {
       instance = new maplibregl.Map({
         container: container.current,
-        style: { version: 8, sources: {}, layers: [] },
+        style: `https://tiles.openfreemap.org/styles/${dark ? "dark" : "positron"}`,
         center: [-122.406, 37.796],
         zoom: 15,
         pixelRatio: 1,
@@ -49,12 +48,6 @@ export default function PlacesMap({
     }
     map.current = instance;
     instance.on("load", () => setReady(instance));
-    instance.on("move", () => {
-      const center = instance.getCenter();
-      setPosition(
-        `${center.lat.toFixed(4)} / ${center.lng.toFixed(4)} · Z${instance.getZoom().toFixed(1)}`
-      );
-    });
     const resize = new ResizeObserver(() => instance.resize());
     resize.observe(container.current);
     return () => {
@@ -62,35 +55,7 @@ export default function PlacesMap({
       instance.remove();
       map.current = null;
     };
-  }, []);
-
-  useEffect(() => {
-    const instance = map.current;
-    if (!instance || instance !== ready) return;
-    // Grayscale OSM raster tiles keep this keyless, with no external font service.
-    if (!instance.getSource("basemap")) {
-      instance.addSource("basemap", {
-        type: "raster",
-        tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-        tileSize: 256,
-        maxzoom: 19,
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      });
-      instance.addLayer({ id: "basemap", type: "raster", source: "basemap" });
-    }
-    instance.setPaintProperty("basemap", "raster-saturation", -1);
-    instance.setPaintProperty(
-      "basemap",
-      "raster-brightness-min",
-      dark ? 0.85 : 0
-    );
-    instance.setPaintProperty(
-      "basemap",
-      "raster-brightness-max",
-      dark ? 0.12 : 1
-    );
-  }, [dark, ready]);
+  }, [dark]);
 
   useEffect(() => {
     const instance = map.current;
@@ -159,38 +124,19 @@ export default function PlacesMap({
           instance.getCanvas().style.cursor = "";
         });
       }
-      // HTML cluster labels avoid an external font service and remain crisp at all zooms.
-      const labels: maplibregl.Marker[] = [];
-      const renderLabels = () => {
-        labels.forEach((label) => label.remove());
-        labels.length = 0;
-        if (!instance.isSourceLoaded("places")) return;
-        const seen = new Set<number>();
-        for (const feature of instance.querySourceFeatures("places")) {
-          const clusterId = feature.properties?.cluster_id;
-          if (
-            clusterId == null ||
-            seen.has(clusterId) ||
-            feature.geometry.type !== "Point"
-          )
-            continue;
-          seen.add(clusterId);
-          const label = document.createElement("span");
-          label.className = "cluster-label";
-          label.textContent = String(feature.properties?.point_count);
-          labels.push(
-            new maplibregl.Marker({ element: label })
-              .setLngLat(feature.geometry.coordinates as [number, number])
-              .addTo(instance)
-          );
-          label.setAttribute("aria-hidden", "true");
-          label.tabIndex = -1;
-        }
-      };
-      instance.on("idle", renderLabels);
-      instance.on("movestart", () => {
-        labels.forEach((label) => label.remove());
-        labels.length = 0;
+      instance.addLayer({
+        id: "cluster-counts",
+        type: "symbol",
+        source: "places",
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": ["get", "point_count_abbreviated"],
+          "text-font": ["Noto Sans Regular"],
+          "text-size": 12,
+          "text-allow-overlap": true,
+          "text-ignore-placement": true,
+        },
+        paint: { "text-color": "#ffffff" },
       });
     }
     if (places.length) {
@@ -253,9 +199,6 @@ export default function PlacesMap({
           <Maximize size={15} />
         </button>
       </div>
-      <output className="map-position">
-        {position || "37.7960 / -122.4060"}
-      </output>
       {!ready && (
         <div className="map-status" role="status">
           {error
