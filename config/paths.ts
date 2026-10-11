@@ -7,6 +7,8 @@ export const DRAFTS_DIR = path.join(POSTS_DIR, "drafts");
 export const WIKI_DIR = path.join(ROOT_DIR, "wiki");
 // Markdown templates offered by the local wiki editor (frontmatter = defaults).
 export const WIKI_TEMPLATES_DIR = path.join(ROOT_DIR, "templates", "wiki");
+// Paper notes are wiki pages (`category: papers/<topic>`), listed at this route.
+export const PAPERS_ROUTE = "/papers";
 export const ESSAYS_DIR = path.join(ROOT_DIR, "essays");
 export const ESSAY_DRAFTS_DIR = path.join(ESSAYS_DIR, "drafts");
 
