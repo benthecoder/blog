@@ -1,7 +1,7 @@
 import { hashText, loadCache, saveCache } from "./postSummaries";
 import { l2Normalize } from "./postVectors";
 
-export const LOCAL_EMBED_MODEL = "Xenova/bge-small-en-v1.5";
+const LOCAL_EMBED_MODEL = "Xenova/bge-small-en-v1.5";
 
 type VectorCache = Record<string, number[]>;
 

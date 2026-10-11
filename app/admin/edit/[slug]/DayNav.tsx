@@ -51,13 +51,6 @@ export function DayNav({
   const monthQuery = (sep: "?" | "&") =>
     monthParam ? `${sep}month=${monthParam}` : "";
 
-  const prevHref = isNew
-    ? prevDate && `/admin/edit/new?date=${prevDate}${monthQuery("&")}`
-    : prevSlug && `/admin/edit/${prevSlug}${monthQuery("?")}`;
-  const nextHref = isNew
-    ? nextDate && `/admin/edit/new?date=${nextDate}${monthQuery("&")}`
-    : nextSlug && `/admin/edit/${nextSlug}${monthQuery("?")}`;
-
   const [slugs, setSlugs] = useState<string[] | null>(null);
   useEffect(() => {
     if (!date) return;
@@ -68,6 +61,24 @@ export function DayNav({
       .catch(() => {});
     return () => controller.abort();
   }, [date]);
+
+  // A new post's neighbour day may already have a post; opening it as "new"
+  // would only fail on save with a 409, so link to the existing one.
+  const newDayHref = (target: string | null) => {
+    if (!target || !slugs) return null;
+    const [year, month, day] = target.split("-");
+    const existing = `${day}${month}${year.slice(2)}`;
+    return slugs.includes(existing)
+      ? `/admin/edit/${existing}${monthQuery("?")}`
+      : `/admin/edit/new?date=${target}${monthQuery("&")}`;
+  };
+
+  const prevHref = isNew
+    ? newDayHref(prevDate)
+    : prevSlug && `/admin/edit/${prevSlug}${monthQuery("?")}`;
+  const nextHref = isNew
+    ? newDayHref(nextDate)
+    : nextSlug && `/admin/edit/${nextSlug}${monthQuery("?")}`;
 
   const prevMonthHref = date && slugs ? monthHref(date, -1, slugs) : null;
   const nextMonthHref = date && slugs ? monthHref(date, 1, slugs) : null;

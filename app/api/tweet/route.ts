@@ -8,8 +8,14 @@ import { parsePublicUrl } from "@/utils/tweets/link";
 const URL_RE = /https?:\/\/[^\s]+/;
 
 export async function POST(request: Request) {
-  const body = await request.json();
-  let content: string = (body.body || "").slice(0, 700);
+  let body: { body?: unknown; link?: unknown; title?: unknown };
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
+  if (!body || typeof body !== "object") body = {};
+  let content = (typeof body.body === "string" ? body.body : "").slice(0, 700);
   let link = typeof body.link === "string" ? parsePublicUrl(body.link) : null;
 
   // No explicit link: lift the first URL out of the text.
@@ -28,6 +34,12 @@ export async function POST(request: Request) {
     link && typeof body.title === "string"
       ? body.title.replace(/\s+/g, " ").trim().slice(0, 300) || null
       : null;
+
+  if (!content.trim() && !link) {
+    return new Response(JSON.stringify({ error: "Empty tweet" }), {
+      status: 400,
+    });
+  }
 
   try {
     const result =

@@ -14,6 +14,10 @@ import {
 } from "@/utils/content/draftRecovery";
 import type { ContentKind } from "@/utils/content/kind";
 import { toDateString } from "@/utils/content/essayDate";
+import {
+  publishImagePaths,
+  unpublishImagePaths,
+} from "@/utils/content/draftImages";
 import { DEFAULT_POST_TEMPLATE } from "../post-template";
 import { suggestPeriods, type PeriodKind } from "@/utils/digest/schedule";
 
@@ -69,6 +73,8 @@ export function usePostDraft({
   const formatRef = useRef(formatMarkdown);
   const autoTriedRef = useRef<string | null>(null);
   const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Set while a delete is in flight or done, so no save recreates the file.
+  const deletingRef = useRef(false);
   const [date, setDate] = useState("");
   const [markdown, setMarkdown] = useState("");
   const [saving, setSaving] = useState(false);
@@ -184,13 +190,13 @@ export function usePostDraft({
 
   // Post/template load syncs fetch + localStorage draft state into the
   // editor; inherently effect-driven.
-  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const draftKey = recoveryKey;
     const controller = new AbortController();
     setLoadedKey(null);
     setTemplateLoading(false);
     wasDirtyRef.current = false;
+    deletingRef.current = false;
     const offerRecovery = (formattedDate: string, baseline: string) => {
       const backup =
         readDraftBackup(draftKey) ??
@@ -295,7 +301,6 @@ export function usePostDraft({
     // confirmAction/notify are page-level helpers, not load triggers
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, isNew, isEssay, kindQuery, dateParam, recoveryKey]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   const saveMarkdown = useCallback(
     async (toSave: string, auto: boolean) => {
@@ -397,6 +402,7 @@ export function usePostDraft({
   const handleSave = useCallback(
     async (options?: { auto?: boolean }) => {
       if (loading || templateLoading || saveInFlight.current) return false;
+      if (deletingRef.current) return false;
       const auto = options?.auto ?? false;
       const toSave = auto ? markdown : formatRef.current(markdown);
       if (toSave !== markdown) {
@@ -407,6 +413,19 @@ export function usePostDraft({
     },
     [markdown, loading, templateLoading, saveMarkdown]
   );
+
+  // Publish/unpublish rewrite image URLs in the file; mirror that in the
+  // editor so the next save doesn't write the old URLs back.
+  const rewriteImagePaths = (rewrite: (markdown: string) => string) => {
+    initialContentRef.current = {
+      markdown: rewrite(initialContentRef.current.markdown),
+    };
+    const next = rewrite(latestMarkdownRef.current);
+    if (next !== latestMarkdownRef.current) {
+      latestMarkdownRef.current = next;
+      setMarkdown(next);
+    }
+  };
 
   const handlePublish = async () => {
     if (loading || saving || publishing || isNew) return;
@@ -438,6 +457,7 @@ export function usePostDraft({
 
       if (response.ok) {
         notify("✓ Published!", true);
+        rewriteImagePaths(publishImagePaths);
         setIsDraft(false);
       } else {
         notify(`✗ Error: ${data.error}`);
@@ -464,6 +484,7 @@ export function usePostDraft({
 
       if (response.ok) {
         notify("✓ Moved to drafts", true);
+        rewriteImagePaths((md) => unpublishImagePaths(md, slug));
         setIsDraft(true);
       } else {
         notify(`✗ Error: ${data.error}`);
@@ -481,6 +502,7 @@ export function usePostDraft({
       "The file is removed and this can't be undone.",
       ["keep", "delete"],
       async () => {
+        deletingRef.current = true;
         setDeleting(true);
         notify("");
 
@@ -493,6 +515,7 @@ export function usePostDraft({
           const data = await response.json();
 
           if (response.ok) {
+            removeDraftBackup(recoveryKey);
             notify(isEssay ? "✓ Essay deleted" : "✓ Post deleted");
             setTimeout(() => {
               router.push(
@@ -504,9 +527,11 @@ export function usePostDraft({
               );
             }, 1000);
           } else {
+            deletingRef.current = false;
             notify(`✗ Error: ${data.error}`);
           }
         } catch (error) {
+          deletingRef.current = false;
           notify(`✗ Error: ${error}`);
         } finally {
           setDeleting(false);
@@ -592,7 +617,13 @@ export function usePostDraft({
       const target = e.target as HTMLElement;
       const anchor = target.closest("a");
 
-      if (anchor && anchor.href && !anchor.href.includes("#")) {
+      // New-tab links (e.g. "view on site") don't leave the editor.
+      if (
+        anchor &&
+        anchor.href &&
+        anchor.target !== "_blank" &&
+        !anchor.href.includes("#")
+      ) {
         e.preventDefault();
         e.stopPropagation();
 

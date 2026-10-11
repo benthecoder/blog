@@ -17,8 +17,8 @@ export interface PostVector {
 const SCAFFOLD_LINE =
   /^(?:-{3,}|mood:.*|(?:wake|sleep|slept):.*|meals:?|[-*]\s*(?:breakfast|lunch|dinner|snacks?|brunch):.*|grateful for:.*|til:?|links:?|notes:?|reflection:?|!\[.*\]\(.*\)|[-*]?\s*)$/i;
 
-export const MIN_CONTENT_CHARS = 120;
-export const MAX_SCAFFOLD_RATIO = 0.6;
+const MIN_CONTENT_CHARS = 120;
+const MAX_SCAFFOLD_RATIO = 0.6;
 
 export function stripScaffolding(text: string): string {
   return text
@@ -118,20 +118,4 @@ export function removeDirection(
     const dot = v.reduce((s, x, i) => s + x * d[i], 0);
     return l2Normalize(v.map((x, i) => x - dot * d[i]));
   });
-}
-
-/**
- * Direction separating `group` from the rest: difference of the group mean
- * and the remainder mean. Returns null when either side is empty.
- */
-export function groupDirection(
-  vectors: number[][],
-  inGroup: boolean[]
-): number[] | null {
-  const a = vectors.filter((_, i) => inGroup[i]);
-  const b = vectors.filter((_, i) => !inGroup[i]);
-  if (a.length === 0 || b.length === 0) return null;
-  const ma = mean(a);
-  const mb = mean(b);
-  return ma.map((x, i) => x - mb[i]);
 }

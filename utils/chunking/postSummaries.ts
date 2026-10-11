@@ -12,7 +12,7 @@ export interface SummaryInput {
   text: string;
 }
 
-export interface SummaryCacheEntry {
+interface SummaryCacheEntry {
   hash: string;
   summary: string;
 }
