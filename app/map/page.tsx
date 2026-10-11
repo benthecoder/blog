@@ -6,11 +6,11 @@ import PlacesExplorer from "./PlacesExplorer";
 export const metadata: Metadata = {
   title: "Places | Benedict Neo",
   description: "Places I love and notes from my travels.",
-  alternates: { canonical: "https://bneo.xyz/map" },
+  alternates: { canonical: "https://maps.bneo.xyz" },
   openGraph: {
     title: "Places | Benedict Neo",
     description: "Places I love and notes from my travels.",
-    url: "https://bneo.xyz/map",
+    url: "https://maps.bneo.xyz",
   },
 };
 

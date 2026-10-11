@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import {
-  ArrowLeft,
   ArrowUpRight,
   Check,
   ChevronDown,
@@ -24,6 +23,7 @@ import {
   type PlacesData,
 } from "@/utils/places";
 import "./map.css";
+import { CategoryIcon } from "./categories";
 
 const PlacesMap = dynamic(() => import("./PlacesMap"), { ssr: false });
 const formatDate = (date: string) =>
@@ -162,11 +162,8 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     <main className="places-explorer">
       <header className="map-header">
         <div className="map-brand">
-          <Link href="/" title="Back to the blog">
-            <ArrowLeft size={15} /> bneo.xyz
-          </Link>
-          <span aria-hidden="true">/</span>
-          <span>places</span>
+          <span className="map-wordmark">places</span>
+          <span>by ben</span>
         </div>
         <div className="header-actions">
           <details
@@ -279,7 +276,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                   p.tags.includes(tag as keyof typeof categoryColors)
                 )
               )
-              .map(([tag, color]) => (
+              .map(([tag]) => (
                 <button
                   key={tag}
                   aria-pressed={category === tag}
@@ -288,7 +285,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                     clearSelection();
                   }}
                 >
-                  <i style={{ background: color }} />
                   {tag}
                 </button>
               ))}
@@ -306,10 +302,9 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                 aria-label={`Show ${place.name} on map`}
                 aria-pressed={place.id === selectedId}
               >
-                <i
-                  className="place-dot"
-                  style={{ background: categoryColors[place.tags[0]] }}
-                />
+                <span className="place-icon">
+                  <CategoryIcon category={place.tags[0]} />
+                </span>
                 <span className="place-copy">
                   <span className="place-name">{place.name}</span>
                   {place.note && (
@@ -360,7 +355,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
               <X size={16} />
             </button>
             <span className="detail-category">
-              <i style={{ background: categoryColors[selected.tags[0]] }} />
+              <CategoryIcon category={selected.tags[0]} size={13} />
               {selected.tags.join(" / ")}
             </span>
             <h2>{selected.name}</h2>

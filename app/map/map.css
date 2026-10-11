@@ -59,16 +59,11 @@
   align-items: center;
   gap: 16px;
 }
-.map-brand a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.map-brand .map-wordmark {
   color: var(--map-accent);
   font-family: var(--font-averia), Georgia, serif;
-  font-size: 17px;
-}
-.map-brand > span:first-of-type {
-  color: var(--map-rule);
+  font-size: 20px;
+  line-height: 1;
 }
 .map-brand > span:last-of-type {
   color: var(--map-muted);
@@ -254,10 +249,14 @@
   width: 100%;
   text-align: left;
 }
-.places-explorer .place-dot {
-  margin-top: 8px;
-  width: 6px;
-  height: 6px;
+.place-icon {
+  width: 16px;
+  height: 23px;
+  flex: 0 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--map-muted);
 }
 .place-copy {
   display: block;
@@ -425,8 +424,8 @@
   .map-brand {
     gap: 12px;
   }
-  .map-brand a {
-    font-size: 16px;
+  .map-brand .map-wordmark {
+    font-size: 20px;
   }
   .map-area {
     position: absolute;

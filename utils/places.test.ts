@@ -40,6 +40,7 @@ describe("place collections", () => {
     });
     const feature = placesGeoJSON(places).features[0];
     expect(feature.geometry.coordinates).toEqual([-122.4071024, 37.7940788]);
+    expect(feature.properties.category).toBe("food");
     expect(feature.properties.visitedOn).toBe("2026-10-11");
     const url = new URL(mapsUrl(data.places[0]));
     expect(url.searchParams.get("query")).toBe("37.7940788,-122.4071024");

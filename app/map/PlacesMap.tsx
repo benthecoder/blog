@@ -8,6 +8,7 @@ import maplibregl, {
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Maximize, Minus, Plus } from "lucide-react";
 import { placesGeoJSON, type Visit } from "@/utils/places";
+import { categoryIcons, CategoryIcon } from "./categories";
 
 export default function PlacesMap({
   places,
@@ -21,6 +22,7 @@ export default function PlacesMap({
   onSelect: (id: string) => void;
 }) {
   const container = useRef<HTMLDivElement>(null);
+  const sprites = useRef<HTMLDivElement>(null);
   const map = useRef<MapInstance | null>(null);
   const current = useRef({ places, onSelect });
   const [ready, setReady] = useState<MapInstance | null>(null);
@@ -47,7 +49,42 @@ export default function PlacesMap({
       return;
     }
     map.current = instance;
-    instance.on("load", () => setReady(instance));
+    instance.on("load", async () => {
+      try {
+        await Promise.all(
+          Object.keys(categoryIcons).map(async (category) => {
+            const svg = sprites.current
+              ?.querySelector(`[data-category="${category}"] svg`)
+              ?.cloneNode(true) as SVGElement | undefined;
+            if (!svg) throw new Error("Missing marker icon");
+            svg.setAttribute("stroke", dark ? "#e3e6e3" : "#343b3e");
+            const image = new Image();
+            image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg.outerHTML)}`;
+            await image.decode();
+            if (map.current !== instance) return;
+            const canvas = document.createElement("canvas");
+            canvas.width = canvas.height = 64;
+            const context = canvas.getContext("2d")!;
+            context.beginPath();
+            context.arc(32, 32, 26, 0, Math.PI * 2);
+            context.fillStyle = dark ? "#242a26" : "#fbfaf5";
+            context.fill();
+            context.lineWidth = 2;
+            context.strokeStyle = dark ? "#a0aaa4" : "#737b7d";
+            context.stroke();
+            context.drawImage(image, 15, 15, 34, 34);
+            instance.addImage(
+              `place-${category}`,
+              context.getImageData(0, 0, 64, 64),
+              { pixelRatio: 2 }
+            );
+          })
+        );
+        if (map.current === instance) setReady(instance);
+      } catch {
+        if (map.current === instance) setError(true);
+      }
+    });
     const resize = new ResizeObserver(() => instance.resize());
     resize.observe(container.current);
     return () => {
@@ -85,14 +122,14 @@ export default function PlacesMap({
       });
       instance.addLayer({
         id: "points",
-        type: "circle",
+        type: "symbol",
         source: "places",
         filter: ["!", ["has", "point_count"]],
-        paint: {
-          "circle-color": ["get", "color"],
-          "circle-radius": 7,
-          "circle-stroke-width": 2,
-          "circle-stroke-color": "#ffffff",
+        layout: {
+          "icon-image": ["concat", "place-", ["get", "category"]],
+          "icon-size": 0.9,
+          "icon-allow-overlap": true,
+          "icon-ignore-placement": true,
         },
       });
       instance.on("click", "clusters", async (event) => {
@@ -148,10 +185,10 @@ export default function PlacesMap({
 
   useEffect(() => {
     if (ready && map.current === ready && map.current.getLayer("points")) {
-      map.current.setPaintProperty(
+      map.current.setLayoutProperty(
         "points",
-        "circle-radius",
-        selected ? ["case", ["==", ["get", "id"], selected.id], 10, 7] : 7
+        "icon-size",
+        selected ? ["case", ["==", ["get", "id"], selected.id], 1.2, 0.9] : 0.9
       );
     }
     if (ready && map.current === ready && selected)
@@ -170,6 +207,16 @@ export default function PlacesMap({
   };
   return (
     <>
+      <div ref={sprites} hidden aria-hidden="true">
+        {Object.keys(categoryIcons).map((category) => (
+          <span key={category} data-category={category}>
+            <CategoryIcon
+              category={category as keyof typeof categoryIcons}
+              size={24}
+            />
+          </span>
+        ))}
+      </div>
       <div
         ref={container}
         className="map-canvas"

@@ -114,6 +114,7 @@ export function placesGeoJSON(places: Visit[]) {
         visitedOn: place.visitedOn ?? "",
         post: place.post ?? "",
         color: categoryColors[place.tags[0]],
+        category: place.tags[0],
       },
     })),
   };
