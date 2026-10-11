@@ -1,0 +1,544 @@
+.places-explorer {
+  --map-paper: var(--color-paper);
+  --map-ink: var(--color-ink-strong);
+  --map-muted: var(--color-ink-muted);
+  --map-rule: var(--color-rule);
+  --map-input: var(--color-paper-sunken);
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  background: var(--map-paper);
+  color: var(--map-ink);
+  font-family: var(--font-averia), Georgia, serif;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+.dark .places-explorer {
+  --map-paper: var(--color-night);
+  --map-ink: var(--color-chalk-strong);
+  --map-muted: var(--color-chalk-muted);
+  --map-rule: var(--color-night-rule);
+  --map-input: var(--color-night-raised);
+}
+.places-explorer button,
+.places-explorer input {
+  font: inherit;
+  color: inherit;
+  border-radius: 4px;
+}
+.places-explorer button,
+.places-explorer a {
+  -webkit-tap-highlight-color: transparent;
+}
+.places-explorer button {
+  cursor: pointer;
+}
+.places-explorer button:focus-visible,
+.places-explorer a:focus-visible,
+.places-explorer input:focus-visible {
+  outline: 2px solid var(--map-ink);
+  outline-offset: 3px;
+}
+.places-panel {
+  overflow-y: auto;
+  border-right: 1px solid var(--map-rule);
+  scrollbar-width: thin;
+  scrollbar-color: var(--map-rule) transparent;
+  background: var(--map-paper);
+  z-index: 3;
+}
+.places-header {
+  padding: 22px 24px 24px;
+  border-bottom: 1px solid var(--map-rule);
+}
+.places-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+}
+.home-link {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+.theme-options {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.theme-options button > span,
+.theme-options button > div {
+  width: 28px;
+  height: 28px;
+}
+.places-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 26px 0 8px;
+}
+.places-title h1 {
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 0;
+}
+.places-title > span {
+  color: var(--map-muted);
+  font-size: 10px;
+}
+.places-header p {
+  color: var(--map-muted);
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 0;
+}
+.dark .places-explorer .places-header p {
+  color: var(--map-muted);
+}
+.collection-section,
+.save-section {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--map-rule);
+}
+.section-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+.section-label h2 {
+  font-size: 15px;
+  font-weight: 400;
+  margin: 0;
+}
+.section-label > span {
+  color: var(--map-muted);
+}
+.collection-options {
+  display: grid;
+}
+.collection-options button {
+  min-height: 48px;
+  padding: 8px 0;
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  font-size: 17px;
+  text-align: left;
+  color: var(--map-muted);
+}
+.collection-options button[aria-checked="true"] {
+  z-index: 1;
+  color: var(--map-ink);
+}
+.collection-radio {
+  border: 1px solid var(--map-muted);
+  border-radius: 50%;
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+}
+[aria-checked="true"] .collection-radio {
+  border: 4px solid var(--map-ink);
+}
+.collection-name {
+  flex: 1;
+}
+.collection-name small {
+  display: block;
+  font-size: 13px;
+  font-weight: normal;
+  color: var(--map-muted);
+  margin-top: 2px;
+}
+.collection-description {
+  color: var(--map-muted);
+  font-size: 15px;
+  margin: 13px 0 0;
+}
+.journal-link {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 14px;
+  margin-top: 10px;
+  text-decoration: underline;
+}
+.filters {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--map-rule);
+}
+.category-options {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.category-options button {
+  display: flex;
+  border: 1px solid var(--map-rule);
+  font-size: 13px;
+  align-items: center;
+  min-height: 30px;
+}
+.category-options button > span:first-child {
+  padding: 3px 6px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.category-count {
+  border-left: 1px solid var(--map-rule);
+  padding: 3px 5px;
+  color: var(--map-muted);
+}
+.category-options button[aria-pressed="true"] {
+  border-color: var(--map-ink);
+}
+.category-options button[aria-pressed="true"] .category-count {
+  color: var(--map-ink);
+  border-color: var(--map-rule);
+}
+.places-explorer i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  flex: 0 0 6px;
+}
+.place-search input {
+  width: 100%;
+  min-height: 36px;
+  padding: 9px 11px;
+  border: 1px solid var(--map-rule);
+  background: var(--map-input);
+  font-size: 15px;
+}
+.place-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.place-list li {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--map-rule);
+}
+.place-list li:hover,
+.place-list li.selected {
+  background: var(--map-input);
+}
+.place-select {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+.place-name {
+  display: block;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.place-note {
+  display: block;
+  font-size: 15px;
+  color: var(--map-muted);
+  margin-top: 4px;
+  line-height: 1.55;
+}
+.place-meta {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+.place-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.place-tags span {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 12px;
+  padding: 1px 4px;
+  color: var(--map-muted);
+}
+.place-meta a {
+  font-size: 13px;
+  color: var(--map-muted);
+  display: inline-flex;
+  align-items: center;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+.visit-number {
+  color: var(--map-muted);
+  font-size: 10px;
+  margin-right: 8px;
+}
+.visit-date {
+  display: block;
+  color: var(--map-muted);
+  font-size: 10px;
+  margin-top: 7px;
+}
+.empty-places {
+  padding: 22px 20px;
+}
+.empty-places button {
+  display: block;
+  margin-top: 8px;
+  text-decoration: underline;
+}
+.save-action {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  padding: 8px 0;
+  margin-bottom: 7px;
+  font-size: 14px !important;
+  text-align: left;
+}
+.save-action small {
+  display: block;
+  font-size: 12px;
+  color: var(--map-muted);
+  margin-top: 3px;
+}
+.places-footer {
+  padding: 20px 24px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  color: var(--map-muted);
+}
+.places-footer p {
+  width: 100%;
+  margin: 14px 0 6px;
+  font-size: 12px;
+}
+.places-footer a {
+  display: inline-flex;
+  align-items: center;
+  color: var(--map-ink);
+}
+.map-area {
+  position: relative;
+  min-width: 0;
+  background: var(--map-input);
+}
+.places-explorer .map-canvas {
+  position: absolute;
+  inset: 0;
+}
+.map-tools {
+  position: absolute;
+  left: 18px;
+  top: 18px;
+  z-index: 2;
+  display: grid;
+  border: 1px solid var(--map-rule);
+  border-radius: 4px;
+  background: var(--map-paper);
+}
+.map-tools button {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+}
+.map-tools button + button {
+  border-top: 1px solid var(--map-rule);
+}
+.share-map {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: var(--map-paper);
+  border: 1px solid var(--map-rule);
+  border-radius: 4px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+}
+.map-position {
+  position: absolute;
+  bottom: 30px;
+  left: 18px;
+  background: var(--map-paper);
+  padding: 4px 8px;
+  font-size: 12px;
+  pointer-events: none;
+}
+.cluster-label {
+  color: #fff;
+  font:
+    11px "Courier New",
+    monospace;
+  pointer-events: none;
+}
+.map-status {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--map-paper);
+  padding: 12px;
+  font-size: 11px;
+}
+.place-detail {
+  position: absolute;
+  right: 18px;
+  top: 62px;
+  width: min(320px, calc(100% - 36px));
+  background: var(--map-paper);
+  border: 1px solid var(--map-rule);
+  border-radius: 4px;
+  padding: 20px;
+  box-shadow: 0 3px 12px #00000012;
+}
+.detail-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--map-muted);
+  font-size: 13px;
+}
+.detail-heading button {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+}
+.place-detail h2 {
+  font-size: 21px;
+  line-height: 1.35;
+  margin: 10px 0 6px;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+.place-detail p {
+  font-size: 16px;
+  margin: 10px 0;
+}
+.place-detail .detail-address {
+  color: var(--map-muted);
+  font-size: 14px;
+}
+.detail-links {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--map-rule);
+  padding-top: 12px;
+  margin-top: 14px;
+}
+.detail-links a {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  text-decoration: underline;
+}
+.share-error {
+  position: absolute;
+  right: 18px;
+  top: 48px;
+  background: var(--map-paper);
+  padding: 8px;
+  font-size: 10px;
+}
+.sheet-toggle {
+  display: none;
+}
+.places-explorer .maplibregl-ctrl-attrib {
+  font:
+    9px "Courier New",
+    monospace;
+}
+@media (max-width: 760px) {
+  .places-explorer {
+    display: block;
+  }
+  .map-area {
+    position: absolute;
+    inset: 0 0 56px;
+  }
+  .places-panel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 56px;
+    top: 22%;
+    border-top: 1px solid var(--map-rule);
+    border-right: 0;
+    transform: translateY(calc(100% + 56px));
+    visibility: hidden;
+    transition:
+      transform 180ms ease,
+      visibility 180ms;
+  }
+  .places-panel.is-open {
+    transform: translateY(0);
+    visibility: visible;
+  }
+  .places-panel.is-open ~ .map-area .place-detail {
+    display: none;
+  }
+  .places-header {
+    padding-top: 20px;
+  }
+  .places-title {
+    margin-top: 25px;
+  }
+  .places-title h1 {
+    font-size: 28px;
+  }
+  .sheet-toggle {
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 4;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    border-top: 1px solid var(--map-rule);
+    background: var(--map-paper);
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    padding-top: 7px;
+  }
+  .sheet-handle {
+    position: absolute;
+    top: 11px;
+    width: 34px;
+    height: 2px;
+    background: var(--map-muted);
+  }
+  .map-position {
+    font-size: 9px;
+    bottom: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .places-panel {
+    transition: none;
+  }
+}
