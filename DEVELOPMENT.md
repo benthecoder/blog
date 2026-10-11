@@ -2,6 +2,64 @@
 
 This document tracks the development progress, TODO items, and setup instructions for the blog.
 
+## Domains and subdomains
+
+Porkbun manages DNS for `bneo.xyz`; Vercel serves the `blog` project in
+`benthecoders-projects`. The subdomains `photos.bneo.xyz` and `maps.bneo.xyz`
+are connected to that project's **Production** environment.
+
+| Type | Host in Porkbun | Answer / target | TTL |
+| --- | --- | --- | --- |
+| CNAME | photos | 007f33140d6cc854.vercel-dns-017.com | 600 |
+| CNAME | maps | 007f33140d6cc854.vercel-dns-017.com | 600 |
+
+To connect another subdomain:
+
+1. In Vercel, open **blog → Domains → Add Existing**, enter the full hostname,
+   choose **Connect to an environment → Production**, and add the domain.
+2. Read the DNS record Vercel displays for that hostname. Use that value rather
+   than assuming the target above will stay the same.
+3. In Porkbun's Domain Management, open **bneo.xyz → DNS → Add record**. Choose
+   **CNAME**, enter just the subdomain label as Host (Porkbun appends `.bneo.xyz`),
+   paste Vercel's target, leave TTL at 600, and save.
+4. Refresh the domain in Vercel. Wait for DNS validation and certificate
+   issuance, then open the hostname over HTTPS. Existing nameservers, root-domain
+   records, and mail records do not need to change.
+
+DNS chooses the hosting service; Vercel's domain assignment chooses the project.
+Neither chooses a page within the app. The Next.js hostname rewrite in
+`next.config.ts` renders `/photos` at `photos.bneo.xyz/`. Internal photo links
+use `/photos/...`; the blog also exposes those routes. `maps.bneo.xyz/` still
+renders the blog homepage until a map route and hostname rewrite are added.
+A separate Vercel project is only needed for a separate app.
+
+## Photo collections
+
+Upload JPEG, PNG, WebP, or AVIF photos to the Cloudflare R2 `photos` bucket.
+Its existing public URL is `https://pub-e85be102871845218dcda1cc49c78508.r2.dev`.
+Group objects by place or trip: `san-francisco/chinatown/IMG_001.jpg` creates
+one San Francisco collection and a Chinatown photoset. Root images go into
+Moments. Use distinct folder names that remain distinct after lowercasing and
+replacing spaces with hyphens.
+
+Run `pnpm photos:sync` with the existing R2 credentials in `.env`. Optional
+`PHOTOS_R2_BUCKET` and `PHOTOS_PUBLIC_URL` override the bucket and image base URL.
+If changing the public URL, also allow its hostname in `next.config.ts` images.
+The command reads images, dimensions, camera/lens and exposure EXIF, capture
+dates, and tiny blur placeholders into `public/data/photo-collections.json`.
+It does not change R2. Empty buckets leave the current manifest intact.
+Precise GPS coordinates are not imported.
+
+Review the manifest before committing and deploying. Edit `caption`,
+`description`, `location`, `journal`, or `camera` in the collection's `photos`
+array; photosets use the same photo IDs, and reimports preserve
+those editorial fields. For example, set `camera` to `Fujifilm X100S` when an
+export has stripped EXIF. Future cameras use their own metadata rather than a
+site-wide default. The viewer shows descriptions and camera details, and each
+photo has a shareable page. Collection and photoset titles can also be edited;
+`cover` is a photo ID. The initial manifest contains five already-published
+San Francisco blog photos while the dedicated bucket is empty.
+
 ## Writing wiki pages
 
 Run `pnpm dev` and open `/admin/wiki` (or choose Wiki from `/admin`). Create a

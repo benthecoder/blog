@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   poweredByHeader: false,
   images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "pub-e85be102871845218dcda1cc49c78508.r2.dev",
+        pathname: "/**",
+      },
+    ],
     formats: ["image/avif", "image/webp"],
     // Limit generated variants to the sizes and qualities the site uses.
     deviceSizes: [640, 828, 1200, 1920],
@@ -17,22 +24,32 @@ const nextConfig: NextConfig = {
     "*": ["public/**/*", ".git/**/*"],
     "/api/**": ["app/og/*.jpg"],
   },
-  rewrites: async () => [
-    {
-      source: "/rss.xml",
-      destination: "/api/rss",
-    },
-    // Published images live in R2. This runs after the public/ file check,
-    // so local files (e.g. /images/drafts/*) still win when present.
-    ...(process.env.R2_PUBLIC_URL
-      ? [
-          {
-            source: "/images/:path*",
-            destination: `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/images/:path*`,
-          },
-        ]
-      : []),
-  ],
+  rewrites: async () => ({
+    beforeFiles: [
+      {
+        source: "/",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos",
+      },
+    ],
+    afterFiles: [
+      {
+        source: "/rss.xml",
+        destination: "/api/rss",
+      },
+      // Published images live in R2. This runs after the public/ file check,
+      // so local files (e.g. /images/drafts/*) still win when present.
+      ...(process.env.R2_PUBLIC_URL
+        ? [
+            {
+              source: "/images/:path*",
+              destination: `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/images/:path*`,
+            },
+          ]
+        : []),
+    ],
+    fallback: [],
+  }),
   headers: async () => [
     {
       source: "/fonts/:path*",

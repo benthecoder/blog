@@ -1,0 +1,140 @@
+[
+  {
+    "slug": "san-francisco",
+    "title": "San Francisco",
+    "description": "A few walks through the city.",
+    "cover": "sf",
+    "photos": [
+      {
+        "id": "cny_parade_25",
+        "src": "/images/cny_parade_25.jpeg",
+        "caption": "Golden Dragon",
+        "date": "2025-02-15",
+        "journal": "150225",
+        "location": "San Francisco",
+        "width": 3024,
+        "height": 4032,
+        "blurDataURL": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQAgCdASoJAAwAAsBMJYgCdEf/gcFaU3UwAP75VGiuv+LHOWElW2pVhSLUDaSkO5mRzndTyAx/kD3RFKTf3lJjhWhZUXEg/C6O0EAG3/0/YG2CpnfZU+NLcAAAAA=="
+      },
+      {
+        "id": "parade_street_25",
+        "src": "/images/parade_street_25.jpeg",
+        "caption": "Chinatown during the parade",
+        "date": "2025-02-16",
+        "journal": "160225",
+        "location": "San Francisco",
+        "width": 1200,
+        "height": 1600,
+        "blurDataURL": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAQAgCdASoJAAwAAsBMJZgCdAELZZzhDZTAAP74bWiBvhP509qIwx9BHUcRhCaabFOvJGTYHWj5jqA+pa0ugjjqUPUU/IBOuSqyuvbjg27178AA"
+      },
+      {
+        "id": "rainyctown",
+        "src": "/images/rainyctown.jpeg",
+        "caption": "Washington Street, 7:06 p.m.",
+        "date": "2025-01-31",
+        "journal": "310125",
+        "location": "San Francisco",
+        "width": 1200,
+        "height": 1098,
+        "blurDataURL": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoMAAsAAsBMJQBOgCB0FoM+U1AA/s9f6tm1Nn/zsOy1X6D56mGcPMzpm2apG1EECoFvhxD7uE7HkSBUryQJ1m6MoR08uKUuvpxvKjew47GECALwAAA=",
+        "camera": "Apple iPhone 13 mini",
+        "description": "Washington Street at 7:06 p.m., taken with Stops on iPhone 13 mini."
+      },
+      {
+        "id": "transamericabus",
+        "src": "/images/transamericabus.jpeg",
+        "caption": "Columbus Avenue, Fujifilm X100S",
+        "date": "2025-01-05",
+        "journal": "050125",
+        "location": "San Francisco",
+        "width": 1200,
+        "height": 1800,
+        "blurDataURL": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADQAQCdASoIAAwAAsBMJZQCdADcR3Xx4AD+6xs22xPAWQjmjvUpIZFEzD862a5wuFix5ezH5RVRZ0JbRhhA4UsL0RAAAA==",
+        "camera": "Fujifilm X100S"
+      },
+      {
+        "id": "sf",
+        "src": "/images/sf.jpeg",
+        "caption": "San Francisco from Shack15",
+        "date": "2024-02-16",
+        "journal": "0to1",
+        "location": "San Francisco",
+        "width": 4032,
+        "height": 3024,
+        "blurDataURL": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAQCdASoMAAkAAsBMJYwCdAEJ1oDlOAD+Wy/s7AHQ7vOJxvUBwsNh6cZXCxuCd0RfAAAA"
+      }
+    ],
+    "sets": [
+      {
+        "slug": "san-francisco--chinatown",
+        "title": "Chinatown",
+        "photos": [
+          {
+            "id": "cny_parade_25",
+            "src": "/images/cny_parade_25.jpeg",
+            "caption": "Golden Dragon",
+            "date": "2025-02-15",
+            "journal": "150225",
+            "location": "San Francisco",
+            "width": 3024,
+            "height": 4032,
+            "blurDataURL": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAAAQAgCdASoJAAwAAsBMJYgCdEf/gcFaU3UwAP75VGiuv+LHOWElW2pVhSLUDaSkO5mRzndTyAx/kD3RFKTf3lJjhWhZUXEg/C6O0EAG3/0/YG2CpnfZU+NLcAAAAA=="
+          },
+          {
+            "id": "parade_street_25",
+            "src": "/images/parade_street_25.jpeg",
+            "caption": "Chinatown during the parade",
+            "date": "2025-02-16",
+            "journal": "160225",
+            "location": "San Francisco",
+            "width": 1200,
+            "height": 1600,
+            "blurDataURL": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAQAgCdASoJAAwAAsBMJZgCdAELZZzhDZTAAP74bWiBvhP509qIwx9BHUcRhCaabFOvJGTYHWj5jqA+pa0ugjjqUPUU/IBOuSqyuvbjg27178AA"
+          },
+          {
+            "id": "rainyctown",
+            "src": "/images/rainyctown.jpeg",
+            "caption": "Washington Street, 7:06 p.m.",
+            "date": "2025-01-31",
+            "journal": "310125",
+            "location": "San Francisco",
+            "width": 1200,
+            "height": 1098,
+            "blurDataURL": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoMAAsAAsBMJQBOgCB0FoM+U1AA/s9f6tm1Nn/zsOy1X6D56mGcPMzpm2apG1EECoFvhxD7uE7HkSBUryQJ1m6MoR08uKUuvpxvKjew47GECALwAAA=",
+            "camera": "Apple iPhone 13 mini",
+            "description": "Washington Street at 7:06 p.m., taken with Stops on iPhone 13 mini."
+          }
+        ]
+      },
+      {
+        "slug": "san-francisco--everyday",
+        "title": "Everyday",
+        "photos": [
+          {
+            "id": "transamericabus",
+            "src": "/images/transamericabus.jpeg",
+            "caption": "Columbus Avenue, Fujifilm X100S",
+            "date": "2025-01-05",
+            "journal": "050125",
+            "location": "San Francisco",
+            "width": 1200,
+            "height": 1800,
+            "blurDataURL": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAADQAQCdASoIAAwAAsBMJZQCdADcR3Xx4AD+6xs22xPAWQjmjvUpIZFEzD862a5wuFix5ezH5RVRZ0JbRhhA4UsL0RAAAA==",
+            "camera": "Fujifilm X100S"
+          },
+          {
+            "id": "sf",
+            "src": "/images/sf.jpeg",
+            "caption": "San Francisco from Shack15",
+            "date": "2024-02-16",
+            "journal": "0to1",
+            "location": "San Francisco",
+            "width": 4032,
+            "height": 3024,
+            "blurDataURL": "data:image/webp;base64,UklGRkAAAABXRUJQVlA4IDQAAADQAQCdASoMAAkAAsBMJYwCdAEJ1oDlOAD+Wy/s7AHQ7vOJxvUBwsNh6cZXCxuCd0RfAAAA"
+          }
+        ]
+      }
+    ]
+  }
+]

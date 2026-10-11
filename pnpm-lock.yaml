@@ -225,6 +225,9 @@ importers:
       eslint-config-next:
         specifier: 16.4.0
         version: 16.4.0(@typescript-eslint/parser@8.59.0(@typescript/typescript6@6.0.2)(eslint@9.38.0(jiti@2.7.0)))(@typescript/typescript6@6.0.2)(eslint@9.38.0(jiti@2.7.0))
+      exifr:
+        specifier: ^7.1.3
+        version: 7.1.3
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -2788,6 +2791,9 @@ packages:
   eventsource-parser@3.1.1:
     resolution: {integrity: sha512-EKN1vKAMcZ8MlYMpaNuxN6R9yakzH6uajHcHVTqWJzvu5pWw9DyhbP35HH8MVBQ+dZjAfDxk+A8NiR9KWaXiyQ==}
     engines: {node: '>=18.0.0'}
+
+  exifr@7.1.3:
+    resolution: {integrity: sha512-g/aje2noHivrRSLbAUtBPWFbxKdKhgj/xr1vATDdUXPOFYJlQ62Ft0oy+72V6XLIpDJfHs6gXLbBLAolqOXYRw==}
 
   expect-type@1.4.0:
     resolution: {integrity: sha512-KfYbmpRm0VbLjEvVa9yGwCi9GI34xvi7A/HXYWQO65CSD2u3MczUJSuwXKFIxlGsgBQizV9q5J9NHj4VG0n+pA==}
@@ -6998,6 +7004,8 @@ snapshots:
   eventemitter3@5.0.1: {}
 
   eventsource-parser@3.1.1: {}
+
+  exifr@7.1.3: {}
 
   expect-type@1.4.0: {}
 
