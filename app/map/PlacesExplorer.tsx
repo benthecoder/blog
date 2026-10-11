@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import {
   ArrowUpRight,
+  ArrowLeft,
   Check,
   ChevronDown,
   Download,
@@ -15,11 +16,14 @@ import {
   X,
 } from "lucide-react";
 import {
-  categoryColors,
+  categories,
   collectionPlaces,
   mapsUrl,
   placesGeoJSON,
   placesKML,
+  readMapSelection,
+  type Category,
+  type Visit,
   type PlacesData,
 } from "@/utils/places";
 import "./map.css";
@@ -37,26 +41,31 @@ const formatDate = (date: string) =>
 export default function PlacesExplorer({ data }: { data: PlacesData }) {
   const panel = useRef<HTMLElement>(null);
   const exports = useRef<HTMLDetailsElement>(null);
-  const [collectionId, setCollectionId] = useState(data.collections[0].id);
-  const [category, setCategory] = useState("all");
+  const [collectionId, setCollectionId] = useState<string | null>(null);
+  const [category, setCategory] = useState<Category | "all">("all");
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(true);
   const [copied, setCopied] = useState(false);
   const [shareError, setShareError] = useState(false);
   const { resolvedTheme } = useTheme();
-  const collection =
-    data.collections.find((c) => c.id === collectionId) ?? data.collections[0];
-  const allPlaces = useMemo(
-    () => collectionPlaces(data, collection),
+  const collection = data.collections.find((c) => c.id === collectionId);
+  const allPlaces = useMemo<Visit[]>(
+    () =>
+      collection
+        ? collectionPlaces(data, collection)
+        : data.places.filter((place) =>
+            data.collections.some((list) =>
+              list.entries.some((entry) => entry.placeId === place.id)
+            )
+          ),
     [data, collection]
   );
   const places = useMemo(
     () =>
       allPlaces.filter(
         (p) =>
-          (category === "all" ||
-            p.tags.includes(category as keyof typeof categoryColors)) &&
+          (category === "all" || p.tags.includes(category)) &&
           `${p.name} ${p.note} ${p.address}`
             .toLowerCase()
             .includes(query.toLowerCase())
@@ -77,21 +86,21 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
   useEffect(() => {
     const readUrl = () => {
       const params = new URLSearchParams(window.location.search);
-      const id = params.get("list");
-      const current =
-        data.collections.find((c) => c.id === id) ?? data.collections[0];
-      const place = params.get("place");
-      const validPlace = current.entries.some(
-        (entry) => entry.placeId === place
-      );
-      setCollectionId(current.id);
-      setSelectedId(validPlace ? place : null);
+      const current = readMapSelection(data, params);
+      setCollectionId(current.collectionId);
+      setSelectedId(current.placeId);
+      setSheetOpen(!current.collectionId);
       setCategory("all");
       setQuery("");
-      if ((id && id !== current.id) || (place && !validPlace)) {
+      if (
+        params.get("list") !== current.collectionId ||
+        params.get("place") !== current.placeId
+      ) {
         const url = new URL(window.location.href);
-        url.searchParams.set("list", current.id);
-        if (!validPlace) url.searchParams.delete("place");
+        if (current.collectionId)
+          url.searchParams.set("list", current.collectionId);
+        else url.searchParams.delete("list");
+        if (!current.placeId) url.searchParams.delete("place");
         window.history.replaceState(null, "", url);
       }
     };
@@ -100,22 +109,27 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     return () => window.removeEventListener("popstate", readUrl);
   }, [data]);
 
-  function updateUrl(list: string, place?: string, replace = false) {
+  function updateUrl(list: string | null, place?: string, replace = false) {
     const url = new URL(window.location.href);
-    url.searchParams.set("list", list);
+    if (list) url.searchParams.set("list", list);
+    else url.searchParams.delete("list");
     if (place) url.searchParams.set("place", place);
     else url.searchParams.delete("place");
     window.history[replace ? "replaceState" : "pushState"](null, "", url);
   }
   function clearSelection() {
     setSelectedId(null);
-    updateUrl(collection.id, undefined, true);
+    updateUrl(collectionId, undefined, true);
   }
-  function selectCollection(id: string) {
+  function selectCollection(id: string | null) {
+    if (panel.current) panel.current.scrollTop = 0;
     setCollectionId(id);
     setCategory("all");
     setQuery("");
     setSelectedId(null);
+    setSheetOpen(true);
+    setShareError(false);
+    setCopied(false);
     updateUrl(id);
   }
   function toggleSheet() {
@@ -123,11 +137,19 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     setSheetOpen(!sheetOpen);
   }
   function selectPlace(id: string) {
+    const listId =
+      collectionId ??
+      data.collections.find((list) =>
+        list.entries.some((entry) => entry.placeId === id)
+      )?.id;
+    if (!listId) return;
+    setCollectionId(listId);
     setSelectedId(id);
     setSheetOpen(false);
-    updateUrl(collection.id, id);
+    updateUrl(listId, id);
   }
   function download(format: "geojson" | "kml") {
+    if (!collection) return;
     const text =
       format === "geojson"
         ? JSON.stringify(placesGeoJSON(allPlaces), null, 2)
@@ -166,39 +188,65 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
           <span>by ben</span>
         </div>
         <div className="header-actions">
-          <details
-            className="export-menu"
-            ref={exports}
-            onKeyDown={(event) => {
-              if (event.key === "Escape" && exports.current)
-                exports.current.open = false;
-            }}
-          >
-            <summary aria-label="Export places" title="Export places">
-              <Download size={17} />
-            </summary>
-            <div className="export-options">
-              <button onClick={() => download("kml")}>
-                Download KML <Download size={14} />
-              </button>
-              <button onClick={() => download("geojson")}>
-                Download GeoJSON <Download size={14} />
-              </button>
-              {collection.source && (
-                <a href={collection.source} target="_blank" rel="noreferrer">
-                  Original Corner list <ArrowUpRight size={14} />
-                </a>
-              )}
-            </div>
-          </details>
-          <button
-            className="icon-button"
-            title={copied ? "Link copied" : "Copy map link"}
-            aria-label={copied ? "Link copied" : "Copy map link"}
-            onClick={share}
-          >
-            {copied ? <Check size={17} /> : <LinkIcon size={17} />}
-          </button>
+          {collection && (
+            <details
+              className="export-menu"
+              ref={exports}
+              onKeyDown={(event) => {
+                if (event.key === "Escape" && exports.current)
+                  exports.current.open = false;
+              }}
+            >
+              <summary
+                aria-label="Download this list"
+                title="Download this list as KML or GeoJSON"
+              >
+                <Download size={17} />
+              </summary>
+              <div className="export-options">
+                <button onClick={() => download("kml")}>
+                  Download KML <Download size={14} />
+                </button>
+                <button onClick={() => download("geojson")}>
+                  Download GeoJSON <Download size={14} />
+                </button>
+                {collection.source && (
+                  <a href={collection.source} target="_blank" rel="noreferrer">
+                    Original list <ArrowUpRight size={14} />
+                  </a>
+                )}
+              </div>
+            </details>
+          )}
+          {collection && (
+            <button
+              className="share-button"
+              title={
+                copied
+                  ? "Link copied"
+                  : selected
+                    ? "Copy a link to this place"
+                    : "Copy a link to this list"
+              }
+              aria-label={
+                copied
+                  ? "Link copied"
+                  : selected
+                    ? "Copy place link"
+                    : "Copy list link"
+              }
+              onClick={share}
+            >
+              {copied ? <Check size={17} /> : <LinkIcon size={17} />}
+              <span>
+                {copied
+                  ? "Copied"
+                  : selected
+                    ? "Copy place link"
+                    : "Copy list link"}
+              </span>
+            </button>
+          )}
         </div>
         {shareError && (
           <p className="share-error" role="status">
@@ -209,129 +257,157 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
       <aside
         ref={panel}
         id="places-panel"
-        className={`places-panel${sheetOpen ? " is-open" : ""}`}
+        className={`places-panel${sheetOpen ? " is-open" : ""}${!collection ? " is-directory" : ""}`}
         aria-label="Lists and places"
       >
-        <div className="collection-heading">
-          {data.collections.length > 1 ? (
-            <select
-              aria-label="Choose a list or trip"
-              value={collection.id}
-              onChange={(e) => selectCollection(e.target.value)}
-            >
-              {data.collections.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.title}
-                </option>
+        {!collection ? (
+          <>
+            <ul className="collection-list" aria-label="Saved lists">
+              {data.collections.map((list) => (
+                <li key={list.id}>
+                  <button
+                    onClick={() => selectCollection(list.id)}
+                    aria-label={`Open ${list.title}`}
+                  >
+                    <span className="collection-title">
+                      {list.title}
+                      <ArrowUpRight size={16} />
+                    </span>
+                    <span className="collection-meta">
+                      {[
+                        list.location,
+                        `${list.entries.length} places`,
+                        list.kind === "trip" && list.date
+                          ? formatDate(list.date)
+                          : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </span>
+                    <span className="collection-description">
+                      {list.description}
+                    </span>
+                  </button>
+                </li>
               ))}
-            </select>
-          ) : (
-            <h1>{collection.title}</h1>
-          )}
-          <p className="collection-meta">
-            {collection.location}
-            <span aria-hidden="true"> · </span>
-            <span aria-live="polite">
-              {places.length} {places.length === 1 ? "place" : "places"}
-            </span>
-          </p>
-          <p className="collection-description">{collection.description}</p>
-          {collection.post && (
-            <Link className="journal-link" href={`/posts/${collection.post}`}>
-              Read the journal <ArrowUpRight size={13} />
-            </Link>
-          )}
-        </div>
-        <div className="filters">
-          <label className="place-search">
-            <Search size={15} aria-hidden="true" />
-            <input
-              type="search"
-              aria-label="Filter places"
-              placeholder="Find a place"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value);
-                clearSelection();
-              }}
-            />
-          </label>
-          <div
-            className="category-options"
-            role="group"
-            aria-label="Filter by kind"
-          >
-            <button
-              aria-pressed={category === "all"}
-              onClick={() => {
-                setCategory("all");
-                clearSelection();
-              }}
-            >
-              all
-            </button>
-            {Object.entries(categoryColors)
-              .filter(([tag]) =>
-                allPlaces.some((p) =>
-                  p.tags.includes(tag as keyof typeof categoryColors)
-                )
-              )
-              .map(([tag]) => (
+            </ul>
+          </>
+        ) : (
+          <>
+            <div className="collection-heading">
+              <button
+                className="all-lists-button"
+                onClick={() => selectCollection(null)}
+              >
+                <ArrowLeft size={14} />
+                Lists
+              </button>
+              <h1>{collection.title}</h1>
+              <p className="collection-meta">
+                {collection.location}
+                <span aria-hidden="true"> · </span>
+                <span aria-live="polite">
+                  {places.length} {places.length === 1 ? "place" : "places"}
+                </span>
+              </p>
+              <p className="collection-description">{collection.description}</p>
+              {collection.post && (
+                <Link
+                  className="journal-link"
+                  href={`https://bneo.xyz/posts/${collection.post}`}
+                >
+                  Read the journal <ArrowUpRight size={13} />
+                </Link>
+              )}
+            </div>
+            <div className="filters">
+              <label className="place-search">
+                <Search size={15} aria-hidden="true" />
+                <input
+                  type="search"
+                  aria-label="Filter places"
+                  placeholder="Find a place"
+                  value={query}
+                  onChange={(e) => {
+                    setQuery(e.target.value);
+                    clearSelection();
+                  }}
+                />
+              </label>
+              <div
+                className="category-options"
+                role="group"
+                aria-label="Filter by kind"
+              >
                 <button
-                  key={tag}
-                  aria-pressed={category === tag}
+                  aria-pressed={category === "all"}
                   onClick={() => {
-                    setCategory(category === tag ? "all" : tag);
+                    setCategory("all");
                     clearSelection();
                   }}
                 >
-                  {tag}
+                  all
                 </button>
-              ))}
-          </div>
-        </div>
-        <ul className="place-list">
-          {places.map((place) => (
-            <li
-              key={place.id}
-              className={place.id === selectedId ? "selected" : ""}
-            >
-              <button
-                className="place-select"
-                onClick={() => selectPlace(place.id)}
-                aria-label={`Show ${place.name} on map`}
-                aria-pressed={place.id === selectedId}
-              >
-                <span className="place-icon">
-                  <CategoryIcon category={place.tags[0]} />
-                </span>
-                <span className="place-copy">
-                  <span className="place-name">{place.name}</span>
-                  {place.note && (
-                    <span className="place-note">{place.note}</span>
-                  )}
-                  {place.visitedOn && (
-                    <span className="visit-date">
-                      {formatDate(place.visitedOn)}
+                {categories
+                  .filter((tag) => allPlaces.some((p) => p.tags.includes(tag)))
+                  .map((tag) => (
+                    <button
+                      key={tag}
+                      aria-pressed={category === tag}
+                      onClick={() => {
+                        setCategory(category === tag ? "all" : tag);
+                        clearSelection();
+                      }}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+              </div>
+            </div>
+            <ul className="place-list">
+              {places.map((place) => (
+                <li
+                  key={place.id}
+                  className={place.id === selectedId ? "selected" : ""}
+                >
+                  <button
+                    className="place-select"
+                    onClick={() => selectPlace(place.id)}
+                    aria-label={`Show ${place.name} on map`}
+                    aria-pressed={place.id === selectedId}
+                  >
+                    <span className="place-icon">
+                      <CategoryIcon category={place.tags[0]} />
                     </span>
-                  )}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-        {!places.length && (
-          <div className="empty-places">
-            <p>No places found.</p>
-            <button
-              onClick={() => {
-                setCategory("all");
-                setQuery("");
-              }}
-            >
-              Clear filters
-            </button>
-          </div>
+                    <span className="place-copy">
+                      <span className="place-name">{place.name}</span>
+                      {place.note && (
+                        <span className="place-note">{place.note}</span>
+                      )}
+                      {place.visitedOn && (
+                        <span className="visit-date">
+                          {formatDate(place.visitedOn)}
+                        </span>
+                      )}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+            {!places.length && (
+              <div className="empty-places">
+                <p>No places found.</p>
+                <button
+                  onClick={() => {
+                    setCategory("all");
+                    setQuery("");
+                  }}
+                >
+                  Clear filters
+                </button>
+              </div>
+            )}
+          </>
         )}
       </aside>
       <section className="map-area" aria-label="Places map">
@@ -349,7 +425,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
               title="Close place details"
               onClick={() => {
                 setSelectedId(null);
-                updateUrl(collection.id);
+                updateUrl(collectionId);
               }}
             >
               <X size={16} />
@@ -371,7 +447,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                 Google Maps <ArrowUpRight size={14} />
               </a>
               {selected.post && (
-                <Link href={`/posts/${selected.post}`}>
+                <Link href={`https://bneo.xyz/posts/${selected.post}`}>
                   Journal <ArrowUpRight size={14} />
                 </Link>
               )}
@@ -393,8 +469,8 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
         ) : (
           <>
             <List size={17} />
-            {collection.title}
-            <span>{places.length}</span>
+            {collection?.title ?? "Lists"}
+            <span>{collection ? places.length : data.collections.length}</span>
           </>
         )}
       </button>

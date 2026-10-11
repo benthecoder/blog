@@ -6,10 +6,57 @@ import {
   placesGeoJSON,
   placesKML,
   placesSchema,
+  readMapSelection,
 } from "./places";
 
 describe("place collections", () => {
   const data = placesSchema.parse(raw);
+  it("opens the directory by default and validates deep links", () => {
+    expect(readMapSelection(data, new URLSearchParams())).toEqual({
+      collectionId: null,
+      placeId: null,
+    });
+    expect(
+      readMapSelection(
+        data,
+        new URLSearchParams("list=sf-chinatown&place=capital")
+      )
+    ).toEqual({ collectionId: "sf-chinatown", placeId: "capital" });
+    expect(
+      readMapSelection(
+        data,
+        new URLSearchParams("list=boston-2023&place=capital")
+      )
+    ).toEqual({ collectionId: null, placeId: null });
+    expect(
+      readMapSelection(
+        data,
+        new URLSearchParams("list=sf-chinatown&place=missing")
+      )
+    ).toEqual({ collectionId: "sf-chinatown", placeId: null });
+  });
+  it("validates categories, coordinates, dates and source links", () => {
+    for (const change of [
+      { tags: ["unknown"] },
+      { coordinates: [181, 38] },
+      { source: "not-a-url" },
+    ]) {
+      expect(
+        placesSchema.safeParse({
+          ...raw,
+          places: raw.places.map((place, index) =>
+            index === 0 ? { ...place, ...change } : place
+          ),
+        }).success
+      ).toBe(false);
+    }
+    expect(
+      placesSchema.safeParse({
+        ...raw,
+        collections: [{ ...raw.collections[0], date: "2026-02-30" }],
+      }).success
+    ).toBe(false);
+  });
   it("preserves imported places and trip-specific notes", () => {
     expect(collectionPlaces(data, data.collections[0])).toHaveLength(17);
     expect(data.collections.map((c) => c.id)).toEqual(["sf-chinatown"]);

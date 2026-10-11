@@ -1,5 +1,13 @@
-import { Coffee, ShoppingBag, Trees, Utensils, Palette } from "lucide-react";
+import {
+  Coffee,
+  ShoppingBag,
+  Trees,
+  Utensils,
+  Palette,
+  type LucideIcon,
+} from "lucide-react";
 import { createElement } from "react";
+import type { Category } from "@/utils/places";
 
 export const categoryIcons = {
   food: Utensils,
@@ -7,13 +15,13 @@ export const categoryIcons = {
   art: Palette,
   shop: ShoppingBag,
   outdoors: Trees,
-};
+} satisfies Record<Category, LucideIcon>;
 
 export function CategoryIcon({
   category,
   size = 16,
 }: {
-  category: keyof typeof categoryIcons;
+  category: Category;
   size?: number;
 }) {
   return createElement(categoryIcons[category], {

@@ -74,6 +74,61 @@
   align-items: center;
   gap: 4px;
 }
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 9px;
+  border-radius: 4px;
+  color: var(--map-muted) !important;
+  font-size: 12px !important;
+  min-width: 124px;
+}
+.share-button:hover {
+  background: var(--map-hover);
+}
+.all-lists-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--map-muted) !important;
+  font-size: 12px !important;
+  margin-bottom: 18px;
+}
+.collection-list {
+  list-style: none;
+  padding: 12px 12px 24px;
+  margin: 0;
+}
+.collection-list li {
+  border-bottom: 1px solid var(--map-rule);
+}
+.collection-list button {
+  display: block;
+  width: 100%;
+  padding: 18px 10px;
+  text-align: left;
+}
+.collection-list button:hover {
+  background: var(--map-hover);
+}
+.collection-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-averia), Georgia, serif;
+  font-size: 19px;
+  line-height: 1.35;
+}
+.collection-title svg {
+  flex-shrink: 0;
+  color: var(--map-muted);
+}
+.collection-list :is(.collection-meta, .collection-description) {
+  display: block;
+}
 .icon-button,
 .export-menu summary {
   width: 36px;
@@ -445,6 +500,10 @@
   .places-panel.is-open {
     transform: translateY(0);
     visibility: visible;
+  }
+  .places-panel.is-directory {
+    top: auto;
+    max-height: calc(78% - 54px);
   }
   .places-panel.is-open ~ .map-area .place-detail {
     display: none;

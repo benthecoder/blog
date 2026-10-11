@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-export const categoryColors = {
+export const categories = ["food", "cafes", "art", "shop", "outdoors"] as const;
+export type Category = (typeof categories)[number];
+export const categoryColors: Record<Category, string> = {
   food: "#ce6333",
   cafes: "#497aa3",
   art: "#bf3637",
@@ -23,7 +25,7 @@ const placeSchema = z.object({
     z.number().min(-90).max(90),
   ]),
   address: z.string(),
-  tags: z.array(z.enum(["food", "cafes", "art", "shop", "outdoors"])).min(1),
+  tags: z.array(z.enum(categories)).min(1),
   note: z.string(),
   googlePlaceId: z.string().optional(),
   source: z.url().optional(),
@@ -72,7 +74,19 @@ export const placesSchema = z
 export type PlacesData = z.infer<typeof placesSchema>;
 export type Place = z.infer<typeof placeSchema>;
 export type Collection = z.infer<typeof collectionSchema>;
-export type Visit = Place & { visitedOn?: string; post?: string };
+export type CollectionEntry = z.infer<typeof entrySchema>;
+export type Visit = Place & Pick<CollectionEntry, "visitedOn" | "post">;
+
+export function readMapSelection(data: PlacesData, params: URLSearchParams) {
+  const collection = data.collections.find((c) => c.id === params.get("list"));
+  const placeId = params.get("place");
+  return {
+    collectionId: collection?.id ?? null,
+    placeId: collection?.entries.some((e) => e.placeId === placeId)
+      ? placeId
+      : null,
+  };
+}
 
 export function collectionPlaces(
   data: PlacesData,
