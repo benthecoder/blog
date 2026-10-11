@@ -15,7 +15,7 @@ export interface EssayMetadata {
   readingTime: number;
 }
 
-export function countWords(content: string): number {
+function countWords(content: string): number {
   return (content.match(/\b\w+\b/gu) || []).length;
 }
 

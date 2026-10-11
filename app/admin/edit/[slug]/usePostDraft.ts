@@ -184,7 +184,6 @@ export function usePostDraft({
 
   // Post/template load syncs fetch + localStorage draft state into the
   // editor; inherently effect-driven.
-  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const draftKey = recoveryKey;
     const controller = new AbortController();
@@ -295,7 +294,6 @@ export function usePostDraft({
     // confirmAction/notify are page-level helpers, not load triggers
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, isNew, isEssay, kindQuery, dateParam, recoveryKey]);
-  /* eslint-enable react-hooks/set-state-in-effect */
 
   const saveMarkdown = useCallback(
     async (toSave: string, auto: boolean) => {

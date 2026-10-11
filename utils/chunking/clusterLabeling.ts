@@ -48,7 +48,7 @@ export function matchPreviousLabels(
 
 const SAMPLES_PER_CLUSTER = 5;
 
-export interface LabelInput {
+interface LabelInput {
   id: number;
   size: number;
   terms: string[];
@@ -67,7 +67,7 @@ function describe(article: ArticleData): string {
  * One prompt for every cluster so the model can keep the labels distinct.
  * `taken` are labels already assigned (reused from the previous map).
  */
-export function buildLabelPrompt(
+function buildLabelPrompt(
   clusters: LabelInput[],
   taken: string[] = []
 ): string {
