@@ -5,6 +5,8 @@ const ROOT_DIR = process.cwd();
 export const POSTS_DIR = path.join(ROOT_DIR, "posts");
 export const DRAFTS_DIR = path.join(POSTS_DIR, "drafts");
 export const WIKI_DIR = path.join(ROOT_DIR, "wiki");
+// Markdown templates offered by the local wiki editor (frontmatter = defaults).
+export const WIKI_TEMPLATES_DIR = path.join(ROOT_DIR, "templates", "wiki");
 export const ESSAYS_DIR = path.join(ROOT_DIR, "essays");
 export const ESSAY_DRAFTS_DIR = path.join(ESSAYS_DIR, "drafts");
 

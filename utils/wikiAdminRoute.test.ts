@@ -86,6 +86,7 @@ describe("wiki save endpoint", () => {
       lastUpdated: "",
       content: "Notes",
       version: "version",
+      paper: { authors: "", year: "", url: "", read: "", source: "" },
     });
     const response = await POST(request());
     expect(response.status).toBe(200);
