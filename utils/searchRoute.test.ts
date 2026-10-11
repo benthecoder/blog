@@ -98,6 +98,10 @@ describe("search request boundary", () => {
     expect(mocks.query).not.toHaveBeenCalled();
     expect(mocks.client).not.toHaveBeenCalled();
   });
+  it("strips tsquery operators < > and backslash from keyword queries", async () => {
+    await POST(request({ query: "a < b \\ c>", searchType: "keyword" }));
+    expect(mocks.query.mock.calls[0][1][0]).toBe("a:* & b:* & c:*");
+  });
 });
 
 describe("parameterized search filters", () => {
