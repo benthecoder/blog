@@ -138,6 +138,20 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
           <h1 className="map-wordmark">PLACES</h1>
           <span>by ben</span>
         </div>
+        <div className="map-theme" role="group" aria-label="Map appearance">
+          <button
+            aria-pressed={resolvedTheme !== "dark"}
+            onClick={() => setTheme("light")}
+          >
+            Light
+          </button>
+          <button
+            aria-pressed={resolvedTheme === "dark"}
+            onClick={() => setTheme("dark")}
+          >
+            Dark
+          </button>
+        </div>
       </header>
       <aside
         ref={panel}
@@ -281,20 +295,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
         )}
       </aside>
       <section className="map-area" aria-label="Places map">
-        <div className="map-theme" role="group" aria-label="Map appearance">
-          <button
-            aria-pressed={resolvedTheme !== "dark"}
-            onClick={() => setTheme("light")}
-          >
-            Light
-          </button>
-          <button
-            aria-pressed={resolvedTheme === "dark"}
-            onClick={() => setTheme("dark")}
-          >
-            Dark
-          </button>
-        </div>
         <PlacesMap
           places={places}
           selected={selected}
