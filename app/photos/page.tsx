@@ -8,11 +8,10 @@ import {
 } from "@/utils/content/photostream";
 
 export const metadata: Metadata = {
-  title: "photos — Benedict Neo",
-  description:
-    "A photo journal by Benedict Neo. Places, people, and the beauty in the ordinary.",
+  title: "photos",
+  description: "Photostream and photosets.",
   alternates: { canonical: "https://photos.bneo.xyz" },
-  openGraph: { title: "photos — Benedict Neo", url: "https://photos.bneo.xyz" },
+  openGraph: { title: "photos", url: "https://photos.bneo.xyz" },
 };
 
 export default function PhotosPage() {
@@ -21,11 +20,7 @@ export default function PhotosPage() {
   return (
     <main className="photo-index">
       <header className="photo-intro">
-        <Link href="https://bneo.xyz" className="photo-byline">
-          Benedict Neo
-        </Link>
         <h1>Photos</h1>
-        <p>Places, people, and the beauty in the ordinary.</p>
       </header>
       <section aria-labelledby="stream-heading" className="photo-recent">
         <div className="photo-section-heading">
