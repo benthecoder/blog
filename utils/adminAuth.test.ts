@@ -1,7 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { proxy } from "@/proxy";
-import { ADMIN_COOKIE, checkAdminAuth, sessionToken } from "./adminAuth";
+import {
+  ADMIN_COOKIE,
+  checkAdminAuth,
+  sessionToken,
+  verifyAdminPassword,
+} from "./adminAuth";
 
 const SECRET = "test-admin-secret";
 
@@ -20,6 +25,27 @@ function production() {
 }
 
 afterEach(() => vi.unstubAllEnvs());
+
+describe("admin password comparison", () => {
+  it("accepts matching UTF-8 secrets", () => {
+    expect(verifyAdminPassword("秘密🔐", "秘密🔐")).toBe(true);
+  });
+
+  it.each([
+    "",
+    "test-admin-secre",
+    "test-admin-secret-extra",
+    "test-admin-secret\0",
+    "Test-admin-secret",
+  ])("rejects different lengths and content: %s", (password) =>
+    expect(verifyAdminPassword(password, SECRET)).toBe(false)
+  );
+
+  it("rejects zero padding and different UTF-8 bytes", () => {
+    expect(verifyAdminPassword("secret", "secret\0")).toBe(false);
+    expect(verifyAdminPassword("秘密🔑", "秘密🔐")).toBe(false);
+  });
+});
 
 describe("admin session access", () => {
   it("accepts the existing Web Crypto cookie in the proxy and route guard", async () => {
