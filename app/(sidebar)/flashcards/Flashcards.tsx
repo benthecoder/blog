@@ -17,11 +17,7 @@ function shuffledIndices(n: number): number[] {
  * Scale type to content length so single-word vocab is large and prominent
  * while long paragraphs (e.g. a bible verse) stay readable and fit the card.
  */
-function fontSize(html: string): string {
-  const len = html
-    .replace(/<[^>]*>/g, "")
-    .replace(/&[a-z]+;/gi, " ")
-    .trim().length;
+function fontSize(len: number): string {
   if (len <= 16) return "text-4xl sm:text-5xl";
   if (len <= 48) return "text-2xl sm:text-3xl";
   if (len <= 140) return "text-xl sm:text-2xl";
@@ -29,7 +25,11 @@ function fontSize(html: string): string {
   return "text-base";
 }
 
-export default function Flashcards({ cards }: { cards: Flashcard[] }) {
+export default function Flashcards({
+  cards,
+}: {
+  cards: (Flashcard & { frontLength: number; backLength: number })[];
+}) {
   const decks = Array.from(new Set(cards.map((c) => c.deck))).sort();
 
   const [deck, setDeck] = useState<string>("all");
@@ -159,7 +159,7 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
           <div className="absolute inset-0 backface-hidden overflow-y-auto rounded-2xl border border-rule dark:border-night-raised bg-paper-raised dark:bg-night-raised shadow-xs group-hover:shadow-md transition-shadow">
             <div className="min-h-full flex items-center justify-center px-8 py-10">
               <div
-                className={`flashcard-body text-center leading-snug text-ink dark:text-chalk-strong ${fontSize(card.front)}`}
+                className={`flashcard-body text-center leading-snug text-ink dark:text-chalk-strong ${fontSize(card.frontLength)}`}
                 dangerouslySetInnerHTML={{ __html: card.front }}
               />
             </div>
@@ -169,7 +169,7 @@ export default function Flashcards({ cards }: { cards: Flashcard[] }) {
           <div className="absolute inset-0 backface-hidden transform-[rotateY(180deg)] overflow-y-auto rounded-2xl border border-ink/20 dark:border-chalk/15 bg-paper dark:bg-night shadow-xs">
             <div className="min-h-full flex items-center justify-center px-8 py-10">
               <div
-                className={`flashcard-body text-center leading-snug text-ink dark:text-chalk ${fontSize(card.back)}`}
+                className={`flashcard-body text-center leading-snug text-ink dark:text-chalk ${fontSize(card.backLength)}`}
                 dangerouslySetInnerHTML={{ __html: card.back }}
               />
             </div>

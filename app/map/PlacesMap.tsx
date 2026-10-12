@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import maplibregl, {
+import {
+  Map as MapLibreMap,
+  LngLatBounds,
+  setWorkerUrl,
+  getVersion,
   type GeoJSONSource,
   type Map as MapInstance,
   type ExpressionSpecification,
@@ -43,7 +47,8 @@ export default function PlacesMap({
     if (!container.current) return;
     let instance: MapInstance;
     try {
-      instance = new maplibregl.Map({
+      setWorkerUrl(`/vendor/maplibre/${getVersion()}/maplibre-gl-worker.mjs`);
+      instance = new MapLibreMap({
         container: container.current,
         style: `https://tiles.openfreemap.org/styles/${dark ? "dark" : "positron"}`,
         center: [-122.406, 37.796],
@@ -175,7 +180,7 @@ export default function PlacesMap({
       });
     }
     if (places.length) {
-      const bounds = new maplibregl.LngLatBounds();
+      const bounds = new LngLatBounds();
       places.forEach((place) => bounds.extend(place.coordinates));
       instance.fitBounds(bounds, { padding: 70, maxZoom: 16, duration: 500 });
     }
@@ -224,7 +229,7 @@ export default function PlacesMap({
 
   const fit = () => {
     if (!places.length || !map.current) return;
-    const bounds = new maplibregl.LngLatBounds();
+    const bounds = new LngLatBounds();
     places.forEach((place) => bounds.extend(place.coordinates));
     map.current.fitBounds(bounds, { padding: 70, maxZoom: 16 });
   };

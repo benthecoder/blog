@@ -28,6 +28,15 @@ describe("extractToc", () => {
     expect(extractToc(md).map((e) => e.id)).toEqual(["notes", "notes-1"]);
   });
 
+  it("parses HTML attributes and entities without leaking markup into labels", () => {
+    expect(extractToc('## <span title="a > b">A &amp; B</span>')).toEqual([
+      { id: "a--b", text: "A & B", depth: 2 },
+    ]);
+    expect(extractToc("## Safe<script>alert(1)</script> heading")[0].text).toBe(
+      "Safe heading"
+    );
+  });
+
   it("ignores h1 and h4+", () => {
     const md = "# Top\n\n#### Deep\n\n## Kept\n";
     expect(extractToc(md).map((e) => e.text)).toEqual(["Kept"]);

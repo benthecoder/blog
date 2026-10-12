@@ -3,6 +3,7 @@ import path from "path";
 import type { Metadata } from "next";
 import { DATA_DIR } from "@/config/paths";
 import { sanitizeFlashcardHtml } from "@/utils/content/flashcardHtml";
+import { htmlText } from "@/utils/content/htmlText";
 import type { FlashcardsData } from "@/types/flashcards";
 import Flashcards from "./Flashcards";
 
@@ -26,11 +27,17 @@ function loadFlashcards(): FlashcardsData | null {
 const FlashcardsPage = () => {
   const data = loadFlashcards();
   // Sanitize at the rendering boundary too, including previously synced JSON.
-  const cards = (data?.cards ?? []).map((card) => ({
-    ...card,
-    front: sanitizeFlashcardHtml(card.front),
-    back: sanitizeFlashcardHtml(card.back),
-  }));
+  const cards = (data?.cards ?? []).map((card) => {
+    const front = sanitizeFlashcardHtml(card.front);
+    const back = sanitizeFlashcardHtml(card.back);
+    return {
+      ...card,
+      front,
+      back,
+      frontLength: htmlText(front).trim().length,
+      backLength: htmlText(back).trim().length,
+    };
+  });
   const deckCount = data?.decks?.length ?? 0;
 
   return (
