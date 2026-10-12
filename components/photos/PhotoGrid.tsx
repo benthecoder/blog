@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, Info, X } from "lucide-react";
 import type { StreamPhoto } from "@/types/photostream";
 import { formatPhotoDate } from "@/utils/photoDate";
 import Link from "next/link";
@@ -141,13 +141,35 @@ export function PhotoGrid({
               <span>
                 {selected! + 1} / {photos.length}
               </span>
-              <button
-                aria-label="Close photo"
-                onClick={() => setSelected(null)}
-                autoFocus
-              >
-                <X size={22} />
-              </button>
+              <div className="photo-lightbox-actions">
+                <details className="photo-viewer-details" key={photo.id}>
+                  <summary aria-label="Photo details" title="Photo details">
+                    <Info size={19} />
+                  </summary>
+                  <div className="photo-viewer-panel">
+                    <PhotoDetails photo={photo} />
+                    <Link
+                      href={`/photos/photo/${encodeURIComponent(photo.id)}`}
+                    >
+                      Open photo page <ArrowUpRight size={13} />
+                    </Link>
+                    {photo.journal && (
+                      <a
+                        href={`https://bneo.xyz/posts/${encodeURIComponent(photo.journal)}`}
+                      >
+                        Read the journal <ArrowUpRight size={13} />
+                      </a>
+                    )}
+                  </div>
+                </details>
+                <button
+                  aria-label="Close photo"
+                  onClick={() => setSelected(null)}
+                  autoFocus
+                >
+                  <X size={22} />
+                </button>
+              </div>
             </header>
             <div className="photo-lightbox-image">
               <Image
@@ -169,26 +191,9 @@ export function PhotoGrid({
               </button>
               <div className="photo-lightbox-caption">
                 <p>{photo.caption}</p>
-                {photo.camera && <p className="photo-camera">{photo.camera}</p>}
-                <p>
-                  {[photo.location, formatPhotoDate(photo.date)]
-                    .filter(Boolean)
-                    .join(" · ")}
+                <p className="photo-camera">
+                  {[photo.location, photo.camera].filter(Boolean).join(" · ")}
                 </p>
-                <details className="photo-viewer-details" key={photo.id}>
-                  <summary>Photo details</summary>
-                  <PhotoDetails photo={photo} />
-                  <Link href={`/photos/photo/${encodeURIComponent(photo.id)}`}>
-                    Open photo page <ArrowUpRight size={13} />
-                  </Link>
-                </details>
-                {photo.journal && (
-                  <a
-                    href={`https://bneo.xyz/posts/${encodeURIComponent(photo.journal)}`}
-                  >
-                    Read the journal <ArrowUpRight size={13} />
-                  </a>
-                )}
               </div>
               <button
                 aria-label="Next photo"
