@@ -382,7 +382,8 @@
       "tags": [
         "cafes"
       ],
-      "note": "my weekday spot - protein matcha, ube matcha is the most-liked order"
+      "note": "my weekday spot - protein matcha, ube matcha is the most-liked order",
+      "googlePlaceId": "ChIJO6Z63Z232YgR7-R3TQSE0FE"
     },
     {
       "id": "the-coffee",
@@ -395,7 +396,8 @@
       "tags": [
         "cafes"
       ],
-      "note": "weekend regular - japanese-inspired, calm, good for working; matcha and protein signatures"
+      "note": "weekend regular - japanese-inspired, calm, good for working; matcha and protein signatures",
+      "googlePlaceId": "ChIJZfgrzK32YgRedQn4eDkYak"
     },
     {
       "id": "nu-real-food",
@@ -409,7 +411,8 @@
         "cafes",
         "food"
       ],
-      "note": "weekend regular - ceremonial-grade matcha, mediterranean wellness cafe in midtown"
+      "note": "weekend regular - ceremonial-grade matcha, mediterranean wellness cafe in midtown",
+      "googlePlaceId": "ChIJFdsfUgCx2YgRtDMLHjav0I8"
     },
     {
       "id": "panther-coffee",
@@ -422,7 +425,8 @@
       "tags": [
         "cafes"
       ],
-      "note": "wynwood specialty coffee og, patio under the big tree; coffee first, matcha secondary"
+      "note": "wynwood specialty coffee og, patio under the big tree; coffee first, matcha secondary",
+      "googlePlaceId": "ChIJG6HQcrK22YgREOwX4PyCF8c"
     },
     {
       "id": "magdalena",
@@ -435,7 +439,8 @@
       "tags": [
         "cafes"
       ],
-      "note": "edgewater plant-filled work cafe - guava matcha, strong wifi, free flowers on fridays"
+      "note": "edgewater plant-filled work cafe - guava matcha, strong wifi, free flowers on fridays",
+      "googlePlaceId": "ChIJU-jJiI632YgRrR4AFKd6Ssg"
     },
     {
       "id": "studio-24",
@@ -448,7 +453,8 @@
       "tags": [
         "cafes"
       ],
-      "note": "matcha tiramisu latte with a ladyfinger on top; dj and lots of tables"
+      "note": "matcha tiramisu latte with a ladyfinger on top; dj and lots of tables",
+      "googlePlaceId": "ChIJY5dR0dG32YgRx0qStVgpk_c"
     },
     {
       "id": "rutina",
@@ -461,7 +467,8 @@
       "tags": [
         "cafes"
       ],
-      "note": "edgewater, the record-player cafe - houseroasted honduran beans, vinyl playing"
+      "note": "edgewater, the record-player cafe - houseroasted honduran beans, vinyl playing",
+      "googlePlaceId": "ChIJpYGzkqG32YgRGC1OiOFbS4E"
     },
     {
       "id": "fincas",
@@ -474,7 +481,8 @@
       "tags": [
         "cafes"
       ],
-      "note": "great honduran coffee, pistachio latte; outdoor-only seating gets too hot"
+      "note": "great honduran coffee, pistachio latte; outdoor-only seating gets too hot",
+      "googlePlaceId": "ChIJNRxUk1e32YgRLIl840TlJGQ"
     }
   ],
   "collections": [
