@@ -17,22 +17,32 @@ const nextConfig: NextConfig = {
     "*": ["public/**/*", ".git/**/*"],
     "/api/**": ["app/og/*.jpg"],
   },
-  rewrites: async () => [
-    {
-      source: "/rss.xml",
-      destination: "/api/rss",
-    },
-    // Published images live in R2. This runs after the public/ file check,
-    // so local files (e.g. /images/drafts/*) still win when present.
-    ...(process.env.R2_PUBLIC_URL
-      ? [
-          {
-            source: "/images/:path*",
-            destination: `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/images/:path*`,
-          },
-        ]
-      : []),
-  ],
+  rewrites: async () => ({
+    beforeFiles: [
+      {
+        source: "/",
+        has: [{ type: "host", value: "maps.bneo.xyz" }],
+        destination: "/map",
+      },
+    ],
+    afterFiles: [
+      {
+        source: "/rss.xml",
+        destination: "/api/rss",
+      },
+      // Published images live in R2. This runs after the public/ file check,
+      // so local files (e.g. /images/drafts/*) still win when present.
+      ...(process.env.R2_PUBLIC_URL
+        ? [
+            {
+              source: "/images/:path*",
+              destination: `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/images/:path*`,
+            },
+          ]
+        : []),
+    ],
+    fallback: [],
+  }),
   headers: async () => [
     {
       source: "/fonts/:path*",
