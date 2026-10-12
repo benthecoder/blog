@@ -95,7 +95,7 @@ export default function PlacesMap({
         source: "places",
         filter: ["has", "point_count"],
         paint: {
-          "circle-color": "#858981",
+          "circle-color": "#858585",
           "circle-radius": ["step", ["get", "point_count"], 13, 10, 17, 30, 21],
           "circle-stroke-width": 2,
           "circle-stroke-color": "#ffffff",
@@ -108,7 +108,7 @@ export default function PlacesMap({
         filter: ["!", ["has", "point_count"]],
         paint: {
           "circle-radius": 5,
-          "circle-color": "#616965",
+          "circle-color": "#656565",
           "circle-stroke-width": 2,
           "circle-stroke-color": "#ffffff",
         },

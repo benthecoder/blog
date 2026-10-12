@@ -1,9 +1,9 @@
 .places-explorer {
   --map-paper: var(--color-paper);
-  --map-ink: #343b3e;
-  --map-muted: #737b7d;
-  --map-rule: #e4e6e3;
-  --map-hover: #f0f2ef;
+  --map-ink: #373737;
+  --map-muted: #767676;
+  --map-rule: var(--color-rule);
+  --map-hover: var(--color-paper-sunken);
   --map-accent: var(--color-ink);
   position: fixed;
   inset: 0;
@@ -20,10 +20,10 @@
 }
 .dark .places-explorer {
   --map-paper: var(--color-night);
-  --map-ink: #e3e6e3;
-  --map-muted: #a0aaa4;
-  --map-rule: #343a36;
-  --map-hover: #242a26;
+  --map-ink: #e5e5e5;
+  --map-muted: #a5a5a5;
+  --map-rule: var(--color-night-rule);
+  --map-hover: var(--color-night-raised);
   --map-accent: var(--color-chalk);
 }
 .places-explorer button,
@@ -41,7 +41,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 .places-explorer :is(button, a, input, select, summary):focus-visible {
-  outline: 2px solid var(--map-accent);
+  outline: 2px solid var(--map-ink);
   outline-offset: 3px;
 }
 .map-header {
