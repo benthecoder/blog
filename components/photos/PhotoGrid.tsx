@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Info, X } from "lucide-react";
 import type { StreamPhoto } from "@/types/photostream";
@@ -19,8 +19,30 @@ export function PhotoGrid({
   const [limit, setLimit] = useState(36);
   const dialog = useRef<HTMLDialogElement>(null);
   const rail = useRef<HTMLDivElement>(null);
+  const [canScroll, setCanScroll] = useState({ left: false, right: false });
+  const updateRail = useCallback(() => {
+    const element = rail.current;
+    if (!element) return;
+    const left = element.scrollLeft > 1;
+    const right =
+      element.scrollLeft + element.clientWidth < element.scrollWidth - 1;
+    setCanScroll((previous) =>
+      previous.left === left && previous.right === right
+        ? previous
+        : { left, right }
+    );
+  }, []);
   const isOpen = selected !== null;
   const photo = selected === null ? null : photos[selected];
+
+  useEffect(() => {
+    const element = rail.current;
+    if (mode !== "rail" || !element) return;
+    const observer = new ResizeObserver(updateRail);
+    observer.observe(element);
+    for (const child of element.children) observer.observe(child);
+    return () => observer.disconnect();
+  }, [mode, photos, updateRail]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -42,6 +64,7 @@ export function PhotoGrid({
         <div className="photo-rail-controls" aria-label="Scroll recent photos">
           <button
             aria-label="Scroll photos left"
+            disabled={!canScroll.left}
             onClick={() =>
               rail.current?.scrollBy({
                 left: -rail.current.clientWidth * 0.8,
@@ -53,6 +76,7 @@ export function PhotoGrid({
           </button>
           <button
             aria-label="Scroll photos right"
+            disabled={!canScroll.right}
             onClick={() =>
               rail.current?.scrollBy({
                 left: rail.current.clientWidth * 0.8,
@@ -64,7 +88,7 @@ export function PhotoGrid({
           </button>
         </div>
       )}
-      <div className={`photo-${mode}`} ref={rail}>
+      <div className={`photo-${mode}`} ref={rail} onScroll={updateRail}>
         {visible.map((item, index) => (
           <figure key={item.id} className="photo-figure">
             <button

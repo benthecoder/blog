@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { PhotoGrid } from "@/components/photos/PhotoGrid";
 import {
   getPhotoCollections,
@@ -30,10 +29,9 @@ export default function PhotosPage() {
       </header>
       <section aria-labelledby="stream-heading" className="photo-recent">
         <div className="photo-section-heading">
-          <h2 id="stream-heading">Photostream</h2>
-          <Link href="/photos/stream">
-            View all <ArrowRight size={16} />
-          </Link>
+          <h2 id="stream-heading">
+            <Link href="/photos/stream">Photostream</Link>
+          </h2>
         </div>
         <PhotoGrid photos={photos.slice(0, 12)} mode="rail" />
       </section>
@@ -77,7 +75,7 @@ export default function PhotosPage() {
                     <h3>{collection.title}</h3>
                     {collection.description && <p>{collection.description}</p>}
                     <span className="photo-cover-count">
-                      {collection.photos.length} photos <ArrowRight size={16} />
+                      {collection.photos.length} photos
                     </span>
                   </div>
                 </Link>

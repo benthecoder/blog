@@ -56,8 +56,8 @@
   font-size: 13px;
 }
 .photo-section-heading h2 {
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 400;
 }
 .photo-section-heading a {
   display: inline-flex;
@@ -78,7 +78,7 @@
 .photo-rail-controls {
   position: absolute;
   right: -5px;
-  top: -5px;
+  top: 0;
   display: flex;
   gap: 2px;
 }
