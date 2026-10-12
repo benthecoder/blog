@@ -7,24 +7,24 @@ import maplibregl, {
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Maximize, Minus, Plus } from "lucide-react";
-import { categories, placesGeoJSON, type Visit } from "@/utils/places";
-import { CategoryIcon } from "./categories";
+import { placesGeoJSON, type Visit } from "@/utils/places";
 
 export default function PlacesMap({
   places,
   selected,
   dark,
   onSelect,
+  onHover,
 }: {
   places: Visit[];
   selected: Visit | null;
   dark: boolean;
   onSelect: (id: string) => void;
+  onHover: (id: string | null) => void;
 }) {
   const container = useRef<HTMLDivElement>(null);
-  const sprites = useRef<HTMLDivElement>(null);
   const map = useRef<MapInstance | null>(null);
-  const current = useRef({ places, onSelect });
+  const current = useRef({ places, onSelect, onHover });
   const [ready, setReady] = useState<MapInstance | null>(null);
   const [error, setError] = useState(false);
   const [position, setPosition] = useState({
@@ -33,8 +33,8 @@ export default function PlacesMap({
     zoom: 15,
   });
   useEffect(() => {
-    current.current = { places, onSelect };
-  }, [places, onSelect]);
+    current.current = { places, onSelect, onHover };
+  }, [places, onSelect, onHover]);
 
   useEffect(() => {
     if (!container.current) return;
@@ -63,41 +63,8 @@ export default function PlacesMap({
       });
     };
     instance.on("move", updatePosition);
-    instance.on("load", async () => {
-      try {
-        await Promise.all(
-          categories.map(async (category) => {
-            const svg = sprites.current
-              ?.querySelector(`[data-category="${category}"] svg`)
-              ?.cloneNode(true) as SVGElement | undefined;
-            if (!svg) throw new Error("Missing marker icon");
-            svg.setAttribute("stroke", dark ? "#e3e6e3" : "#343b3e");
-            const image = new Image();
-            image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg.outerHTML)}`;
-            await image.decode();
-            if (map.current !== instance) return;
-            const canvas = document.createElement("canvas");
-            canvas.width = canvas.height = 64;
-            const context = canvas.getContext("2d")!;
-            context.beginPath();
-            context.arc(32, 32, 26, 0, Math.PI * 2);
-            context.fillStyle = dark ? "#242a26" : "#fbfaf5";
-            context.fill();
-            context.lineWidth = 2;
-            context.strokeStyle = dark ? "#a0aaa4" : "#737b7d";
-            context.stroke();
-            context.drawImage(image, 15, 15, 34, 34);
-            instance.addImage(
-              `place-${category}`,
-              context.getImageData(0, 0, 64, 64),
-              { pixelRatio: 2 }
-            );
-          })
-        );
-        if (map.current === instance) setReady(instance);
-      } catch {
-        if (map.current === instance) setError(true);
-      }
+    instance.on("load", () => {
+      if (map.current === instance) setReady(instance);
     });
     const resize = new ResizeObserver(() => instance.resize());
     resize.observe(container.current);
@@ -136,14 +103,14 @@ export default function PlacesMap({
       });
       instance.addLayer({
         id: "points",
-        type: "symbol",
+        type: "circle",
         source: "places",
         filter: ["!", ["has", "point_count"]],
-        layout: {
-          "icon-image": ["concat", "place-", ["get", "category"]],
-          "icon-size": 0.9,
-          "icon-allow-overlap": true,
-          "icon-ignore-placement": true,
+        paint: {
+          "circle-radius": 5,
+          "circle-color": "#616965",
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#ffffff",
         },
       });
       instance.on("click", "clusters", async (event) => {
@@ -167,6 +134,11 @@ export default function PlacesMap({
         const id = event.features?.[0]?.properties.id;
         if (id) current.current.onSelect(String(id));
       });
+      instance.on("mousemove", "points", (event) => {
+        const id = event.features?.[0]?.properties.id;
+        current.current.onHover(id ? String(id) : null);
+      });
+      instance.on("mouseleave", "points", () => current.current.onHover(null));
       for (const layer of ["clusters", "points"]) {
         instance.on("mouseenter", layer, () => {
           instance.getCanvas().style.cursor = "pointer";
@@ -199,10 +171,10 @@ export default function PlacesMap({
 
   useEffect(() => {
     if (ready && map.current === ready && map.current.getLayer("points")) {
-      map.current.setLayoutProperty(
+      map.current.setPaintProperty(
         "points",
-        "icon-size",
-        selected ? ["case", ["==", ["get", "id"], selected.id], 1.2, 0.9] : 0.9
+        "circle-radius",
+        selected ? ["case", ["==", ["get", "id"], selected.id], 8, 5] : 5
       );
     }
     if (ready && map.current === ready && selected)
@@ -221,13 +193,6 @@ export default function PlacesMap({
   };
   return (
     <>
-      <div ref={sprites} hidden aria-hidden="true">
-        {categories.map((category) => (
-          <span key={category} data-category={category}>
-            <CategoryIcon category={category} size={24} />
-          </span>
-        ))}
-      </div>
       <div
         ref={container}
         className="map-canvas"

@@ -77,6 +77,22 @@ export type Collection = z.infer<typeof collectionSchema>;
 export type CollectionEntry = z.infer<typeof entrySchema>;
 export type Visit = Place & Pick<CollectionEntry, "visitedOn" | "post">;
 
+export function filterPlaces(
+  places: Visit[],
+  selectedCategories: Category[],
+  query: string
+): Visit[] {
+  const search = query.trim().toLowerCase();
+  return places.filter(
+    (place) =>
+      (!selectedCategories.length ||
+        selectedCategories.some((category) => place.tags.includes(category))) &&
+      `${place.name} ${place.note} ${place.address}`
+        .toLowerCase()
+        .includes(search)
+  );
+}
+
 export function readMapSelection(data: PlacesData, params: URLSearchParams) {
   const collection = data.collections.find((c) => c.id === params.get("list"));
   const placeId = params.get("place");

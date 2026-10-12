@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import raw from "@/config/places.json";
 import {
   collectionPlaces,
+  filterPlaces,
   mapsUrl,
   placesGeoJSON,
   placesKML,
@@ -11,6 +12,24 @@ import {
 
 describe("place collections", () => {
   const data = placesSchema.parse(raw);
+  it("combines category filters without duplicating multi-category places", () => {
+    const places = [
+      { ...data.places[0], tags: ["food" as const] },
+      { ...data.places[1], tags: ["cafes" as const, "shop" as const] },
+      { ...data.places[2], tags: ["shop" as const] },
+    ];
+    expect(filterPlaces(places, [], "")).toHaveLength(3);
+    expect(
+      filterPlaces(places, ["food", "cafes"], "").map((place) => place.id)
+    ).toEqual([places[0].id, places[1].id]);
+    expect(filterPlaces(places, ["cafes", "shop"], "")).toHaveLength(2);
+    expect(
+      filterPlaces(places, ["food", "cafes"], "  CAPITAL  ").map(
+        (place) => place.id
+      )
+    ).toEqual(["capital"]);
+    expect(filterPlaces(places, ["outdoors"], "")).toEqual([]);
+  });
   it("opens the directory by default and validates deep links", () => {
     expect(readMapSelection(data, new URLSearchParams())).toEqual({
       collectionId: null,

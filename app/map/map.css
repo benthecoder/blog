@@ -9,8 +9,8 @@
   inset: 0;
   z-index: 60;
   display: grid;
-  grid-template-columns: 304px minmax(0, 1fr);
-  grid-template-rows: 56px minmax(0, 1fr);
+  grid-template-columns: 340px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
   background: var(--map-paper);
   color: var(--map-ink);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -45,12 +45,13 @@
   outline-offset: 3px;
 }
 .map-header {
-  grid-column: 1 / -1;
+  grid-column: 1;
+  grid-row: 1;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 22px;
-  border-bottom: 1px solid var(--map-rule);
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px 22px 0;
+  border-right: 1px solid var(--map-rule);
   background: var(--map-paper);
   z-index: 5;
 }
@@ -75,6 +76,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  flex-wrap: wrap;
 }
 .map-theme {
   display: flex;
@@ -115,7 +117,6 @@
 }
 .collection-list button[aria-pressed="true"] {
   background: var(--map-hover);
-  box-shadow: inset 2px 0 var(--map-accent);
 }
 .map-position {
   position: absolute;
@@ -146,7 +147,7 @@
 }
 .collection-list {
   list-style: none;
-  padding: 12px 12px 24px;
+  padding: 12px 22px;
   margin: 0;
 }
 .collection-list li {
@@ -155,7 +156,7 @@
 .collection-list button {
   display: block;
   width: 100%;
-  padding: 18px 10px;
+  padding: 12px 10px;
   text-align: left;
 }
 .collection-list button:hover {
@@ -167,12 +168,20 @@
   justify-content: space-between;
   gap: 12px;
   font-family: var(--font-averia), Georgia, serif;
-  font-size: 19px;
+  font-size: 16px;
   line-height: 1.35;
 }
-.collection-title svg {
-  flex-shrink: 0;
+.collection-count {
   color: var(--map-muted);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.collection-summary {
+  padding: 0 22px 18px;
+}
+.collection-summary .collection-description {
+  margin-top: 8px;
 }
 .collection-list :is(.collection-meta, .collection-description) {
   display: block;
@@ -240,8 +249,11 @@
   border: 1px solid var(--map-rule);
 }
 .places-panel {
+  grid-column: 1;
+  grid-row: 2;
   min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   border-right: 1px solid var(--map-rule);
   background: var(--map-paper);
   scrollbar-width: thin;
@@ -295,25 +307,31 @@
 .category-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 0 14px;
+  gap: 6px;
   margin: 12px 0 4px;
 }
 .category-options button {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  min-height: 34px;
+  min-height: 32px;
+  padding: 0 8px;
   color: var(--map-muted);
   font-size: 12px;
-  border-bottom: 1px solid transparent;
+  border: 1px solid var(--map-muted);
+  border-radius: 0;
 }
 .category-options button[aria-pressed="true"] {
-  color: var(--map-ink);
-  border-bottom-color: var(--map-accent);
+  color: var(--map-paper);
+  background: var(--map-ink);
+  border-color: var(--map-ink);
 }
 .category-options button > span {
   color: var(--map-muted);
   font-variant-numeric: tabular-nums;
+}
+.category-options button[aria-pressed="true"] > span {
+  color: inherit;
 }
 .place-list {
   list-style: none;
@@ -336,15 +354,6 @@
   padding: 14px 10px;
   width: 100%;
   text-align: left;
-}
-.place-icon {
-  width: 16px;
-  height: 23px;
-  flex: 0 0 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--map-muted);
 }
 .place-copy {
   display: block;
@@ -383,6 +392,8 @@
   text-decoration: underline;
 }
 .map-area {
+  grid-column: 2;
+  grid-row: 1 / -1;
   position: relative;
   min-width: 0;
   min-height: 0;
@@ -436,6 +447,13 @@
   border-radius: 4px;
   padding: 22px;
   box-shadow: 0 4px 20px #00000010;
+}
+.place-detail.is-preview {
+  pointer-events: none;
+}
+.place-detail.is-preview .detail-close,
+.place-detail.is-preview .detail-links {
+  display: none;
 }
 .detail-close {
   position: absolute;
@@ -497,9 +515,14 @@
   }
   .map-header {
     position: absolute;
-    inset: 0 0 auto;
-    height: 52px;
-    padding: 0 16px;
+    inset: 12px 12px auto;
+    min-height: 48px;
+    padding: 6px 12px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border: 1px solid var(--map-rule);
   }
   .map-brand {
     gap: 12px;
@@ -509,7 +532,7 @@
   }
   .map-area {
     position: absolute;
-    inset: 52px 0 54px;
+    inset: 0 0 54px;
   }
   .places-panel {
     position: absolute;
@@ -561,11 +584,11 @@
     right: 16px;
   }
   .map-area:has(.place-detail) .map-tools {
-    top: 16px;
+    top: 76px;
     bottom: auto;
   }
   .map-area:has(.place-detail) .map-position {
-    top: 16px;
+    top: 76px;
     bottom: auto;
   }
   .map-brand > span:last-of-type {
@@ -579,6 +602,13 @@
   }
   .share-button > span {
     display: none;
+  }
+  .header-actions {
+    gap: 0;
+    flex-wrap: nowrap;
+  }
+  .map-theme {
+    margin-right: 4px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
