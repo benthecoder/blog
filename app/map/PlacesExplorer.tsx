@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { ArrowUpRight, ChevronDown, List, X } from "lucide-react";
+import { PALETTES, usePalette } from "@/app/providers";
+import { useMounted } from "@/components/ui/ThemeSwitch";
 import {
   categories,
   collectionPlaces,
@@ -35,6 +37,8 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(true);
   const { resolvedTheme, setTheme } = useTheme();
+  const { palette, setPalette } = usePalette();
+  const mounted = useMounted();
   const collection = data.collections.find((c) => c.id === collectionId);
   const allPlaces = useMemo<Visit[]>(
     () =>
@@ -140,17 +144,32 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
         </div>
         <div className="map-theme" role="group" aria-label="Map appearance">
           <button
-            aria-pressed={resolvedTheme !== "dark"}
+            aria-pressed={mounted && resolvedTheme !== "dark"}
             onClick={() => setTheme("light")}
           >
             Light
           </button>
           <button
-            aria-pressed={resolvedTheme === "dark"}
+            aria-pressed={mounted && resolvedTheme === "dark"}
             onClick={() => setTheme("dark")}
           >
             Dark
           </button>
+        </div>
+        <div className="map-palettes" role="group" aria-label="Color palette">
+          {PALETTES.map((color) => (
+            <button
+              key={color}
+              className="colophon-swatch"
+              data-palette={color}
+              aria-label={`${color} palette`}
+              aria-pressed={mounted && palette === color}
+              title={color}
+              onClick={() => setPalette(color)}
+            >
+              <span />
+            </button>
+          ))}
         </div>
       </header>
       <aside

@@ -3,8 +3,9 @@
   --map-ink: #373737;
   --map-muted: #767676;
   --map-rule: var(--color-rule);
-  --map-hover: var(--color-paper-sunken);
   --map-accent: var(--color-ink);
+  --map-hover: color-mix(in srgb, var(--map-accent) 8%, var(--map-paper));
+  --map-marker: var(--map-accent);
   position: fixed;
   inset: 0;
   z-index: 60;
@@ -23,7 +24,6 @@
   --map-ink: #e5e5e5;
   --map-muted: #a5a5a5;
   --map-rule: var(--color-night-rule);
-  --map-hover: var(--color-night-raised);
   --map-accent: var(--color-chalk);
 }
 .places-explorer button,
@@ -47,7 +47,8 @@
 .map-header {
   grid-column: 1;
   grid-row: 1;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -87,7 +88,30 @@
 }
 .map-theme button[aria-pressed="true"] {
   color: var(--map-paper);
-  background: var(--map-ink);
+  background: var(--map-accent);
+}
+.map-palettes {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 4px;
+}
+.map-palettes button {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+}
+.map-palettes button span {
+  width: 14px;
+  height: 14px;
+  background: var(--color-ink);
+}
+.dark .map-palettes button span {
+  background: var(--color-chalk);
+}
+.map-palettes button[aria-pressed="true"] span {
+  outline: 1px solid var(--map-ink);
+  outline-offset: 3px;
 }
 .panel-section-heading {
   display: flex;
@@ -245,8 +269,8 @@
 }
 .category-options button[aria-pressed="true"] {
   color: var(--map-paper);
-  background: var(--map-ink);
-  border-color: var(--map-ink);
+  background: var(--map-accent);
+  border-color: var(--map-muted);
 }
 .category-options button > span {
   color: var(--map-muted);
@@ -502,11 +526,11 @@
     right: 16px;
   }
   .map-area:has(.place-detail) .map-tools {
-    top: 76px;
+    top: 108px;
     bottom: auto;
   }
   .map-area:has(.place-detail) .map-position {
-    top: 76px;
+    top: 108px;
     bottom: auto;
   }
   .map-brand > span:last-of-type {
