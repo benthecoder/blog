@@ -4,8 +4,7 @@
   --map-muted: #767676;
   --map-rule: var(--color-rule);
   --map-accent: var(--color-ink);
-  --map-hover: color-mix(in srgb, var(--map-accent) 8%, var(--map-paper));
-  --map-marker: var(--map-accent);
+  --map-hover: var(--color-paper-sunken);
   position: fixed;
   inset: 0;
   z-index: 60;
@@ -25,6 +24,7 @@
   --map-muted: #a5a5a5;
   --map-rule: var(--color-night-rule);
   --map-accent: var(--color-chalk);
+  --map-hover: var(--color-night-raised);
 }
 .places-explorer button,
 .places-explorer input,
@@ -47,8 +47,7 @@
 .map-header {
   grid-column: 1;
   grid-row: 1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
@@ -88,30 +87,21 @@
 }
 .map-theme button[aria-pressed="true"] {
   color: var(--map-paper);
-  background: var(--map-accent);
+  background: var(--map-ink);
 }
-.map-palettes {
-  grid-column: 1 / -1;
-  display: flex;
-  gap: 4px;
-}
-.map-palettes button {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-}
-.map-palettes button span {
-  width: 14px;
-  height: 14px;
+.places-explorer .category-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
   background: var(--color-ink);
 }
-.dark .map-palettes button span {
+.dark .places-explorer .category-dot {
   background: var(--color-chalk);
 }
-.map-palettes button[aria-pressed="true"] span {
-  outline: 1px solid var(--map-ink);
-  outline-offset: 3px;
+.places-explorer .category-options button[aria-pressed="true"] .category-dot {
+  background: var(--color-ink);
+  box-shadow: 0 0 0 1px var(--color-paper);
 }
 .panel-section-heading {
   display: flex;
@@ -240,6 +230,12 @@
 .place-search input::placeholder {
   color: var(--map-muted);
 }
+.place-search:focus-within {
+  border-color: var(--map-ink);
+}
+.place-search input:focus-visible {
+  outline: none;
+}
 .place-search input::-webkit-search-cancel-button {
   display: none;
 }
@@ -269,8 +265,8 @@
 }
 .category-options button[aria-pressed="true"] {
   color: var(--map-paper);
-  background: var(--map-accent);
-  border-color: var(--map-muted);
+  background: var(--map-ink);
+  border-color: var(--map-ink);
 }
 .category-options button > span {
   color: var(--map-muted);
@@ -402,13 +398,18 @@
   top: 7px;
   right: 7px;
 }
+.detail-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-right: 24px;
+}
 .detail-category {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   color: var(--map-muted);
   font-size: 11px;
-  padding-right: 24px;
 }
 .place-detail h2 {
   font-family: var(--font-averia), Georgia, serif;
@@ -526,11 +527,11 @@
     right: 16px;
   }
   .map-area:has(.place-detail) .map-tools {
-    top: 108px;
+    top: 76px;
     bottom: auto;
   }
   .map-area:has(.place-detail) .map-position {
-    top: 108px;
+    top: 76px;
     bottom: auto;
   }
   .map-brand > span:last-of-type {

@@ -5,8 +5,8 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { ArrowUpRight, ChevronDown, List, X } from "lucide-react";
-import { PALETTES, usePalette } from "@/app/providers";
 import { useMounted } from "@/components/ui/ThemeSwitch";
+import CategoryDot from "./CategoryDot";
 import {
   categories,
   collectionPlaces,
@@ -37,7 +37,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(true);
   const { resolvedTheme, setTheme } = useTheme();
-  const { palette, setPalette } = usePalette();
   const mounted = useMounted();
   const collection = data.collections.find((c) => c.id === collectionId);
   const allPlaces = useMemo<Visit[]>(
@@ -135,6 +134,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     updateUrl(listId, id);
   }
 
+  // Map/list layout inspired by CW&T: https://maps.cwandt.com/?list=nyc
   return (
     <main className="places-explorer">
       <header className="map-header">
@@ -155,21 +155,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
           >
             Dark
           </button>
-        </div>
-        <div className="map-palettes" role="group" aria-label="Color palette">
-          {PALETTES.map((color) => (
-            <button
-              key={color}
-              className="colophon-swatch"
-              data-palette={color}
-              aria-label={`${color} palette`}
-              aria-pressed={mounted && palette === color}
-              title={color}
-              onClick={() => setPalette(color)}
-            >
-              <span />
-            </button>
-          ))}
         </div>
       </header>
       <aside
@@ -269,6 +254,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                     clearSelection();
                   }}
                 >
+                  <CategoryDot category={tag} />
                   {tag}{" "}
                   <span>
                     {
@@ -337,7 +323,14 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
             >
               <X size={16} />
             </button>
-            <span className="detail-category">{detail.tags.join(" / ")}</span>
+            <div className="detail-categories">
+              {detail.tags.map((tag) => (
+                <span className="detail-category" key={tag}>
+                  <CategoryDot category={tag} />
+                  {tag}
+                </span>
+              ))}
+            </div>
             <h2>{detail.name}</h2>
             <p className="detail-address">{detail.address}</p>
             {detail.note && <p>{detail.note}</p>}

@@ -2,13 +2,6 @@ import { z } from "zod";
 
 export const categories = ["food", "cafes", "art", "shop", "outdoors"] as const;
 export type Category = (typeof categories)[number];
-export const categoryColors: Record<Category, string> = {
-  food: "#ce6333",
-  cafes: "#497aa3",
-  art: "#bf3637",
-  shop: "#aa915b",
-  outdoors: "#487b59",
-};
 const id = z.string().regex(/^[a-z0-9-]+$/);
 const date = z.iso.date();
 const entrySchema = z.object({
@@ -143,7 +136,6 @@ export function placesGeoJSON(places: Visit[]) {
         tags: place.tags,
         visitedOn: place.visitedOn ?? "",
         post: place.post ?? "",
-        color: categoryColors[place.tags[0]],
         category: place.tags[0],
       },
     })),

@@ -4,11 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import maplibregl, {
   type GeoJSONSource,
   type Map as MapInstance,
+  type ExpressionSpecification,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Maximize, Minus, Plus } from "lucide-react";
-import { placesGeoJSON, type Visit } from "@/utils/places";
-import { usePalette } from "@/app/providers";
+import { categories, placesGeoJSON, type Visit } from "@/utils/places";
+import CategoryDot from "./CategoryDot";
 
 export default function PlacesMap({
   places,
@@ -24,7 +25,7 @@ export default function PlacesMap({
   onHover: (id: string | null) => void;
 }) {
   const container = useRef<HTMLDivElement>(null);
-  const { palette } = usePalette();
+  const categorySwatches = useRef<HTMLDivElement>(null);
   const map = useRef<MapInstance | null>(null);
   const current = useRef({ places, onSelect, onHover });
   const [ready, setReady] = useState<MapInstance | null>(null);
@@ -182,21 +183,28 @@ export default function PlacesMap({
 
   useEffect(() => {
     if (!ready || map.current !== ready || !container.current) return;
-    // Read after the shared provider applies the palette's CSS variables.
     const frame = requestAnimationFrame(() => {
-      if (map.current !== ready || !container.current) return;
-      const style = getComputedStyle(container.current);
-      const color = style.getPropertyValue("--map-marker").trim();
-      const label = style.getPropertyValue("--map-paper").trim();
-      for (const layer of ["points", "clusters"]) {
-        if (ready.getLayer(layer))
-          ready.setPaintProperty(layer, "circle-color", color);
-      }
-      if (ready.getLayer("cluster-counts"))
-        ready.setPaintProperty("cluster-counts", "text-color", label);
+      if (map.current !== ready || !categorySwatches.current) return;
+      // Use the same themed CSS colors as the category legend.
+      const colors = Array.from(categorySwatches.current.children).flatMap(
+        (swatch) => [
+          swatch.getAttribute("data-category")!,
+          getComputedStyle(swatch).backgroundColor,
+        ]
+      );
+      const colorExpression: ExpressionSpecification = [
+        "match",
+        ["get", "category"],
+        colors[0],
+        colors[1],
+        ...colors.slice(2),
+        "#656565",
+      ];
+      if (ready.getLayer("points"))
+        ready.setPaintProperty("points", "circle-color", colorExpression);
     });
     return () => cancelAnimationFrame(frame);
-  }, [ready, palette, dark]);
+  }, [ready, dark]);
 
   useEffect(() => {
     if (ready && map.current === ready && map.current.getLayer("points")) {
@@ -222,6 +230,11 @@ export default function PlacesMap({
   };
   return (
     <>
+      <div ref={categorySwatches} hidden aria-hidden="true">
+        {categories.map((category) => (
+          <CategoryDot key={category} category={category} />
+        ))}
+      </div>
       <div
         ref={container}
         className="map-canvas"
