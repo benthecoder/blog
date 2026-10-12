@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Blog Design System'
+  short_description: 'Design consistent pages across Ben’s whole blog'
+  default_prompt: 'Use $blog-design-system to design this page in the style of my blog.'
