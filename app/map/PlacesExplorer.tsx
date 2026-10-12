@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { ArrowUpRight, ChevronDown, List, Search, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, List, X } from "lucide-react";
 import {
   categories,
   collectionPlaces,
@@ -138,22 +138,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
           <h1 className="map-wordmark">PLACES</h1>
           <span>by ben</span>
         </div>
-        <div className="header-actions">
-          <div className="map-theme" role="group" aria-label="Map appearance">
-            <button
-              aria-pressed={resolvedTheme !== "dark"}
-              onClick={() => setTheme("light")}
-            >
-              Light
-            </button>
-            <button
-              aria-pressed={resolvedTheme === "dark"}
-              onClick={() => setTheme("dark")}
-            >
-              Dark
-            </button>
-          </div>
-        </div>
       </header>
       <aside
         ref={panel}
@@ -180,17 +164,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                   </span>
                 </span>
               </button>
-              {collectionId === list.id && (
-                <div className="collection-summary">
-                  {list.location && (
-                    <p className="collection-meta">
-                      {list.location}
-                      {list.date ? ` · ${formatDate(list.date)}` : ""}
-                    </p>
-                  )}
-                  <p className="collection-description">{list.description}</p>
-                </div>
-              )}
             </li>
           ))}
         </ul>
@@ -209,19 +182,31 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
           </div>
         )}
         <div className="filters">
-          <label className="place-search">
-            <Search size={15} aria-hidden="true" />
+          <div className="place-search">
             <input
               type="search"
               aria-label="Filter places"
-              placeholder="Find a place"
+              placeholder="Filter"
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
                 clearSelection();
               }}
             />
-          </label>
+            {query && (
+              <button
+                type="button"
+                aria-label="Clear search"
+                title="Clear search"
+                onClick={() => {
+                  setQuery("");
+                  clearSelection();
+                }}
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
           <div
             className="category-options"
             role="group"
@@ -291,19 +276,25 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
         </ul>
         {!places.length && (
           <div className="empty-places">
-            <p>No places found.</p>
-            <button
-              onClick={() => {
-                setSelectedCategories([]);
-                setQuery("");
-              }}
-            >
-              Clear filters
-            </button>
+            <p>Nothing matches that.</p>
           </div>
         )}
       </aside>
       <section className="map-area" aria-label="Places map">
+        <div className="map-theme" role="group" aria-label="Map appearance">
+          <button
+            aria-pressed={resolvedTheme !== "dark"}
+            onClick={() => setTheme("light")}
+          >
+            Light
+          </button>
+          <button
+            aria-pressed={resolvedTheme === "dark"}
+            onClick={() => setTheme("dark")}
+          >
+            Dark
+          </button>
+        </div>
         <PlacesMap
           places={places}
           selected={selected}
