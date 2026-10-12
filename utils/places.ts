@@ -67,7 +67,7 @@ export const placesSchema = z
 export type PlacesData = z.infer<typeof placesSchema>;
 export type Place = z.infer<typeof placeSchema>;
 export type Collection = z.infer<typeof collectionSchema>;
-export type CollectionEntry = z.infer<typeof entrySchema>;
+type CollectionEntry = z.infer<typeof entrySchema>;
 export type Visit = Place & Pick<CollectionEntry, "visitedOn" | "post">;
 
 export function filterPlaces(
