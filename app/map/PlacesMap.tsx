@@ -113,6 +113,13 @@ export default function PlacesMap({
           "circle-stroke-color": "#ffffff",
         },
       });
+      instance.addLayer({
+        id: "point-targets",
+        type: "circle",
+        source: "places",
+        filter: ["!", ["has", "point_count"]],
+        paint: { "circle-radius": 14, "circle-opacity": 0 },
+      });
       instance.on("click", "clusters", async (event) => {
         const feature = event.features?.[0];
         if (!feature || feature.geometry.type !== "Point") return;
@@ -130,16 +137,18 @@ export default function PlacesMap({
           /* A collection can change while a cluster is expanding. */
         }
       });
-      instance.on("click", "points", (event) => {
+      instance.on("click", "point-targets", (event) => {
         const id = event.features?.[0]?.properties.id;
         if (id) current.current.onSelect(String(id));
       });
-      instance.on("mousemove", "points", (event) => {
+      instance.on("mousemove", "point-targets", (event) => {
         const id = event.features?.[0]?.properties.id;
         current.current.onHover(id ? String(id) : null);
       });
-      instance.on("mouseleave", "points", () => current.current.onHover(null));
-      for (const layer of ["clusters", "points"]) {
+      instance.on("mouseleave", "point-targets", () =>
+        current.current.onHover(null)
+      );
+      for (const layer of ["clusters", "point-targets"]) {
         instance.on("mouseenter", layer, () => {
           instance.getCanvas().style.cursor = "pointer";
         });

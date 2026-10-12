@@ -13,7 +13,7 @@
   grid-template-rows: auto minmax(0, 1fr);
   background: var(--map-paper);
   color: var(--map-ink);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-serif);
   font-size: 14px;
   line-height: 1.5;
   letter-spacing: 0;
@@ -131,20 +131,6 @@
   font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
-.share-button {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 36px;
-  padding: 0 9px;
-  border-radius: 4px;
-  color: var(--map-muted) !important;
-  font-size: 12px !important;
-  min-width: 124px;
-}
-.share-button:hover {
-  background: var(--map-hover);
-}
 .collection-list {
   list-style: none;
   padding: 12px 22px;
@@ -173,12 +159,12 @@
 }
 .collection-count {
   color: var(--map-muted);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: inherit;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 .collection-summary {
-  padding: 0 22px 18px;
+  padding: 0 10px 16px;
 }
 .collection-summary .collection-description {
   margin-top: 8px;
@@ -186,8 +172,7 @@
 .collection-list :is(.collection-meta, .collection-description) {
   display: block;
 }
-.icon-button,
-.export-menu summary {
+.icon-button {
   width: 36px;
   height: 36px;
   display: grid;
@@ -195,58 +180,9 @@
   color: var(--map-muted);
   border-radius: 4px;
 }
-.icon-button:hover,
-.export-menu summary:hover {
+.icon-button:hover {
   background: var(--map-hover);
   color: var(--map-ink);
-}
-.export-menu {
-  position: relative;
-}
-.export-menu summary {
-  list-style: none;
-}
-.export-menu summary::-webkit-details-marker {
-  display: none;
-}
-.export-options {
-  position: absolute;
-  right: 0;
-  top: 43px;
-  width: 208px;
-  background: var(--map-paper);
-  border: 1px solid var(--map-rule);
-  border-radius: 4px;
-  padding: 5px;
-  box-shadow: 0 6px 20px #0000000d;
-}
-.export-options > * {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  padding: 10px;
-  text-align: left;
-  font-size: 13px;
-  border-radius: 3px;
-}
-.export-options > *:hover {
-  background: var(--map-hover);
-}
-.export-options a {
-  border-top: 1px solid var(--map-rule);
-  color: var(--map-muted);
-}
-.share-error {
-  position: absolute;
-  right: 20px;
-  top: 60px;
-  margin: 0;
-  background: var(--map-paper);
-  padding: 10px;
-  font-size: 13px;
-  border: 1px solid var(--map-rule);
 }
 .places-panel {
   grid-column: 1;
@@ -592,15 +528,6 @@
     bottom: auto;
   }
   .map-brand > span:last-of-type {
-    display: none;
-  }
-  .share-button {
-    min-width: 36px;
-    width: 36px;
-    justify-content: center;
-    padding: 0;
-  }
-  .share-button > span {
     display: none;
   }
   .header-actions {

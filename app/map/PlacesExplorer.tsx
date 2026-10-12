@@ -4,23 +4,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import {
-  ArrowUpRight,
-  Check,
-  ChevronDown,
-  Download,
-  List,
-  Link as LinkIcon,
-  Search,
-  X,
-} from "lucide-react";
+import { ArrowUpRight, ChevronDown, List, Search, X } from "lucide-react";
 import {
   categories,
   collectionPlaces,
   filterPlaces,
   mapsUrl,
-  placesGeoJSON,
-  placesKML,
   readMapSelection,
   type Category,
   type Visit,
@@ -39,15 +28,12 @@ const formatDate = (date: string) =>
 
 export default function PlacesExplorer({ data }: { data: PlacesData }) {
   const panel = useRef<HTMLElement>(null);
-  const exports = useRef<HTMLDetailsElement>(null);
   const [collectionId, setCollectionId] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(true);
-  const [copied, setCopied] = useState(false);
-  const [shareError, setShareError] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
   const collection = data.collections.find((c) => c.id === collectionId);
   const allPlaces = useMemo<Visit[]>(
@@ -69,17 +55,11 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
   const detail = places.find((p) => p.id === hoveredId) ?? selected;
 
   useEffect(() => {
-    const closeExports = (event: PointerEvent) => {
-      if (exports.current && !exports.current.contains(event.target as Node))
-        exports.current.open = false;
-    };
-    document.addEventListener("pointerdown", closeExports);
     const dismissPreview = (event: KeyboardEvent) => {
       if (event.key === "Escape") setHoveredId(null);
     };
     document.addEventListener("keydown", dismissPreview);
     return () => {
-      document.removeEventListener("pointerdown", closeExports);
       document.removeEventListener("keydown", dismissPreview);
     };
   }, []);
@@ -132,8 +112,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     setQuery("");
     setSelectedId(null);
     setSheetOpen(true);
-    setShareError(false);
-    setCopied(false);
     updateUrl(id);
   }
   function toggleSheet() {
@@ -151,37 +129,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     setSelectedId(id);
     setSheetOpen(false);
     updateUrl(listId, id);
-  }
-  function download(format: "geojson" | "kml") {
-    if (!collection) return;
-    const text =
-      format === "geojson"
-        ? JSON.stringify(placesGeoJSON(allPlaces), null, 2)
-        : placesKML(collection.title, allPlaces);
-    const url = URL.createObjectURL(
-      new Blob([text], {
-        type:
-          format === "geojson"
-            ? "application/geo+json"
-            : "application/vnd.google-earth.kml+xml",
-      })
-    );
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${collection.id}.${format}`;
-    link.click();
-    URL.revokeObjectURL(url);
-    if (exports.current) exports.current.open = false;
-  }
-  async function share() {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setShareError(false);
-      window.setTimeout(() => setCopied(false), 1800);
-    } catch {
-      setShareError(true);
-    }
   }
 
   return (
@@ -206,71 +153,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
               Dark
             </button>
           </div>
-          {collection && (
-            <details
-              className="export-menu"
-              ref={exports}
-              onKeyDown={(event) => {
-                if (event.key === "Escape" && exports.current)
-                  exports.current.open = false;
-              }}
-            >
-              <summary
-                aria-label="Download this list"
-                title="Download this list as KML or GeoJSON"
-              >
-                <Download size={17} />
-              </summary>
-              <div className="export-options">
-                <button onClick={() => download("kml")}>
-                  Download KML <Download size={14} />
-                </button>
-                <button onClick={() => download("geojson")}>
-                  Download GeoJSON <Download size={14} />
-                </button>
-                {collection.source && (
-                  <a href={collection.source} target="_blank" rel="noreferrer">
-                    Original list <ArrowUpRight size={14} />
-                  </a>
-                )}
-              </div>
-            </details>
-          )}
-          {collection && (
-            <button
-              className="share-button"
-              title={
-                copied
-                  ? "Link copied"
-                  : selected
-                    ? "Copy a link to this place"
-                    : "Copy a link to this list"
-              }
-              aria-label={
-                copied
-                  ? "Link copied"
-                  : selected
-                    ? "Copy place link"
-                    : "Copy list link"
-              }
-              onClick={share}
-            >
-              {copied ? <Check size={17} /> : <LinkIcon size={17} />}
-              <span>
-                {copied
-                  ? "Copied"
-                  : selected
-                    ? "Copy place link"
-                    : "Copy list link"}
-              </span>
-            </button>
-          )}
         </div>
-        {shareError && (
-          <p className="share-error" role="status">
-            Copy the link from your address bar.
-          </p>
-        )}
       </header>
       <aside
         ref={panel}
@@ -297,20 +180,20 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                   </span>
                 </span>
               </button>
+              {collectionId === list.id && (
+                <div className="collection-summary">
+                  {list.location && (
+                    <p className="collection-meta">
+                      {list.location}
+                      {list.date ? ` · ${formatDate(list.date)}` : ""}
+                    </p>
+                  )}
+                  <p className="collection-description">{list.description}</p>
+                </div>
+              )}
             </li>
           ))}
         </ul>
-        {collection && (
-          <div className="collection-summary">
-            {collection.location && (
-              <p className="collection-meta">
-                {collection.location}
-                {collection.date ? ` · ${formatDate(collection.date)}` : ""}
-              </p>
-            )}
-            <p className="collection-description">{collection.description}</p>
-          </div>
-        )}
         <div className="panel-section-heading places-section-heading">
           <h2>Places</h2>
           <span aria-live="polite">{places.length}</span>
@@ -390,12 +273,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                 onClick={() => selectPlace(place.id)}
                 aria-label={`Show ${place.name} on map`}
                 aria-pressed={place.id === selectedId}
-                onPointerEnter={(event) => {
-                  if (event.pointerType === "mouse") setHoveredId(place.id);
-                }}
-                onPointerLeave={() => setHoveredId(null)}
-                onFocus={() => setHoveredId(place.id)}
-                onBlur={() => setHoveredId(null)}
               >
                 <span className="place-copy">
                   <span className="place-name">{place.name}</span>
