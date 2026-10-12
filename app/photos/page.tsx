@@ -32,6 +32,7 @@ export default function PhotosPage() {
           <h2 id="stream-heading">
             <Link href="/photos/stream">Photostream</Link>
           </h2>
+          <Link href="/photos/stream">View all</Link>
         </div>
         <PhotoGrid photos={photos.slice(0, 12)} mode="rail" />
       </section>
