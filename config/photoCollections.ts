@@ -1,6 +1,6 @@
 import type { PhotoCollection } from "@/types/photostream";
 import manifest from "@/public/data/photo-collections.json";
 
-// The manifest contains public photos from the dedicated photos bucket.
-// Importing is explicit; rendering never lists R2 or scans a local library.
+// Optional editorial overrides for matching live R2 photo IDs.
+// Entries here do not publish an image that is absent from the bucket.
 export const photoCollections: PhotoCollection[] = manifest;

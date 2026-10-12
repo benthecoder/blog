@@ -42,23 +42,31 @@ one San Francisco collection and a Chinatown photoset. Root images go into
 Moments. Use distinct folder names that remain distinct after lowercasing and
 replacing spaces with hyphens.
 
-Run `pnpm photos:sync` with the existing R2 credentials in `.env`. Optional
-`PHOTOS_R2_BUCKET` and `PHOTOS_PUBLIC_URL` override the bucket and image base URL.
-If changing the public URL, also allow its hostname in `next.config.ts` images.
-The command reads images, dimensions, camera/lens and exposure EXIF, capture
-dates, and tiny blur placeholders into `public/data/photo-collections.json`.
-It does not change R2. Empty buckets leave the current manifest intact.
-Precise GPS coordinates are not imported.
+Uploads appear automatically: photo pages list the R2 bucket on the server,
+with a 30-second listing cache. Visible pages check for updates every 30 seconds;
+an open photo viewer pauses those checks. No sync command, commit, or deploy is
+needed for new uploads or folders after the feature is deployed. Empty folders
+are ignored, and deleting an image removes it after the listing refreshes.
 
-Review the manifest before committing and deploying. Edit `caption`,
-`description`, `location`, `journal`, or `camera` in the collection's `photos`
-array; photosets use the same photo IDs, and reimports preserve
-those editorial fields. For example, set `camera` to `Fujifilm X100S` when an
-export has stripped EXIF. Future cameras use their own metadata rather than a
-site-wide default. The viewer shows descriptions and camera details, and each
-photo has a shareable page. Collection and photoset titles can also be edited;
-`cover` is a photo ID. The initial manifest contains five already-published
-San Francisco blog photos while the dedicated bucket is empty.
+The Vercel runtime needs the existing `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, and
+`R2_SECRET_ACCESS_KEY`, with List/Get permission for the `photos` bucket.
+Optional `PHOTOS_R2_BUCKET` and `PHOTOS_PUBLIC_URL` override the bucket and image
+base URL. If changing the public URL, also allow its hostname in
+`next.config.ts` images. Credentials stay on the server.
+
+Camera, lens, exposure, capture date, dimensions, and blur previews are read from
+each new image once and cached by object version. Export JPEGs with EXIF to keep
+camera details. Location defaults to the folder names; precise GPS coordinates
+are not imported. Overwriting an object produces a new image URL version so
+image optimization caches do not keep showing the old image.
+
+`public/data/photo-collections.json` is now an optional source of editorial
+overrides, not the published photo list. Existing entries only apply to matching
+live object IDs. Edit caption, description, camera, or location in a collection's
+`photos` array, and deploy those editorial edits if needed. The optional
+`pnpm photos:sync` command can still create a local snapshot for editing; ordinary
+uploads do not require it. The five original preview images are not displayed
+unless matching objects exist in the dedicated bucket.
 
 ## Writing wiki pages
 

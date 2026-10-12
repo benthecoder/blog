@@ -7,13 +7,9 @@ import { getPhotosets } from "@/utils/content/photostream";
 import { formatPhotoDate } from "@/utils/photoDate";
 
 type Props = { params: Promise<{ slug: string }> };
-export function generateStaticParams() {
-  return getPhotosets().map(({ slug }) => ({ slug }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const collection = getPhotosets().find((item) => item.slug === slug);
+  const collection = (await getPhotosets()).find((item) => item.slug === slug);
   return {
     title: `${collection?.title ?? "photos"} — Benedict Neo`,
     description: collection?.description,
@@ -23,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function PhotosetPage({ params }: Props) {
   const { slug } = await params;
-  const collections = getPhotosets();
+  const collections = await getPhotosets();
   const index = collections.findIndex((item) => item.slug === slug);
   if (index === -1) notFound();
   const collection = collections[index];

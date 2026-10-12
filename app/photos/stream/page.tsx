@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "https://photos.bneo.xyz/photos/stream" },
 };
 
-export default function PhotostreamPage() {
-  const photos = getPhotostream();
+export default async function PhotostreamPage() {
+  const photos = await getPhotostream();
   return <PhotoStream photos={photos} />;
 }

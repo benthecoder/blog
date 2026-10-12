@@ -7,12 +7,9 @@ import { getPhotostream } from "@/utils/content/photostream";
 import { PhotoDetails } from "@/components/photos/PhotoDetails";
 
 type Props = { params: Promise<{ id: string }> };
-export function generateStaticParams() {
-  return getPhotostream().map(({ id }) => ({ id }));
-}
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const photo = getPhotostream().find((item) => item.id === id);
+  const photo = (await getPhotostream()).find((item) => item.id === id);
   return {
     title: `${photo?.caption ?? "photo"} — Benedict Neo`,
     description: photo?.description ?? photo?.caption,
@@ -23,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 export default async function PhotoPage({ params }: Props) {
   const { id } = await params;
-  const photos = getPhotostream();
+  const photos = await getPhotostream();
   const index = photos.findIndex((photo) => photo.id === id);
   if (index === -1) notFound();
   const photo = photos[index];

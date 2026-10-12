@@ -14,9 +14,11 @@ export const metadata: Metadata = {
   openGraph: { title: "photos", url: "https://photos.bneo.xyz" },
 };
 
-export default function PhotosPage() {
-  const collections = getPhotoCollections();
-  const photos = getPhotostream();
+export default async function PhotosPage() {
+  const [collections, photos] = await Promise.all([
+    getPhotoCollections(),
+    getPhotostream(),
+  ]);
   return (
     <main className="photo-index">
       <header className="photo-intro">
@@ -102,9 +104,7 @@ export default function PhotosPage() {
           })}
         </div>
         {collections.length === 0 && (
-          <p className="photo-empty">
-            A few moments worth keeping. The first collection is on its way.
-          </p>
+          <p className="photo-empty">No photos yet.</p>
         )}
       </section>
     </main>
