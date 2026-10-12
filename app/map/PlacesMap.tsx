@@ -7,8 +7,8 @@ import maplibregl, {
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Maximize, Minus, Plus } from "lucide-react";
-import { placesGeoJSON, type Visit } from "@/utils/places";
-import { categoryIcons, CategoryIcon } from "./categories";
+import { categories, placesGeoJSON, type Visit } from "@/utils/places";
+import { CategoryIcon } from "./categories";
 
 export default function PlacesMap({
   places,
@@ -27,6 +27,11 @@ export default function PlacesMap({
   const current = useRef({ places, onSelect });
   const [ready, setReady] = useState<MapInstance | null>(null);
   const [error, setError] = useState(false);
+  const [position, setPosition] = useState({
+    latitude: 37.796,
+    longitude: -122.406,
+    zoom: 15,
+  });
   useEffect(() => {
     current.current = { places, onSelect };
   }, [places, onSelect]);
@@ -49,10 +54,19 @@ export default function PlacesMap({
       return;
     }
     map.current = instance;
+    const updatePosition = () => {
+      const center = instance.getCenter();
+      setPosition({
+        latitude: center.lat,
+        longitude: center.lng,
+        zoom: instance.getZoom(),
+      });
+    };
+    instance.on("move", updatePosition);
     instance.on("load", async () => {
       try {
         await Promise.all(
-          Object.keys(categoryIcons).map(async (category) => {
+          categories.map(async (category) => {
             const svg = sprites.current
               ?.querySelector(`[data-category="${category}"] svg`)
               ?.cloneNode(true) as SVGElement | undefined;
@@ -208,12 +222,9 @@ export default function PlacesMap({
   return (
     <>
       <div ref={sprites} hidden aria-hidden="true">
-        {Object.keys(categoryIcons).map((category) => (
+        {categories.map((category) => (
           <span key={category} data-category={category}>
-            <CategoryIcon
-              category={category as keyof typeof categoryIcons}
-              size={24}
-            />
+            <CategoryIcon category={category} size={24} />
           </span>
         ))}
       </div>
@@ -223,6 +234,13 @@ export default function PlacesMap({
         role="region"
         aria-label="Map of saved places"
       />
+      <output
+        className="map-position"
+        aria-label="Map center latitude, longitude and zoom"
+      >
+        {position.latitude.toFixed(4)} / {position.longitude.toFixed(4)} · Z
+        {position.zoom.toFixed(1)}
+      </output>
       <div className="map-tools">
         <button
           aria-label="Zoom in"
