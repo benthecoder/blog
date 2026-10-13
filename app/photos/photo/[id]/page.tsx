@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { getPhotostream } from "@/utils/content/photostream";
-import { PhotoDetails } from "@/components/photos/PhotoDetails";
+import { FadeImage } from "@/components/photos/FadeImage";
+import { PhotoMeta } from "@/components/photos/PhotoMeta";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -27,45 +27,38 @@ export default async function PhotoPage({ params }: Props) {
   const previous = photos[index - 1];
   const next = photos[index + 1];
   return (
-    <main className="photo-single-page">
-      <Link href="/photos/stream" className="photo-back">
-        <ArrowLeft size={16} /> Photostream
-      </Link>
-      <Image
-        src={photo.src}
-        alt={photo.caption}
-        width={photo.width}
-        height={photo.height}
-        sizes="(max-width: 800px) 100vw, 1000px"
-        quality={75}
-        preload
-      />
-      <div className="photo-single-caption">
-        <h1>{photo.caption}</h1>
-        <PhotoDetails photo={photo} />
-        {photo.journal && (
-          <a
-            href={`https://bneo.xyz/posts/${encodeURIComponent(photo.journal)}`}
-            className="photo-back"
+    <main className="ph-view">
+      <div className="ph-view-image">
+        <FadeImage
+          src={photo.src}
+          alt={photo.caption}
+          fill
+          sizes="100vw"
+          quality={80}
+          preload
+        />
+        {previous && (
+          <Link
+            href={`/photos/photo/${encodeURIComponent(previous.id)}`}
+            className="ph-prev"
+            aria-label="Previous photo"
           >
-            Read the journal <ArrowUpRight size={14} />
-          </a>
+            <ArrowLeft size={20} />
+          </Link>
         )}
-        <nav className="photo-single-navigation" aria-label="Adjacent photos">
-          {previous ? (
-            <Link href={`/photos/photo/${encodeURIComponent(previous.id)}`}>
-              <ArrowLeft size={16} /> Previous
-            </Link>
-          ) : (
-            <span />
-          )}
-          {next && (
-            <Link href={`/photos/photo/${encodeURIComponent(next.id)}`}>
-              Next <ArrowRight size={16} />
-            </Link>
-          )}
-        </nav>
+        {next && (
+          <Link
+            href={`/photos/photo/${encodeURIComponent(next.id)}`}
+            className="ph-next"
+            aria-label="Next photo"
+          >
+            <ArrowRight size={20} />
+          </Link>
+        )}
       </div>
+      <footer>
+        <PhotoMeta photo={photo} />
+      </footer>
     </main>
   );
 }

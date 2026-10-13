@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { PhotoGrid } from "@/components/photos/PhotoGrid";
+import { PhotoGallery } from "@/components/photos/ContactSheet";
 import { getPhotosets } from "@/utils/content/photostream";
+import { placeLine } from "@/utils/photoPlaces";
 import { formatPhotoDate } from "@/utils/photoDate";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -32,57 +32,47 @@ export default async function PhotosetPage({ params }: Props) {
   ].sort();
   const next = collections[index + 1];
   return (
-    <main className="photo-set-page">
-      <header className="photo-set-intro">
+    <main className="ph-page ph-set-page">
+      <header className="ph-set-intro">
         <Link
           href={
             collection.parentSlug
               ? `/photos/sets/${collection.parentSlug}`
-              : "/photos"
+              : "/photos/trips"
           }
-          className="photo-back"
+          className="ph-mono ph-back"
         >
-          <ArrowLeft size={15} />{" "}
-          {collection.parentSlug ? "Back to collection" : "All photosets"}
+          {collection.parentSlug ? "← Back to trip" : "← All trips"}
         </Link>
-        <p className="photo-eyebrow">Collection</p>
         <h1>{collection.title}</h1>
-        {collection.description && (
-          <p className="photo-set-description">{collection.description}</p>
-        )}
-        <div className="photo-set-stats">
-          <span>{collection.photos.length} photos</span>
-          {days.length > 0 && (
-            <span>
-              {days.length} {days.length === 1 ? "day" : "days"}
-            </span>
-          )}
-          {days.length > 0 && (
-            <span>
-              {formatPhotoDate(days[0])}
-              {days.length > 1 && ` — ${formatPhotoDate(days.at(-1))}`}
-            </span>
-          )}
-        </div>
+        {collection.description && <p>{collection.description}</p>}
+        <p className="ph-mono ph-stats">
+          {[
+            `${collection.photos.length} ${collection.photos.length === 1 ? "frame" : "frames"}`,
+            placeLine(collection.place),
+            days.length > 0 &&
+              `${days.length} ${days.length === 1 ? "day" : "days"}`,
+            days.length > 0 &&
+              `${formatPhotoDate(days[0])}${days.length > 1 ? ` — ${formatPhotoDate(days.at(-1))}` : ""}`,
+          ]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
         {collection.sets && collection.sets.length > 1 && (
-          <nav className="photo-set-links" aria-label="Sets in this collection">
+          <nav className="ph-tabs ph-mono" aria-label="Sets in this trip">
             {collection.sets.map((set) => (
               <Link key={set.slug} href={`/photos/sets/${set.slug}`}>
-                {set.title} <ArrowRight size={13} />
+                {set.title}
               </Link>
             ))}
           </nav>
         )}
       </header>
-      <PhotoGrid photos={collection.photos} mode="essay" />
+      <PhotoGallery photos={collection.photos} mode="essay" />
       {next && (
-        <Link href={`/photos/sets/${next.slug}`} className="photo-next-set">
-          <span>
-            Next collection
-            <br />
-            <strong>{next.title}</strong>
-          </span>
-          <ArrowRight size={24} />
+        <Link href={`/photos/sets/${next.slug}`} className="ph-next-set">
+          <span className="ph-mono">Next trip →</span>
+          <strong>{next.title}</strong>
         </Link>
       )}
     </main>

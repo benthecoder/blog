@@ -96,6 +96,7 @@ export function groupPhotoObjects(
       slug,
       title: existing?.title ?? titleFromFolder(group.name),
       description: existing?.description,
+      place: existing?.place,
       cover: group.photos.some((photo) => photo.id === existing?.cover)
         ? existing!.cover
         : group.photos[0].id,

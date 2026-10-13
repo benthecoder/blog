@@ -37,8 +37,8 @@ A separate Vercel project is only needed for a separate app.
 
 Upload JPEG, PNG, WebP, or AVIF photos to the Cloudflare R2 `photos` bucket.
 Its existing public URL is `https://pub-e85be102871845218dcda1cc49c78508.r2.dev`.
-Group objects by place or trip: `san-francisco/chinatown/IMG_001.jpg` creates
-one San Francisco collection and a Chinatown photoset. Root images go into
+Folders are trips: `penang-2025/day-2/IMG_001.jpg` creates a Penang 2025 trip
+and a Day 2 set. Root images go into
 Moments. Use distinct folder names that remain distinct after lowercasing and
 replacing spaces with hyphens.
 
@@ -53,6 +53,13 @@ The Vercel runtime needs the existing `R2_ENDPOINT`, `R2_ACCESS_KEY_ID`, and
 Optional `PHOTOS_R2_BUCKET` and `PHOTOS_PUBLIC_URL` override the bucket and image
 base URL. If changing the public URL, also allow its hostname in
 `next.config.ts` images. Credentials stay on the server.
+
+Places are tags, separate from folders: `"Spot, City, Country"`, most specific
+first, one to three parts (`"Malaysia"`, `"Penang, Malaysia"`,
+`"Chinatown, San Francisco, United States"`). Set a trip's default place with
+`place` on its collection in `public/data/photo-collections.json`, and override a
+photo with `place` on its entry (matched by id; `""` leaves it unplaced). The
+`/photos/places` pages group by country, then city.
 
 Camera, lens, exposure, capture date, dimensions, and blur previews are read from
 each new image once and cached by object version. Export JPEGs with EXIF to keep

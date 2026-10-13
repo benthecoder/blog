@@ -13,6 +13,8 @@ export interface StreamPhoto {
   focalLength?: number;
   date?: string;
   location?: string;
+  // "Spot, City, Country", most specific first.
+  place?: string;
   journal?: string;
   blurDataURL?: string;
   addedAt?: string;
@@ -22,6 +24,7 @@ export interface PhotoCollection {
   slug: string;
   title: string;
   description?: string;
+  place?: string;
   cover: string;
   photos: StreamPhoto[];
   sets?: { slug: string; title: string; photos: StreamPhoto[] }[];

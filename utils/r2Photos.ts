@@ -125,6 +125,7 @@ export async function buildLivePhotoCollections(
             "lens",
             "date",
             "location",
+            "place",
             "journal",
             "aperture",
             "shutter",

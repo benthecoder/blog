@@ -11,6 +11,7 @@ import {
   type PhotoObject,
 } from "@/utils/r2Photos";
 import { photoCollections } from "@/config/photoCollections";
+import { applyCollectionPlaces } from "@/utils/photoPlaces";
 import type { PhotoCollection, StreamPhoto } from "@/types/photostream";
 
 const listCached = unstable_cache(
@@ -55,10 +56,12 @@ export const getPhotoCollections = cache(
       "https://pub-e85be102871845218dcda1cc49c78508.r2.dev";
     const endpoint = process.env.R2_ENDPOINT || "";
     const objects = await listCached(bucket, endpoint);
-    return buildLivePhotoCollections(
-      objects,
-      (object) => readCached(bucket, publicUrl, endpoint, object),
-      photoCollections
+    return applyCollectionPlaces(
+      await buildLivePhotoCollections(
+        objects,
+        (object) => readCached(bucket, publicUrl, endpoint, object),
+        photoCollections
+      )
     );
   }
 );
@@ -85,6 +88,7 @@ export const getPhotosets = cache(async () =>
           collection.photos.find((item) => item.id === photo.id) ?? photo
       ),
       cover: set.photos[0]?.id,
+      place: collection.place,
       description: undefined,
       parentSlug: collection.slug,
       sets: undefined,
