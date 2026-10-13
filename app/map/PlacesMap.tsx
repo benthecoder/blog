@@ -85,6 +85,15 @@ const fitPadding = () =>
     ? { top: 90, bottom: 40, left: 40, right: 40 }
     : { top: 80, bottom: 80, left: 80, right: 80 };
 
+/** Map ink comes from the explorer's own CSS variables (map.css), which are
+ * always defined; see the note there. */
+const INK_VARS = {
+  accent: "--map-accent",
+  muted: "--map-muted",
+  primary: "--map-ink",
+  surface: "--map-paper",
+} as const;
+
 export default function PlacesMap({
   places,
   selected,
@@ -114,11 +123,6 @@ export default function PlacesMap({
   });
   const [ready, setReady] = useState<MapInstance | null>(null);
   const [error, setError] = useState(false);
-  const [position, setPosition] = useState({
-    latitude: 37.796,
-    longitude: -122.406,
-    zoom: 15,
-  });
   useEffect(() => {
     current.current = {
       places,
@@ -151,15 +155,6 @@ export default function PlacesMap({
     instance.on("style.load", () => {
       if (styleDark.current) liftDarkBasemap(instance);
     });
-    const updatePosition = () => {
-      const center = instance.getCenter();
-      setPosition({
-        latitude: center.lat,
-        longitude: center.lng,
-        zoom: instance.getZoom(),
-      });
-    };
-    instance.on("move", updatePosition);
     instance.on("load", () => {
       if (map.current === instance) setReady(instance);
     });
@@ -192,7 +187,7 @@ export default function PlacesMap({
         source: "places",
         filter: ["has", "point_count"],
         paint: {
-          "circle-radius": ["step", ["get", "point_count"], 13, 10, 17, 30, 21],
+          "circle-radius": ["step", ["get", "point_count"], 10, 10, 13, 30, 16],
           "circle-stroke-width": 2,
         },
       });
@@ -426,11 +421,11 @@ export default function PlacesMap({
         ))}
       </div>
       <div ref={inkSwatches} hidden aria-hidden="true">
-        {["accent", "muted", "primary", "surface"].map((name) => (
+        {Object.entries(INK_VARS).map(([name, cssVar]) => (
           <span
             key={name}
             data-ink={name}
-            style={{ color: `var(--color-${name})` }}
+            style={{ color: `var(${cssVar})` }}
           />
         ))}
       </div>
@@ -440,13 +435,6 @@ export default function PlacesMap({
         role="region"
         aria-label="Map of saved places"
       />
-      <output
-        className="map-position"
-        aria-label="Map center latitude, longitude and zoom"
-      >
-        {position.latitude.toFixed(4)} / {position.longitude.toFixed(4)} · Z
-        {position.zoom.toFixed(1)}
-      </output>
       <div className="map-tools">
         <button
           aria-label="Zoom in"
