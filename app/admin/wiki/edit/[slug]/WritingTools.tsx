@@ -7,7 +7,7 @@ import type { WikiTemplate } from "@/types/wiki";
 import type { WritingCheck } from "@/utils/content/writingChecks";
 
 const linkButton =
-  "text-left text-ink dark:text-chalk underline underline-offset-4 disabled:opacity-50";
+  "text-left text-accent underline underline-offset-4 disabled:opacity-50";
 
 /**
  * Local writing checks for the wiki editor. Each broken [[link]] offers the
@@ -107,38 +107,29 @@ export default function WritingTools({
   };
 
   return (
-    <div
-      id="wiki-writing-tools"
-      className="mb-6 border-b border-rule dark:border-night-rule pb-4"
-    >
+    <div id="wiki-writing-tools" className="mb-6 border-b border-line pb-4">
       <button
         type="button"
         disabled={pending || saving}
         onClick={() => void check()}
-        className="min-h-11 px-3 text-sm text-ink dark:text-chalk underline underline-offset-4 disabled:opacity-50"
+        className="min-h-11 px-3 text-sm text-accent underline underline-offset-4 disabled:opacity-50"
       >
         {pending ? "Checking…" : "Check writing"}
       </button>
       {error && (
-        <p
-          role="alert"
-          className="mt-4 text-sm text-ink-strong dark:text-chalk-strong"
-        >
+        <p role="alert" className="mt-4 text-sm text-primary">
           {error}
         </p>
       )}
       {note && (
-        <p
-          role="status"
-          className="mt-4 text-sm text-ink-strong dark:text-chalk-strong"
-        >
+        <p role="status" className="mt-4 text-sm text-primary">
           {note}
         </p>
       )}
       {review && (
         <section
           aria-label="Writing checks"
-          className="mt-4 text-sm text-ink-strong dark:text-chalk-strong"
+          className="mt-4 text-sm text-primary"
         >
           {review.context !== context ? (
             <p role="status">Changed since the check. Run it again.</p>

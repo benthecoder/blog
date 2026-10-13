@@ -67,13 +67,11 @@ const EssayPage = async ({ params }: { params: Params }) => {
       </div>
 
       <header className="mb-10">
-        <h1 className="text-2xl font-bold lowercase leading-tight tracking-tight text-balance text-ink-strong dark:text-chalk-strong md:text-4xl">
+        <h1 className="text-2xl font-bold lowercase leading-tight tracking-tight text-balance text-primary md:text-4xl">
           {essay.title}
         </h1>
         {essay.subtitle && (
-          <p className="mt-3 text-base text-ink-soft dark:text-chalk-soft">
-            {essay.subtitle}
-          </p>
+          <p className="mt-3 text-base text-secondary">{essay.subtitle}</p>
         )}
         <p className="mt-3 text-xs text-ink-soft/80 dark:text-chalk-muted">
           {meta}

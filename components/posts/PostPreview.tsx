@@ -7,12 +7,8 @@ const PostPreview = (props: PostMetadata) => {
       slug={props.slug}
       className="group relative flex justify-between items-center cursor-crosshair text-sm md:text-base"
     >
-      <p className="text-ink dark:text-chalk group-hover:underline">
-        {props.title}
-      </p>
-      <p className="text-ink-muted dark:text-chalk-muted shrink-0 ml-4">
-        {props.date}
-      </p>
+      <p className="text-accent group-hover:underline">{props.title}</p>
+      <p className="text-muted shrink-0 ml-4">{props.date}</p>
     </PostLinkPreview>
   );
 };

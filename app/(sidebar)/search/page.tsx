@@ -110,14 +110,14 @@ function SearchContent() {
               setQuery(e.target.value);
             }}
             placeholder="search..."
-            className="w-full px-4 py-3 bg-paper dark:bg-night border-2 border-rule dark:border-night-raised focus:border-ink dark:focus:border-chalk-soft transition-colors text-ink-strong dark:text-chalk-strong text-lg font-medium placeholder-ink-strong/40 dark:placeholder-chalk-strong/40 outline-hidden selection:bg-ink selection:text-white dark:selection:bg-chalk-soft dark:selection:text-night"
+            className="w-full px-4 py-3 bg-surface border-2 border-rule dark:border-night-raised focus:border-ink dark:focus:border-chalk-soft transition-colors text-primary text-lg font-medium placeholder-primary/40 outline-hidden selection:bg-ink selection:text-white dark:selection:bg-chalk-soft dark:selection:text-night"
           />
           {query && (
             <button
               type="button"
               aria-label="Clear search"
               onClick={clearQuery}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-strong/40 dark:text-chalk-strong/40 hover:text-ink dark:hover:text-chalk-soft transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/40 hover:text-ink dark:hover:text-chalk-soft transition-colors"
             >
               ✕
             </button>
@@ -150,7 +150,7 @@ function SearchContent() {
       {results.length > 0 ? (
         <div>
           <div className="mb-4 pb-2 border-b border-rule dark:border-night-raised">
-            <p className="text-xs text-ink-strong/60 dark:text-chalk-strong/60 tracking-wide">
+            <p className="text-xs text-primary/60 tracking-wide">
               {results.length} RESULTS
             </p>
           </div>
@@ -170,7 +170,7 @@ function SearchContent() {
         hasSearched &&
         query && (
           <div className="text-center py-12 border border-rule dark:border-night-raised">
-            <p className="text-ink-strong/70 dark:text-chalk-strong/70 mb-2">
+            <p className="text-primary/70 mb-2">
               No results found for &quot;{query}&quot;
             </p>
             {selectedChunkType && (

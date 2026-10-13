@@ -9,14 +9,12 @@ export const dynamic = "force-dynamic";
 export default function AdminEssaysPage() {
   const essays = getEssayAdminList();
   return (
-    <div className="min-h-screen px-6 py-10 bg-paper dark:bg-night">
+    <div className="min-h-screen px-6 py-10 bg-surface">
       <div className="mx-auto max-w-3xl">
         <AdminNavigation section="essays" />
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-2xl text-ink-strong dark:text-chalk-strong">
-              Essays
-            </h1>
+            <h1 className="text-2xl text-primary">Essays</h1>
             <p className="mt-2 text-sm text-ink-soft dark:text-chalk-muted">
               Long-form writing. Drafts stay local until published.
             </p>
@@ -24,11 +22,11 @@ export default function AdminEssaysPage() {
           <NewEssayForm existing={essays.map((essay) => essay.slug)} />
         </div>
         {essays.length === 0 ? (
-          <div className="border border-rule dark:border-night-rule rounded-xs p-8 text-center text-ink-soft dark:text-chalk-muted">
+          <div className="border border-line rounded-xs p-8 text-center text-ink-soft dark:text-chalk-muted">
             <p>No essays yet.</p>
           </div>
         ) : (
-          <ul className="divide-y divide-rule dark:divide-night-rule">
+          <ul className="divide-y divide-line">
             {essays.map((essay) => (
               <li key={`${essay.isDraft ? "draft" : "live"}-${essay.slug}`}>
                 <Link
@@ -39,7 +37,7 @@ export default function AdminEssaysPage() {
                     {essay.isDraft ? "draft" : "live"}
                     {essay.date && ` · ${formatEssayDate(essay.date)}`}
                   </span>
-                  <h2 className="mt-1 text-lg lowercase text-ink-strong dark:text-chalk-strong">
+                  <h2 className="mt-1 text-lg lowercase text-primary">
                     {essay.title}
                   </h2>
                   {essay.subtitle && (

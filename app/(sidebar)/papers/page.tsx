@@ -27,10 +27,8 @@ const PapersPage = () => {
 
   return (
     <div className="mx-auto max-w-[65ch] py-12">
-      <h1 className="mb-2 text-2xl font-bold lowercase text-ink-strong dark:text-chalk-strong">
-        papers
-      </h1>
-      <p className="mb-10 text-sm text-ink-soft dark:text-chalk-soft">
+      <h1 className="mb-2 text-2xl font-bold lowercase text-primary">papers</h1>
+      <p className="mb-10 text-sm text-secondary">
         papers i&apos;ve read, with my notes. each links into the{" "}
         <Link href="/wiki" className="underline underline-offset-2">
           wiki
@@ -38,17 +36,12 @@ const PapersPage = () => {
         .
       </p>
       {groups.length === 0 ? (
-        <p className="text-sm text-ink-strong/40 dark:text-chalk-strong/40">
-          Nothing here yet.
-        </p>
+        <p className="text-sm text-primary/60">Nothing here yet.</p>
       ) : (
         <div className="space-y-12">
           {groups.map((group) => (
             <section key={group.slug} aria-labelledby={`topic-${group.slug}`}>
-              <h2
-                id={`topic-${group.slug}`}
-                className="mb-4 text-[10px] font-mono uppercase tracking-widest text-ink-strong/40 dark:text-chalk-strong/40"
-              >
+              <h2 id={`topic-${group.slug}`} className="eyebrow mb-4 font-mono">
                 {group.label} · {group.papers.length}
               </h2>
               <ul className="space-y-6">
@@ -67,7 +60,7 @@ const PapersPage = () => {
                           {paper.title}
                         </h3>
                         {byline && (
-                          <p className="mt-0.5 text-sm text-ink-soft dark:text-chalk-soft">
+                          <p className="mt-0.5 text-sm text-secondary">
                             {byline}
                           </p>
                         )}

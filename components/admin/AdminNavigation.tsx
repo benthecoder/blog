@@ -8,7 +8,7 @@ export default function AdminNavigation({
   return (
     <nav
       aria-label="Admin sections"
-      className="mb-6 flex gap-6 border-b border-rule dark:border-night-rule pb-3 text-sm"
+      className="mb-6 flex gap-6 border-b border-line pb-3 text-sm"
     >
       {(
         [
@@ -23,8 +23,8 @@ export default function AdminNavigation({
           aria-current={section === id ? "page" : undefined}
           className={
             section === id
-              ? "font-medium text-ink-strong dark:text-chalk-strong"
-              : "text-ink-soft dark:text-chalk-muted hover:text-ink-strong dark:hover:text-chalk-strong"
+              ? "font-medium text-primary"
+              : "text-ink-soft dark:text-chalk-muted hover:text-primary"
           }
         >
           {label}

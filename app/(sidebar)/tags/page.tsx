@@ -10,7 +10,7 @@ const TagPage = () => {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
       <div className="mb-4">
-        <p className="text-[10px] text-ink-strong/40 dark:text-chalk-strong/40 tracking-widest font-mono">
+        <p className="text-[10px] text-primary/40 tracking-widest font-mono">
           {sortedTags.length} TAGS
         </p>
       </div>
@@ -19,10 +19,10 @@ const TagPage = () => {
         {sortedTags.map(([tag, count]) => (
           <Link href={`/tags/${tag}`} key={tag}>
             <div className="group border border-rule dark:border-night-raised hover:bg-ink/5 dark:hover:bg-chalk-soft/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors">
-              <span className="text-xs text-ink-strong dark:text-chalk-strong group-hover:text-ink dark:group-hover:text-chalk-soft transition-colors truncate">
+              <span className="text-xs text-primary group-hover:text-ink dark:group-hover:text-chalk-soft transition-colors truncate">
                 {tag}
               </span>
-              <span className="text-[10px] text-ink-strong/30 dark:text-chalk-strong/30 font-mono tabular-nums shrink-0">
+              <span className="text-[10px] text-primary/30 font-mono tabular-nums shrink-0">
                 {count}
               </span>
             </div>

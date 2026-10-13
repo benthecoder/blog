@@ -15,12 +15,10 @@ export default function SearchError({
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-      <p className="text-sm text-ink/60 dark:text-chalk/60">
-        search unavailable
-      </p>
+      <p className="text-sm text-accent/60">search unavailable</p>
       <button
         onClick={reset}
-        className="mt-4 text-xs text-ink dark:text-chalk opacity-60 hover:opacity-100 transition-opacity"
+        className="mt-4 text-xs text-accent opacity-60 hover:opacity-100 transition-opacity"
       >
         try again
       </button>

@@ -78,7 +78,7 @@ export default function PostImage({
         aria-label={alt ? `Expand image: ${alt}` : "Expand image"}
         // outline-none kills the ring a mouse click would leave behind;
         // focus-visible still shows one for keyboard users, who need it.
-        className="photo-frame block w-full cursor-zoom-in border-0 outline-none focus-visible:ring-2 focus-visible:ring-ink/40 dark:focus-visible:ring-chalk/40"
+        className="photo-frame block w-full cursor-zoom-in border-0 outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
       >
         {/* Every plate is square regardless of the source aspect, so a run of
             photos hangs on a consistent line. The full frame is one click

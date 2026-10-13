@@ -36,9 +36,8 @@ function YearNav({
   navigationPath: string;
 }) {
   const sep = navigationPath.includes("?") ? "&" : "?";
-  const linkCls =
-    "text-sm text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk transition-colors";
-  const disabledCls = "text-sm text-ink-muted/30 dark:text-chalk-muted/30";
+  const linkCls = "text-sm text-muted hover:text-accent transition-colors";
+  const disabledCls = "text-sm text-muted/30";
 
   return (
     <div className="flex items-center justify-between mb-4">
@@ -52,7 +51,7 @@ function YearNav({
       ) : (
         <span className={disabledCls}>← {year - 1}</span>
       )}
-      <h1 className="text-sm text-ink dark:text-chalk">{year}</h1>
+      <h1 className="text-sm text-accent">{year}</h1>
       {year < maxYear ? (
         <Link
           href={`${navigationPath}${sep}year=${year + 1}&month=0`}
@@ -84,7 +83,7 @@ function DayCell({
     <div
       className={`w-(--hm-cell) h-(--hm-cell) rounded-xs ${wordCountColor(day.posts)} ${
         day.posts.length > 0
-          ? "cursor-pointer hover:ring-1 hover:ring-ink dark:hover:ring-chalk"
+          ? "cursor-pointer hover:ring-1 hover:ring-accent"
           : ""
       } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-[box-shadow] duration-150`}
       onMouseEnter={() => day.posts.length > 0 && onHover(day)}
@@ -98,7 +97,7 @@ function DayCell({
 function HoverInfo({ day }: { day: DayData }) {
   return (
     <div className="text-xs">
-      <span className="text-ink-muted dark:text-chalk-muted">
+      <span className="text-muted">
         {day.date.toLocaleDateString("en-US", {
           month: "short",
           day: "numeric",
@@ -110,16 +109,13 @@ function HoverInfo({ day }: { day: DayData }) {
           {idx > 0 && ", "}
           <Link
             href={`/posts/${post.slug}`}
-            className="text-ink dark:text-chalk hover:underline"
+            className="text-accent hover:underline"
           >
             {post.title}
           </Link>
         </span>
       ))}
-      <span className="text-ink-muted dark:text-chalk-muted">
-        {" "}
-        · {totalWordCount(day.posts)} words
-      </span>
+      <span className="text-muted"> · {totalWordCount(day.posts)} words</span>
     </div>
   );
 }
@@ -130,15 +126,11 @@ function Legend() {
     <div className="flex items-center justify-between text-xs">
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
-          <span className="text-ink-muted dark:text-chalk-muted text-[9px] md:text-[10px]">
-            short
-          </span>
-          <div className={`${cell} bg-ink/30 dark:bg-chalk/30`} />
-          <div className={`${cell} bg-ink/60 dark:bg-chalk/60`} />
-          <div className={`${cell} bg-ink/90 dark:bg-chalk/90`} />
-          <span className="text-ink-muted dark:text-chalk-muted text-[9px] md:text-[10px]">
-            long
-          </span>
+          <span className="text-muted text-[9px] md:text-[10px]">short</span>
+          <div className={`${cell} bg-accent/30`} />
+          <div className={`${cell} bg-accent/60`} />
+          <div className={`${cell} bg-accent/90`} />
+          <span className="text-muted text-[9px] md:text-[10px]">long</span>
         </div>
       </div>
     </div>
@@ -203,7 +195,7 @@ const Heatmap = ({
           {weeks.map((_, weekIndex) => (
             <div
               key={`month-${weekIndex}`}
-              className="text-[8px] md:text-[10px] text-ink-muted/60 dark:text-chalk-muted/60 h-[12px] md:h-[14px] w-[9px] md:w-auto overflow-visible whitespace-nowrap"
+              className="text-[8px] md:text-[10px] text-muted/60 h-[12px] md:h-[14px] w-[9px] md:w-auto overflow-visible whitespace-nowrap"
             >
               {monthLabels.get(weekIndex) || ""}
             </div>
@@ -212,7 +204,7 @@ const Heatmap = ({
           {/* Rows 1-7: Day labels + day cells */}
           {DAY_LABELS.map((label, dayOfWeek) => (
             <Fragment key={dayOfWeek}>
-              <div className="text-[8px] md:text-[10px] leading-none text-ink-muted/60 dark:text-chalk-muted/60 flex items-center pr-0.5 md:pr-1 h-(--hm-cell)">
+              <div className="text-[8px] md:text-[10px] leading-none text-muted/60 flex items-center pr-0.5 md:pr-1 h-(--hm-cell)">
                 {label}
               </div>
               {weeks.map((week, weekIndex) => {

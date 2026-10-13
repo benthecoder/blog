@@ -20,23 +20,19 @@ export default function Loader({ text, size = "md" }: LoaderProps) {
     <div className="flex flex-col items-center justify-center gap-3">
       <div className={`flex items-center ${gapClasses[size]}`}>
         <div
-          className={`${sizeClasses[size]} rounded-[1px] bg-ink dark:bg-chalk animate-pulse`}
+          className={`${sizeClasses[size]} rounded-[1px] bg-accent animate-pulse`}
           style={{ animationDelay: "0ms", animationDuration: "1400ms" }}
         />
         <div
-          className={`${sizeClasses[size]} rounded-[1px] bg-ink dark:bg-chalk animate-pulse`}
+          className={`${sizeClasses[size]} rounded-[1px] bg-accent animate-pulse`}
           style={{ animationDelay: "200ms", animationDuration: "1400ms" }}
         />
         <div
-          className={`${sizeClasses[size]} rounded-[1px] bg-ink dark:bg-chalk animate-pulse`}
+          className={`${sizeClasses[size]} rounded-[1px] bg-accent animate-pulse`}
           style={{ animationDelay: "400ms", animationDuration: "1400ms" }}
         />
       </div>
-      {text && (
-        <p className="text-xs text-ink/50 dark:text-chalk/50 font-light">
-          {text}
-        </p>
-      )}
+      {text && <p className="text-xs text-accent/50 font-light">{text}</p>}
     </div>
   );
 }

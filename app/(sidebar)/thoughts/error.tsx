@@ -15,12 +15,10 @@ export default function ThoughtsError({
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12 text-center">
-      <p className="text-sm text-ink/60 dark:text-chalk/60">
-        couldn&apos;t load thoughts
-      </p>
+      <p className="text-sm text-accent/60">couldn&apos;t load thoughts</p>
       <button
         onClick={reset}
-        className="mt-4 text-xs text-ink dark:text-chalk opacity-60 hover:opacity-100 transition-opacity"
+        className="mt-4 text-xs text-accent opacity-60 hover:opacity-100 transition-opacity"
       >
         try again
       </button>

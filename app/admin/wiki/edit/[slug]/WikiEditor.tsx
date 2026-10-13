@@ -43,7 +43,7 @@ const PAPER_INPUTS: { key: keyof PaperFields; label: string; hint?: string }[] =
   ];
 
 const fieldClass =
-  "w-full rounded-xs border border-rule dark:border-night-rule bg-paper dark:bg-night px-3 py-2 text-sm text-ink-strong dark:text-chalk-strong focus:outline-none focus:ring-1 focus:ring-ink dark:focus:ring-chalk disabled:opacity-60";
+  "w-full rounded-xs border border-line bg-surface px-3 py-2 text-sm text-primary focus:outline-none focus:ring-1 focus:ring-accent disabled:opacity-60";
 
 const wikiEditorExtensions = [
   ...markdownEditorExtensions,
@@ -172,9 +172,9 @@ export default function WikiEditor({
   }, [dirty]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-paper dark:bg-night">
+    <div className="flex min-h-screen flex-col bg-surface">
       <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-4 py-6 md:px-8">
-        <header className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-rule dark:border-night-rule pb-4">
+        <header className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
           <Link
             href="/admin/wiki"
             className="text-sm text-ink-soft dark:text-chalk-muted hover:underline"
@@ -217,7 +217,7 @@ export default function WikiEditor({
               disabled={
                 saving || !form.title.trim() || !form.slug || (!dirty && !isNew)
               }
-              className="rounded-xs bg-ink dark:bg-chalk text-paper dark:text-night px-4 py-2 text-sm disabled:opacity-40"
+              className="rounded-xs bg-accent text-surface px-4 py-2 text-sm disabled:opacity-40"
             >
               {saving ? "Saving…" : "Save"}
             </button>
@@ -242,7 +242,7 @@ export default function WikiEditor({
           />
         )}
 
-        <h1 className="mb-4 text-xl text-ink-strong dark:text-chalk-strong">
+        <h1 className="mb-4 text-xl text-primary">
           {isNew ? "New wiki page" : "Edit wiki page"}
         </h1>
         <p className="mb-4 text-xs text-ink-soft dark:text-chalk-muted">
@@ -252,7 +252,7 @@ export default function WikiEditor({
         {message && (
           <p
             role={failed ? "alert" : "status"}
-            className="mb-4 rounded-xs border border-rule dark:border-night-rule p-3 text-sm text-ink-strong dark:text-chalk-strong"
+            className="mb-4 rounded-xs border border-line p-3 text-sm text-primary"
           >
             {message}
           </p>
@@ -263,7 +263,7 @@ export default function WikiEditor({
             <p className="mb-2 text-xs text-ink-soft dark:text-chalk-muted">
               {form.category || "uncategorized"}
             </p>
-            <h2 className="text-2xl font-bold lowercase text-ink-strong dark:text-chalk-strong">
+            <h2 className="text-2xl font-bold lowercase text-primary">
               {form.title || "Untitled"}
             </h2>
             {form.description && (
@@ -383,7 +383,7 @@ export default function WikiEditor({
             {showPaper && (
               <fieldset
                 disabled={saving}
-                className="mb-6 grid gap-4 border-t border-rule dark:border-night-rule pt-4 sm:grid-cols-2"
+                className="mb-6 grid gap-4 border-t border-line pt-4 sm:grid-cols-2"
               >
                 <legend className="text-xs text-ink-soft dark:text-chalk-muted">
                   Paper · shown on /papers
@@ -417,7 +417,7 @@ export default function WikiEditor({
             >
               Content · connect pages with [[Title]] or [[Title|label]]
             </p>
-            <div className="min-h-[45vh] flex-1 border border-rule dark:border-night-rule rounded-xs">
+            <div className="min-h-[45vh] flex-1 border border-line rounded-xs">
               <CodeMirror
                 ref={editorRef}
                 id="wiki-content"
@@ -430,7 +430,7 @@ export default function WikiEditor({
                 basicSetup={markdownEditorSetup}
                 theme="none"
                 placeholder="Write your notes here…"
-                className="h-full font-mono text-base text-ink-strong dark:text-chalk-strong"
+                className="h-full font-mono text-base text-primary"
               />
             </div>
           </>

@@ -22,7 +22,7 @@ export default function SearchResult({ result, query }: SearchResultProps) {
     >
       <div className="space-y-2">
         <div className="flex items-center justify-between gap-3">
-          <h3 className="font-medium text-ink-strong dark:text-chalk-strong group-hover:text-ink dark:group-hover:text-chalk-soft transition-colors">
+          <h3 className="font-medium text-primary group-hover:text-ink dark:group-hover:text-chalk-soft transition-colors">
             {result.post_title}
           </h3>
           {result.score_type !== "keyword" && (
@@ -37,7 +37,7 @@ export default function SearchResult({ result, query }: SearchResultProps) {
             <code>{snippet}</code>
           </pre>
         ) : (
-          <p className="text-ink-strong/70 dark:text-chalk-strong/70 mt-2 text-sm leading-relaxed">
+          <p className="text-primary/70 mt-2 text-sm leading-relaxed">
             {highlightText(snippet, keywords)}
           </p>
         )}
@@ -47,15 +47,13 @@ export default function SearchResult({ result, query }: SearchResultProps) {
           {result.section && (
             <>
               <span>•</span>
-              <span className="text-ink-strong/60 dark:text-chalk-strong/60 italic">
-                {result.section}
-              </span>
+              <span className="text-primary/60 italic">{result.section}</span>
             </>
           )}
           {result.language && (
             <>
               <span>•</span>
-              <span className="text-ink-strong/60 dark:text-chalk-strong/60 font-mono text-[10px]">
+              <span className="text-primary/60 font-mono text-[10px]">
                 {result.language}
               </span>
             </>
@@ -63,7 +61,7 @@ export default function SearchResult({ result, query }: SearchResultProps) {
           {result.tags && result.tags.length > 3 && (
             <>
               <span>•</span>
-              <span className="text-ink-strong/50 dark:text-chalk-strong/50">
+              <span className="text-primary/50">
                 +{result.tags.length - 3} tags
               </span>
             </>
