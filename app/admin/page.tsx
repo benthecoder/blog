@@ -7,7 +7,7 @@ export default function AdminPage() {
   const posts = getPostMetadata({ includeDrafts: true });
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-8 bg-paper dark:bg-night">
+    <div className="min-h-screen flex items-center justify-center p-8 bg-surface">
       <div className="w-full max-w-6xl">
         <AdminNavigation section="posts" />
         <Suspense fallback={null}>

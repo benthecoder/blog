@@ -474,7 +474,7 @@ export default function Gallery({ images }: GalleryProps) {
       <div className="sticky top-0 z-10 flex justify-start px-2 py-2 pointer-events-none">
         <button
           onClick={toggleMode}
-          className="pointer-events-auto p-2 rounded-full bg-paper/80 dark:bg-night/80 backdrop-blur-xs text-ink/60 dark:text-chalk/60 hover:text-ink dark:hover:text-chalk active:scale-95 transition-[color,transform] duration-150"
+          className="pointer-events-auto p-2 rounded-full bg-surface/80 backdrop-blur-xs text-accent/60 hover:text-accent active:scale-95 transition-[color,transform] duration-150"
           aria-label={
             mode === "grid"
               ? "Switch to aspect ratio grid"
@@ -488,7 +488,7 @@ export default function Gallery({ images }: GalleryProps) {
 
       {gridBody}
 
-      <p className="text-center text-[10px] text-ink/30 dark:text-chalk/30 py-6">
+      <p className="text-center text-[10px] text-accent/30 py-6">
         {images.length} photos · pinch to zoom
       </p>
 

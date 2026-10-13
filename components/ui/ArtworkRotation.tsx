@@ -133,10 +133,7 @@ export default function ArtworkRotation() {
           </Link>
 
           <div className="flex flex-col items-center gap-2 pb-2">
-            <Link
-              href="/start"
-              className="text-sm text-ink dark:text-chalk hover:underline"
-            >
+            <Link href="/start" className="text-sm text-accent hover:underline">
               start here
             </Link>
           </div>

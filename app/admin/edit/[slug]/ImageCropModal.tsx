@@ -123,7 +123,7 @@ export function ImageCropModal({
     <dialog
       ref={dialogRef}
       aria-labelledby={titleId}
-      className="m-auto bg-paper dark:bg-night border border-rule dark:border-night-rule p-6 w-[calc(100vw-2rem)] max-w-2xl max-h-[calc(100dvh-2rem)] overflow-y-auto admin-scrollbar rounded-xs backdrop:bg-black/40"
+      className="m-auto bg-surface border border-line p-6 w-[calc(100vw-2rem)] max-w-2xl max-h-[calc(100dvh-2rem)] overflow-y-auto admin-scrollbar rounded-xs backdrop:bg-black/40"
       onCancel={(event) => {
         event.preventDefault();
         if (!disabled) onCancel();
@@ -131,7 +131,7 @@ export function ImageCropModal({
     >
       <h2
         id={titleId}
-        className="text-lg font-light mb-4 text-ink dark:text-chalk tracking-wide"
+        className="text-lg font-light mb-4 text-accent tracking-wide"
       >
         crop image
       </h2>
@@ -172,10 +172,10 @@ export function ImageCropModal({
             type="button"
             aria-pressed={aspect === value}
             onClick={() => changeAspect(value)}
-            className={`px-2.5 py-1 text-xs rounded-xs border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:focus-visible:outline-chalk ${
+            className={`px-2.5 py-1 text-xs rounded-xs border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
               aspect === value
-                ? "border-ink dark:border-chalk text-ink dark:text-chalk"
-                : "border-rule dark:border-night-rule text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
+                ? "border-accent text-accent"
+                : "border-line text-muted hover:text-accent"
             }`}
           >
             {label}
@@ -193,11 +193,11 @@ export function ImageCropModal({
         aria-label="Image name"
         placeholder="image-name"
         ref={nameRef}
-        className="w-full px-3 py-2 mb-6 border border-rule dark:border-night-rule bg-transparent text-ink dark:text-chalk focus:outline-hidden focus:border-ink dark:focus:border-chalk rounded-xs"
+        className="w-full px-3 py-2 mb-6 border border-line bg-transparent text-accent focus:outline-hidden focus:border-accent rounded-xs"
       />
 
       {error && (
-        <p role="alert" className="mb-4 text-sm text-ink dark:text-chalk">
+        <p role="alert" className="mb-4 text-sm text-accent">
           {error}
         </p>
       )}
@@ -205,14 +205,14 @@ export function ImageCropModal({
         <button
           onClick={onCancel}
           disabled={disabled}
-          className="min-h-11 px-4 py-1.5 text-sm text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 transition-colors"
+          className="min-h-11 px-4 py-1.5 text-sm text-ink-soft dark:text-chalk-muted hover:text-accent disabled:opacity-30 transition-colors"
         >
           cancel
         </button>
         <button
           onClick={confirm}
           disabled={disabled || !completed?.width}
-          className="min-h-11 px-4 py-1.5 text-sm bg-ink dark:bg-chalk text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
+          className="min-h-11 px-4 py-1.5 text-sm bg-accent text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
         >
           {disabled ? "uploading…" : "upload"}
         </button>

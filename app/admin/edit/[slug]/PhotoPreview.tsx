@@ -39,13 +39,13 @@ export function PhotoPreview({
   const ready = loadedId === photo.id;
   const failed = failedId === photo.id;
   const quietButton =
-    "min-h-11 min-w-11 inline-flex items-center justify-center text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:focus-visible:outline-chalk";
+    "min-h-11 min-w-11 inline-flex items-center justify-center text-ink-soft dark:text-chalk-muted hover:text-accent disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 
   return (
     <dialog
       ref={dialogRef}
       aria-labelledby={titleId}
-      className="m-auto w-[calc(100vw-2rem)] max-w-4xl max-h-[calc(100dvh-2rem)] p-0 border border-rule dark:border-night-rule bg-paper dark:bg-night text-ink dark:text-chalk backdrop:bg-black/50"
+      className="m-auto w-[calc(100vw-2rem)] max-w-4xl max-h-[calc(100dvh-2rem)] p-0 border border-line bg-surface text-accent backdrop:bg-black/50"
       onCancel={(event) => {
         event.preventDefault();
         if (!busy) onClose();
@@ -65,7 +65,7 @@ export function PhotoPreview({
         }
       }}
     >
-      <header className="flex items-center justify-between gap-4 px-4 border-b border-rule dark:border-night-rule">
+      <header className="flex items-center justify-between gap-4 px-4 border-b border-line">
         <h2 id={titleId} className="text-sm truncate">
           {photo.name}
         </h2>
@@ -135,7 +135,7 @@ export function PhotoPreview({
         <button
           onClick={onInsert}
           disabled={busy || !ready}
-          className="min-h-11 px-4 text-sm bg-ink text-paper dark:bg-chalk dark:text-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+          className="min-h-11 px-4 text-sm bg-ink text-paper dark:bg-chalk dark:text-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           {busy ? "opening…" : "insert"}
         </button>

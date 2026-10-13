@@ -17,7 +17,7 @@ export function ImageStrip({
   onDelete: (fileName: string) => void;
 }) {
   return (
-    <div className="border-b border-rule dark:border-night-rule px-6 py-3 bg-paper dark:bg-night-raised/50">
+    <div className="border-b border-line px-6 py-3 bg-paper dark:bg-night-raised/50">
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs text-ink-soft dark:text-chalk-muted lowercase">
           images · {images.length}
@@ -25,7 +25,7 @@ export function ImageStrip({
         <button
           onClick={onClose}
           aria-label="Close images"
-          className="text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
+          className="text-ink-soft dark:text-chalk-muted hover:text-accent"
         >
           <X size={14} />
         </button>
@@ -41,7 +41,7 @@ export function ImageStrip({
                 alt={img.name}
                 width={80}
                 height={80}
-                className="h-20 w-20 object-cover rounded-sm border border-rule dark:border-night-rule"
+                className="h-20 w-20 object-cover rounded-sm border border-line"
               />
               <button
                 onClick={() => onDelete(img.name)}

@@ -116,7 +116,7 @@ export default function SearchModal() {
       className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh]"
       onClick={() => setOpen(false)}
     >
-      <div className="absolute inset-0 bg-paper/80 dark:bg-night/80 backdrop-blur-xs" />
+      <div className="absolute inset-0 bg-surface/80 backdrop-blur-xs" />
 
       <div
         role="dialog"
@@ -127,7 +127,7 @@ export default function SearchModal() {
       >
         <div className="flex items-center border-b border-rule dark:border-white/6 px-3 gap-2">
           <svg
-            className="w-4 h-4 text-ink/30 dark:text-chalk/30 shrink-0"
+            className="w-4 h-4 text-accent/30 shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -142,7 +142,7 @@ export default function SearchModal() {
             onChange={(e) => handleInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="search posts…"
-            className="flex-1 py-3 text-sm bg-transparent outline-hidden text-ink dark:text-chalk placeholder:text-ink/30 dark:placeholder:text-chalk/30"
+            className="flex-1 py-3 text-sm bg-transparent outline-hidden text-accent placeholder:text-accent/30"
           />
           <div className="flex items-center gap-1 shrink-0">
             {(["keyword", "semantic"] as SearchType[]).map((t) => (
@@ -152,8 +152,8 @@ export default function SearchModal() {
                 onClick={() => handleTypeToggle(t)}
                 className={`text-[10px] px-1.5 py-0.5 tracking-wide transition-[color,border-color] duration-150 border ${
                   searchType === t
-                    ? "border-ink/50 dark:border-chalk/50 text-ink dark:text-chalk"
-                    : "border-transparent text-ink/30 dark:text-chalk/30 hover:text-ink/60 dark:hover:text-chalk/60"
+                    ? "border-accent/50 text-accent"
+                    : "border-transparent text-accent/30 hover:text-accent/60"
                 }`}
               >
                 {t}
@@ -163,16 +163,11 @@ export default function SearchModal() {
         </div>
 
         {loading && (
-          <div className="px-4 py-3 text-xs text-ink/40 dark:text-chalk/40">
-            searching…
-          </div>
+          <div className="px-4 py-3 text-xs text-accent/40">searching…</div>
         )}
 
         {error && (
-          <p
-            role="alert"
-            className="px-4 py-3 text-xs text-ink dark:text-chalk"
-          >
+          <p role="alert" className="px-4 py-3 text-xs text-accent">
             {error}
           </p>
         )}
@@ -182,9 +177,7 @@ export default function SearchModal() {
           hasSearched &&
           query.trim() &&
           results.length === 0 && (
-            <div className="px-4 py-3 text-xs text-ink/40 dark:text-chalk/40">
-              no results
-            </div>
+            <div className="px-4 py-3 text-xs text-accent/40">no results</div>
           )}
 
         {!loading && results.length > 0 && (
@@ -195,14 +188,14 @@ export default function SearchModal() {
                   onClick={() => navigate(r.post_slug)}
                   onMouseEnter={() => setActiveIndex(i)}
                   className={`w-full text-left px-4 py-2.5 transition-[background-color] duration-100 ${
-                    i === activeIndex ? "bg-ink/5 dark:bg-chalk/5" : ""
+                    i === activeIndex ? "bg-accent/5" : ""
                   }`}
                 >
-                  <div className="text-sm text-ink dark:text-chalk truncate">
+                  <div className="text-sm text-accent truncate">
                     {r.post_title}
                   </div>
                   {r.published_date && (
-                    <div className="text-[10px] text-ink/35 dark:text-chalk/35 mt-0.5 tabular-nums">
+                    <div className="text-[10px] text-accent/35 mt-0.5 tabular-nums">
                       {new Date(r.published_date).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -218,7 +211,7 @@ export default function SearchModal() {
         )}
 
         {results.length > 0 && (
-          <div className="border-t border-rule dark:border-white/6 px-4 py-2 flex gap-3 text-[10px] text-ink/30 dark:text-chalk/30">
+          <div className="border-t border-rule dark:border-white/6 px-4 py-2 flex gap-3 text-[10px] text-accent/30">
             <span>↑↓ navigate</span>
             <span>↵ open</span>
             <span>esc close</span>

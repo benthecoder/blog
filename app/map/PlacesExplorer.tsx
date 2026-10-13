@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useTheme } from "next-themes";
@@ -35,6 +35,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [listHoverId, setListHoverId] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(true);
   const { resolvedTheme, setTheme } = useTheme();
   const mounted = useMounted();
@@ -55,17 +56,47 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     [allPlaces, selectedCategories, query]
   );
   const selected = places.find((p) => p.id === selectedId) ?? null;
+  // Without a selected list, group rows under the first list that has them.
+  const groups = useMemo(() => {
+    if (collection) return [{ id: "", title: "", places }];
+    const claimed = new Set<string>();
+    return data.collections
+      .map((list) => {
+        const rows = places.filter(
+          (place) =>
+            !claimed.has(place.id) &&
+            list.entries.some((entry) => entry.placeId === place.id)
+        );
+        rows.forEach((place) => claimed.add(place.id));
+        return { id: list.id, title: list.title, places: rows };
+      })
+      .filter((group) => group.places.length);
+  }, [data, collection, places]);
   const detail = places.find((p) => p.id === hoveredId) ?? selected;
 
   useEffect(() => {
-    const dismissPreview = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setHoveredId(null);
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (hoveredId) {
+        setHoveredId(null);
+        return;
+      }
+      if (event.target instanceof HTMLInputElement && event.target.value) {
+        setQuery("");
+        clearSelection();
+        return;
+      }
+      if (selectedId) {
+        setSelectedId(null);
+        updateUrl(collectionId);
+      }
     };
-    document.addEventListener("keydown", dismissPreview);
+    document.addEventListener("keydown", onEscape);
     return () => {
-      document.removeEventListener("keydown", dismissPreview);
+      document.removeEventListener("keydown", onEscape);
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hoveredId, selectedId, collectionId]);
 
   useEffect(() => {
     const readUrl = () => {
@@ -140,7 +171,9 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
       <header className="map-header">
         <div className="map-brand">
           <h1 className="map-wordmark">PLACES</h1>
-          <span>by ben</span>
+          <span>
+            <a href="https://bneo.xyz">by ben</a>
+          </span>
         </div>
         <div className="map-theme" role="group" aria-label="Map appearance">
           <button
@@ -266,33 +299,48 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
               ))}
           </div>
         </div>
-        <ul className="place-list">
-          {places.map((place) => (
-            <li
-              key={place.id}
-              className={place.id === selectedId ? "selected" : ""}
-            >
-              <button
-                className="place-select"
-                onClick={() => selectPlace(place.id)}
-                aria-label={`Show ${place.name} on map`}
-                aria-pressed={place.id === selectedId}
-              >
-                <span className="place-copy">
-                  <span className="place-name">{place.name}</span>
-                  {place.note && (
-                    <span className="place-note">{place.note}</span>
-                  )}
-                  {place.visitedOn && (
-                    <span className="visit-date">
-                      {formatDate(place.visitedOn)}
+        {groups.map((group) => (
+          <Fragment key={group.id}>
+            {group.title && <h3 className="place-group">{group.title}</h3>}
+            <ul className="place-list">
+              {group.places.map((place) => (
+                <li
+                  key={place.id}
+                  className={
+                    place.id === selectedId
+                      ? "selected"
+                      : place.id === hoveredId
+                        ? "is-hovered"
+                        : ""
+                  }
+                >
+                  <button
+                    className="place-select"
+                    onClick={() => selectPlace(place.id)}
+                    onMouseEnter={() => setListHoverId(place.id)}
+                    onMouseLeave={() => setListHoverId(null)}
+                    onFocus={() => setListHoverId(place.id)}
+                    onBlur={() => setListHoverId(null)}
+                    aria-label={`Show ${place.name} on map`}
+                    aria-pressed={place.id === selectedId}
+                  >
+                    <span className="place-copy">
+                      <span className="place-name">{place.name}</span>
+                      {place.note && (
+                        <span className="place-note">{place.note}</span>
+                      )}
+                      {place.visitedOn && (
+                        <span className="visit-date">
+                          {formatDate(place.visitedOn)}
+                        </span>
+                      )}
                     </span>
-                  )}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </Fragment>
+        ))}
         {!places.length && (
           <div className="empty-places">
             <p>Nothing matches that.</p>
@@ -303,6 +351,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
         <PlacesMap
           places={places}
           selected={selected}
+          highlightId={listHoverId}
           dark={resolvedTheme === "dark"}
           onSelect={selectPlace}
           onHover={setHoveredId}

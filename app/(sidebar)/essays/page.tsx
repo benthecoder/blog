@@ -19,13 +19,11 @@ const EssaysPage = () => {
 
   return (
     <div className="mx-auto max-w-[65ch] py-12">
-      <h1 className="mb-10 text-2xl font-bold lowercase text-ink-strong dark:text-chalk-strong">
+      <h1 className="mb-10 text-2xl font-bold lowercase text-primary">
         essays
       </h1>
       {essays.length === 0 ? (
-        <p className="text-sm text-ink-strong/40 dark:text-chalk-strong/40">
-          Nothing here yet.
-        </p>
+        <p className="text-sm text-primary/40">Nothing here yet.</p>
       ) : (
         <ul className="space-y-8">
           {essays.map((essay) => (
@@ -35,7 +33,7 @@ const EssaysPage = () => {
                   {essay.title}
                 </h2>
                 {essay.subtitle && (
-                  <p className="mt-0.5 text-sm text-ink-soft dark:text-chalk-soft">
+                  <p className="mt-0.5 text-sm text-secondary">
                     {essay.subtitle}
                   </p>
                 )}

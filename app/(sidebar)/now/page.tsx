@@ -31,7 +31,7 @@ export default function NowPage() {
             more this year
           </li>
         </ul>
-        <p className="text-sm text-ink/60 dark:text-chalk/60 mt-6">
+        <p className="text-sm text-accent/60 mt-6">
           Last updated: Jul 27, 2026
         </p>
       </article>

@@ -39,24 +39,22 @@ export default function HackerNewsPage() {
   return (
     <div className="w-full">
       {isLoading ? (
-        <p className="text-ink/50 dark:text-chalk/50">flibbertigibbeting...</p>
+        <p className="text-accent/50">flibbertigibbeting...</p>
       ) : isError ? (
-        <p className="text-ink/50 dark:text-chalk/50">
-          couldn&apos;t reach hacker news
-        </p>
+        <p className="text-accent/50">couldn&apos;t reach hacker news</p>
       ) : (
         <div>
           <ol className="space-y-1 list-none">
             {topStories.map((story, index) => (
               <li key={story.id} className="flex items-baseline gap-2">
-                <span className="text-ink/30 dark:text-chalk/30 text-sm tabular-nums min-w-[2ch]">
+                <span className="text-accent/30 text-sm tabular-nums min-w-[2ch]">
                   {currentPage * POSTS_PER_PAGE + index + 1}.
                 </span>
                 <a
                   href={story.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
+                  className="text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
                 >
                   {story.title.toLowerCase()}
                 </a>
@@ -65,7 +63,7 @@ export default function HackerNewsPage() {
                     href={`https://news.ycombinator.com/item?id=${story.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-ink/30 dark:text-chalk/30 hover:text-ink-soft dark:hover:text-chalk-muted transition-colors text-sm whitespace-nowrap"
+                    className="text-accent/30 hover:text-ink-soft dark:hover:text-chalk-muted transition-colors text-sm whitespace-nowrap"
                   >
                     ({story.descendants})
                   </a>
@@ -77,7 +75,7 @@ export default function HackerNewsPage() {
             {currentPage > 0 && (
               <button
                 onClick={handleBackPage}
-                className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
+                className="text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
               >
                 back
               </button>
@@ -85,7 +83,7 @@ export default function HackerNewsPage() {
             {currentPage < MAX_PAGES - 1 && (
               <button
                 onClick={handleNextPage}
-                className="text-ink dark:text-chalk hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
+                className="text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
               >
                 next
               </button>

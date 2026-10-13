@@ -138,7 +138,7 @@ const PostLinkPreview = ({
                 ...transitionStyles,
                 transitionTimingFunction: EASE_OUT,
               }}
-              className="origin-bottom max-w-xs p-3 rounded-md shadow-md border border-rule dark:border-white/10 bg-paper-raised dark:bg-night-raised"
+              className="origin-bottom max-w-xs p-3 rounded-md shadow-md border border-rule dark:border-white/10 bg-raised"
             >
               <p className="text-xs font-bold text-ink dark:text-chalk-strong mb-0.5">
                 {preview.title}
@@ -150,7 +150,7 @@ const PostLinkPreview = ({
                   day: "numeric",
                 })}
               </p>
-              <p className="text-[11px] leading-relaxed text-ink-muted dark:text-chalk-muted">
+              <p className="text-[11px] leading-relaxed text-muted">
                 {preview.excerpt}
               </p>
             </div>
