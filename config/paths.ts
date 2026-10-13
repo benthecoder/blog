@@ -7,7 +7,7 @@ export const DRAFTS_DIR = path.join(POSTS_DIR, "drafts");
 export const WIKI_DIR = path.join(ROOT_DIR, "wiki");
 // Markdown templates offered by the local wiki editor (frontmatter = defaults).
 export const WIKI_TEMPLATES_DIR = path.join(ROOT_DIR, "templates", "wiki");
-// Paper notes are wiki pages (`category: papers/<topic>`), listed at this route.
+// Papers I've read / am tracking: one hand-edited Markdown list, rendered at /papers.
 export const PAPERS_ROUTE = "/papers";
 export const ESSAYS_DIR = path.join(ROOT_DIR, "essays");
 export const ESSAY_DRAFTS_DIR = path.join(ESSAYS_DIR, "drafts");
@@ -45,6 +45,7 @@ export const LIBRARY_MD = path.join(
   ROOT_DIR,
   "app/(sidebar)/library/library.md"
 );
+export const PAPERS_MD = path.join(ROOT_DIR, "app/(sidebar)/papers/papers.md");
 export const PROJECTS_MD = path.join(
   ROOT_DIR,
   "app/(sidebar)/projects/projects.md"

@@ -1,90 +1,131 @@
 import { cache } from "react";
-import { WIKI_DIR } from "@/config/paths";
-import { PAPER_TOPICS, PAPERS_CATEGORY } from "@/config/papers";
-import { scanMarkdownDir } from "./markdown";
-import { readPaperFields } from "./paperFields";
-import { parseTags } from "./tags";
+import { PAPERS_MD, WIKI_DIR } from "@/config/paths";
+import { readMarkdownFile, scanMarkdownDir } from "./markdown";
 
-export interface PaperEntry {
-  slug: string;
+/** Wiki category prefix that marks a page as a paper note. */
+const PAPERS_CATEGORY = "papers";
+
+export interface PaperListItem {
   title: string;
-  description: string;
-  topic: string;
+  url: string;
   authors: string;
   year: string;
-  url: string;
-  /** YYYY-MM-DD, or "" when unknown. */
+  /** "YYYY-MM" or "YYYY-MM-DD" for read papers, "" for the queue. */
   read: string;
-  tags: string[];
+  /** `/wiki/<slug>` when a paper note exists. */
+  note: string;
 }
 
-export interface PaperTopicGroup {
-  slug: string;
-  label: string;
-  papers: PaperEntry[];
+export interface PaperList {
+  upNext: PaperListItem[];
+  /** Read papers grouped by month read, newest first; undated last. */
+  read: { month: string; papers: PaperListItem[] }[];
 }
 
-function topicOf(category: string): string | null {
-  const [root, topic = ""] = category.trim().split("/");
-  return root === PAPERS_CATEGORY ? topic.trim() : null;
+// - [Title](url) — Authors, 2017 · read 2026-10
+const LINE =
+  /^\s*[-*]\s+\[(?<title>[^\]]+)\]\((?<url>[^)\s]+)\)\s*(?:[—–-]+\s*(?<rest>.*))?$/;
+
+function normalize(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, " ")
+    .trim();
 }
 
-function labelFor(slug: string): string {
-  const known = PAPER_TOPICS.find((t) => t.slug === slug);
-  if (known) return known.label;
-  if (!slug) return "Other";
-  return slug.replace(/-/g, " ").replace(/^\w/, (c) => c.toUpperCase());
+export function parsePaperLine(
+  line: string
+): Omit<PaperListItem, "note"> | null {
+  const m = LINE.exec(line);
+  if (!m?.groups) return null;
+  let rest = (m.groups.rest ?? "").trim();
+  let read = "";
+  const readMatch = /\s*·\s*read\s+(\d{4}-\d{2}(?:-\d{2})?)\s*$/i.exec(rest);
+  if (readMatch) {
+    read = readMatch[1];
+    rest = rest.slice(0, readMatch.index).trim();
+  }
+  let year = "";
+  const yearMatch = /,?\s*\(?((?:19|20)\d{2})\)?\s*$/.exec(rest);
+  if (yearMatch) {
+    year = yearMatch[1];
+    rest = rest.slice(0, yearMatch.index).trim();
+  }
+  return {
+    title: m.groups.title.trim(),
+    url: m.groups.url,
+    authors: rest.replace(/[,·]\s*$/, "").trim(),
+    year,
+    read,
+  };
 }
 
-/** Every wiki page under `papers/`, newest `read` first (undated last). */
-export const getPapers = cache(function getPapers(): PaperEntry[] {
-  return scanMarkdownDir(WIKI_DIR)
-    .flatMap(({ slug, data }) => {
-      const topic = topicOf(
-        typeof data.category === "string" ? data.category : ""
-      );
-      if (topic === null) return [];
-      const fields = readPaperFields(data);
-      return [
-        {
-          slug,
-          title: (data.title as string) || slug,
-          description:
-            typeof data.description === "string" ? data.description : "",
-          topic,
-          authors: fields.authors,
-          year: fields.year,
-          url: fields.url,
-          read: fields.read,
-          tags: parseTags(data.tags),
-        },
-      ];
-    })
-    .sort(
-      (a, b) =>
-        (b.read || "").localeCompare(a.read || "") ||
-        a.title.localeCompare(b.title)
-    );
+/** Parse the list: `## up next` and `## read` sections of `- [Title](url) — …` lines. */
+export function parsePaperList(
+  markdown: string,
+  notes: { slug: string; title: string }[] = []
+): PaperList {
+  const byKey = new Map<string, string>();
+  for (const note of notes) {
+    for (const key of [normalize(note.title), normalize(note.slug)])
+      if (key && !byKey.has(key)) byKey.set(key, `/wiki/${note.slug}`);
+  }
+  const noteFor = (title: string) => {
+    const full = normalize(title);
+    // "BERT: Pre-training of …" also matches a note titled "BERT".
+    const short = normalize(title.split(":")[0]);
+    return byKey.get(full) ?? byKey.get(short) ?? "";
+  };
+
+  const text = markdown.replace(/<!--[\s\S]*?-->/g, "");
+  const upNext: PaperListItem[] = [];
+  const read: PaperListItem[] = [];
+  let section: "up next" | "read" | null = null;
+  for (const line of text.split("\n")) {
+    const heading = /^##\s+(.+?)\s*$/.exec(line);
+    if (heading) {
+      const name = heading[1].toLowerCase();
+      section = name.startsWith("read")
+        ? "read"
+        : /up next|reading|tracking|to read/.test(name)
+          ? "up next"
+          : null;
+      continue;
+    }
+    if (!section) continue;
+    const item = parsePaperLine(line);
+    if (!item) continue;
+    (section === "read" ? read : upNext).push({
+      ...item,
+      note: noteFor(item.title),
+    });
+  }
+
+  const months = new Map<string, PaperListItem[]>();
+  for (const item of read) {
+    const month = item.read.slice(0, 7);
+    months.set(month, [...(months.get(month) ?? []), item]);
+  }
+  return {
+    upNext,
+    read: [...months.entries()]
+      .sort(([a], [b]) => (b || "0").localeCompare(a || "0"))
+      .map(([month, papers]) => ({
+        month,
+        papers: papers.sort((a, b) => b.read.localeCompare(a.read)),
+      })),
+  };
+}
+
+/** Wiki pages filed under `papers/…`; these are the notes list items link to. */
+const getPaperNotes = cache(function getPaperNotes() {
+  return scanMarkdownDir(WIKI_DIR).flatMap(({ slug, data }) => {
+    const category = typeof data.category === "string" ? data.category : "";
+    if (category.trim().split("/")[0] !== PAPERS_CATEGORY) return [];
+    return [{ slug, title: (data.title as string) || slug }];
+  });
 });
 
-/** Papers grouped by topic in PAPER_TOPICS order; empty topics are omitted. */
-export function groupPapersByTopic(papers: PaperEntry[]): PaperTopicGroup[] {
-  const order = new Map<string, number>(
-    PAPER_TOPICS.map((t, i) => [t.slug, i])
-  );
-  const groups = new Map<string, PaperTopicGroup>();
-  for (const paper of papers) {
-    const group = groups.get(paper.topic) ?? {
-      slug: paper.topic,
-      label: labelFor(paper.topic),
-      papers: [],
-    };
-    group.papers.push(paper);
-    groups.set(paper.topic, group);
-  }
-  return [...groups.values()].sort(
-    (a, b) =>
-      (order.get(a.slug) ?? 99) - (order.get(b.slug) ?? 99) ||
-      a.label.localeCompare(b.label)
-  );
-}
+export const getPaperList = cache(function getPaperList(): PaperList {
+  return parsePaperList(readMarkdownFile(PAPERS_MD).content, getPaperNotes());
+});
