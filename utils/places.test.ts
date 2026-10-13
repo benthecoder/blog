@@ -78,7 +78,10 @@ describe("place collections", () => {
   });
   it("preserves imported places and trip-specific notes", () => {
     expect(collectionPlaces(data, data.collections[0])).toHaveLength(17);
-    expect(data.collections.map((c) => c.id)).toEqual(["sf-chinatown"]);
+    expect(data.collections.map((c) => c.id)).toEqual([
+      "sf-chinatown",
+      "miami-cafes",
+    ]);
     const tripCollection = {
       ...data.collections[0],
       post: "example-trip",
