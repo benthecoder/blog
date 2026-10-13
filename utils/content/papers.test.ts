@@ -1,9 +1,13 @@
 import fs from "fs";
 import { describe, expect, it } from "vitest";
 import { PAPERS_MD } from "@/config/paths";
-import { parsePaperLine, parsePaperList } from "./papers";
+import { parsePaperLine, parsePaperList, stripComments } from "./papers";
 
 describe("paper list", () => {
+  it("strips comments, including unclosed ones", () => {
+    expect(stripComments("a<!-- x -->b<!--<!-- y -->c<!-- open")).toBe("abc");
+  });
+
   it("parses one-line entries", () => {
     expect(
       parsePaperLine(
@@ -60,8 +64,7 @@ describe("paper list", () => {
   it("ships a list whose entries all parse", () => {
     const raw = fs.readFileSync(PAPERS_MD, "utf8");
     const list = parsePaperList(raw);
-    const lines = raw
-      .replace(/<!--[\s\S]*?-->/g, "")
+    const lines = stripComments(raw)
       .split("\n")
       .filter((l) => l.trim().startsWith("- "));
     expect(list.upNext.length + list.read.flatMap((g) => g.papers).length).toBe(

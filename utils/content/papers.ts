@@ -33,6 +33,21 @@ function normalize(value: string): string {
     .trim();
 }
 
+/** Drop `<!-- … -->` comments (an unclosed comment hides the rest of the file). */
+export function stripComments(markdown: string): string {
+  let out = "";
+  let at = 0;
+  while (at < markdown.length) {
+    const open = markdown.indexOf("<!--", at);
+    if (open < 0) return out + markdown.slice(at);
+    out += markdown.slice(at, open);
+    const close = markdown.indexOf("-->", open + 4);
+    if (close < 0) return out;
+    at = close + 3;
+  }
+  return out;
+}
+
 export function parsePaperLine(
   line: string
 ): Omit<PaperListItem, "note"> | null {
@@ -77,7 +92,7 @@ export function parsePaperList(
     return byKey.get(full) ?? byKey.get(short) ?? "";
   };
 
-  const text = markdown.replace(/<!--[\s\S]*?-->/g, "");
+  const text = stripComments(markdown);
   const upNext: PaperListItem[] = [];
   const read: PaperListItem[] = [];
   let section: "up next" | "read" | null = null;
