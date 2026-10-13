@@ -82,14 +82,14 @@ const RenderPost = ({
 
       {backlinks}
 
-      <footer className="mt-12 pt-5 border-t border-rule dark:border-night-rule text-xs">
+      <footer className="mt-12 pt-5 border-t border-line text-xs">
         {(tags.length > 0 || slug) && (
           <div className="flex items-center gap-x-3 gap-y-1 flex-wrap text-ink-soft dark:text-chalk-muted">
             {tags.map((tag) => (
               <Link
                 href={`/tags/${tag}`}
                 key={tag}
-                className="hover:text-ink dark:hover:text-chalk transition-colors duration-150"
+                className="hover:text-accent transition-colors duration-150"
               >
                 #{tag}
               </Link>
@@ -107,12 +107,10 @@ const RenderPost = ({
         <div className="mt-8 flex justify-between gap-4">
           {prev ? (
             <div className="flex flex-col flex-1">
-              <p className="text-ink-strong/40 dark:text-chalk-strong/40 mb-1">
-                Previous
-              </p>
+              <p className="text-primary/60 mb-1">Previous</p>
               <Link
                 href={`/posts/${prev.slug}`}
-                className="text-ink-strong dark:text-chalk-strong hover:text-ink dark:hover:text-chalk-soft transition-colors"
+                className="text-primary hover:text-ink dark:hover:text-chalk-soft transition-colors"
               >
                 {prev.title}
               </Link>
@@ -122,12 +120,10 @@ const RenderPost = ({
           )}
           {next ? (
             <div className="flex flex-col flex-1 text-right">
-              <p className="text-ink-strong/40 dark:text-chalk-strong/40 mb-1">
-                Next
-              </p>
+              <p className="text-primary/60 mb-1">Next</p>
               <Link
                 href={`/posts/${next.slug}`}
-                className="text-ink-strong dark:text-chalk-strong hover:text-ink dark:hover:text-chalk-soft transition-colors"
+                className="text-primary hover:text-ink dark:hover:text-chalk-soft transition-colors"
               >
                 {next.title}
               </Link>

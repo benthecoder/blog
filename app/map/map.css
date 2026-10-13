@@ -1,9 +1,9 @@
 .places-explorer {
-  --map-paper: var(--color-paper);
-  --map-ink: #373737;
-  --map-muted: #767676;
-  --map-rule: var(--color-rule);
-  --map-accent: var(--color-ink);
+  --map-paper: var(--color-surface);
+  --map-ink: var(--color-primary);
+  --map-muted: var(--color-muted);
+  --map-rule: var(--color-line);
+  --map-accent: var(--color-accent);
   --map-hover: var(--color-paper-sunken);
   position: fixed;
   inset: 0;
@@ -19,11 +19,6 @@
   letter-spacing: 0;
 }
 .dark .places-explorer {
-  --map-paper: var(--color-night);
-  --map-ink: #e5e5e5;
-  --map-muted: #a5a5a5;
-  --map-rule: var(--color-night-rule);
-  --map-accent: var(--color-chalk);
   --map-hover: var(--color-night-raised);
 }
 .places-explorer button,
@@ -73,6 +68,9 @@
   color: var(--map-muted);
   font-size: 13px;
 }
+.map-brand > span:last-of-type a:hover {
+  text-decoration: underline;
+}
 .map-theme {
   flex-shrink: 0;
   display: flex;
@@ -86,13 +84,13 @@
   color: var(--map-muted);
 }
 .map-theme button[aria-pressed="true"] {
-  color: var(--map-paper);
-  background: var(--map-ink);
+  color: var(--map-ink);
+  background: var(--map-hover);
 }
 .places-explorer .category-dot {
-  width: 7px;
-  height: 7px;
-  flex: 0 0 7px;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
   border-radius: 50%;
   background: var(--color-ink);
 }
@@ -101,7 +99,7 @@
 }
 .places-explorer .category-options button[aria-pressed="true"] .category-dot {
   background: var(--color-ink);
-  box-shadow: 0 0 0 1px var(--color-paper);
+  box-shadow: 0 0 0 1px var(--map-paper);
 }
 .panel-section-heading {
   display: flex;
@@ -113,7 +111,8 @@
 .panel-section-heading h2 {
   margin: 0;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 .panel-section-heading > span {
@@ -128,6 +127,9 @@
 .collection-list button[aria-pressed="true"] {
   background: var(--map-hover);
 }
+.collection-list button[aria-pressed="true"] .collection-title {
+  color: var(--map-accent);
+}
 .map-position {
   position: absolute;
   bottom: 28px;
@@ -136,18 +138,21 @@
   color: var(--map-muted);
   border: 1px solid var(--map-rule);
   padding: 5px 8px;
-  font-family: monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   pointer-events: none;
 }
 .collection-list {
   list-style: none;
-  padding: 12px 22px;
+  padding: 12px 12px;
   margin: 0;
 }
 .collection-list li {
   border-bottom: 1px solid var(--map-rule);
+}
+.collection-list li:last-child {
+  border-bottom: 0;
 }
 .collection-list button {
   display: block;
@@ -255,17 +260,17 @@
 .category-options button {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  min-height: 32px;
-  padding: 0 8px;
+  gap: 4px;
+  min-height: 28px;
+  padding: 0 7px;
   color: var(--map-muted);
   font-size: 12px;
-  border: 1px solid var(--map-muted);
+  border: 1px solid var(--map-rule);
   border-radius: 0;
 }
 .category-options button[aria-pressed="true"] {
-  color: var(--map-paper);
-  background: var(--map-ink);
+  color: var(--map-ink);
+  background: var(--map-hover);
   border-color: var(--map-ink);
 }
 .category-options button > span {
@@ -287,8 +292,19 @@
   border-bottom: 0;
 }
 .place-list li:hover,
+.place-list li.is-hovered,
 .place-list li.selected {
   background: var(--map-hover);
+}
+.place-group {
+  margin: 14px 22px 0;
+  color: var(--map-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+.place-group + .place-list {
+  margin-top: 4px;
+  padding-bottom: 8px;
 }
 .place-select {
   display: flex;
@@ -354,6 +370,7 @@
   box-shadow: 0 2px 8px #00000008;
 }
 .map-tools button {
+  color: var(--map-ink);
   width: 34px;
   height: 34px;
   display: grid;
@@ -446,11 +463,16 @@
 .sheet-toggle {
   display: none;
 }
-.places-explorer .maplibregl-ctrl-attrib {
+.places-explorer .maplibregl-ctrl.maplibregl-ctrl-attrib {
+  background: color-mix(in srgb, var(--map-paper) 85%, transparent);
+  color: var(--map-muted);
   font:
     10px -apple-system,
     BlinkMacSystemFont,
     sans-serif;
+}
+.places-explorer .maplibregl-ctrl-attrib a {
+  color: var(--map-muted);
 }
 @media (max-width: 760px) {
   .places-explorer {

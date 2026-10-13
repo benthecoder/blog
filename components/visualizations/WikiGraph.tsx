@@ -179,7 +179,7 @@ export default function WikiGraph({
             stroke="currentColor"
             strokeWidth={e.kind === "ref" ? 1 : 0.8}
             strokeDasharray={e.kind === "ref" ? "3 3" : undefined}
-            className="text-ink-muted dark:text-chalk-muted transition-opacity"
+            className="text-muted transition-opacity"
             style={{
               strokeOpacity:
                 neighbors &&
@@ -210,11 +210,7 @@ export default function WikiGraph({
               <circle
                 r={active ? r + 1.5 : r}
                 fill="currentColor"
-                className={
-                  isDomain(n)
-                    ? "text-ink-strong dark:text-chalk-strong"
-                    : "text-ink-muted dark:text-chalk-muted"
-                }
+                className={isDomain(n) ? "text-primary" : "text-muted"}
               />
               <text
                 x={0}
@@ -223,7 +219,7 @@ export default function WikiGraph({
                 fill="currentColor"
                 className={
                   isDomain(n)
-                    ? "text-ink-strong dark:text-chalk-strong"
+                    ? "text-primary"
                     : "text-ink-soft dark:text-chalk-muted"
                 }
                 style={{
@@ -239,7 +235,7 @@ export default function WikiGraph({
         })}
       </svg>
 
-      <p className="pointer-events-none absolute bottom-2 left-2 text-[10px] text-ink-muted/60 dark:text-chalk-muted/60">
+      <p className="pointer-events-none absolute bottom-2 left-2 text-[10px] text-muted/60">
         drag to rearrange · click a topic to open
       </p>
     </div>

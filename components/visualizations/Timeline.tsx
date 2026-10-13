@@ -79,7 +79,7 @@ const ImageLinkComponent: FC<{ link: ImageLink }> = ({ link }) => {
         aria-expanded={isOpen}
         ref={refs.setReference}
         {...getReferenceProps()}
-        className="inline text-left underline decoration-solid decoration-1 cursor-pointer decoration-ink-soft/40 dark:decoration-chalk-soft/40 underline-offset-2 transition-[text-decoration-color] duration-150 hover:decoration-ink-soft dark:hover:decoration-chalk-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:focus-visible:outline-chalk"
+        className="inline text-left underline decoration-solid decoration-1 cursor-pointer decoration-secondary/40 underline-offset-2 transition-[text-decoration-color] duration-150 hover:decoration-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         {link.text}
       </button>
@@ -169,7 +169,7 @@ const Timeline: FC<TimelineProps> = ({ events }) => (
                           href={`/posts/${encodeURIComponent(item.postSlug)}`}
                           prefetch={false}
                           aria-label={`Read journal entry: ${item.description}`}
-                          className="text-sm text-ink-soft dark:text-chalk-muted underline decoration-dotted underline-offset-4 hover:text-ink dark:hover:text-chalk focus-visible:outline-2 focus-visible:outline-offset-2"
+                          className="text-sm text-ink-soft dark:text-chalk-muted underline decoration-dotted underline-offset-4 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2"
                         >
                           {dateDetail}
                         </Link>

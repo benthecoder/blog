@@ -15,9 +15,7 @@ const WikiPage = () => {
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       {graph.nodes.length === 0 ? (
-        <p className="text-sm text-ink-strong/40 dark:text-chalk-strong/40">
-          Nothing here yet.
-        </p>
+        <p className="text-sm text-primary/60">Nothing here yet.</p>
       ) : (
         <WikiGraph data={graph} className="h-[78vh] w-full" />
       )}

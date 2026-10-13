@@ -40,6 +40,19 @@ Surfaces stay stable across palettes. The ink colors change with the selected pa
 
 Values shown are the steel baseline. Other palettes are indigo, olive, gold, vermillion, and rose. `paper-tint` and `paper-warm` provide additional light surfaces and accents; choose them by the existing component’s usage rather than inventing a dark counterpart.
 
+**Prefer role tokens.** `app/globals.css` defines theme-aware roles that switch between the light and dark tokens above on their own, so one class covers both modes:
+
+| Role | Light → dark | Use |
+| --- | --- | --- |
+| `primary` | ink-strong → chalk-strong | body copy, titles |
+| `accent` | ink → chalk | links, marks, index rows |
+| `secondary` | ink-soft → chalk-soft | hover, emphasis |
+| `muted` | ink-muted → chalk-muted | dates, captions, meta |
+| `surface` / `raised` | paper → night, paper-raised → night-raised | page, cards and overlays |
+| `line` | rule → night-rule | rules, borders |
+
+Write `text-primary`, not `text-ink-strong dark:text-chalk-strong`. Opacity modifiers work (`text-accent/60`). Plain CSS uses `var(--color-primary)` and so on. Use raw `ink-*`/`chalk-*` pairs only when the two modes intentionally use different roles. For text people need to read, keep opacity at 60% or above; lower values are for decoration and disabled states. Use the `eyebrow` utility for small uppercase section labels.
+
 Theme mode is controlled by `.dark`; palette by `html[data-palette]`. Reuse `Providers`, `ThemeSwitch`, and `PaletteSwitch`. The global light body has a fixed 135° gradient from sunken to paper to raised; dark mode has a flat night background. A dedicated viewing surface can use a flat background.
 
 Global prose defaults to `ink` in light mode and `chalk-strong` in dark mode. Other components intentionally vary text emphasis. Check the component rather than applying one text color everywhere. Selected rows should use a restrained fill or text emphasis; avoid bright blue selection borders. Keyboard focus remains visibly distinct from selection.

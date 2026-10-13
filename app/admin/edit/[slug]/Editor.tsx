@@ -351,9 +351,9 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   }, []);
 
   const ghostBtn =
-    "min-h-11 sm:min-h-9 px-2 text-xs text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk";
+    "min-h-11 sm:min-h-9 px-2 text-xs text-ink-soft dark:text-chalk-muted hover:text-accent disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-accent";
   const menuItemCls =
-    "block w-full px-3 py-2 text-left rounded-xs hover:bg-paper-sunken dark:hover:bg-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-ink dark:focus-visible:outline-chalk";
+    "block w-full px-3 py-2 text-left rounded-xs hover:bg-paper-sunken dark:hover:bg-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-accent";
   const primaryActive = isNew || publishing || draft.hasUnsavedChanges;
   const primaryLabel = publishing
     ? draft.publishing
@@ -375,10 +375,10 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
           : "saved";
 
   return (
-    <div className="h-dvh bg-paper dark:bg-night">
-      <div className="mx-auto w-full h-full min-w-0 flex flex-col relative max-w-[760px] sm:border-x border-rule dark:border-night-rule">
+    <div className="h-dvh bg-surface">
+      <div className="mx-auto w-full h-full min-w-0 flex flex-col relative max-w-[760px] sm:border-x border-line">
         {/* Top bar */}
-        <div className="min-h-14 shrink-0 border-b border-rule dark:border-night-rule px-4 sm:px-6 py-2 flex flex-wrap gap-3 justify-between items-center">
+        <div className="min-h-14 shrink-0 border-b border-line px-4 sm:px-6 py-2 flex flex-wrap gap-3 justify-between items-center">
           <div className="flex items-center gap-4">
             <Link
               href={
@@ -388,7 +388,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                     ? `/admin?month=${monthParam}`
                     : "/admin"
               }
-              className="text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk transition-colors"
+              className="text-ink-soft dark:text-chalk-muted hover:text-accent transition-colors"
               title={isEssay ? "Back to essays" : "Back to calendar"}
               aria-label={isEssay ? "Back to essays" : "Back to calendar"}
             >
@@ -398,7 +398,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               <span className="inline-flex items-center gap-1.5 text-xs text-ink-soft dark:text-chalk-muted">
                 <span
                   aria-hidden="true"
-                  className={`h-1.5 w-1.5 rounded-full ${draft.isDraft ? "bg-ink-muted dark:bg-chalk-muted" : "bg-green-600 dark:bg-green-500"}`}
+                  className={`h-1.5 w-1.5 rounded-full ${draft.isDraft ? "bg-muted" : "bg-green-600 dark:bg-green-500"}`}
                 />
                 {draft.isDraft ? "draft" : "live"}
               </span>
@@ -484,7 +484,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                     <div
                       className={
                         !draft.isDraft || images.postImages.length > 0
-                          ? "mt-1 pt-1 border-t border-rule dark:border-night-rule"
+                          ? "mt-1 pt-1 border-t border-line"
                           : ""
                       }
                     >
@@ -495,7 +495,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                           close();
                           void draft.handleDelete();
                         }}
-                        className={`${menuItemCls} text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk`}
+                        className={`${menuItemCls} text-muted hover:text-accent`}
                       >
                         {draft.deleting ? "deleting…" : "delete…"}
                       </button>
@@ -544,11 +544,11 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                     return (
                       <div className="mx-auto max-w-[65ch]">
                         <header className="mb-10">
-                          <h1 className="text-2xl font-bold lowercase leading-tight tracking-tight text-balance text-ink-strong dark:text-chalk-strong md:text-4xl">
+                          <h1 className="text-2xl font-bold lowercase leading-tight tracking-tight text-balance text-primary md:text-4xl">
                             {(frontmatter.title || "Untitled").toString()}
                           </h1>
                           {frontmatter.subtitle ? (
-                            <p className="mt-3 text-base text-ink-soft dark:text-chalk-soft">
+                            <p className="mt-3 text-base text-secondary">
                               {frontmatter.subtitle.toString()}
                             </p>
                           ) : null}
@@ -583,7 +583,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               </div>
             ) : (
               <div
-                className={`px-4 sm:px-8 pt-10 min-h-full transition-colors ${images.isDragging ? "bg-paper-sunken dark:bg-night-raised outline outline-1 outline-dashed outline-ink dark:outline-chalk" : ""}`}
+                className={`px-4 sm:px-8 pt-10 min-h-full transition-colors ${images.isDragging ? "bg-paper-sunken dark:bg-night-raised outline outline-1 outline-dashed outline-accent" : ""}`}
                 onDragOver={images.handleDragOver}
                 onDragLeave={images.handleDragLeave}
                 onDrop={images.handleDrop}
@@ -601,14 +601,14 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                       ? "---\ntitle: \nsubtitle: \ndate: \n---\n\nWrite your essay here..."
                       : "---\ntitle: \ntags: \ndate: \n---\n\nWrite your content here..."
                   }
-                  className="w-full text-ink-strong dark:text-chalk-strong"
+                  className="w-full text-primary"
                 />
               </div>
             )}
           </div>
           {images.isDragging && !showPreview && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="text-2xl text-ink dark:text-chalk font-light tracking-wide">
+              <div className="text-2xl text-accent font-light tracking-wide">
                 Drop images here
               </div>
             </div>
@@ -616,7 +616,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         </div>
 
         {/* Bottom bar */}
-        <div className="shrink-0 border-t border-rule dark:border-night-rule px-4 sm:px-6 py-2 flex items-center justify-between gap-3 text-xs text-ink-soft dark:text-chalk-muted">
+        <div className="shrink-0 border-t border-line px-4 sm:px-6 py-2 flex items-center justify-between gap-3 text-xs text-ink-soft dark:text-chalk-muted">
           <span className="tabular-nums">
             {bodyWords} words · {Math.max(1, Math.ceil(bodyWords / 200))} min
             read
@@ -646,7 +646,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               onClick={() =>
                 setTheme(resolvedTheme === "dark" ? "light" : "dark")
               }
-              className="min-h-11 min-w-11 sm:min-h-9 sm:min-w-9 -mr-2 inline-flex items-center justify-center rounded-xs hover:text-ink dark:hover:text-chalk"
+              className="min-h-11 min-w-11 sm:min-h-9 sm:min-w-9 -mr-2 inline-flex items-center justify-center rounded-xs hover:text-accent"
               title="toggle dark mode"
               aria-label="Toggle dark mode"
             >
@@ -704,7 +704,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         <button
           type="button"
           onClick={() => setPhotosOpen(true)}
-          className="fixed right-0 top-24 z-20 inline-flex flex-col items-center gap-2 rounded-l-xs border border-r-0 border-rule dark:border-night-rule bg-paper dark:bg-night px-1.5 py-3 text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk transition-colors"
+          className="fixed right-0 top-24 z-20 inline-flex flex-col items-center gap-2 rounded-l-xs border border-r-0 border-line bg-surface px-1.5 py-3 text-ink-soft dark:text-chalk-muted hover:text-accent transition-colors"
           title="photos from this day"
           aria-label="Photos from this day"
         >

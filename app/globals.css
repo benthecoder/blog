@@ -73,6 +73,58 @@
 }
 
 /* ==========================================================================
+   ROLES
+
+   Theme-aware aliases, so a component names the job a color does once
+   instead of pairing `text-ink-strong dark:text-chalk-strong` everywhere.
+   Prefer these; reach for the raw ink/chalk tokens only when light and dark
+   intentionally differ in role. Swatches re-declare them so a nested
+   palette preview resolves against its own ink.
+   ========================================================================== */
+:root,
+.colophon-swatch {
+  --role-primary: var(--color-ink-strong);
+  --role-accent: var(--color-ink);
+  --role-secondary: var(--color-ink-soft);
+  --role-muted: var(--color-ink-muted);
+  --role-surface: var(--color-paper);
+  --role-raised: var(--color-paper-raised);
+  --role-line: var(--color-rule);
+}
+
+.dark,
+.dark .colophon-swatch {
+  --role-primary: var(--color-chalk-strong);
+  --role-accent: var(--color-chalk);
+  --role-secondary: var(--color-chalk-soft);
+  --role-muted: var(--color-chalk-muted);
+  --role-surface: var(--color-night);
+  --role-raised: var(--color-night-raised);
+  --role-line: var(--color-night-rule);
+}
+
+@theme inline {
+  --color-primary: var(--role-primary); /* body copy, titles */
+  --color-accent: var(--role-accent); /* links, marks */
+  --color-secondary: var(--role-secondary); /* hover, emphasis */
+  --color-muted: var(--role-muted); /* dates, captions, meta */
+  --color-surface: var(--role-surface); /* page */
+  --color-raised: var(--role-raised); /* cards, overlays */
+  --color-line: var(--role-line); /* rules, borders */
+}
+
+/* Small caps label above a list or section ("favorites", "linked from").
+   60% keeps it quiet without dropping below readable contrast. */
+@layer components {
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--color-primary) 60%, transparent);
+  }
+}
+
+/* ==========================================================================
    PALETTES
 
    One row per palette, set on <html data-palette="…"> by the palette

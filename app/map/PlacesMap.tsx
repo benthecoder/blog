@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Map as MapLibreMap,
   LngLatBounds,
@@ -15,23 +15,103 @@ import { Maximize, Minus, Plus } from "lucide-react";
 import { categories, placesGeoJSON, type Visit } from "@/utils/places";
 import CategoryDot from "./CategoryDot";
 
+const styleUrl = (dark: boolean) =>
+  `https://tiles.openfreemap.org/styles/${dark ? "dark" : "positron"}`;
+// Layers we add on top of the base style; kept when the theme swaps styles.
+const OUR_LAYERS = [
+  "clusters",
+  "points",
+  "point-labels",
+  "selected-label",
+  "point-targets",
+  "cluster-counts",
+];
+// OpenFreeMap's dark style sits near pure black with ~2.4:1 street labels.
+// Lift it onto the blog's night surface (#1a1a1a) and brighten roads and
+// names so the map reads like the light one. Keyed by base layer id.
+type PaintProperty = Parameters<MapInstance["setPaintProperty"]>[1];
+const DARK_LAYER_PAINT: Record<
+  string,
+  Partial<Record<PaintProperty, string>>
+> = {
+  background: { "background-color": "#1a1a1a" },
+  water: { "fill-color": "#131518" },
+  waterway: { "line-color": "#131518" },
+  landuse_residential: { "fill-color": "#1c1c1c" },
+  landuse_park: { "fill-color": "#1e231f" },
+  landcover_wood: { "fill-color": "#1e231f" },
+  building: { "fill-color": "#232323", "fill-outline-color": "#2c2c2c" },
+  highway_path: { "line-color": "#2e2e2e" },
+  highway_minor: { "line-color": "#303030" },
+  highway_major_casing: { "line-color": "#3c3c3c" },
+  highway_major_inner: { "line-color": "#343434" },
+  highway_major_subtle: { "line-color": "#343434" },
+  highway_motorway_casing: { "line-color": "#454545" },
+  highway_motorway_subtle: { "line-color": "#343434" },
+  railway: { "line-color": "#333333" },
+  railway_transit: { "line-color": "#333333" },
+  railway_minor: { "line-color": "#333333" },
+  water_name: { "text-color": "#6e7681", "text-halo-color": "#131518" },
+  highway_name_other: { "text-color": "#8f8f8f", "text-halo-color": "#1a1a1a" },
+  highway_name_motorway: { "text-color": "#9a9a9a" },
+  ...Object.fromEntries(
+    [
+      "place_other",
+      "place_suburb",
+      "place_village",
+      "place_town",
+      "place_city",
+      "place_city_large",
+      "place_state",
+      "place_country_other",
+      "place_country_minor",
+      "place_country_major",
+    ].map((id) => [
+      id,
+      { "text-color": "#a8a8a8", "text-halo-color": "rgba(26,26,26,0.85)" },
+    ])
+  ),
+};
+const liftDarkBasemap = (instance: MapInstance) => {
+  for (const [id, paint] of Object.entries(DARK_LAYER_PAINT))
+    if (instance.getLayer(id))
+      for (const [property, value] of Object.entries(paint))
+        instance.setPaintProperty(id, property as PaintProperty, value);
+};
+const isMobile = () => window.matchMedia("(max-width: 760px)").matches;
+// Leave room for the floating header (mobile) and keep pins off the edges.
+const fitPadding = () =>
+  isMobile()
+    ? { top: 90, bottom: 40, left: 40, right: 40 }
+    : { top: 80, bottom: 80, left: 80, right: 80 };
+
 export default function PlacesMap({
   places,
   selected,
+  highlightId,
   dark,
   onSelect,
   onHover,
 }: {
   places: Visit[];
   selected: Visit | null;
+  highlightId: string | null;
   dark: boolean;
   onSelect: (id: string) => void;
   onHover: (id: string | null) => void;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const categorySwatches = useRef<HTMLDivElement>(null);
+  const inkSwatches = useRef<HTMLDivElement>(null);
   const map = useRef<MapInstance | null>(null);
-  const current = useRef({ places, onSelect, onHover });
+  const styleDark = useRef(dark);
+  const current = useRef({
+    places,
+    onSelect,
+    onHover,
+    selectedId: selected?.id ?? "",
+    highlightId,
+  });
   const [ready, setReady] = useState<MapInstance | null>(null);
   const [error, setError] = useState(false);
   const [position, setPosition] = useState({
@@ -40,8 +120,14 @@ export default function PlacesMap({
     zoom: 15,
   });
   useEffect(() => {
-    current.current = { places, onSelect, onHover };
-  }, [places, onSelect, onHover]);
+    current.current = {
+      places,
+      onSelect,
+      onHover,
+      selectedId: selected?.id ?? "",
+      highlightId,
+    };
+  }, [places, onSelect, onHover, selected, highlightId]);
 
   useEffect(() => {
     if (!container.current) return;
@@ -50,7 +136,7 @@ export default function PlacesMap({
       setWorkerUrl(`/vendor/maplibre/${getVersion()}/maplibre-gl-worker.mjs`);
       instance = new MapLibreMap({
         container: container.current,
-        style: `https://tiles.openfreemap.org/styles/${dark ? "dark" : "positron"}`,
+        style: styleUrl(styleDark.current),
         center: [-122.406, 37.796],
         zoom: 15,
         pixelRatio: 1,
@@ -62,6 +148,9 @@ export default function PlacesMap({
       return;
     }
     map.current = instance;
+    instance.on("style.load", () => {
+      if (styleDark.current) liftDarkBasemap(instance);
+    });
     const updatePosition = () => {
       const center = instance.getCenter();
       setPosition({
@@ -81,7 +170,7 @@ export default function PlacesMap({
       instance.remove();
       map.current = null;
     };
-  }, [dark]);
+  }, []);
 
   useEffect(() => {
     const instance = map.current;
@@ -103,10 +192,8 @@ export default function PlacesMap({
         source: "places",
         filter: ["has", "point_count"],
         paint: {
-          "circle-color": "#858585",
           "circle-radius": ["step", ["get", "point_count"], 13, 10, 17, 30, 21],
           "circle-stroke-width": 2,
-          "circle-stroke-color": "#ffffff",
         },
       });
       instance.addLayer({
@@ -118,8 +205,41 @@ export default function PlacesMap({
           "circle-radius": 5,
           "circle-color": "#656565",
           "circle-stroke-width": 2,
-          "circle-stroke-color": "#ffffff",
         },
+      });
+      // Labels sit below point-targets so clicks still hit the targets.
+      instance.addLayer({
+        id: "point-labels",
+        type: "symbol",
+        source: "places",
+        minzoom: 15,
+        filter: ["!", ["has", "point_count"]],
+        layout: {
+          "text-field": ["get", "name"],
+          "text-font": ["Noto Sans Regular"],
+          "text-size": 12,
+          "text-offset": [0, 1.1],
+          "text-anchor": "top",
+          "text-optional": true,
+          "text-max-width": 9,
+        },
+        paint: { "text-halo-width": 1.5 },
+      });
+      instance.addLayer({
+        id: "selected-label",
+        type: "symbol",
+        source: "places",
+        filter: ["==", ["get", "id"], ""],
+        layout: {
+          "text-field": ["get", "name"],
+          "text-font": ["Noto Sans Bold"],
+          "text-size": 12,
+          "text-offset": [0, 1.1],
+          "text-anchor": "top",
+          "text-max-width": 9,
+          "text-allow-overlap": true,
+        },
+        paint: { "text-halo-width": 1.5 },
       });
       instance.addLayer({
         id: "point-targets",
@@ -176,68 +296,142 @@ export default function PlacesMap({
           "text-allow-overlap": true,
           "text-ignore-placement": true,
         },
-        paint: { "text-color": "#ffffff" },
       });
     }
     if (places.length) {
       const bounds = new LngLatBounds();
       places.forEach((place) => bounds.extend(place.coordinates));
-      instance.fitBounds(bounds, { padding: 70, maxZoom: 16, duration: 500 });
+      instance.fitBounds(bounds, {
+        padding: fitPadding(),
+        maxZoom: 16,
+        duration: 500,
+      });
     }
   }, [places, ready]);
 
-  useEffect(() => {
-    if (!ready || map.current !== ready || !container.current) return;
-    const frame = requestAnimationFrame(() => {
-      if (map.current !== ready || !categorySwatches.current) return;
-      // Use the same themed CSS colors as the category legend.
-      const colors = Array.from(categorySwatches.current.children).flatMap(
-        (swatch) => [
-          swatch.getAttribute("data-category")!,
-          getComputedStyle(swatch).backgroundColor,
-        ]
-      );
-      const colorExpression: ExpressionSpecification = [
-        "match",
-        ["get", "category"],
-        colors[0],
-        colors[1],
-        ...colors.slice(2),
-        "#656565",
-      ];
-      if (ready.getLayer("points"))
-        ready.setPaintProperty("points", "circle-color", colorExpression);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [ready, dark]);
+  // Themed colors come from CSS, like the category legend.
+  const paintMarks = useCallback((instance: MapInstance) => {
+    if (map.current !== instance || !instance.getLayer("points")) return;
+    const ink = Object.fromEntries(
+      Array.from(inkSwatches.current?.children ?? []).map((swatch) => [
+        swatch.getAttribute("data-ink")!,
+        getComputedStyle(swatch).color,
+      ])
+    );
+    const colors = Array.from(categorySwatches.current?.children ?? []).flatMap(
+      (swatch) => [
+        swatch.getAttribute("data-category")!,
+        getComputedStyle(swatch).backgroundColor,
+      ]
+    );
+    const { selectedId, highlightId } = current.current;
+    const isSelected: ExpressionSpecification = [
+      "==",
+      ["get", "id"],
+      selectedId,
+    ];
+    instance.setPaintProperty("clusters", "circle-color", ink.accent);
+    instance.setPaintProperty("clusters", "circle-stroke-color", ink.surface);
+    instance.setPaintProperty("cluster-counts", "text-color", ink.surface);
+    instance.setPaintProperty("points", "circle-color", [
+      "match",
+      ["get", "category"],
+      colors[0],
+      colors[1],
+      ...colors.slice(2),
+      "#656565",
+    ]);
+    instance.setPaintProperty("points", "circle-stroke-color", [
+      "case",
+      isSelected,
+      ink.accent,
+      ink.surface,
+    ]);
+    instance.setPaintProperty("points", "circle-stroke-width", [
+      "case",
+      isSelected,
+      3,
+      2,
+    ]);
+    instance.setPaintProperty("points", "circle-radius", [
+      "case",
+      isSelected,
+      8,
+      ["==", ["get", "id"], highlightId ?? ""],
+      7,
+      5,
+    ]);
+    instance.setPaintProperty("point-labels", "text-color", ink.muted);
+    instance.setPaintProperty("point-labels", "text-halo-color", ink.surface);
+    instance.setPaintProperty("selected-label", "text-color", ink.primary);
+    instance.setPaintProperty("selected-label", "text-halo-color", ink.surface);
+    instance.setFilter("selected-label", ["==", ["get", "id"], selectedId]);
+  }, []);
 
   useEffect(() => {
-    if (ready && map.current === ready && map.current.getLayer("points")) {
-      map.current.setPaintProperty(
-        "points",
-        "circle-radius",
-        selected ? ["case", ["==", ["get", "id"], selected.id], 8, 5] : 5
-      );
-    }
-    if (ready && map.current === ready && selected)
-      map.current?.flyTo({
-        center: selected.coordinates,
-        zoom: Math.max(map.current.getZoom(), 17),
-        duration: 600,
-      });
+    if (!ready || map.current !== ready) return;
+    const frame = requestAnimationFrame(() => paintMarks(ready));
+    return () => cancelAnimationFrame(frame);
+  }, [ready, selected, highlightId, paintMarks]);
+
+  // Swap the base style in place so the camera and our layers survive.
+  useEffect(() => {
+    if (!ready || map.current !== ready || styleDark.current === dark) return;
+    styleDark.current = dark;
+    ready.setStyle(styleUrl(dark), {
+      transformStyle: (previous, next) =>
+        previous?.sources.places
+          ? {
+              ...next,
+              sources: { ...next.sources, places: previous.sources.places },
+              layers: [
+                ...next.layers,
+                ...previous.layers.filter((layer) =>
+                  OUR_LAYERS.includes(layer.id)
+                ),
+              ],
+            }
+          : next,
+    });
+    const repaint = () => paintMarks(ready);
+    ready.once("style.load", repaint);
+    return () => {
+      ready.off("style.load", repaint);
+    };
+  }, [ready, dark, paintMarks]);
+
+  useEffect(() => {
+    if (!ready || map.current !== ready || !selected) return;
+    const mobile = isMobile();
+    ready.flyTo({
+      center: selected.coordinates,
+      zoom: Math.max(ready.getZoom(), 17),
+      // Keep the pin clear of the detail card (left on desktop, bottom on mobile).
+      offset: mobile ? [0, -80] : [150, 0],
+      duration: 600,
+    });
   }, [selected, ready]);
 
   const fit = () => {
     if (!places.length || !map.current) return;
     const bounds = new LngLatBounds();
     places.forEach((place) => bounds.extend(place.coordinates));
-    map.current.fitBounds(bounds, { padding: 70, maxZoom: 16 });
+    map.current.fitBounds(bounds, { padding: fitPadding(), maxZoom: 16 });
   };
   return (
     <>
       <div ref={categorySwatches} hidden aria-hidden="true">
         {categories.map((category) => (
           <CategoryDot key={category} category={category} />
+        ))}
+      </div>
+      <div ref={inkSwatches} hidden aria-hidden="true">
+        {["accent", "muted", "primary", "surface"].map((name) => (
+          <span
+            key={name}
+            data-ink={name}
+            style={{ color: `var(--color-${name})` }}
+          />
         ))}
       </div>
       <div

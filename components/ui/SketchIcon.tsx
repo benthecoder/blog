@@ -21,7 +21,7 @@ export function SketchIcon({
       role={label ? "img" : undefined}
       aria-label={label}
       aria-hidden={label ? undefined : true}
-      className={`inline-block bg-ink dark:bg-chalk ${className}`}
+      className={`inline-block bg-accent ${className}`}
       style={{
         WebkitMaskImage: `url("${src}")`,
         maskImage: `url("${src}")`,

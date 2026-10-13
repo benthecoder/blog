@@ -46,7 +46,7 @@ const PaletteSwitch = () => {
         {/* Small mark in a full-size hit area — the notebook icons are sparse
             line art, so a solid disc at their bounding-box size overpowers
             them. */}
-        <span className="block w-3.5 h-3.5 md:w-5 md:h-5 rounded-full bg-ink dark:bg-chalk transition-opacity duration-200 opacity-80 hover:opacity-100" />
+        <span className="block w-3.5 h-3.5 md:w-5 md:h-5 rounded-full bg-accent transition-opacity duration-200 opacity-80 hover:opacity-100" />
       </span>
     </button>
   );

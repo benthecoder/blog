@@ -58,7 +58,7 @@ export const highlightText = (text: string, keywords: string[]): ReactNode => {
       parts.push(
         <mark
           key={i}
-          className="bg-ink dark:bg-chalk text-paper dark:text-night font-medium px-1 py-0.5 rounded-sm"
+          className="bg-accent text-surface font-medium px-1 py-0.5 rounded-sm"
         >
           {text.substring(index, index + length)}
         </mark>
