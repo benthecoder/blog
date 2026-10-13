@@ -1,9 +1,12 @@
 .places-explorer {
-  --map-paper: var(--color-surface);
-  --map-ink: var(--color-primary);
-  --map-muted: var(--color-muted);
-  --map-rule: var(--color-line);
-  --map-accent: var(--color-accent);
+  /* Raw tokens, not the role aliases: @theme inline roles aren't guaranteed
+     to exist as CSS variables in every build, and an undefined var() here made
+     the panel, header and marker colors transparent/black in production. */
+  --map-paper: var(--color-paper);
+  --map-ink: var(--color-ink-strong);
+  --map-muted: var(--color-ink-muted);
+  --map-rule: var(--color-rule);
+  --map-accent: var(--color-ink);
   --map-hover: var(--color-paper-sunken);
   position: fixed;
   inset: 0;
@@ -19,6 +22,11 @@
   letter-spacing: 0;
 }
 .dark .places-explorer {
+  --map-paper: var(--color-night);
+  --map-ink: var(--color-chalk-strong);
+  --map-muted: var(--color-chalk-muted);
+  --map-rule: var(--color-night-rule);
+  --map-accent: var(--color-chalk);
   --map-hover: var(--color-night-raised);
 }
 .places-explorer button,
@@ -129,19 +137,6 @@
 }
 .collection-list button[aria-pressed="true"] .collection-title {
   color: var(--map-accent);
-}
-.map-position {
-  position: absolute;
-  bottom: 28px;
-  left: 16px;
-  background: var(--map-paper);
-  color: var(--map-muted);
-  border: 1px solid var(--map-rule);
-  padding: 5px 8px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-  pointer-events: none;
 }
 .collection-list {
   list-style: none;
@@ -488,6 +483,8 @@
     justify-content: space-between;
     gap: 8px;
     border: 1px solid var(--map-rule);
+    box-shadow: 0 2px 8px #0000000d;
+    z-index: 7;
   }
   .map-brand {
     gap: 12px;
@@ -516,6 +513,20 @@
   }
   .places-panel.is-open ~ .map-area .place-detail {
     display: none;
+  }
+  /* The sheet owns the screen while open: no map chrome poking through it. */
+  .places-panel.is-open
+    ~ .map-area
+    :is(
+      .map-tools,
+      .maplibregl-ctrl-bottom-right,
+      .maplibregl-ctrl-bottom-left
+    ) {
+    visibility: hidden;
+  }
+  .places-panel {
+    z-index: 6;
+    box-shadow: 0 -6px 18px #00000014;
   }
   .collection-heading {
     padding-top: 0;
@@ -549,10 +560,6 @@
     right: 16px;
   }
   .map-area:has(.place-detail) .map-tools {
-    top: 76px;
-    bottom: auto;
-  }
-  .map-area:has(.place-detail) .map-position {
     top: 76px;
     bottom: auto;
   }
