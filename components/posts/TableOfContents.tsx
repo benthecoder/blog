@@ -48,7 +48,7 @@ const TableOfContents = ({ items }: { items: TocEntry[] }) => {
         aria-label="Table of contents"
         className="hidden xl:block absolute left-full top-0 bottom-0 ml-12 w-52"
       >
-        <ul className="sticky top-24 max-h-[75vh] overflow-y-auto space-y-1.5 text-xs border-l border-rule dark:border-night-rule pl-4">
+        <ul className="sticky top-24 max-h-[75vh] overflow-y-auto space-y-1.5 text-xs border-l border-line pl-4">
           {items.map((item) => (
             <li key={item.id} className={item.depth === 3 ? "pl-3" : ""}>
               <a
@@ -59,8 +59,8 @@ const TableOfContents = ({ items }: { items: TocEntry[] }) => {
                 // a muted→strong jump reads in both modes.
                 className={`block transition-colors duration-150 ${
                   activeId === item.id
-                    ? "font-medium text-ink-strong dark:text-chalk-strong"
-                    : "text-ink-muted dark:text-chalk-muted hover:text-ink-strong dark:hover:text-chalk"
+                    ? "font-medium text-primary"
+                    : "text-muted hover:text-ink-strong dark:hover:text-chalk"
                 }`}
               >
                 {item.text}
@@ -72,15 +72,15 @@ const TableOfContents = ({ items }: { items: TocEntry[] }) => {
 
       {/* Mobile/tablet: collapsed block between title and body. */}
       <details className="xl:hidden mb-8 text-sm text-ink-soft dark:text-chalk-muted">
-        <summary className="cursor-pointer select-none w-fit hover:text-ink dark:hover:text-chalk transition-colors duration-150">
+        <summary className="cursor-pointer select-none w-fit hover:text-accent transition-colors duration-150">
           Contents
         </summary>
-        <ul className="mt-2 space-y-1.5 border-l border-rule dark:border-night-rule pl-4">
+        <ul className="mt-2 space-y-1.5 border-l border-line pl-4">
           {items.map((item) => (
             <li key={item.id} className={item.depth === 3 ? "pl-3" : ""}>
               <a
                 href={`#${item.id}`}
-                className="block hover:text-ink dark:hover:text-chalk transition-colors duration-150"
+                className="block hover:text-accent transition-colors duration-150"
               >
                 {item.text}
               </a>

@@ -47,9 +47,9 @@ export default function SpotifyNowPlaying() {
 
   return (
     <div
-      className={`mt-8 text-sm text-ink-muted dark:text-chalk-muted leading-relaxed transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
+      className={`mt-8 text-sm text-muted leading-relaxed transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
-      <div className="border-t border-rule dark:border-night-rule pt-6">
+      <div className="border-t border-line pt-6">
         <p className="mb-3 text-xs opacity-60">♫ recent</p>
         <div className="flex flex-col gap-2.5">
           {recentlyPlayed.tracks.slice(0, 10).map((track, i) => (

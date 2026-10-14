@@ -1,4 +1,5 @@
 import GithubSlugger from "github-slugger";
+import { htmlText } from "./htmlText";
 
 export interface TocEntry {
   id: string;
@@ -9,15 +10,15 @@ export interface TocEntry {
 // Mirror how rehype-slug sees a heading: plain text content, with inline
 // markdown syntax stripped. Keeps ids in sync with the rendered anchors.
 const stripInline = (text: string): string =>
-  text
-    .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/`([^`]*)`/g, "$1")
-    .replace(/(\*\*|__)(.*?)\1/g, "$2")
-    .replace(/(\*|_)(.*?)\1/g, "$2")
-    .replace(/~~(.*?)~~/g, "$1")
-    .replace(/<[^>]+>/g, "")
-    .trim();
+  htmlText(
+    text
+      .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+      .replace(/`([^`]*)`/g, "$1")
+      .replace(/(\*\*|__)(.*?)\1/g, "$2")
+      .replace(/(\*|_)(.*?)\1/g, "$2")
+      .replace(/~~(.*?)~~/g, "$1")
+  ).trim();
 
 // Extracts ## and ### headings, skipping fenced code blocks.
 export function extractToc(markdown: string): TocEntry[] {

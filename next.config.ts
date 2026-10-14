@@ -1,4 +1,11 @@
 import type { NextConfig } from "next";
+import {
+  PHASE_DEVELOPMENT_SERVER,
+  PHASE_PRODUCTION_BUILD,
+} from "next/constants";
+import { createRequire } from "node:module";
+import path from "node:path";
+import { prepareMapWorkerAssets } from "./utils/mapWorkerAssets";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -30,6 +37,11 @@ const nextConfig: NextConfig = {
         source: "/",
         has: [{ type: "host", value: "photos.bneo.xyz" }],
         destination: "/photos",
+      },
+      {
+        source: "/",
+        has: [{ type: "host", value: "maps.bneo.xyz" }],
+        destination: "/map",
       },
     ],
     afterFiles: [
@@ -84,4 +96,12 @@ const nextConfig: NextConfig = {
   ],
 };
 
-export default nextConfig;
+export default function config(phase: string): NextConfig {
+  if (phase === PHASE_DEVELOPMENT_SERVER || phase === PHASE_PRODUCTION_BUILD) {
+    prepareMapWorkerAssets(
+      createRequire(import.meta.url).resolve("maplibre-gl/package.json"),
+      path.join(process.cwd(), "public")
+    );
+  }
+  return nextConfig;
+}

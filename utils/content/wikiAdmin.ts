@@ -4,6 +4,11 @@ import { createHash } from "crypto";
 import { getWikiPath, isSafeSlug } from "@/config/paths";
 import { readMarkdownFile, writeMarkdownFile } from "./markdown";
 import { parseTags } from "./tags";
+import {
+  paperFrontmatter,
+  PAPER_FIELD_KEYS,
+  readPaperFields,
+} from "./paperFields";
 import type { WikiEditorPage } from "@/types/wiki";
 
 export class WikiEditError extends Error {
@@ -64,6 +69,7 @@ export function getWikiEditorPage(slug: string): WikiEditorPage {
         : String(data.lastUpdated ?? ""),
     content,
     version: versionOf(data, content),
+    paper: readPaperFields(data),
   };
 }
 
@@ -78,6 +84,16 @@ const wikiSaveSchema = z.object({
   tags: z.string().max(1000),
   content: z.string().max(2_000_000),
   create: z.boolean(),
+  paper: z
+    .object({
+      authors: z.string().max(500),
+      year: z.string().max(10),
+      url: z.string().max(1000),
+      read: z.string().max(40),
+      source: z.string().max(100),
+    })
+    .partial()
+    .optional(),
   version: z.unknown().optional(),
 });
 
@@ -95,8 +111,17 @@ export function saveWikiEditorPage(input: unknown): WikiEditorPage {
       400
     );
   }
-  const { slug, title, category, description, tags, content, create, version } =
-    parsed.data;
+  const {
+    slug,
+    title,
+    category,
+    description,
+    tags,
+    content,
+    create,
+    version,
+    paper,
+  } = parsed.data;
   const filePath = wikiPath(slug);
   let existingData: Record<string, unknown> = {};
   if (create) {
@@ -113,6 +138,14 @@ export function saveWikiEditorPage(input: unknown): WikiEditorPage {
       );
     existingData = existing.data;
   }
+  // When the editor sends paper fields it owns them: cleared fields are removed.
+  if (paper) {
+    existingData = Object.fromEntries(
+      Object.entries(existingData).filter(
+        ([key]) => !(PAPER_FIELD_KEYS as readonly string[]).includes(key)
+      )
+    );
+  }
   try {
     writeMarkdownFile(
       filePath,
@@ -122,6 +155,7 @@ export function saveWikiEditorPage(input: unknown): WikiEditorPage {
         category: category.trim() || "uncategorized",
         description: description.trim(),
         tags: [...new Set(parseTags(tags).filter(Boolean))],
+        ...(paper ? paperFrontmatter(paper) : {}),
         lastUpdated: new Date().toISOString(),
       },
       content,

@@ -34,11 +34,11 @@ export function ConfirmModal({
         event.preventDefault();
         onCancel();
       }}
-      className="m-auto bg-paper dark:bg-night border border-rule dark:border-night-rule p-8 max-w-md w-[calc(100vw-2rem)] backdrop:bg-black/40"
+      className="m-auto bg-surface border border-line p-8 max-w-md w-[calc(100vw-2rem)] backdrop:bg-black/40"
     >
       <h2
         id={titleId}
-        className="text-lg font-light mb-4 text-ink dark:text-chalk tracking-wide"
+        className="text-lg font-light mb-4 text-accent tracking-wide"
       >
         {config.title}
       </h2>
@@ -51,13 +51,13 @@ export function ConfirmModal({
       <div className="flex gap-3 justify-end">
         <button
           onClick={onCancel}
-          className="min-h-11 px-4 py-1.5 text-sm border border-rule dark:border-night-rule text-ink dark:text-chalk hover:border-ink dark:hover:border-chalk transition-colors"
+          className="min-h-11 px-4 py-1.5 text-sm border border-line text-accent hover:border-accent transition-colors"
         >
           {config.labels[0]}
         </button>
         <button
           onClick={config.onConfirm}
-          className="min-h-11 px-4 py-1.5 text-sm border border-ink dark:border-chalk text-ink dark:text-chalk hover:bg-ink hover:text-white dark:hover:bg-chalk dark:hover:text-night transition-colors"
+          className="min-h-11 px-4 py-1.5 text-sm border border-accent text-accent hover:bg-ink hover:text-white dark:hover:bg-chalk dark:hover:text-night transition-colors"
         >
           {config.labels[1]}
         </button>

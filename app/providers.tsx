@@ -46,11 +46,8 @@ function readStoredPalette(): Palette {
     : DEFAULT_PALETTE;
 }
 
-const INIT_SCRIPT = `(function(){try{var v=localStorage.getItem(${JSON.stringify(
-  STORAGE_KEY
-)});var valid=${JSON.stringify(PALETTES)};document.documentElement.setAttribute("data-palette",valid.indexOf(v)>-1?v:${JSON.stringify(
-  DEFAULT_PALETTE
-)});}catch(e){}})();`;
+// Keep executable source static; stored values are checked against an allowlist.
+const INIT_SCRIPT = `(function(){try{var v=localStorage.getItem("palette");var valid=["indigo","olive","gold","steel","vermillion","rose"];document.documentElement.setAttribute("data-palette",valid.indexOf(v)>-1?v:"steel");}catch(e){}})();`;
 
 function PaletteProvider({ children }: { children: ReactNode }) {
   const [palette, setPaletteState] = useState<Palette>(readStoredPalette);

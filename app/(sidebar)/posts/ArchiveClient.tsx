@@ -13,8 +13,7 @@ type Sort = "date" | "views" | "length";
 const PAGE_SIZE = 50;
 const VIEWS: View[] = ["list", "year", "tags"];
 
-const labelCls =
-  "text-[10px] tracking-widest uppercase text-ink/30 dark:text-chalk/30";
+const labelCls = "eyebrow";
 
 function paginationRange(current: number, total: number): (number | "…")[] {
   if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
@@ -132,8 +131,8 @@ export default function ArchiveClient({
               onClick={() => setView(v)}
               className={`transition-[color] duration-150 ${
                 view === v
-                  ? "text-ink dark:text-chalk"
-                  : "text-ink/35 dark:text-chalk/35 hover:text-ink/70 dark:hover:text-chalk/70"
+                  ? "text-accent"
+                  : "text-accent/35 hover:text-accent/70"
               }`}
             >
               {v}
@@ -141,13 +140,13 @@ export default function ArchiveClient({
           ))}
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-ink/40 dark:text-chalk/40 tabular-nums">
+          <span className="text-xs text-accent/40 tabular-nums">
             {allPosts.length} posts ·{" "}
             {new Intl.NumberFormat().format(totalWords)} words
           </span>
           <Link
             href="/search"
-            className="text-ink/35 dark:text-chalk/35 hover:text-ink/70 dark:hover:text-chalk/70 transition-[color] duration-150"
+            className="text-accent/35 hover:text-accent/70 transition-[color] duration-150"
             aria-label="search"
           >
             <svg
@@ -188,8 +187,8 @@ export default function ArchiveClient({
                   onClick={() => handleSort(s)}
                   className={`px-2.5 py-1 text-[10px] transition-[background-color,color] duration-150 ${
                     sort === s
-                      ? "bg-ink/8 dark:bg-chalk/8 text-ink dark:text-chalk"
-                      : "text-ink/35 dark:text-chalk/35 hover:text-ink/60 dark:hover:text-chalk/60"
+                      ? "bg-accent/8 text-accent"
+                      : "text-accent/35 hover:text-accent/60"
                   }`}
                 >
                   {s === "views" && viewsLoading ? "…" : s}
@@ -210,7 +209,7 @@ export default function ArchiveClient({
                 p === "…" ? (
                   <span
                     key={`ellipsis-${i}`}
-                    className="w-7 h-7 flex items-center justify-center text-xs text-ink/30 dark:text-chalk/30"
+                    className="w-7 h-7 flex items-center justify-center text-xs text-accent/30"
                   >
                     …
                   </span>
@@ -220,8 +219,8 @@ export default function ArchiveClient({
                     onClick={() => setPage(p)}
                     className={`w-7 h-7 text-xs tabular-nums border transition-[border-color,color] duration-150 ${
                       p === page
-                        ? "border-ink/60 dark:border-chalk/60 text-ink dark:text-chalk"
-                        : "border-rule dark:border-white/8 text-ink/40 dark:text-chalk/40 hover:border-ink/40 dark:hover:border-chalk/40"
+                        ? "border-accent/60 text-accent"
+                        : "border-rule dark:border-white/8 text-accent/40 hover:border-accent/40"
                     }`}
                   >
                     {p}
@@ -261,12 +260,10 @@ export default function ArchiveClient({
               prefetch={prefetchTag === tag ? null : false}
               onMouseEnter={() => setPrefetchTag(tag)}
               onFocus={() => setPrefetchTag(tag)}
-              className="border border-rule dark:border-night-raised hover:bg-ink/5 dark:hover:bg-chalk/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors duration-150"
+              className="border border-rule dark:border-night-raised hover:bg-accent/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors duration-150"
             >
-              <span className="text-xs text-ink dark:text-chalk truncate">
-                {tag}
-              </span>
-              <span className="text-[10px] text-ink/30 dark:text-chalk/30 font-mono shrink-0">
+              <span className="text-xs text-accent truncate">{tag}</span>
+              <span className="text-[10px] text-accent/30 font-mono shrink-0">
                 {count}
               </span>
             </Link>

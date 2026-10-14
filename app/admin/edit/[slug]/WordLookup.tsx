@@ -60,7 +60,7 @@ export function WordLookup({ selection }: { selection: WordSelection }) {
     >
       {open ? (
         <div
-          className={`${entries?.definition && entries.thesaurus ? "w-[36rem] grid grid-cols-2 gap-4" : "w-80"} max-w-[calc(100vw-24px)] p-3 bg-paper dark:bg-night-raised text-ink dark:text-chalk border border-rule dark:border-night-rule shadow-lg`}
+          className={`${entries?.definition && entries.thesaurus ? "w-[36rem] grid grid-cols-2 gap-4" : "w-80"} max-w-[calc(100vw-24px)] p-3 bg-paper dark:bg-night-raised text-accent border border-line shadow-lg`}
         >
           {error ? (
             <p className="text-ink-soft dark:text-chalk-muted">{error}</p>
@@ -74,9 +74,7 @@ export function WordLookup({ selection }: { selection: WordSelection }) {
               ([label, text]) =>
                 text && (
                   <section key={label} className="min-w-0">
-                    <h3 className="mb-1 text-[11px] text-ink-muted dark:text-chalk-muted">
-                      {label}
-                    </h3>
+                    <h3 className="mb-1 text-[11px] text-muted">{label}</h3>
                     <p className="max-h-64 overflow-y-auto whitespace-pre-line leading-relaxed pr-1 [scrollbar-width:thin] [scrollbar-color:var(--scrollbar-thumb-quiet)_transparent]">
                       {formatEntry(text)}
                     </p>
@@ -89,7 +87,7 @@ export function WordLookup({ selection }: { selection: WordSelection }) {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="px-2 py-1 rounded-xs bg-paper dark:bg-night-raised border border-rule dark:border-night-rule shadow-sm text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk"
+          className="px-2 py-1 rounded-xs bg-paper dark:bg-night-raised border border-line shadow-sm text-ink-soft dark:text-chalk-muted hover:text-accent"
         >
           define
         </button>

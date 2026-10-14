@@ -12,10 +12,8 @@ export default function Backlinks({ contentRef }: { contentRef: ContentRef }) {
   if (backlinks.length === 0) return null;
 
   return (
-    <section className="mt-12 pt-6 border-t border-rule dark:border-night-rule">
-      <h2 className="text-[10px] font-mono tracking-widest uppercase text-ink-strong/40 dark:text-chalk-strong/40 mb-3">
-        Linked from
-      </h2>
+    <section className="mt-12 pt-6 border-t border-line">
+      <h2 className="eyebrow mb-3 font-mono">Linked from</h2>
       <ul className="space-y-1.5">
         {backlinks.map((entry) => (
           <li key={entry.href}>
