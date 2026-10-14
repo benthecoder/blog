@@ -12,6 +12,13 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   poweredByHeader: false,
   images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "pub-e85be102871845218dcda1cc49c78508.r2.dev",
+        pathname: "/**",
+      },
+    ],
     formats: ["image/avif", "image/webp"],
     // Limit generated variants to the sizes and qualities the site uses.
     deviceSizes: [640, 828, 1200, 1920],
@@ -26,6 +33,11 @@ const nextConfig: NextConfig = {
   },
   rewrites: async () => ({
     beforeFiles: [
+      {
+        source: "/",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos",
+      },
       {
         source: "/",
         has: [{ type: "host", value: "maps.bneo.xyz" }],

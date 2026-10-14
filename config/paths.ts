@@ -40,6 +40,10 @@ export const KNOWLEDGE_MAP_NODES_JSON = path.join(
   "knowledge-map-nodes.json"
 );
 export const IMAGE_META_JSON = path.join(DATA_DIR, "image-meta.json");
+export const PHOTO_COLLECTIONS_JSON = path.join(
+  DATA_DIR,
+  "photo-collections.json"
+);
 
 export const LIBRARY_MD = path.join(
   ROOT_DIR,
