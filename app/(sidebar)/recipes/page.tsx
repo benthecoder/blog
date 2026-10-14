@@ -22,41 +22,38 @@ const RecipesPage = () => {
           Nothing here yet.
         </p>
       ) : (
-        <table className="w-full border-collapse border border-ink-strong dark:border-chalk-strong">
-          <tbody>
-            {recipes.map((recipe) => (
-              <tr
-                key={recipe.slug}
-                className="border border-ink-strong dark:border-chalk-strong"
+        <ul className="flex flex-col gap-8">
+          {recipes.map((recipe) => (
+            <li key={recipe.slug}>
+              <Link
+                href={`/recipes/${recipe.slug}`}
+                className="group flex items-start gap-4"
               >
-                <td className="w-[150px] border border-ink-strong p-0 align-middle dark:border-chalk-strong">
-                  <div className="relative size-[150px] bg-paper-sunken dark:bg-night-raised">
-                    {recipe.image && (
-                      <Image
-                        src={recipe.image}
-                        alt=""
-                        fill
-                        sizes="150px"
-                        className="object-cover"
-                      />
-                    )}
-                  </div>
-                </td>
-                <td className="border border-ink-strong p-3 align-middle text-sm dark:border-chalk-strong">
-                  <Link
-                    href={`/recipes/${recipe.slug}`}
-                    className="font-bold underline underline-offset-2 hover:text-ink dark:hover:text-chalk-soft"
-                  >
+                {recipe.image && (
+                  <span className="relative mt-0.5 block size-16 shrink-0 overflow-hidden rounded-md">
+                    <Image
+                      src={recipe.image}
+                      alt=""
+                      fill
+                      sizes="64px"
+                      className="object-cover"
+                    />
+                  </span>
+                )}
+                <span>
+                  <span className="font-bold underline-offset-2 group-hover:underline">
                     {recipe.title}
-                  </Link>
+                  </span>
                   {recipe.description && (
-                    <p className="mt-3">{recipe.description}</p>
+                    <span className="mt-1 block text-sm text-ink-strong/60 dark:text-chalk-strong/60">
+                      {recipe.description}
+                    </span>
                   )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );
