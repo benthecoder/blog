@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import type { PhotoCollection, StreamPhoto } from "@/types/photostream";
 
-export const slugifyPhotoFolder = (value: string) =>
+const slugifyPhotoFolder = (value: string) =>
   value
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
