@@ -22,6 +22,9 @@
    ink tier in the PALETTES block; nothing else needs to change.
    ========================================================================== */
 @theme {
+  --color-photo-viewer: #131413;
+  --color-photo-caption: #f6f5ef;
+  --color-photo-shade: #131413b3;
   /* -- Surfaces: light ---------------------------------------------------- */
   --color-paper: #fbfaf5; /* page + card background */
   --color-paper-raised: #f8fbfb; /* raised card */

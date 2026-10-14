@@ -4,366 +4,234 @@
     {
       "id": "capital",
       "name": "Capital",
-      "coordinates": [
-        -122.4071024,
-        37.7940788
-      ],
+      "coordinates": [-122.4071024, 37.7940788],
       "address": "839 Clay St, San Francisco",
-      "tags": [
-        "food"
-      ],
+      "tags": ["food"],
       "note": "\"best chicken wings in the bay\"",
       "googlePlaceId": "ChIJXRqnWIuAhYAR8b-4A9UNRHU"
     },
     {
       "id": "hons",
       "name": "Hon's Wun-Tun House",
-      "coordinates": [
-        -122.4046276,
-        37.7942739
-      ],
+      "coordinates": [-122.4046276, 37.7942739],
       "address": "648 Kearny St, San Francisco",
-      "tags": [
-        "food"
-      ],
+      "tags": ["food"],
       "note": "good wontons and shanghai pan-fried soup dumplings",
       "googlePlaceId": "ChIJW-VIGYuAhYARDoGG1byUOcs"
     },
     {
       "id": "mas",
       "name": "Ma's Dimsum & Cafe",
-      "coordinates": [
-        -122.4102778,
-        37.7966667
-      ],
+      "coordinates": [-122.4102778, 37.7966667],
       "address": "1315 Powell St, San Francisco",
-      "tags": [
-        "food"
-      ],
+      "tags": ["food"],
       "note": "best claypot rice with crispy bottom",
       "googlePlaceId": "ChIJ0bn3U_KAhYAR4uiaZnKx44A"
     },
     {
       "id": "yees",
       "name": "Yee's Restaurant",
-      "coordinates": [
-        -122.4070265,
-        37.7972785
-      ],
+      "coordinates": [-122.4070265, 37.7972785],
       "address": "1131 Grant Ave, San Francisco",
-      "tags": [
-        "food"
-      ],
+      "tags": ["food"],
       "note": "chill spot, great braised beef stew",
       "googlePlaceId": "ChIJQ8ltgPSAhYAR7MLcpoA-6vM"
     },
     {
       "id": "zy",
       "name": "Z & Y Peking Duck",
-      "coordinates": [
-        -122.4054916,
-        37.7963524
-      ],
+      "coordinates": [-122.4054916, 37.7963524],
       "address": "606 Jackson St, San Francisco",
-      "tags": [
-        "food"
-      ],
+      "tags": ["food"],
       "note": "good roast duck, on the pricier side",
       "googlePlaceId": "ChIJP9HbwPSAhYAR2jzkKhT18MY"
     },
     {
       "id": "mong-kok",
       "name": "Good Mong Kok Bakery",
-      "coordinates": [
-        -122.408356,
-        37.795455
-      ],
+      "coordinates": [-122.408356, 37.795455],
       "address": "1039 Stockton St, San Francisco",
-      "tags": [
-        "food"
-      ],
+      "tags": ["food"],
       "note": "sesame balls, might be a long line",
       "googlePlaceId": "ChIJverWRvOAhYARVfNtAtDviIc"
     },
     {
       "id": "yummy",
       "name": "Yummy Bakery & Cafe",
-      "coordinates": [
-        -122.4054873,
-        37.7960919
-      ],
+      "coordinates": [-122.4054873, 37.7960919],
       "address": "607 Jackson St, San Francisco",
-      "tags": [
-        "food"
-      ],
+      "tags": ["food"],
       "note": "famous for egg tarts",
       "googlePlaceId": "ChIJ2VhSxvSAhYARxn-BM9ied9Y"
     },
     {
       "id": "wong-lee",
       "name": "Wong Lee Bakery",
-      "coordinates": [
-        -122.4072627,
-        37.7960381
-      ],
+      "coordinates": [-122.4072627, 37.7960381],
       "address": "732 Jackson St, San Francisco",
-      "tags": [
-        "food"
-      ],
+      "tags": ["food"],
       "note": "cheaper and less crowded",
       "googlePlaceId": "ChIJEZlOXvOAhYARvN1tiLWjNgk"
     },
     {
       "id": "rice-roll",
       "name": "Rice Roll Express",
-      "coordinates": [
-        -122.4084831,
-        37.7962296
-      ],
+      "coordinates": [-122.4084831, 37.7962296],
       "address": "1131 Stockton St, San Francisco",
-      "tags": [
-        "food"
-      ],
+      "tags": ["food"],
       "note": "yummy soft rice noodles",
       "googlePlaceId": "ChIJRQiaCQCBhYAR6ynYJWaw1bk"
     },
     {
       "id": "by-me",
       "name": "By Me Boba Tea",
-      "coordinates": [
-        -122.4073351,
-        37.7955908
-      ],
+      "coordinates": [-122.4073351, 37.7955908],
       "address": "22 Ross Alley, San Francisco",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "right beside Golden Gate Fortune Cookie Factory",
       "googlePlaceId": "ChIJ2xMNyUKBhYAR8Q2HJJTnOYU"
     },
     {
       "id": "fruit-tea",
       "name": "Chinatown Taiwan Fruit Tea",
-      "coordinates": [
-        -122.4076269,
-        37.7951026
-      ],
+      "coordinates": [-122.4076269, 37.7951026],
       "address": "870 Washington St, San Francisco",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "fruity tea options",
       "googlePlaceId": "ChIJ7QcwOq-BhYARSeWoRNwUDGA"
     },
     {
       "id": "maiko",
       "name": "Matcha Cafe Maiko",
-      "coordinates": [
-        -122.4062082,
-        37.7942158
-      ],
+      "coordinates": [-122.4062082, 37.7942158],
       "address": "756 Grant Ave, San Francisco",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "matcha ice cream",
       "googlePlaceId": "ChIJQeLNPsmBhYAR3DfsmDa7K7A"
     },
     {
       "id": "waverly",
       "name": "On Waverly",
-      "coordinates": [
-        -122.4069298,
-        37.7950135
-      ],
+      "coordinates": [-122.4069298, 37.7950135],
       "address": "162 Waverly Pl, San Francisco",
-      "tags": [
-        "shop"
-      ],
+      "tags": ["shop"],
       "note": "cute gift shop",
       "googlePlaceId": "ChIJsyarI-uBhYARTTD8hjiemKg"
     },
     {
       "id": "lanlan",
       "name": "LanLanMarket",
-      "coordinates": [
-        -122.406743,
-        37.79522
-      ],
+      "coordinates": [-122.406743, 37.79522],
       "address": "812 Washington St, San Francisco",
-      "tags": [
-        "shop",
-        "food"
-      ],
+      "tags": ["shop", "food"],
       "note": "Asian snacks",
       "googlePlaceId": "ChIJf4FOMQCBhYAR_1oKV20BHxA"
     },
     {
       "id": "stout",
       "name": "William Stout Architectural Books",
-      "coordinates": [
-        -122.4034271,
-        37.7966638
-      ],
+      "coordinates": [-122.4034271, 37.7966638],
       "address": "804 Montgomery St, San Francisco",
-      "tags": [
-        "shop"
-      ],
+      "tags": ["shop"],
       "note": "",
       "googlePlaceId": "ChIJ7YQtMPWAhYARW1Ey6W_oWnM"
     },
     {
       "id": "city-lights",
       "name": "City Lights Booksellers & Publishers",
-      "coordinates": [
-        -122.4066213,
-        37.7976271
-      ],
+      "coordinates": [-122.4066213, 37.7976271],
       "address": "261 Columbus Ave, San Francisco",
-      "tags": [
-        "shop"
-      ],
+      "tags": ["shop"],
       "note": "",
       "googlePlaceId": "ChIJ9W7ofPSAhYARPkhgF24V8KI"
     },
     {
       "id": "redwood",
       "name": "Transamerica Redwood Park",
-      "coordinates": [
-        -122.4022806,
-        37.7951667
-      ],
+      "coordinates": [-122.4022806, 37.7951667],
       "address": "600 Montgomery St, San Francisco",
-      "tags": [
-        "outdoors"
-      ],
+      "tags": ["outdoors"],
       "note": "redwood trees in downtown",
       "googlePlaceId": "ChIJYXDDl4qAhYAReRkaZFbsSzo"
     },
     {
       "id": "libertino",
       "name": "Libertino Cafe",
-      "coordinates": [
-        -80.19954,
-        25.79994
-      ],
+      "coordinates": [-80.19954, 25.79994],
       "address": "220 NW 24th St, Miami",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "plant protein matcha",
       "googlePlaceId": "ChIJO6Z63Z232YgR7-R3TQSE0FE"
     },
     {
       "id": "the-coffee",
       "name": "The Coffee",
-      "coordinates": [
-        -80.197862,
-        25.8019
-      ],
+      "coordinates": [-80.197862, 25.8019],
       "address": "136 NW 27th St, Miami",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "my go to",
       "googlePlaceId": "ChIJZfgrzK32YgRedQn4eDkYak"
     },
     {
       "id": "nu-real-food",
       "name": "NU real food",
-      "coordinates": [
-        -80.19366,
-        25.8073
-      ],
+      "coordinates": [-80.19366, 25.8073],
       "address": "3252 Buena Vista Blvd, Miami",
-      "tags": [
-        "cafes",
-        "food"
-      ],
+      "tags": ["cafes", "food"],
       "note": "good matcha and food",
       "googlePlaceId": "ChIJFdsfUgCx2YgRtDMLHjav0I8"
     },
     {
       "id": "panther-coffee",
       "name": "Panther Coffee",
-      "coordinates": [
-        -80.199196,
-        25.799907
-      ],
+      "coordinates": [-80.199196, 25.799907],
       "address": "2390 NW 2nd Ave, Miami",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "good coffee, also cool tree",
       "googlePlaceId": "ChIJG6HQcrK22YgREOwX4PyCF8c"
     },
     {
       "id": "magdalena",
       "name": "Magdalena Coffee & Houseplants",
-      "coordinates": [
-        -80.188291,
-        25.801796
-      ],
+      "coordinates": [-80.188291, 25.801796],
       "address": "321 NE 26th St, Miami",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "small but cozy",
       "googlePlaceId": "ChIJU-jJiI632YgRrR4AFKd6Ssg"
     },
     {
       "id": "studio-24",
       "name": "Studio 24 Artful Coffee",
-      "coordinates": [
-        -80.189508,
-        25.803001
-      ],
+      "coordinates": [-80.189508, 25.803001],
       "address": "2700A Biscayne Blvd, Miami",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "v art vibes",
       "googlePlaceId": "ChIJY5dR0dG32YgRx0qStVgpk_c"
     },
     {
       "id": "rutina",
       "name": "Rutina Coffee",
-      "coordinates": [
-        -80.188694,
-        25.795531
-      ],
+      "coordinates": [-80.188694, 25.795531],
       "address": "2001 Biscayne Blvd, Miami",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "a little small but still cool",
       "googlePlaceId": "ChIJpYGzkqG32YgRGC1OiOFbS4E"
     },
     {
       "id": "fincas",
       "name": "Fincas Coffee",
-      "coordinates": [
-        -80.192224,
-        25.821903
-      ],
+      "coordinates": [-80.192224, 25.821903],
       "address": "5030 NE 2nd Ave, Miami",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "i love the jungle vibes here",
       "googlePlaceId": "ChIJNRxUk1e32YgRLIl840TlJGQ"
     },
     {
       "id": "mins",
       "name": "MINS Coffeehouse",
-      "coordinates": [
-        -80.198678,
-        25.799556
-      ],
+      "coordinates": [-80.198678, 25.799556],
       "address": "194 NW 24th St, Miami",
-      "tags": [
-        "cafes"
-      ],
+      "tags": ["cafes"],
       "note": "so good, two ladies stopped me on the street to ask about it",
       "googlePlaceId": "ChIJ0TCuFFC32YgRTpZ85rwXito"
     }

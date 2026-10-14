@@ -86,6 +86,9 @@ importers:
       dotenv:
         specifier: ^16.4.5
         version: 16.6.1
+      exifr:
+        specifier: ^7.1.3
+        version: 7.1.3
       github-slugger:
         specifier: ^2.0.0
         version: 2.0.0
@@ -2829,6 +2832,9 @@ packages:
   eventsource-parser@3.1.1:
     resolution: {integrity: sha512-EKN1vKAMcZ8MlYMpaNuxN6R9yakzH6uajHcHVTqWJzvu5pWw9DyhbP35HH8MVBQ+dZjAfDxk+A8NiR9KWaXiyQ==}
     engines: {node: '>=18.0.0'}
+
+  exifr@7.1.3:
+    resolution: {integrity: sha512-g/aje2noHivrRSLbAUtBPWFbxKdKhgj/xr1vATDdUXPOFYJlQ62Ft0oy+72V6XLIpDJfHs6gXLbBLAolqOXYRw==}
 
   expect-type@1.4.0:
     resolution: {integrity: sha512-KfYbmpRm0VbLjEvVa9yGwCi9GI34xvi7A/HXYWQO65CSD2u3MczUJSuwXKFIxlGsgBQizV9q5J9NHj4VG0n+pA==}
@@ -7115,6 +7121,8 @@ snapshots:
   eventemitter3@5.0.1: {}
 
   eventsource-parser@3.1.1: {}
+
+  exifr@7.1.3: {}
 
   expect-type@1.4.0: {}
 
