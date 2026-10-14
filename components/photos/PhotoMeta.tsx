@@ -5,13 +5,7 @@ import { formatPhotoDate } from "@/utils/photoDate";
 import { parsePlace, placeSlug } from "@/utils/photoPlaces";
 
 // The one caption bar under a photo, shared by the viewer and the photo page.
-export function PhotoMeta({
-  photo,
-  pageLink = false,
-}: {
-  photo: StreamPhoto;
-  pageLink?: boolean;
-}) {
+export function PhotoMeta({ photo }: { photo: StreamPhoto }) {
   const place = parsePlace(photo.place);
   const country = place?.country && placeSlug(place.country);
   const camera = [shortCamera(photo.camera), exposureLine(photo)]
@@ -44,20 +38,15 @@ export function PhotoMeta({
       </div>
       <div className="ph-meta-right">
         {camera && <p className="ph-mono">{camera}</p>}
-        <p className="ph-mono ph-meta-links">
-          {pageLink && (
-            <Link href={`/photos/photo/${encodeURIComponent(photo.id)}`}>
-              Photo page ↗
-            </Link>
-          )}
-          {photo.journal && (
+        {photo.journal && (
+          <p className="ph-mono ph-meta-links">
             <a
               href={`https://bneo.xyz/posts/${encodeURIComponent(photo.journal)}`}
             >
               Journal ↗
             </a>
-          )}
-        </p>
+          </p>
+        )}
       </div>
     </div>
   );

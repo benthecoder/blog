@@ -91,7 +91,7 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
             </button>
           </div>
           <footer>
-            <PhotoMeta photo={photo} pageLink />
+            <PhotoMeta photo={photo} />
           </footer>
         </div>
       )}
