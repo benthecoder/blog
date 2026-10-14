@@ -36,6 +36,15 @@ export default async function PhotosPage({
     .filter(Boolean)
     .join(" · ");
   return (
-    <PhotoStream photos={photos} initialCamera={camera} summary={summary} />
+    <PhotoStream
+      photos={photos}
+      initialCamera={camera}
+      header={
+        <>
+          <h1 className="ph-sr">All photos</h1>
+          <p className="ph-mono ph-summary">{summary}</p>
+        </>
+      }
+    />
   );
 }

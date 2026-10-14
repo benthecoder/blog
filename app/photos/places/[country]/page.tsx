@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PhotoGallery } from "@/components/photos/ContactSheet";
+import { CityRows } from "@/components/photos/CityRows";
 import { getPhotostream } from "@/utils/content/photostream";
 import { placeTree } from "@/utils/photoPlaces";
 
@@ -43,18 +43,7 @@ export default async function CountryPage({ params }: Props) {
           {count(country.cities.length, "city", "cities")}
         </p>
       </header>
-      {country.cities.map((city) => (
-        <section key={city.slug} id={city.slug} className="ph-city-section">
-          <h2 className="ph-month ph-mono">
-            <span>{city.city}</span>
-            <span>{count(city.count, "frame")}</span>
-          </h2>
-          {city.spots.length > 0 && (
-            <p className="ph-mono ph-spots">{city.spots.join(" · ")}</p>
-          )}
-          <PhotoGallery photos={city.photos} />
-        </section>
-      ))}
+      <CityRows country={country} />
     </main>
   );
 }

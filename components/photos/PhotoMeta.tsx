@@ -22,7 +22,7 @@ export function PhotoMeta({ photo }: { photo: StreamPhoto }) {
               {place.spot && `${place.spot} · `}
               {place.city && (
                 <Link
-                  href={`/photos/places/${country}#${placeSlug(place.city)}`}
+                  href={`/photos/places/${country}/${placeSlug(place.city)}`}
                 >
                   {place.city}
                 </Link>
