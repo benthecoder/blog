@@ -915,3 +915,7 @@ body {
 .dark .essay-prose li:target {
   color: var(--color-chalk-strong);
 }
+
+body:has(.photo-site) .floating-controls {
+  display: none;
+}

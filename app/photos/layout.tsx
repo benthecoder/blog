@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
-import { NavLink } from "@/components/photos/NavLink";
+import { PhotoNav } from "@/components/photos/PhotoNav";
 import { PhotoUpdates } from "@/components/photos/PhotoUpdates";
 import "./photos.css";
 
@@ -14,24 +14,11 @@ export default function PhotosLayout({ children }: { children: ReactNode }) {
       <PhotoUpdates />
       <header className="photo-bar">
         <Link href="/photos" className="photo-brand">
-          Photos <span>/ ben neo</span>
+          Benedict Neo
         </Link>
-        <nav aria-label="Photos">
-          <NavLink href="/photos" exact>
-            All
-          </NavLink>
-          <NavLink href="/photos/places">Places</NavLink>
-          <NavLink href="/photos/trips" also="/photos/sets">
-            Trips
-          </NavLink>
-          <a href="https://bneo.xyz">Blog ↗</a>
-        </nav>
+        <PhotoNav />
       </header>
       {children}
-      <footer className="photo-footer">
-        <span>ben neo — shot on whatever was in my pocket</span>
-        <a href="https://bneo.xyz">bneo.xyz ↗</a>
-      </footer>
     </div>
   );
 }
