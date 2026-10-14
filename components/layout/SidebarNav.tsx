@@ -19,7 +19,7 @@ const links = [
   { path: "/library", text: "library", icon: "library.svg" },
   { path: "/papers", text: "papers", icon: "flashcards.svg" },
   { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
-  { path: "/gallery", text: "gallery", icon: "gallery.svg" },
+  { path: "/photos", text: "photos", icon: "gallery.svg" },
   { path: "/map", text: "map", icon: "" },
 ];
 
