@@ -51,12 +51,12 @@ const RecipePage = async ({ params }: { params: Params }) => {
       <h1 className="mt-6 mb-6 text-2xl font-bold lowercase">{recipe.title}</h1>
 
       {recipe.image && (
-        <div className="relative mb-8 size-[300px]">
+        <div className="relative mb-8 aspect-[4/3] w-full overflow-hidden rounded-md">
           <Image
             src={recipe.image}
             alt={recipe.title}
             fill
-            sizes="300px"
+            sizes="(max-width: 768px) 100vw, 65ch"
             loading="eager"
             className="object-cover"
           />
