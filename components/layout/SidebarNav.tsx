@@ -17,10 +17,8 @@ const links = [
   { path: "/curius", text: "curius", icon: "bookmark.svg" },
   { path: "/projects", text: "projects", icon: "code.svg" },
   { path: "/library", text: "library", icon: "library.svg" },
-  { path: "/papers", text: "papers", icon: "flashcards.svg" },
   { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
   { path: "/photos", text: "photos", icon: "gallery.svg" },
-  { path: "/map", text: "map", icon: "" },
 ];
 
 export function SidebarNav() {
