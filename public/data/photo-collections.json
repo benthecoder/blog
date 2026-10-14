@@ -1,8 +1,9 @@
 [
   {
-    "slug": "san-francisco",
+    "slug": "sf",
     "title": "San Francisco",
     "description": "A few walks through the city.",
+    "place": "San Francisco, United States",
     "cover": "sf",
     "photos": [
       {
