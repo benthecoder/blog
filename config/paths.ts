@@ -11,6 +11,7 @@ export const WIKI_TEMPLATES_DIR = path.join(ROOT_DIR, "templates", "wiki");
 export const PAPERS_ROUTE = "/papers";
 export const ESSAYS_DIR = path.join(ROOT_DIR, "essays");
 export const ESSAY_DRAFTS_DIR = path.join(ESSAYS_DIR, "drafts");
+export const RECIPES_DIR = path.join(ROOT_DIR, "recipes");
 
 // Local-only helper + cache for the admin "photos from this day" panel.
 export const PHOTOKIT_BIN = path.join(ROOT_DIR, ".cache", "bin", "photokit");
@@ -72,6 +73,10 @@ export function getEssayPath(slug: string): string {
 
 export function getEssayDraftPath(slug: string): string {
   return getMarkdownPath(ESSAY_DRAFTS_DIR, slug);
+}
+
+export function getRecipePath(slug: string): string {
+  return getMarkdownPath(RECIPES_DIR, slug);
 }
 
 function getMarkdownPath(directory: string, slug: string): string {
