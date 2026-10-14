@@ -57,6 +57,7 @@ step, and can still be edited directly in an IDE.
   - [ ] https://www.rishi.cx/
 - [ ] Create pop up notes like https://www.rishi.cx/
 - [x] A real-time digital clock with seconds
+- [x] recipes page (`/recipes`, markdown in `recipes/`), inspired by [Arielle Lok's recipes](https://ariellelok.com/recipes.html)
 - [ ] build a map of favorite restaurants and places like [build your corner](https://twitter.com/buildyourcorner)
 - [ ] Add listening and reading updates
   - [ ] https://dev.to/j471n/how-to-use-spotify-api-with-nextjs-50o5
@@ -99,6 +100,7 @@ Source of truth is the blog. Capture is cheap and happens in the moment; the AI 
 - [quinnha/portfolio](https://github.com/quinnha/portfolio)
 - [yihui-hu/yihui-work](https://github.com/yihui-hu/yihui-work)
 - [Linus Rogge](https://linusrogge.com/)
+- [Arielle Lok](https://ariellelok.com/recipes.html) (recipes page)
 
 ## Database Setup Instructions
 
