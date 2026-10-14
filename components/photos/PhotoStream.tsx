@@ -1,22 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { StreamPhoto } from "@/types/photostream";
 import { shortCamera } from "@/utils/photoCamera";
 import { ContactSheet } from "./ContactSheet";
-import { formatMonth } from "./dates";
+import { formatDay, formatMonth } from "./dates";
 import { PhotoLightbox } from "./PhotoLightbox";
 
 const PAGE = 36;
 
+// Every collection page (all photos, a city, a trip) is this same stream
+// under its own header, so they all browse the same way.
 export function PhotoStream({
   photos,
+  header,
+  groupBy = "month",
   initialCamera = "",
-  summary,
 }: {
   photos: StreamPhoto[];
+  header: ReactNode;
+  groupBy?: "month" | "day";
   initialCamera?: string;
-  summary?: string;
 }) {
   const [camera, setCamera] = useState(initialCamera);
   const [limit, setLimit] = useState(PAGE);
@@ -32,12 +36,13 @@ export function PhotoStream({
     ? photos.filter((photo) => shortCamera(photo.camera) === active)
     : photos;
 
-  const months: { label: string; start: number; photos: StreamPhoto[] }[] = [];
+  const label = groupBy === "day" ? formatDay : formatMonth;
+  const groups: { label: string; start: number; photos: StreamPhoto[] }[] = [];
   filtered.slice(0, limit).forEach((photo, index) => {
-    const label = formatMonth(photo.date);
-    const last = months.at(-1);
-    if (last?.label === label) last.photos.push(photo);
-    else months.push({ label, start: index, photos: [photo] });
+    const name = label(photo.date);
+    const last = groups.at(-1);
+    if (last?.label === name) last.photos.push(photo);
+    else groups.push({ label: name, start: index, photos: [photo] });
   });
 
   const choose = (name: string) => {
@@ -51,35 +56,37 @@ export function PhotoStream({
 
   return (
     <main className="ph-page ph-stream">
-      <h1 className="ph-sr">All photos</h1>
-      {summary && <p className="ph-mono ph-summary">{summary}</p>}
-      <div
-        className="ph-tabs ph-mono"
-        role="group"
-        aria-label="Filter by camera"
-      >
-        {[["", photos.length] as const, ...tabs].map(([name, count]) => (
-          <button
-            key={name}
-            aria-pressed={name === active}
-            onClick={() => choose(name)}
-          >
-            {name || "All"} <span>{count}</span>
-          </button>
-        ))}
-      </div>
-      {months.map((month) => (
-        <section key={month.label + month.start}>
+      {header}
+      {/* A filter with one option has nothing to choose. */}
+      {tabs.length > 1 && (
+        <div
+          className="ph-tabs ph-mono"
+          role="group"
+          aria-label="Filter by camera"
+        >
+          {[["", photos.length] as const, ...tabs].map(([name, count]) => (
+            <button
+              key={name}
+              aria-pressed={name === active}
+              onClick={() => choose(name)}
+            >
+              {name || "All"} <span>{count}</span>
+            </button>
+          ))}
+        </div>
+      )}
+      {groups.map((group) => (
+        <section key={group.label + group.start}>
           <h2 className="ph-month ph-mono">
-            <span>{month.label}</span>
+            <span>{group.label}</span>
             <span>
-              {month.photos.length}{" "}
-              {month.photos.length === 1 ? "frame" : "frames"}
+              {group.photos.length}{" "}
+              {group.photos.length === 1 ? "frame" : "frames"}
             </span>
           </h2>
           <ContactSheet
-            photos={month.photos}
-            offset={month.start}
+            photos={group.photos}
+            offset={group.start}
             onOpen={setSelected}
           />
         </section>

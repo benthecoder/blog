@@ -191,9 +191,6 @@
 .ph-cell:is(:hover, :focus-within) .ph-edge-exposure {
   opacity: 1;
 }
-.ph-roll {
-  --row-h: 180px;
-}
 
 /* places */
 .ph-country {
@@ -247,13 +244,6 @@
 }
 .ph-unplaced {
   margin-top: 56px;
-  color: var(--ph-faint);
-}
-.ph-city-section {
-  scroll-margin-top: 52px;
-}
-.ph-spots {
-  margin-bottom: 12px;
   color: var(--ph-faint);
 }
 .ph-summary {
@@ -375,37 +365,6 @@
 }
 .ph-set-intro .ph-tabs {
   margin-top: 24px;
-}
-.ph-essay {
-  max-width: 960px;
-}
-.ph-essay figure {
-  width: min(100%, calc(85vh * var(--ar)));
-  margin: 0 0 56px;
-}
-.ph-essay figcaption {
-  margin-top: 12px;
-  font-size: 15px;
-}
-.ph-essay figcaption .ph-mono {
-  display: block;
-  margin-top: 4px;
-}
-.ph-next-set {
-  display: block;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid var(--ph-line);
-}
-.ph-next-set strong {
-  display: block;
-  margin-top: 8px;
-  font-size: 28px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-}
-.ph-next-set:hover strong {
-  color: var(--ph-accent);
 }
 
 /* single photo: the image takes the screen, details sit in one bar */
@@ -546,9 +505,6 @@
   .ph-sheet {
     --row-h: 150px;
   }
-  .ph-roll {
-    --row-h: 110px;
-  }
   .ph-section {
     padding-top: 36px;
   }
@@ -573,9 +529,6 @@
   }
   .ph-set-intro h1 {
     font-size: 36px;
-  }
-  .ph-essay figure {
-    margin-bottom: 36px;
   }
   .ph-meta {
     flex-direction: column;

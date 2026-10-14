@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FadeImage } from "@/components/photos/FadeImage";
+import { CityRows } from "@/components/photos/CityRows";
 import { getPhotostream } from "@/utils/content/photostream";
 import { placeTree } from "@/utils/photoPlaces";
 
@@ -31,36 +31,7 @@ export default async function PlacesPage() {
             {count(country.count, "frame")} ·{" "}
             {count(country.cities.length, "city", "cities")}
           </p>
-          <div className="ph-cities">
-            {country.cities.map((city) => (
-              <Link
-                key={city.slug}
-                href={`/photos/places/${country.slug}#${city.slug}`}
-                className="ph-city"
-              >
-                <div>
-                  <h3>{city.city}</h3>
-                  <p className="ph-mono">{count(city.count, "frame")}</p>
-                </div>
-                <div className="ph-strip">
-                  {city.photos.slice(0, 6).map((photo) => (
-                    <div
-                      key={photo.id}
-                      style={{ aspectRatio: photo.width / photo.height }}
-                    >
-                      <FadeImage
-                        src={photo.src}
-                        alt=""
-                        fill
-                        sizes="(max-width: 700px) 25vw, 200px"
-                        quality={60}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </Link>
-            ))}
-          </div>
+          <CityRows country={country} />
         </section>
       ))}
       {countries.length === 0 && <p className="ph-empty">No places yet.</p>}
