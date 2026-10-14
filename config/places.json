@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-12",
+  "updated": "2026-10-13",
   "places": [
     {
       "id": "capital",
@@ -352,6 +352,20 @@
       ],
       "note": "i love the jungle vibes here",
       "googlePlaceId": "ChIJNRxUk1e32YgRLIl840TlJGQ"
+    },
+    {
+      "id": "mins",
+      "name": "MINS Coffeehouse",
+      "coordinates": [
+        -80.198678,
+        25.799556
+      ],
+      "address": "194 NW 24th St, Miami",
+      "tags": [
+        "cafes"
+      ],
+      "note": "so good, two ladies stopped me on the street to ask about it",
+      "googlePlaceId": "ChIJ0TCuFFC32YgRTpZ85rwXito"
     }
   ],
   "collections": [
@@ -446,6 +460,10 @@
         },
         {
           "placeId": "fincas"
+        },
+        {
+          "placeId": "mins",
+          "visitedOn": "2026-10-13"
         }
       ]
     }
