@@ -46,7 +46,6 @@
 .ph-mono,
 .photo-bar,
 .ph-tabs,
-.ph-button,
 .ph-edge,
 .ph-label {
   font-family: var(--font-photo-mono), ui-monospace, monospace;
@@ -331,15 +330,8 @@
 .ph-month span:first-child {
   color: var(--ph-text);
 }
-.photo-site .ph-button {
-  display: block;
-  margin: 48px auto 0;
-  padding: 12px 20px;
-  border: 1px solid var(--ph-line);
-}
-.photo-site .ph-button:hover {
-  color: var(--ph-text);
-  border-color: var(--ph-faint);
+.ph-end {
+  height: 1px;
 }
 
 /* essay + set page */

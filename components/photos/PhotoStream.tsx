@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { StreamPhoto } from "@/types/photostream";
 import { shortCamera } from "@/utils/photoCamera";
 import { ContactSheet } from "./ContactSheet";
@@ -25,6 +25,7 @@ export function PhotoStream({
   const [camera, setCamera] = useState(initialCamera);
   const [limit, setLimit] = useState(PAGE);
   const [selected, setSelected] = useState<number | null>(null);
+  const end = useRef<HTMLDivElement>(null);
   const counts = new Map<string, number>();
   for (const photo of photos) {
     const name = shortCamera(photo.camera);
@@ -53,6 +54,23 @@ export function PhotoStream({
       : location.pathname;
     history.replaceState(null, "", url);
   };
+
+  // Load the next batch while the end of the list is still a couple of
+  // screens away, so scrolling never hits a wall. Re-observing after each
+  // batch catches the case where the end is still in range.
+  const more = limit < filtered.length;
+  useEffect(() => {
+    const element = end.current;
+    if (!more || !element) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setLimit((count) => count + PAGE);
+      },
+      { rootMargin: "1600px 0px" }
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [more, limit]);
 
   return (
     <main className="ph-page ph-stream">
@@ -91,14 +109,7 @@ export function PhotoStream({
           />
         </section>
       ))}
-      {limit < filtered.length && (
-        <button
-          className="ph-button ph-mono"
-          onClick={() => setLimit((count) => count + PAGE)}
-        >
-          Load more frames →
-        </button>
-      )}
+      {more && <div ref={end} className="ph-end" aria-hidden />}
       <PhotoLightbox photos={filtered} index={selected} onIndex={setSelected} />
     </main>
   );
