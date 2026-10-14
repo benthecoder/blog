@@ -5,6 +5,10 @@ const ROOT_DIR = process.cwd();
 export const POSTS_DIR = path.join(ROOT_DIR, "posts");
 export const DRAFTS_DIR = path.join(POSTS_DIR, "drafts");
 export const WIKI_DIR = path.join(ROOT_DIR, "wiki");
+// Markdown templates offered by the local wiki editor (frontmatter = defaults).
+export const WIKI_TEMPLATES_DIR = path.join(ROOT_DIR, "templates", "wiki");
+// Paper notes are wiki pages (`category: papers/<topic>`), listed at this route.
+export const PAPERS_ROUTE = "/papers";
 export const ESSAYS_DIR = path.join(ROOT_DIR, "essays");
 export const ESSAY_DRAFTS_DIR = path.join(ESSAYS_DIR, "drafts");
 export const RECIPES_DIR = path.join(ROOT_DIR, "recipes");
@@ -37,6 +41,10 @@ export const KNOWLEDGE_MAP_NODES_JSON = path.join(
   "knowledge-map-nodes.json"
 );
 export const IMAGE_META_JSON = path.join(DATA_DIR, "image-meta.json");
+export const PHOTO_COLLECTIONS_JSON = path.join(
+  DATA_DIR,
+  "photo-collections.json"
+);
 
 export const LIBRARY_MD = path.join(
   ROOT_DIR,

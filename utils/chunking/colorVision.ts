@@ -24,7 +24,7 @@ export const CVD_MATRICES: Record<
   ],
 };
 
-export function hexToRgb(hex: string): [number, number, number] {
+function hexToRgb(hex: string): [number, number, number] {
   const n = parseInt(hex.replace("#", ""), 16);
   return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
@@ -36,7 +36,7 @@ const toLinear = (c: number) => {
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
-export function simulate(
+function simulate(
   rgb: [number, number, number],
   matrix?: Matrix
 ): [number, number, number] {
@@ -48,7 +48,7 @@ export function simulate(
 }
 
 /** Linear sRGB to CIE Lab (D65). */
-export function linearToLab([r, g, b]: [number, number, number]): [
+function linearToLab([r, g, b]: [number, number, number]): [
   number,
   number,
   number,
@@ -60,7 +60,7 @@ export function linearToLab([r, g, b]: [number, number, number]): [
   return [116 * f(y) - 16, 500 * (f(x) - f(y)), 200 * (f(y) - f(z))];
 }
 
-export function deltaE(
+function deltaE(
   a: [number, number, number],
   b: [number, number, number]
 ): number {

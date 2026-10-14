@@ -3,12 +3,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const ADMIN_COOKIE = "admin_session";
 
-// Hash both sides so inputs of different lengths can be compared and the
-// comparison time never depends on how many leading characters match.
+// Compare secret bytes directly without a fast password hash. Pad the supplied
+// value to the expected byte length so timingSafeEqual also handles mismatches.
 function safeEqual(a: string, b: string): boolean {
-  const ha = crypto.createHash("sha256").update(a).digest();
-  const hb = crypto.createHash("sha256").update(b).digest();
-  return crypto.timingSafeEqual(ha, hb);
+  const supplied = Buffer.from(a);
+  const expected = Buffer.from(b);
+  const padded = Buffer.alloc(expected.length);
+  supplied.copy(padded);
+  const equal = crypto.timingSafeEqual(padded, expected);
+  return equal && supplied.length === expected.length;
 }
 
 // The cookie stores this derived token rather than ADMIN_SECRET itself, so a

@@ -60,7 +60,7 @@ function mapRow(row: DbRow, scoreType: ScoreType) {
 }
 
 function prepareSearchQuery(input: string, operator = "&"): string {
-  const sanitized = input.replace(/['&|!():*]/g, " ").trim();
+  const sanitized = input.replace(/['&|!():*<>\\]/g, " ").trim();
   const terms = sanitized.split(/\s+/).filter(Boolean);
   if (terms.length === 0) return "";
   if (terms.length === 1) return terms[0];

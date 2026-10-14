@@ -62,7 +62,7 @@ export default function NewEssayForm({ existing }: { existing: string[] }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="shrink-0 whitespace-nowrap rounded-xs bg-ink dark:bg-chalk text-paper dark:text-night px-4 py-2 text-sm"
+        className="shrink-0 whitespace-nowrap rounded-xs bg-accent text-surface px-4 py-2 text-sm"
       >
         new essay
       </button>
@@ -84,12 +84,12 @@ export default function NewEssayForm({ existing }: { existing: string[] }) {
           onChange={(event) => setSlug(event.target.value)}
           placeholder="slug-like-this"
           aria-label="essay slug"
-          className="w-48 rounded-xs border border-rule dark:border-night-rule bg-transparent px-3 py-2 text-sm text-ink-strong dark:text-chalk-strong"
+          className="w-48 rounded-xs border border-line bg-transparent px-3 py-2 text-sm text-primary"
         />
         <button
           type="submit"
           disabled={busy}
-          className="rounded-xs bg-ink dark:bg-chalk text-paper dark:text-night px-4 py-2 text-sm disabled:opacity-30"
+          className="rounded-xs bg-accent text-surface px-4 py-2 text-sm disabled:opacity-30"
         >
           {busy ? "creating…" : "create"}
         </button>

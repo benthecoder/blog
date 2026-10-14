@@ -52,7 +52,7 @@ const WikiSlugPage = async ({ params }: { params: Params }) => {
       <div className="mb-10">
         <Link
           href="/wiki"
-          className="text-xs lowercase tracking-wide text-ink-soft dark:text-chalk-muted transition-colors hover:text-ink-strong dark:hover:text-chalk-strong"
+          className="text-xs lowercase tracking-wide text-ink-soft dark:text-chalk-muted transition-colors hover:text-primary"
         >
           ← wiki
         </Link>
@@ -64,7 +64,7 @@ const WikiSlugPage = async ({ params }: { params: Params }) => {
             {meta.tags.join(" · ")}
           </p>
         )}
-        <h1 className="text-2xl font-bold lowercase text-ink-strong dark:text-chalk-strong">
+        <h1 className="text-2xl font-bold lowercase text-primary">
           {meta.title}
         </h1>
         {meta.description && (
@@ -74,7 +74,7 @@ const WikiSlugPage = async ({ params }: { params: Params }) => {
         )}
       </div>
 
-      <article className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-ink-strong dark:prose-headings:text-chalk-strong prose-a:text-ink dark:prose-a:text-chalk-soft prose-a:no-underline prose-a:hover:underline">
+      <article className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-primary prose-a:text-ink dark:prose-a:text-chalk-soft prose-a:no-underline prose-a:hover:underline">
         <MarkdownContent content={content.content} />
       </article>
 

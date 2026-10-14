@@ -111,25 +111,25 @@ export default function CalendarView({ posts }: CalendarViewProps) {
   return (
     <div className="max-w-5xl mx-auto">
       <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-3xl font-light tracking-wide text-ink dark:text-chalk">
+        <h2 className="text-3xl font-light tracking-wide text-accent">
           {monthNames[month]} {year}
         </h2>
         <div className="flex gap-3">
           <button
             onClick={prevMonth}
-            className="px-4 py-2 border border-rule dark:border-night-rule rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-ink dark:text-chalk"
+            className="px-4 py-2 border border-line rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-accent"
           >
             ←
           </button>
           <button
             onClick={() => setCurrentDate(new Date())}
-            className="px-4 py-2 border border-rule dark:border-night-rule rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-ink dark:text-chalk"
+            className="px-4 py-2 border border-line rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-accent"
           >
             今日
           </button>
           <button
             onClick={nextMonth}
-            className="px-4 py-2 border border-rule dark:border-night-rule rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-ink dark:text-chalk"
+            className="px-4 py-2 border border-line rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-accent"
           >
             →
           </button>
@@ -164,8 +164,8 @@ export default function CalendarView({ posts }: CalendarViewProps) {
               onClick={() => handleDateClick(day)}
               className={`
                 aspect-square border rounded-xs p-3 flex flex-col items-start justify-between relative
-                hover:border-ink dark:hover:border-chalk hover:shadow-xs transition-[border-color,box-shadow]
-                ${isTodayDate ? "border-ink dark:border-chalk bg-chalk-soft dark:bg-night-raised shadow-xs" : "border-rule dark:border-night-rule"}
+                hover:border-accent hover:shadow-xs transition-[border-color,box-shadow]
+                ${isTodayDate ? "border-accent bg-chalk-soft dark:bg-night-raised shadow-xs" : "border-line"}
                 ${isDraft ? "border-2 border-dashed border-blue-400 dark:border-blue-500 bg-blue-50 dark:bg-blue-950/20" : ""}
                 ${post && !isTodayDate && !isDraft ? "bg-paper dark:bg-night-raised/50" : ""}
                 ${!post && !isTodayDate ? "bg-paper-raised dark:bg-night" : ""}
@@ -175,9 +175,9 @@ export default function CalendarView({ posts }: CalendarViewProps) {
                 <span
                   className={`text-sm font-light ${
                     isTodayDate
-                      ? "text-ink dark:text-chalk font-medium"
+                      ? "text-accent font-medium"
                       : post
-                        ? "text-ink dark:text-chalk"
+                        ? "text-accent"
                         : "text-ink-soft dark:text-chalk-muted"
                   }`}
                 >
@@ -197,9 +197,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
 
               {post && (
                 <div className="text-left w-full">
-                  <p className="text-xs text-ink dark:text-chalk font-light">
-                    {post.title}
-                  </p>
+                  <p className="text-xs text-accent font-light">{post.title}</p>
                 </div>
               )}
             </button>

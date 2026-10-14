@@ -39,6 +39,14 @@ export function extractPostDate(
   frontmatter: Record<string, unknown> | null
 ): Date {
   if (frontmatter?.date) {
+    // Date-only ISO strings parse as UTC midnight; keep them local like the
+    // other formats so toISODateString round-trips in any timezone.
+    const iso = String(frontmatter.date).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (iso) {
+      const local = new Date(+iso[1], +iso[2] - 1, +iso[3]);
+      if (!isNaN(local.getTime())) return local;
+    }
+
     const direct = new Date(frontmatter.date as string);
     if (!isNaN(direct.getTime())) return direct;
 
@@ -61,5 +69,6 @@ export function extractPostDate(
 }
 
 export function toISODateString(date: Date): string {
-  return date.toISOString().split("T")[0];
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }

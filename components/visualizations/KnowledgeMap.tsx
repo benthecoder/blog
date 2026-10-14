@@ -667,10 +667,7 @@ export default function KnowledgeMap({
   };
 
   return (
-    <div
-      ref={containerRef}
-      className={`relative ${className} bg-paper dark:bg-night`}
-    >
+    <div ref={containerRef} className={`relative ${className} bg-surface`}>
       {/* Search */}
       <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
         <input
@@ -678,12 +675,12 @@ export default function KnowledgeMap({
           placeholder="search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-36 px-2 py-1 text-xs bg-paper/90 dark:bg-night/90 text-ink dark:text-chalk border border-rule dark:border-white/8 focus:outline-hidden placeholder:text-ink/25 dark:placeholder:text-chalk/25 backdrop-blur-xs"
+          className="w-36 px-2 py-1 text-xs bg-surface/90 text-accent border border-rule dark:border-white/8 focus:outline-hidden placeholder:text-accent/25 backdrop-blur-xs"
         />
         {isMoved && (
           <button
             onClick={() => animateTo({ k: 1, x: 0, y: 0 })}
-            className="bg-paper/90 dark:bg-night/90 px-2 py-1 border border-rule dark:border-white/8 text-xs text-ink/60 dark:text-chalk/60 hover:text-ink dark:hover:text-chalk transition-colors backdrop-blur-xs"
+            className="bg-surface/90 px-2 py-1 border border-rule dark:border-white/8 text-xs text-accent/60 hover:text-accent transition-colors backdrop-blur-xs"
           >
             reset
           </button>
@@ -700,10 +697,10 @@ export default function KnowledgeMap({
       {/* ArticleNode detail panel — hover preview or pinned detail */}
       {displayArticleNode && (
         <div
-          className="absolute z-20 w-60 px-3.5 py-3 bg-paper dark:bg-night border border-rule dark:border-white/10 shadow-[0_6px_20px_rgb(0_0_0/0.06)] pointer-events-none"
+          className="absolute z-20 w-60 px-3.5 py-3 bg-surface border border-rule dark:border-white/10 shadow-[0_6px_20px_rgb(0_0_0/0.06)] pointer-events-none"
           style={getPanelPosition()}
         >
-          <p className="flex items-baseline justify-between gap-3 text-[11px] lowercase tabular-nums text-ink/50 dark:text-chalk/50">
+          <p className="flex items-baseline justify-between gap-3 text-[11px] lowercase tabular-nums text-accent/50">
             <span className="truncate">
               {clusterLabels[displayArticleNode.cluster] ?? "unclustered"}
             </span>
@@ -711,16 +708,16 @@ export default function KnowledgeMap({
               <span className="shrink-0">
                 {new Date(displayArticleNode.publishedDate).toLocaleDateString(
                   "en-US",
-                  { year: "numeric", month: "short" }
+                  { year: "numeric", month: "short", timeZone: "UTC" }
                 )}
               </span>
             )}
           </p>
-          <h3 className="mt-1.5 text-sm font-medium leading-snug text-ink-strong dark:text-chalk-strong">
+          <h3 className="mt-1.5 text-sm font-medium leading-snug text-primary">
             {displayArticleNode.postTitle}
           </h3>
           {summaries?.[displayArticleNode.postSlug] && (
-            <p className="mt-1 text-xs leading-relaxed text-ink/75 dark:text-chalk/75 line-clamp-3">
+            <p className="mt-1 text-xs leading-relaxed text-accent/75 line-clamp-3">
               {summaries[displayArticleNode.postSlug]}
             </p>
           )}
@@ -728,7 +725,7 @@ export default function KnowledgeMap({
             <div className="pointer-events-auto mt-2.5 flex items-center justify-between text-xs">
               <Link
                 href={`/posts/${displayArticleNode.postSlug}`}
-                className="text-ink dark:text-chalk underline underline-offset-4 decoration-ink/25 dark:decoration-chalk/25 hover:decoration-current"
+                className="text-accent underline underline-offset-4 decoration-accent/25 hover:decoration-current"
               >
                 read →
               </Link>
@@ -744,7 +741,7 @@ export default function KnowledgeMap({
             </div>
           ) : (
             isTouchDevice && (
-              <p className="mt-2 text-[11px] text-ink/40 dark:text-chalk/40">
+              <p className="mt-2 text-[11px] text-accent/40">
                 tap again to read
               </p>
             )
@@ -757,7 +754,7 @@ export default function KnowledgeMap({
         <div className="absolute bottom-4 right-4 z-10">
           <button
             onClick={() => setShowLegend(!showLegend)}
-            className="bg-paper/90 dark:bg-night/90 px-2 py-1 border border-rule dark:border-white/8 text-xs text-ink/60 dark:text-chalk/60 hover:text-ink dark:hover:text-chalk transition-colors backdrop-blur-xs"
+            className="bg-surface/90 px-2 py-1 border border-rule dark:border-white/8 text-xs text-accent/60 hover:text-accent transition-colors backdrop-blur-xs"
           >
             {showLegend
               ? "hide"
@@ -766,7 +763,7 @@ export default function KnowledgeMap({
                 : "clusters"}
           </button>
           {showLegend && (
-            <div className="absolute bottom-8 right-0 bg-paper/95 dark:bg-night/95 px-3 py-2 border border-rule dark:border-white/8 max-h-[min(60vh,18rem)] overflow-y-auto shadow-xs min-w-[200px] backdrop-blur-xs">
+            <div className="absolute bottom-8 right-0 bg-surface/95 px-3 py-2 border border-rule dark:border-white/8 max-h-[min(60vh,18rem)] overflow-y-auto shadow-xs min-w-[200px] backdrop-blur-xs">
               {selectedCluster !== null && (
                 <button
                   onClick={() => setSelectedCluster(null)}
@@ -822,11 +819,9 @@ export default function KnowledgeMap({
                             ),
                           }}
                         />
-                        <span className="text-ink/70 dark:text-chalk/70 text-left">
+                        <span className="text-accent/70 text-left">
                           {label}{" "}
-                          <span className="text-ink/40 dark:text-chalk/40">
-                            ({count})
-                          </span>
+                          <span className="text-accent/40">({count})</span>
                         </span>
                       </button>
                     );
@@ -838,7 +833,7 @@ export default function KnowledgeMap({
       )}
 
       {/* Instructions */}
-      <div className="absolute bottom-4 left-4 z-10 bg-paper/80 dark:bg-night/80 px-3 py-1 border border-rule dark:border-white/8 text-xs text-ink/40 dark:text-chalk/40 pointer-events-none backdrop-blur-xs">
+      <div className="absolute bottom-4 left-4 z-10 bg-surface/80 px-3 py-1 border border-rule dark:border-white/8 text-xs text-accent/40 pointer-events-none backdrop-blur-xs">
         {isTouchDevice ? "pinch · drag · tap" : "scroll · drag · click"}
       </div>
     </div>

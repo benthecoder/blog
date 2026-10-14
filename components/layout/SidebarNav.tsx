@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { play } from "cuelume";
 import { SketchIcon } from "../ui/SketchIcon";
+import { MapPinned } from "lucide-react";
 
 const links = [
   { path: "/posts", text: "archive", icon: "archive.svg" },
@@ -17,7 +18,7 @@ const links = [
   { path: "/projects", text: "projects", icon: "code.svg" },
   { path: "/library", text: "library", icon: "library.svg" },
   { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
-  { path: "/gallery", text: "gallery", icon: "gallery.svg" },
+  { path: "/photos", text: "photos", icon: "gallery.svg" },
 ];
 
 export function SidebarNav() {
@@ -80,7 +81,7 @@ export function SidebarNav() {
       {/* Extra bottom gap on small screens: the nav used to sit against a
           white content card that separated it from the page title, and
           without that card the two run together. */}
-      <nav className="flex flex-row gap-2 justify-center lg:flex-col lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0">
+      <nav className="flex flex-row flex-wrap gap-2 justify-center lg:flex-col lg:flex-nowrap lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0">
         {links.map(({ path, text, icon }) => (
           <Link
             key={path}
@@ -113,7 +114,11 @@ export function SidebarNav() {
                 className={`w-full h-full${path === "/random" && spinning ? " dice-spin" : ""}`}
               />
             ) : (
-              text
+              <MapPinned
+                aria-label={text}
+                className="w-full h-full p-1.5"
+                strokeWidth={1.25}
+              />
             )}
           </Link>
         ))}
@@ -121,7 +126,7 @@ export function SidebarNav() {
 
       {hoveredLink && (
         <div
-          className="fixed z-50 pointer-events-none px-2 py-1 bg-ink/90 dark:bg-chalk/90 text-paper dark:text-night backdrop-blur-xs rounded-sm text-xs font-medium whitespace-nowrap"
+          className="fixed z-50 pointer-events-none px-2 py-1 bg-accent/90 text-surface backdrop-blur-xs rounded-sm text-xs font-medium whitespace-nowrap"
           style={
             hoveredLink.isMobile
               ? {

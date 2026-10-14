@@ -1,10 +1,24 @@
 import type { NextConfig } from "next";
+import {
+  PHASE_DEVELOPMENT_SERVER,
+  PHASE_PRODUCTION_BUILD,
+} from "next/constants";
+import { createRequire } from "node:module";
+import path from "node:path";
+import { prepareMapWorkerAssets } from "./utils/mapWorkerAssets";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   reactCompiler: true,
   poweredByHeader: false,
   images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "pub-e85be102871845218dcda1cc49c78508.r2.dev",
+        pathname: "/**",
+      },
+    ],
     formats: ["image/avif", "image/webp"],
     // Limit generated variants to the sizes and qualities the site uses.
     deviceSizes: [640, 828, 1200, 1920],
@@ -17,22 +31,40 @@ const nextConfig: NextConfig = {
     "*": ["public/**/*", ".git/**/*"],
     "/api/**": ["app/og/*.jpg"],
   },
-  rewrites: async () => [
-    {
-      source: "/rss.xml",
-      destination: "/api/rss",
-    },
-    // Published images live in R2. This runs after the public/ file check,
-    // so local files (e.g. /images/drafts/*) still win when present.
-    ...(process.env.R2_PUBLIC_URL
-      ? [
-          {
-            source: "/images/:path*",
-            destination: `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/images/:path*`,
-          },
-        ]
-      : []),
+  redirects: async () => [
+    { source: "/gallery", destination: "/photos", permanent: true },
   ],
+  rewrites: async () => ({
+    beforeFiles: [
+      {
+        source: "/",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos",
+      },
+      {
+        source: "/",
+        has: [{ type: "host", value: "maps.bneo.xyz" }],
+        destination: "/map",
+      },
+    ],
+    afterFiles: [
+      {
+        source: "/rss.xml",
+        destination: "/api/rss",
+      },
+      // Published images live in R2. This runs after the public/ file check,
+      // so local files (e.g. /images/drafts/*) still win when present.
+      ...(process.env.R2_PUBLIC_URL
+        ? [
+            {
+              source: "/images/:path*",
+              destination: `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/images/:path*`,
+            },
+          ]
+        : []),
+    ],
+    fallback: [],
+  }),
   headers: async () => [
     {
       source: "/fonts/:path*",
@@ -67,4 +99,12 @@ const nextConfig: NextConfig = {
   ],
 };
 
-export default nextConfig;
+export default function config(phase: string): NextConfig {
+  if (phase === PHASE_DEVELOPMENT_SERVER || phase === PHASE_PRODUCTION_BUILD) {
+    prepareMapWorkerAssets(
+      createRequire(import.meta.url).resolve("maplibre-gl/package.json"),
+      path.join(process.cwd(), "public")
+    );
+  }
+  return nextConfig;
+}

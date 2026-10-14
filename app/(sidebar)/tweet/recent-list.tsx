@@ -34,7 +34,7 @@ export default function RecentList({ items }: { items: Item[] }) {
       {items.map((t) => (
         <li
           key={t.id}
-          className={`group flex items-start gap-3 text-sm text-ink dark:text-chalk transition-opacity ${deleting === t.id ? "opacity-40" : ""}`}
+          className={`group flex items-start gap-3 text-sm text-accent transition-opacity ${deleting === t.id ? "opacity-40" : ""}`}
         >
           <span className="flex-1 break-words">
             {t.content}
@@ -43,7 +43,7 @@ export default function RecentList({ items }: { items: Item[] }) {
                 href={t.link}
                 target="_blank"
                 rel="noreferrer"
-                className="block text-xs text-ink-muted dark:text-chalk-muted underline truncate"
+                className="block text-xs text-muted underline truncate"
               >
                 {t.title ?? t.link}
               </a>
@@ -54,7 +54,7 @@ export default function RecentList({ items }: { items: Item[] }) {
             aria-label="delete"
             disabled={deleting !== null}
             onClick={() => remove(t.id)}
-            className="shrink-0 text-xs text-ink-muted dark:text-chalk-muted hover:text-red-500 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+            className="shrink-0 text-xs text-muted hover:text-red-500 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
           >
             delete
           </button>

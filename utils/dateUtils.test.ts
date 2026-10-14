@@ -28,3 +28,16 @@ describe("extractPostDate", () => {
     expect(d.getFullYear()).toBe(2020);
   });
 });
+
+describe("toISODateString", () => {
+  it("keeps the local calendar day for written dates", () => {
+    const d = extractPostDate("posts/x.md", { date: "Jan 5, 2024" });
+    expect(toISODateString(d)).toBe("2024-01-05");
+  });
+
+  it("keeps the local calendar day for filename dates", () => {
+    expect(toISODateString(extractPostDate("posts/010524.md", null))).toBe(
+      "2024-01-05"
+    );
+  });
+});
