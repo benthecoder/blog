@@ -12,6 +12,7 @@ your note automatically (matched by title or address).
 
 ## up next
 
+- [Learning When to Trust Medical Knowledge: Regression-Safe Routing for Clinical Reasoning](https://arxiv.org/abs/2610.19663) — Zhang, Zeng & Xin, 2026
 - [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903) — Wei et al., 2022
 - [Base Models Can Reason By Taking a Cue From Training Data](https://arxiv.org/abs/2610.06851) — Wang, Dravid, Shao, Farhat, Min & Efros, 2026
 - [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805) — Devlin, Chang, Lee & Toutanova, 2018
