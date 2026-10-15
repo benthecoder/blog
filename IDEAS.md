@@ -12,6 +12,7 @@
 - [x] Internal-post hover previews — [Steph Ango](https://stephango.com/buy-wisely).
 - [x] Live clock with seconds.
 - [x] Favorite-places map — [CW&T’s NYC map](https://maps.cwandt.com/?list=nyc), [Build Your Corner](https://twitter.com/buildyourcorner).
+- [x] Recipes page — [Arielle Lok](https://ariellelok.com/recipes.html).
 - [x] Spotify listening updates — [Spotify / Next.js guide](https://dev.to/j471n/how-to-use-spotify-api-with-nextjs-50o5), [yihui-work](https://github.com/yihui-hu/yihui-work).
 - [ ] Hoverable note highlights and annotations — [Steph Ango](https://stephango.com/buy-wisely).
 - [ ] Wiki breadcrumbs — [Jake’s original reference](https://jake.isnt.online/) (now redirects; the old example is gone).

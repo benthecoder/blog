@@ -1,7 +1,6 @@
 ongoing
 
 - [this blog](/colophon)
-- [drawings + photos](/gallery)
 
 done?
 
