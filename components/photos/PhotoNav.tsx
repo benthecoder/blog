@@ -34,9 +34,8 @@ export function PhotoNav() {
         <NavLink href="/photos" exact>
           All
         </NavLink>
-        <NavLink href="/photos/places">Places</NavLink>
-        <NavLink href="/photos/trips" also="/photos/sets">
-          Trips
+        <NavLink href="/photos/places" also="/photos/sets">
+          Places
         </NavLink>
         <a href="https://bneo.xyz">Blog ↗</a>
       </nav>
