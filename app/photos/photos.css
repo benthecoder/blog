@@ -131,17 +131,14 @@
   opacity: 1;
 }
 .photo-site .ph-frame img,
-.ph-set-cover img,
 .ph-view-image img {
   opacity: 0;
   transition: opacity 300ms;
 }
-.photo-site .ph-frame img[data-loaded],
-.ph-set-cover img[data-loaded] {
+.photo-site .ph-frame img[data-loaded] {
   opacity: 0.85;
 }
-.photo-site .ph-frame:hover img[data-loaded],
-.ph-set a:hover img[data-loaded] {
+.photo-site .ph-frame:hover img[data-loaded] {
   opacity: 1;
 }
 
@@ -254,40 +251,6 @@
 .photo-bar nav a[aria-current="page"] {
   color: var(--ph-text);
   box-shadow: 0 6px 0 -5px var(--ph-accent);
-}
-
-/* sets */
-.ph-sets {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 32px 12px;
-}
-.ph-set-cover {
-  position: relative;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  background: var(--ph-raised);
-}
-.ph-set-cover img {
-  object-fit: cover;
-}
-.ph-set h3 {
-  margin-top: 14px;
-  font-size: 20px;
-}
-.ph-set p {
-  margin-top: 6px;
-}
-.ph-set .ph-set-place {
-  color: var(--ph-text);
-}
-.ph-subsets {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-}
-.ph-subsets a:hover {
-  color: var(--ph-text);
 }
 
 /* stream + tabs */
@@ -464,11 +427,6 @@
   color: var(--ph-text);
 }
 
-@media (max-width: 900px) {
-  .ph-sets {
-    grid-template-columns: 1fr 1fr;
-  }
-}
 @media (max-width: 700px) {
   .photo-menu-button {
     display: grid;
@@ -499,9 +457,6 @@
   }
   .ph-section {
     padding-top: 36px;
-  }
-  .ph-sets {
-    grid-template-columns: 1fr;
   }
   .ph-country {
     font-size: 32px;

@@ -32,7 +32,7 @@ export default async function PhotosetPage({ params }: Props) {
   ].sort();
   return (
     <PhotoStream
-      // A trip reads from its first day forward.
+      // A set reads from its first day forward.
       photos={[...collection.photos].sort((a, b) =>
         (a.date ?? "").localeCompare(b.date ?? "")
       )}
@@ -43,11 +43,11 @@ export default async function PhotosetPage({ params }: Props) {
             href={
               collection.parentSlug
                 ? `/photos/sets/${collection.parentSlug}`
-                : "/photos/trips"
+                : "/photos/places"
             }
             className="ph-mono ph-back"
           >
-            {collection.parentSlug ? "← Back to trip" : "← All trips"}
+            {collection.parentSlug ? "← Back" : "← All places"}
           </Link>
           <h1>{collection.title}</h1>
           {collection.description && <p>{collection.description}</p>}

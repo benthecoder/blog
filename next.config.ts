@@ -33,6 +33,7 @@ const nextConfig: NextConfig = {
   },
   redirects: async () => [
     { source: "/gallery", destination: "/photos", permanent: true },
+    { source: "/photos/trips", destination: "/photos/places", permanent: true },
   ],
   rewrites: async () => ({
     beforeFiles: [
