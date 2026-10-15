@@ -43,12 +43,8 @@ const RecipePage = async ({ params }: { params: Params }) => {
   const content = getRecipeContent(slug);
 
   return (
-    <div className="mx-auto max-w-[65ch] py-12 text-ink-strong dark:text-chalk-strong">
-      <Link href="/recipes" className={linkClasses}>
-        go back
-      </Link>
-
-      <h1 className="mt-6 mb-6 text-2xl font-bold lowercase">{recipe.title}</h1>
+    <div className="mx-auto max-w-[65ch] pb-12 text-ink-strong dark:text-chalk-strong">
+      <h1 className="mb-6 text-2xl font-bold lowercase">{recipe.title}</h1>
 
       {recipe.image && (
         <div className="relative mb-8 aspect-[4/3] w-full overflow-hidden rounded-md">
@@ -67,13 +63,16 @@ const RecipePage = async ({ params }: { params: Params }) => {
         <MarkdownContent content={content.content} />
       </article>
 
-      {next && (
-        <div className="mt-6">
+      <div className="mt-6 flex justify-between">
+        <Link href="/recipes" className={linkClasses}>
+          go back
+        </Link>
+        {next && (
           <Link href={`/recipes/${next.slug}`} className={linkClasses}>
             go next
           </Link>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
