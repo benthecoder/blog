@@ -18,7 +18,6 @@ const links = [
   { path: "/projects", text: "projects", icon: "code.svg" },
   { path: "/library", text: "library", icon: "library.svg" },
   { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
-  { path: "/photos", text: "photos", icon: "gallery.svg" },
 ];
 
 export function SidebarNav() {
