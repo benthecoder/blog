@@ -169,8 +169,10 @@ export default function PlacesMap({
     };
     place();
     ready.on("move", place);
+    ready.on("resize", place);
     return () => {
       ready.off("move", place);
+      ready.off("resize", place);
     };
   }, [ready, lng, lat]);
   useEffect(() => {
@@ -206,7 +208,12 @@ export default function PlacesMap({
     instance.on("load", () => {
       if (map.current === instance) setReady(instance);
     });
-    const resize = new ResizeObserver(() => instance.resize());
+    // resize() clears the canvas and MapLibre repaints on its next frame, so a
+    // width change flashed the empty background. Redraw in the same frame.
+    const resize = new ResizeObserver(() => {
+      instance.resize();
+      if (instance.isStyleLoaded()) instance.redraw();
+    });
     resize.observe(container.current);
     return () => {
       resize.disconnect();

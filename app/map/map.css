@@ -354,7 +354,8 @@
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  background: var(--map-hover);
+  /* Matches the basemap's land, so a frame before tiles paint doesn't flash. */
+  background: var(--map-base-land);
 }
 .places-explorer .map-canvas {
   position: absolute;
