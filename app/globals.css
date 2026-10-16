@@ -919,3 +919,57 @@ body {
 body:has(.photo-site) .floating-controls {
   display: none;
 }
+
+/* ==========================================================================
+   SAFARI CHROME EDGES
+
+   Mobile Safari paints the status-bar and bottom-toolbar areas from the
+   page's edge colors. SafariEdges (components/layout) samples one
+   palette per page and writes it to --edge-top-background /
+   --edge-bottom-background, the html/body backgrounds, and the
+   theme-color meta. These strips are the visible half of that: fixed,
+   full-width, click-through, exactly as tall as the chrome needs —
+   max(12px, env(safe-area-inset-*)) — so they kiss the edges without
+   ever covering content.
+   ========================================================================== */
+.edge-top,
+.edge-bottom {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  pointer-events: none;
+}
+
+.edge-top {
+  top: 0;
+}
+
+.edge-bottom {
+  bottom: 0;
+}
+
+.edge-top::after,
+.edge-bottom::after {
+  content: "";
+  display: block;
+}
+
+.edge-top::after {
+  height: max(12px, env(safe-area-inset-top));
+  background: var(--edge-top-background, var(--color-paper-sunken));
+}
+
+.edge-bottom::after {
+  height: max(12px, env(safe-area-inset-bottom));
+  background: var(--edge-bottom-background, var(--color-paper-raised));
+}
+
+.dark .edge-top::after,
+.dark .edge-bottom::after {
+  background: var(--edge-top-background, var(--color-night));
+}
+
+.dark .edge-bottom::after {
+  background: var(--edge-bottom-background, var(--color-night));
+}
