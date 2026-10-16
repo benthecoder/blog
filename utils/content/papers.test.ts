@@ -1,59 +1,79 @@
 import fs from "fs";
-import path from "path";
-import { afterAll, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
+import { PAPERS_MD } from "@/config/paths";
+import { parsePaperLine, parsePaperList, stripComments } from "./papers";
 
-const root = vi.hoisted(() => ({ dir: "" }));
-vi.mock("@/config/paths", async (importOriginal) => {
-  const original = await importOriginal<typeof import("@/config/paths")>();
-  const fsm = await import("fs");
-  const osm = await import("os");
-  const pathm = await import("path");
-  root.dir = fsm.mkdtempSync(pathm.join(osm.tmpdir(), "papers-"));
-  return { ...original, WIKI_DIR: root.dir };
-});
-import { getPapers, groupPapersByTopic } from "./papers";
+describe("paper list", () => {
+  it("strips comments, including unclosed ones", () => {
+    expect(stripComments("a<!-- x -->b<!--<!-- y -->c<!-- open")).toBe("abc");
+  });
 
-afterAll(() => fs.rmSync(root.dir, { recursive: true, force: true }));
-
-function page(slug: string, frontmatter: string) {
-  fs.writeFileSync(
-    path.join(root.dir, `${slug}.md`),
-    `---\n${frontmatter}\n---\nBody\n`
-  );
-}
-
-describe("papers", () => {
-  it("lists papers/ wiki pages newest-read first, grouped in topic order", () => {
-    page(
-      "attention",
-      "title: Attention Is All You Need\ncategory: papers/llms-and-agents\nauthors: Vaswani et al.\nyear: 2017\nread: 2026-10-01"
-    );
-    page(
-      "rlhf",
-      "title: InstructGPT\ncategory: papers/llms-and-agents\nyear: 2022\nread: 2026-10-09"
-    );
-    page(
-      "pitfalls",
-      "title: ML Pitfalls\ncategory: papers/deep-learning-foundations"
-    );
-    page("odd", "title: Odd\ncategory: papers/new-topic\nread: 2026-01-01");
-    page("christianity", "title: Christianity\ncategory: religion");
-    const papers = getPapers();
-    expect(papers.map((p) => p.slug)).toEqual([
-      "rlhf",
-      "attention",
-      "odd",
-      "pitfalls",
-    ]);
-    expect(papers[1]).toMatchObject({
+  it("parses one-line entries", () => {
+    expect(
+      parsePaperLine(
+        "- [Attention Is All You Need](https://arxiv.org/abs/1706.03762) — Vaswani et al., 2017 · read 2026-10-12"
+      )
+    ).toEqual({
+      title: "Attention Is All You Need",
+      url: "https://arxiv.org/abs/1706.03762",
       authors: "Vaswani et al.",
       year: "2017",
+      read: "2026-10-12",
     });
-    const groups = groupPapersByTopic(papers);
-    expect(groups.map((g) => [g.label, g.papers.map((p) => p.slug)])).toEqual([
-      ["LLMs & Agents", ["rlhf", "attention"]],
-      ["Deep Learning Foundations", ["pitfalls"]],
-      ["New topic", ["odd"]],
+    expect(
+      parsePaperLine("- [X](https://x.org) — Someone (2020)")
+    ).toMatchObject({
+      authors: "Someone",
+      year: "2020",
+      read: "",
+    });
+    expect(parsePaperLine("just prose")).toBeNull();
+  });
+
+  it("splits sections, groups read papers by month and links notes", () => {
+    const list = parsePaperList(
+      [
+        "<!-- - [Hidden](https://h.org) — H, 2000 -->",
+        "## up next",
+        "- [BERT: Pre-training of Deep Bidirectional Transformers](https://a.org/bert) — Devlin et al., 2018",
+        "## read",
+        "- [Old](https://a.org/old) — A, 2010 · read 2026-09",
+        "- [New](https://a.org/new) — B, 2020 · read 2026-10-02",
+        "- [Newer](https://a.org/newer) — C, 2021 · read 2026-10-09",
+        "- [Undated](https://a.org/u) — D, 2001",
+      ].join("\n"),
+      [
+        { slug: "bert", title: "BERT" },
+        { slug: "old-paper", title: "Old" },
+      ]
+    );
+    expect(list.upNext.map((p) => [p.title.split(":")[0], p.note])).toEqual([
+      ["BERT", "/wiki/bert"],
     ]);
+    expect(
+      list.read.map((g) => [g.month, g.papers.map((p) => p.title)])
+    ).toEqual([
+      ["2026-10", ["Newer", "New"]],
+      ["2026-09", ["Old"]],
+      ["", ["Undated"]],
+    ]);
+    expect(list.read[1].papers[0].note).toBe("/wiki/old-paper");
+    expect(list.read[0].papers[0].note).toBe("");
+  });
+
+  it("ships a list whose entries all parse", () => {
+    const raw = fs.readFileSync(PAPERS_MD, "utf8");
+    const list = parsePaperList(raw);
+    const lines = stripComments(raw)
+      .split("\n")
+      .filter((l) => l.trim().startsWith("- "));
+    expect(list.upNext.length + list.read.flatMap((g) => g.papers).length).toBe(
+      lines.length
+    );
+    expect(
+      list.upNext.every(
+        (p) => p.authors && p.year && p.url.startsWith("https://")
+      )
+    ).toBe(true);
   });
 });

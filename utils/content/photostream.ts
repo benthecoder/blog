@@ -46,25 +46,23 @@ const readCached = unstable_cache(
   { revalidate: false }
 );
 
-export const getPhotoCollections = cache(
-  async (): Promise<PhotoCollection[]> => {
-    // Discover uploads at request time, including URLs that didn't exist at build time.
-    await connection();
-    const bucket = process.env.PHOTOS_R2_BUCKET || "photos";
-    const publicUrl =
-      process.env.PHOTOS_PUBLIC_URL ||
-      "https://pub-e85be102871845218dcda1cc49c78508.r2.dev";
-    const endpoint = process.env.R2_ENDPOINT || "";
-    const objects = await listCached(bucket, endpoint);
-    return applyCollectionPlaces(
-      await buildLivePhotoCollections(
-        objects,
-        (object) => readCached(bucket, publicUrl, endpoint, object),
-        photoCollections
-      )
-    );
-  }
-);
+const getPhotoCollections = cache(async (): Promise<PhotoCollection[]> => {
+  // Discover uploads at request time, including URLs that didn't exist at build time.
+  await connection();
+  const bucket = process.env.PHOTOS_R2_BUCKET || "photos";
+  const publicUrl =
+    process.env.PHOTOS_PUBLIC_URL ||
+    "https://pub-e85be102871845218dcda1cc49c78508.r2.dev";
+  const endpoint = process.env.R2_ENDPOINT || "";
+  const objects = await listCached(bucket, endpoint);
+  return applyCollectionPlaces(
+    await buildLivePhotoCollections(
+      objects,
+      (object) => readCached(bucket, publicUrl, endpoint, object),
+      photoCollections
+    )
+  );
+});
 
 export const getPhotostream = cache(async (): Promise<StreamPhoto[]> => {
   const unique = new Map<string, StreamPhoto>();
