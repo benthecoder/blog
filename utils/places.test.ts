@@ -3,6 +3,7 @@ import raw from "@/config/places.json";
 import {
   collectionPlaces,
   filterPlaces,
+  groupPlaces,
   mapsUrl,
   placesGeoJSON,
   placesKML,
@@ -127,5 +128,27 @@ describe("place collections", () => {
     expect(kml).toContain("A &amp; B &lt;Cafe&gt;");
     expect(kml).toContain("&quot;tea&quot; &amp; snacks");
     expect(kml).toContain("-122.4071024,37.7940788,0");
+  });
+  it("groups each place under the first list that has it", () => {
+    const all = data.places.filter((place) =>
+      data.collections.some((list) =>
+        list.entries.some((entry) => entry.placeId === place.id)
+      )
+    );
+    const ids = groupPlaces(data, undefined, all).flatMap((group) =>
+      group.places.map((place) => place.id)
+    );
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids).toHaveLength(all.length);
+  });
+  it("only takes place images from /images/places/", () => {
+    const withImage = (src: string) => {
+      const copy = structuredClone(raw);
+      Object.assign(copy.places[0], { images: [{ src, alt: "Front" }] });
+      return placesSchema.safeParse(copy).success;
+    };
+    expect(withImage("/images/places/capital.jpg")).toBe(true);
+    expect(withImage("https://example.com/capital.jpg")).toBe(false);
+    expect(withImage("/images/recipes/miso.jpg")).toBe(false);
   });
 });

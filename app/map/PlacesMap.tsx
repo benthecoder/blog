@@ -1,11 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import {
   Map as MapLibreMap,
   LngLatBounds,
-  NavigationControl,
-  ScaleControl,
   setWorkerUrl,
   getVersion,
   type GeoJSONSource,
@@ -23,114 +28,82 @@ const styleUrl = (dark: boolean) =>
 const OUR_LAYERS = [
   "clusters",
   "points",
-  "point-stations",
   "point-labels",
   "selected-label",
   "point-targets",
   "cluster-counts",
 ];
-// OpenFreeMap's dark style sits near pure black with ~2.4:1 street labels.
-// Lift it onto the blog's night surface (#1a1a1a) and brighten roads and
-// names so the map reads like the light one. Keyed by base layer id.
+// Repaint OpenFreeMap's base layers in the map's own washi/sumi palette so
+// the tiles match the panel. Values are token names from the MAP section of
+// app/globals.css, resolved per theme. Keyed by base layer id.
 type PaintProperty = Parameters<MapInstance["setPaintProperty"]>[1];
-const DARK_LAYER_PAINT: Record<
+const PLACE_LABELS = [
+  "place_other",
+  "place_suburb",
+  "place_village",
+  "place_town",
+  "place_city",
+  "place_city_large",
+  "place_state",
+  "place_country_other",
+  "place_country_minor",
+  "place_country_major",
+];
+const BASEMAP_PAINT: Record<
   string,
-  Partial<Record<PaintProperty, string>>
+  Partial<Record<PaintProperty, `--map-base-${string}`>>
 > = {
-  background: { "background-color": "#1a1a1a" },
-  water: { "fill-color": "#131518" },
-  waterway: { "line-color": "#131518" },
-  landuse_residential: { "fill-color": "#1c1c1c" },
-  landuse_park: { "fill-color": "#1e231f" },
-  landcover_wood: { "fill-color": "#1e231f" },
-  building: { "fill-color": "#232323", "fill-outline-color": "#2c2c2c" },
-  highway_path: { "line-color": "#2e2e2e" },
-  highway_minor: { "line-color": "#303030" },
-  highway_major_casing: { "line-color": "#3c3c3c" },
-  highway_major_inner: { "line-color": "#343434" },
-  highway_major_subtle: { "line-color": "#343434" },
-  highway_motorway_casing: { "line-color": "#454545" },
-  highway_motorway_subtle: { "line-color": "#343434" },
-  railway: { "line-color": "#333333" },
-  railway_transit: { "line-color": "#333333" },
-  railway_minor: { "line-color": "#333333" },
-  water_name: { "text-color": "#6e7681", "text-halo-color": "#131518" },
-  highway_name_other: { "text-color": "#8f8f8f", "text-halo-color": "#1a1a1a" },
-  highway_name_motorway: { "text-color": "#9a9a9a" },
+  background: { "background-color": "--map-base-land" },
+  water: { "fill-color": "--map-base-water" },
+  waterway: { "line-color": "--map-base-waterway" },
+  landuse_residential: { "fill-color": "--map-base-residential" },
+  landuse_park: { "fill-color": "--map-base-park" },
+  landcover_wood: { "fill-color": "--map-base-wood" },
+  building: {
+    "fill-color": "--map-base-building",
+    "fill-outline-color": "--map-base-building-line",
+  },
+  highway_path: { "line-color": "--map-base-path" },
+  highway_minor: { "line-color": "--map-base-road" },
+  highway_major_casing: { "line-color": "--map-base-road-casing" },
+  highway_major_inner: { "line-color": "--map-base-highway" },
+  highway_major_subtle: { "line-color": "--map-base-highway" },
+  highway_motorway_casing: { "line-color": "--map-base-highway-casing" },
+  highway_motorway_subtle: { "line-color": "--map-base-highway" },
+  railway: { "line-color": "--map-base-rail" },
+  railway_transit: { "line-color": "--map-base-rail" },
+  railway_minor: { "line-color": "--map-base-rail" },
+  water_name: {
+    "text-color": "--map-base-water-label",
+    "text-halo-color": "--map-base-water",
+  },
+  highway_name_other: {
+    "text-color": "--map-base-road-label",
+    "text-halo-color": "--map-base-halo",
+  },
+  highway_name_motorway: {
+    "text-color": "--map-base-road-label",
+    "text-halo-color": "--map-base-halo",
+  },
   ...Object.fromEntries(
-    [
-      "place_other",
-      "place_suburb",
-      "place_village",
-      "place_town",
-      "place_city",
-      "place_city_large",
-      "place_state",
-      "place_country_other",
-      "place_country_minor",
-      "place_country_major",
-    ].map((id) => [
+    PLACE_LABELS.map((id) => [
       id,
-      { "text-color": "#a8a8a8", "text-halo-color": "rgba(26,26,26,0.85)" },
+      {
+        "text-color": "--map-base-place-label",
+        "text-halo-color": "--map-base-halo",
+      },
     ])
   ),
 };
-// The light positron style is blue-grey; a printed sheet is not. Repaint
-// it onto the paper palette: cream land, sage water, tan roads, sepia
-// type. Keyed by base layer id, like the dark lift below.
-const PAPER_LAYER_PAINT: Record<
-  string,
-  Partial<Record<PaintProperty, string>>
-> = {
-  background: { "background-color": "#ece1c4" },
-  water: { "fill-color": "#b7c9bd" },
-  waterway: { "line-color": "#a9bfb0" },
-  landuse_residential: { "fill-color": "#f2ead2" },
-  landuse_park: { "fill-color": "#dde0bd" },
-  landcover_wood: { "fill-color": "#d3d8b2" },
-  building: { "fill-color": "#e7dcc0", "fill-outline-color": "#d5c69c" },
-  highway_path: { "line-color": "#ddd0a8" },
-  highway_minor: { "line-color": "#f7efdb" },
-  highway_major_casing: { "line-color": "#c9b98c" },
-  highway_major_inner: { "line-color": "#f3e9cd" },
-  highway_major_subtle: { "line-color": "#f3e9cd" },
-  highway_motorway_casing: { "line-color": "#b3a077" },
-  highway_motorway_subtle: { "line-color": "#e8d9ae" },
-  railway: { "line-color": "#b3a077" },
-  railway_transit: { "line-color": "#b3a077" },
-  railway_minor: { "line-color": "#b3a077" },
-  water_name: { "text-color": "#5d7263", "text-halo-color": "#b7c9bd" },
-  highway_name_other: { "text-color": "#6d5c36", "text-halo-color": "#f4eedd" },
-  highway_name_motorway: { "text-color": "#6d5c36", "text-halo-color": "#f4eedd" },
-  ...Object.fromEntries(
-    [
-      "place_other",
-      "place_suburb",
-      "place_village",
-      "place_town",
-      "place_city",
-      "place_city_large",
-      "place_state",
-      "place_country_other",
-      "place_country_minor",
-      "place_country_major",
-    ].map((id) => [
-      id,
-      { "text-color": "#3d3423", "text-halo-color": "#f4eedd" },
-    ])
-  ),
-};
-const paintPaperBasemap = (instance: MapInstance) => {
-  for (const [id, paint] of Object.entries(PAPER_LAYER_PAINT))
+const paintBasemap = (instance: MapInstance) => {
+  const tokens = getComputedStyle(instance.getContainer());
+  for (const [id, paint] of Object.entries(BASEMAP_PAINT))
     if (instance.getLayer(id))
-      for (const [property, value] of Object.entries(paint))
-        instance.setPaintProperty(id, property as PaintProperty, value);
-};
-const liftDarkBasemap = (instance: MapInstance) => {
-  for (const [id, paint] of Object.entries(DARK_LAYER_PAINT))
-    if (instance.getLayer(id))
-      for (const [property, value] of Object.entries(paint))
-        instance.setPaintProperty(id, property as PaintProperty, value);
+      for (const [property, token] of Object.entries(paint)) {
+        const value = tokens.getPropertyValue(token).trim();
+        if (value)
+          instance.setPaintProperty(id, property as PaintProperty, value);
+      }
 };
 const isMobile = () => window.matchMedia("(max-width: 760px)").matches;
 // Leave room for the floating header (mobile) and keep pins off the edges.
@@ -145,7 +118,6 @@ const INK_VARS = {
   accent: "--map-accent",
   muted: "--map-muted",
   primary: "--map-ink",
-  stamp: "--map-stamp",
   surface: "--map-paper",
 } as const;
 
@@ -156,6 +128,7 @@ export default function PlacesMap({
   dark,
   onSelect,
   onHover,
+  popup,
 }: {
   places: Visit[];
   selected: Visit | null;
@@ -163,6 +136,8 @@ export default function PlacesMap({
   dark: boolean;
   onSelect: (id: string) => void;
   onHover: (id: string | null) => void;
+  /** Card pinned above a place's dot; it follows the dot as the map moves. */
+  popup: { coordinates: [number, number]; content: ReactNode } | null;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const categorySwatches = useRef<HTMLDivElement>(null);
@@ -178,6 +153,26 @@ export default function PlacesMap({
   });
   const [ready, setReady] = useState<MapInstance | null>(null);
   const [error, setError] = useState(false);
+  const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null);
+  const [lng, lat] = popup?.coordinates ?? [];
+  useEffect(() => {
+    if (
+      !ready ||
+      map.current !== ready ||
+      lng === undefined ||
+      lat === undefined
+    )
+      return;
+    const place = () => {
+      const { x, y } = ready.project([lng, lat]);
+      setAnchor({ x, y });
+    };
+    place();
+    ready.on("move", place);
+    return () => {
+      ready.off("move", place);
+    };
+  }, [ready, lng, lat]);
   useEffect(() => {
     current.current = {
       places,
@@ -207,19 +202,8 @@ export default function PlacesMap({
       return;
     }
     map.current = instance;
-    instance.on("style.load", () => {
-      if (styleDark.current) liftDarkBasemap(instance);
-      else paintPaperBasemap(instance);
-    });
+    instance.on("style.load", () => paintBasemap(instance));
     instance.on("load", () => {
-      instance.addControl(
-        new NavigationControl({ showZoom: false, showCompass: true }),
-        "top-right"
-      );
-      instance.addControl(
-        new ScaleControl({ maxWidth: 90, unit: "metric" }),
-        "bottom-right"
-      );
       if (map.current === instance) setReady(instance);
     });
     const resize = new ResizeObserver(() => instance.resize());
@@ -242,7 +226,7 @@ export default function PlacesMap({
         type: "geojson",
         data,
         cluster: true,
-        clusterRadius: 35,
+        clusterRadius: 24,
         clusterMaxZoom: 16,
       });
       instance.addLayer({
@@ -251,7 +235,7 @@ export default function PlacesMap({
         source: "places",
         filter: ["has", "point_count"],
         paint: {
-          "circle-radius": ["step", ["get", "point_count"], 10, 10, 13, 30, 16],
+          "circle-radius": ["step", ["get", "point_count"], 11, 10, 13, 30, 15],
           "circle-stroke-width": 2,
         },
       });
@@ -260,24 +244,7 @@ export default function PlacesMap({
         type: "circle",
         source: "places",
         filter: ["!", ["has", "point_count"]],
-        paint: {
-          "circle-radius": 5,
-          "circle-color": "#656565",
-          "circle-stroke-width": 2,
-        },
-      });
-      instance.addLayer({
-        id: "point-stations",
-        type: "symbol",
-        source: "places",
-        filter: ["!", ["has", "point_count"]],
-        layout: {
-          "text-field": ["get", "station"],
-          "text-font": ["Noto Sans Bold"],
-          "text-size": 10,
-          "text-allow-overlap": true,
-          "text-ignore-placement": true,
-        },
+        paint: { "circle-radius": 5, "circle-stroke-width": 1.5 },
       });
       // Labels sit below point-targets so clicks still hit the targets.
       instance.addLayer({
@@ -289,8 +256,8 @@ export default function PlacesMap({
         layout: {
           "text-field": ["get", "name"],
           "text-font": ["Noto Sans Regular"],
-          "text-size": 12,
-          "text-offset": [0, 1.1],
+          "text-size": 11,
+          "text-offset": [0, 0.8],
           "text-anchor": "top",
           "text-optional": true,
           "text-max-width": 9,
@@ -305,8 +272,8 @@ export default function PlacesMap({
         layout: {
           "text-field": ["get", "name"],
           "text-font": ["Noto Sans Bold"],
-          "text-size": 12,
-          "text-offset": [0, 1.1],
+          "text-size": 11,
+          "text-offset": [0, 0.8],
           "text-anchor": "top",
           "text-max-width": 9,
           "text-allow-overlap": true,
@@ -363,8 +330,8 @@ export default function PlacesMap({
         filter: ["has", "point_count"],
         layout: {
           "text-field": ["get", "point_count_abbreviated"],
-          "text-font": ["Noto Sans Regular"],
-          "text-size": 12,
+          "text-font": ["Noto Sans Bold"],
+          "text-size": 10,
           "text-allow-overlap": true,
           "text-ignore-placement": true,
         },
@@ -402,42 +369,36 @@ export default function PlacesMap({
       ["get", "id"],
       selectedId,
     ];
-    instance.setPaintProperty("clusters", "circle-color", ink.accent);
-    instance.setPaintProperty("clusters", "circle-stroke-color", ink.surface);
-    instance.setPaintProperty("cluster-counts", "text-color", ink.surface);
+    // Hollow, so a cluster of 2 can't be mistaken for stop 2.
+    instance.setPaintProperty("clusters", "circle-color", ink.surface);
+    instance.setPaintProperty("clusters", "circle-stroke-color", ink.primary);
+    instance.setPaintProperty("cluster-counts", "text-color", ink.primary);
+    const category: ExpressionSpecification = [
+      "match",
+      ["get", "category"],
+      colors[0],
+      colors[1],
+      ...colors.slice(2),
+      ink.primary,
+    ];
+    // Small dots in their category's color; the selected one is red.
     instance.setPaintProperty("points", "circle-color", [
       "case",
       isSelected,
-      ink.stamp,
-      ink.surface,
+      ink.accent,
+      category,
     ]);
-    instance.setPaintProperty("points", "circle-stroke-color", [
-      "case",
-      isSelected,
-      ink.stamp,
-      ["match", ["get", "category"], colors[0], colors[1], ...colors.slice(2), ink.primary],
-    ]);
-    instance.setPaintProperty("points", "circle-stroke-width", [
-      "case",
-      isSelected,
-      2.5,
-      2,
-    ]);
+    instance.setPaintProperty("points", "circle-stroke-color", ink.surface);
+    instance.setPaintProperty("points", "circle-stroke-width", 1.5);
     instance.setPaintProperty("points", "circle-radius", [
       "case",
       isSelected,
-      10,
+      7,
       ["==", ["get", "id"], highlightId ?? ""],
-      9,
-      8,
+      6.5,
+      5,
     ]);
-    instance.setPaintProperty("point-stations", "text-color", [
-      "case",
-      isSelected,
-      ink.surface,
-      ink.primary,
-    ]);
-    instance.setPaintProperty("point-labels", "text-color", ink.muted);
+    instance.setPaintProperty("point-labels", "text-color", ink.primary);
     instance.setPaintProperty("point-labels", "text-halo-color", ink.surface);
     instance.setPaintProperty("selected-label", "text-color", ink.primary);
     instance.setPaintProperty("selected-label", "text-halo-color", ink.surface);
@@ -482,8 +443,11 @@ export default function PlacesMap({
     ready.flyTo({
       center: selected.coordinates,
       zoom: Math.max(ready.getZoom(), 17),
-      // Keep the pin clear of the detail card (left on desktop, bottom on mobile).
-      offset: mobile ? [0, -80] : [150, 0],
+      // Leave room for the card: above the pin on desktop, and on mobile
+      // the card sits at the bottom, so the pin goes up.
+      offset: mobile
+        ? [0, -Math.round(window.innerHeight * 0.24)]
+        : [0, Math.round(window.innerHeight * 0.18)],
       duration: 600,
     });
   }, [selected, ready]);
@@ -522,23 +486,33 @@ export default function PlacesMap({
           title="Zoom in"
           onClick={() => map.current?.zoomIn()}
         >
-          <Plus size={16} />
+          <Plus size={14} />
         </button>
         <button
           aria-label="Zoom out"
           title="Zoom out"
           onClick={() => map.current?.zoomOut()}
         >
-          <Minus size={16} />
+          <Minus size={14} />
         </button>
         <button
           aria-label="Show all places"
           title="Show all places"
           onClick={fit}
         >
-          <Maximize size={15} />
+          <Maximize size={13} />
         </button>
       </div>
+      {popup && anchor && (
+        <div
+          className="map-popup"
+          style={
+            { "--x": `${anchor.x}px`, "--y": `${anchor.y}px` } as CSSProperties
+          }
+        >
+          {popup.content}
+        </div>
+      )}
       {!ready && (
         <div className="map-status" role="status">
           {error
