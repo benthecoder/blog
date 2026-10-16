@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -10,6 +10,7 @@ import PaletteSwitch from "@/components/ui/PaletteSwitch";
 import SearchModal from "@/components/ui/SearchModal";
 import { FloatingControls } from "@/components/layout/FloatingControls";
 import { RandomPostListener } from "@/components/layout/RandomPostListener";
+import SafariEdges from "@/components/layout/SafariEdges";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bneo.xyz"),
@@ -77,6 +78,13 @@ const averia = localFont({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  viewportFit: "cover",
+  // Pre-hydration value (the light top edge). SafariEdges keeps the
+  // theme-color meta in sync with the painted top edge at runtime.
+  themeColor: "#f3f3f2",
+};
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
@@ -92,6 +100,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           </FloatingControls>
           <SearchModal />
           <RandomPostListener />
+          <SafariEdges />
           {children}
         </Providers>
         <SpeedInsights />
