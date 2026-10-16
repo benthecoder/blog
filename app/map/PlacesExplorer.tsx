@@ -11,6 +11,7 @@ import {
   categories,
   collectionPlaces,
   filterPlaces,
+  gridReference,
   mapsUrl,
   readMapSelection,
   type Category,
@@ -73,6 +74,13 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
       .filter((group) => group.places.length);
   }, [data, collection, places]);
   const detail = places.find((p) => p.id === hoveredId) ?? selected;
+  const stationOf = useMemo(
+    () => new Map(places.map((place, index) => [place.id, index + 1])),
+    [places]
+  );
+  const sheetLine = `Field map · ${collection?.location ?? "All sheets"} · rev. ${new Date(
+    `${data.updated}T12:00:00Z`
+  ).toLocaleDateString("en-US", { month: "short", year: "numeric", timeZone: "UTC" })}`;
 
   useEffect(() => {
     const onEscape = (event: KeyboardEvent) => {
@@ -170,7 +178,10 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     <main className="places-explorer">
       <header className="map-header">
         <div className="map-brand">
-          <h1 className="map-wordmark">PLACES</h1>
+          <div className="map-brand-text">
+            <h1 className="map-wordmark">PLACES</h1>
+            <span className="sheet-line">{sheetLine}</span>
+          </div>
           <span>
             <a href="https://bneo.xyz">by ben</a>
           </span>
@@ -197,10 +208,10 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
         aria-label="Lists and places"
       >
         <div className="panel-section-heading">
-          <h2>Lists</h2>
+          <h2>Sheets</h2>
           <span>{data.collections.length}</span>
         </div>
-        <ul className="collection-list" aria-label="Saved lists">
+        <ul className="collection-list" aria-label="Saved sheets">
           {data.collections.map((list) => (
             <li key={list.id}>
               <button
@@ -219,7 +230,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
           ))}
         </ul>
         <div className="panel-section-heading places-section-heading">
-          <h2>Places</h2>
+          <h2>Index</h2>
           <span aria-live="polite">{places.length}</span>
         </div>
         {collection?.post && (
@@ -324,8 +335,17 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                     aria-label={`Show ${place.name} on map`}
                     aria-pressed={place.id === selectedId}
                   >
+                    <span className="place-station" aria-hidden="true">
+                      {stationOf.get(place.id)}
+                    </span>
                     <span className="place-copy">
-                      <span className="place-name">{place.name}</span>
+                      <span className="place-line">
+                        <span className="place-name">{place.name}</span>
+                        <span className="place-leader" aria-hidden="true" />
+                        <span className="place-ref">
+                          {gridReference(place, allPlaces)}
+                        </span>
+                      </span>
                       {place.note && (
                         <span className="place-note">{place.note}</span>
                       )}
@@ -346,6 +366,29 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
             <p>Nothing matches that.</p>
           </div>
         )}
+        <div className="map-legend">
+          <h2>Legend</h2>
+          <p>
+            <span className="legend-station" aria-hidden="true">
+              4
+            </span>
+            station — its number matches the index and the map
+          </p>
+          <p>
+            <span className="legend-ring" aria-hidden="true" />
+            ring colour — the kind of place, as in the filters above
+          </p>
+          <p>
+            <span className="legend-stamp" aria-hidden="true">
+              Surveyed
+            </span>
+            stamped on a card once it has been visited
+          </p>
+          <p className="legend-note">
+            Grid references (B2) place a station on this sheet: columns
+            west to east, rows north to south.
+          </p>
+        </div>
       </aside>
       <section className="map-area" aria-label="Places map">
         <PlacesMap
@@ -384,8 +427,8 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
             <p className="detail-address">{detail.address}</p>
             {detail.note && <p>{detail.note}</p>}
             {detail.visitedOn && (
-              <p className="visit-date">
-                Visited {formatDate(detail.visitedOn)}
+              <p className="visit-stamp">
+                Surveyed {formatDate(detail.visitedOn)}
               </p>
             )}
             <div className="detail-links">
@@ -415,7 +458,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
         ) : (
           <>
             <List size={17} />
-            {collection?.title ?? "Lists"}
+            {collection?.title ?? "Sheets"}
             <span>{collection ? places.length : data.collections.length}</span>
           </>
         )}

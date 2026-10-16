@@ -125,7 +125,7 @@ export function mapsUrl(place: Place) {
 export function placesGeoJSON(places: Visit[]) {
   return {
     type: "FeatureCollection" as const,
-    features: places.map((place) => ({
+    features: places.map((place, index) => ({
       type: "Feature" as const,
       geometry: { type: "Point" as const, coordinates: place.coordinates },
       properties: {
@@ -137,9 +137,42 @@ export function placesGeoJSON(places: Visit[]) {
         visitedOn: place.visitedOn ?? "",
         post: place.post ?? "",
         category: place.tags[0],
+        // 1-based position in the list the visitor sees, so the number
+        // printed inside a map station matches the index beside it.
+        station: String(index + 1),
       },
     })),
   };
+}
+
+const GRID_COLS = "ABCDE";
+/**
+ * Printed-map grid reference ("B2") for a place, on a 5x5 grid stretched
+ * over the bounds of the set it belongs to. Columns run west to east,
+ * rows north to south, like the index of a folded sheet map. Computed
+ * against the whole set (not a filtered view) so a reference stays put
+ * while the visitor filters.
+ */
+export function gridReference(
+  place: Pick<Place, "coordinates">,
+  places: Pick<Place, "coordinates">[]
+): string {
+  if (places.length < 2) return "C3";
+  const lngs = places.map((p) => p.coordinates[0]);
+  const lats = places.map((p) => p.coordinates[1]);
+  const minLng = Math.min(...lngs);
+  const maxLat = Math.max(...lats);
+  const colSpan = (Math.max(...lngs) - minLng) / 5 || 1;
+  const rowSpan = (maxLat - Math.min(...lats)) / 5 || 1;
+  const col = Math.min(
+    4,
+    Math.max(0, Math.floor((place.coordinates[0] - minLng) / colSpan))
+  );
+  const row = Math.min(
+    4,
+    Math.max(0, Math.floor((maxLat - place.coordinates[1]) / rowSpan))
+  );
+  return `${GRID_COLS[col]}${row + 1}`;
 }
 const xml = (value: string) =>
   value.replace(

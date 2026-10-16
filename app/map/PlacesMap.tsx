@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Map as MapLibreMap,
   LngLatBounds,
+  NavigationControl,
+  ScaleControl,
   setWorkerUrl,
   getVersion,
   type GeoJSONSource,
@@ -21,6 +23,7 @@ const styleUrl = (dark: boolean) =>
 const OUR_LAYERS = [
   "clusters",
   "points",
+  "point-stations",
   "point-labels",
   "selected-label",
   "point-targets",
@@ -72,6 +75,57 @@ const DARK_LAYER_PAINT: Record<
     ])
   ),
 };
+// The light positron style is blue-grey; a printed sheet is not. Repaint
+// it onto the paper palette: cream land, sage water, tan roads, sepia
+// type. Keyed by base layer id, like the dark lift below.
+const PAPER_LAYER_PAINT: Record<
+  string,
+  Partial<Record<PaintProperty, string>>
+> = {
+  background: { "background-color": "#ece1c4" },
+  water: { "fill-color": "#b7c9bd" },
+  waterway: { "line-color": "#a9bfb0" },
+  landuse_residential: { "fill-color": "#f2ead2" },
+  landuse_park: { "fill-color": "#dde0bd" },
+  landcover_wood: { "fill-color": "#d3d8b2" },
+  building: { "fill-color": "#e7dcc0", "fill-outline-color": "#d5c69c" },
+  highway_path: { "line-color": "#ddd0a8" },
+  highway_minor: { "line-color": "#f7efdb" },
+  highway_major_casing: { "line-color": "#c9b98c" },
+  highway_major_inner: { "line-color": "#f3e9cd" },
+  highway_major_subtle: { "line-color": "#f3e9cd" },
+  highway_motorway_casing: { "line-color": "#b3a077" },
+  highway_motorway_subtle: { "line-color": "#e8d9ae" },
+  railway: { "line-color": "#b3a077" },
+  railway_transit: { "line-color": "#b3a077" },
+  railway_minor: { "line-color": "#b3a077" },
+  water_name: { "text-color": "#5d7263", "text-halo-color": "#b7c9bd" },
+  highway_name_other: { "text-color": "#6d5c36", "text-halo-color": "#f4eedd" },
+  highway_name_motorway: { "text-color": "#6d5c36", "text-halo-color": "#f4eedd" },
+  ...Object.fromEntries(
+    [
+      "place_other",
+      "place_suburb",
+      "place_village",
+      "place_town",
+      "place_city",
+      "place_city_large",
+      "place_state",
+      "place_country_other",
+      "place_country_minor",
+      "place_country_major",
+    ].map((id) => [
+      id,
+      { "text-color": "#3d3423", "text-halo-color": "#f4eedd" },
+    ])
+  ),
+};
+const paintPaperBasemap = (instance: MapInstance) => {
+  for (const [id, paint] of Object.entries(PAPER_LAYER_PAINT))
+    if (instance.getLayer(id))
+      for (const [property, value] of Object.entries(paint))
+        instance.setPaintProperty(id, property as PaintProperty, value);
+};
 const liftDarkBasemap = (instance: MapInstance) => {
   for (const [id, paint] of Object.entries(DARK_LAYER_PAINT))
     if (instance.getLayer(id))
@@ -91,6 +145,7 @@ const INK_VARS = {
   accent: "--map-accent",
   muted: "--map-muted",
   primary: "--map-ink",
+  stamp: "--map-stamp",
   surface: "--map-paper",
 } as const;
 
@@ -154,8 +209,17 @@ export default function PlacesMap({
     map.current = instance;
     instance.on("style.load", () => {
       if (styleDark.current) liftDarkBasemap(instance);
+      else paintPaperBasemap(instance);
     });
     instance.on("load", () => {
+      instance.addControl(
+        new NavigationControl({ showZoom: false, showCompass: true }),
+        "top-right"
+      );
+      instance.addControl(
+        new ScaleControl({ maxWidth: 90, unit: "metric" }),
+        "bottom-right"
+      );
       if (map.current === instance) setReady(instance);
     });
     const resize = new ResizeObserver(() => instance.resize());
@@ -200,6 +264,19 @@ export default function PlacesMap({
           "circle-radius": 5,
           "circle-color": "#656565",
           "circle-stroke-width": 2,
+        },
+      });
+      instance.addLayer({
+        id: "point-stations",
+        type: "symbol",
+        source: "places",
+        filter: ["!", ["has", "point_count"]],
+        layout: {
+          "text-field": ["get", "station"],
+          "text-font": ["Noto Sans Bold"],
+          "text-size": 10,
+          "text-allow-overlap": true,
+          "text-ignore-placement": true,
         },
       });
       // Labels sit below point-targets so clicks still hit the targets.
@@ -329,32 +406,36 @@ export default function PlacesMap({
     instance.setPaintProperty("clusters", "circle-stroke-color", ink.surface);
     instance.setPaintProperty("cluster-counts", "text-color", ink.surface);
     instance.setPaintProperty("points", "circle-color", [
-      "match",
-      ["get", "category"],
-      colors[0],
-      colors[1],
-      ...colors.slice(2),
-      "#656565",
+      "case",
+      isSelected,
+      ink.stamp,
+      ink.surface,
     ]);
     instance.setPaintProperty("points", "circle-stroke-color", [
       "case",
       isSelected,
-      ink.accent,
-      ink.surface,
+      ink.stamp,
+      ["match", ["get", "category"], colors[0], colors[1], ...colors.slice(2), ink.primary],
     ]);
     instance.setPaintProperty("points", "circle-stroke-width", [
       "case",
       isSelected,
-      3,
+      2.5,
       2,
     ]);
     instance.setPaintProperty("points", "circle-radius", [
       "case",
       isSelected,
-      8,
+      10,
       ["==", ["get", "id"], highlightId ?? ""],
-      7,
-      5,
+      9,
+      8,
+    ]);
+    instance.setPaintProperty("point-stations", "text-color", [
+      "case",
+      isSelected,
+      ink.surface,
+      ink.primary,
     ]);
     instance.setPaintProperty("point-labels", "text-color", ink.muted);
     instance.setPaintProperty("point-labels", "text-halo-color", ink.surface);
