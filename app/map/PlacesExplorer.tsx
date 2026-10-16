@@ -2,15 +2,17 @@
 
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { ArrowUpRight, ChevronDown, List, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, List, Moon, Sun, X } from "lucide-react";
 import { useMounted } from "@/components/ui/ThemeSwitch";
 import CategoryDot from "./CategoryDot";
 import {
   categories,
   collectionPlaces,
   filterPlaces,
+  groupPlaces,
   mapsUrl,
   readMapSelection,
   type Category,
@@ -56,22 +58,11 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     [allPlaces, selectedCategories, query]
   );
   const selected = places.find((p) => p.id === selectedId) ?? null;
-  // Without a selected list, group rows under the first list that has them.
-  const groups = useMemo(() => {
-    if (collection) return [{ id: "", title: "", places }];
-    const claimed = new Set<string>();
-    return data.collections
-      .map((list) => {
-        const rows = places.filter(
-          (place) =>
-            !claimed.has(place.id) &&
-            list.entries.some((entry) => entry.placeId === place.id)
-        );
-        rows.forEach((place) => claimed.add(place.id));
-        return { id: list.id, title: list.title, places: rows };
-      })
-      .filter((group) => group.places.length);
-  }, [data, collection, places]);
+  const groups = useMemo(
+    () => groupPlaces(data, collection, places),
+    [data, collection, places]
+  );
+  const dark = mounted && resolvedTheme === "dark";
   const detail = places.find((p) => p.id === hoveredId) ?? selected;
 
   useEffect(() => {
@@ -170,25 +161,24 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     <main className="places-explorer">
       <header className="map-header">
         <div className="map-brand">
-          <h1 className="map-wordmark">PLACES</h1>
-          <span>
-            <a href="https://bneo.xyz">by ben</a>
-          </span>
+          <h1 className="map-wordmark">Places</h1>
+          <a href="https://bneo.xyz">by ben</a>
         </div>
-        <div className="map-theme" role="group" aria-label="Map appearance">
-          <button
-            aria-pressed={mounted && resolvedTheme !== "dark"}
-            onClick={() => setTheme("light")}
-          >
-            Light
-          </button>
-          <button
-            aria-pressed={mounted && resolvedTheme === "dark"}
-            onClick={() => setTheme("dark")}
-          >
-            Dark
-          </button>
-        </div>
+        {/* The version is the data's last update, so it moves with the list. */}
+        <span
+          className="map-version"
+          title={`Updated ${formatDate(data.updated)}`}
+        >
+          v{data.updated.replaceAll("-", ".")}
+        </span>
+        <button
+          className="map-theme icon-button"
+          onClick={() => setTheme(dark ? "light" : "dark")}
+          aria-label={dark ? "Switch to light map" : "Switch to dark map"}
+          title={dark ? "Light map" : "Dark map"}
+        >
+          {mounted && (dark ? <Sun size={14} /> : <Moon size={14} />)}
+        </button>
       </header>
       <aside
         ref={panel}
@@ -200,24 +190,24 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
           <h2>Lists</h2>
           <span>{data.collections.length}</span>
         </div>
-        <ul className="collection-list" aria-label="Saved lists">
+        <div
+          className="collection-list"
+          role="radiogroup"
+          aria-label="Saved lists"
+        >
           {data.collections.map((list) => (
-            <li key={list.id}>
-              <button
-                onClick={() => selectCollection(list.id)}
-                aria-label={`Open ${list.title}`}
-                aria-pressed={collectionId === list.id}
-              >
-                <span className="collection-title">
-                  {list.title}
-                  <span className="collection-count">
-                    {list.entries.length}
-                  </span>
-                </span>
-              </button>
-            </li>
+            <label key={list.id} className="collection-option">
+              <input
+                type="radio"
+                name="map-list"
+                checked={collectionId === list.id}
+                onChange={() => selectCollection(list.id)}
+              />
+              <span className="collection-title">{list.title}</span>
+              <span className="collection-count">{list.entries.length}</span>
+            </label>
           ))}
-        </ul>
+        </div>
         <div className="panel-section-heading places-section-heading">
           <h2>Places</h2>
           <span aria-live="polite">{places.length}</span>
@@ -228,7 +218,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
               className="journal-link"
               href={`https://bneo.xyz/posts/${collection.post}`}
             >
-              Read the journal <ArrowUpRight size={13} />
+              Read the journal <ArrowUpRight size={12} />
             </Link>
           </div>
         )}
@@ -306,6 +296,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
               {group.places.map((place) => (
                 <li
                   key={place.id}
+                  data-category={place.tags[0]}
                   className={
                     place.id === selectedId
                       ? "selected"
@@ -325,7 +316,10 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                     aria-pressed={place.id === selectedId}
                   >
                     <span className="place-copy">
-                      <span className="place-name">{place.name}</span>
+                      <span className="place-name">
+                        <CategoryDot category={place.tags[0]} />
+                        {place.name}
+                      </span>
                       {place.note && (
                         <span className="place-note">{place.note}</span>
                       )}
@@ -352,54 +346,75 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
           places={places}
           selected={selected}
           highlightId={listHoverId}
-          dark={resolvedTheme === "dark"}
+          dark={dark}
           onSelect={selectPlace}
           onHover={setHoveredId}
+          popup={
+            detail && {
+              coordinates: detail.coordinates,
+              content: (
+                <article
+                  className={`place-detail${hoveredId && hoveredId !== selectedId ? " is-preview" : ""}`}
+                >
+                  <div className="detail-meta">
+                    {detail.tags.map((tag) => (
+                      <span className="detail-category" key={tag}>
+                        <CategoryDot category={tag} />
+                        {tag}
+                      </span>
+                    ))}
+                    {detail.visitedOn && (
+                      <span>Visited {formatDate(detail.visitedOn)}</span>
+                    )}
+                    <button
+                      className="detail-close icon-button"
+                      aria-label="Close place details"
+                      title="Close place details"
+                      onClick={() => {
+                        setSelectedId(null);
+                        setHoveredId(null);
+                        updateUrl(collectionId);
+                      }}
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                  <h2>{detail.name}</h2>
+                  <p className="detail-address">{detail.address}</p>
+                  {detail.images?.length ? (
+                    <div
+                      className="detail-images"
+                      data-count={detail.images.length}
+                    >
+                      {detail.images.map((image, index) => (
+                        <figure key={image.src}>
+                          <Image
+                            src={image.src}
+                            alt={image.alt}
+                            fill
+                            sizes="(max-width: 760px) 90vw, 260px"
+                            priority={index === 0 && detail.id === selectedId}
+                          />
+                        </figure>
+                      ))}
+                    </div>
+                  ) : null}
+                  {detail.note && <p className="detail-note">{detail.note}</p>}
+                  <div className="detail-links">
+                    <a href={mapsUrl(detail)} target="_blank" rel="noreferrer">
+                      Google Maps <ArrowUpRight size={12} />
+                    </a>
+                    {detail.post && (
+                      <Link href={`https://bneo.xyz/posts/${detail.post}`}>
+                        Journal <ArrowUpRight size={12} />
+                      </Link>
+                    )}
+                  </div>
+                </article>
+              ),
+            }
+          }
         />
-        {detail && (
-          <article
-            className={`place-detail${hoveredId && hoveredId !== selectedId ? " is-preview" : ""}`}
-          >
-            <button
-              className="detail-close icon-button"
-              aria-label="Close place details"
-              title="Close place details"
-              onClick={() => {
-                setSelectedId(null);
-                setHoveredId(null);
-                updateUrl(collectionId);
-              }}
-            >
-              <X size={16} />
-            </button>
-            <div className="detail-categories">
-              {detail.tags.map((tag) => (
-                <span className="detail-category" key={tag}>
-                  <CategoryDot category={tag} />
-                  {tag}
-                </span>
-              ))}
-            </div>
-            <h2>{detail.name}</h2>
-            <p className="detail-address">{detail.address}</p>
-            {detail.note && <p>{detail.note}</p>}
-            {detail.visitedOn && (
-              <p className="visit-date">
-                Visited {formatDate(detail.visitedOn)}
-              </p>
-            )}
-            <div className="detail-links">
-              <a href={mapsUrl(detail)} target="_blank" rel="noreferrer">
-                Google Maps <ArrowUpRight size={14} />
-              </a>
-              {detail.post && (
-                <Link href={`https://bneo.xyz/posts/${detail.post}`}>
-                  Journal <ArrowUpRight size={14} />
-                </Link>
-              )}
-            </div>
-          </article>
-        )}
       </section>
       <button
         className="sheet-toggle"

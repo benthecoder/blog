@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Zen_Old_Mincho } from "next/font/google";
 import data from "@/config/places.json";
 import { placesSchema } from "@/utils/places";
 import PlacesExplorer from "./PlacesExplorer";
@@ -14,6 +15,18 @@ export const metadata: Metadata = {
   },
 };
 
+// Mincho for names and the title, like the type on an old printed map.
+const mincho = Zen_Old_Mincho({
+  weight: ["400", "700"],
+  subsets: ["latin"],
+  variable: "--font-mincho",
+  display: "swap",
+});
+
 export default function MapPage() {
-  return <PlacesExplorer data={placesSchema.parse(data)} />;
+  return (
+    <div className={mincho.variable}>
+      <PlacesExplorer data={placesSchema.parse(data)} />
+    </div>
+  );
 }

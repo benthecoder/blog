@@ -22,6 +22,16 @@ const placeSchema = z.object({
   note: z.string(),
   googlePlaceId: z.string().optional(),
   source: z.url().optional(),
+  // Shown under the address in the detail card, first one largest. Files
+  // live in R2 under /images/places/ (never in git), like recipe images.
+  images: z
+    .array(
+      z.object({
+        src: z.string().regex(/^\/images\/places\/[\w./-]+$/),
+        alt: z.string().min(1),
+      })
+    )
+    .optional(),
 });
 const collectionSchema = z.object({
   id,
@@ -122,6 +132,28 @@ export function mapsUrl(place: Place) {
     url.searchParams.set("query_place_id", place.googlePlaceId);
   return url.toString();
 }
+/** Rows under the list they belong to. With no list picked, a place sits
+ * under the first list that has it. */
+export function groupPlaces(
+  data: PlacesData,
+  collection: Collection | undefined,
+  places: Visit[]
+) {
+  if (collection) return [{ id: "", title: "", places }];
+  const claimed = new Set<string>();
+  return data.collections
+    .map((list) => {
+      const rows = places.filter(
+        (place) =>
+          !claimed.has(place.id) &&
+          list.entries.some((entry) => entry.placeId === place.id)
+      );
+      rows.forEach((place) => claimed.add(place.id));
+      return { id: list.id, title: list.title, places: rows };
+    })
+    .filter((group) => group.places.length);
+}
+
 export function placesGeoJSON(places: Visit[]) {
   return {
     type: "FeatureCollection" as const,
