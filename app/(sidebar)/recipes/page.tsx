@@ -55,6 +55,14 @@ const RecipesPage = () => {
           ))}
         </ul>
       )}
+      <p className="mt-10 text-sm">
+        <Link
+          href="/groceries"
+          className="underline underline-offset-2 hover:text-ink dark:hover:text-chalk-soft"
+        >
+          groceries i like
+        </Link>
+      </p>
     </div>
   );
 };

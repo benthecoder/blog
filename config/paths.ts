@@ -54,6 +54,10 @@ export const PROJECTS_MD = path.join(
   ROOT_DIR,
   "app/(sidebar)/projects/projects.md"
 );
+export const GROCERIES_MD = path.join(
+  ROOT_DIR,
+  "app/(sidebar)/groceries/groceries.md"
+);
 
 export function getPostPath(slug: string): string {
   return getMarkdownPath(POSTS_DIR, slug);
