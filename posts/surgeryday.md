@@ -32,7 +32,7 @@ Two nurses came in at 1 p.m. to brief me about more details. They reassured me t
 
 It wasn't until 3 p.m. when the time came.
 
-I was wheeled from room to room, and finally arrived at the operation theatre, bright and cold. I was really curious, observing avery part of the room, noticing every instrument and screen in my vicinity. The nurse asked if it was like in the movies, and I said it's brighter than I thought.
+I was wheeled from room to room, and finally arrived at the operation theatre, bright and cold. I was really curious, observing every part of the room, noticing every instrument and screen in my vicinity. The nurse asked if it was like in the movies, and I said it's brighter than I thought.
 
 I moved to the operation bed, and they put a heated blanket. It felt nice. One of the nurses started conversing with me. I told her about my studies in the US, she shared about her son who has been in London the past 6 years, about his 700 pound/week rent, and his application for a masters in USC. We shared the same concerns towards the cost of US education, and how she cannot retire yet. I say my dad is in the same situation too. The anaesthesia went in my bloodstream. _I later found out this was Bridion (sugammadex sodium), and it costs RM600_.
 

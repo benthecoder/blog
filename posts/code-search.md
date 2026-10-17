@@ -89,7 +89,7 @@ Here's the process.
 4. The data is partitioned between shards. Each shard consumes a single Kafka partition in the topic.
    - **Indexing is decoupled from crawling** through the use of Kafka and the **ordering** of messages in Kafka is how we gain **query consistency**.
 5. Indexer shards take the documents and build the indices
-   - tokenizing to construct n-gram indices (for content, symbols) and other useful indices (languages, owners, etc) before serializing and flushing to disk when enough work as accumulated.
+   - tokenizing to construct n-gram indices (for content, symbols) and other useful indices (languages, owners, etc) before serializing and flushing to disk when enough work has accumulated.
 6. Finally the shards run compaction to collapse up smaller indices to larger onces that are more efficient to query.
    - Compaction also k-merges the posting list by score so relevant documents have lower IDs and will be returned first by lazy iterators.
 

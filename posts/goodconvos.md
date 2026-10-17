@@ -68,7 +68,7 @@ Some notes on C7: The Right questions.
   - your skills (What are you doing when you feel most alive?)
   - your schedule (How exactly do you fill your days?)
 - an average child asks 40,000 questions between ages 2-5
-- some point during late childhood or adolescence, we begin to withdraw from intimacy. society sends teh message we shouldn't show emotions, shouldn't get personal
+- some point during late childhood or adolescence, we begin to withdraw from intimacy. society sends the message we shouldn't show emotions, shouldn't get personal
 - simple questions are best. David, as a journalist just asks the same question over and over again: "And then what happened?"
 - broad, dumb questions > smart questions (meant to display how well-informed you are)
 - questioning as a **moral practice**

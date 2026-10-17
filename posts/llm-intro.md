@@ -8,7 +8,7 @@ date: 'Nov 27, 2023'
 
 Below are my takeaways.
 
-- LLMs are neutal networks with billions of parameters dispersed through them, we know how to iteratively adjust the parameters to make them better, but we don't know how they collaborate to do it
+- LLMs are neutral networks with billions of parameters dispersed through them, we know how to iteratively adjust the parameters to make them better, but we don't know how they collaborate to do it
 - training LLMs = lossy compression (100x compression ratio), there is [close relationship](https://mindfulmodeler.substack.com/p/the-intricate-link-between-compression) between compression and performance
 - hallucinations: LLMs dreams, think of them as mostly inscrutable artifacts, develop correspondingly sophisticated evaluations
 - how LLMs are build
