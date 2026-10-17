@@ -1,15 +1,9 @@
-// Sidenotes: on wide screens, footnotes belong in the margin next to the
-// text they annotate (Tufte-style), not collected at the bottom of the
-// post. This plugin clones every GFM footnote definition into an
-// <aside class="sidenote"> inserted right after the block containing its
-// reference — number first, then the note's content (which may include
-// images). The original endnotes section stays in the document and is
-// what smaller screens render; globals.css shows exactly one of the two
-// per breakpoint and tags the section with .has-sidenotes so it can hide
-// itself when the margin copies take over.
+// Clones every footnote into an <aside class="sidenote"> after the block
+// containing its reference. The endnotes section stays in the document;
+// globals.css renders the asides in the margin on wide screens and the
+// endnotes otherwise, and hides the section via .has-sidenotes.
 //
-// Minimal hast shapes: @types/hast is not a dependency of this repo, and
-// the plugin only needs the fields below.
+// Minimal hast shapes — @types/hast is not a dependency of this repo.
 interface HastText {
   type: "text";
   value: string;
@@ -82,13 +76,8 @@ function isBlankText(node: HastNode): boolean {
   return node.type === "text" && (node as HastText).value.trim() === "";
 }
 
-// Deep-copies a footnote <li>'s content into sidenote children: backref
-// arrows dropped. Image-led paragraphs are unwrapped to their inline
-// children — left wrapped, the markdown pipeline turns them into
-// full-bleed square photo plates and drops any text after the image;
-// in the margin the image should sit plainly in the note's flow, with
-// its following text kept as the caption. A single remaining paragraph
-// is unwrapped too, so the note reads as one block of margin text.
+// Image-led paragraphs are unwrapped: left wrapped, the pipeline turns
+// them into full-bleed photo plates and drops any text after the image.
 function sidenoteChildren(li: HastElement): HastNode[] {
   const copy = (nodes: HastNode[]): HastNode[] =>
     nodes.flatMap((node) => {
@@ -160,16 +149,12 @@ export default function rehypeSidenotes() {
           const aside: HastElement = {
             type: "element",
             tagName: "aside",
-            // The endnote below is the canonical copy (the in-text ref
-            // links to it); the margin aside is a visual duplicate, so
-            // keep it out of the accessibility tree.
+            // aria-hidden: the endnote is the canonical copy.
             properties: { className: ["sidenote"], ariaHidden: true },
             children: [number, ...sidenoteChildren(item)],
           };
 
-          // Walk up from the reference past inline wrappers (sup, em, …)
-          // to the block that contains it, then insert the aside right
-          // after the block.
+          // Insert after the block containing the reference.
           let located: Located | null = refs[0];
           while (located && INLINE_TAGS.has(located.node.tagName)) {
             const parentEl = located.parent as HastElement;
