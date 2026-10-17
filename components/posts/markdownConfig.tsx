@@ -7,6 +7,7 @@ import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
 import PostImage from "./PostImage";
 import remarkWikiLink from "./remarkWikiLink";
+import rehypeSidenotes from "./rehypeSidenotes";
 import type { ImageMeta } from "@/utils/content/imageMeta";
 import "katex/dist/katex.min.css";
 
@@ -19,6 +20,8 @@ export const rehypePlugins: PluggableList = [
   rehypeRaw,
   rehypeSlug,
   [rehypeKatex, { strict: false }],
+  // Runs last: sidenotes need the footnote section fully rendered.
+  rehypeSidenotes,
 ];
 
 // `getImageMeta` is only available server-side (it reads the manifest from
