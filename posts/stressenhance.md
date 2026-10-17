@@ -15,7 +15,7 @@ The tl;dr of the study:
 > Stress is bad -> Stress is debilitating.  
 > Stress is good -> <mark>Stress is enhancing</mark> .
 
-The did multiple experiments, and one of them was testing on work performance, on soft tasks and hard tasks.
+They did multiple experiments, and one of them was testing on work performance, on soft tasks and hard tasks.
 
 The takeaway is the people who learned that **stress is enhancing** significantly **improved their performance** on hard tasks, and the group who learned that stress is bad had no improvements at all.
 

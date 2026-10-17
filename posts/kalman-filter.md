@@ -8,7 +8,7 @@ date: 'Nov 6, 2023'
 
 You can use it in any place where you have uncertain information about some dynamic system, and you can make an educated guess about what the system is going to do next.
 
-So, a common application is for guidance, navigation, and control of vehicles, particularly airfract, [spacecraft](https://ntrs.nasa.gov/api/citations/19860003843/downloads/19860003843.pdf) and ships [positioned dynamically](https://www.wikiwand.com/en/Dynamic_positioning).
+So, a common application is for guidance, navigation, and control of vehicles, particularly aircraft, [spacecraft](https://ntrs.nasa.gov/api/citations/19860003843/downloads/19860003843.pdf) and ships [positioned dynamically](https://www.wikiwand.com/en/Dynamic_positioning).
 
 Even if reality is messy and interferes with the clean motion, it can still do a good job of figuring out what happened.
 

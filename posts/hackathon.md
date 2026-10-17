@@ -42,4 +42,4 @@ I cut my losses and decided to just be glad I got to participate in this hackath
 
 We went back for dinner, went to the rooftop, and then went for the BART to home.
 
-I didn't make any new connections, which I regret, I was too focused on trying to build something, and even thought it wasn't even created, I was glad to be there and experience it with my friends.
+I didn't make any new connections, which I regret, I was too focused on trying to build something, and even though it wasn't even created, I was glad to be there and experience it with my friends.

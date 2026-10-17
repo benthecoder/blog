@@ -28,7 +28,7 @@ We start with data about an event, and we want to estimate a parameter of intere
 
 In mathematical form, our model is estimating P(θ|X), the parameter distribution for θ given the data X.
 
-But we can't directly estimate P(θ|X), we don't know the true values of parameters in the real-word.
+But we can't directly estimate P(θ|X), we don't know the true values of parameters in the real-world.
 
 It's much more natural to estimate the inverse - P(X|θ) the distribution of data given parameters.
 
