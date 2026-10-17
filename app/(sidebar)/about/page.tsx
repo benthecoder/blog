@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import Timeline from "@/components/visualizations/Timeline";
+import { personJsonLd } from "@/config/person";
+import { serializeJsonLd } from "@/utils/jsonLd";
 import { timelineEvents } from "./events";
 
 export const metadata: Metadata = {
@@ -10,6 +12,11 @@ export const metadata: Metadata = {
 export const dynamic = "force-static";
 
 const ChronologyPage = () => (
+  <>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(personJsonLd) }}
+    />
   <div className="min-h-screen font-serif">
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
       <div className="mb-8 pb-4">
@@ -20,6 +27,7 @@ const ChronologyPage = () => (
       <Timeline events={timelineEvents} />
     </div>
   </div>
+  </>
 );
 
 export default ChronologyPage;
