@@ -3,7 +3,6 @@ type RawEvent = {
   month?: string;
   day?: string;
   description: string;
-  postSlug?: string;
   imageLinks?: { text: string; imagePath: string; altText: string }[];
 };
 
@@ -158,35 +157,30 @@ const rawEvents: RawEvent[] = [
     month: "june",
     day: "3",
     description: "monterey with my parents",
-    postSlug: "monterey",
   },
   {
     year: "2023",
     month: "june",
     day: "4",
     description: "sf with my parents",
-    postSlug: "golden-gate",
   },
   {
     year: "2023",
     month: "june",
     day: "13",
     description: "first kpop concert — TWICE",
-    postSlug: "kpop",
   },
   {
     year: "2023",
     month: "june",
     day: "27",
     description: "first sf meetup",
-    postSlug: "sf-meetup",
   },
   {
     year: "2023",
     month: "july",
     day: "15",
     description: "first in-person hackathon @ scale ai",
-    postSlug: "hackathon",
   },
   {
     year: "2023",
@@ -224,7 +218,6 @@ const rawEvents: RawEvent[] = [
     month: "november",
     day: "20",
     description: "boston with A",
-    postSlug: "boston-d1",
     imageLinks: [
       {
         text: "boston",
@@ -243,7 +236,6 @@ const rawEvents: RawEvent[] = [
     month: "december",
     day: "25",
     description: "finished the nativity sketch in seattle",
-    postSlug: "christmas-seattle",
     imageLinks: [
       {
         text: "nativity sketch",
@@ -398,7 +390,6 @@ const rawEvents: RawEvent[] = [
     month: "feb",
     day: "23",
     description: "first day back in office",
-    postSlug: "230226",
     imageLinks: [
       {
         text: "office",
@@ -410,8 +401,8 @@ const rawEvents: RawEvent[] = [
 ];
 
 const grouped = rawEvents.reduce(
-  (acc, { year, month, day, description, postSlug, imageLinks }) => {
-    (acc[year] ??= []).push({ month, day, description, postSlug, imageLinks });
+  (acc, { year, month, day, description, imageLinks }) => {
+    (acc[year] ??= []).push({ month, day, description, imageLinks });
     return acc;
   },
   {} as Record<string, Omit<RawEvent, "year">[]>
