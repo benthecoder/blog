@@ -6,6 +6,8 @@ import { FadeImage } from "@/components/photos/FadeImage";
 import { PhotoMeta } from "@/components/photos/PhotoMeta";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
+export const revalidate = 60;
+
 type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;

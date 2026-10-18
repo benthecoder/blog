@@ -6,6 +6,8 @@ import { monthRange } from "@/components/photos/dates";
 import { getPhotostream } from "@/utils/content/photostream";
 import { placeTree } from "@/utils/photoPlaces";
 
+export const revalidate = 60;
+
 type Props = { params: Promise<{ country: string; city: string }> };
 
 async function findCity(countrySlug: string, citySlug: string) {

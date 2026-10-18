@@ -23,7 +23,7 @@ import { categories, placesGeoJSON, type Visit } from "@/utils/places";
 import CategoryDot from "./CategoryDot";
 
 const styleUrl = (dark: boolean) =>
-  `https://tiles.openfreemap.org/styles/${dark ? "dark" : "positron"}`;
+  `/map-styles/${dark ? "dark" : "positron"}.json`;
 // Layers we add on top of the base style; kept when the theme swaps styles.
 const OUR_LAYERS = [
   "clusters",
