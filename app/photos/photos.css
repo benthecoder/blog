@@ -232,10 +232,16 @@
   opacity: 0;
   transition: opacity 300ms;
 }
+.ph-strip > div {
+  background: var(--ph-raised);
+}
 .ph-strip img[data-loaded] {
   opacity: 0.85;
 }
-.ph-city:hover .ph-strip img[data-loaded] {
+.ph-city:hover .ph-strip > div {
+  background: var(--ph-raised);
+}
+.ph-strip img[data-loaded] {
   opacity: 1;
 }
 .ph-unplaced {
