@@ -68,6 +68,31 @@ const nextConfig: NextConfig = {
   }),
   headers: async () => [
     {
+      source: "/:path*",
+      headers: [
+        { key: "X-Content-Type-Options", value: "nosniff" },
+        { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        { key: "X-Frame-Options", value: "SAMEORIGIN" },
+        {
+          key: "Content-Security-Policy",
+          value: [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
+            "style-src 'self' 'unsafe-inline'",
+            "img-src 'self' data: blob: https:",
+            "font-src 'self' data:",
+            "connect-src 'self' https://tiles.openfreemap.org https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+            "worker-src 'self' blob:",
+            "frame-src 'self' https:",
+            "frame-ancestors 'self'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "object-src 'none'",
+          ].join("; "),
+        },
+      ],
+    },
+    {
       source: "/fonts/:path*",
       headers: [
         { key: "Cache-Control", value: "public, max-age=31536000, immutable" },

@@ -58,7 +58,9 @@ export function DayNav({
     fetch("/api/admin/list-posts", { signal: controller.signal })
       .then((res) => (res.ok ? res.json() : []))
       .then((list: string[]) => setSlugs(list))
-      .catch(() => {});
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted) console.error(error);
+      });
     return () => controller.abort();
   }, [date]);
 
