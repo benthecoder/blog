@@ -987,6 +987,68 @@ body {
   color: var(--color-ink-strong);
 }
 
+/* Sidenotes: rehypeSidenotes clones each footnote into an aside placed
+   after the paragraph that references it. Below 2xl the asides stay
+   hidden and the endnotes section renders as usual; at 2xl the asides
+   float into the right margin (Tufte-style) and the endnotes section
+   hides itself via .has-sidenotes. The article column is centered with
+   a site sidebar on the left, so 2xl is where a ~250px margin column
+   genuinely fits. */
+.prose aside.sidenote,
+.essay-prose aside.sidenote {
+  display: none;
+}
+
+@media (min-width: 1536px) {
+  .prose aside.sidenote,
+  .essay-prose aside.sidenote {
+    display: block;
+    float: right;
+    width: 250px;
+    margin: 0.3em -290px 1.2em 2em;
+    font-size: 0.8em;
+    line-height: 1.55;
+    color: var(--color-ink-muted);
+  }
+
+  .dark .prose aside.sidenote,
+  .dark .essay-prose aside.sidenote {
+    color: var(--color-chalk-muted);
+  }
+
+  .prose aside.sidenote .sidenote-number,
+  .essay-prose aside.sidenote .sidenote-number {
+    display: block;
+    margin-bottom: 0.2em;
+    font-size: 0.85em;
+    color: var(--color-ink-soft);
+  }
+
+  .dark .prose aside.sidenote .sidenote-number,
+  .dark .essay-prose aside.sidenote .sidenote-number {
+    color: var(--color-chalk);
+  }
+
+  .prose aside.sidenote p,
+  .essay-prose aside.sidenote p {
+    margin: 0.4em 0;
+  }
+
+  .prose aside.sidenote img,
+  .essay-prose aside.sidenote img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 0.4em 0;
+  }
+
+  .prose section[data-footnotes].has-sidenotes,
+  .essay-prose section[data-footnotes].has-sidenotes {
+    display: none;
+  }
+}
+
 .dark .essay-prose li:target {
   color: var(--color-chalk-strong);
 }
