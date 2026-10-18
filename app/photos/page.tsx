@@ -14,15 +14,12 @@ export const metadata: Metadata = {
 const count = (n: number, one: string, many = `${one}s`) =>
   `${n} ${n === 1 ? one : many}`;
 
-export default async function PhotosPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ camera?: string }>;
-}) {
-  const [{ camera }, photos] = await Promise.all([
-    searchParams,
-    getPhotostream(),
-  ]);
+// The stream changes only when photos are uploaded; serve it from the
+// edge cache and refresh in the background.
+export const revalidate = 60;
+
+export default async function PhotosPage() {
+  const photos = await getPhotostream();
   const places = placeTree(photos);
   const cameras = new Set(photos.map((p) => shortCamera(p.camera)));
   cameras.delete(undefined);
@@ -38,7 +35,6 @@ export default async function PhotosPage({
   return (
     <PhotoStream
       photos={photos}
-      initialCamera={camera}
       header={
         <>
           <h1 className="ph-sr">All photos</h1>

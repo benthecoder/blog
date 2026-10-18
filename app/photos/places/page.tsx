@@ -4,6 +4,8 @@ import { CityRows } from "@/components/photos/CityRows";
 import { getPhotostream } from "@/utils/content/photostream";
 import { placeTree } from "@/utils/photoPlaces";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "places — photos",
   description: "Photos by country and city.",

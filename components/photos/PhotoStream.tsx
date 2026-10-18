@@ -23,6 +23,13 @@ export function PhotoStream({
   initialCamera?: string;
 }) {
   const [camera, setCamera] = useState(initialCamera);
+  // Pages no longer read ?camera= on the server (that forced a dynamic
+  // render); adopt it here instead. choose() keeps it in sync afterwards.
+  useEffect(() => {
+    if (initialCamera) return;
+    const fromUrl = new URLSearchParams(window.location.search).get("camera");
+    if (fromUrl) setCamera(fromUrl);
+  }, [initialCamera]);
   const [limit, setLimit] = useState(PAGE);
   const [selected, setSelected] = useState<number | null>(null);
   const end = useRef<HTMLDivElement>(null);
