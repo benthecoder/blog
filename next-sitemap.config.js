@@ -4,6 +4,38 @@ module.exports = {
   generateRobotsTxt: true,
   exclude: ["/admin", "/admin/*"],
   robotsTxtOptions: {
-    policies: [{ userAgent: "*", allow: "/", disallow: ["/admin", "/api"] }],
+    policies: [
+      // AI crawlers: no scraping, no training data. Named individually
+      // because the wildcard group below is an allow.
+      {
+        userAgent: [
+          "GPTBot",
+          "OAI-SearchBot",
+          "ChatGPT-User",
+          "ClaudeBot",
+          "Claude-SearchBot",
+          "Claude-User",
+          "anthropic-ai",
+          "CCBot",
+          "Google-Extended",
+          "Applebot-Extended",
+          "Meta-ExternalAgent",
+          "Meta-ExternalFetcher",
+          "Bytespider",
+          "PerplexityBot",
+          "Perplexity-User",
+          "cohere-ai",
+          "Diffbot",
+          "Omgilibot",
+          "ImagesiftBot",
+          "Timpibot",
+          "AI2Bot",
+          "DuckAssistBot",
+          "MistralAI-User",
+        ],
+        disallow: ["/"],
+      },
+      { userAgent: "*", allow: "/", disallow: ["/admin", "/api"] },
+    ],
   },
 };

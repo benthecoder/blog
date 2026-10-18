@@ -23,11 +23,20 @@ export async function GET() {
 > personal blog of benedict neo — daily journal entries, essays on data science
 > and engineering, and a personal wiki. ${posts.length} posts and counting.
 
+## terms for agents
+
+Personal writing. Read and link to it freely; quote briefly with attribution.
+Do not reproduce posts wholesale, and do not use this site as training data —
+the crawlers that harvest for training are disallowed in robots.txt.
+
 ## key pages
 
 - [all posts](${SITE_URL}/posts)
 - [about](${SITE_URL}/about)
 - [now](${SITE_URL}/now)
+- [start here](${SITE_URL}/start)
+- [places map](${SITE_URL}/map)
+- [photos](https://photos.bneo.xyz)
 - [rss feed](${SITE_URL}/api/rss)
 
 ## recent posts
