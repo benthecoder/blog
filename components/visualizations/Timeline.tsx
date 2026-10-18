@@ -144,7 +144,7 @@ const Timeline: FC<TimelineProps> = ({ events }) => (
       <div key={event.period} className="group/year">
         <div className="flex gap-2 sm:gap-4 text-ink dark:text-chalk-strong">
           <div className="min-w-[60px] sm:min-w-[70px] pt-0.5">
-            <span className="text-sm opacity-50 transition-opacity group-hover/year:opacity-70">
+            <span className="text-sm opacity-50 dark:opacity-75 transition-opacity group-hover/year:opacity-70 dark:group-hover/year:opacity-90">
               {event.period}
             </span>
           </div>
@@ -162,7 +162,7 @@ const Timeline: FC<TimelineProps> = ({ events }) => (
                 >
                   <div className="min-w-[80px] sm:min-w-[90px]">
                     {dateDetail && (
-                      <span className="text-sm opacity-30 transition-opacity group-hover/item:opacity-50">
+                      <span className="text-sm opacity-30 dark:opacity-60 transition-opacity group-hover/item:opacity-50 dark:group-hover/item:opacity-80">
                         {dateDetail}
                       </span>
                     )}
