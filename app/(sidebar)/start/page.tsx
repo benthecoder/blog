@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { DRAWINGS_URL } from "@/config/constants";
 
 const KnowledgeMap = dynamic(
   () => import("@/components/visualizations/KnowledgeMap"),
@@ -26,6 +28,29 @@ const INTERESTS: Interest[] = [
     href: "https://curius.app/benedict-neo",
     external: true,
   },
+];
+
+// Everything on the site, as a plain list of names — the doodle nav in
+// the rail is decoration; this is the version you can actually read.
+const INDEX: { text: string; href: string; external?: boolean }[] = [
+  { text: "about", href: "/about" },
+  { text: "posts", href: "/posts" },
+  { text: "essays", href: "/essays" },
+  { text: "wiki", href: "/wiki" },
+  { text: "thoughts", href: "/thoughts" },
+  { text: "projects", href: "/projects" },
+  { text: "map", href: "/map" },
+  { text: "photos", href: "/photos" },
+  { text: "sketchbook", href: "/sketch" },
+  { text: "papers", href: "/papers" },
+  { text: "recipes", href: "/recipes" },
+  { text: "now", href: "/now" },
+  { text: "reading", href: "/library" },
+  { text: "uses", href: "/uses" },
+  { text: "findme", href: "/contact" },
+  { text: "curius", href: "https://curius.app/benedict-neo", external: true },
+  { text: "til", href: "https://github.com/benthecoder/til", external: true },
+  { text: "rss", href: "/api/rss" },
 ];
 
 const ExternalLinkIcon = () => (
@@ -69,6 +94,19 @@ const StartPage = () => {
 
   return (
     <div>
+      {/* One picture, then words — the sketch is a scan on white paper, so
+          it blends onto the page the same way the home artwork does. */}
+      <div className="relative w-full max-w-sm aspect-square mb-8">
+        <Image
+          src={`${DRAWINGS_URL}/christ.png`}
+          alt="nativity sketch"
+          fill
+          priority
+          sizes="(max-width: 640px) 85vw, 384px"
+          className="object-contain mix-blend-multiply dark:invert dark:mix-blend-screen"
+        />
+      </div>
+
       <article className="prose">
         <p>welcome to my corner on the internet</p>
 
@@ -129,7 +167,29 @@ const StartPage = () => {
         </p>
       </article>
 
-      <div className="h-[60vh] mt-8 overflow-hidden border border-rule dark:border-white/8">
+      <nav aria-label="site index" className="mt-10 font-serif">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 gap-x-8 gap-y-2.5">
+          {INDEX.map((item) => (
+            <li key={item.text}>
+              {item.external ? (
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1"
+                >
+                  {item.text}
+                  <ExternalLinkIcon />
+                </a>
+              ) : (
+                <Link href={item.href}>{item.text}</Link>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div className="h-[50vh] mt-12 overflow-hidden border border-rule dark:border-white/8">
         <KnowledgeMap className="w-full h-full" />
       </div>
     </div>

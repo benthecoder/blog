@@ -88,7 +88,7 @@ export function SidebarNav() {
             prefetch={
               path !== "/random" && prefetchPath === path ? null : false
             }
-            className={`inline-flex w-8 h-8 lg:w-11 lg:h-11 transition-opacity ${
+            className={`inline-flex flex-col items-center gap-1.5 transition-opacity ${
               pathname === path ? "opacity-50" : "hover:opacity-70"
             }`}
             onMouseEnter={(e) => {
@@ -106,19 +106,26 @@ export function SidebarNav() {
                 : undefined
             }
           >
-            {icon ? (
-              <SketchIcon
-                src={`/icons/${icon}`}
-                label={text}
-                className={`w-full h-full${path === "/random" && spinning ? " dice-spin" : ""}`}
-              />
-            ) : (
-              <MapPinned
-                aria-label={text}
-                className="w-full h-full p-1.5"
-                strokeWidth={1.25}
-              />
-            )}
+            <span className="block w-8 h-8 lg:w-9 lg:h-9">
+              {icon ? (
+                <SketchIcon
+                  src={`/icons/${icon}`}
+                  label={text}
+                  className={`w-full h-full${path === "/random" && spinning ? " dice-spin" : ""}`}
+                />
+              ) : (
+                <MapPinned
+                  aria-label={text}
+                  className="w-full h-full p-1.5"
+                  strokeWidth={1.25}
+                />
+              )}
+            </span>
+            {/* The doodles alone don't say where they go; the rail has the
+                vertical room to just say it. Mobile stays icon-only. */}
+            <span className="hidden lg:block text-[10px] leading-none opacity-70 select-none">
+              {text}
+            </span>
           </Link>
         ))}
       </nav>
