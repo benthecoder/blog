@@ -9,10 +9,12 @@ export default function PostImage({
   src,
   alt,
   meta,
+  priority = false,
 }: {
   src: string;
   alt: string;
   meta?: ImageMeta | null;
+  priority?: boolean;
 }) {
   const [loaded, setLoaded] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -90,7 +92,9 @@ export default function PostImage({
             fill
             // Lazy images can choose from their actual laid-out slot. Older
             // browsers retain the existing fallback; artwork stays untouched.
-            loading="lazy"
+            // The flagged first image preloads instead (see markdownConfig).
+            loading={priority ? "eager" : "lazy"}
+            preload={priority || undefined}
             sizes="auto, (max-width: 800px) 100vw, 800px"
             placeholder={meta?.blurDataURL ? "blur" : "empty"}
             blurDataURL={meta?.blurDataURL}
