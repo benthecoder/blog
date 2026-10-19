@@ -64,10 +64,26 @@ export default function ArtworkRotation() {
   const [current, setCurrent] = useState<Layer>({ index: 0, id: 0 });
   const [pending, setPending] = useState<Layer | null>(null);
   const [paused, setPaused] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const currentId = useRef(0);
 
   useEffect(() => {
-    if (paused) return;
+    const onVisibility = () => setHidden(document.hidden);
+    onVisibility();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => document.removeEventListener("visibilitychange", onVisibility);
+  }, []);
+
+  useEffect(() => {
+    if (paused || hidden) return;
+    // A one-second slideshow is motion: readers who asked their OS for
+    // less of it keep the first drawing, and data-saver connections don't
+    // spend bytes preloading the other twelve.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const connection = (
+      navigator as Navigator & { connection?: { saveData?: boolean } }
+    ).connection;
+    if (connection?.saveData) return;
     const timer = setInterval(() => {
       setCurrent((shown) => {
         setPending({
@@ -78,7 +94,7 @@ export default function ArtworkRotation() {
       });
     }, INTERVAL);
     return () => clearInterval(timer);
-  }, [paused]);
+  }, [paused, hidden]);
 
   // Promote only once the pixels are paintable — onLoad means fetched, not
   // decoded, and cutting to a not-yet-decoded image flashes blank. Both
