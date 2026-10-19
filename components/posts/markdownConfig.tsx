@@ -11,10 +11,41 @@ import rehypeSidenotes from "./rehypeSidenotes";
 import type { ImageMeta } from "@/utils/content/imageMeta";
 import "katex/dist/katex.min.css";
 
+// Minimal mdast shape — @types/mdast is not a dependency of this repo.
+interface MdastNode {
+  type: string;
+  children?: MdastNode[];
+  data?: { hProperties?: Record<string, string> };
+}
+
+function flagFirstImage(node: MdastNode): boolean {
+  if (node.type === "image") {
+    node.data = {
+      ...node.data,
+      hProperties: { ...node.data?.hProperties, "data-priority": "true" },
+    };
+    return true;
+  }
+  for (const child of node.children ?? []) {
+    if (flagFirstImage(child)) return true;
+  }
+  return false;
+}
+
+// Flags the first image in the document so its plate can preload: on a
+// photo-led post that image is the LCP element, and lazy-loading it delays
+// the one paint the reader is waiting for.
+function remarkFirstImage() {
+  return (tree: MdastNode) => {
+    flagFirstImage(tree);
+  };
+}
+
 export const remarkPlugins: PluggableList = [
   remarkMath,
   remarkGfm,
   remarkWikiLink,
+  remarkFirstImage,
 ];
 export const rehypePlugins: PluggableList = [
   rehypeRaw,
@@ -39,7 +70,10 @@ export function createBaseComponents(
         const src = first.properties?.src as string;
         const alt = (first.properties?.alt as string) ?? "";
         const meta = getImageMeta?.(src) ?? null;
-        return <PostImage src={src} alt={alt} meta={meta} />;
+        const priority = first.properties?.["data-priority"] === "true";
+        return (
+          <PostImage src={src} alt={alt} meta={meta} priority={priority} />
+        );
       }
       return <p>{children}</p>;
     },
