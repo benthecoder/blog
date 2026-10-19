@@ -34,6 +34,8 @@ export default function SafariEdges() {
 
     // Save shared document state so leaving restores it exactly.
     const prevHtmlBg = html.style.backgroundColor;
+    const prevHtmlBgImage = html.style.backgroundImage;
+    const prevHtmlBgAttachment = html.style.backgroundAttachment;
     const prevBodyBg = body.style.backgroundColor;
     let meta = document.querySelector<HTMLMetaElement>(
       'meta[name="theme-color"]'
@@ -58,7 +60,9 @@ export default function SafariEdges() {
     const paletteEdge = (edge: "top" | "bottom"): string =>
       html.classList.contains("dark")
         ? token("--color-night")
-        : token(edge === "top" ? "--color-paper-sunken" : "--color-paper-raised");
+        : token(
+            edge === "top" ? "--color-paper-sunken" : "--color-paper-raised"
+          );
 
     // If a page paints its own solid background at an edge (the map,
     // the photo viewer), match that instead of the body gradient.
@@ -67,8 +71,7 @@ export default function SafariEdges() {
       let el: Element | null = document.elementFromPoint(x, y);
       while (el && el !== html && el !== body) {
         const bg = getComputedStyle(el).backgroundColor;
-        if (bg && bg !== "transparent" && bg !== "rgba(0, 0, 0, 0)")
-          return bg;
+        if (bg && bg !== "transparent" && bg !== "rgba(0, 0, 0, 0)") return bg;
         el = el.parentElement;
       }
       return paletteEdge(edge);
@@ -80,11 +83,14 @@ export default function SafariEdges() {
       const top = visibleBackgroundAt(2, "top");
       const bottom = visibleBackgroundAt(window.innerHeight - 2, "bottom");
       topRef.current?.style.setProperty("--edge-top-background", top);
-      bottomRef.current?.style.setProperty(
-        "--edge-bottom-background",
-        bottom
-      );
+      bottomRef.current?.style.setProperty("--edge-bottom-background", bottom);
       html.style.backgroundColor = top;
+      // The sidebar layout's top margin collapses to the viewport top,
+      // where only the html background paints — a flat color there reads
+      // as a hard band against the body's gradient. Clone the gradient
+      // (fixed, like body's) so the strip continues it instead.
+      html.style.backgroundImage = getComputedStyle(body).backgroundImage;
+      html.style.backgroundAttachment = "fixed";
       body.style.backgroundColor = bottom;
       meta.setAttribute("content", top);
     };
@@ -104,8 +110,15 @@ export default function SafariEdges() {
     window.visualViewport?.addEventListener("resize", schedule);
     // Theme / palette switches land as attribute changes on <html>/<body>.
     const observer = new MutationObserver(schedule);
-    observer.observe(html, { attributes: true, attributeFilter: ["class", "style", "data-theme", "data-palette"] });
-    observer.observe(body, { attributes: true, childList: true, subtree: false });
+    observer.observe(html, {
+      attributes: true,
+      attributeFilter: ["class", "style", "data-theme", "data-palette"],
+    });
+    observer.observe(body, {
+      attributes: true,
+      childList: true,
+      subtree: false,
+    });
 
     return () => {
       window.clearTimeout(settle);
@@ -116,6 +129,8 @@ export default function SafariEdges() {
       window.visualViewport?.removeEventListener("resize", schedule);
       observer.disconnect();
       html.style.backgroundColor = prevHtmlBg;
+      html.style.backgroundImage = prevHtmlBgImage;
+      html.style.backgroundAttachment = prevHtmlBgAttachment;
       body.style.backgroundColor = prevBodyBg;
       if (createdMeta) meta.remove();
       else if (prevMetaContent === null) meta.removeAttribute("content");
