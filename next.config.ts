@@ -93,6 +93,18 @@ const nextConfig: NextConfig = {
       ],
     },
     {
+      // Self-hosted map styles (see #124): a snapshot that changes ~never,
+      // fetched on the map's critical path — cache it like the other statics
+      // instead of revalidating against the origin on every visit.
+      source: "/map-styles/:path*",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, max-age=86400, stale-while-revalidate=604800",
+        },
+      ],
+    },
+    {
       source: "/fonts/:path*",
       headers: [
         { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
