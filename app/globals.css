@@ -988,24 +988,29 @@ body {
 }
 
 /* Sidenotes: rehypeSidenotes clones each footnote into an aside placed
-   after the paragraph that references it. Below 2xl the asides stay
-   hidden and the endnotes section renders as usual; at 2xl the asides
+   after the paragraph that references it. Below xl the asides stay
+   hidden and the endnotes section renders as usual; at xl the asides
    float into the right margin (Tufte-style) and the endnotes section
-   hides itself via .has-sidenotes. The article column is centered with
-   a site sidebar on the left, so 2xl is where a ~250px margin column
-   genuinely fits. */
+   hides itself via .has-sidenotes. On posts the notes hang in the empty
+   space right of the centered column, which at xl is wide enough for
+   them, so the article never moves. The editor column has borders, so
+   it widens on both sides to keep the notes inside them. */
 .prose aside.sidenote,
 .essay-prose aside.sidenote {
   display: none;
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1280px) {
+  .editor-column:has(aside.sidenote) {
+    max-width: calc(760px + 2 * 280px);
+  }
+
   .prose aside.sidenote,
   .essay-prose aside.sidenote {
     display: block;
     float: right;
-    width: 250px;
-    margin: 0.3em -290px 1.2em 2em;
+    width: 240px;
+    margin: 0.3em -280px 1.2em 2em;
     font-size: 0.8em;
     line-height: 1.55;
     color: var(--color-ink-muted);
