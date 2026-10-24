@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   reactCompiler: true,
   poweredByHeader: false,
+  experimental: {
+    agentUpgrade: "security",
+  },
   images: {
     remotePatterns: [
       {
