@@ -988,24 +988,29 @@ body {
 }
 
 /* Sidenotes: rehypeSidenotes clones each footnote into an aside placed
-   after the paragraph that references it. Below 2xl the asides stay
-   hidden and the endnotes section renders as usual; at 2xl the asides
+   after the paragraph that references it. Below xl the asides stay
+   hidden and the endnotes section renders as usual; at xl the asides
    float into the right margin (Tufte-style) and the endnotes section
-   hides itself via .has-sidenotes. The article column is centered with
-   a site sidebar on the left, so 2xl is where a ~250px margin column
-   genuinely fits. */
+   hides itself via .has-sidenotes. On posts the notes hang in the empty
+   space right of the centered column, which at xl is wide enough for
+   them, so the article never moves. The editor column has borders, so
+   it widens on both sides to keep the notes inside them. */
 .prose aside.sidenote,
 .essay-prose aside.sidenote {
   display: none;
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1280px) {
+  .editor-column:has(aside.sidenote) {
+    max-width: calc(760px + 2 * 280px);
+  }
+
   .prose aside.sidenote,
   .essay-prose aside.sidenote {
     display: block;
     float: right;
-    width: 250px;
-    margin: 0.3em -290px 1.2em 2em;
+    width: 240px;
+    margin: 0.3em -280px 1.2em 2em;
     font-size: 0.8em;
     line-height: 1.55;
     color: var(--color-ink-muted);
@@ -1055,58 +1060,4 @@ body {
 
 body:has(.photo-site) .floating-controls {
   display: none;
-}
-
-/* ==========================================================================
-   SAFARI CHROME EDGES
-
-   Mobile Safari paints the status-bar and bottom-toolbar areas from the
-   page's edge colors. SafariEdges (components/layout) samples one
-   palette per page and writes it to --edge-top-background /
-   --edge-bottom-background, the html/body backgrounds, and the
-   theme-color meta. These strips are the visible half of that: fixed,
-   full-width, click-through, exactly as tall as the chrome needs —
-   max(12px, env(safe-area-inset-*)) — so they kiss the edges without
-   ever covering content.
-   ========================================================================== */
-.edge-top,
-.edge-bottom {
-  position: fixed;
-  left: 0;
-  right: 0;
-  z-index: 90;
-  pointer-events: none;
-}
-
-.edge-top {
-  top: 0;
-}
-
-.edge-bottom {
-  bottom: 0;
-}
-
-.edge-top::after,
-.edge-bottom::after {
-  content: "";
-  display: block;
-}
-
-.edge-top::after {
-  height: max(12px, env(safe-area-inset-top));
-  background: var(--edge-top-background, var(--color-paper-sunken));
-}
-
-.edge-bottom::after {
-  height: max(12px, env(safe-area-inset-bottom));
-  background: var(--edge-bottom-background, var(--color-paper-raised));
-}
-
-.dark .edge-top::after,
-.dark .edge-bottom::after {
-  background: var(--edge-top-background, var(--color-night));
-}
-
-.dark .edge-bottom::after {
-  background: var(--edge-bottom-background, var(--color-night));
 }
