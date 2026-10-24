@@ -35,7 +35,11 @@ const PUBLIC_DIR = path.join(ROOT_DIR, "public");
 export const IMAGES_DIR = path.join(PUBLIC_DIR, "images");
 export const IMAGES_DRAFTS_DIR = path.join(IMAGES_DIR, "drafts");
 export const DATA_DIR = path.join(PUBLIC_DIR, "data");
-export const KNOWLEDGE_MAP_JSON = path.join(DATA_DIR, "knowledge-map.json");
+export const KNOWLEDGE_MAP_JSON = path.join(
+  ROOT_DIR,
+  "data",
+  "knowledge-map.json"
+);
 export const KNOWLEDGE_MAP_NODES_JSON = path.join(
   DATA_DIR,
   "knowledge-map-nodes.json"

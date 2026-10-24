@@ -31,12 +31,14 @@ describe("deployment knowledge map preparation", () => {
     const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "map-build-"));
     const dataDir = path.join(cwd, "public/data");
     const map = JSON.parse(
-      fs.readFileSync(path.join(root, "public/data/knowledge-map.json"), "utf8")
+      fs.readFileSync(path.join(root, "data/knowledge-map.json"), "utf8")
     ) as KnowledgeMapOutput;
     const original = JSON.stringify(map);
     try {
       fs.mkdirSync(dataDir, { recursive: true });
-      fs.writeFileSync(path.join(dataDir, "knowledge-map.json"), original);
+      const sourceDir = path.join(cwd, "data");
+      fs.mkdirSync(sourceDir, { recursive: true });
+      fs.writeFileSync(path.join(sourceDir, "knowledge-map.json"), original);
       expect(run(cwd).toString()).toContain("no provider query");
       const expected = splitKnowledgeMap(map);
       expect(
@@ -54,7 +56,7 @@ describe("deployment knowledge map preparation", () => {
         ).toBe(expected.summariesJson);
       }
       expect(
-        fs.readFileSync(path.join(dataDir, "knowledge-map.json"), "utf8")
+        fs.readFileSync(path.join(sourceDir, "knowledge-map.json"), "utf8")
       ).toBe(original);
     } finally {
       fs.rmSync(cwd, { recursive: true, force: true });

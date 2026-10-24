@@ -6,6 +6,8 @@ import { getPhotosets } from "@/utils/content/photostream";
 import { placeLine } from "@/utils/photoPlaces";
 import { formatPhotoDate } from "@/utils/photoDate";
 
+export const revalidate = 60;
+
 type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;

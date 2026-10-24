@@ -1,7 +1,6 @@
 import "server-only";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
-import { connection } from "next/server";
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { getR2Client } from "@/utils/r2";
 import {
@@ -47,21 +46,29 @@ const readCached = unstable_cache(
 );
 
 const getPhotoCollections = cache(async (): Promise<PhotoCollection[]> => {
-  // Discover uploads at request time, including URLs that didn't exist at build time.
-  await connection();
+  // Uploads are discovered from the bucket listing (cached 30s in
+  // listCached) and the photos routes revalidate on a short interval, so a
+  // new upload appears within a minute — no per-request render needed.
   const bucket = process.env.PHOTOS_R2_BUCKET || "photos";
   const publicUrl =
     process.env.PHOTOS_PUBLIC_URL ||
     "https://pub-e85be102871845218dcda1cc49c78508.r2.dev";
   const endpoint = process.env.R2_ENDPOINT || "";
-  const objects = await listCached(bucket, endpoint);
-  return applyCollectionPlaces(
-    await buildLivePhotoCollections(
-      objects,
-      (object) => readCached(bucket, publicUrl, endpoint, object),
-      photoCollections
-    )
-  );
+  try {
+    const objects = await listCached(bucket, endpoint);
+    return applyCollectionPlaces(
+      await buildLivePhotoCollections(
+        objects,
+        (object) => readCached(bucket, publicUrl, endpoint, object),
+        photoCollections
+      )
+    );
+  } catch (error) {
+    // A bucket outage (or a build without R2 credentials) must not take the
+    // photos pages down with it; the next revalidation retries.
+    console.error("live photo collections failed", error);
+    return [];
+  }
 });
 
 export const getPhotostream = cache(async (): Promise<StreamPhoto[]> => {
