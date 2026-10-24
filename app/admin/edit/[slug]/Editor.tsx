@@ -376,7 +376,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
 
   return (
     <div className="h-dvh bg-surface">
-      <div className="mx-auto w-full h-full min-w-0 flex flex-col relative max-w-[760px] sm:border-x border-line">
+      <div className="editor-column mx-auto w-full h-full min-w-0 flex flex-col relative max-w-[760px] sm:border-x border-line">
         {/* Top bar */}
         <div className="min-h-14 shrink-0 border-b border-line px-4 sm:px-6 py-2 flex flex-wrap gap-3 justify-between items-center">
           <div className="flex items-center gap-4">
