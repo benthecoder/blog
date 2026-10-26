@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NotFoundSuggest from "@/components/ui/NotFoundSuggest";
 
 export default function NotFound() {
   return (
@@ -7,6 +8,7 @@ export default function NotFound() {
 _.|o o  |_   ) )
 -(((---(((--------`}</pre>
       <p className="text-accent/60 text-sm">404 — this page does not exist</p>
+      <NotFoundSuggest />
       <Link
         href="/"
         className="pointer-events-auto opacity-60 hover:opacity-100 transition-opacity text-sm text-accent"
