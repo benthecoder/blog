@@ -1,6 +1,7 @@
 import { serializeJsonLd } from "@/utils/jsonLd";
 import { getPostContent, getPostMetadata } from "@/utils/content/posts";
 import { getRelatedPosts } from "@/utils/content/related";
+import { getSameDayPosts } from "@/utils/content/onThisDay";
 import { getPostPreviewData } from "@/utils/content/preview";
 import { SITE_URL } from "@/config/site";
 import { PERSON_ID } from "@/config/person";
@@ -103,6 +104,7 @@ const PostPage = async ({ params }: { params: Params }) => {
         wordcount={post.wordcount}
         toc={extractToc(postContent.content)}
         related={getRelatedPosts(slug)}
+        onThisDay={getSameDayPosts(slug)}
         hero={hero ? <MarkdownContent content={hero} /> : undefined}
         backlinks={<Backlinks contentRef={{ kind: "post", slug }} />}
       >
