@@ -4,10 +4,14 @@ import { revalidatePath } from "next/cache";
 const sql = neon(process.env.POSTGRES_URL!);
 
 import { parsePublicUrl } from "@/utils/tweets/link";
+import { isTweetAuthorized } from "@/utils/tweetAuth";
 
 const URL_RE = /https?:\/\/[^\s]+/;
 
 export async function POST(request: Request) {
+  if (!isTweetAuthorized(request)) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
   let body: { body?: unknown; link?: unknown; title?: unknown };
   try {
     body = await request.json();

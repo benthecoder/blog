@@ -5,7 +5,7 @@ export const ADMIN_COOKIE = "admin_session";
 
 // Compare secret bytes directly without a fast password hash. Pad the supplied
 // value to the expected byte length so timingSafeEqual also handles mismatches.
-function safeEqual(a: string, b: string): boolean {
+export function safeEqual(a: string, b: string): boolean {
   const supplied = Buffer.from(a);
   const expected = Buffer.from(b);
   const padded = Buffer.alloc(expected.length);
