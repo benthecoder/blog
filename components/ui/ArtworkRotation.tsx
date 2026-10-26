@@ -7,7 +7,7 @@ import { DRAWINGS_URL } from "@/config/constants";
 import { SketchIcon, ENAME_RATIO, CNAME_RATIO } from "./SketchIcon";
 
 const NameHeader = () => (
-  <div className="fixed top-8 left-1/2 -translate-x-1/2 z-50">
+  <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50">
     <div className="flex flex-col items-center gap-3">
       <Link href="/">
         <SketchIcon
@@ -47,6 +47,15 @@ const SKETCHES = [
 
 const SKETCH_PATHS = SKETCHES.map((f) => `${DRAWINGS_URL}/${f}`);
 
+const HOME_LINKS = [
+  ["/posts", "posts", "flex"],
+  ["/photos", "photos", "flex"],
+  ["/map", "places", "flex"],
+  // The Chinese name above already leads to /about; on the narrowest
+  // phones dropping it keeps the line from wrapping onto a stray dot.
+  ["/about", "about", "hidden min-[360px]:flex"],
+] as const;
+
 const INTERVAL = 1000;
 
 function altOf(index: number) {
@@ -65,7 +74,19 @@ export default function ArtworkRotation() {
   const [pending, setPending] = useState<Layer | null>(null);
   const [paused, setPaused] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [offscreen, setOffscreen] = useState(false);
   const currentId = useRef(0);
+  const hero = useRef<HTMLDivElement>(null);
+
+  // The page scrolls past the drawing now; stop flipping it once it's gone.
+  useEffect(() => {
+    if (!hero.current) return;
+    const observer = new IntersectionObserver(([entry]) =>
+      setOffscreen(!entry.isIntersecting)
+    );
+    observer.observe(hero.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const onVisibility = () => setHidden(document.hidden);
@@ -75,7 +96,7 @@ export default function ArtworkRotation() {
   }, []);
 
   useEffect(() => {
-    if (paused || hidden) return;
+    if (paused || hidden || offscreen) return;
     // A one-second slideshow is motion: readers who asked their OS for
     // less of it keep the first drawing, and data-saver connections don't
     // spend bytes preloading the other twelve.
@@ -94,7 +115,7 @@ export default function ArtworkRotation() {
       });
     }, INTERVAL);
     return () => clearInterval(timer);
-  }, [paused, hidden]);
+  }, [paused, hidden, offscreen]);
 
   // Promote only once the pixels are paintable — onLoad means fetched, not
   // decoded, and cutting to a not-yet-decoded image flashes blank. Both
@@ -111,9 +132,12 @@ export default function ArtworkRotation() {
   };
 
   return (
-    <>
+    <div className="relative">
       <NameHeader />
-      <div className="h-screen w-full flex flex-col items-center justify-center pt-10 px-4 md:px-8 overflow-hidden">
+      <div
+        ref={hero}
+        className="h-svh w-full flex flex-col items-center justify-center pt-10 px-4 md:px-8 overflow-hidden"
+      >
         <div className="flex flex-col items-center justify-center gap-4 md:gap-6 w-full max-w-[min(85vw,700px)] md:max-w-[min(60vw,600px)]">
           <Link
             href="/sketch"
@@ -148,13 +172,32 @@ export default function ArtworkRotation() {
             </div>
           </Link>
 
-          <div className="flex flex-col items-center gap-2 pb-2">
-            <Link href="/start" className="text-sm text-accent hover:underline">
+          <nav
+            aria-label="site"
+            className="flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 pb-2 text-sm"
+          >
+            <Link href="/start" className="text-accent hover:underline">
               start here
             </Link>
-          </div>
+            {HOME_LINKS.map(([href, label, display]) => (
+              <span
+                key={href}
+                className={`${display} items-center gap-x-1.5 whitespace-nowrap`}
+              >
+                <span aria-hidden="true" className="text-muted">
+                  ·
+                </span>
+                <Link
+                  href={href}
+                  className="text-ink-soft dark:text-chalk-muted hover:text-ink dark:hover:text-chalk hover:underline transition-colors"
+                >
+                  {label}
+                </Link>
+              </span>
+            ))}
+          </nav>
         </div>
       </div>
-    </>
+    </div>
   );
 }
