@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import type { ComponentType } from "react";
 import Image from "next/image";
 import { Scroll, Camera, Pencil, Box, Play, Code2 } from "lucide-react";
+
+export const metadata: Metadata = { title: "findme" };
 
 type LinkItemProps = {
   href: string;

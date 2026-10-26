@@ -1,4 +1,7 @@
+import type { Metadata } from "next";
 import Image from "next/image";
+
+export const metadata: Metadata = { title: "uses" };
 
 type Product = {
   name: string;
