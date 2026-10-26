@@ -84,6 +84,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       lang="en"
       className={`${averia.variable} font-serif`}
     >
+      <head>
+        {/* In <head> rather than metadata.alternates: pages that set their
+            own alternates (every post's canonical) would replace it. */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Benedict Neo"
+          href="https://bneo.xyz/rss.xml"
+        />
+      </head>
       <body className="antialiased">
         <Providers>
           <FloatingControls>
