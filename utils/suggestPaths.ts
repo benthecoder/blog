@@ -3,8 +3,8 @@ export interface PathEntry {
   title: string;
 }
 
-export const SUGGEST_THRESHOLD = 0.6;
-export const MAX_SUGGESTIONS = 3;
+const SUGGEST_THRESHOLD = 0.6;
+const MAX_SUGGESTIONS = 3;
 
 // Common wrong-section spellings readers type or old links used.
 const SECTION_ALIASES: Record<string, string> = {
