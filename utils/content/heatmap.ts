@@ -121,3 +121,92 @@ export function wordCountColor(posts: PostMetadata[]): string {
   const words = totalWordCount(posts);
   return WORD_COUNT_SCALE.find(({ max }) => words <= max)!.className;
 }
+
+export interface Run {
+  length: number;
+  start: string;
+  end: string;
+}
+
+function nextDayKey(key: string): string {
+  const [y, m, d] = key.split("-").map(Number);
+  const next = new Date(y, m - 1, d);
+  next.setDate(next.getDate() + 1);
+  return dateKey(next);
+}
+
+/** Longest stretch of calendar-consecutive days. Ties go to the earliest run. */
+export function longestRun(days: string[]): Run | null {
+  const sorted = [...new Set(days)].sort();
+  if (sorted.length === 0) return null;
+
+  let best: Run = { length: 1, start: sorted[0], end: sorted[0] };
+  let runStart = sorted[0];
+  let runLength = 1;
+
+  for (let i = 1; i < sorted.length; i++) {
+    if (sorted[i] === nextDayKey(sorted[i - 1])) {
+      runLength++;
+    } else {
+      runStart = sorted[i];
+      runLength = 1;
+    }
+    if (runLength > best.length) {
+      best = { length: runLength, start: runStart, end: sorted[i] };
+    }
+  }
+  return best;
+}
+
+export interface YearSummary {
+  posts: number;
+  words: number;
+  everyDay: boolean;
+  longestRunInYear: number;
+  partOf: Run | null;
+}
+
+export function yearSummary(posts: PostMetadata[], year: number): YearSummary {
+  const allDays: string[] = [];
+  const yearPosts: PostMetadata[] = [];
+  const yearDays: string[] = [];
+  for (const post of posts) {
+    const date = new Date(post.date);
+    const key = dateKey(date);
+    allDays.push(key);
+    if (date.getFullYear() === year) {
+      yearPosts.push(post);
+      yearDays.push(key);
+    }
+  }
+
+  const uniqueYearDays = new Set(yearDays);
+  const daysInYear = Math.round(
+    (Date.UTC(year + 1, 0, 1) - Date.UTC(year, 0, 1)) / 86400000
+  );
+  const inYear = longestRun(yearDays);
+  const overall = longestRun(allDays);
+
+  const touchesYear =
+    overall !== null &&
+    overall.start <= `${year}-12-31` &&
+    overall.end >= `${year}-01-01`;
+  const partOf =
+    overall && touchesYear && overall.length > (inYear?.length ?? 0)
+      ? overall
+      : null;
+
+  return {
+    posts: yearPosts.length,
+    words: totalWordCount(yearPosts),
+    everyDay: uniqueYearDays.size === daysInYear,
+    longestRunInYear: inYear?.length ?? 0,
+    partOf,
+  };
+}
+
+/** "2023-04-16" → "apr 16, 2023" */
+export function formatDateKey(key: string): string {
+  const [y, m, d] = key.split("-").map(Number);
+  return `${MONTH_NAMES[m - 1]} ${d}, ${y}`;
+}

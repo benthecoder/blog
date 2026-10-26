@@ -1,11 +1,12 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { PostMetadata } from "@/types/post";
 import { countTagFrequency } from "@/utils/content/tags";
 import PostPreview from "@/components/posts/PostPreview";
 import Heatmap from "@/components/visualizations/Heatmap";
+import { formatDateKey, yearSummary } from "@/utils/content/heatmap";
 import Link from "next/link";
 
 type View = "list" | "year" | "tags";
@@ -120,6 +121,11 @@ export default function ArchiveClient({
     page * PAGE_SIZE
   );
   const totalWords = allPosts.reduce((sum, p) => sum + p.wordcount, 0);
+  const nf = useMemo(() => new Intl.NumberFormat(), []);
+  const summary = useMemo(
+    () => (view === "year" ? yearSummary(allPosts, selectedYear) : null),
+    [view, allPosts, selectedYear]
+  );
 
   return (
     <div>
@@ -241,6 +247,33 @@ export default function ArchiveClient({
             showNavigation={true}
             navigationPath="/posts?view=year"
           />
+          {summary && summary.posts > 0 && (
+            <p className="text-xs text-accent/40 tabular-nums mt-4">
+              {[
+                `${nf.format(summary.posts)} posts`,
+                `${nf.format(summary.words)} words`,
+                summary.everyDay
+                  ? "every day"
+                  : // The streak phrase already covers a run that spans years.
+                    !summary.partOf && summary.longestRunInYear >= 7
+                    ? `longest run ${nf.format(summary.longestRunInYear)} days`
+                    : null,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+              {summary.partOf && (
+                <>
+                  {" · "}
+                  <span
+                    className="whitespace-nowrap"
+                    title={`${formatDateKey(summary.partOf.start)} – ${formatDateKey(summary.partOf.end)}`}
+                  >
+                    part of a {nf.format(summary.partOf.length)}-day streak
+                  </span>
+                </>
+              )}
+            </p>
+          )}
           <div className="space-y-1 mt-6">
             {allPosts
               .filter((p) => new Date(p.date).getFullYear() === selectedYear)
