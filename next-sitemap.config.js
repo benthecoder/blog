@@ -2,7 +2,22 @@
 module.exports = {
   siteUrl: process.env.NEXT_PUBLIC_ROOT_URL || "https://bneo.xyz",
   generateRobotsTxt: true,
-  exclude: ["/admin", "/admin/*"],
+  exclude: [
+    "/admin",
+    "/admin/*",
+    // robots.txt disallows /api; listing it here is a contradiction crawlers report.
+    "/api/*",
+    // Files, not pages. Feeds are announced by <link rel="alternate"> instead.
+    "/apple-icon.png",
+    "/icon.ico",
+    "/llms.txt",
+    "/rss.xml",
+    "/essays/rss.xml",
+    // Canonical on maps.bneo.xyz / photos.bneo.xyz, not here.
+    "/map",
+    "/photos",
+    "/photos/*",
+  ],
   robotsTxtOptions: {
     policies: [
       // AI crawlers: no scraping, no training data. One policy per agent —
