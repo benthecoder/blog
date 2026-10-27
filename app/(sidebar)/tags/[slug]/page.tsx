@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostMetadata } from "@/utils/content/posts";
 import PostPreview from "@/components/posts/PostPreview";
@@ -29,6 +30,9 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   const filteredPosts = getPostMetadata().filter((post) =>
     post.tags.includes(tag)
   );
+  // Any slug renders here, so an unknown tag must 404 rather than show an
+  // empty page with a 200.
+  if (filteredPosts.length === 0) notFound();
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
