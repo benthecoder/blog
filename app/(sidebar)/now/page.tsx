@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import SpotifyNowPlaying from "./SpotifyNowPlaying";
 import Clock from "@/components/ui/Clock";
+
+export const metadata: Metadata = { title: "now" };
 
 export default function NowPage() {
   return (

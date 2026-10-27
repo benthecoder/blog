@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getPostMetadata } from "@/utils/content/posts";
 import ArchiveClient from "./ArchiveClient";
+
+export const metadata: Metadata = { title: "archive" };
 
 export const dynamic = "force-static";
 

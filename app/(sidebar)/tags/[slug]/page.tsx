@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import { getPostMetadata } from "@/utils/content/posts";
 import PostPreview from "@/components/posts/PostPreview";
 import { tryDecodeUrlComponent } from "@/utils/links/url";
 
 export const dynamic = "force-static";
+
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await props.params;
+  return { title: `#${tryDecodeUrlComponent(slug) ?? slug}` };
+}
 
 export const generateStaticParams = async () => {
   const postMetadata = getPostMetadata();
