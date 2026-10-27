@@ -2,8 +2,10 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ParsedPost, PostMetadata } from "@/types/post";
 import type { RelatedPost } from "@/utils/content/related";
+import type { SameDayPost } from "@/utils/content/onThisDay";
 import type { TocEntry } from "@/utils/content/toc";
 import { extractTags } from "@/utils/content/tags";
+import OnThisDay from "./OnThisDay";
 import PostViewTracker from "./PostViewTracker";
 import RelatedPosts from "./RelatedPosts";
 import TableOfContents from "./TableOfContents";
@@ -16,6 +18,7 @@ interface RenderPostProps {
   wordcount?: number;
   toc?: TocEntry[];
   related?: RelatedPost[];
+  onThisDay?: SameDayPost[];
   hero?: ReactNode;
   backlinks?: ReactNode;
   children: ReactNode;
@@ -32,6 +35,7 @@ const RenderPost = ({
   wordcount,
   toc,
   related,
+  onThisDay,
   hero,
   backlinks,
   children,
@@ -103,6 +107,8 @@ const RenderPost = ({
         )}
 
         {related && related.length > 0 && <RelatedPosts posts={related} />}
+
+        {onThisDay && <OnThisDay posts={onThisDay} />}
 
         <div className="mt-8 flex justify-between gap-4">
           {prev ? (
