@@ -37,6 +37,8 @@ const nextConfig: NextConfig = {
   redirects: async () => [
     { source: "/gallery", destination: "/photos", permanent: true },
     { source: "/photos/trips", destination: "/photos/places", permanent: true },
+    // The UMAP plot of post embeddings moved into the knowledge map on /start.
+    { source: "/viz", destination: "/start", permanent: true },
   ],
   rewrites: async () => ({
     beforeFiles: [
