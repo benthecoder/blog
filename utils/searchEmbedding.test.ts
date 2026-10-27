@@ -21,7 +21,7 @@ describe("search embedding requests", () => {
     const calls = Array.from({ length: 5 }, () => getSearchEmbedding("faith"));
     expect(embed).toHaveBeenCalledOnce();
     expect(embed).toHaveBeenCalledWith(
-      { model: VOYAGE_MODEL, input: "faith", inputType: "document" },
+      { model: VOYAGE_MODEL, input: "faith", inputType: "query" },
       { timeoutInSeconds: 10, maxRetries: 0 }
     );
     resolve({ data: [{ embedding: vector }] });
