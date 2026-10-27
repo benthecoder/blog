@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPhotostream } from "@/utils/content/photostream";
+import { photoAlt, photoTitle } from "@/utils/photoCaption";
 import { FadeImage } from "@/components/photos/FadeImage";
 import { PhotoMeta } from "@/components/photos/PhotoMeta";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -13,8 +14,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const photo = (await getPhotostream()).find((item) => item.id === id);
   return {
-    title: `${photo?.caption ?? "photo"} — Benedict Neo`,
-    description: photo?.description ?? photo?.caption,
+    title: `${photo ? (photoTitle(photo) ?? photoAlt(photo).replace(/^Photo in /, "")) : "Photo"} — Benedict Neo`,
+    description: photo?.description ?? (photo ? photoAlt(photo) : undefined),
     alternates: {
       canonical: `https://photos.bneo.xyz/photos/photo/${encodeURIComponent(id)}`,
     },
@@ -33,7 +34,7 @@ export default async function PhotoPage({ params }: Props) {
       <div className="ph-view-image">
         <FadeImage
           src={photo.src}
-          alt={photo.caption}
+          alt={photoAlt(photo)}
           fill
           sizes="100vw"
           quality={80}

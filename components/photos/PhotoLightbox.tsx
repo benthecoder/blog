@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import type { StreamPhoto } from "@/types/photostream";
 import { frameNumber } from "@/utils/photoCamera";
+import { photoAlt } from "@/utils/photoCaption";
 import { PhotoMeta } from "./PhotoMeta";
 
 type Props = {
@@ -32,6 +33,31 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
 
   const step = (delta: number) =>
     onIndex(Math.max(0, Math.min(photos.length - 1, index! + delta)));
+  // Horizontal swipe on touch; a second finger (pinch) cancels it.
+  const touches = useRef(new Map<number, { x: number; y: number }>());
+  const swipe = useRef(true);
+  const onPointerDown = (event: React.PointerEvent) => {
+    if (event.pointerType !== "touch") return;
+    if (touches.current.size === 0) swipe.current = true;
+    else swipe.current = false;
+    touches.current.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+    });
+  };
+  const onPointerUp = (event: React.PointerEvent) => {
+    const start = touches.current.get(event.pointerId);
+    touches.current.delete(event.pointerId);
+    if (!start || !swipe.current || touches.current.size > 0) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > 1.5 * Math.abs(dy)) {
+      step(dx < 0 ? 1 : -1);
+    }
+  };
+  const onPointerCancel = (event: React.PointerEvent) => {
+    touches.current.delete(event.pointerId);
+  };
   return (
     <dialog
       ref={dialog}
@@ -64,11 +90,16 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
               <X size={20} />
             </button>
           </header>
-          <div className="ph-lightbox-image">
+          <div
+            className="ph-lightbox-image"
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerCancel}
+          >
             <Image
               key={photo.id}
               src={photo.src}
-              alt={photo.caption}
+              alt={photoAlt(photo)}
               fill
               sizes="100vw"
               quality={75}

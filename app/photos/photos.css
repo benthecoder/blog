@@ -387,6 +387,7 @@
 .ph-lightbox-image {
   position: relative;
   min-height: 0;
+  touch-action: pan-y pinch-zoom;
 }
 .ph-lightbox-image > img {
   object-fit: contain;
