@@ -8,12 +8,20 @@
   --ph-accent: var(--color-chalk);
   --ph-pad: clamp(20px, 4vw, 40px);
   --ph-side: max(var(--ph-pad), calc((100% - 1280px) / 2 + var(--ph-pad)));
-  min-height: 100vh;
+  min-height: 100svh;
   color: var(--ph-text);
   background: var(--ph-bg);
   color-scheme: dark;
   font-family: var(--font-photo-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+.photo-site :is(a, button) {
+  touch-action: manipulation;
+}
+.photo-site :is(.photo-menu-button, .ph-tabs button, .ph-lightbox button) {
+  -webkit-user-select: none;
+  user-select: none;
 }
 .photo-site a {
   color: inherit;
@@ -91,8 +99,10 @@
   margin-right: -12px;
   color: var(--ph-text);
 }
-.photo-bar nav a:hover {
-  color: var(--ph-text);
+@media (hover: hover) and (pointer: fine) {
+  .photo-bar nav a:hover {
+    color: var(--ph-text);
+  }
 }
 
 .ph-page {
@@ -116,10 +126,12 @@
   letter-spacing: inherit;
   color: var(--ph-text);
 }
-.ph-label a:hover,
-.ph-back:hover,
-.ph-meta a:hover {
-  color: var(--ph-text);
+@media (hover: hover) and (pointer: fine) {
+  .ph-label a:hover,
+  .ph-back:hover,
+  .ph-meta a:hover {
+    color: var(--ph-text);
+  }
 }
 .ph-empty {
   color: var(--ph-muted);
@@ -138,8 +150,15 @@
 .photo-site .ph-frame img[data-loaded] {
   opacity: 0.85;
 }
-.photo-site .ph-frame:hover img[data-loaded] {
-  opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+  .photo-site .ph-frame:hover img[data-loaded] {
+    opacity: 1;
+  }
+}
+/* Press feedback for touch, where hover never fires. */
+.photo-site .ph-frame:active img[data-loaded] {
+  opacity: 0.6;
+  transition-duration: 100ms;
 }
 
 /* contact sheet */
@@ -184,8 +203,13 @@
   opacity: 0;
   transition: opacity 150ms;
 }
-.ph-cell:is(:hover, :focus-within) .ph-edge-exposure {
+.ph-cell:focus-within .ph-edge-exposure {
   opacity: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ph-cell:hover .ph-edge-exposure {
+    opacity: 1;
+  }
 }
 
 /* places */
@@ -193,8 +217,10 @@
   font-size: 40px;
   line-height: 1.05;
 }
-.ph-country a:hover {
-  color: var(--ph-accent);
+@media (hover: hover) and (pointer: fine) {
+  .ph-country a:hover {
+    color: var(--ph-accent);
+  }
 }
 .ph-section .ph-stats {
   margin: 12px 0 20px;
@@ -212,8 +238,10 @@
   margin-bottom: 6px;
   transition: color 150ms;
 }
-.ph-city:hover h3 {
-  color: var(--ph-accent);
+@media (hover: hover) and (pointer: fine) {
+  .ph-city:hover h3 {
+    color: var(--ph-accent);
+  }
 }
 .ph-strip {
   display: flex;
@@ -238,8 +266,10 @@
 .ph-strip img[data-loaded] {
   opacity: 0.85;
 }
-.ph-city:hover .ph-strip > div {
-  background: var(--ph-raised);
+@media (hover: hover) and (pointer: fine) {
+  .ph-city:hover .ph-strip > div {
+    background: var(--ph-raised);
+  }
 }
 .ph-strip img[data-loaded] {
   opacity: 1;
@@ -273,8 +303,10 @@
   border-bottom: 1px solid transparent;
   color: var(--ph-muted);
 }
-.ph-tabs :is(button, a):hover {
-  color: var(--ph-text);
+@media (hover: hover) and (pointer: fine) {
+  .ph-tabs :is(button, a):hover {
+    color: var(--ph-text);
+  }
 }
 .ph-tabs button[aria-pressed="true"] {
   color: var(--ph-text);
@@ -451,8 +483,10 @@
   gap: 16px;
   margin-top: 6px;
 }
-.ph-meta-links a:hover {
-  color: var(--ph-text);
+@media (hover: hover) and (pointer: fine) {
+  .ph-meta-links a:hover {
+    color: var(--ph-text);
+  }
 }
 
 @media (max-width: 700px) {
