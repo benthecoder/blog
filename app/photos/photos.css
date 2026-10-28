@@ -366,6 +366,27 @@
   grid-template-rows: auto 1fr auto;
   height: 100%;
 }
+/* Opening a photo eases in instead of cutting over the grid. Only the dialog
+   and its frame animate: they stay mounted while stepping, so swiping
+   between photos stays instant (the image itself remounts per photo). */
+.ph-lightbox[open],
+.ph-lightbox[open]::backdrop {
+  opacity: 1;
+  transition: opacity 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.ph-lightbox[open] .ph-lightbox-inner {
+  transform: none;
+  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@starting-style {
+  .ph-lightbox[open],
+  .ph-lightbox[open]::backdrop {
+    opacity: 0;
+  }
+  .ph-lightbox[open] .ph-lightbox-inner {
+    transform: scale(0.98);
+  }
+}
 .ph-lightbox header,
 .ph-meta {
   display: flex;
