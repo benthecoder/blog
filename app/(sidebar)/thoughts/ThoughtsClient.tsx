@@ -134,7 +134,11 @@ export default function ThoughtsClient({
                 const time = timeFormatter.format(new Date(entry.created_at));
 
                 return (
-                  <div key={entry.id} className="flex gap-4 items-baseline">
+                  <div
+                    key={entry.id}
+                    id={`t-${entry.id}`}
+                    className="flex gap-4 items-baseline"
+                  >
                     <span className="text-xs text-accent/50 shrink-0 select-none w-10">
                       {time}
                     </span>

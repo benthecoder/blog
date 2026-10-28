@@ -28,6 +28,7 @@ module.exports = {
     "/posts-sitemap.xml",
     "/rss.xml",
     "/essays/rss.xml",
+    "/thoughts/rss.xml",
     // Canonical on maps.bneo.xyz / photos.bneo.xyz, not here.
     "/map",
     "/photos",

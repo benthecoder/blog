@@ -32,7 +32,9 @@ it("saves a link-only thought and invalidates the public feed after the insert",
     "https://example.com/note",
     null,
   ]);
-  expect(mocks.revalidatePath).toHaveBeenCalledExactlyOnceWith("/thoughts");
+  expect(mocks.revalidatePath).toHaveBeenCalledTimes(2);
+  expect(mocks.revalidatePath).toHaveBeenCalledWith("/thoughts");
+  expect(mocks.revalidatePath).toHaveBeenCalledWith("/thoughts/rss.xml");
 });
 
 it("does not invalidate the feed when saving fails", async () => {
