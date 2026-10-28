@@ -128,9 +128,9 @@ describe("parameterized search filters", () => {
       else expect(mocks.embed).toHaveBeenCalledOnce();
     }
   );
-  it.each(["hybrid", "semantic"])(
-    "keeps filters in %s fallback results",
-    async (searchType) => {
+  it("keeps filters in semantic fallback results", async () => {
+    {
+      const searchType = "semantic";
       mocks.query.mockResolvedValueOnce([]).mockResolvedValueOnce([row]);
       const response = await POST(
         request({ query: "jazz", searchType, tags, chunkType: "quote" })
@@ -142,7 +142,17 @@ describe("parameterized search filters", () => {
         expect(parameters.slice(-2)).toEqual([JSON.stringify(tags), "quote"]);
       }
     }
-  );
+  });
+  it("fuses hybrid results in one query with a per-post cap", async () => {
+    const response = await POST(request({ query: "jazz" }));
+    expect((await response.json()).fallback).toBeUndefined();
+    expect(mocks.query).toHaveBeenCalledOnce();
+    const [statement, parameters] = mocks.query.mock.calls[0];
+    expect(statement).toContain("websearch_to_tsquery");
+    expect(statement).toContain("PARTITION BY c.post_slug");
+    expect(parameters).toContain(60);
+    expect(parameters).toContain(2);
+  });
   it.each(["keyword", "hybrid", "semantic"])(
     "uses unfiltered values when %s filters are omitted",
     async (searchType) => {

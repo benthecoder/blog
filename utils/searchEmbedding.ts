@@ -12,7 +12,7 @@ const cachedEmbedding = unstable_cache(
     if (pending) return pending;
     const request = (async () => {
       const response = await getVoyageClient().embed(
-        { model, input: query, inputType: "document" },
+        { model, input: query, inputType: "query" },
         { timeoutInSeconds: 10, maxRetries: 0 }
       );
       const embedding = response.data?.[0]?.embedding;
@@ -28,7 +28,7 @@ const cachedEmbedding = unstable_cache(
     pendingEmbeddings.set(key, request);
     return request;
   },
-  ["search-embedding-document-1024-v1"],
+  ["search-embedding-query-1024-v1"],
   { revalidate: 3600 }
 );
 
