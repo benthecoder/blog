@@ -46,7 +46,9 @@ it("does not invalidate the feed when saving fails", async () => {
 it("invalidates the feed after a successful local deletion", async () => {
   vi.stubEnv("NODE_ENV", "development");
   expect((await DELETE(request({ id: 1 }))).status).toBe(204);
-  expect(mocks.revalidatePath).toHaveBeenCalledExactlyOnceWith("/thoughts");
+  expect(mocks.revalidatePath).toHaveBeenCalledTimes(2);
+  expect(mocks.revalidatePath).toHaveBeenCalledWith("/thoughts");
+  expect(mocks.revalidatePath).toHaveBeenCalledWith("/thoughts/rss.xml");
 });
 
 it("keeps production deletion forbidden without writing or invalidating", async () => {
