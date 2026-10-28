@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
   query: vi.fn(),
   embed: vi.fn(),
   client: vi.fn(),
+  limit: vi.fn(),
 }));
 vi.mock("@neondatabase/serverless", () => ({
   neon: () => ({ query: mocks.query }),
@@ -11,6 +12,7 @@ vi.mock("@neondatabase/serverless", () => ({
 vi.mock("@/utils/clients", () => ({ getVoyageClient: mocks.client }));
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 vi.mock("server-only", () => ({}));
+vi.mock("@/utils/rateLimit", () => ({ checkRateLimit: mocks.limit }));
 import { POST } from "@/app/api/search/route";
 
 const row = {
@@ -37,6 +39,22 @@ beforeEach(() => {
     .mockReset()
     .mockResolvedValue({ data: [{ embedding: Array(1024).fill(0.1) }] });
   mocks.client.mockImplementation(() => ({ embed: mocks.embed }));
+  mocks.limit.mockReset().mockResolvedValue({ ok: true, retryAfter: 60 });
+});
+
+describe("search rate limit", () => {
+  it("returns 429 before any embedding or SQL work", async () => {
+    mocks.limit.mockResolvedValue({ ok: false, retryAfter: 42 });
+    const response = await POST(request({ query: "jazz" }));
+    expect(response.status).toBe(429);
+    expect(response.headers.get("Retry-After")).toBe("42");
+    expect(mocks.query).not.toHaveBeenCalled();
+    expect(mocks.client).not.toHaveBeenCalled();
+  });
+  it("does not spend quota on invalid requests", async () => {
+    await POST(request({ query: " " }));
+    expect(mocks.limit).not.toHaveBeenCalled();
+  });
 });
 
 describe("search request boundary", () => {
