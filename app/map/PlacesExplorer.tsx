@@ -38,7 +38,7 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [listHoverId, setListHoverId] = useState<string | null>(null);
-  const [sheetOpen, setSheetOpen] = useState(true);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
   const mounted = useMounted();
   const collection = data.collections.find((c) => c.id === collectionId);
@@ -90,12 +90,14 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
   }, [hoveredId, selectedId, collectionId]);
 
   useEffect(() => {
-    const readUrl = () => {
+    // A fresh visit lands on the map; the sheet stays one tap away. Going
+    // back to the index from a list reopens it, since that's where you were.
+    const readUrl = (event?: PopStateEvent) => {
       const params = new URLSearchParams(window.location.search);
       const current = readMapSelection(data, params);
       setCollectionId(current.collectionId);
       setSelectedId(current.placeId);
-      setSheetOpen(!current.collectionId);
+      setSheetOpen(Boolean(event) && !current.collectionId);
       setSelectedCategories([]);
       setHoveredId(null);
       setQuery("");
