@@ -2,6 +2,8 @@ import { serializeJsonLd } from "@/utils/jsonLd";
 import { getPostContent, getPostMetadata } from "@/utils/content/posts";
 import { getRelatedPosts } from "@/utils/content/related";
 import { getSameDayPosts } from "@/utils/content/onThisDay";
+import { photosForPost } from "@/utils/content/photosForPost";
+import { getPhotostream } from "@/utils/content/photostream";
 import { getPostPreviewData } from "@/utils/content/preview";
 import { SITE_URL } from "@/config/site";
 import { PERSON_ID } from "@/config/person";
@@ -63,6 +65,16 @@ export const generateStaticParams = async () => {
   }));
 };
 
+// Photos are decoration: a missing R2 env or network error must never fail
+// the build, so any error just means no photos.
+async function getPostPhotos(post: { slug: string; date: string }) {
+  try {
+    return photosForPost(await getPhotostream(), post);
+  } catch {
+    return [];
+  }
+}
+
 const PostPage = async ({ params }: { params: Params }) => {
   const posts = getPostMetadata();
   const { slug } = await params;
@@ -105,6 +117,7 @@ const PostPage = async ({ params }: { params: Params }) => {
         toc={extractToc(postContent.content)}
         related={getRelatedPosts(slug)}
         onThisDay={getSameDayPosts(slug)}
+        photos={await getPostPhotos(post)}
         hero={hero ? <MarkdownContent content={hero} /> : undefined}
         backlinks={<Backlinks contentRef={{ kind: "post", slug }} />}
       >

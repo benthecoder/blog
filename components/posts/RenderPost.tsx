@@ -3,9 +3,11 @@ import type { ReactNode } from "react";
 import { ParsedPost, PostMetadata } from "@/types/post";
 import type { RelatedPost } from "@/utils/content/related";
 import type { SameDayPost } from "@/utils/content/onThisDay";
+import type { StreamPhoto } from "@/types/photostream";
 import type { TocEntry } from "@/utils/content/toc";
 import { extractTags } from "@/utils/content/tags";
 import OnThisDay from "./OnThisDay";
+import PhotosFromThisDay from "./PhotosFromThisDay";
 import PostViewTracker from "./PostViewTracker";
 import RelatedPosts from "./RelatedPosts";
 import TableOfContents from "./TableOfContents";
@@ -19,6 +21,7 @@ interface RenderPostProps {
   toc?: TocEntry[];
   related?: RelatedPost[];
   onThisDay?: SameDayPost[];
+  photos?: StreamPhoto[];
   hero?: ReactNode;
   backlinks?: ReactNode;
   children: ReactNode;
@@ -36,6 +39,7 @@ const RenderPost = ({
   toc,
   related,
   onThisDay,
+  photos,
   hero,
   backlinks,
   children,
@@ -109,6 +113,8 @@ const RenderPost = ({
         {related && related.length > 0 && <RelatedPosts posts={related} />}
 
         {onThisDay && <OnThisDay posts={onThisDay} />}
+
+        {photos && <PhotosFromThisDay photos={photos} />}
 
         <div className="mt-8 flex justify-between gap-4">
           {prev ? (
