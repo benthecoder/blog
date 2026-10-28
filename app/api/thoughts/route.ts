@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 
+// Run beside Neon (us-east-2): the project default region is sin1, and every
+// query from Singapore crosses the Pacific twice. Must stay a literal.
+export const preferredRegion = "iad1";
+
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
