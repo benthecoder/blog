@@ -355,6 +355,10 @@ body {
   width: 100%;
   min-width: 100%;
   position: relative;
+  /* Bare URLs and long inline code otherwise push the page wider than a
+     phone. Only breaks a word that can't fit on its own line; <pre> keeps
+     its own horizontal scroll. */
+  overflow-wrap: anywhere;
 }
 
 .dark .prose {
@@ -497,7 +501,9 @@ body {
 .prose ul li::before {
   content: "\25E6"; /* small circle */
   color: var(--color-ink-muted);
-  display: inline-block;
+  /* Out of the line box (it stays put via the negative margin), so a long
+     URL can't break onto its own line and leave the bullet alone above it. */
+  position: absolute;
   width: 0.75em;
   margin-left: -0.75em;
 }
