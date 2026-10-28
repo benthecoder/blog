@@ -12,6 +12,12 @@ const OG_BACKGROUND_PATH = path.join(process.cwd(), "app", "og", "og-bg.jpg");
 const mocks = vi.hoisted(() => ({ readFile: vi.fn(), imageResponse: vi.fn() }));
 vi.mock("node:fs/promises", () => ({ readFile: mocks.readFile }));
 vi.mock("next/og", () => ({ ImageResponse: mocks.imageResponse }));
+// The route re-encodes the rendered PNG as JPEG; stand in for the encoder.
+vi.mock("sharp", () => ({
+  default: () => ({
+    jpeg: () => ({ toBuffer: async () => Buffer.from("JPEG") }),
+  }),
+}));
 
 beforeEach(() => {
   vi.resetModules();
@@ -56,8 +62,8 @@ describe("social image resource handling", () => {
       )
     ).toBe(true);
     for (const response of responses) {
-      expect(await response.text()).toBe("PNG");
-      expect(response.headers.get("content-type")).toBe("image/png");
+      expect(await response.text()).toBe("JPEG");
+      expect(response.headers.get("content-type")).toBe("image/jpeg");
       expect(response.headers.get("cache-control")).toBe(
         "public, max-age=31536000, immutable"
       );
