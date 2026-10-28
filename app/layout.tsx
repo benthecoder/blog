@@ -75,6 +75,9 @@ const averia = localFont({
   ],
   variable: "--font-averia",
   display: "swap",
+  // Six faces ~250KB; a page renders two or three. Unpreloaded, the browser
+  // fetches only the faces the page's CSS actually uses.
+  preload: false,
 });
 
 export default function RootLayout({ children }: { children: ReactNode }) {
