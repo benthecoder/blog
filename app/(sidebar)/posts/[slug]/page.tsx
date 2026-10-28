@@ -3,6 +3,9 @@ import { getPostContent, getPostMetadata } from "@/utils/content/posts";
 import { getRelatedPosts } from "@/utils/content/related";
 import { getSameDayPosts } from "@/utils/content/onThisDay";
 import { getPostPreviewData } from "@/utils/content/preview";
+import data from "@/config/places.json";
+import { placesSchema } from "@/utils/places";
+import { placesForPost } from "@/utils/placesInPost";
 import { SITE_URL } from "@/config/site";
 import { PERSON_ID } from "@/config/person";
 import RenderPost from "@/components/posts/RenderPost";
@@ -12,6 +15,8 @@ import { extractToc } from "@/utils/content/toc";
 import { splitLeadingImage } from "@/utils/content/hero";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+
+const places = placesSchema.parse(data);
 
 export const dynamic = "force-static";
 
@@ -105,6 +110,7 @@ const PostPage = async ({ params }: { params: Params }) => {
         toc={extractToc(postContent.content)}
         related={getRelatedPosts(slug)}
         onThisDay={getSameDayPosts(slug)}
+        onTheMap={placesForPost(places, slug)}
         hero={hero ? <MarkdownContent content={hero} /> : undefined}
         backlinks={<Backlinks contentRef={{ kind: "post", slug }} />}
       >

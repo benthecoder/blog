@@ -6,6 +6,7 @@ import type { SameDayPost } from "@/utils/content/onThisDay";
 import type { TocEntry } from "@/utils/content/toc";
 import { extractTags } from "@/utils/content/tags";
 import OnThisDay from "./OnThisDay";
+import OnTheMap from "./OnTheMap";
 import PostArrowKeys from "./PostArrowKeys";
 import PostViewTracker from "./PostViewTracker";
 import RelatedPosts from "./RelatedPosts";
@@ -20,6 +21,7 @@ interface RenderPostProps {
   toc?: TocEntry[];
   related?: RelatedPost[];
   onThisDay?: SameDayPost[];
+  onTheMap?: { name: string; href: string }[];
   hero?: ReactNode;
   backlinks?: ReactNode;
   children: ReactNode;
@@ -37,6 +39,7 @@ const RenderPost = ({
   toc,
   related,
   onThisDay,
+  onTheMap,
   hero,
   backlinks,
   children,
@@ -116,6 +119,8 @@ const RenderPost = ({
         {related && related.length > 0 && <RelatedPosts posts={related} />}
 
         {onThisDay && <OnThisDay posts={onThisDay} />}
+
+        {onTheMap && <OnTheMap places={onTheMap} />}
 
         <div className="mt-8 flex justify-between gap-4">
           {prev ? (
