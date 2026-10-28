@@ -33,6 +33,24 @@
 .places-explorer a {
   -webkit-tap-highlight-color: transparent;
 }
+.places-explorer :is(button, a, summary, label) {
+  touch-action: manipulation;
+}
+.places-explorer
+  :is(
+    .icon-button,
+    .category-options button,
+    .map-tools button,
+    .sheet-toggle
+  ) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+@media (pointer: coarse) {
+  .places-explorer :is(input, select, textarea) {
+    font-size: 16px;
+  }
+}
 .places-explorer :is(button, a, input, select, summary):focus-visible {
   outline: 1.5px solid var(--map-ink);
   outline-offset: 2px;
@@ -45,7 +63,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 10px 12px 18px;
+  padding: 14px 10px 12px max(18px, env(safe-area-inset-left, 0px));
   border-right: 1px solid var(--map-rule);
   border-bottom: 1px solid var(--map-rule);
   background: var(--map-paper);
@@ -74,9 +92,11 @@
 .map-version {
   font-variant-numeric: tabular-nums;
 }
-.map-brand a:hover {
-  color: var(--map-ink);
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .map-brand a:hover {
+    color: var(--map-ink);
+    text-decoration: underline;
+  }
 }
 .icon-button {
   width: 28px;
@@ -86,9 +106,11 @@
   place-items: center;
   color: var(--map-muted);
 }
-.icon-button:hover {
-  background: var(--map-hover);
-  color: var(--map-ink);
+@media (hover: hover) and (pointer: fine) {
+  .icon-button:hover {
+    background: var(--map-hover);
+    color: var(--map-ink);
+  }
 }
 
 /* -- Category colors and dots ------------------------------------------- */
@@ -125,7 +147,8 @@
   background: var(--map-paper);
   scrollbar-width: thin;
   scrollbar-color: var(--map-rule) transparent;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
   z-index: 3;
 }
 /* Section labels stay small and quiet so list and place names lead. */
@@ -176,8 +199,10 @@
   border-color: var(--map-ink);
   background: radial-gradient(var(--map-ink) 0 3px, transparent 3.5px);
 }
-.collection-option:hover input {
-  border-color: var(--map-ink);
+@media (hover: hover) and (pointer: fine) {
+  .collection-option:hover input {
+    border-color: var(--map-ink);
+  }
 }
 .collection-title {
   flex: 1;
@@ -201,8 +226,10 @@
   gap: 3px;
   font-size: 12px;
 }
-.journal-link:hover {
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .journal-link:hover {
+    text-decoration: underline;
+  }
 }
 
 /* Filters */
@@ -258,8 +285,10 @@
   border: 1px solid var(--map-rule);
   font-size: 11px;
 }
-.category-options button:hover {
-  border-color: var(--map-muted);
+@media (hover: hover) and (pointer: fine) {
+  .category-options button:hover {
+    border-color: var(--map-muted);
+  }
 }
 .category-options button[aria-pressed="true"] {
   border-color: var(--map-ink);
@@ -281,9 +310,13 @@
 .place-list li {
   border-bottom: 1px solid var(--map-rule);
 }
-.place-list li:hover,
 .place-list li.is-hovered {
   background: var(--map-hover);
+}
+@media (hover: hover) and (pointer: fine) {
+  .place-list li:hover {
+    background: var(--map-hover);
+  }
 }
 .place-list li.selected {
   background: var(--map-hover);
@@ -364,7 +397,7 @@
 .map-tools {
   position: absolute;
   bottom: 28px;
-  right: 14px;
+  right: max(14px, env(safe-area-inset-right, 0px));
   display: grid;
   border: 1px solid var(--map-rule);
   background: var(--map-paper);
@@ -377,8 +410,10 @@
   place-items: center;
   color: var(--map-ink);
 }
-.map-tools button:hover {
-  background: var(--map-hover);
+@media (hover: hover) and (pointer: fine) {
+  .map-tools button:hover {
+    background: var(--map-hover);
+  }
 }
 .map-tools button + button {
   border-top: 1px solid var(--map-rule);
@@ -512,8 +547,10 @@
   font-size: 12px;
   font-weight: 700;
 }
-.detail-links a:hover {
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .detail-links a:hover {
+    text-decoration: underline;
+  }
 }
 
 .sheet-toggle {
@@ -523,6 +560,9 @@
   background: color-mix(in srgb, var(--map-paper) 85%, transparent);
   color: var(--map-muted);
   font: 10px var(--map-font);
+}
+.places-explorer .maplibregl-ctrl-bottom-right {
+  margin-right: env(safe-area-inset-right, 0px);
 }
 .places-explorer .maplibregl-ctrl-attrib a {
   color: var(--map-muted);
@@ -534,19 +574,21 @@
   }
   .map-header {
     position: absolute;
-    inset: calc(10px + env(safe-area-inset-top)) 10px auto 10px;
+    inset: calc(10px + env(safe-area-inset-top, 0px))
+      max(10px, env(safe-area-inset-right, 0px)) auto
+      max(10px, env(safe-area-inset-left, 0px));
     padding: 8px 6px 8px 12px;
     border: 1px solid var(--map-rule);
     z-index: 7;
   }
   .map-area {
     position: absolute;
-    inset: 0 0 calc(48px + env(safe-area-inset-bottom));
+    inset: 0 0 calc(48px + env(safe-area-inset-bottom, 0px));
   }
   /* On a phone the card docks to the bottom instead of following the dot. */
   .map-popup {
-    left: 10px;
-    right: 10px;
+    left: max(10px, env(safe-area-inset-left, 0px));
+    right: max(10px, env(safe-area-inset-right, 0px));
     top: auto;
     bottom: 10px;
     width: auto;
@@ -560,9 +602,10 @@
   }
   .places-panel {
     position: absolute;
-    inset: 22% 0 calc(48px + env(safe-area-inset-bottom));
+    inset: 22% 0 calc(48px + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid var(--map-rule);
     border-right: 0;
+    padding-right: env(safe-area-inset-right, 0px);
     transform: translateY(calc(100% + 48px));
     visibility: hidden;
     transition:
@@ -594,8 +637,9 @@
     gap: 8px;
     position: absolute;
     inset: auto 0 0;
-    height: calc(48px + env(safe-area-inset-bottom));
-    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(48px + env(safe-area-inset-bottom, 0px));
+    padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px)
+      env(safe-area-inset-left, 0px);
     border-top: 1px solid var(--map-rule);
     background: var(--map-paper);
     font-size: 13px;
@@ -610,10 +654,10 @@
   }
   .map-tools {
     bottom: 24px;
-    right: 10px;
+    right: max(10px, env(safe-area-inset-right, 0px));
   }
   .map-area:has(.map-popup) .map-tools {
-    top: calc(64px + env(safe-area-inset-top));
+    top: calc(64px + env(safe-area-inset-top, 0px));
     bottom: auto;
   }
 }

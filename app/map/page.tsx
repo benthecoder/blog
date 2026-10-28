@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { preconnect } from "react-dom";
 import { Zen_Old_Mincho } from "next/font/google";
 import data from "@/config/places.json";
@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     url: "https://maps.bneo.xyz",
   },
 };
+
+// Draw under the notch and home indicator; map.css pads with env(safe-area-*).
+export const viewport: Viewport = { viewportFit: "cover" };
 
 // Mincho for names and the title, like the type on an old printed map.
 const mincho = Zen_Old_Mincho({
