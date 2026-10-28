@@ -35,7 +35,12 @@ export function photoShareMetadata({
   return {
     title,
     description,
-    alternates: { canonical: url },
+    // Pages set their own alternates, which replaces a layout's wholesale,
+    // so the photos feed is announced here rather than in the layout.
+    alternates: {
+      canonical: url,
+      types: { "application/rss+xml": `${PHOTOS_URL}/rss.xml` },
+    },
     openGraph: {
       title,
       description,
