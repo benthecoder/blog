@@ -17,6 +17,7 @@ const LibraryPage = () => {
 
   return (
     <div>
+      <h1 className="sr-only">library</h1>
       <article className="prose">
         <MarkdownContent content={content} />
       </article>

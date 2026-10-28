@@ -113,7 +113,8 @@ export default function ArtworkRotation() {
   return (
     <>
       <NameHeader />
-      <div className="h-screen w-full flex flex-col items-center justify-center pt-10 px-4 md:px-8 overflow-hidden">
+      <main className="h-screen w-full flex flex-col items-center justify-center pt-10 px-4 md:px-8 overflow-hidden">
+        <h1 className="sr-only">Benedict Neo</h1>
         <div className="flex flex-col items-center justify-center gap-4 md:gap-6 w-full max-w-[min(85vw,700px)] md:max-w-[min(60vw,600px)]">
           <Link
             href="/sketch"
@@ -154,7 +155,7 @@ export default function ArtworkRotation() {
             </Link>
           </div>
         </div>
-      </div>
+      </main>
     </>
   );
 }

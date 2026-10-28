@@ -8,6 +8,7 @@ export const metadata: Metadata = pageMetadata({ title: "now", path: "/now" });
 export default function NowPage() {
   return (
     <div>
+      <h1 className="sr-only">now</h1>
       <article className="prose">
         <p>
           this is a <a href="https://sive.rs/nowff">now</a> page
