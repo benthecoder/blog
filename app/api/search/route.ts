@@ -12,9 +12,6 @@ import {
   SEMANTIC_SIMILARITY_THRESHOLD,
 } from "@/config/constants";
 
-// Run beside Neon (us-east-2): the project default region is sin1, and every
-// query from Singapore crosses the Pacific twice. Must stay a literal.
-export const preferredRegion = "iad1";
 
 const sql = neon(process.env.POSTGRES_URL!);
 

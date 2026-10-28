@@ -5,9 +5,6 @@ const sql = neon(process.env.POSTGRES_URL!);
 
 import { parsePublicUrl } from "@/utils/tweets/link";
 
-// Run beside Neon (us-east-2): the project default region is sin1, and every
-// query from Singapore crosses the Pacific twice. Must stay a literal.
-export const preferredRegion = "iad1";
 
 const URL_RE = /https?:\/\/[^\s]+/;
 
