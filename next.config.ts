@@ -57,6 +57,26 @@ const nextConfig: NextConfig = {
         has: [{ type: "host", value: "maps.bneo.xyz" }],
         destination: "/map",
       },
+      {
+        source: "/robots.txt",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos/robots.txt",
+      },
+      {
+        source: "/sitemap.xml",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos/sitemap.xml",
+      },
+      {
+        source: "/robots.txt",
+        has: [{ type: "host", value: "maps.bneo.xyz" }],
+        destination: "/map/robots.txt",
+      },
+      {
+        source: "/sitemap.xml",
+        has: [{ type: "host", value: "maps.bneo.xyz" }],
+        destination: "/map/sitemap.xml",
+      },
     ],
     afterFiles: [
       {
