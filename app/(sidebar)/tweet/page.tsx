@@ -3,6 +3,10 @@ import Form from "./form";
 import RecentList from "./recent-list";
 import type { Thought } from "@/types/thoughts";
 
+// Run beside Neon (us-east-2): the project default region is sin1, and every
+// query from Singapore crosses the Pacific twice. Must stay a literal.
+export const preferredRegion = "iad1";
+
 export const dynamic = "force-dynamic";
 
 const sql = neon(process.env.POSTGRES_URL!);
