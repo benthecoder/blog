@@ -3,6 +3,11 @@ import { preconnect } from "react-dom";
 import { Zen_Old_Mincho } from "next/font/google";
 import data from "@/config/places.json";
 import { placesSchema } from "@/utils/places";
+import {
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+  ogImageUrl,
+} from "@/utils/pageMetadata";
 import PlacesExplorer from "./PlacesExplorer";
 
 export const metadata: Metadata = {
@@ -13,6 +18,19 @@ export const metadata: Metadata = {
     title: "Places | Benedict Neo",
     description: "Places I love and notes from my travels.",
     url: "https://maps.bneo.xyz",
+    images: [
+      {
+        url: ogImageUrl("Places"),
+        width: OG_IMAGE_WIDTH,
+        height: OG_IMAGE_HEIGHT,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Places | Benedict Neo",
+    description: "Places I love and notes from my travels.",
+    images: [ogImageUrl("Places")],
   },
 };
 
