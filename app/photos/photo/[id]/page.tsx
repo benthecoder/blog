@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPhotostream } from "@/utils/content/photostream";
 import { blurBackground, photoAlt, photoTitle } from "@/utils/photoCaption";
+import { photoShareMetadata } from "@/utils/photoShare";
 import { FadeImage } from "@/components/photos/FadeImage";
 import { PhotoMeta } from "@/components/photos/PhotoMeta";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -13,13 +14,13 @@ type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const photo = (await getPhotostream()).find((item) => item.id === id);
-  return {
+  return photoShareMetadata({
     title: `${photo ? (photoTitle(photo) ?? photoAlt(photo).replace(/^Photo in /, "")) : "Photo"} — Benedict Neo`,
     description: photo?.description ?? (photo ? photoAlt(photo) : undefined),
-    alternates: {
-      canonical: `https://photos.bneo.xyz/photos/photo/${encodeURIComponent(id)}`,
-    },
-  };
+    path: `/photos/photo/${encodeURIComponent(id)}`,
+    photo,
+    type: "article",
+  });
 }
 export default async function PhotoPage({ params }: Props) {
   const { id } = await params;
