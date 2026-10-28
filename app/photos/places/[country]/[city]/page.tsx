@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { PhotoStream } from "@/components/photos/PhotoStream";
 import { monthRange } from "@/components/photos/dates";
 import { getPhotostream } from "@/utils/content/photostream";
+import { photoShareMetadata } from "@/utils/photoShare";
 import { placeTree } from "@/utils/photoPlaces";
 
 export const revalidate = 60;
@@ -21,13 +22,14 @@ async function findCity(countrySlug: string, citySlug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country, city } = await params;
   const found = await findCity(country, city);
-  return {
+  return photoShareMetadata({
     title: `${found?.city.city ?? "places"} — photos`,
-    description: found && `Photos from ${found.city.city}.`,
-    alternates: {
-      canonical: `https://photos.bneo.xyz/photos/places/${country}/${city}`,
-    },
-  };
+    description:
+      found &&
+      `${found.city.count} ${found.city.count === 1 ? "frame" : "frames"} from ${found.city.city}.`,
+    path: `/photos/places/${country}/${city}`,
+    photo: found?.city.photos[0],
+  });
 }
 
 export default async function CityPage({ params }: Props) {

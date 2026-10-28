@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPhotostream } from "@/utils/content/photostream";
+import { blurBackground, photoAlt, photoTitle } from "@/utils/photoCaption";
+import { photoShareMetadata } from "@/utils/photoShare";
 import { FadeImage } from "@/components/photos/FadeImage";
 import { PhotoMeta } from "@/components/photos/PhotoMeta";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -12,13 +14,13 @@ type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const photo = (await getPhotostream()).find((item) => item.id === id);
-  return {
-    title: `${photo?.caption ?? "photo"} — Benedict Neo`,
-    description: photo?.description ?? photo?.caption,
-    alternates: {
-      canonical: `https://photos.bneo.xyz/photos/photo/${encodeURIComponent(id)}`,
-    },
-  };
+  return photoShareMetadata({
+    title: `${photo ? (photoTitle(photo) ?? photoAlt(photo).replace(/^Photo in /, "")) : "Photo"} — Benedict Neo`,
+    description: photo?.description ?? (photo ? photoAlt(photo) : undefined),
+    path: `/photos/photo/${encodeURIComponent(id)}`,
+    photo,
+    type: "article",
+  });
 }
 export default async function PhotoPage({ params }: Props) {
   const { id } = await params;
@@ -30,10 +32,14 @@ export default async function PhotoPage({ params }: Props) {
   const next = photos[index + 1];
   return (
     <main className="ph-view">
-      <div className="ph-view-image">
+      <div
+        className="ph-view-image"
+        // The blurred preview sits behind the image while it fades in.
+        style={blurBackground(photo.blurDataURL)}
+      >
         <FadeImage
           src={photo.src}
-          alt={photo.caption}
+          alt={photoAlt(photo)}
           fill
           sizes="100vw"
           quality={80}

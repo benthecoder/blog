@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import type { StreamPhoto } from "@/types/photostream";
+import { photoAlt } from "@/utils/photoCaption";
 import { exposureLine, frameNumber, shortCamera } from "@/utils/photoCamera";
 import { FadeImage } from "./FadeImage";
 
@@ -25,12 +26,12 @@ export function ContactSheet({ photos, offset = 0, onOpen }: Props) {
           >
             <button
               className="ph-frame"
-              aria-label={`Open photo: ${photo.caption}`}
+              aria-label={`Open photo: ${photoAlt(photo)}`}
               onClick={() => onOpen(offset + index)}
             >
               <FadeImage
                 src={photo.src}
-                alt={photo.caption}
+                alt={photoAlt(photo)}
                 width={photo.width}
                 height={photo.height}
                 sizes="(max-width: 700px) 60vw, 400px"

@@ -2,14 +2,18 @@ import type { Metadata } from "next";
 import { PhotoStream } from "@/components/photos/PhotoStream";
 import { getPhotostream } from "@/utils/content/photostream";
 import { shortCamera } from "@/utils/photoCamera";
+import { photoShareMetadata } from "@/utils/photoShare";
 import { placeTree } from "@/utils/photoPlaces";
 
-export const metadata: Metadata = {
-  title: "photos",
-  description: "Every photo, by month.",
-  alternates: { canonical: "https://photos.bneo.xyz" },
-  openGraph: { title: "photos", url: "https://photos.bneo.xyz" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const photos = await getPhotostream();
+  return photoShareMetadata({
+    title: "photos",
+    description: "Every photo, by month.",
+    path: "",
+    photo: photos[0],
+  });
+}
 
 const count = (n: number, one: string, many = `${one}s`) =>
   `${n} ${n === 1 ? one : many}`;
