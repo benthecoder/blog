@@ -4,8 +4,16 @@ import {
   PHASE_PRODUCTION_BUILD,
 } from "next/constants";
 import { createRequire } from "node:module";
+import fs from "node:fs";
 import path from "node:path";
+import { blogSections, hostRedirects } from "./config/hostRedirects";
 import { prepareMapWorkerAssets } from "./utils/mapWorkerAssets";
+
+const blogSectionNames = blogSections(
+  fs.readdirSync(path.join(process.cwd(), "app", "(sidebar)"), {
+    withFileTypes: true,
+  })
+);
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -39,6 +47,8 @@ const nextConfig: NextConfig = {
     { source: "/photos/trips", destination: "/photos/places", permanent: true },
     // The UMAP plot of post embeddings moved into the knowledge map on /start.
     { source: "/viz", destination: "/start", permanent: true },
+    // One app serves three hosts; each only answers for its own pages.
+    ...hostRedirects(blogSectionNames),
   ],
   rewrites: async () => ({
     beforeFiles: [
