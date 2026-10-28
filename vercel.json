@@ -12,6 +12,9 @@
     },
     "app/api/tweet/route.ts": {
       "regions": ["iad1"]
+    },
+    "app/api/views/route.ts": {
+      "regions": ["iad1"]
     }
   }
 }
