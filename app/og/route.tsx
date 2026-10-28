@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
+import sharp from "sharp";
 
 // Keep these paths local: importing the content paths module makes the tracer
 // include the entire post archive in this rendering-only function.
@@ -91,9 +92,14 @@ export async function GET(req: NextRequest) {
 
   // Finish rendering before returning cacheable success headers. A failed
   // render must remain a server error, rather than a partially streamed 200.
-  return new Response(await imageResponse.arrayBuffer(), {
+  // Satori only emits PNG, which runs ~1.7MB over the photographic wave;
+  // as JPEG the same card is a fraction of that, small enough for apps
+  // (WhatsApp among them) that drop oversized preview images.
+  const png = Buffer.from(await imageResponse.arrayBuffer());
+  const jpeg = await sharp(png).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
+  return new Response(new Uint8Array(jpeg), {
     headers: {
-      "Content-Type": "image/png",
+      "Content-Type": "image/jpeg",
       "Cache-Control": "public, max-age=31536000, immutable",
       "Vercel-CDN-Cache-Control":
         "max-age=86400, stale-while-revalidate=604800",
