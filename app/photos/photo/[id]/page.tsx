@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { getPhotostream } from "@/utils/content/photostream";
 import { blurBackground, photoAlt, photoTitle } from "@/utils/photoCaption";
 import { photoShareMetadata } from "@/utils/photoShare";
+import { photoJsonLd } from "@/utils/photoJsonLd";
+import { serializeJsonLd } from "@/utils/jsonLd";
 import { FadeImage } from "@/components/photos/FadeImage";
 import { PhotoMeta } from "@/components/photos/PhotoMeta";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -32,6 +34,12 @@ export default async function PhotoPage({ params }: Props) {
   const next = photos[index + 1];
   return (
     <main className="ph-view">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: serializeJsonLd(photoJsonLd(photo)),
+        }}
+      />
       <div
         className="ph-view-image"
         // The blurred preview sits behind the image while it fades in.
