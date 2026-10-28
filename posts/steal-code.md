@@ -24,7 +24,7 @@ My takeaway from the article by StackOverflow is if you're cloning code (copy pa
 
 Borrowing code comes at a risk, there might be bugs or malicious intent baked into it.
 
-Even the [most copied snippet from SO has a bug](https://programming.guide/worlds-most-copied-so-snippet.html).
+Even the [most copied snippet from SO has a bug](https://web.archive.org/web/20231105174956/https://programming.guide/worlds-most-copied-so-snippet.html).
 
 On the other hand, stealing code means you know exactly what it does.
 

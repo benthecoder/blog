@@ -44,7 +44,7 @@ He has to filter and select from all possible combinations and not accumulate de
 
 He thus concludes that a work of art is the "climax of long work of preparation".
 
-Recounting his experience painting [In my Still Life with Magnolia](https://www.centrepompidou.fr/en/ressources/oeuvre/Y5BlJZ2), where he states that the secret of creation lies in the play and balance of colors and lines.
+Recounting his experience painting [In my Still Life with Magnolia](https://web.archive.org/web/20240226220952/https://www.centrepompidou.fr/en/ressources/oeuvre/Y5BlJZ2), where he states that the secret of creation lies in the play and balance of colors and lines.
 
 And his [chapel at Vence](https://www.theartpilgrim.org/pilgrimages-2/the-chapelle-du-rosaire-de-vence), where the color and light, every line and every detail, gives an impression of boundless space.
 

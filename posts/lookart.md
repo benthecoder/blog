@@ -53,7 +53,7 @@ But how should we look at art?
 blogs
 
 - [What Artists Notice](https://stopa.io/post/294): noticing small details in Van Eyck’s “Arnolfini Portrait” and Botticelli’s “The Birth of Venus”
-- [Spending an Hour with Vermeer’s Sleeping Maid — Marina Gross-Hoy](https://www.marinagrosshoy.com/blog/sleeping-maid)
+- [Spending an Hour with Vermeer’s Sleeping Maid — Marina Gross-Hoy](https://web.archive.org/web/20240214081242/https://www.marinagrosshoy.com/blog/sleeping-maid)
 - [How to look at a painting | The Arts Society](https://theartssociety.org/arts-news-features/how-look-painting) get up close, spend time contemplating a painting to collect visual details, and lean into the canvas (look for gaps or thin areas of paint)
 - [How Long Do You Need to Look at a Work of Art to Get It? | Artsy](https://www.artsy.net/article/artsy-editorial-long-work-art-it): spoiler alert it's 20 minutes
 - [How to Look at Art](https://jumpmag.co.uk/look-at-art/): just look, make up stories, share your thoughts with other people
