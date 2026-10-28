@@ -48,6 +48,11 @@ const nextConfig: NextConfig = {
         destination: "/photos",
       },
       {
+        source: "/rss.xml",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos/rss.xml",
+      },
+      {
         source: "/",
         has: [{ type: "host", value: "maps.bneo.xyz" }],
         destination: "/map",
