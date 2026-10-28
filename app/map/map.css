@@ -418,6 +418,18 @@
 .map-tools button + button {
   border-top: 1px solid var(--map-rule);
 }
+.map-tools button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.map-me {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--map-ink);
+  border: 2px solid var(--map-paper);
+  box-shadow: 0 0 0 1.5px var(--map-ink);
+}
 .map-status {
   position: absolute;
   top: 50%;
