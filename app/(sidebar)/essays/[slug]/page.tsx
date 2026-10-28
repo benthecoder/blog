@@ -6,6 +6,7 @@ import { formatEssayDate } from "@/utils/content/essayDate";
 import { extractToc } from "@/utils/content/toc";
 import { essayProseClasses } from "@/components/essays/essayProse";
 import MarkdownContent from "@/components/posts/MarkdownContent";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
@@ -20,11 +21,15 @@ export async function generateMetadata({
   const essay = getEssayMetadata().find((e) => e.slug === slug);
   if (!essay) return;
 
-  return {
+  const base = pageMetadata({
     title: essay.title,
     description: essay.subtitle || undefined,
+    path: `/essays/${slug}`,
+  });
+  return {
+    ...base,
     alternates: {
-      canonical: `/essays/${slug}`,
+      ...base.alternates,
       types: { "application/rss+xml": "/essays/rss.xml" },
     },
   };

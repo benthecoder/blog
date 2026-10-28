@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { getPostMetadata } from "@/utils/content/posts";
 import PostPreview from "@/components/posts/PostPreview";
 import { tryDecodeUrlComponent } from "@/utils/links/url";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
@@ -10,7 +11,10 @@ export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await props.params;
-  return { title: `#${tryDecodeUrlComponent(slug) ?? slug}` };
+  return pageMetadata({
+    title: `#${tryDecodeUrlComponent(slug) ?? slug}`,
+    path: `/tags/${slug}`,
+  });
 }
 
 export const generateStaticParams = async () => {

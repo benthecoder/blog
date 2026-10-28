@@ -2,14 +2,15 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { PAPERS_ROUTE } from "@/config/paths";
 import { getPapers, groupPapersByTopic } from "@/utils/content/papers";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "papers",
   description: "Papers I've read, with my notes",
-  alternates: { canonical: PAPERS_ROUTE },
-};
+  path: PAPERS_ROUTE,
+});
 
 function formatRead(date: string): string {
   const parsed = new Date(`${date}T12:00:00Z`);

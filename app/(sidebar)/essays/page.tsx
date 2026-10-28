@@ -2,14 +2,20 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getEssayMetadata } from "@/utils/content/essays";
 import { formatEssayDate } from "@/utils/content/essayDate";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
-export const metadata: Metadata = {
+const base = pageMetadata({
   title: "essays",
   description: "Long-form essays",
+  path: "/essays",
+});
+
+export const metadata: Metadata = {
+  ...base,
   alternates: {
-    canonical: "/essays",
+    ...base.alternates,
     types: { "application/rss+xml": "/essays/rss.xml" },
   },
 };
