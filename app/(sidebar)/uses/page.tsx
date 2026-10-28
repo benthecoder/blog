@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import { pageMetadata } from "@/utils/pageMetadata";
 
-export const metadata: Metadata = { title: "uses" };
+export const metadata: Metadata = pageMetadata({
+  title: "uses",
+  path: "/uses",
+});
 
 type Product = {
   name: string;

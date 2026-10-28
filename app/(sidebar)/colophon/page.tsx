@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/utils/pageMetadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "colophon",
   description: "Colophon for bneo.xyz.",
-};
+  path: "/colophon",
+});
 
 const inks = [
   ["indigo", "#4d5f9e"],

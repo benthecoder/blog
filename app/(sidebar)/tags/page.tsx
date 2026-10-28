@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getPostMetadata } from "@/utils/content/posts";
 import { countTagFrequency } from "@/utils/content/tags";
+import { pageMetadata } from "@/utils/pageMetadata";
 
-export const metadata: Metadata = { title: "tags" };
+export const metadata: Metadata = pageMetadata({
+  title: "tags",
+  path: "/tags",
+});
 
 export const dynamic = "force-static";
 

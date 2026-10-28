@@ -10,6 +10,11 @@ import PaletteSwitch from "@/components/ui/PaletteSwitch";
 import SearchModal from "@/components/ui/SearchModal";
 import { FloatingControls } from "@/components/layout/FloatingControls";
 import { RandomPostListener } from "@/components/layout/RandomPostListener";
+import {
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+  ogImageUrl,
+} from "@/utils/pageMetadata";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bneo.xyz"),
@@ -18,10 +23,16 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Benedict Neo",
     description: "writing daily",
-    url: "https://bneo.xyz",
     siteName: "Benedict Neo",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: ogImageUrl("Benedict Neo"),
+        width: OG_IMAGE_WIDTH,
+        height: OG_IMAGE_HEIGHT,
+      },
+    ],
   },
   robots: {
     index: true,
@@ -37,6 +48,7 @@ export const metadata: Metadata = {
   twitter: {
     title: "Benedict Neo",
     card: "summary_large_image",
+    images: [ogImageUrl("Benedict Neo")],
   },
 };
 

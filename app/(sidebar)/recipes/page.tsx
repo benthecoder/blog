@@ -2,14 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getRecipeMetadata } from "@/utils/content/recipes";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "recipes",
   description: "Things I cook, written and re-tested until they're right",
-  alternates: { canonical: "/recipes" },
-};
+  path: "/recipes",
+});
 
 const RecipesPage = () => {
   const recipes = getRecipeMetadata();

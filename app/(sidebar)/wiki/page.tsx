@@ -1,13 +1,15 @@
 import { getWikiGraph } from "@/utils/content/wikiGraph";
 import WikiGraph from "@/components/visualizations/WikiGraph";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "wiki",
   description: "A directory of things I've written up",
-};
+  path: "/wiki",
+});
 
 const WikiPage = () => {
   const graph = getWikiGraph();
