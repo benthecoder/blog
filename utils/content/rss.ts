@@ -17,7 +17,7 @@ const processor = unified()
   .use(rehypeStringify);
 
 // Split CDATA terminators so an article containing XML examples cannot break the feed.
-function cdata(value: string) {
+export function cdata(value: string) {
   return `<![CDATA[${value.replaceAll("]]>", "]]]]><![CDATA[>")}]]>`;
 }
 
