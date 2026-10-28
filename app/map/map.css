@@ -424,6 +424,19 @@
   background: var(--map-paper);
   box-shadow: 0 4px 14px var(--map-shade);
 }
+/* A selected place's card settles in rather than popping. Hover previews
+   (desktop list) stay instant: they come and go too often for motion. */
+.place-detail:not(.is-preview) {
+  transition:
+    opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@starting-style {
+  .place-detail:not(.is-preview) {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
 .place-detail.is-preview {
   pointer-events: none;
 }
@@ -618,7 +631,8 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .places-panel {
+  .places-panel,
+  .place-detail:not(.is-preview) {
     transition: none;
   }
 }
