@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPhotostream } from "@/utils/content/photostream";
-import { photoAlt, photoTitle } from "@/utils/photoCaption";
+import { blurBackground, photoAlt, photoTitle } from "@/utils/photoCaption";
 import { FadeImage } from "@/components/photos/FadeImage";
 import { PhotoMeta } from "@/components/photos/PhotoMeta";
 import { ArrowLeft, ArrowRight } from "lucide-react";
@@ -31,7 +31,11 @@ export default async function PhotoPage({ params }: Props) {
   const next = photos[index + 1];
   return (
     <main className="ph-view">
-      <div className="ph-view-image">
+      <div
+        className="ph-view-image"
+        // The blurred preview sits behind the image while it fades in.
+        style={blurBackground(photo.blurDataURL)}
+      >
         <FadeImage
           src={photo.src}
           alt={photoAlt(photo)}

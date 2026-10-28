@@ -34,3 +34,15 @@ export function photoAlt(photo: Captioned): string {
   const base = parts.length > 0 ? `Photo in ${parts.join(", ")}` : "Photo";
   return date ? `${base}, ${date}` : base;
 }
+
+/** The tiny blurred preview as a contained background, shown behind a
+ * full-size photo until it loads. */
+export function blurBackground(blurDataURL?: string) {
+  if (!blurDataURL) return undefined;
+  return {
+    backgroundImage: `url("${blurDataURL}")`,
+    backgroundSize: "contain",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+  };
+}

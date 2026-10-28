@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import type { StreamPhoto } from "@/types/photostream";
 import { frameNumber } from "@/utils/photoCamera";
-import { photoAlt } from "@/utils/photoCaption";
+import { blurBackground, photoAlt } from "@/utils/photoCaption";
 import { PhotoMeta } from "./PhotoMeta";
 
 type Props = {
@@ -92,6 +92,7 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
           </header>
           <div
             className="ph-lightbox-image"
+            style={blurBackground(photo.blurDataURL)}
             onPointerDown={onPointerDown}
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerCancel}
