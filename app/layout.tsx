@@ -99,13 +99,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="antialiased">
         <Providers>
+          <SearchModal />
+          <RandomPostListener />
+          {children}
+          {/* Fixed in the corner, so DOM order is only tab order: after the
+              page, so the skip link is the first stop. */}
           <FloatingControls>
             <PaletteSwitch />
             <ThemeSwitch />
           </FloatingControls>
-          <SearchModal />
-          <RandomPostListener />
-          {children}
         </Providers>
         <SpeedInsights />
         <Analytics />
