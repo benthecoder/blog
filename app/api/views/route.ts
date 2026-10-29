@@ -4,6 +4,7 @@ import { upstashRequest, upstashPipeline } from "@/utils/upstash";
 import { COUNT_VIEW_SCRIPT } from "@/utils/viewCounter";
 import { isSafeSlug } from "@/config/paths";
 import { getPostSlugs } from "@/utils/content/posts";
+import { clientIp } from "@/utils/clientIp";
 
 export const dynamic = "force-dynamic";
 const VIEW_TTL_SECONDS = 24 * 60 * 60;
@@ -21,11 +22,7 @@ const parseSlug = (value: unknown): string | null => {
 };
 
 const getViewerHash = (request: NextRequest) => {
-  const forwardedFor = request.headers.get("x-forwarded-for") || "";
-  const ip =
-    forwardedFor.split(",")[0]?.trim() ||
-    request.headers.get("x-real-ip") ||
-    "unknown";
+  const ip = clientIp(request);
   const userAgent = request.headers.get("user-agent") || "unknown";
   const acceptLanguage = request.headers.get("accept-language") || "";
 

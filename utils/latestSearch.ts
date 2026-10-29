@@ -38,6 +38,14 @@ export class LatestSearch {
         }),
       });
       if (generation !== this.generation) return null;
+      if (response.status === 429) {
+        const body = await response.json().catch(() => null);
+        if (generation !== this.generation) return null;
+        return {
+          results: [],
+          error: body?.error ?? "Too many searches. Try again in a minute.",
+        };
+      }
       if (!response.ok) throw new Error("Search unavailable");
       const data = await response.json();
       if (generation !== this.generation) return null;
