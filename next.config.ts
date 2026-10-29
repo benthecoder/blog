@@ -39,6 +39,10 @@ const nextConfig: NextConfig = {
     { source: "/photos/trips", destination: "/photos/places", permanent: true },
     // The UMAP plot of post embeddings moved into the knowledge map on /start.
     { source: "/viz", destination: "/start", permanent: true },
+    { source: "/visualization", destination: "/start", permanent: true },
+    // Retired pages whose job moved: popular posts → archive, chat → search.
+    { source: "/views", destination: "/posts", permanent: true },
+    { source: "/chat", destination: "/search", permanent: true },
   ],
   rewrites: async () => ({
     beforeFiles: [
