@@ -25,7 +25,7 @@ export default function NowPage() {
           <li>finding balance in life and work and trying to sleep more</li>
           <li>
             experimenting with{" "}
-            <a href="https://en.wikipedia.org/wiki/Low-level_laser_therapy/">
+            <a href="https://en.wikipedia.org/wiki/Low-level_laser_therapy">
               photobiomodulation
             </a>
           </li>
