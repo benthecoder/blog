@@ -6,11 +6,17 @@ import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
-export const metadata: Metadata = pageMetadata({
+const base = pageMetadata({
   title: "papers",
   description: "Papers I've read, with my notes",
   path: PAPERS_ROUTE,
 });
+
+export function generateMetadata(): Metadata {
+  return groupPapersByTopic(getPapers()).length === 0
+    ? { ...base, robots: { index: false, follow: true } }
+    : base;
+}
 
 function formatRead(date: string): string {
   const parsed = new Date(`${date}T12:00:00Z`);
