@@ -370,6 +370,7 @@
 .ph-view-image {
   position: relative;
   min-height: 0;
+  touch-action: pan-y pinch-zoom;
 }
 .ph-view-image img {
   object-fit: contain;

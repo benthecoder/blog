@@ -6,6 +6,7 @@ import { getPostPreviewData } from "@/utils/content/preview";
 import data from "@/config/places.json";
 import { placesSchema } from "@/utils/places";
 import { placesForPost } from "@/utils/placesInPost";
+import { postDateISO } from "@/utils/dateUtils";
 import { SITE_URL } from "@/config/site";
 import { PERSON_ID } from "@/config/person";
 import RenderPost from "@/components/posts/RenderPost";
@@ -19,6 +20,9 @@ import type { Metadata } from "next";
 const places = placesSchema.parse(data);
 
 export const dynamic = "force-static";
+
+const postOgImage = (title: string) =>
+  `${SITE_URL}/og?title=${encodeURIComponent(title)}`;
 
 type Params = Promise<{ slug: string }>;
 
@@ -35,8 +39,9 @@ export async function generateMetadata({
     return;
   }
 
-  const { title, date: publishedTime } = post;
-  const ogImage = `${SITE_URL}/og?title=${encodeURIComponent(title)}`;
+  const { title } = post;
+  const publishedTime = postDateISO(post.date);
+  const ogImage = postOgImage(title);
   const description = getPostPreviewData(slug)?.excerpt.slice(0, 160);
 
   return {
@@ -55,6 +60,7 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
+      creator: "@benedictneo",
       title,
       images: [ogImage],
     },
@@ -79,12 +85,13 @@ const PostPage = async ({ params }: { params: Params }) => {
 
   const postContent = getPostContent(slug);
   const { hero, body } = splitLeadingImage(postContent.content);
+  const isoDate = postDateISO(post.date);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
-    datePublished: post.date,
-    dateModified: post.date,
+    ...(isoDate && { datePublished: isoDate, dateModified: isoDate }),
+    image: postOgImage(post.title),
     url: `https://bneo.xyz/posts/${slug}`,
     author: {
       "@type": "Person",
