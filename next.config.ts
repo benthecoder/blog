@@ -6,6 +6,7 @@ import {
 import { createRequire } from "node:module";
 import fs from "node:fs";
 import path from "node:path";
+import { IMAGE_REMOTE_HOST } from "./config/site";
 import { blogSections, hostRedirects } from "./config/hostRedirects";
 import { prepareMapWorkerAssets } from "./utils/mapWorkerAssets";
 
@@ -26,7 +27,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "pub-e85be102871845218dcda1cc49c78508.r2.dev",
+        hostname: IMAGE_REMOTE_HOST,
         pathname: "/**",
       },
     ],

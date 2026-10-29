@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { splitLeadingImage } from "./hero";
+import { heroImage, splitLeadingImage } from "./hero";
 
 describe("splitLeadingImage", () => {
   it("splits a leading image from the body", () => {
@@ -23,5 +23,25 @@ describe("splitLeadingImage", () => {
   it("ignores images that share a line with other text", () => {
     const md = "intro ![alt](/img.png)\n";
     expect(splitLeadingImage(md).hero).toBeNull();
+  });
+});
+
+describe("heroImage", () => {
+  it("returns the alt and src of the leading image", () => {
+    expect(heroImage("\n![The School](/images/athens.jpeg)\n\ntext")).toEqual({
+      alt: "The School",
+      src: "/images/athens.jpeg",
+    });
+  });
+
+  it("drops a link title and allows empty alt", () => {
+    expect(heroImage('![](/a.png "caption")\ntext')).toEqual({
+      alt: "",
+      src: "/a.png",
+    });
+  });
+
+  it("returns null without a leading image", () => {
+    expect(heroImage("Hello.\n\n![alt](/img.png)")).toBeNull();
   });
 });
