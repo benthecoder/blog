@@ -5,6 +5,7 @@ export const dynamic = "force-static";
 const Wave = () => {
   return (
     <div className="w-full">
+      <h1 className="sr-only">wave</h1>
       <Image
         alt="wave"
         src="/images/wave.jpeg"

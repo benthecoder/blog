@@ -4,8 +4,16 @@ import {
   PHASE_PRODUCTION_BUILD,
 } from "next/constants";
 import { createRequire } from "node:module";
+import fs from "node:fs";
 import path from "node:path";
+import { blogSections, hostRedirects } from "./config/hostRedirects";
 import { prepareMapWorkerAssets } from "./utils/mapWorkerAssets";
+
+const blogSectionNames = blogSections(
+  fs.readdirSync(path.join(process.cwd(), "app", "(sidebar)"), {
+    withFileTypes: true,
+  })
+);
 
 // photos.localhost:3000 stands in for the photos host in development.
 const PHOTOS_HOST = "photos\\.(?:bneo\\.xyz|localhost)";
@@ -41,21 +49,17 @@ const nextConfig: NextConfig = {
     { source: "/gallery", destination: "/photos", permanent: true },
     { source: "/photos/trips", destination: "/photos/places", permanent: true },
     // Photos live at the root of their own host: photos.bneo.xyz/places, not
-    // /photos/places. Old /photos links on either host land there.
+    // /photos/places. Old /photos links on other hosts go through hostRedirects.
     {
       source: "/photos/:path*",
       has: [{ type: "host", value: PHOTOS_HOST }],
       destination: "/:path*",
       permanent: true,
     },
-    {
-      source: "/photos/:path*",
-      has: [{ type: "host", value: "bneo.xyz" }],
-      destination: "https://photos.bneo.xyz/:path*",
-      permanent: true,
-    },
     // The UMAP plot of post embeddings moved into the knowledge map on /start.
     { source: "/viz", destination: "/start", permanent: true },
+    // One app serves three hosts; each only answers for its own pages.
+    ...hostRedirects(blogSectionNames),
   ],
   rewrites: async () => ({
     beforeFiles: [

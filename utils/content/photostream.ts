@@ -11,7 +11,32 @@ import {
 } from "@/utils/r2Photos";
 import { photoCollections } from "@/config/photoCollections";
 import { applyCollectionPlaces } from "@/utils/photoPlaces";
+import { journalSlugFor } from "@/utils/photoJournal";
+import { getPostSlugs } from "@/utils/content/posts";
 import type { PhotoCollection, StreamPhoto } from "@/types/photostream";
+
+function withJournalLinks(collections: PhotoCollection[]): PhotoCollection[] {
+  let slugs: Set<string>;
+  try {
+    slugs = new Set(getPostSlugs());
+  } catch (error) {
+    // A filesystem problem only means "no link", never a broken photos page.
+    console.error("journal slug lookup failed", error);
+    return collections;
+  }
+  const link = (photo: StreamPhoto): StreamPhoto => {
+    const journal = photo.journal ?? journalSlugFor(photo.date, slugs);
+    return journal === photo.journal ? photo : { ...photo, journal };
+  };
+  return collections.map((collection) => ({
+    ...collection,
+    photos: collection.photos.map(link),
+    sets: collection.sets?.map((set) => ({
+      ...set,
+      photos: set.photos.map(link),
+    })),
+  }));
+}
 
 const listCached = unstable_cache(
   async (bucket: string, _endpoint: string) =>
@@ -56,11 +81,13 @@ const getPhotoCollections = cache(async (): Promise<PhotoCollection[]> => {
   const endpoint = process.env.R2_ENDPOINT || "";
   try {
     const objects = await listCached(bucket, endpoint);
-    return applyCollectionPlaces(
-      await buildLivePhotoCollections(
-        objects,
-        (object) => readCached(bucket, publicUrl, endpoint, object),
-        photoCollections
+    return withJournalLinks(
+      applyCollectionPlaces(
+        await buildLivePhotoCollections(
+          objects,
+          (object) => readCached(bucket, publicUrl, endpoint, object),
+          photoCollections
+        )
       )
     );
   } catch (error) {
