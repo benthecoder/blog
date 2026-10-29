@@ -52,6 +52,34 @@ describe("textFragment", () => {
     ).toBe("#:~:text=plain%20rice%20here");
   });
 
+  it("preserves inline-code identifiers from published posts", () => {
+    expect(
+      textFragment(
+        "baking models today, learned the choices for `attn_implementation`:",
+        ["attn_implementation"]
+      )
+    ).toBe("#:~:text=the%20choices%20for%20attn_implementation");
+    expect(
+      textFragment(
+        "  - `import ray.data` -> `ray.data.read_datasource(CustomerDataSource())`",
+        ["read_datasource"]
+      )
+    ).toBe(
+      "#:~:text=import%20ray.data%20%2D%3E%20ray.data.read_datasource(CustomerDataSource"
+    );
+  });
+
+  it("keeps literal emphasis characters inside code and removes outside emphasis", () => {
+    expect(
+      textFragment("Use `some_*value*` with **care** and __attention__.", [
+        "some_",
+      ])
+    ).toBe("#:~:text=Use%20some_*value*%20with%20care%20and%20attention");
+    expect(textFragment("Use ``a`_b`` here", ["_b"])).toBe(
+      "#:~:text=Use%20a%60_b%20here"
+    );
+  });
+
   it("skips image-only lines and fence markers", () => {
     const content = "![rice photo](/img/rice.jpg)\n```rice\nthen rice later";
     expect(textFragment(content, ["rice"])).toBe(

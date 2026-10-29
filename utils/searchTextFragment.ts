@@ -11,7 +11,7 @@ function toPlainText(line: string): string {
     .replace(/^\s*#{1,6}\s+/, "")
     .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
     .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-    .replace(/[*_`]/g, "")
+    .replace(/(`+)(.*?)\1|[*_]/g, (_match, ticks, code) => (ticks ? code : ""))
     .replace(/\s+/g, " ")
     .trim();
 }
