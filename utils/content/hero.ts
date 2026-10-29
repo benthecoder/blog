@@ -15,3 +15,12 @@ export function splitLeadingImage(markdown: string): {
   }
   return { hero: null, body: markdown };
 }
+
+// The hero's alt text and source, for a social card. Drops any link title.
+export function heroImage(
+  markdown: string
+): { src: string; alt: string } | null {
+  const { hero } = splitLeadingImage(markdown);
+  const match = hero?.trim().match(/^!\[([^\]]*)\]\(\s*<?([^\s>)]+)>?/);
+  return match ? { alt: match[1], src: match[2] } : null;
+}
