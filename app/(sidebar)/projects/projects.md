@@ -20,10 +20,10 @@ inspirations
 
 - [jaclyn](https://www.straightupjac.xyz/projects)
 - [Varun Shenoy](https://varunshenoy.com/projects.html)
-- [Alicia Guo](https://www.aliciaguo.com/artifacts/)
+- [Alicia Guo](https://web.archive.org/web/20250624123505/https://www.aliciaguo.com/artifacts/)
 - [Kartik Agaram](https://akkartik.name/code)
 - [Ray Del Vecchio](https://raydelv.tech/technology)
 - [Alex Reichert](https://www.alexreichert.com/projects)
-- [Keane Moraes](https://www.itskeane.info/projects)
+- [Keane Moraes](https://web.archive.org/web/20241214125311/https://www.itskeane.info/projects)
 - [straightupjac](https://www.straightupjac.xyz/thoughts/ideas)
 - [Minn Kim](https://x.com/minney_cat/status/1045046502417031168)
