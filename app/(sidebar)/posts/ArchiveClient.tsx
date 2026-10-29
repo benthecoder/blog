@@ -124,7 +124,7 @@ export default function ArchiveClient({
   return (
     <div>
       <h1 className="sr-only">archive</h1>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 mb-6">
         <div className="flex gap-4 text-sm">
           {VIEWS.map((v) => (
             <button
@@ -140,11 +140,22 @@ export default function ArchiveClient({
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-accent/40 tabular-nums">
-            {allPosts.length} posts ·{" "}
-            {new Intl.NumberFormat().format(totalWords)} words
-          </span>
+        <div className="flex items-center gap-4 text-sm">
+          {view === "list" &&
+            (["date", "views", "length"] as Sort[]).map((s) => (
+              <button
+                key={s}
+                onClick={() => handleSort(s)}
+                aria-pressed={sort === s}
+                className={`transition-[color] duration-150 ${
+                  sort === s
+                    ? "text-accent"
+                    : "text-accent/35 hover:text-accent/70"
+                }`}
+              >
+                {s === "views" && viewsLoading ? "…" : s}
+              </button>
+            ))}
           <Link
             href="/search"
             className="text-accent/35 hover:text-accent/70 transition-[color] duration-150"
@@ -181,21 +192,10 @@ export default function ArchiveClient({
 
           <div className="flex items-center justify-between mb-2">
             <p className={labelCls}>all</p>
-            <div className="flex items-center border border-rule dark:border-white/8 divide-x divide-rule dark:divide-white/8">
-              {(["date", "views", "length"] as Sort[]).map((s) => (
-                <button
-                  key={s}
-                  onClick={() => handleSort(s)}
-                  className={`px-2.5 py-1 text-[10px] transition-[background-color,color] duration-150 ${
-                    sort === s
-                      ? "bg-accent/8 text-accent"
-                      : "text-accent/35 hover:text-accent/60"
-                  }`}
-                >
-                  {s === "views" && viewsLoading ? "…" : s}
-                </button>
-              ))}
-            </div>
+            <span className="text-xs text-accent/40 tabular-nums">
+              {allPosts.length} posts ·{" "}
+              {new Intl.NumberFormat().format(totalWords)} words
+            </span>
           </div>
 
           <div className="space-y-1">
