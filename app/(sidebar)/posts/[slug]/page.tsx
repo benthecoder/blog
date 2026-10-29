@@ -3,6 +3,7 @@ import { getPostContent, getPostMetadata } from "@/utils/content/posts";
 import { getRelatedPosts } from "@/utils/content/related";
 import { getSameDayPosts } from "@/utils/content/onThisDay";
 import { getPostPreviewData } from "@/utils/content/preview";
+import { postDateISO } from "@/utils/dateUtils";
 import { SITE_URL } from "@/config/site";
 import { PERSON_ID } from "@/config/person";
 import RenderPost from "@/components/posts/RenderPost";
@@ -14,6 +15,9 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 export const dynamic = "force-static";
+
+const postOgImage = (title: string) =>
+  `${SITE_URL}/og?title=${encodeURIComponent(title)}`;
 
 type Params = Promise<{ slug: string }>;
 
@@ -30,8 +34,9 @@ export async function generateMetadata({
     return;
   }
 
-  const { title, date: publishedTime } = post;
-  const ogImage = `${SITE_URL}/og?title=${encodeURIComponent(title)}`;
+  const { title } = post;
+  const publishedTime = postDateISO(post.date);
+  const ogImage = postOgImage(title);
   const description = getPostPreviewData(slug)?.excerpt.slice(0, 160);
 
   return {
@@ -74,12 +79,13 @@ const PostPage = async ({ params }: { params: Params }) => {
 
   const postContent = getPostContent(slug);
   const { hero, body } = splitLeadingImage(postContent.content);
+  const isoDate = postDateISO(post.date);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
-    datePublished: post.date,
-    dateModified: post.date,
+    ...(isoDate && { datePublished: isoDate, dateModified: isoDate }),
+    image: postOgImage(post.title),
     url: `https://bneo.xyz/posts/${slug}`,
     author: {
       "@type": "Person",
