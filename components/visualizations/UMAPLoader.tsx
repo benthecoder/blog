@@ -19,16 +19,27 @@ export default function UMAPLoader({ className = "" }: { className?: string }) {
     }));
     setDots(initialDots);
 
-    const interval = setInterval(() => {
-      setDots((prev) =>
-        prev.map((dot) => ({
-          ...dot,
-          opacity: Math.random() * 0.7 + 0.15,
-        }))
-      );
-    }, 200);
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let interval: ReturnType<typeof setInterval> | undefined;
+    const updateMotion = () => {
+      clearInterval(interval);
+      if (motion.matches) return;
+      interval = setInterval(() => {
+        setDots((prev) =>
+          prev.map((dot) => ({
+            ...dot,
+            opacity: Math.random() * 0.7 + 0.15,
+          }))
+        );
+      }, 200);
+    };
+    updateMotion();
+    motion.addEventListener("change", updateMotion);
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      motion.removeEventListener("change", updateMotion);
+    };
   }, []);
 
   return (
