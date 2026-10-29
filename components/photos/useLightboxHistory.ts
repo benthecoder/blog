@@ -12,13 +12,14 @@ export function useLightboxHistory(photos: StreamPhoto[]) {
 
   useEffect(() => {
     const onPop = () => {
-      if (window.history.state?.lightbox) return;
-      pushed.current = false;
-      setSelected(null);
+      const id = window.history.state?.lightbox;
+      const index = photos.findIndex((photo) => photo.id === id);
+      pushed.current = index !== -1;
+      setSelected(index === -1 ? null : index);
     };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
-  }, []);
+  }, [photos]);
 
   const onIndex = (next: number | null) => {
     if (next === null) {
@@ -31,7 +32,7 @@ export function useLightboxHistory(photos: StreamPhoto[]) {
     }
     const photo = photos[next];
     if (photo) {
-      const state = { lightbox: true };
+      const state = { lightbox: photo.id };
       if (selected === null && !pushed.current) {
         window.history.pushState(state, "", permalink(photo));
         pushed.current = true;
