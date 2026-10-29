@@ -56,6 +56,7 @@ export function groupPhotoObjects(
     string,
     {
       name: string;
+      place?: string;
       sets: Map<string, { name: string; photos: StreamPhoto[] }>;
       photos: StreamPhoto[];
     }
@@ -63,7 +64,9 @@ export function groupPhotoObjects(
   for (const { key, photo } of objects) {
     const parts = key.split("/");
     const name = parts.length > 1 ? parts[0] : "moments";
-    const slug = slugifyPhotoFolder(name);
+    // A "City, Country" folder places its trip without a manifest entry.
+    const placeParts = name.split(",").map((part) => part.trim());
+    const slug = slugifyPhotoFolder(placeParts[0]);
     if (!slug) throw new Error(`Folder needs a readable name: ${name}`);
     let group = groups.get(slug);
     if (group && group.name !== name)
@@ -71,7 +74,15 @@ export function groupPhotoObjects(
         `Folders '${group.name}' and '${name}' produce the same URL; rename one.`
       );
     if (!group) {
-      group = { name, sets: new Map(), photos: [] };
+      group = {
+        name,
+        place:
+          placeParts.length > 1
+            ? placeParts.map(titleFromFolder).join(", ")
+            : undefined,
+        sets: new Map(),
+        photos: [],
+      };
       groups.set(slug, group);
     }
     group.photos.push(photo);
@@ -94,9 +105,9 @@ export function groupPhotoObjects(
     const existing = previous.find((collection) => collection.slug === slug);
     return {
       slug,
-      title: existing?.title ?? titleFromFolder(group.name),
+      title: existing?.title ?? titleFromFolder(group.name.split(",")[0]),
       description: existing?.description,
-      place: existing?.place,
+      place: existing?.place ?? group.place,
       cover: group.photos.some((photo) => photo.id === existing?.cover)
         ? existing!.cover
         : group.photos[0].id,

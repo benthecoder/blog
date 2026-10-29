@@ -34,6 +34,16 @@ describe("photo collection imports", () => {
       "san-francisco--everyday",
     ]);
   });
+  it("places a City, Country folder without a manifest entry", () => {
+    const [collection] = groupPhotoObjects([
+      { key: "lisbon, portugal/one.jpg", photo: photo("one") },
+    ]);
+    expect(collection).toMatchObject({
+      slug: "lisbon",
+      title: "Lisbon",
+      place: "Lisbon, Portugal",
+    });
+  });
   it("keeps edited collection titles, descriptions, and cover choices", () => {
     const previous = [
       {
