@@ -48,11 +48,21 @@ async function CodeBlock({
 
 const components: Components = {
   ...createBaseComponents(getImageMeta),
-  a({ href, children }) {
+  a({ href, children, node: _node, ...props }) {
     const wikiTarget = href ? decodeWikiLinkHref(href) : null;
     if (wikiTarget !== null) {
-      return <WikiLink target={wikiTarget}>{children}</WikiLink>;
+      return (
+        <WikiLink target={wikiTarget} tabIndex={props.tabIndex}>
+          {children}
+        </WikiLink>
+      );
     }
+    if (props.tabIndex === -1)
+      return (
+        <a href={href} {...props}>
+          {children}
+        </a>
+      );
     const slug = href ? postSlugFromHref(href) : null;
     const preview = slug ? getPostPreviewData(slug) : null;
     if (preview) {
@@ -62,7 +72,11 @@ const components: Components = {
         </PostLinkPreview>
       );
     }
-    return <a href={href}>{children}</a>;
+    return (
+      <a href={href} {...props}>
+        {children}
+      </a>
+    );
   },
   pre({ node, children }) {
     const codeNode = node?.children[0] as
