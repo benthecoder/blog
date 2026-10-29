@@ -43,6 +43,7 @@ export function PhotoStepper({
         return;
       }
       if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+      if (document.querySelector("dialog[open], [aria-modal='true']")) return;
       const target = event.target as HTMLElement | null;
       if (target?.closest("input, textarea, select, [contenteditable]")) return;
       go(event.key === "ArrowRight" ? 1 : -1);
