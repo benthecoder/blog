@@ -20,6 +20,19 @@ export interface UMAPPosition {
   y: number;
 }
 
+export interface UMAPPosition3D extends UMAPPosition {
+  z: number;
+}
+
+export interface VisualizationUMAPOptions {
+  nNeighbors?: number;
+  minDist?: number;
+  spread?: number;
+  // cluster ids (-1 = unlabeled) that pull same-cluster points together
+  labels?: number[];
+  targetWeight?: number;
+}
+
 /**
  * Reduce embeddings to nComponents dimensions for clustering.
  * Uses minDist=0.0 and high nNeighbors to emphasize global cluster structure
@@ -53,15 +66,31 @@ export function computeClusteringProjection(
  */
 export function computeVisualizationUMAP(
   embeddings: number[][],
-  options?: {
-    nNeighbors?: number;
-    minDist?: number;
-    spread?: number;
-    // cluster ids (-1 = unlabeled) that pull same-cluster points together
-    labels?: number[];
-    targetWeight?: number;
-  }
+  options?: VisualizationUMAPOptions
 ): UMAPPosition[] {
+  return projectVisualization(embeddings, 2, options).map((point) => ({
+    x: point[0],
+    y: point[1],
+  }));
+}
+
+/** Same layout as computeVisualizationUMAP, in three dimensions. */
+export function computeVisualizationUMAP3D(
+  embeddings: number[][],
+  options?: VisualizationUMAPOptions
+): UMAPPosition3D[] {
+  return projectVisualization(embeddings, 3, options).map((point) => ({
+    x: point[0],
+    y: point[1],
+    z: point[2],
+  }));
+}
+
+function projectVisualization(
+  embeddings: number[][],
+  nComponents: number,
+  options?: VisualizationUMAPOptions
+): number[][] {
   if (embeddings.length === 0) return [];
 
   const nNeighbors = options?.nNeighbors ?? Math.min(30, embeddings.length - 1);
@@ -69,7 +98,7 @@ export function computeVisualizationUMAP(
   const spread = options?.spread ?? 12.0;
 
   const umap = new UMAP({
-    nComponents: 2,
+    nComponents,
     nNeighbors,
     minDist,
     spread,
@@ -82,12 +111,7 @@ export function computeVisualizationUMAP(
     });
   }
 
-  const projection = umap.fit(embeddings);
-
-  return projection.map((point: number[]) => ({
-    x: point[0],
-    y: point[1],
-  }));
+  return umap.fit(embeddings);
 }
 
 /**
@@ -139,5 +163,34 @@ export function normalizePositions(
   return positions.map((pos) => ({
     x: padding + ((pos.x - minX) / rangeX) * (width - 2 * padding),
     y: padding + ((pos.y - minY) / rangeY) * (height - 2 * padding),
+  }));
+}
+
+/**
+ * Clamp each axis to its percentile range, then scale the whole cloud
+ * uniformly (aspect preserved) around its center into [-1, 1]³.
+ */
+export function normalizeCloud3D(
+  positions: UMAPPosition3D[],
+  percentile: number = 0.01
+): UMAPPosition3D[] {
+  if (positions.length === 0) return [];
+  const axes = ["x", "y", "z"] as const;
+  const clamped = positions.map((p) => ({ ...p }));
+  const mid: Record<string, number> = {};
+  let half = 0;
+  for (const axis of axes) {
+    const sorted = positions.map((p) => p[axis]).sort((a, b) => a - b);
+    const lo = sorted[Math.floor(percentile * (sorted.length - 1))];
+    const hi = sorted[Math.ceil((1 - percentile) * (sorted.length - 1))];
+    for (const p of clamped) p[axis] = Math.min(hi, Math.max(lo, p[axis]));
+    mid[axis] = (lo + hi) / 2;
+    half = Math.max(half, (hi - lo) / 2);
+  }
+  const scale = half > 0 ? 1 / half : 1;
+  return clamped.map((p) => ({
+    x: (p.x - mid.x) * scale,
+    y: (p.y - mid.y) * scale,
+    z: (p.z - mid.z) * scale,
   }));
 }

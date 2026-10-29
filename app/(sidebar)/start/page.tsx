@@ -134,6 +134,9 @@ const StartPage = () => {
       <div className="h-[60vh] mt-8 overflow-hidden border border-rule dark:border-white/8">
         <KnowledgeMap className="w-full h-full" />
       </div>
+      <p className="prose mt-3">
+        <Link href="/explore">view in 3D</Link>
+      </p>
     </div>
   );
 };
