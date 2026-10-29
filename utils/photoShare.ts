@@ -51,6 +51,7 @@ export function photoShareMetadata({
     },
     twitter: {
       card: "summary_large_image",
+      creator: "@benedictneo",
       title,
       description,
       ...(image && { images: [image.url] }),
