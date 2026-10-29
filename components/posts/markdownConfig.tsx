@@ -70,7 +70,8 @@ export function createBaseComponents(
         const src = first.properties?.src as string;
         const alt = (first.properties?.alt as string) ?? "";
         const meta = getImageMeta?.(src) ?? null;
-        const priority = first.properties?.["data-priority"] === "true";
+        // rehype-raw re-parses the tree, which camel-cases data-* attributes.
+        const priority = first.properties?.dataPriority === "true";
         return (
           <PostImage src={src} alt={alt} meta={meta} priority={priority} />
         );

@@ -29,7 +29,7 @@ some curius people
 - [Arielle Lok](https://ariellelok.com/) – her [syllabus](https://ariellelok.com/sidepages/2023syllabus/fall2023syllabus.html) is cool
 - [Eric Zhang](https://www.ekzhang.com/) – god-tier programmer and his systems reading group
 - [James Quiambao](https://www.jquiambao.com/) – inspired me to write everyday
-- [Alicia Guo](https://www.aliciaguo.com/) – her [nuggets](https://www.aliciaguo.com/nuggets/) and [artifacts](https://www.aliciaguo.com/artifacts/)
+- [Alicia Guo](https://www.aliciaguo.com/) – her [nuggets](https://www.aliciaguo.com/nuggets/) and [artifacts](https://web.archive.org/web/20231208034629/https://www.aliciaguo.com/artifacts/)
 - [Marley Xiong](https://marleyx.com/) – fire, photons, and neuro
 - [Katherine Huang](https://www.katmh.com/) – [things learned in college](https://www.katmh.com/dialectic)
 - [Jennifer Tsai](https://jennifertsai.substack.com/) – [everything's beautiful](https://jennifertsai.substack.com/p/everythings-beautiful)

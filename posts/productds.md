@@ -53,7 +53,7 @@ It inspired me to pursue product DS, because I believe it's a good skill set to 
 
 ### some resources for Meta DS interviews
 
-- [Meta Product Data Scientist](https://www.glassdoor.com/Salary/Meta-Product-Data-Scientist-Salaries-E40772_D_KO5%2C27.htm?experienceLevel=LESS_THAN_ONE)
+- [Meta Product Data Scientist](https://web.archive.org/web/20250722120617/https://www.glassdoor.com/Salary/Meta-Product-Data-Scientist-Salaries-E40772_D_KO5%2C27.htm?experienceLevel=LESS_THAN_ONE)
 - [Meta Data Science Interview Guide [30 LEAKED Questions from 2024]](https://datalemur.com/blog/meta-data-scientist-interview-guide)
 - [Meta Data Science, Analytics Screening: Interview Cheat Sheet | by Priscilla Mannuel](https://medium.com/@pmannuel/meta-data-science-analytics-screening-interview-cheat-sheet-735abb17fc8e)
 - [The Product Data Science Interview Guide](https://www.interviewquery.com/p/product-data-science-interview)

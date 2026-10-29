@@ -5,11 +5,13 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   type CSSProperties,
   type ReactNode,
 } from "react";
 import {
   Map as MapLibreMap,
+  Marker,
   LngLatBounds,
   setWorkerUrl,
   getVersion,
@@ -18,7 +20,7 @@ import {
   type ExpressionSpecification,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Maximize, Minus, Plus } from "lucide-react";
+import { LocateFixed, Maximize, Minus, Plus } from "lucide-react";
 import { categories, placesGeoJSON, type Visit } from "@/utils/places";
 import CategoryDot from "./CategoryDot";
 
@@ -153,6 +155,21 @@ export default function PlacesMap({
   });
   const [ready, setReady] = useState<MapInstance | null>(null);
   const [error, setError] = useState(false);
+  const canLocate = useSyncExternalStore(
+    () => () => {},
+    () => "geolocation" in navigator,
+    () => false
+  );
+  const [locating, setLocating] = useState<"idle" | "pending" | "failed">(
+    "idle"
+  );
+  const me = useRef<Marker | null>(null);
+  useEffect(() => {
+    return () => {
+      me.current?.remove();
+      me.current = null;
+    };
+  }, []);
   const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null);
   const [lng, lat] = popup?.coordinates ?? [];
   useEffect(() => {
@@ -465,6 +482,36 @@ export default function PlacesMap({
     places.forEach((place) => bounds.extend(place.coordinates));
     map.current.fitBounds(bounds, { padding: fitPadding(), maxZoom: 16 });
   };
+  const locate = () => {
+    const target = map.current;
+    if (!target || locating !== "idle") return;
+    setLocating("pending");
+    navigator.geolocation.getCurrentPosition(
+      ({ coords }) => {
+        if (map.current !== target) return;
+        const center: [number, number] = [coords.longitude, coords.latitude];
+        if (!me.current) {
+          const dot = document.createElement("div");
+          dot.className = "map-me";
+          me.current = new Marker({ element: dot }).setLngLat(center);
+          me.current.addTo(target);
+        } else {
+          me.current.setLngLat(center);
+        }
+        const camera = { center, zoom: Math.max(target.getZoom(), 15) };
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          target.jumpTo(camera);
+        } else {
+          target.flyTo(camera);
+        }
+        setLocating("idle");
+      },
+      // Only a denial is final; a timeout or lost signal can be retried.
+      (error) =>
+        setLocating(error.code === error.PERMISSION_DENIED ? "failed" : "idle"),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    );
+  };
   return (
     <>
       <div ref={categorySwatches} hidden aria-hidden="true">
@@ -509,6 +556,25 @@ export default function PlacesMap({
         >
           <Maximize size={13} />
         </button>
+        {canLocate && (
+          <button
+            aria-label={
+              locating === "failed"
+                ? "Location unavailable"
+                : "Show my location"
+            }
+            title={
+              locating === "failed"
+                ? "Location unavailable"
+                : "Show my location"
+            }
+            aria-busy={locating === "pending"}
+            disabled={locating !== "idle"}
+            onClick={locate}
+          >
+            <LocateFixed size={14} />
+          </button>
+        )}
       </div>
       {popup && anchor && (
         <div

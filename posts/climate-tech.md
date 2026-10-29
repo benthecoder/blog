@@ -9,12 +9,12 @@ These are companies that [MIT Tech Review](https://www.technologyreview.com/2023
 1. [Fervo Energy](https://fervoenergy.com/): Geothermal Energy
    - Delivering 24/7 carbon-free energy through the development of next-generation geothermal [projects](https://fervoenergy.com/technology/).
 2. [Ørsted](https://us.orsted.com/): Renewable Energy
-   - A Danish multinational energy company that develops, constructs, and operates [offshore](https://us.orsted.com/renewable-energy-solutions/offshore-wind) and [onshore](https://us.orsted.com/renewable-energy-solutions/onshore-wind) wind farms, [solar farms](https://us.orsted.com/renewable-energy-solutions/solar-and-battery-storage), energy storage facilities, renewable [hydrogen](https://us.orsted.com/renewable-energy-solutions/power-to-x), and green fuels facilities
+   - A Danish multinational energy company that develops, constructs, and operates [offshore](https://us.orsted.com/renewable-energy-solutions/offshore-wind) and [onshore](https://us.orsted.com/renewable-energy-solutions/onshore-wind) wind farms, [solar farms](https://web.archive.org/web/20231004092850/https://us.orsted.com/renewable-energy-solutions/solar-and-battery-storage), energy storage facilities, renewable [hydrogen](https://us.orsted.com/renewable-energy-solutions/power-to-x), and green fuels facilities
 3. [H2 Green Steel](https://www.h2greensteel.com/): Steel
    - Produce [green steel](https://www.h2greensteel.com/green-steel) in a fully integrated, digitalized, and circular plant in Boden, northern Sweden. They focus on reducing CO₂ emissions by up to 95% compared to traditional steelmaking by replacing coal with [green hydrogen](https://www.h2greensteel.com/green-hydrogen) powered by fossil-free electricity
 4. [Commonwealth Fusion Systems](https://cfs.energy/): Fusion Energy
    - CFS is [working](https://cfs.energy/company/story) to design, build, and scale fusion power plants that will deliver cost-competitive, clean fusion energy to combat climate change. They focus on combining [proven physics](https://cfs.energy/technology/sparc) with revolutionary [magnet](https://cfs.energy/technology/hts-magnets) technology.
-5. [NuScale](https://www.nuscalepower.com/en): Nuclear Energy
+5. [NuScale](https://web.archive.org/web/20231001191940/https://www.nuscalepower.com/en): Nuclear Energy
    - Designs and markets [small modular reactors (SMRs)](<https://www.world-nuclear.org/information-library/nuclear-fuel-cycle/nuclear-power-reactors/small-nuclear-power-reactors.aspx) that can [replace](https://www.nuscalepower.com/en/products/voygr-smr-plants) retiring coal plants and provide reliable baseload powers for wind and solar.
 6. [BYD](https://www.byd.com/us): Electric Vehicles
    - Build Your Dreams is an industry leader in electronics, automotives, renewable energy, and rail transit. They're on track to be the [world's biggest seller](https://finance.yahoo.com/news/warren-buffett-backed-byd-just-110357033.html) of EV cars.
@@ -35,4 +35,4 @@ These are companies that [MIT Tech Review](https://www.technologyreview.com/2023
 14. [Sublime Systems](https://sublime-systems.com/): Cement
     - Develops innovative technologies to reduce CO₂ emissions in the cement industry. They use an electrochemical process to create [low-carbon cement](https://sublime-systems.com/technology/), avoiding the emissions from combustion for heating and decomposition.
 15. [Blue Frontier](https://bluefrontierac.com/): Air Conditioning
-    - Developing energy-efficient and environmentally friendly [air conditioning](https://bluefrontierac.com/wp-content/uploads/2021/04/BlueFrontier-CA-TED-Summary-Report.pdf) systems. They aim to reduce the energy consumption and greenhouse gas emissions associated with traditional air conditioning technologies
+    - Developing energy-efficient and environmentally friendly [air conditioning](https://web.archive.org/web/20241206062225/http://bluefrontierac.com/wp-content/uploads/2021/04/BlueFrontier-CA-TED-Summary-Report.pdf) systems. They aim to reduce the energy consumption and greenhouse gas emissions associated with traditional air conditioning technologies

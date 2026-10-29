@@ -69,6 +69,7 @@ const StartPage = () => {
 
   return (
     <div>
+      <h1 className="sr-only">start here</h1>
       <article className="prose">
         <p>welcome to my corner on the internet</p>
 

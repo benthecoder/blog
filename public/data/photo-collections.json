@@ -137,5 +137,12 @@
         ]
       }
     ]
+  },
+  {
+    "slug": "miami",
+    "title": "Miami",
+    "place": "Miami, United States",
+    "cover": "0f7a0606ebdb352f9428",
+    "photos": []
   }
 ]

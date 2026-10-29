@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostMetadata } from "@/utils/content/posts";
 import PostPreview from "@/components/posts/PostPreview";
@@ -35,8 +35,16 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
     post.tags.includes(tag)
   );
   // Any slug renders here, so an unknown tag must 404 rather than show an
-  // empty page with a 200.
-  if (filteredPosts.length === 0) notFound();
+  // empty page with a 200. A different-case spelling of a real tag
+  // (/tags/sf for SF) redirects to it instead.
+  if (filteredPosts.length === 0) {
+    const lower = tag.toLowerCase();
+    const match = getPostMetadata()
+      .flatMap((post) => post.tags)
+      .find((t) => t.toLowerCase() === lower);
+    if (match) permanentRedirect(`/tags/${encodeURIComponent(match)}`);
+    notFound();
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">

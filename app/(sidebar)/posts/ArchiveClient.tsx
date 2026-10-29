@@ -123,6 +123,7 @@ export default function ArchiveClient({
 
   return (
     <div>
+      <h1 className="sr-only">archive</h1>
       <div className="flex items-center justify-between mb-6">
         <div className="flex gap-4 text-sm">
           {VIEWS.map((v) => (

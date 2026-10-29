@@ -38,6 +38,7 @@ export default function CuriusPage() {
 
   return (
     <div>
+      <h1 className="sr-only">curius</h1>
       {isLoading ? (
         <p className="text-accent/50">discombobulating...</p>
       ) : error ? (

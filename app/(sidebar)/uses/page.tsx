@@ -99,6 +99,7 @@ const ProductCell = ({ item }: { item: Product }) => {
 export default function ProductsPage() {
   return (
     <div className="w-full flex flex-col items-center">
+      <h1 className="sr-only">uses</h1>
       <p className="text-[10px] tracking-[0.3em] uppercase opacity-30 mb-12">
         日用品
       </p>

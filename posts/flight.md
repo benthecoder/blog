@@ -19,7 +19,7 @@ Data
 Life
 
 - [Choose Good Quests - by Trae Stephens and Markie Wagner](https://www.piratewires.com/p/choose-good-quests)
-- [What Makes You Happy · Collab Fund](https://collabfund.com/blog/what-makes-you-happy/)
+- [What Makes You Happy · Collab Fund](https://web.archive.org/web/20230517071101/https://collabfund.com/blog/what-makes-you-happy/)
 - [Advice That Actually Worked For Me](https://nabeelqu.co/advice)
 - [To listen well, get curious | benkuhn.net](https://www.benkuhn.net/listen/)
 - [My 8 Best Techniques for Evaluating Character](https://tedgioia.substack.com/p/my-8-best-techniques-for-evaluating)

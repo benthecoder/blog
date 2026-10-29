@@ -73,7 +73,7 @@ from people
 
 lists
 
-- [Great Books of the Western World](https://en.wikipedia.org/wiki/Great_Books_of_the_Western_World?useskin=vector) ([image](https://static.wikia.nocookie.net/4chanlit/images/4/48/StartWithHowToReadABookv24MB.png/revision/latest?cb=20200731150209))
+- [Great Books of the Western World](https://en.wikipedia.org/wiki/Great_Books_of_the_Western_World?useskin=vector) ([image](https://web.archive.org/web/20240630122628/https://static.wikia.nocookie.net/4chanlit/images/4/48/StartWithHowToReadABookv24MB.png/revision/latest?cb=20200731150209))
 - [Design books for non-designers](https://www.stripe.press/recommended/design-books.html?curius=2790)
 - [Most Recommended Books | Good Books](https://www.goodbooks.io/top-100/all-books?curius=2790)
 - [1000 books to read before you die!](https://www.1000bookstoread.com/?curius=2790)

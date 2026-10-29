@@ -20,7 +20,7 @@ It was the start of 2021, just another usual day. I drank soju with friends on N
 
 I see GERD as a misfortune. One day I was fine, and the next I was struck by this incurable disease. It felt like a punishment that came out of nowhere, like being framed for a crime I did not commit. I always dream about going back to the past, when I was "normal". And this causes a lot of unhappiness.
 
-AI Marcus Aurelius said in this [podcast](https://dkbshow.substack.com/p/marcus-aurelius-podcast-interview) that to endure hardship and prevail is good fortune.
+AI Marcus Aurelius said in this [podcast](https://web.archive.org/web/20230427210501/https://dkbshow.substack.com/p/marcus-aurelius-podcast-interview) that to endure hardship and prevail is good fortune.
 
 It's hard for me to accept that I have GERD. Christians say that God has a plan for everyone and my prayer will be answered at the right time, some days I feel like my messages to God are lost in the ether.
 

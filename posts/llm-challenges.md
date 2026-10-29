@@ -23,7 +23,7 @@ date: 'Jul 3, 2023'
    - build: what if your in-house chatbot leaks sensitive info?
 4. **Context length**
    - use cases: document processing, summarization, narrative, tasks involving genes and proteins
-   - [16.9%](https://arxiv.org/abs/2109.06157) of [NQ-Open](https://huggingface.co/datasets/nq_open) tasks have context-dependent answers (SituatedQA)
+   - [16.9%](https://arxiv.org/abs/2109.06157) of [NQ-Open](https://web.archive.org/web/20231020013601/https://huggingface.co/datasets/nq_open) tasks have context-dependent answers (SituatedQA)
 5. **Data drift**
    - even when provided new data, existing models trained on past data fails to generalize to answer questions asked in the present ([SituatedQA](https://arxiv.org/abs/2109.06157))
 6. **Forward & Backward compatibility**

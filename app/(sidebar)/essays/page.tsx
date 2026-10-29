@@ -12,13 +12,18 @@ const base = pageMetadata({
   path: "/essays",
 });
 
-export const metadata: Metadata = {
-  ...base,
-  alternates: {
-    ...base.alternates,
-    types: { "application/rss+xml": "/essays/rss.xml" },
-  },
-};
+export function generateMetadata(): Metadata {
+  if (getEssayMetadata().length === 0) {
+    return { ...base, robots: { index: false, follow: true } };
+  }
+  return {
+    ...base,
+    alternates: {
+      ...base.alternates,
+      types: { "application/rss+xml": "/essays/rss.xml" },
+    },
+  };
+}
 
 const EssaysPage = () => {
   const essays = getEssayMetadata();
