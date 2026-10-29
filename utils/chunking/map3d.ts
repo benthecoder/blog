@@ -1,7 +1,7 @@
 // Pure math for the 3D knowledge map: orbit rotation, perspective projection,
 // hit-testing and cluster centroids. No DOM, so it can be unit-tested.
 
-export const CAMERA_DISTANCE = 3;
+export const CAMERA_DISTANCE = 2.2;
 export const MIN_ZOOM = 0.6;
 export const MAX_ZOOM = 4;
 export const MAX_PITCH = Math.PI / 2 - 0.05;

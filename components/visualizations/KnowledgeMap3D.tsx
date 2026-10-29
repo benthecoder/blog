@@ -22,11 +22,11 @@ import {
   projectAll,
 } from "@/utils/chunking/map3d";
 
-const AUTO_SPEED = 0.00012; // radians per ms
+const AUTO_SPEED = 0.00025; // radians per ms: one turn in ~25s
 const DRAG_SPEED = 0.005; // radians per px
 const CLICK_SLOP = 5; // px of travel that still counts as a tap
 const HIT_RADIUS = 12; // px
-// Cloud radius is ~1 and perspective magnifies the near side by d/(d-1)=1.5;
+// Cloud radius is ~1 and perspective magnifies the near side by d/(d-1)=1.83;
 // 0.92 leaves ~8% of the short side free on each edge at zoom 1.
 const FIT = 0.92 / (CAMERA_DISTANCE / (CAMERA_DISTANCE - 1));
 const LABEL_PAD = 4; // px between labels
@@ -108,7 +108,7 @@ export default function KnowledgeMap3D({
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
-    const view = { yaw: 0.6, pitch: 0.35, zoom: 1 };
+    const view = { yaw: 0.6, pitch: 0.35, zoom: 1.4 };
     let width = 0;
     let height = 0;
     let theme = readTheme();
@@ -150,8 +150,9 @@ export default function KnowledgeMap3D({
         const o = i * STRIDE;
         const t = depthFactor(projected[o + 2]);
         const isHover = i === hoveredRef.current;
-        const r = (1.2 + t * 2.2) * size * (isHover ? 2.2 : 1);
-        ctx.globalAlpha = isHover ? 1 : 0.25 + t * 0.7;
+        // Far points shrink to specks and fade into the page; near ones swell.
+        const r = (0.6 + t * t * 4) * size * (isHover ? 2.2 : 1);
+        ctx.globalAlpha = isHover ? 1 : 0.1 + t * 0.9;
         ctx.fillStyle = colorOf(points[i].cluster);
         ctx.beginPath();
         ctx.arc(cx + projected[o], cy + projected[o + 1], r, 0, Math.PI * 2);
