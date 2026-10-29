@@ -37,7 +37,7 @@ export function buildPhotoFeed(photos: StreamPhoto[]): string {
 
   const items = recent
     .map(({ photo, at }) => {
-      const url = `${PHOTOS_URL}/photos/photo/${encodeURIComponent(photo.id)}`;
+      const url = `${PHOTOS_URL}/photo/${encodeURIComponent(photo.id)}`;
       const image = photoShareImage(photo);
       const alt = escapeHtml(photoAlt(photo));
       const details = [

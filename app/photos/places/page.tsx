@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return photoShareMetadata({
     title: "places — photos",
     description: `Photos from ${count(countries.length, "country", "countries")}.`,
-    path: "/photos/places",
+    path: "/places",
     photo: countries[0]?.cover,
   });
 }
@@ -30,9 +30,7 @@ export default async function PlacesPage() {
       {countries.map((country) => (
         <section key={country.slug} className="ph-section">
           <h2 className="ph-country">
-            <Link href={`/photos/places/${country.slug}`}>
-              {country.country}
-            </Link>
+            <Link href={`/places/${country.slug}`}>{country.country}</Link>
           </h2>
           <p className="ph-mono ph-stats">
             {count(country.count, "frame")} ·{" "}

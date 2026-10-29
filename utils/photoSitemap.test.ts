@@ -18,9 +18,9 @@ describe("photoSitemapUrls", () => {
       ["trip"]
     );
     expect(urls).toContain("https://photos.bneo.xyz");
-    expect(urls).toContain("https://photos.bneo.xyz/photos/places");
-    expect(urls).toContain("https://photos.bneo.xyz/photos/photo/a%20b");
-    expect(urls).toContain("https://photos.bneo.xyz/photos/sets/trip");
+    expect(urls).toContain("https://photos.bneo.xyz/places");
+    expect(urls).toContain("https://photos.bneo.xyz/photo/a%20b");
+    expect(urls).toContain("https://photos.bneo.xyz/sets/trip");
     expect(urls.some((u) => u.endsWith("/stream"))).toBe(false);
   });
 });

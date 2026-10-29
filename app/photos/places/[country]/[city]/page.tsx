@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description:
       found &&
       `${found.city.count} ${found.city.count === 1 ? "frame" : "frames"} from ${found.city.city}.`,
-    path: `/photos/places/${country}/${city}`,
+    path: `/places/${country}/${city}`,
     photo: found?.city.photos[0],
   });
 }
@@ -42,10 +42,7 @@ export default async function CityPage({ params }: Props) {
       photos={city.photos}
       header={
         <header className="ph-set-intro">
-          <Link
-            href={`/photos/places/${country.slug}`}
-            className="ph-mono ph-back"
-          >
+          <Link href={`/places/${country.slug}`} className="ph-mono ph-back">
             {`← ${country.country}`}
           </Link>
           <h1>{city.city}</h1>

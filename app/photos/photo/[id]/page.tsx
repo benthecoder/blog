@@ -13,7 +13,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 export const revalidate = 60;
 
-const photoHref = (id: string) => `/photos/photo/${encodeURIComponent(id)}`;
+const photoHref = (id: string) => `/photo/${encodeURIComponent(id)}`;
 
 type Props = { params: Promise<{ id: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return photoShareMetadata({
     title: `${photo ? (photoTitle(photo) ?? photoAlt(photo).replace(/^Photo in /, "")) : "Photo"} — Benedict Neo`,
     description: photo?.description ?? (photo ? photoAlt(photo) : undefined),
-    path: `/photos/photo/${encodeURIComponent(id)}`,
+    path: `/photo/${encodeURIComponent(id)}`,
     photo,
     type: "article",
   });
