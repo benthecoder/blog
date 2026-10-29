@@ -4,8 +4,16 @@ import {
   PHASE_PRODUCTION_BUILD,
 } from "next/constants";
 import { createRequire } from "node:module";
+import fs from "node:fs";
 import path from "node:path";
+import { blogSections, hostRedirects } from "./config/hostRedirects";
 import { prepareMapWorkerAssets } from "./utils/mapWorkerAssets";
+
+const blogSectionNames = blogSections(
+  fs.readdirSync(path.join(process.cwd(), "app", "(sidebar)"), {
+    withFileTypes: true,
+  })
+);
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -39,6 +47,8 @@ const nextConfig: NextConfig = {
     { source: "/photos/trips", destination: "/photos/places", permanent: true },
     // The UMAP plot of post embeddings moved into the knowledge map on /start.
     { source: "/viz", destination: "/start", permanent: true },
+    // One app serves three hosts; each only answers for its own pages.
+    ...hostRedirects(blogSectionNames),
   ],
   rewrites: async () => ({
     beforeFiles: [
@@ -48,9 +58,34 @@ const nextConfig: NextConfig = {
         destination: "/photos",
       },
       {
+        source: "/rss.xml",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos/rss.xml",
+      },
+      {
         source: "/",
         has: [{ type: "host", value: "maps.bneo.xyz" }],
         destination: "/map",
+      },
+      {
+        source: "/robots.txt",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos/robots.txt",
+      },
+      {
+        source: "/sitemap.xml",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos/sitemap.xml",
+      },
+      {
+        source: "/robots.txt",
+        has: [{ type: "host", value: "maps.bneo.xyz" }],
+        destination: "/map/robots.txt",
+      },
+      {
+        source: "/sitemap.xml",
+        has: [{ type: "host", value: "maps.bneo.xyz" }],
+        destination: "/map/sitemap.xml",
       },
     ],
     afterFiles: [
@@ -87,7 +122,8 @@ const nextConfig: NextConfig = {
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob: https:",
             "font-src 'self' data:",
-            "connect-src 'self' https://tiles.openfreemap.org https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+            // /hn reads Hacker News' public API straight from the browser.
+            "connect-src 'self' https://tiles.openfreemap.org https://va.vercel-scripts.com https://vitals.vercel-insights.com https://hacker-news.firebaseio.com",
             "worker-src 'self' blob:",
             "frame-src 'self' https:",
             "frame-ancestors 'self'",

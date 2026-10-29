@@ -14,9 +14,9 @@ Research
 
 Coding
 
-- [Phind - AI Search Engine and Pair Programmer](https://www.phind.com/)
+- [Phind - AI Search Engine and Pair Programmer](https://web.archive.org/web/20231030120921/https://www.phind.com/)
 - [CodiumAI - Meaningful Code Tests for Busy Devs](https://www.codium.ai/)
-- [Sweep - turn bugs and feature requests into code changes.](https://sweep.dev/)
+- [Sweep - turn bugs and feature requests into code changes.](https://web.archive.org/web/20231102142617/https://sweep.dev/)
 
 Search
 
@@ -25,7 +25,7 @@ Search
 
 Art
 
-- [Visual Electric](https://visualelectric.com/)
+- [Visual Electric](https://web.archive.org/web/20231102064225/https://visualelectric.com/)
 
 Video
 

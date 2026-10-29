@@ -6,6 +6,7 @@ import { shortCamera } from "@/utils/photoCamera";
 import { ContactSheet } from "./ContactSheet";
 import { formatDay, formatMonth } from "./dates";
 import { PhotoLightbox } from "./PhotoLightbox";
+import { useLightboxHistory } from "./useLightboxHistory";
 
 const PAGE = 36;
 
@@ -31,7 +32,6 @@ export function PhotoStream({
     if (fromUrl) setCamera(fromUrl);
   }, [initialCamera]);
   const [limit, setLimit] = useState(PAGE);
-  const [selected, setSelected] = useState<number | null>(null);
   const end = useRef<HTMLDivElement>(null);
   const counts = new Map<string, number>();
   for (const photo of photos) {
@@ -52,6 +52,8 @@ export function PhotoStream({
     if (last?.label === name) last.photos.push(photo);
     else groups.push({ label: name, start: index, photos: [photo] });
   });
+
+  const [selected, onIndex] = useLightboxHistory(filtered);
 
   const choose = (name: string) => {
     setCamera(name);
@@ -112,12 +114,12 @@ export function PhotoStream({
           <ContactSheet
             photos={group.photos}
             offset={group.start}
-            onOpen={setSelected}
+            onOpen={onIndex}
           />
         </section>
       ))}
       {more && <div ref={end} className="ph-end" aria-hidden />}
-      <PhotoLightbox photos={filtered} index={selected} onIndex={setSelected} />
+      <PhotoLightbox photos={filtered} index={selected} onIndex={onIndex} />
     </main>
   );
 }

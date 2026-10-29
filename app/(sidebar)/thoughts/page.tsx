@@ -4,6 +4,7 @@ import ThoughtsClient from "./ThoughtsClient";
 import type { Thought } from "@/types/thoughts";
 import { pageMetadata } from "@/utils/pageMetadata";
 
+
 // ISR requires the Node runtime; Edge ignored the hourly revalidation.
 export const dynamic = "force-static";
 export const revalidate = 3600;

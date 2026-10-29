@@ -6,7 +6,7 @@ date: 'Dec 29, 2023'
 
 I'm writing this on the roads of Oregon, where I can see the beautiful hills powdered with snow, en route to Twin Falls.
 
-Hacking is fun. I like building things that can solve problems, especially if they're important, social issues that can be tackled with technology. This is why I'm addicted to hackathons, they give me the motivation for building. But now that I'm out of school, and I have more time, I'm going to start committing to one idea, and see how far it can go, and build properly with my friend [WC](https://weichun.xyz/).
+Hacking is fun. I like building things that can solve problems, especially if they're important, social issues that can be tackled with technology. This is why I'm addicted to hackathons, they give me the motivation for building. But now that I'm out of school, and I have more time, I'm going to start committing to one idea, and see how far it can go, and build properly with my friend [WC](https://web.archive.org/web/20240214174434/https://weichun.xyz/).
 
 Some notes on "[The Hacker Attitude](http://www.catb.org/~esr/faqs/hacker-howto.html#attitude)" by Eric
 

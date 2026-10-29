@@ -5,6 +5,7 @@ const sql = neon(process.env.POSTGRES_URL!);
 
 import { parsePublicUrl } from "@/utils/tweets/link";
 
+
 const URL_RE = /https?:\/\/[^\s]+/;
 
 export async function POST(request: Request) {

@@ -48,7 +48,7 @@ Below are my takeaways.
 
 - **Transformers and Language Models**
   - [Attention Is All You Need](https://arxiv.org/abs/1706.03762)
-  - [Language Models are Unsupervised Multitask Learners (GPT-2)](https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
+  - [Language Models are Unsupervised Multitask Learners (GPT-2)](https://web.archive.org/web/20231128065642/https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
   - [Training Language Models to Follow Instructions (InstructGPT)](https://arxiv.org/abs/2203.02155)
   - [LLaMA-2](https://ai.meta.com/research/publications/llama-2-open-foundation-and-fine-tuned-chat-models)
 - **Running Language Models Locally**

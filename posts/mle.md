@@ -32,7 +32,7 @@ Links
 
 ### MoM vs MLE
 
-MLEs can be shown to be [asymptotically efficient](https://www.statistics.com/glossary/asymptotic-efficiency/), but MLEs require more assumptions. The best tool depends on the situation.
+MLEs can be shown to be [asymptotically efficient](https://web.archive.org/web/20231205011019/https://www.statistics.com/glossary/asymptotic-efficiency/), but MLEs require more assumptions. The best tool depends on the situation.
 
 More on this:
 

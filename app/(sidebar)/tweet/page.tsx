@@ -3,6 +3,7 @@ import Form from "./form";
 import RecentList from "./recent-list";
 import type { Thought } from "@/types/thoughts";
 
+
 export const dynamic = "force-dynamic";
 
 const sql = neon(process.env.POSTGRES_URL!);

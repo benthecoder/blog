@@ -24,7 +24,7 @@ Here are some takeaways.
   - so, think of matrices as functions, and matmul as a function application, that takes another matrix
 - why arrays as functions?
   - easy to change slightly, small changes to entries -> small changes to function
-  - LA can be made lightning fast ([TPU](https://en.wikipedia.org/wiki/Tensor_Processing_Unit), [BLAS](https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprogramsr))
+  - LA can be made lightning fast ([TPU](https://en.wikipedia.org/wiki/Tensor_Processing_Unit), [BLAS](https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms))
   - arrays represent [linear functions](https://www.wikiwand.com/en/Linear_function)
   - linear functions play nice with weighted sums
   - this makes linear function easy to reason about

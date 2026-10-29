@@ -54,7 +54,7 @@ I've also collected a few resources for people to get started.
 - [The Paris Review - Why Write?](https://www.theparisreview.org/blog/2022/07/06/why-write/?curius=1417,856,2919)
 - [Why write at all? – Jesse](https://jessems.com/posts/2019-05-10-why-write-at-all)
 - [Why Write – Gian](https://giansegato.com/essays/why-writing)
-- [Why Bother Writing an Essay – Jordan Peterson](https://jackyeh.me/why-you-should-write-today/)
+- [Why Bother Writing an Essay – Jordan Peterson](https://web.archive.org/web/20240810095003/https://jackyeh.me/why-you-should-write-today/)
 - [Ask HN: What has your personal website/blog done for you?](https://news.ycombinator.com/item?id=35164819)
 
 ### how to write
