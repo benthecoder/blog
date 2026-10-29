@@ -1,35 +1,50 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PostMetadata } from "@/types/post";
 import { countTagFrequency } from "@/utils/content/tags";
-import PostPreview from "@/components/posts/PostPreview";
+import PostLinkPreview from "@/components/posts/PostLinkPreview";
 import Heatmap from "@/components/visualizations/Heatmap";
 import Link from "next/link";
 
-type View = "list" | "year" | "tags";
-type Sort = "date" | "views" | "length";
-const PAGE_SIZE = 50;
-const VIEWS: View[] = ["list", "year", "tags"];
+type View = "list" | "favorites" | "tags";
+const VIEWS: View[] = ["list", "favorites", "tags"];
+const FAVORITE = "✰";
 
-const labelCls = "eyebrow";
-
-function paginationRange(current: number, total: number): (number | "…")[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-  const delta = 1;
-  const left = current - delta;
-  const right = current + delta;
-  const pages: (number | "…")[] = [];
-  let prev = 0;
-  for (let p = 1; p <= total; p++) {
-    if (p === 1 || p === total || (p >= left && p <= right)) {
-      if (prev && p - prev > 1) pages.push("…");
-      pages.push(p);
-      prev = p;
-    }
+const byYear = (posts: PostMetadata[]) => {
+  const years = new Map<number, PostMetadata[]>();
+  for (const post of posts) {
+    const year = new Date(post.date).getFullYear();
+    years.set(year, [...(years.get(year) ?? []), post]);
   }
-  return pages;
+  return [...years].sort(([a], [b]) => b - a);
+};
+
+// Title, dotted leader, then the day; the year is the section heading.
+function PostRow({ post }: { post: PostMetadata }) {
+  return (
+    <PostLinkPreview
+      slug={post.slug}
+      className="group flex items-baseline gap-3 cursor-crosshair text-sm md:text-base"
+    >
+      <span className="text-accent group-hover:underline">
+        {post.title}
+        {post.tags.includes(FAVORITE) && (
+          <span className="text-muted ml-1.5" aria-label="favorite">
+            {FAVORITE}
+          </span>
+        )}
+      </span>
+      <span
+        aria-hidden
+        className="flex-1 min-w-4 border-b border-dotted border-rule dark:border-night-rule translate-y-[-0.3em]"
+      />
+      <span className="text-muted shrink-0 text-xs md:text-sm tabular-nums">
+        {post.date.replace(/,? \d{4}$/, "")}
+      </span>
+    </PostLinkPreview>
+  );
 }
 
 export default function ArchiveClient({
@@ -40,96 +55,42 @@ export default function ArchiveClient({
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const [page, setPage] = useState(1);
-  const [sort, setSort] = useState<Sort>("date");
   const [prefetchTag, setPrefetchTag] = useState<string | null>(null);
-  const [viewCounts, setViewCounts] = useState<Map<string, number> | null>(
-    null
-  );
-  const [viewsLoading, setViewsLoading] = useState(false);
 
-  const view = (searchParams.get("view") as View) || "list";
+  // ?view=year predates the merged list; it lands on that year's section.
+  const param = searchParams.get("view");
+  const view: View = VIEWS.includes(param as View) ? (param as View) : "list";
   const yearParam = searchParams.get("year");
-  const selectedYear = yearParam
-    ? parseInt(yearParam, 10)
-    : allPosts.length > 0
-      ? new Date(allPosts[0].date).getFullYear()
-      : new Date().getFullYear();
 
-  const fetchViewCounts = () => {
-    if (viewCounts !== null || viewsLoading) return;
-    setViewsLoading(true);
-    fetch("/api/views")
-      .then((r) => {
-        if (!r.ok) throw new Error("Failed to fetch view counts");
-        return r.json();
-      })
-      .then((d) => {
-        const map = new Map<string, number>(
-          (d.results ?? []).map((r: { slug: string; count: number }) => [
-            r.slug,
-            r.count,
-          ])
-        );
-        setViewCounts(map);
-      })
-      .catch(() => {
-        // Keep counts uncached so selecting views again can retry.
-      })
-      .finally(() => setViewsLoading(false));
-  };
+  useEffect(() => {
+    if (view === "list" && yearParam)
+      document.getElementById(`y${yearParam}`)?.scrollIntoView();
+  }, [view, yearParam]);
 
   const setView = (v: View) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (v === "list") {
-      params.delete("view");
-    } else {
-      params.set("view", v);
-    }
-    router.push(`${pathname}?${params.toString()}`);
+    const params = new URLSearchParams();
+    if (v !== "list") params.set("view", v);
+    const query = params.toString();
+    router.push(query ? `${pathname}?${query}` : pathname);
   };
 
-  const handleSort = (s: Sort) => {
-    setSort(s);
-    setPage(1);
-    if (s === "views") fetchViewCounts();
-  };
-
-  const sortedTags = countTagFrequency(allPosts, ["✰"]);
-
-  const starredPosts = allPosts.filter((p) => p.tags.includes("✰"));
-  const regularPosts = allPosts.filter((p) => !p.tags.includes("✰"));
-
-  const sortedRegular = (() => {
-    if (sort === "length") {
-      return [...regularPosts].sort((a, b) => b.wordcount - a.wordcount);
-    }
-    if (sort === "views" && viewCounts) {
-      return [...regularPosts].sort(
-        (a, b) => (viewCounts.get(b.slug) ?? 0) - (viewCounts.get(a.slug) ?? 0)
-      );
-    }
-    return [...regularPosts].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-  })();
-
-  const totalPages = Math.ceil(sortedRegular.length / PAGE_SIZE);
-  const pagedRegular = sortedRegular.slice(
-    (page - 1) * PAGE_SIZE,
-    page * PAGE_SIZE
-  );
+  const sortedTags = countTagFrequency(allPosts, [FAVORITE]);
+  const posts =
+    view === "favorites"
+      ? allPosts.filter((p) => p.tags.includes(FAVORITE))
+      : allPosts;
   const totalWords = allPosts.reduce((sum, p) => sum + p.wordcount, 0);
 
   return (
     <div>
       <h1 className="sr-only">archive</h1>
-      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 mb-6">
+      <div className="flex items-center justify-between mb-8">
         <div className="flex gap-4 text-sm">
           {VIEWS.map((v) => (
             <button
               key={v}
               onClick={() => setView(v)}
+              aria-pressed={view === v}
               className={`transition-[color] duration-150 ${
                 view === v
                   ? "text-accent"
@@ -140,22 +101,11 @@ export default function ArchiveClient({
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-4 text-sm">
-          {view === "list" &&
-            (["date", "views", "length"] as Sort[]).map((s) => (
-              <button
-                key={s}
-                onClick={() => handleSort(s)}
-                aria-pressed={sort === s}
-                className={`transition-[color] duration-150 ${
-                  sort === s
-                    ? "text-accent"
-                    : "text-accent/35 hover:text-accent/70"
-                }`}
-              >
-                {s === "views" && viewsLoading ? "…" : s}
-              </button>
-            ))}
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-accent/40 tabular-nums">
+            {allPosts.length} posts ·{" "}
+            {new Intl.NumberFormat().format(totalWords)} words
+          </span>
           <Link
             href="/search"
             className="text-accent/35 hover:text-accent/70 transition-[color] duration-150"
@@ -177,80 +127,32 @@ export default function ArchiveClient({
         </div>
       </div>
 
-      {view === "list" && (
-        <>
-          {starredPosts.length > 0 && (
-            <>
-              <p className={`${labelCls} mb-2`}>favorites ✰</p>
-              <div className="space-y-1 mb-6 pb-6 border-b border-rule dark:border-white/6">
-                {starredPosts.map((post) => (
-                  <PostPreview key={post.slug} {...post} />
-                ))}
+      {view !== "tags" &&
+        byYear(posts).map(([year, yearPosts]) => (
+          <section
+            key={year}
+            id={`y${year}`}
+            className="mb-12 scroll-mt-6 [content-visibility:auto] [contain-intrinsic-size:auto_2000px]"
+          >
+            <h2 className="text-sm text-accent mb-3 tabular-nums">{year}</h2>
+            {view === "list" && (
+              <div className="mb-5">
+                <Heatmap
+                  posts={allPosts}
+                  year={year}
+                  month={0}
+                  showNavigation={false}
+                  followUrl={false}
+                />
               </div>
-            </>
-          )}
-
-          <div className="flex items-center justify-between mb-2">
-            <p className={labelCls}>all</p>
-            <span className="text-xs text-accent/40 tabular-nums">
-              {allPosts.length} posts ·{" "}
-              {new Intl.NumberFormat().format(totalWords)} words
-            </span>
-          </div>
-
-          <div className="space-y-1">
-            {pagedRegular.map((post) => (
-              <PostPreview key={post.slug} {...post} />
-            ))}
-          </div>
-
-          {totalPages > 1 && (
-            <div className="flex justify-center gap-1 mt-6">
-              {paginationRange(page, totalPages).map((p, i) =>
-                p === "…" ? (
-                  <span
-                    key={`ellipsis-${i}`}
-                    className="w-7 h-7 flex items-center justify-center text-xs text-accent/30"
-                  >
-                    …
-                  </span>
-                ) : (
-                  <button
-                    key={p}
-                    onClick={() => setPage(p)}
-                    className={`w-7 h-7 text-xs tabular-nums border transition-[border-color,color] duration-150 ${
-                      p === page
-                        ? "border-accent/60 text-accent"
-                        : "border-rule dark:border-white/8 text-accent/40 hover:border-accent/40"
-                    }`}
-                  >
-                    {p}
-                  </button>
-                )
-              )}
-            </div>
-          )}
-        </>
-      )}
-
-      {view === "year" && (
-        <>
-          <Heatmap
-            posts={allPosts}
-            year={selectedYear}
-            month={0}
-            showNavigation={true}
-            navigationPath="/posts?view=year"
-          />
-          <div className="space-y-1 mt-6">
-            {allPosts
-              .filter((p) => new Date(p.date).getFullYear() === selectedYear)
-              .map((post) => (
-                <PostPreview key={post.slug} {...post} />
+            )}
+            <div className="space-y-1">
+              {yearPosts.map((post) => (
+                <PostRow key={post.slug} post={post} />
               ))}
-          </div>
-        </>
-      )}
+            </div>
+          </section>
+        ))}
 
       {view === "tags" && (
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-0">
