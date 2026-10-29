@@ -10,11 +10,11 @@ import {
   SEARCH_RRF_K,
   SEARCH_MAX_PER_POST,
   SEMANTIC_SIMILARITY_THRESHOLD,
+  SEARCH_RATE_LIMIT,
+  SEARCH_RATE_WINDOW_SECONDS,
 } from "@/config/constants";
-
-// Run beside Neon (us-east-2): the project default region is sin1, and every
-// query from Singapore crosses the Pacific twice. Must stay a literal.
-export const preferredRegion = "iad1";
+import { checkRateLimit } from "@/utils/rateLimit";
+import { clientIp, hashViewer } from "@/utils/clientIp";
 
 const sql = neon(process.env.POSTGRES_URL!);
 
@@ -117,6 +117,18 @@ export async function POST(request: Request) {
             : "Expected a search request",
       },
       { status: 400 }
+    );
+  }
+  const limited = await checkRateLimit({
+    scope: "search",
+    viewer: hashViewer(clientIp(request)),
+    limit: SEARCH_RATE_LIMIT,
+    windowSeconds: SEARCH_RATE_WINDOW_SECONDS,
+  });
+  if (!limited.ok) {
+    return NextResponse.json(
+      { error: "Too many searches — try again in a minute." },
+      { status: 429, headers: { "Retry-After": String(limited.retryAfter) } }
     );
   }
   const { query, searchType, tags, chunkType } = parsed.data;

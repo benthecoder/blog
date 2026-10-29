@@ -8,6 +8,7 @@ import type { TocEntry } from "@/utils/content/toc";
 import { extractTags } from "@/utils/content/tags";
 import OnThisDay from "./OnThisDay";
 import PhotosFromThisDay from "./PhotosFromThisDay";
+import PostArrowKeys from "./PostArrowKeys";
 import PostViewTracker from "./PostViewTracker";
 import RelatedPosts from "./RelatedPosts";
 import TableOfContents from "./TableOfContents";
@@ -71,6 +72,12 @@ const RenderPost = ({
 
   return (
     <div className="relative max-w-[65ch] mx-auto">
+      {(prev || next) && (
+        <PostArrowKeys
+          prevHref={prev ? `/posts/${prev.slug}` : undefined}
+          nextHref={next ? `/posts/${next.slug}` : undefined}
+        />
+      )}
       <header className="mb-10">
         {slug ? <Link href={`/posts/${slug}`}>{heading}</Link> : heading}
         {meta && (

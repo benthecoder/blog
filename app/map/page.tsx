@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    creator: "@benedictneo",
     title: "Places | Benedict Neo",
     description: "Places I love and notes from my travels.",
     images: [ogImageUrl("Places")],

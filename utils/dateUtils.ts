@@ -72,3 +72,15 @@ export function toISODateString(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
+
+// Frontmatter dates carry no timezone, so read them with local getters.
+// Returns undefined when unparseable.
+export function postDateISO(date: string): string | undefined {
+  const iso = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) {
+    const local = new Date(+iso[1], +iso[2] - 1, +iso[3]);
+    return toISODateString(local) === date ? date : undefined;
+  }
+  const d = new Date(date);
+  return Number.isNaN(d.getTime()) ? undefined : toISODateString(d);
+}

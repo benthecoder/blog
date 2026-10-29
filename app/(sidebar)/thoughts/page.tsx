@@ -4,10 +4,6 @@ import ThoughtsClient from "./ThoughtsClient";
 import type { Thought } from "@/types/thoughts";
 import { pageMetadata } from "@/utils/pageMetadata";
 
-// Run beside Neon (us-east-2): the project default region is sin1, and every
-// query from Singapore crosses the Pacific twice. Must stay a literal.
-export const preferredRegion = "iad1";
-
 // ISR requires the Node runtime; Edge ignored the hourly revalidation.
 export const dynamic = "force-static";
 export const revalidate = 3600;

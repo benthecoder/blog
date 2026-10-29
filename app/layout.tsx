@@ -47,6 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     title: "Benedict Neo",
+    creator: "@benedictneo",
     card: "summary_large_image",
     images: [ogImageUrl("Benedict Neo")],
   },

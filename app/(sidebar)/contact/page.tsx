@@ -46,7 +46,7 @@ const SECTIONS: LinkSectionProps[] = [
   {
     icon: Scroll,
     links: [
-      { href: "https://twitter.com/benxneo", text: "twitter" },
+      { href: "https://x.com/benedictneo", text: "twitter" },
       { href: "https://www.linkedin.com/in/benedictneo/", text: "linkedin" },
     ],
   },

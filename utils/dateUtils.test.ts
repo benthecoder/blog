@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractPostDate, toISODateString } from "./dateUtils";
+import { extractPostDate, postDateISO, toISODateString } from "./dateUtils";
 
 describe("extractPostDate", () => {
   it("parses ISO frontmatter dates", () => {
@@ -39,5 +39,17 @@ describe("toISODateString", () => {
     expect(toISODateString(extractPostDate("posts/010524.md", null))).toBe(
       "2024-01-05"
     );
+  });
+});
+
+describe("postDateISO", () => {
+  it("normalizes frontmatter date forms to YYYY-MM-DD", () => {
+    expect(postDateISO("Dec 29, 2025")).toBe("2025-12-29");
+    expect(postDateISO("Jun 1, 2024")).toBe("2024-06-01");
+    expect(postDateISO("2025-01-02")).toBe("2025-01-02");
+  });
+
+  it("returns undefined for garbage", () => {
+    expect(postDateISO("not a date")).toBeUndefined();
   });
 });
