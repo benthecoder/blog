@@ -99,6 +99,7 @@ const SECTIONS: LinkSectionProps[] = [
 
 const ContactPage = () => (
   <div>
+    <h1 className="sr-only">findme</h1>
     <article className="prose">
       {/* `not-prose` opts out of the 65vh cap that keeps inline post images
           from dominating a page — here the photo is the point, so it runs

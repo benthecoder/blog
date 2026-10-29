@@ -106,12 +106,12 @@ I started reading [How to Avoid a Climate Disaster](https://www.goodreads.com/bo
 
 ### companies on my list
 
-- [watershed](https://watershed.com/careers) [(culture)](https://coda.io/@avi-itskovich/watersheds-personal-priorities-ritual) ([Environmental Data Scientist](https://watershed.com/careers/5147514004-environmental-data-scientist-financial-services))
+- [watershed](https://watershed.com/careers) [(culture)](https://coda.io/@avi-itskovich/watersheds-personal-priorities-ritual) ([Environmental Data Scientist](https://web.archive.org/web/20240404052247/https://watershed.com/careers/5147514004-environmental-data-scientist-financial-services))
 - [CarbonPlan](https://carbonplan.org/?curius=2790) ([Modeling extreme heat in a changing climate](https://carbonplan.org/research/extreme-heat-explainer))
 - [Our World in Data](https://ourworldindata.org/jobs)
 - [Equilibrium Energy](https://www.equilibriumenergy.com/careers)
 - [StreetLight Data](https://www.streetlightdata.com/jobs-join-us/)
 - [Dioxycle](https://dioxycle.com/career/)
-- [ClimateAi](https://climate.ai/careers/)
+- [ClimateAi](https://web.archive.org/web/20240411123528/https://climate.ai/careers/)
 - [Paces](https://www.paces.com/)
 - [Pioneer](https://pioneerclimate.notion.site/Meet-the-team-9ad636991a20436cbf0986ee13bed4e2#c0c920e6edda494b957df55007db859e)

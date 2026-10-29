@@ -8,7 +8,7 @@ date: 'May 3, 2023'
 
 Happiness can be measured, strengthened, and taught.
 
-Here are some habits by [happiness experts](https://time.com/6241099/daily-habits-happiness-experts/) that boosts [brain chemicals](https://www.insider.com/guides/health/mental-health/happy-hormones) responsible for happiness.
+Here are some habits by [happiness experts](https://web.archive.org/web/20230510223755/https://time.com/6241099/daily-habits-happiness-experts/) that boosts [brain chemicals](https://www.insider.com/guides/health/mental-health/happy-hormones) responsible for happiness.
 
 - \>7 hours of sleep
 - meditate

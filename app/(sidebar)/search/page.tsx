@@ -99,6 +99,7 @@ function SearchContent() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="sr-only">search</h1>
       <form onSubmit={handleSearch} className="mb-6">
         <div className="relative">
           <input

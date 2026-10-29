@@ -6,7 +6,7 @@ date: 'Dec 10, 2023'
 
 ![Ejiri in Suruga Province](/images/ejiri.jpeg)
 
-In the tenth view of the [Thirty-six Views of Mount Fuji](https://gallerythane.com/en-us/blogs/news/36-views-of-mount-fuji), we see a group of travellers are wending their way around rice paddies near [Ejiri in Suruga province](https://www.metmuseum.org/art/collection/search/55735). They're [thrown into chaos](https://arc.net/l/quote/ttwnmxzn) by a gust of autumn wind, struggling to hold onto their hats, their possessions fly into the paddy fields, and someone's papers (represents human logic and presumption) are carried off into oblivion.
+In the tenth view of the [Thirty-six Views of Mount Fuji](https://web.archive.org/web/20230927004205/https://gallerythane.com/en-us/blogs/news/36-views-of-mount-fuji), we see a group of travellers are wending their way around rice paddies near [Ejiri in Suruga province](https://www.metmuseum.org/art/collection/search/55735). They're [thrown into chaos](https://arc.net/l/quote/ttwnmxzn) by a gust of autumn wind, struggling to hold onto their hats, their possessions fly into the paddy fields, and someone's papers (represents human logic and presumption) are carried off into oblivion.
 
 What is art?
 

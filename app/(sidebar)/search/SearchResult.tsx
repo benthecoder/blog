@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { extractKeywords, getSnippet, highlightText } from "./searchHelpers";
+import { textFragment } from "@/utils/searchTextFragment";
 import type { SearchResultItem } from "@/types/search";
 
 interface SearchResultProps {
@@ -15,11 +16,16 @@ export default function SearchResult({ result, query }: SearchResultProps) {
       ? result.content.substring(0, 200) + "..."
       : result.content;
 
-  return (
-    <Link
-      href={`/posts/${result.post_slug}`}
-      className="group block mb-4 p-4 border border-rule/40 dark:border-night-raised/40 bg-paper-raised/40 dark:bg-night-raised/20 hover:border-ink/60 dark:hover:border-chalk-soft/60 hover:bg-paper-tint/60 dark:hover:bg-night-raised/40 transition-[border-color,background-color,box-shadow] duration-200 hover:shadow-xs"
-    >
+  // Text fragments only apply on full document loads, so use a plain anchor.
+  const fragment = query
+    ? textFragment(result.content, keywords, result.chunk_type)
+    : null;
+  const href = `/posts/${result.post_slug}`;
+  const className =
+    "group block mb-4 p-4 border border-rule/40 dark:border-night-raised/40 bg-paper-raised/40 dark:bg-night-raised/20 hover:border-ink/60 dark:hover:border-chalk-soft/60 hover:bg-paper-tint/60 dark:hover:bg-night-raised/40 transition-[border-color,background-color,box-shadow] duration-200 hover:shadow-xs";
+
+  const body = (
+    <>
       <div className="space-y-2">
         <div className="flex items-center justify-between gap-3">
           <h3 className="font-medium text-primary group-hover:text-ink dark:group-hover:text-chalk-soft transition-colors">
@@ -70,6 +76,16 @@ export default function SearchResult({ result, query }: SearchResultProps) {
           )}
         </div>
       </div>
+    </>
+  );
+
+  return fragment ? (
+    <a href={`${href}${fragment}`} className={className}>
+      {body}
+    </a>
+  ) : (
+    <Link href={href} className={className}>
+      {body}
     </Link>
   );
 }

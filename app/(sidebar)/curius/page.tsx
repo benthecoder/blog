@@ -38,6 +38,7 @@ export default function CuriusPage() {
 
   return (
     <div>
+      <h1 className="sr-only">curius</h1>
       {isLoading ? (
         <p className="text-ink-muted dark:text-chalk-muted">
           discombobulating...

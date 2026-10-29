@@ -26,7 +26,7 @@ After the panel session ended there was project demos.
 I discovered these projects:
 
 - [Shop with ai](https://goshopwith.ai/chat): agent to chat with celebrities + scrape clothes listings + customize to your style with image upload
-- [Protege.ai](https://teachprotege.ai/): LLM for labelling insurance claims from emails
+- [Protege.ai](https://web.archive.org/web/20230517200617/https://teachprotege.ai/): LLM for labelling insurance claims from emails
 - [embedchain](https://github.com/embedchain/embedchain): LLM bots over any dataset
 - [realchar](https://github.com/Shaunwei/RealChar): open source AI character/companion with voice
 - A website that allows GPT model usage by charging users on the bitcoin lightning network

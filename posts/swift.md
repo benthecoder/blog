@@ -55,7 +55,7 @@ blogs/thoughts
 - [Swift Developer News – Hacking with Swift](https://www.hackingwithswift.com/articles)
 - [iOS Dev Tools](https://iosdevtools.substack.com/)
 - [Sarunw - A weekly blog about iOS development](https://sarunw.com/)
-- [TestFlight forever: Developers are building a better world outside the App Store - Protocol](https://www.protocol.com/testflight-app-store#toggle-gdpr)
+- [TestFlight forever: Developers are building a better world outside the App Store - Protocol](https://web.archive.org/web/20240126073050/https://www.protocol.com/testflight-app-store)
 - [iOS Feeds: Latest content from the iOS community](https://iosfeeds.com/)
 
 ios twitter
@@ -72,7 +72,7 @@ ios twitter
 
 apps I like
 
-- [untitled](https://www.untitledpc.net/) by [Rishi Mody](https://twitter.com/rishmody)
+- [untitled](https://web.archive.org/web/20230610073121/https://www.untitledpc.net/) by [Rishi Mody](https://twitter.com/rishmody)
 - Cosmos
 - [are.na app](https://arena-ios-app.vercel.app/) by [Yihui](https://twitter.com/_yihui)
 

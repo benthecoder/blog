@@ -38,6 +38,7 @@ export default function HackerNewsPage() {
 
   return (
     <div className="w-full">
+      <h1 className="sr-only">hn</h1>
       {isLoading ? (
         <p className="text-ink-muted dark:text-chalk-muted">
           flibbertigibbeting...

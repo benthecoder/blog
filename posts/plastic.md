@@ -11,7 +11,7 @@ Some statistics on plastic
 - [95% of the plastic](https://www.mckinsey.com/~/media/mckinsey/business%20functions/sustainability/our%20insights/rethinking%20future%20of%20plastics/the%20new%20plastics%20economy.pdf) used in packaging is disposed of after one use, a loss to the economy of up to $120 billion annually
 - One-third of this packaging is not collected -> significant economic cost by reducing productivity of vital natural systems such as the ocean -> $40 billion in damages
 - Coca-Cola produced 3 million tons of plastic packaging in 2017
-- Average person consumes [five grams](https://www.newcastle.edu.au/newsroom/featured/plastic-ingestion-by-people-could-be-equating-to-a-credit-card-a-week) of plastic every week—mostly from water
+- Average person consumes [five grams](https://web.archive.org/web/20231013003653/https://www.newcastle.edu.au/newsroom/featured/plastic-ingestion-by-people-could-be-equating-to-a-credit-card-a-week) of plastic every week—mostly from water
 - About [95% of the tap water](https://www.weforum.org/agenda/2019/06/you-eat-a-credit-card-s-worth-of-plastic-a-week-research-says/) in the United States is contaminated
 
 ### Solution

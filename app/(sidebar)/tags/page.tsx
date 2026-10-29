@@ -16,6 +16,7 @@ const TagPage = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
+      <h1 className="sr-only">tags</h1>
       <div className="mb-4">
         <p className="text-[10px] text-ink-muted dark:text-chalk-muted tracking-widest font-mono">
           {sortedTags.length} TAGS
