@@ -1,4 +1,18 @@
+const fs = require("fs");
+const path = require("path");
+const { isNoindexHtml } = require("./config/noindex");
+
 const siteUrl = process.env.NEXT_PUBLIC_ROOT_URL || "https://bneo.xyz";
+
+function isPrerenderedNoindex(loc) {
+  const route = loc === "/" ? "/index" : loc.replace(/\/$/, "");
+  const file = path.join(process.cwd(), ".next/server/app", `${route}.html`);
+  try {
+    return isNoindexHtml(fs.readFileSync(file, "utf8"));
+  } catch {
+    return false;
+  }
+}
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
@@ -8,11 +22,16 @@ module.exports = {
   // Google to ignore lastmod. Posts carry real dates in /posts-sitemap.xml.
   autoLastmod: false,
   // Google ignores both; drop the "daily"/0.7 defaults.
-  transform: async (config, loc) => ({
-    loc,
-    alternateRefs: config.alternateRefs ?? [],
-    trailingSlash: config.trailingSlash,
-  }),
+  transform: async (config, loc) => {
+    // Empty section pages ship <meta robots noindex>; keep them out of the
+    // sitemap. A missing prerender (dynamic route, lookup miss) keeps the entry.
+    if (isPrerenderedNoindex(loc)) return null;
+    return {
+      loc,
+      alternateRefs: config.alternateRefs ?? [],
+      trailingSlash: config.trailingSlash,
+    };
+  },
   exclude: [
     "/admin",
     "/admin/*",

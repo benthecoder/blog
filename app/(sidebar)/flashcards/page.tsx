@@ -10,7 +10,7 @@ import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
-export const metadata: Metadata = pageMetadata({
+const base = pageMetadata({
   title: "flashcards",
   description: "Anki flashcards I'm reviewing, with a flip-to-reveal UI",
   path: "/flashcards",
@@ -24,6 +24,12 @@ function loadFlashcards(): FlashcardsData | null {
   } catch {
     return null;
   }
+}
+
+export function generateMetadata(): Metadata {
+  return (loadFlashcards()?.cards ?? []).length === 0
+    ? { ...base, robots: { index: false, follow: true } }
+    : base;
 }
 
 const FlashcardsPage = () => {
