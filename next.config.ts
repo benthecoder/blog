@@ -112,7 +112,8 @@ const nextConfig: NextConfig = {
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob: https:",
             "font-src 'self' data:",
-            "connect-src 'self' https://tiles.openfreemap.org https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+            // /hn reads Hacker News' public API straight from the browser.
+            "connect-src 'self' https://tiles.openfreemap.org https://va.vercel-scripts.com https://vitals.vercel-insights.com https://hacker-news.firebaseio.com",
             "worker-src 'self' blob:",
             "frame-src 'self' https:",
             "frame-ancestors 'self'",
