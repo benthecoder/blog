@@ -51,6 +51,7 @@ export const personJsonLd = {
         "https://devpost.com/benthecoder",
         "https://www.kaggle.com/benthecoder",
         "https://huggingface.co/benthecoder",
+        "https://x.com/benedictneo",
         "https://www.youtube.com/@benxneo",
       ],
     },
