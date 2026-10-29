@@ -28,6 +28,7 @@ export default function SearchModal() {
     )
     .slice(0, 8);
   const [activeIndex, setActiveIndex] = useState(0);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const openRef = useRef(false);
@@ -50,7 +51,6 @@ export default function SearchModal() {
           openFresh();
         }
       }
-      if (e.key === "Escape") setOpen(false);
     };
     const onOpen = () => openFresh();
     document.addEventListener("keydown", onKey);
@@ -63,10 +63,25 @@ export default function SearchModal() {
 
   useEffect(() => {
     openRef.current = open;
-    if (open) {
-      const raf = requestAnimationFrame(() => inputRef.current?.focus());
-      return () => cancelAnimationFrame(raf);
-    }
+    if (!open) return;
+
+    const dialog = dialogRef.current;
+    dialog?.showModal();
+    inputRef.current?.focus();
+
+    const { overflow, paddingRight } = document.body.style;
+    const gutter = window.innerWidth - document.documentElement.clientWidth;
+    const padding = parseFloat(getComputedStyle(document.body).paddingRight);
+    document.body.style.overflow = "hidden";
+    if (gutter > 0) document.body.style.paddingRight = `${padding + gutter}px`;
+    if (dialog) dialog.style.paddingRight = `${gutter}px`;
+
+    return () => {
+      dialog?.close();
+      if (dialog) dialog.style.paddingRight = "";
+      document.body.style.overflow = overflow;
+      document.body.style.paddingRight = paddingRight;
+    };
   }, [open]);
 
   useEffect(() => {
@@ -120,19 +135,20 @@ export default function SearchModal() {
     else router.push(href);
   };
 
-  if (!open) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh]"
+    <dialog
+      ref={dialogRef}
+      aria-label="Search posts"
+      className="fixed inset-0 z-100 m-0 h-full max-h-none w-full max-w-none hidden open:flex items-start justify-center border-0 bg-transparent p-0 pt-[15vh] text-inherit backdrop:bg-transparent"
+      onCancel={(event) => {
+        event.preventDefault();
+        setOpen(false);
+      }}
       onClick={() => setOpen(false)}
     >
       <div className="absolute inset-0 bg-surface/80 backdrop-blur-xs" />
 
       <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="Search posts"
         className="relative w-full max-w-lg mx-4 bg-paper dark:bg-night-raised border border-rule dark:border-white/8 shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
@@ -229,6 +245,6 @@ export default function SearchModal() {
           </div>
         )}
       </div>
-    </div>
+    </dialog>
   );
 }
