@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, Fragment, type CSSProperties } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PostMetadata } from "@/types/post";
 import {
@@ -139,17 +139,12 @@ function Legend() {
 
 const Heatmap = ({
   posts,
-  year: initialYear,
+  year,
   showNavigation = true,
   navigationPath = "/calendar",
 }: HeatmapProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [hoveredDay, setHoveredDay] = useState<DayData | null>(null);
-
-  // Read year from URL params, fallback to initialYear prop
-  const yearParam = searchParams.get("year");
-  const year = yearParam ? parseInt(yearParam, 10) : initialYear;
 
   const postYears = posts.map((post) => new Date(post.date).getFullYear());
   const minYear = Math.min(...postYears);
