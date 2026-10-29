@@ -22,7 +22,7 @@ But what did God mean by [green pastures and still waters](https://steppesoffait
 
 In Jerusalem, the hillsides are mainly dirt and sand. But there are rainy seasons and dry seasons, just like in our lives.
 
-In Israel, the west wind blows it's humidity against the hillside where it condenses the cool rocks at night, along with the [23 inches](http://www.jerusalem.climatemps.com/precipitation.php) of rain Jerusalem gets each year, it's enough to grow little sprigs of grass.
+In Israel, the west wind blows it's humidity against the hillside where it condenses the cool rocks at night, along with the [23 inches](https://web.archive.org/web/20230313063437/http://www.jerusalem.climatemps.com/precipitation.php) of rain Jerusalem gets each year, it's enough to grow little sprigs of grass.
 
 There are dirt paths in the hillside where shepherds let their sheep graze on the little springs
 

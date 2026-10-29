@@ -64,4 +64,4 @@ A list of YouTube videos that I want to archive away in a dusty box in the attic
 
 ### Writing
 
-- [LEADERSHIP LAB: The Craft of Writing Effectively](https://www.youtube.com/watch&v=vtIzMaLkCaM)
+- [LEADERSHIP LAB: The Craft of Writing Effectively](https://www.youtube.com/watch?v=vtIzMaLkCaM)

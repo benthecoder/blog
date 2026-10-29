@@ -8,7 +8,7 @@ date: 'Dec 21, 2023'
 
 I love [Monet's garden](https://en.wikipedia.org/wiki/The_Artist%27s_Garden_at_Giverny?useskin=vector) in [Giverney](https://artsandculture.google.com/usergallery/impressionism-monet-s-lily-garden-in-giverny/ggKyII_ttwaVIA). I hope to visit it one day and see it with my own eyes. It made me want to have my own garden in Europe, once I'm done fulfilling my dreams and aspirations in the US.
 
-I read this [piece](https://wonderground.press/gardens/audacious-gardening-daring-care/) from the Wonderground by [Georgina Reid](https://wonderground.press/contributor/georgina-reid/) and the way she thinks about gardening is radical.
+I read this [piece](https://wonderground.press/gardens/audacious-gardening-daring-care/) from the Wonderground by [Georgina Reid](https://web.archive.org/web/20231003173433/https://wonderground.press/contributor/georgina-reid/) and the way she thinks about gardening is radical.
 
 Gardening is not valued. It's seen as a weekend task involving fighting with a lawn mower and is something people to do when they retire.
 

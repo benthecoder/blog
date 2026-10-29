@@ -28,7 +28,7 @@ Below are a couple resources I discovered so far.
 
 - [Shadcn](https://ui.shadcn.com/)
 - [Aceternity UI](https://ui.aceternity.com/)
-- [HyperUI](https://www.hyperui.dev/components/application-ui)
+- [HyperUI](https://web.archive.org/web/20240407120523/https://www.hyperui.dev/components/application-ui)
 
 ### templates
 
