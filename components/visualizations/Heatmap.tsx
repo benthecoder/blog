@@ -20,8 +20,6 @@ interface HeatmapProps {
   month: number;
   showNavigation?: boolean;
   navigationPath?: string;
-  // Off when several heatmaps share a page, so ?year= can't retarget them all.
-  followUrl?: boolean;
 }
 
 const DAY_LABELS = ["s", "m", "t", "w", "t", "f", "s"];
@@ -144,7 +142,6 @@ const Heatmap = ({
   year: initialYear,
   showNavigation = true,
   navigationPath = "/calendar",
-  followUrl = true,
 }: HeatmapProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -152,7 +149,7 @@ const Heatmap = ({
 
   // Read year from URL params, fallback to initialYear prop
   const yearParam = searchParams.get("year");
-  const year = followUrl && yearParam ? parseInt(yearParam, 10) : initialYear;
+  const year = yearParam ? parseInt(yearParam, 10) : initialYear;
 
   const postYears = posts.map((post) => new Date(post.date).getFullYear());
   const minYear = Math.min(...postYears);

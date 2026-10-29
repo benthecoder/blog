@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, type ReactNode } from "react";
 import { PostMetadata } from "@/types/post";
 import { countTagFrequency } from "@/utils/content/tags";
 import PostLinkPreview from "@/components/posts/PostLinkPreview";
@@ -20,6 +20,22 @@ const byYear = (posts: PostMetadata[]) => {
   }
   return [...years].sort(([a], [b]) => b - a);
 };
+
+const YearLink = ({
+  href,
+  children,
+}: {
+  href: string;
+  children: ReactNode;
+}) => (
+  <Link
+    href={href}
+    scroll={false}
+    className="text-accent/35 hover:text-accent/70 transition-[color] duration-150"
+  >
+    {children}
+  </Link>
+);
 
 // Title, dotted leader, then the day; the year is the section heading.
 function PostRow({ post }: { post: PostMetadata }) {
@@ -57,15 +73,9 @@ export default function ArchiveClient({
   const pathname = usePathname();
   const [prefetchTag, setPrefetchTag] = useState<string | null>(null);
 
-  // ?view=year predates the merged list; it lands on that year's section.
+  // Old ?view=year links fall back to the list, which reads the same ?year.
   const param = searchParams.get("view");
   const view: View = VIEWS.includes(param as View) ? (param as View) : "list";
-  const yearParam = searchParams.get("year");
-
-  useEffect(() => {
-    if (view === "list" && yearParam)
-      document.getElementById(`y${yearParam}`)?.scrollIntoView();
-  }, [view, yearParam]);
 
   const setView = (v: View) => {
     const params = new URLSearchParams();
@@ -79,7 +89,20 @@ export default function ArchiveClient({
     view === "favorites"
       ? allPosts.filter((p) => p.tags.includes(FAVORITE))
       : allPosts;
-  const totalWords = allPosts.reduce((sum, p) => sum + p.wordcount, 0);
+  // The list shows one year at a time, newest first; ?year= picks another.
+  const years = byYear(allPosts);
+  const yearParam = Number(searchParams.get("year"));
+  const index = Math.max(
+    0,
+    years.findIndex(([y]) => y === yearParam)
+  );
+  const [year, yearPosts] = years[index] ?? [undefined, []];
+  const newer = years[index - 1]?.[0];
+  const older = years[index + 1]?.[0];
+  const words = (list: PostMetadata[]) =>
+    new Intl.NumberFormat().format(
+      list.reduce((sum, p) => sum + p.wordcount, 0)
+    );
 
   return (
     <div>
@@ -101,53 +124,68 @@ export default function ArchiveClient({
             </button>
           ))}
         </div>
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-accent/40 tabular-nums">
-            {allPosts.length} posts ·{" "}
-            {new Intl.NumberFormat().format(totalWords)} words
-          </span>
-          <Link
-            href="/search"
-            className="text-accent/35 hover:text-accent/70 transition-[color] duration-150"
-            aria-label="search"
+        <Link
+          href="/search"
+          className="text-accent/35 hover:text-accent/70 transition-[color] duration-150"
+          aria-label="search"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="w-3.5 h-3.5"
           >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="w-3.5 h-3.5"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-          </Link>
-        </div>
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </Link>
       </div>
 
-      {view !== "tags" &&
-        byYear(posts).map(([year, yearPosts]) => (
-          <section
-            key={year}
-            id={`y${year}`}
-            className="mb-12 scroll-mt-6 [content-visibility:auto] [contain-intrinsic-size:auto_2000px]"
-          >
-            <h2 className="text-sm text-accent mb-3 tabular-nums">{year}</h2>
-            {view === "list" && (
-              <div className="mb-5">
-                <Heatmap
-                  posts={allPosts}
-                  year={year}
-                  month={0}
-                  showNavigation={false}
-                  followUrl={false}
-                />
-              </div>
-            )}
+      {view === "list" && year && (
+        <section>
+          <div className="flex items-baseline justify-between mb-3 text-sm tabular-nums">
+            <div className="flex items-baseline gap-4">
+              {older && (
+                <YearLink href={`${pathname}?year=${older}`}>
+                  ← {older}
+                </YearLink>
+              )}
+              <h2 className="text-accent">{year}</h2>
+              {newer && (
+                <YearLink href={`${pathname}?year=${newer}`}>
+                  {newer} →
+                </YearLink>
+              )}
+            </div>
+            <span className="text-xs text-accent/40">
+              {yearPosts.length} posts · {words(yearPosts)} words
+            </span>
+          </div>
+          <div className="mb-5">
+            <Heatmap
+              posts={allPosts}
+              year={year}
+              month={0}
+              showNavigation={false}
+            />
+          </div>
+          <div className="space-y-1">
+            {yearPosts.map((post) => (
+              <PostRow key={post.slug} post={post} />
+            ))}
+          </div>
+        </section>
+      )}
+
+      {view === "favorites" &&
+        byYear(posts).map(([favYear, favPosts]) => (
+          <section key={favYear} className="mb-10">
+            <h2 className="text-sm text-accent mb-3 tabular-nums">{favYear}</h2>
             <div className="space-y-1">
-              {yearPosts.map((post) => (
+              {favPosts.map((post) => (
                 <PostRow key={post.slug} post={post} />
               ))}
             </div>
