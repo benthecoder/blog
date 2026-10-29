@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
+import { textFragment } from "@/utils/searchTextFragment";
+import { extractKeywords } from "@/app/(sidebar)/search/searchHelpers";
 import { useLatestSearch } from "@/components/hooks/useLatestSearch";
 
 type SearchType = "keyword" | "semantic";
@@ -100,13 +102,22 @@ export default function SearchModal() {
       setActiveIndex((i) => Math.max(i - 1, 0));
     } else if (e.key === "Enter" && results[activeIndex]) {
       e.preventDefault();
-      navigate(results[activeIndex].post_slug);
+      navigate(results[activeIndex]);
     }
   };
 
-  const navigate = (slug: string) => {
+  const navigate = (r: (typeof results)[number]) => {
     setOpen(false);
-    router.push(`/posts/${slug}`);
+    const href = `/posts/${r.post_slug}`;
+    const fragment = textFragment(
+      r.content,
+      extractKeywords(query),
+      r.chunk_type
+    );
+    // Text fragments only apply on full document loads, not router.push.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    if (fragment) window.location.assign(href + fragment);
+    else router.push(href);
   };
 
   if (!open) return null;
@@ -185,7 +196,7 @@ export default function SearchModal() {
             {results.map((r, i) => (
               <li key={r.post_slug}>
                 <button
-                  onClick={() => navigate(r.post_slug)}
+                  onClick={() => navigate(r)}
                   onMouseEnter={() => setActiveIndex(i)}
                   className={`w-full text-left px-4 py-2.5 transition-[background-color] duration-100 ${
                     i === activeIndex ? "bg-accent/5" : ""
