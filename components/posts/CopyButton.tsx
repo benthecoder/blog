@@ -1,21 +1,36 @@
 "use client";
 
 import { useState } from "react";
+import { play } from "cuelume";
 
 export default function CopyButton({ code }: { code: string }) {
-  const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState<"idle" | "copied" | "error">("idle");
+  const copied = status === "copied";
+  const label =
+    status === "error"
+      ? "Copy failed. Try again."
+      : copied
+        ? "Copied"
+        : "Copy code";
 
-  const copy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copy = async () => {
+    setStatus("idle");
+    try {
+      await navigator.clipboard.writeText(code);
+    } catch {
+      setStatus("error");
+      return;
+    }
+    setStatus("copied");
+    play("success");
+    setTimeout(() => setStatus("idle"), 2000);
   };
 
   return (
     <button
       onClick={copy}
-      data-cuelume-toggle="success"
-      aria-label={copied ? "Copied" : "Copy code"}
+      aria-label={label}
+      title={label}
       className="absolute top-2 right-2 p-1.5 rounded-sm text-ink-soft hover:text-ink dark:text-chalk-muted dark:hover:text-chalk hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-150"
     >
       <svg
