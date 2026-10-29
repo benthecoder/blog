@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${country?.country ?? "places"} — photos`,
     description:
       country && `${count(country.count, "frame")} in ${country.country}.`,
-    path: `/photos/places/${slug}`,
+    path: `/places/${slug}`,
     photo: country?.cover,
   });
 }
@@ -34,7 +34,7 @@ export default async function CountryPage({ params }: Props) {
   return (
     <main className="ph-page">
       <header className="ph-set-intro">
-        <Link href="/photos/places" className="ph-mono ph-back">
+        <Link href="/places" className="ph-mono ph-back">
           ← All places
         </Link>
         <h1>{country.country}</h1>

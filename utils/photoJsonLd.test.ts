@@ -14,7 +14,7 @@ describe("photoJsonLd", () => {
     const ld = photoJsonLd(base);
     expect(ld["@type"]).toBe("ImageObject");
     expect(ld.contentUrl).toBe(base.src);
-    expect(ld.url).toBe("https://photos.bneo.xyz/photos/photo/a%20b");
+    expect(ld.url).toBe("https://photos.bneo.xyz/photo/a%20b");
     expect(ld.creator.name).toBe("Benedict Neo");
     expect(ld.creditText).toBe("Benedict Neo");
     expect(ld.thumbnailUrl).toContain("/_next/image?url=");

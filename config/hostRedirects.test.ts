@@ -26,7 +26,7 @@ it("sends each host's foreign pages to their home host", () => {
     "https://photos.bneo.xyz"
   );
   expect(find("bneo.xyz", "/photos/:path*")?.destination).toBe(
-    "https://photos.bneo.xyz/photos/:path*"
+    "https://photos.bneo.xyz/:path*"
   );
   expect(find("bneo.xyz", "/map")?.destination).toBe("https://maps.bneo.xyz");
   expect(find("photos.bneo.xyz", "/posts/:path*")?.destination).toBe(
@@ -36,7 +36,7 @@ it("sends each host's foreign pages to their home host", () => {
     "https://bneo.xyz/posts"
   );
   expect(find("maps.bneo.xyz", "/photos/:path*")?.destination).toBe(
-    "https://photos.bneo.xyz/photos/:path*"
+    "https://photos.bneo.xyz/:path*"
   );
   expect(find("photos.bneo.xyz", "/map")?.destination).toBe(
     "https://maps.bneo.xyz"

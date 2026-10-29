@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import { PHOTOS_URL } from "@/config/site";
 
 const KnowledgeMap = dynamic(
   () => import("@/components/visualizations/KnowledgeMap"),
@@ -120,7 +121,7 @@ const StartPage = () => {
 
         <p>
           browse the <Link href="/posts">archives</Link> or wonder through the{" "}
-          <Link href="/photos">frames</Link> or wherever.{" "}
+          <a href={PHOTOS_URL}>frames</a> or wherever.{" "}
           <span className="text-xs opacity-40">
             {/* explicit string: turbopack's server/client compiles disagree
                 about the space between </code> and the entity-bearing text */}

@@ -29,9 +29,9 @@ describe("photoShareImage", () => {
 
 describe("photoShareMetadata", () => {
   it("omits images when there is no photo", () => {
-    const meta = photoShareMetadata({ title: "t", path: "/photos" });
+    const meta = photoShareMetadata({ title: "t", path: "" });
     expect(meta.openGraph).not.toHaveProperty("images");
     expect(meta.twitter).not.toHaveProperty("images");
-    expect(meta.alternates?.canonical).toBe("https://photos.bneo.xyz/photos");
+    expect(meta.alternates?.canonical).toBe("https://photos.bneo.xyz");
   });
 });

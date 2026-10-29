@@ -16,6 +16,9 @@ const blogSectionNames = blogSections(
   })
 );
 
+// photos.localhost:3000 stands in for the photos host in development.
+const PHOTOS_HOST = "photos\\.(?:bneo\\.xyz|localhost)";
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   reactCompiler: true,
@@ -46,6 +49,14 @@ const nextConfig: NextConfig = {
   redirects: async () => [
     { source: "/gallery", destination: "/photos", permanent: true },
     { source: "/photos/trips", destination: "/photos/places", permanent: true },
+    // Photos live at the root of their own host: photos.bneo.xyz/places, not
+    // /photos/places. Old /photos links on other hosts go through hostRedirects.
+    {
+      source: "/photos/:path*",
+      has: [{ type: "host", value: PHOTOS_HOST }],
+      destination: "/:path*",
+      permanent: true,
+    },
     // The UMAP plot of post embeddings moved into the knowledge map on /start.
     { source: "/viz", destination: "/start", permanent: true },
     // One app serves three hosts; each only answers for its own pages.
@@ -55,8 +66,13 @@ const nextConfig: NextConfig = {
     beforeFiles: [
       {
         source: "/",
-        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        has: [{ type: "host", value: PHOTOS_HOST }],
         destination: "/photos",
+      },
+      {
+        source: "/:section(places|sets|photo|stream)/:path*",
+        has: [{ type: "host", value: PHOTOS_HOST }],
+        destination: "/photos/:section/:path*",
       },
       {
         source: "/rss.xml",

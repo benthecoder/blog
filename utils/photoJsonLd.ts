@@ -22,7 +22,7 @@ export function photoJsonLd(photo: StreamPhoto) {
     contentUrl: /^https?:\/\//.test(photo.src)
       ? photo.src
       : `${PHOTOS_URL}${photo.src.startsWith("/") ? "" : "/"}${photo.src}`,
-    url: `${PHOTOS_URL}/photos/photo/${encodeURIComponent(photo.id)}`,
+    url: `${PHOTOS_URL}/photo/${encodeURIComponent(photo.id)}`,
     ...(name && { name }),
     description: photo.description || photoAlt(photo),
     width: photo.width,

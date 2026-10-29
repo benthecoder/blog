@@ -84,8 +84,23 @@
   background: color-mix(in srgb, var(--ph-bg) 90%, transparent);
   backdrop-filter: blur(12px);
 }
-.photo-site .photo-brand {
-  color: var(--ph-text);
+/* Geist Mono's ↗ is 4.6px tall on the baseline beside 7.8px capitals;
+   lift it to sit centred on them. */
+.photo-out {
+  display: inline-block;
+  transform: translateY(-1.6px);
+}
+.photo-summary {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Phones keep frames and countries; cities and cameras need the width. */
+@media (max-width: 480px) {
+  .photo-summary span:nth-child(n + 3) {
+    display: none;
+  }
 }
 .photo-bar nav {
   display: flex;
@@ -277,12 +292,6 @@
 .ph-unplaced {
   margin-top: 56px;
   color: var(--ph-faint);
-}
-.ph-summary {
-  padding-top: 32px;
-}
-.ph-summary + .ph-tabs {
-  padding-top: 16px;
 }
 .photo-bar nav a[aria-current="page"] {
   color: var(--ph-text);

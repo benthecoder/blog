@@ -11,10 +11,10 @@ const redirect = (source: string, destination: string, host: string) => ({
   permanent: true,
 });
 
-// Photo pages live on the photos host; the path keeps its /photos prefix there.
+// Photo pages live at the root of the photos host (photos.bneo.xyz/places).
 const photoRedirects = (host: string) => [
   redirect("/photos", `https://${PHOTOS_HOST}`, host),
-  redirect("/photos/:path*", `https://${PHOTOS_HOST}/photos/:path*`, host),
+  redirect("/photos/:path*", `https://${PHOTOS_HOST}/:path*`, host),
 ];
 
 // Directory names under app/(sidebar) that are real route segments.

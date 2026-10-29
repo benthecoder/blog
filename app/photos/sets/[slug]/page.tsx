@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description:
       collection?.description ??
       (collection && `${count} ${count === 1 ? "frame" : "frames"}.`),
-    path: `/photos/sets/${slug}`,
+    path: `/sets/${slug}`,
     photo:
       collection?.photos.find(
         (photo) =>
@@ -53,8 +53,8 @@ export default async function PhotosetPage({ params }: Props) {
           <Link
             href={
               collection.parentSlug
-                ? `/photos/sets/${collection.parentSlug}`
-                : "/photos/places"
+                ? `/sets/${collection.parentSlug}`
+                : "/places"
             }
             className="ph-mono ph-back"
           >
@@ -77,7 +77,7 @@ export default async function PhotosetPage({ params }: Props) {
           {collection.sets && collection.sets.length > 1 && (
             <nav className="ph-tabs ph-mono" aria-label="Sets in this trip">
               {collection.sets.map((set) => (
-                <Link key={set.slug} href={`/photos/sets/${set.slug}`}>
+                <Link key={set.slug} href={`/sets/${set.slug}`}>
                   {set.title}
                 </Link>
               ))}

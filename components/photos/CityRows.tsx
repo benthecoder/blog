@@ -13,7 +13,7 @@ export function CityRows({ country }: { country: Country }) {
       {country.cities.map((city) => (
         <Link
           key={city.slug}
-          href={`/photos/places/${country.slug}/${city.slug}`}
+          href={`/places/${country.slug}/${city.slug}`}
           className="ph-city"
         >
           <div>

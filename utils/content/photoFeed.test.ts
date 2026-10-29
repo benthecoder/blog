@@ -35,9 +35,7 @@ describe("buildPhotoFeed", () => {
 
   it("uses absolute guid and image urls", () => {
     const xml = buildPhotoFeed([photo("a b")]);
-    expect(xml).toContain(
-      "<guid>https://photos.bneo.xyz/photos/photo/a%20b</guid>"
-    );
+    expect(xml).toContain("<guid>https://photos.bneo.xyz/photo/a%20b</guid>");
     expect(xml).toContain('src="https://photos.bneo.xyz/_next/image?url=');
     expect(xml).toContain('width="1200" height="800"');
   });

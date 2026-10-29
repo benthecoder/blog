@@ -16,10 +16,10 @@ export function NavLink({
   also?: string;
   children: ReactNode;
 }) {
-  // photos.bneo.xyz serves /photos at "/": the server renders /photos while
-  // the browser reports "/", so treat them alike or hydration disagrees.
-  const raw = usePathname();
-  const pathname = raw === "/" ? "/photos" : raw;
+  // photos.bneo.xyz rewrites "/places" to "/photos/places": the server sees
+  // the rewritten path and the browser the short one, so compare short paths
+  // or hydration disagrees.
+  const pathname = usePathname().replace(/^\/photos(?=\/|$)/, "") || "/";
   const within = (base: string) =>
     pathname === base || (!exact && pathname.startsWith(`${base}/`));
   const active = within(href) || (also !== undefined && within(also));
