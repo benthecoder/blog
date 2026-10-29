@@ -41,12 +41,14 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="mb-8 pb-4 border-b border-rule dark:border-night-raised">
-        <p className="text-xs text-primary/60 tracking-wide mb-2">TAG</p>
+        <p className="text-xs text-ink-muted dark:text-chalk-muted tracking-wide mb-2">
+          TAG
+        </p>
         <div className="flex items-baseline gap-3">
           <h1 className="text-2xl font-bold text-ink dark:text-chalk-soft">
             {tag}
           </h1>
-          <span className="text-sm text-primary/40 font-mono tabular-nums">
+          <span className="text-sm text-ink-muted dark:text-chalk-muted font-mono tabular-nums">
             {filteredPosts.length}
           </span>
         </div>

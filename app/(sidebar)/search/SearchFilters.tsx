@@ -23,7 +23,7 @@ export default function SearchFilters({
     <div className="mb-8 space-y-4">
       {/* Search Type Filter */}
       <div className="border-t border-rule dark:border-night-raised pt-4">
-        <label className="block text-xs font-medium text-primary/70 mb-2 tracking-wide">
+        <label className="block text-xs font-medium text-ink-muted dark:text-chalk-muted mb-2 tracking-wide">
           SEARCH TYPE
         </label>
         <div className="flex flex-wrap gap-2">
@@ -35,7 +35,7 @@ export default function SearchFilters({
               className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
                 searchType === type
                   ? "border-ink dark:border-chalk-soft bg-ink/20 dark:bg-chalk-soft/20 text-ink dark:text-chalk-strong font-medium"
-                  : "border-rule dark:border-night-raised text-primary/60 hover:border-ink/50 dark:hover:border-chalk-soft/50"
+                  : "border-rule dark:border-night-raised text-ink-muted dark:text-chalk-muted hover:border-ink/50 dark:hover:border-chalk-soft/50"
               }`}
             >
               {type}
@@ -46,7 +46,7 @@ export default function SearchFilters({
 
       {/* Content Type Filter */}
       <div className="pt-4">
-        <label className="block text-xs font-medium text-primary/70 mb-2 tracking-wide">
+        <label className="block text-xs font-medium text-ink-muted dark:text-chalk-muted mb-2 tracking-wide">
           CONTENT TYPE
         </label>
         <div className="flex flex-wrap gap-2">
@@ -56,7 +56,7 @@ export default function SearchFilters({
             className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
               selectedChunkType === ""
                 ? "border-ink dark:border-chalk-soft bg-ink/20 dark:bg-chalk-soft/20 text-ink dark:text-chalk-strong font-medium"
-                : "border-rule dark:border-night-raised text-primary/60 hover:border-ink/50 dark:hover:border-chalk-soft/50"
+                : "border-rule dark:border-night-raised text-ink-muted dark:text-chalk-muted hover:border-ink/50 dark:hover:border-chalk-soft/50"
             }`}
           >
             all
@@ -69,7 +69,7 @@ export default function SearchFilters({
               className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
                 selectedChunkType === type
                   ? "border-ink dark:border-chalk-soft bg-ink/20 dark:bg-chalk-soft/20 text-ink dark:text-chalk-strong font-medium"
-                  : "border-rule dark:border-night-raised text-primary/60 hover:border-ink/50 dark:hover:border-chalk-soft/50"
+                  : "border-rule dark:border-night-raised text-ink-muted dark:text-chalk-muted hover:border-ink/50 dark:hover:border-chalk-soft/50"
               }`}
             >
               {formatChunkTypeLabel(type)}
@@ -84,7 +84,7 @@ export default function SearchFilters({
           <button
             type="button"
             onClick={onClearFilters}
-            className="text-xs text-primary/50 hover:text-ink dark:hover:text-chalk-soft transition-colors"
+            className="text-xs text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk-soft transition-colors"
           >
             clear filters
           </button>

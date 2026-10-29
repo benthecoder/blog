@@ -117,13 +117,16 @@
 }
 
 /* Small caps label above a list or section ("favorites", "linked from").
-   60% keeps it quiet without dropping below readable contrast. */
+   The muted ink tier keeps it quiet and still clears 4.5:1 in every palette. */
 @layer components {
   .eyebrow {
     font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--color-primary) 60%, transparent);
+    color: var(--color-ink-muted);
+  }
+  .dark .eyebrow {
+    color: var(--color-chalk-muted);
   }
 }
 

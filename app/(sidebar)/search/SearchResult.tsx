@@ -42,18 +42,20 @@ export default function SearchResult({ result, query }: SearchResultProps) {
           </p>
         )}
 
-        <div className="flex items-center gap-2 text-xs text-ink/70 dark:text-chalk-soft/70 pt-1">
+        <div className="flex items-center gap-2 text-xs text-ink-muted dark:text-chalk-muted pt-1">
           <span className="capitalize font-medium">{result.chunk_type}</span>
           {result.section && (
             <>
               <span>•</span>
-              <span className="text-primary/60 italic">{result.section}</span>
+              <span className="text-ink-muted dark:text-chalk-muted italic">
+                {result.section}
+              </span>
             </>
           )}
           {result.language && (
             <>
               <span>•</span>
-              <span className="text-primary/60 font-mono text-[10px]">
+              <span className="text-ink-muted dark:text-chalk-muted font-mono text-[10px]">
                 {result.language}
               </span>
             </>
@@ -61,7 +63,7 @@ export default function SearchResult({ result, query }: SearchResultProps) {
           {result.tags && result.tags.length > 3 && (
             <>
               <span>•</span>
-              <span className="text-primary/50">
+              <span className="text-ink-muted dark:text-chalk-muted">
                 +{result.tags.length - 3} tags
               </span>
             </>

@@ -132,7 +132,7 @@ export default function ArchiveClient({
               className={`transition-[color] duration-150 ${
                 view === v
                   ? "text-accent"
-                  : "text-accent/35 hover:text-accent/70"
+                  : "text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk-soft"
               }`}
             >
               {v}
@@ -140,13 +140,13 @@ export default function ArchiveClient({
           ))}
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-accent/40 tabular-nums">
+          <span className="text-xs text-ink-muted dark:text-chalk-muted tabular-nums">
             {allPosts.length} posts ·{" "}
             {new Intl.NumberFormat().format(totalWords)} words
           </span>
           <Link
             href="/search"
-            className="text-accent/35 hover:text-accent/70 transition-[color] duration-150"
+            className="text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk-soft transition-[color] duration-150"
             aria-label="search"
           >
             <svg
@@ -188,7 +188,7 @@ export default function ArchiveClient({
                   className={`px-2.5 py-1 text-[10px] transition-[background-color,color] duration-150 ${
                     sort === s
                       ? "bg-accent/8 text-accent"
-                      : "text-accent/35 hover:text-accent/60"
+                      : "text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk-soft"
                   }`}
                 >
                   {s === "views" && viewsLoading ? "…" : s}
@@ -220,7 +220,7 @@ export default function ArchiveClient({
                     className={`w-7 h-7 text-xs tabular-nums border transition-[border-color,color] duration-150 ${
                       p === page
                         ? "border-accent/60 text-accent"
-                        : "border-rule dark:border-white/8 text-accent/40 hover:border-accent/40"
+                        : "border-rule dark:border-white/8 text-ink-muted dark:text-chalk-muted hover:border-accent/40"
                     }`}
                   >
                     {p}
@@ -263,7 +263,7 @@ export default function ArchiveClient({
               className="border border-rule dark:border-night-raised hover:bg-accent/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors duration-150"
             >
               <span className="text-xs text-accent truncate">{tag}</span>
-              <span className="text-[10px] text-accent/30 font-mono shrink-0">
+              <span className="text-[10px] text-ink-muted dark:text-chalk-muted font-mono shrink-0">
                 {count}
               </span>
             </Link>

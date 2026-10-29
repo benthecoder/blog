@@ -120,7 +120,9 @@ const RenderPost = ({
         <div className="mt-8 flex justify-between gap-4">
           {prev ? (
             <div className="flex flex-col flex-1">
-              <p className="text-primary/60 mb-1">Previous</p>
+              <p className="text-ink-muted dark:text-chalk-muted mb-1">
+                Previous
+              </p>
               <Link
                 href={`/posts/${prev.slug}`}
                 className="text-primary hover:text-ink dark:hover:text-chalk-soft transition-colors"
@@ -133,7 +135,7 @@ const RenderPost = ({
           )}
           {next ? (
             <div className="flex flex-col flex-1 text-right">
-              <p className="text-primary/60 mb-1">Next</p>
+              <p className="text-ink-muted dark:text-chalk-muted mb-1">Next</p>
               <Link
                 href={`/posts/${next.slug}`}
                 className="text-primary hover:text-ink dark:hover:text-chalk-soft transition-colors"

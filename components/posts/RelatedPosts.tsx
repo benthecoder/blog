@@ -6,7 +6,7 @@ const RelatedPosts = ({ posts }: { posts: RelatedPost[] }) => {
 
   return (
     <div className="mt-8 text-xs">
-      <p className="text-primary/60 mb-1">Similar</p>
+      <p className="text-ink-muted dark:text-chalk-muted mb-1">Similar</p>
       <ul className="space-y-1">
         {posts.map((post) => (
           <li key={post.slug}>

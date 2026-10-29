@@ -39,15 +39,19 @@ export default function HackerNewsPage() {
   return (
     <div className="w-full">
       {isLoading ? (
-        <p className="text-accent/50">flibbertigibbeting...</p>
+        <p className="text-ink-muted dark:text-chalk-muted">
+          flibbertigibbeting...
+        </p>
       ) : isError ? (
-        <p className="text-accent/50">couldn&apos;t reach hacker news</p>
+        <p className="text-ink-muted dark:text-chalk-muted">
+          couldn&apos;t reach hacker news
+        </p>
       ) : (
         <div>
           <ol className="space-y-1 list-none">
             {topStories.map((story, index) => (
               <li key={story.id} className="flex items-baseline gap-2">
-                <span className="text-accent/30 text-sm tabular-nums min-w-[2ch]">
+                <span className="text-ink-muted dark:text-chalk-muted text-sm tabular-nums min-w-[2ch]">
                   {currentPage * POSTS_PER_PAGE + index + 1}.
                 </span>
                 <a
@@ -63,7 +67,7 @@ export default function HackerNewsPage() {
                     href={`https://news.ycombinator.com/item?id=${story.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-accent/30 hover:text-ink-soft dark:hover:text-chalk-muted transition-colors text-sm whitespace-nowrap"
+                    className="text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk-soft transition-colors text-sm whitespace-nowrap"
                   >
                     ({story.descendants})
                   </a>

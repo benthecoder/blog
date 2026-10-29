@@ -117,7 +117,7 @@ function SearchContent() {
               type="button"
               aria-label="Clear search"
               onClick={clearQuery}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/40 hover:text-ink dark:hover:text-chalk-soft transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-muted dark:text-chalk-muted hover:text-ink dark:hover:text-chalk-soft transition-colors"
             >
               ✕
             </button>
@@ -150,7 +150,7 @@ function SearchContent() {
       {results.length > 0 ? (
         <div>
           <div className="mb-4 pb-2 border-b border-rule dark:border-night-raised">
-            <p className="text-xs text-primary/60 tracking-wide">
+            <p className="text-xs text-ink-muted dark:text-chalk-muted tracking-wide">
               {results.length} RESULTS
             </p>
           </div>
@@ -170,7 +170,7 @@ function SearchContent() {
         hasSearched &&
         query && (
           <div className="text-center py-12 border border-rule dark:border-night-raised">
-            <p className="text-primary/70 mb-2">
+            <p className="text-ink-muted dark:text-chalk-muted mb-2">
               No results found for &quot;{query}&quot;
             </p>
             {selectedChunkType && (

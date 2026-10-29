@@ -124,7 +124,7 @@ export default function ThoughtsClient({
         {dates.map((date) => (
           <div key={date} className="relative">
             <div className="mb-2 pb-2 border-b border-rule dark:border-chalk-muted/30">
-              <p className="text-xs text-accent/50 tracking-wide lowercase text-center">
+              <p className="text-xs text-ink-muted dark:text-chalk-muted tracking-wide lowercase text-center">
                 {date}
               </p>
             </div>
@@ -135,7 +135,7 @@ export default function ThoughtsClient({
 
                 return (
                   <div key={entry.id} className="flex gap-4 items-baseline">
-                    <span className="text-xs text-accent/50 shrink-0 select-none w-10">
+                    <span className="text-xs text-ink-muted dark:text-chalk-muted shrink-0 select-none w-10">
                       {time}
                     </span>
                     <p className="text-sm text-accent leading-relaxed wrap-break-word whitespace-pre-wrap flex-1">
