@@ -91,9 +91,6 @@ export default async function HomePage() {
         <p>here are some places you can visit:</p>
         <ul>
           <li>
-            <Link href="/photos">photos</Link>
-          </li>
-          <li>
             <Link href="/map">places i recommend</Link>
           </li>
           <li>
