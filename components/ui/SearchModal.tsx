@@ -169,7 +169,7 @@ export default function SearchModal() {
             onChange={(e) => handleInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="search posts…"
-            className="flex-1 py-3 text-sm bg-transparent outline-hidden text-accent placeholder:text-accent/30"
+            className="min-w-0 flex-1 py-3 text-sm bg-transparent outline-hidden text-accent placeholder:text-accent/30"
           />
           <div className="flex items-center gap-1 shrink-0">
             {(["keyword", "semantic"] as SearchType[]).map((t) => (
