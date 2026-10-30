@@ -58,7 +58,7 @@ const nextConfig: NextConfig = {
       permanent: true,
     },
     // The UMAP plot of post embeddings moved into the knowledge map on /start.
-    { source: "/viz", destination: "/start", permanent: true },
+    { source: "/viz", destination: "/", permanent: true },
     // One app serves three hosts; each only answers for its own pages.
     ...hostRedirects(blogSectionNames),
   ],

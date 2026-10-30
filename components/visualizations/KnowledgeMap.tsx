@@ -621,7 +621,25 @@ export default function KnowledgeMap({
   const control =
     "inline-flex size-8 items-center justify-center text-accent hover:bg-accent/10 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent";
 
-  const previewWidth = Math.min(228, Math.max(0, plotSize.width - 24));
+  // Closest entries by similarity, one per post; a post can have several nodes.
+  const selectedConnections = useMemo(() => {
+    if (!selectedArticleNode) return [];
+    const byId = new Map(articles.map((a) => [a.id, a]));
+    const seen = new Set([selectedArticleNode.postSlug]);
+    const closest: ArticleNode[] = [];
+    const neighbors = [...(neighborsById.get(selectedArticleNode.id) ?? [])];
+    for (const { id } of neighbors.sort((a, b) => b.sim - a.sim)) {
+      const article = byId.get(id);
+      if (!article || seen.has(article.postSlug)) continue;
+      seen.add(article.postSlug);
+      closest.push(article);
+      if (closest.length === 3) break;
+    }
+    return closest;
+  }, [selectedArticleNode, neighborsById, articles]);
+
+  const previewWidth = Math.min(248, Math.max(0, plotSize.width - 24));
+  const previewHeight = 200;
   const selectedPosition = selectedArticleNode
     ? {
         left: Math.max(
@@ -638,8 +656,8 @@ export default function KnowledgeMap({
           Math.min(
             transform.y +
               (selectedArticleNode.y / 1000) * plotSize.height * transform.k -
-              84,
-            plotSize.height - 100
+              40,
+            plotSize.height - previewHeight - 12
           )
         ),
         width: previewWidth,
@@ -783,6 +801,11 @@ export default function KnowledgeMap({
                     })}
                   </p>
                 )}
+                {clusterLabels[selectedArticleNode.cluster] && (
+                  <p className="mt-1 text-xs text-muted">
+                    in {clusterLabels[selectedArticleNode.cluster]}
+                  </p>
+                )}
               </div>
               <button
                 aria-label="Close entry preview"
@@ -792,6 +815,23 @@ export default function KnowledgeMap({
                 ×
               </button>
             </div>
+            {selectedConnections.length > 0 && (
+              <div className="mt-3">
+                <p className="text-xs text-muted">closest entries</p>
+                <ul className="mt-1 space-y-1 text-xs">
+                  {selectedConnections.map((article) => (
+                    <li key={article.id}>
+                      <Link
+                        href={`/posts/${encodeURIComponent(article.postSlug)}`}
+                        className="line-clamp-1 text-accent hover:underline underline-offset-4"
+                      >
+                        {article.postTitle}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </article>
         )}
         {isFiltered && filtered.length > 0 && !selectedArticleNode && (
