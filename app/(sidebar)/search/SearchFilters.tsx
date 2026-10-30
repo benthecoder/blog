@@ -11,6 +11,12 @@ interface SearchFiltersProps {
 }
 
 const CHUNK_TYPES: ChunkType[] = ["code", "full-post", "quote", "section"];
+const filterClass = (selected: boolean) =>
+  `py-1 underline-offset-4 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 ${
+    selected
+      ? "text-primary underline decoration-accent/60"
+      : "text-muted hover:text-accent"
+  }`;
 
 export default function SearchFilters({
   searchType,
@@ -20,46 +26,43 @@ export default function SearchFilters({
   onClearFilters,
 }: SearchFiltersProps) {
   return (
-    <div className="mb-8 space-y-4">
-      {/* Search Type Filter */}
-      <div className="border-t border-rule dark:border-night-raised pt-4">
-        <label className="block text-xs font-medium text-primary/70 mb-2 tracking-wide">
-          SEARCH TYPE
-        </label>
-        <div className="flex flex-wrap gap-2">
+    <div className="mb-8 space-y-2 text-sm">
+      <div
+        role="group"
+        aria-label="Search type"
+        className="grid grid-cols-[3.5rem_minmax(0,1fr)] items-baseline gap-x-4"
+      >
+        <span aria-hidden="true" className="w-14 text-xs text-muted">
+          match
+        </span>
+        <div className="flex flex-wrap gap-x-4 gap-y-1">
           {(["hybrid", "semantic", "keyword"] as const).map((type) => (
             <button
               key={type}
               type="button"
               aria-pressed={searchType === type}
               onClick={() => onSearchTypeChange(type)}
-              className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
-                searchType === type
-                  ? "border-ink dark:border-chalk-soft bg-ink/20 dark:bg-chalk-soft/20 text-ink dark:text-chalk-strong font-medium"
-                  : "border-rule dark:border-night-raised text-primary/60 hover:border-ink/50 dark:hover:border-chalk-soft/50"
-              }`}
+              className={filterClass(searchType === type)}
             >
               {type}
             </button>
           ))}
         </div>
       </div>
-
-      {/* Content Type Filter */}
-      <div className="pt-4">
-        <label className="block text-xs font-medium text-primary/70 mb-2 tracking-wide">
-          CONTENT TYPE
-        </label>
-        <div className="flex flex-wrap gap-2">
+      <div
+        role="group"
+        aria-label="Content type"
+        className="grid grid-cols-[3.5rem_minmax(0,1fr)] items-baseline gap-x-4"
+      >
+        <span aria-hidden="true" className="w-14 text-xs text-muted">
+          show
+        </span>
+        <div className="flex flex-wrap gap-x-4 gap-y-1">
           <button
             type="button"
             aria-pressed={selectedChunkType === ""}
             onClick={() => onChunkTypeChange("")}
-            className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
-              selectedChunkType === ""
-                ? "border-ink dark:border-chalk-soft bg-ink/20 dark:bg-chalk-soft/20 text-ink dark:text-chalk-strong font-medium"
-                : "border-rule dark:border-night-raised text-primary/60 hover:border-ink/50 dark:hover:border-chalk-soft/50"
-            }`}
+            className={filterClass(selectedChunkType === "")}
           >
             all
           </button>
@@ -69,30 +72,22 @@ export default function SearchFilters({
               type="button"
               aria-pressed={selectedChunkType === type}
               onClick={() => onChunkTypeChange(type)}
-              className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
-                selectedChunkType === type
-                  ? "border-ink dark:border-chalk-soft bg-ink/20 dark:bg-chalk-soft/20 text-ink dark:text-chalk-strong font-medium"
-                  : "border-rule dark:border-night-raised text-primary/60 hover:border-ink/50 dark:hover:border-chalk-soft/50"
-              }`}
+              className={filterClass(selectedChunkType === type)}
             >
               {formatChunkTypeLabel(type)}
             </button>
           ))}
+          {selectedChunkType && (
+            <button
+              type="button"
+              onClick={onClearFilters}
+              className="py-1 text-xs text-muted hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+            >
+              reset
+            </button>
+          )}
         </div>
       </div>
-
-      {/* Clear filters button */}
-      {selectedChunkType && (
-        <div className="flex justify-end pt-2">
-          <button
-            type="button"
-            onClick={onClearFilters}
-            className="text-xs text-primary/50 hover:text-ink dark:hover:text-chalk-soft transition-colors"
-          >
-            clear filters
-          </button>
-        </div>
-      )}
     </div>
   );
 }
