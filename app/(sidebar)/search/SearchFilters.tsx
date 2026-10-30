@@ -31,6 +31,7 @@ export default function SearchFilters({
             <button
               key={type}
               type="button"
+              aria-pressed={searchType === type}
               onClick={() => onSearchTypeChange(type)}
               className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
                 searchType === type
@@ -52,6 +53,7 @@ export default function SearchFilters({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
+            aria-pressed={selectedChunkType === ""}
             onClick={() => onChunkTypeChange("")}
             className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
               selectedChunkType === ""
@@ -65,6 +67,7 @@ export default function SearchFilters({
             <button
               key={type}
               type="button"
+              aria-pressed={selectedChunkType === type}
               onClick={() => onChunkTypeChange(type)}
               className={`px-3 py-1.5 text-sm border transition-[border-color,background-color,color] duration-150 ${
                 selectedChunkType === type
