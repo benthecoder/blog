@@ -78,7 +78,24 @@ export default function Flashcards({
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement) return;
+      if (
+        e.defaultPrevented ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.altKey ||
+        e.shiftKey
+      ) {
+        return;
+      }
+      const target = e.target instanceof Element ? e.target : null;
+      if (
+        target?.closest("input, textarea, select, [contenteditable]") ||
+        ((e.key === " " || e.key === "Enter") &&
+          target?.closest("button, a")) ||
+        document.querySelector("dialog[open], [aria-modal='true']")
+      ) {
+        return;
+      }
       if (e.key === " " || e.key === "Enter") {
         e.preventDefault();
         flip();
