@@ -83,7 +83,7 @@ export function SidebarNav() {
           without that card the two run together. */}
       <nav
         aria-label="Site navigation"
-        className="flex flex-row flex-wrap gap-2 justify-center lg:flex-col lg:flex-nowrap lg:items-center lg:w-28 lg:fixed lg:top-44 lg:left-10 mb-12 lg:mb-0"
+        className="flex flex-row flex-wrap gap-2 justify-center lg:flex-col lg:flex-nowrap lg:fixed lg:top-[max(50%,24.5rem)] lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0"
       >
         {links.map(({ path, text, icon }) => (
           <Link
