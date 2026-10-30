@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DRAWINGS_URL } from "@/config/constants";
 import styles from "./ArtworkStrip.module.css";
 
@@ -24,6 +24,26 @@ const SKETCHES = [
 
 export default function ArtworkStrip() {
   const strip = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ start: false, end: true });
+
+  useEffect(() => {
+    const element = strip.current;
+    if (!element) return;
+    const update = () => {
+      const end = element.scrollWidth - element.clientWidth;
+      setEdges({
+        start: element.scrollLeft > 1,
+        end: element.scrollLeft < end - 1,
+      });
+    };
+    update();
+    element.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      element.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
 
   useEffect(() => {
     const element = strip.current;
@@ -56,7 +76,7 @@ export default function ArtworkStrip() {
   }, []);
 
   return (
-    <section aria-label="Drawings" className="mt-8 mb-8">
+    <section aria-label="Drawings" className="relative mt-8 mb-8">
       <div
         ref={strip}
         role="region"
@@ -83,6 +103,18 @@ export default function ArtworkStrip() {
           </Link>
         ))}
       </div>
+      {(["start", "end"] as const).map((side) => (
+        <div
+          key={side}
+          aria-hidden="true"
+          data-hidden={!edges[side]}
+          className={`${styles.edge} ${styles[side]}`}
+        >
+          <span />
+          <span />
+          <span />
+        </div>
+      ))}
     </section>
   );
 }

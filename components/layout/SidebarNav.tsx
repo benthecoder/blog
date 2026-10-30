@@ -47,15 +47,17 @@ export function SidebarNav({ home = false }: { home?: boolean }) {
     isMobile: boolean;
   } | null>(null);
 
-  const handleMouseEnter = (e: MouseEvent<HTMLAnchorElement>, text: string) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const isMobile = window.innerWidth < 1024;
-
-    // Not data-cuelume-hover: its 150ms throttle is global, so fast sweeps
-    // drop ticks. Pointer check skips touch, where taps emulate mouseenter.
+  // Not data-cuelume-hover: its 150ms throttle is global, so fast sweeps
+  // drop ticks. Pointer check skips touch, where taps emulate mouseenter.
+  const tick = () => {
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
       play("tick");
     }
+  };
+
+  const handleMouseEnter = (e: MouseEvent<HTMLAnchorElement>, text: string) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const isMobile = window.innerWidth < 1024;
 
     if (isMobile) {
       // Position below and centered on mobile
@@ -101,6 +103,7 @@ export function SidebarNav({ home = false }: { home?: boolean }) {
             }`}
             onMouseEnter={(e) => {
               setPrefetchPath(path);
+              tick();
               if (!home) handleMouseEnter(e, text);
             }}
             onFocus={() => setPrefetchPath(path)}

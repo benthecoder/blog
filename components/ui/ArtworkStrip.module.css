@@ -5,3 +5,47 @@
 .strip::-webkit-scrollbar {
   display: none;
 }
+
+/* Progressive blur: each layer blurs a little more and is masked to a
+   band nearer the edge, so drawings soften as they run off the strip. */
+.edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3.5rem;
+  pointer-events: none;
+  transition: opacity 200ms ease-out;
+}
+
+.edge[data-hidden="true"] {
+  opacity: 0;
+}
+
+.start {
+  left: -0.25rem;
+  transform: scaleX(-1);
+}
+
+.end {
+  right: -0.25rem;
+}
+
+.edge > span {
+  position: absolute;
+  inset: 0;
+}
+
+.edge > span:nth-child(1) {
+  backdrop-filter: blur(1px);
+  mask-image: linear-gradient(to right, transparent, black 40%);
+}
+
+.edge > span:nth-child(2) {
+  backdrop-filter: blur(2px);
+  mask-image: linear-gradient(to right, transparent 30%, black 70%);
+}
+
+.edge > span:nth-child(3) {
+  backdrop-filter: blur(4px);
+  mask-image: linear-gradient(to right, transparent 60%, black);
+}
