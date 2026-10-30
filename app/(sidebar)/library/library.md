@@ -42,7 +42,7 @@ Fiction
 - [Burnout Society](/posts/burnoutsociety) (Byung-Chul Han)  
 - [Zero to One](/posts/0to1) (Peter Thiel)  
 - [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn linkenborg)  
-- [How to Be a Friend: An Ancient Guide to True Friendship](/posts/[x]ruefriendship) (Marcus Tullius Cicero)  
+- [How to Be a Friend: An Ancient Guide to True Friendship](/posts/truefriendship) (Marcus Tullius Cicero)
 - [The Almanack of Naval Ravikant](/posts/naval) (Naval Ravikant)  
 - [Make Something Wonderful](/posts/makesomethingwonderful) (Steve Jobs)
 
