@@ -109,6 +109,7 @@ export default function SearchModal() {
   };
 
   const handleKeyDown = (e: ReactKeyboardEvent) => {
+    if (e.nativeEvent.isComposing) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setActiveIndex((i) => Math.max(0, Math.min(i + 1, results.length - 1)));
