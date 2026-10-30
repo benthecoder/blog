@@ -154,30 +154,6 @@ const rawEvents: RawEvent[] = [
   },
   {
     year: "2023",
-    month: "june",
-    day: "3",
-    description: "monterey with my parents",
-  },
-  {
-    year: "2023",
-    month: "june",
-    day: "4",
-    description: "sf with my parents",
-  },
-  {
-    year: "2023",
-    month: "june",
-    day: "13",
-    description: "first kpop concert — TWICE",
-  },
-  {
-    year: "2023",
-    month: "june",
-    day: "27",
-    description: "first sf meetup",
-  },
-  {
-    year: "2023",
     month: "july",
     day: "15",
     description: "first in-person hackathon @ scale ai",
@@ -215,34 +191,8 @@ const rawEvents: RawEvent[] = [
   },
   {
     year: "2023",
-    month: "november",
-    day: "20",
-    description: "boston with A",
-    imageLinks: [
-      {
-        text: "boston",
-        imagePath: "/images/boston1.jpeg",
-        altText: "Quincy Market in Boston",
-      },
-    ],
-  },
-  {
-    year: "2023",
     month: "december",
     description: "graduated from isu",
-  },
-  {
-    year: "2023",
-    month: "december",
-    day: "25",
-    description: "finished the nativity sketch in seattle",
-    imageLinks: [
-      {
-        text: "nativity sketch",
-        imagePath: "/images/drawings/christ.png",
-        altText: "The Nativity",
-      },
-    ],
   },
   {
     year: "2024",
@@ -305,12 +255,6 @@ const rawEvents: RawEvent[] = [
     month: "january",
     day: "21",
     description: "me and T",
-  },
-  {
-    year: "2025",
-    month: "march",
-    day: "12",
-    description: "joined contrary research fellowship",
   },
   {
     year: "2025",
@@ -382,19 +326,6 @@ const rawEvents: RawEvent[] = [
         text: "MIA",
         imagePath: "/images/miami.png",
         altText: "MIA",
-      },
-    ],
-  },
-  {
-    year: "2026",
-    month: "feb",
-    day: "23",
-    description: "first day back in office",
-    imageLinks: [
-      {
-        text: "office",
-        imagePath: "/images/230226-neon.jpg",
-        altText: "Neon sign at the office",
       },
     ],
   },
