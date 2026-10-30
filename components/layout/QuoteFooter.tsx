@@ -2,24 +2,24 @@
 
 import Link from "next/link";
 import { useState, useSyncExternalStore } from "react";
-import { QUOTES } from "@/config/quotes";
+import type { Quote } from "@/utils/content/quotes";
 
 // Picked once per page load on the client. Hydration uses the server
 // snapshot (the first quote), then React swaps in this one, so the markup
 // always matches.
-const startIndex =
-  typeof window === "undefined" ? 0 : Math.floor(Math.random() * QUOTES.length);
+const startRoll = typeof window === "undefined" ? 0 : Math.random();
 const noop = () => () => {};
 
-export function QuoteFooter() {
+export function QuoteFooter({ quotes }: { quotes: Quote[] }) {
   const start = useSyncExternalStore(
     noop,
-    () => startIndex,
+    () => Math.floor(startRoll * quotes.length),
     () => 0
   );
   const [step, setStep] = useState(0);
 
-  const quote = QUOTES[(start + step) % QUOTES.length];
+  if (quotes.length === 0) return null;
+  const quote = quotes[(start + step) % quotes.length];
   const next = () => setStep(step + 1);
 
   return (
