@@ -2,18 +2,23 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CityRows } from "@/components/photos/CityRows";
 import { getPhotostream } from "@/utils/content/photostream";
+import { photoShareMetadata } from "@/utils/photoShare";
 import { placeTree } from "@/utils/photoPlaces";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "places — photos",
-  description: "Photos by country and city.",
-  alternates: { canonical: "https://photos.bneo.xyz/photos/places" },
-};
-
 const count = (n: number, one: string, many = `${one}s`) =>
   `${n} ${n === 1 ? one : many}`;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const countries = placeTree(await getPhotostream());
+  return photoShareMetadata({
+    title: "places — photos",
+    description: `Photos from ${count(countries.length, "country", "countries")}.`,
+    path: "/places",
+    photo: countries[0]?.cover,
+  });
+}
 
 export default async function PlacesPage() {
   const photos = await getPhotostream();
@@ -25,9 +30,7 @@ export default async function PlacesPage() {
       {countries.map((country) => (
         <section key={country.slug} className="ph-section">
           <h2 className="ph-country">
-            <Link href={`/photos/places/${country.slug}`}>
-              {country.country}
-            </Link>
+            <Link href={`/places/${country.slug}`}>{country.country}</Link>
           </h2>
           <p className="ph-mono ph-stats">
             {count(country.count, "frame")} ·{" "}

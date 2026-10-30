@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
+import { textFragment } from "@/utils/searchTextFragment";
+import { extractKeywords } from "@/app/(sidebar)/search/searchHelpers";
 import { useLatestSearch } from "@/components/hooks/useLatestSearch";
 
 type SearchType = "keyword" | "semantic";
@@ -26,6 +28,7 @@ export default function SearchModal() {
     )
     .slice(0, 8);
   const [activeIndex, setActiveIndex] = useState(0);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const openRef = useRef(false);
@@ -48,7 +51,6 @@ export default function SearchModal() {
           openFresh();
         }
       }
-      if (e.key === "Escape") setOpen(false);
     };
     const onOpen = () => openFresh();
     document.addEventListener("keydown", onKey);
@@ -61,10 +63,25 @@ export default function SearchModal() {
 
   useEffect(() => {
     openRef.current = open;
-    if (open) {
-      const raf = requestAnimationFrame(() => inputRef.current?.focus());
-      return () => cancelAnimationFrame(raf);
-    }
+    if (!open) return;
+
+    const dialog = dialogRef.current;
+    dialog?.showModal();
+    inputRef.current?.focus();
+
+    const { overflow, paddingRight } = document.body.style;
+    const gutter = window.innerWidth - document.documentElement.clientWidth;
+    const padding = parseFloat(getComputedStyle(document.body).paddingRight);
+    document.body.style.overflow = "hidden";
+    if (gutter > 0) document.body.style.paddingRight = `${padding + gutter}px`;
+    if (dialog) dialog.style.paddingRight = `${gutter}px`;
+
+    return () => {
+      dialog?.close();
+      if (dialog) dialog.style.paddingRight = "";
+      document.body.style.overflow = overflow;
+      document.body.style.paddingRight = paddingRight;
+    };
   }, [open]);
 
   useEffect(() => {
@@ -92,6 +109,7 @@ export default function SearchModal() {
   };
 
   const handleKeyDown = (e: ReactKeyboardEvent) => {
+    if (e.nativeEvent.isComposing) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setActiveIndex((i) => Math.max(0, Math.min(i + 1, results.length - 1)));
@@ -100,34 +118,44 @@ export default function SearchModal() {
       setActiveIndex((i) => Math.max(i - 1, 0));
     } else if (e.key === "Enter" && results[activeIndex]) {
       e.preventDefault();
-      navigate(results[activeIndex].post_slug);
+      navigate(results[activeIndex]);
     }
   };
 
-  const navigate = (slug: string) => {
+  const navigate = (r: (typeof results)[number]) => {
     setOpen(false);
-    router.push(`/posts/${slug}`);
+    const href = `/posts/${r.post_slug}`;
+    const fragment = textFragment(
+      r.content,
+      extractKeywords(query),
+      r.chunk_type
+    );
+    // Text fragments only apply on full document loads, not router.push.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+    if (fragment) window.location.assign(href + fragment);
+    else router.push(href);
   };
 
-  if (!open) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-100 flex items-start justify-center pt-[15vh]"
+    <dialog
+      ref={dialogRef}
+      aria-label="Search posts"
+      className="fixed inset-0 z-100 m-0 h-full max-h-none w-full max-w-none hidden open:flex items-start justify-center border-0 bg-transparent p-0 pt-[15vh] text-inherit backdrop:bg-transparent"
+      onCancel={(event) => {
+        event.preventDefault();
+        setOpen(false);
+      }}
       onClick={() => setOpen(false)}
     >
       <div className="absolute inset-0 bg-surface/80 backdrop-blur-xs" />
 
       <div
-        role="dialog"
-        aria-modal="true"
-        aria-label="Search posts"
-        className="relative w-full max-w-lg mx-4 bg-paper dark:bg-night-raised border border-rule dark:border-white/8 shadow-lg"
+        className="relative min-w-0 w-full max-w-lg mx-4 bg-raised text-primary border border-line shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center border-b border-rule dark:border-white/6 px-3 gap-2">
+        <div className="flex items-center border-b border-line focus-within:border-accent px-3 gap-2">
           <svg
-            className="w-4 h-4 text-accent/30 shrink-0"
+            className="w-4 h-4 text-muted shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -142,7 +170,7 @@ export default function SearchModal() {
             onChange={(e) => handleInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="search posts…"
-            className="flex-1 py-3 text-sm bg-transparent outline-hidden text-accent placeholder:text-accent/30"
+            className="min-w-0 flex-1 py-3 text-sm bg-transparent text-primary placeholder:text-muted outline-hidden"
           />
           <div className="flex items-center gap-1 shrink-0">
             {(["keyword", "semantic"] as SearchType[]).map((t) => (
@@ -150,10 +178,10 @@ export default function SearchModal() {
                 aria-pressed={searchType === t}
                 key={t}
                 onClick={() => handleTypeToggle(t)}
-                className={`text-[10px] px-1.5 py-0.5 tracking-wide transition-[color,border-color] duration-150 border ${
+                className={`text-xs px-1.5 py-1 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${
                   searchType === t
-                    ? "border-accent/50 text-accent"
-                    : "border-transparent text-accent/30 hover:text-accent/60"
+                    ? "bg-accent/10 text-primary"
+                    : "text-muted hover:text-accent"
                 }`}
               >
                 {t}
@@ -163,11 +191,11 @@ export default function SearchModal() {
         </div>
 
         {loading && (
-          <div className="px-4 py-3 text-xs text-accent/40">searching…</div>
+          <div className="px-4 py-3 text-xs text-muted">searching…</div>
         )}
 
         {error && (
-          <p role="alert" className="px-4 py-3 text-xs text-accent">
+          <p role="alert" className="px-4 py-3 text-xs text-primary">
             {error}
           </p>
         )}
@@ -177,7 +205,7 @@ export default function SearchModal() {
           hasSearched &&
           query.trim() &&
           results.length === 0 && (
-            <div className="px-4 py-3 text-xs text-accent/40">no results</div>
+            <div className="px-4 py-3 text-xs text-muted">no results</div>
           )}
 
         {!loading && results.length > 0 && (
@@ -185,17 +213,17 @@ export default function SearchModal() {
             {results.map((r, i) => (
               <li key={r.post_slug}>
                 <button
-                  onClick={() => navigate(r.post_slug)}
+                  onClick={() => navigate(r)}
                   onMouseEnter={() => setActiveIndex(i)}
-                  className={`w-full text-left px-4 py-2.5 transition-[background-color] duration-100 ${
+                  className={`w-full text-left px-4 py-3 focus-visible:outline-2 focus-visible:outline-accent focus-visible:-outline-offset-2 transition-colors duration-100 ${
                     i === activeIndex ? "bg-accent/5" : ""
                   }`}
                 >
-                  <div className="text-sm text-accent truncate">
+                  <div className="text-sm text-primary truncate">
                     {r.post_title}
                   </div>
                   {r.published_date && (
-                    <div className="text-[10px] text-accent/35 mt-0.5 tabular-nums">
+                    <div className="text-[10px] text-muted mt-0.5 tabular-nums">
                       {new Date(r.published_date).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -211,13 +239,13 @@ export default function SearchModal() {
         )}
 
         {results.length > 0 && (
-          <div className="border-t border-rule dark:border-white/6 px-4 py-2 flex gap-3 text-[10px] text-accent/30">
+          <div className="border-t border-line px-4 py-2 flex gap-3 text-[10px] text-muted">
             <span>↑↓ navigate</span>
             <span>↵ open</span>
             <span>esc close</span>
           </div>
         )}
       </div>
-    </div>
+    </dialog>
   );
 }

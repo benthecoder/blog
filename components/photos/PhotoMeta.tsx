@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { StreamPhoto } from "@/types/photostream";
 import { exposureLine, shortCamera } from "@/utils/photoCamera";
+import { photoTitle } from "@/utils/photoCaption";
 import { formatPhotoDate } from "@/utils/photoDate";
 import { parsePlace, placeSlug } from "@/utils/photoPlaces";
 
@@ -12,23 +13,22 @@ export function PhotoMeta({ photo }: { photo: StreamPhoto }) {
     .filter(Boolean)
     .join(" · ");
   const date = formatPhotoDate(photo.date);
+  const title = photoTitle(photo);
   return (
     <div className="ph-meta">
       <div>
-        <p className="ph-meta-caption">{photo.caption}</p>
+        {title && <p className="ph-meta-caption">{title}</p>}
         <p className="ph-mono">
           {place ? (
             <>
               {place.spot && `${place.spot} · `}
               {place.city && (
-                <Link
-                  href={`/photos/places/${country}/${placeSlug(place.city)}`}
-                >
+                <Link href={`/places/${country}/${placeSlug(place.city)}`}>
                   {place.city}
                 </Link>
               )}
               {place.city && " · "}
-              <Link href={`/photos/places/${country}`}>{place.country}</Link>
+              <Link href={`/places/${country}`}>{place.country}</Link>
             </>
           ) : (
             photo.location

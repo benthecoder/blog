@@ -2,14 +2,15 @@ export const DRAWINGS_URL = "/images/drawings";
 
 export const VOYAGE_MODEL = "voyage-3.5-lite";
 
-export const SEMANTIC_SIMILARITY_THRESHOLD_STRICT = 0.5;
 export const SEMANTIC_SIMILARITY_THRESHOLD = 0.4;
-
-export const HYBRID_VECTOR_WEIGHT = 0.7;
-export const HYBRID_KEYWORD_WEIGHT = 0.3;
 
 export const SEARCH_RESULT_LIMIT = 25;
 export const SEARCH_FALLBACK_LIMIT = 15;
+export const SEARCH_CANDIDATE_LIMIT = 60; // per candidate list (vector / keyword) before fusion
+export const SEARCH_RRF_K = 60; // reciprocal rank fusion damping: 1 / (k + rank)
+export const SEARCH_MAX_PER_POST = 2; // chunks per post in the final list
+export const SEARCH_RATE_LIMIT = 60; // requests per IP per window
+export const SEARCH_RATE_WINDOW_SECONDS = 60;
 
 export const MIN_QUOTE_LENGTH = 50; // quotes can be shorter — "be water" is 2 words
 export const MIN_SECTION_LENGTH = 150;

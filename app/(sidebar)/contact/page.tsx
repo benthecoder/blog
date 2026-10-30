@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import type { ComponentType } from "react";
 import Image from "next/image";
 import { Scroll, Camera, Pencil, Box, Play, Code2 } from "lucide-react";
+import { pageMetadata } from "@/utils/pageMetadata";
+
+export const metadata: Metadata = pageMetadata({
+  title: "findme",
+  path: "/contact",
+});
 
 type LinkItemProps = {
   href: string;
@@ -39,7 +46,7 @@ const SECTIONS: LinkSectionProps[] = [
   {
     icon: Scroll,
     links: [
-      { href: "https://twitter.com/benxneo", text: "twitter" },
+      { href: "https://x.com/benedictneo", text: "twitter" },
       { href: "https://www.linkedin.com/in/benedictneo/", text: "linkedin" },
     ],
   },
@@ -92,6 +99,7 @@ const SECTIONS: LinkSectionProps[] = [
 
 const ContactPage = () => (
   <div>
+    <h1 className="sr-only">findme</h1>
     <article className="prose">
       {/* `not-prose` opts out of the 65vh cap that keeps inline post images
           from dominating a page — here the photo is the point, so it runs

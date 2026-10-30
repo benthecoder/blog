@@ -1,7 +1,7 @@
 // Clones every footnote into an <aside class="sidenote"> after the block
 // containing its reference. The endnotes section stays in the document;
 // globals.css renders the asides in the margin on wide screens and the
-// endnotes otherwise, and hides the section via .has-sidenotes.
+// endnotes otherwise, keeping the canonical section accessible in both.
 //
 // Minimal hast shapes — @types/hast is not a dependency of this repo.
 interface HastText {
@@ -83,7 +83,16 @@ function sidenoteChildren(li: HastElement): HastNode[] {
     nodes.flatMap((node) => {
       if (isBackref(node)) return [];
       if (!isElement(node)) return [{ ...node }];
-      return [{ ...node, children: copy(node.children) }];
+      return [
+        {
+          ...node,
+          properties: {
+            ...node.properties,
+            ...(node.tagName === "a" ? { tabIndex: -1 } : {}),
+          },
+          children: copy(node.children),
+        },
+      ];
     });
   const cloned = copy(li.children).filter((node) => !isBlankText(node));
   const flattened = cloned.flatMap((node) => {

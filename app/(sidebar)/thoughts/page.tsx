@@ -2,15 +2,17 @@ import { neon } from "@neondatabase/serverless";
 import { Metadata } from "next";
 import ThoughtsClient from "./ThoughtsClient";
 import type { Thought } from "@/types/thoughts";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 // ISR requires the Node runtime; Edge ignored the hourly revalidation.
 export const dynamic = "force-static";
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "thoughts",
   description: "unfiltered thoughts, stream of consciousness",
-};
+  path: "/thoughts",
+});
 
 const sql = neon(process.env.POSTGRES_URL!);
 const INITIAL_LIMIT = 100;

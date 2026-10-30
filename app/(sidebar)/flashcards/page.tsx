@@ -6,13 +6,15 @@ import { sanitizeFlashcardHtml } from "@/utils/content/flashcardHtml";
 import { htmlText } from "@/utils/content/htmlText";
 import type { FlashcardsData } from "@/types/flashcards";
 import Flashcards from "./Flashcards";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
-export const metadata: Metadata = {
+const base = pageMetadata({
   title: "flashcards",
   description: "Anki flashcards I'm reviewing, with a flip-to-reveal UI",
-};
+  path: "/flashcards",
+});
 
 function loadFlashcards(): FlashcardsData | null {
   const file = path.join(DATA_DIR, "flashcards.json");
@@ -22,6 +24,12 @@ function loadFlashcards(): FlashcardsData | null {
   } catch {
     return null;
   }
+}
+
+export function generateMetadata(): Metadata {
+  return (loadFlashcards()?.cards ?? []).length === 0
+    ? { ...base, robots: { index: false, follow: true } }
+    : base;
 }
 
 const FlashcardsPage = () => {

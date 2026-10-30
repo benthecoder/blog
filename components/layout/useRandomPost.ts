@@ -56,6 +56,7 @@ export function useRandomPost() {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key.toLowerCase() !== "r" || e.metaKey || e.ctrlKey || e.altKey)
         return;
+      if (document.querySelector("dialog[open], [aria-modal='true']")) return;
       const target = e.target as HTMLElement;
       const tag = target.tagName;
       if (

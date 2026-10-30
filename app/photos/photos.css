@@ -8,12 +8,20 @@
   --ph-accent: var(--color-chalk);
   --ph-pad: clamp(20px, 4vw, 40px);
   --ph-side: max(var(--ph-pad), calc((100% - 1280px) / 2 + var(--ph-pad)));
-  min-height: 100vh;
+  min-height: 100svh;
   color: var(--ph-text);
   background: var(--ph-bg);
   color-scheme: dark;
   font-family: var(--font-photo-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+.photo-site :is(a, button) {
+  touch-action: manipulation;
+}
+.photo-site :is(.photo-menu-button, .ph-tabs button, .ph-lightbox button) {
+  -webkit-user-select: none;
+  user-select: none;
 }
 .photo-site a {
   color: inherit;
@@ -76,8 +84,23 @@
   background: color-mix(in srgb, var(--ph-bg) 90%, transparent);
   backdrop-filter: blur(12px);
 }
-.photo-site .photo-brand {
-  color: var(--ph-text);
+/* Geist Mono's ↗ is 4.6px tall on the baseline beside 7.8px capitals;
+   lift it to sit centred on them. */
+.photo-out {
+  display: inline-block;
+  transform: translateY(-1.6px);
+}
+.photo-summary {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Phones keep frames and countries; cities and cameras need the width. */
+@media (max-width: 480px) {
+  .photo-summary span:nth-child(n + 3) {
+    display: none;
+  }
 }
 .photo-bar nav {
   display: flex;
@@ -91,8 +114,10 @@
   margin-right: -12px;
   color: var(--ph-text);
 }
-.photo-bar nav a:hover {
-  color: var(--ph-text);
+@media (hover: hover) and (pointer: fine) {
+  .photo-bar nav a:hover {
+    color: var(--ph-text);
+  }
 }
 
 .ph-page {
@@ -116,10 +141,12 @@
   letter-spacing: inherit;
   color: var(--ph-text);
 }
-.ph-label a:hover,
-.ph-back:hover,
-.ph-meta a:hover {
-  color: var(--ph-text);
+@media (hover: hover) and (pointer: fine) {
+  .ph-label a:hover,
+  .ph-back:hover,
+  .ph-meta a:hover {
+    color: var(--ph-text);
+  }
 }
 .ph-empty {
   color: var(--ph-muted);
@@ -138,8 +165,15 @@
 .photo-site .ph-frame img[data-loaded] {
   opacity: 0.85;
 }
-.photo-site .ph-frame:hover img[data-loaded] {
-  opacity: 1;
+@media (hover: hover) and (pointer: fine) {
+  .photo-site .ph-frame:hover img[data-loaded] {
+    opacity: 1;
+  }
+}
+/* Press feedback for touch, where hover never fires. */
+.photo-site .ph-frame:active img[data-loaded] {
+  opacity: 0.6;
+  transition-duration: 100ms;
 }
 
 /* contact sheet */
@@ -184,8 +218,13 @@
   opacity: 0;
   transition: opacity 150ms;
 }
-.ph-cell:is(:hover, :focus-within) .ph-edge-exposure {
+.ph-cell:focus-within .ph-edge-exposure {
   opacity: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .ph-cell:hover .ph-edge-exposure {
+    opacity: 1;
+  }
 }
 
 /* places */
@@ -193,8 +232,10 @@
   font-size: 40px;
   line-height: 1.05;
 }
-.ph-country a:hover {
-  color: var(--ph-accent);
+@media (hover: hover) and (pointer: fine) {
+  .ph-country a:hover {
+    color: var(--ph-accent);
+  }
 }
 .ph-section .ph-stats {
   margin: 12px 0 20px;
@@ -212,8 +253,10 @@
   margin-bottom: 6px;
   transition: color 150ms;
 }
-.ph-city:hover h3 {
-  color: var(--ph-accent);
+@media (hover: hover) and (pointer: fine) {
+  .ph-city:hover h3 {
+    color: var(--ph-accent);
+  }
 }
 .ph-strip {
   display: flex;
@@ -238,8 +281,10 @@
 .ph-strip img[data-loaded] {
   opacity: 0.85;
 }
-.ph-city:hover .ph-strip > div {
-  background: var(--ph-raised);
+@media (hover: hover) and (pointer: fine) {
+  .ph-city:hover .ph-strip > div {
+    background: var(--ph-raised);
+  }
 }
 .ph-strip img[data-loaded] {
   opacity: 1;
@@ -247,12 +292,6 @@
 .ph-unplaced {
   margin-top: 56px;
   color: var(--ph-faint);
-}
-.ph-summary {
-  padding-top: 32px;
-}
-.ph-summary + .ph-tabs {
-  padding-top: 16px;
 }
 .photo-bar nav a[aria-current="page"] {
   color: var(--ph-text);
@@ -273,8 +312,10 @@
   border-bottom: 1px solid transparent;
   color: var(--ph-muted);
 }
-.ph-tabs :is(button, a):hover {
-  color: var(--ph-text);
+@media (hover: hover) and (pointer: fine) {
+  .ph-tabs :is(button, a):hover {
+    color: var(--ph-text);
+  }
 }
 .ph-tabs button[aria-pressed="true"] {
   color: var(--ph-text);
@@ -338,6 +379,7 @@
 .ph-view-image {
   position: relative;
   min-height: 0;
+  touch-action: pan-y pinch-zoom;
 }
 .ph-view-image img {
   object-fit: contain;
@@ -366,6 +408,27 @@
   grid-template-rows: auto 1fr auto;
   height: 100%;
 }
+/* Opening a photo eases in instead of cutting over the grid. Only the dialog
+   and its frame animate: they stay mounted while stepping, so swiping
+   between photos stays instant (the image itself remounts per photo). */
+.ph-lightbox[open],
+.ph-lightbox[open]::backdrop {
+  opacity: 1;
+  transition: opacity 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.ph-lightbox[open] .ph-lightbox-inner {
+  transform: none;
+  transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@starting-style {
+  .ph-lightbox[open],
+  .ph-lightbox[open]::backdrop {
+    opacity: 0;
+  }
+  .ph-lightbox[open] .ph-lightbox-inner {
+    transform: scale(0.98);
+  }
+}
 .ph-lightbox header,
 .ph-meta {
   display: flex;
@@ -387,6 +450,7 @@
 .ph-lightbox-image {
   position: relative;
   min-height: 0;
+  touch-action: pan-y pinch-zoom;
 }
 .ph-lightbox-image > img {
   object-fit: contain;
@@ -429,8 +493,10 @@
   gap: 16px;
   margin-top: 6px;
 }
-.ph-meta-links a:hover {
-  color: var(--ph-text);
+@media (hover: hover) and (pointer: fine) {
+  .ph-meta-links a:hover {
+    color: var(--ph-text);
+  }
 }
 
 @media (max-width: 700px) {

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getWikiMetadata, getWikiContent } from "@/utils/content/wiki";
 import MarkdownContent from "@/components/posts/MarkdownContent";
 import Backlinks from "@/components/content/Backlinks";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
@@ -19,13 +20,11 @@ export async function generateMetadata({
   const page = pages.find((p) => p.slug === slug);
   if (!page) return;
 
-  return {
+  return pageMetadata({
     title: page.title,
     description: page.description,
-    alternates: {
-      canonical: `/wiki/${slug}`,
-    },
-  };
+    path: `/wiki/${slug}`,
+  });
 }
 
 export const generateStaticParams = async () => {

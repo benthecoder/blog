@@ -1,18 +1,54 @@
 import { serializeJsonLd } from "@/utils/jsonLd";
 import { getPostContent, getPostMetadata } from "@/utils/content/posts";
 import { getRelatedPosts } from "@/utils/content/related";
+import { getSameDayPosts } from "@/utils/content/onThisDay";
 import { getPostPreviewData } from "@/utils/content/preview";
-import { SITE_URL } from "@/config/site";
+import { postDateISO } from "@/utils/dateUtils";
+import { IMAGE_REMOTE_HOST, SITE_URL } from "@/config/site";
 import { PERSON_ID } from "@/config/person";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownContent from "@/components/posts/MarkdownContent";
 import Backlinks from "@/components/content/Backlinks";
 import { extractToc } from "@/utils/content/toc";
-import { splitLeadingImage } from "@/utils/content/hero";
+import { heroImage, splitLeadingImage } from "@/utils/content/hero";
+import { getImageMeta } from "@/utils/content/imageMeta";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 export const dynamic = "force-static";
+
+const postOgImage = (title: string) =>
+  `${SITE_URL}/og?title=${encodeURIComponent(title)}`;
+
+// Posts that open with a photo share it, resized by the next/image optimizer
+// (1200 wide, q75 are both allowed in next.config.ts). Null keeps the text card.
+function photoOgImage(content: string) {
+  const hero = heroImage(content);
+  if (!hero) return null;
+  const { src, alt } = hero;
+  if (/^https?:\/\//.test(src)) {
+    try {
+      const { protocol, hostname } = new URL(src);
+      if (protocol !== "https:" || hostname !== IMAGE_REMOTE_HOST) return null;
+    } catch {
+      return null;
+    }
+  } else if (!src.startsWith("/") || src.startsWith("//")) {
+    return null;
+  }
+  const meta = getImageMeta(src);
+  // The optimizer never upscales, so a smaller original is served as is.
+  const width = meta && Math.min(1200, meta.width);
+  return {
+    url: `${SITE_URL}/_next/image?url=${encodeURIComponent(src)}&w=1200&q=75`,
+    alt,
+    ...(meta &&
+      width && {
+        width,
+        height: Math.round((meta.height * width) / meta.width),
+      }),
+  };
+}
 
 type Params = Promise<{ slug: string }>;
 
@@ -29,8 +65,10 @@ export async function generateMetadata({
     return;
   }
 
-  const { title, date: publishedTime } = post;
-  const ogImage = `${SITE_URL}/og?title=${encodeURIComponent(title)}`;
+  const { title } = post;
+  const publishedTime = postDateISO(post.date);
+  const photo = photoOgImage(getPostContent(slug).content);
+  const ogImage = photo?.url ?? postOgImage(title);
   const description = getPostPreviewData(slug)?.excerpt.slice(0, 160);
 
   return {
@@ -45,10 +83,11 @@ export async function generateMetadata({
       type: "article",
       publishedTime,
       url: `${SITE_URL}/posts/${slug}`,
-      images: [{ url: ogImage }],
+      images: [photo ?? { url: ogImage }],
     },
     twitter: {
       card: "summary_large_image",
+      creator: "@benedictneo",
       title,
       images: [ogImage],
     },
@@ -73,12 +112,13 @@ const PostPage = async ({ params }: { params: Params }) => {
 
   const postContent = getPostContent(slug);
   const { hero, body } = splitLeadingImage(postContent.content);
+  const isoDate = postDateISO(post.date);
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
-    datePublished: post.date,
-    dateModified: post.date,
+    ...(isoDate && { datePublished: isoDate, dateModified: isoDate }),
+    image: photoOgImage(postContent.content)?.url ?? postOgImage(post.title),
     url: `https://bneo.xyz/posts/${slug}`,
     author: {
       "@type": "Person",
@@ -103,10 +143,11 @@ const PostPage = async ({ params }: { params: Params }) => {
         wordcount={post.wordcount}
         toc={extractToc(postContent.content)}
         related={getRelatedPosts(slug)}
+        onThisDay={getSameDayPosts(slug)}
         hero={hero ? <MarkdownContent content={hero} /> : undefined}
         backlinks={<Backlinks contentRef={{ kind: "post", slug }} />}
       >
-        <MarkdownContent content={body} />
+        <MarkdownContent content={body} prioritizeFirstImage={!hero} />
       </RenderPost>
     </>
   );

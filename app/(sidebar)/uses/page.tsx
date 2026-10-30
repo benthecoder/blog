@@ -1,4 +1,11 @@
+import type { Metadata } from "next";
 import Image from "next/image";
+import { pageMetadata } from "@/utils/pageMetadata";
+
+export const metadata: Metadata = pageMetadata({
+  title: "uses",
+  path: "/uses",
+});
 
 type Product = {
   name: string;
@@ -59,6 +66,7 @@ const ProductCell = ({ item }: { item: Product }) => {
           src={`/images/uses/${item.image}`}
           alt={item.name}
           fill
+          sizes="(max-width: 767px) 30vw, (max-width: 1279px) 120px, 160px"
           className="object-contain"
         />
       </div>
@@ -92,6 +100,7 @@ const ProductCell = ({ item }: { item: Product }) => {
 export default function ProductsPage() {
   return (
     <div className="w-full flex flex-col items-center">
+      <h1 className="sr-only">uses</h1>
       <p className="text-[10px] tracking-[0.3em] uppercase opacity-30 mb-12">
         日用品
       </p>

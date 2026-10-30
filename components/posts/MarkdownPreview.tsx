@@ -2,6 +2,7 @@
 
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import { useMemo } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 import Link from "next/link";
 import { createResolver } from "@/utils/links/resolve";
 import type { LinkableEntry } from "@/types/links";
@@ -27,20 +28,25 @@ export default function MarkdownPreview({
       a: ({
         href,
         children,
-      }: {
-        href?: string;
-        children?: React.ReactNode;
-      }) => {
+        node: _node,
+        ...props
+      }: ComponentPropsWithoutRef<"a"> & { node?: unknown }) => {
         const target = href ? decodeWikiLinkHref(href) : null;
         if (target !== null) {
           const entry = resolve(target);
           return entry ? (
-            <Link href={entry.href}>{children}</Link>
+            <Link href={entry.href} {...props}>
+              {children}
+            </Link>
           ) : (
             <>{children}</>
           );
         }
-        return <a href={href}>{children}</a>;
+        return (
+          <a href={href} {...props}>
+            {children}
+          </a>
+        );
       },
     }),
     [resolve]

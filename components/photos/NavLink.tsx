@@ -16,7 +16,10 @@ export function NavLink({
   also?: string;
   children: ReactNode;
 }) {
-  const pathname = usePathname();
+  // photos.bneo.xyz rewrites "/places" to "/photos/places": the server sees
+  // the rewritten path and the browser the short one, so compare short paths
+  // or hydration disagrees.
+  const pathname = usePathname().replace(/^\/photos(?=\/|$)/, "") || "/";
   const within = (base: string) =>
     pathname === base || (!exact && pathname.startsWith(`${base}/`));
   const active = within(href) || (also !== undefined && within(also));

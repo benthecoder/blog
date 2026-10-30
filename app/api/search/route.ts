@@ -6,11 +6,15 @@ import { formatEmbeddingForPostgres } from "@/utils/chunking/embeddingUtils";
 import {
   SEARCH_RESULT_LIMIT,
   SEARCH_FALLBACK_LIMIT,
+  SEARCH_CANDIDATE_LIMIT,
+  SEARCH_RRF_K,
+  SEARCH_MAX_PER_POST,
   SEMANTIC_SIMILARITY_THRESHOLD,
-  SEMANTIC_SIMILARITY_THRESHOLD_STRICT,
-  HYBRID_VECTOR_WEIGHT,
-  HYBRID_KEYWORD_WEIGHT,
+  SEARCH_RATE_LIMIT,
+  SEARCH_RATE_WINDOW_SECONDS,
 } from "@/config/constants";
+import { checkRateLimit } from "@/utils/rateLimit";
+import { clientIp, hashViewer } from "@/utils/clientIp";
 
 const sql = neon(process.env.POSTGRES_URL!);
 
@@ -37,9 +41,9 @@ function mapRow(row: DbRow, scoreType: ScoreType) {
   const similarity =
     scoreType === "keyword"
       ? Number(row.keyword_score?.toFixed(4)) || 0
-      : scoreType === "hybrid"
-        ? Number(row.hybrid_score?.toFixed(4)) || 0
-        : Number(row.vector_similarity?.toFixed(4)) || 0;
+      : // Hybrid ranks by the fused score, but shows cosine similarity: fused
+        // scores aren't comparable across queries as a percentage.
+        Number(row.vector_similarity?.toFixed(4)) || 0;
 
   return {
     content: row.content,
@@ -115,6 +119,18 @@ export async function POST(request: Request) {
       { status: 400 }
     );
   }
+  const limited = await checkRateLimit({
+    scope: "search",
+    viewer: hashViewer(clientIp(request)),
+    limit: SEARCH_RATE_LIMIT,
+    windowSeconds: SEARCH_RATE_WINDOW_SECONDS,
+  });
+  if (!limited.ok) {
+    return NextResponse.json(
+      { error: "Too many searches — try again in a minute." },
+      { status: 429, headers: { "Retry-After": String(limited.retryAfter) } }
+    );
+  }
   const { query, searchType, tags, chunkType } = parsed.data;
   // JSON transport avoids depending on the driver's PostgreSQL array encoding.
   const tagsJson = JSON.stringify(tags);
@@ -171,76 +187,79 @@ export async function POST(request: Request) {
     );
 
     if (searchType === "hybrid") {
-      // Split the unfiltered text/vector OR so text matching can use its GIN
-      // index. Selective tag filters already prune cheaply with the old plan.
-      // Only fixed SQL fragments vary here; all input values remain parameters.
+      // Reciprocal Rank Fusion of two candidate lists. Raw scores are not
+      // comparable (cosine ~0.7 vs ts_rank ~0.05), ranks are.
+      //  vec: nearest chunks by cosine distance (ORDER BY + LIMIT lets the
+      //       pgvector index work; no similarity threshold).
+      //  kw:  chunks matching the query via websearch_to_tsquery, title
+      //       matches first, then ts_rank_cd. The tsvector expression matches
+      //       the existing GIN index.
+      // fused = sum of 1/(k+rank) over the lists a chunk is in, plus one
+      // top-rank contribution when the post title matches the query, so exact
+      // titles land first. `similarity` is the fused score divided by its
+      // maximum (rank 1 in both lists + title bonus = 3/(k+1)), so it stays in
+      // 0-1 and agrees with the ordering shown. At most $6 chunks per post.
+      // Only fixed SQL varies; all input values are parameters.
       const results = await sql.query(
         `
-        WITH RankedResults AS (
-          SELECT content, post_slug, post_title, chunk_type, metadata,
-            1 - (embedding <=> $1::vector) as vector_similarity,
-            ts_rank(to_tsvector('english', content || ' ' || post_title), plainto_tsquery('english', $2)) as text_rank
-          FROM content_chunks
-          WHERE ${
-            tags.length
-              ? `(to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', $2)
-                  OR 1 - (embedding <=> $1::vector) > $3)`
-              : `id IN (
-                  SELECT id FROM content_chunks
-                  WHERE to_tsvector('english', content || ' ' || post_title) @@ plainto_tsquery('english', $2)
-                    AND ($8::text IS NULL OR chunk_type = $8::text)
-                  UNION
-                  SELECT id FROM content_chunks
-                  WHERE 1 - (embedding <=> $1::vector) > $3
-                    AND ($8::text IS NULL OR chunk_type = $8::text)
-                )`
-          }
-            AND ($7::jsonb = '[]'::jsonb OR metadata->'tags' ?| ARRAY(SELECT jsonb_array_elements_text($7::jsonb)))
-            AND ($8::text IS NULL OR chunk_type = $8::text)
+        WITH vec AS (
+          SELECT id, ROW_NUMBER() OVER (ORDER BY dist) AS rnk
+          FROM (
+            SELECT id, embedding <=> $1::vector AS dist
+            FROM content_chunks
+            WHERE ($7::jsonb = '[]'::jsonb OR metadata->'tags' ?| ARRAY(SELECT jsonb_array_elements_text($7::jsonb)))
+              AND ($8::text IS NULL OR chunk_type = $8::text)
+            ORDER BY embedding <=> $1::vector
+            LIMIT $3::int
+          ) nearest
+        ),
+        kw AS (
+          SELECT id, title_match, text_rank,
+            ROW_NUMBER() OVER (ORDER BY title_match DESC, text_rank DESC) AS rnk
+          FROM (
+            SELECT c.id,
+              to_tsvector('english', c.post_title) @@ q.tsq AS title_match,
+              ts_rank_cd(to_tsvector('english', c.content || ' ' || c.post_title), q.tsq) AS text_rank
+            FROM content_chunks c, (SELECT websearch_to_tsquery('english', $2) AS tsq) q
+            WHERE to_tsvector('english', c.content || ' ' || c.post_title) @@ q.tsq
+              -- A negation-only query ("-foo") matches nearly every row at rank 0.
+              AND ts_rank_cd(to_tsvector('english', c.content || ' ' || c.post_title), q.tsq) > 0
+              AND ($7::jsonb = '[]'::jsonb OR c.metadata->'tags' ?| ARRAY(SELECT jsonb_array_elements_text($7::jsonb)))
+              AND ($8::text IS NULL OR c.chunk_type = $8::text)
+            ORDER BY title_match DESC, text_rank DESC
+            LIMIT $3::int
+          ) matches
+        ),
+        fused AS (
+          SELECT COALESCE(vec.id, kw.id) AS id,
+            COALESCE(1.0 / ($4::int + vec.rnk), 0)
+              + COALESCE(1.0 / ($4::int + kw.rnk), 0)
+              + CASE WHEN kw.title_match THEN 1.0 / ($4::int + 1) ELSE 0 END AS rrf,
+            COALESCE(kw.text_rank, 0) AS text_rank
+          FROM vec FULL JOIN kw ON vec.id = kw.id
+        ),
+        capped AS (
+          SELECT c.content, c.post_slug, c.post_title, c.chunk_type, c.metadata,
+            1 - (c.embedding <=> $1::vector) AS vector_similarity,
+            f.text_rank,
+            (f.rrf * ($4::int + 1) / 3.0)::float8 AS hybrid_score,
+            ROW_NUMBER() OVER (PARTITION BY c.post_slug ORDER BY f.rrf DESC) AS post_rank
+          FROM fused f JOIN content_chunks c ON c.id = f.id
         )
-        SELECT content, post_slug, post_title, chunk_type, metadata, vector_similarity, text_rank,
-          (vector_similarity * $4 + COALESCE(text_rank, 0) * $5) as hybrid_score
-        FROM RankedResults ORDER BY hybrid_score DESC LIMIT $6
+        SELECT content, post_slug, post_title, chunk_type, metadata,
+          vector_similarity, text_rank, hybrid_score
+        FROM capped
+        WHERE post_rank <= $6::int
+        ORDER BY hybrid_score DESC
+        LIMIT $5::int
         `,
         [
           formattedEmbedding,
           query,
-          SEMANTIC_SIMILARITY_THRESHOLD_STRICT,
-          HYBRID_VECTOR_WEIGHT,
-          HYBRID_KEYWORD_WEIGHT,
+          SEARCH_CANDIDATE_LIMIT,
+          SEARCH_RRF_K,
           SEARCH_RESULT_LIMIT,
-          tagsJson,
-          chunkType,
-        ],
-        queryOptions
-      );
-
-      if (results.length > 0) {
-        return NextResponse.json({
-          results: results.map((row) => mapRow(row as DbRow, "hybrid")),
-        });
-      }
-
-      const fallback = await sql.query(
-        `
-        WITH RankedResults AS (
-          SELECT content, post_slug, post_title, chunk_type, metadata,
-            1 - (embedding <=> $1::vector) as vector_similarity,
-            ts_rank(to_tsvector('english', content || ' ' || post_title), plainto_tsquery('english', $2)) as text_rank
-          FROM content_chunks
-          WHERE ($6::jsonb = '[]'::jsonb OR metadata->'tags' ?| ARRAY(SELECT jsonb_array_elements_text($6::jsonb)))
-            AND ($7::text IS NULL OR chunk_type = $7::text)
-        )
-        SELECT content, post_slug, post_title, chunk_type, metadata, vector_similarity, text_rank,
-          (vector_similarity * $3 + COALESCE(text_rank, 0) * $4) as hybrid_score
-        FROM RankedResults ORDER BY hybrid_score DESC LIMIT $5
-        `,
-        [
-          formattedEmbedding,
-          query,
-          HYBRID_VECTOR_WEIGHT,
-          HYBRID_KEYWORD_WEIGHT,
-          SEARCH_FALLBACK_LIMIT,
+          SEARCH_MAX_PER_POST,
           tagsJson,
           chunkType,
         ],
@@ -248,25 +267,38 @@ export async function POST(request: Request) {
       );
 
       return NextResponse.json({
-        results: fallback.map((row) => mapRow(row as DbRow, "hybrid")),
-        fallback: true,
+        results: results.map((row) => mapRow(row as DbRow, "hybrid")),
       });
     }
 
+    // Semantic: nearest candidates (index-friendly), then threshold and the
+    // per-post cap on the small candidate set.
     const results = await sql.query(
       `
-        SELECT content, post_slug, post_title, chunk_type, metadata,
-          1 - (embedding <=> $1::vector) as vector_similarity
-        FROM content_chunks
-        WHERE 1 - (embedding <=> $1::vector) > $2
-        AND ($4::jsonb = '[]'::jsonb OR metadata->'tags' ?| ARRAY(SELECT jsonb_array_elements_text($4::jsonb)))
-        AND ($5::text IS NULL OR chunk_type = $5::text)
-        ORDER BY vector_similarity DESC LIMIT $3
+        SELECT content, post_slug, post_title, chunk_type, metadata, vector_similarity
+        FROM (
+          SELECT content, post_slug, post_title, chunk_type, metadata, vector_similarity,
+            ROW_NUMBER() OVER (PARTITION BY post_slug ORDER BY vector_similarity DESC) AS post_rank
+          FROM (
+            SELECT content, post_slug, post_title, chunk_type, metadata,
+              1 - (embedding <=> $1::vector) AS vector_similarity
+            FROM content_chunks
+            WHERE ($6::jsonb = '[]'::jsonb OR metadata->'tags' ?| ARRAY(SELECT jsonb_array_elements_text($6::jsonb)))
+              AND ($7::text IS NULL OR chunk_type = $7::text)
+            ORDER BY embedding <=> $1::vector
+            LIMIT $5::int
+          ) nearest
+          WHERE vector_similarity > $2
+        ) capped
+        WHERE post_rank <= $4::int
+        ORDER BY vector_similarity DESC LIMIT $3::int
         `,
       [
         formattedEmbedding,
         SEMANTIC_SIMILARITY_THRESHOLD,
         SEARCH_RESULT_LIMIT,
+        SEARCH_MAX_PER_POST,
+        SEARCH_CANDIDATE_LIMIT,
         tagsJson,
         chunkType,
       ],

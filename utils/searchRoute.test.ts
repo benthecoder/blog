@@ -4,6 +4,7 @@ const mocks = vi.hoisted(() => ({
   query: vi.fn(),
   embed: vi.fn(),
   client: vi.fn(),
+  limit: vi.fn(),
 }));
 vi.mock("@neondatabase/serverless", () => ({
   neon: () => ({ query: mocks.query }),
@@ -11,6 +12,7 @@ vi.mock("@neondatabase/serverless", () => ({
 vi.mock("@/utils/clients", () => ({ getVoyageClient: mocks.client }));
 vi.mock("next/cache", () => ({ unstable_cache: (fn: unknown) => fn }));
 vi.mock("server-only", () => ({}));
+vi.mock("@/utils/rateLimit", () => ({ checkRateLimit: mocks.limit }));
 import { POST } from "@/app/api/search/route";
 
 const row = {
@@ -37,6 +39,22 @@ beforeEach(() => {
     .mockReset()
     .mockResolvedValue({ data: [{ embedding: Array(1024).fill(0.1) }] });
   mocks.client.mockImplementation(() => ({ embed: mocks.embed }));
+  mocks.limit.mockReset().mockResolvedValue({ ok: true, retryAfter: 60 });
+});
+
+describe("search rate limit", () => {
+  it("returns 429 before any embedding or SQL work", async () => {
+    mocks.limit.mockResolvedValue({ ok: false, retryAfter: 42 });
+    const response = await POST(request({ query: "jazz" }));
+    expect(response.status).toBe(429);
+    expect(response.headers.get("Retry-After")).toBe("42");
+    expect(mocks.query).not.toHaveBeenCalled();
+    expect(mocks.client).not.toHaveBeenCalled();
+  });
+  it("does not spend quota on invalid requests", async () => {
+    await POST(request({ query: " " }));
+    expect(mocks.limit).not.toHaveBeenCalled();
+  });
 });
 
 describe("search request boundary", () => {
@@ -128,9 +146,9 @@ describe("parameterized search filters", () => {
       else expect(mocks.embed).toHaveBeenCalledOnce();
     }
   );
-  it.each(["hybrid", "semantic"])(
-    "keeps filters in %s fallback results",
-    async (searchType) => {
+  it("keeps filters in semantic fallback results", async () => {
+    {
+      const searchType = "semantic";
       mocks.query.mockResolvedValueOnce([]).mockResolvedValueOnce([row]);
       const response = await POST(
         request({ query: "jazz", searchType, tags, chunkType: "quote" })
@@ -142,7 +160,17 @@ describe("parameterized search filters", () => {
         expect(parameters.slice(-2)).toEqual([JSON.stringify(tags), "quote"]);
       }
     }
-  );
+  });
+  it("fuses hybrid results in one query with a per-post cap", async () => {
+    const response = await POST(request({ query: "jazz" }));
+    expect((await response.json()).fallback).toBeUndefined();
+    expect(mocks.query).toHaveBeenCalledOnce();
+    const [statement, parameters] = mocks.query.mock.calls[0];
+    expect(statement).toContain("websearch_to_tsquery");
+    expect(statement).toContain("PARTITION BY c.post_slug");
+    expect(parameters).toContain(60);
+    expect(parameters).toContain(2);
+  });
   it.each(["keyword", "hybrid", "semantic"])(
     "uses unfiltered values when %s filters are omitted",
     async (searchType) => {

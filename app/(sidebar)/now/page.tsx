@@ -1,9 +1,14 @@
+import type { Metadata } from "next";
 import SpotifyNowPlaying from "./SpotifyNowPlaying";
 import Clock from "@/components/ui/Clock";
+import { pageMetadata } from "@/utils/pageMetadata";
+
+export const metadata: Metadata = pageMetadata({ title: "now", path: "/now" });
 
 export default function NowPage() {
   return (
     <div>
+      <h1 className="sr-only">now</h1>
       <article className="prose">
         <p>
           this is a <a href="https://sive.rs/nowff">now</a> page
@@ -21,7 +26,7 @@ export default function NowPage() {
           <li>finding balance in life and work and trying to sleep more</li>
           <li>
             experimenting with{" "}
-            <a href="https://en.wikipedia.org/wiki/Low-level_laser_therapy/">
+            <a href="https://en.wikipedia.org/wiki/Low-level_laser_therapy">
               photobiomodulation
             </a>
           </li>

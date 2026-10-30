@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getRecipeMetadata, getRecipeContent } from "@/utils/content/recipes";
 import MarkdownContent from "@/components/posts/MarkdownContent";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
@@ -21,11 +22,11 @@ export async function generateMetadata({
   const recipe = getRecipeMetadata().find((r) => r.slug === slug);
   if (!recipe) return;
 
-  return {
+  return pageMetadata({
     title: recipe.title,
     description: recipe.description,
-    alternates: { canonical: `/recipes/${slug}` },
-  };
+    path: `/recipes/${slug}`,
+  });
 }
 
 export const generateStaticParams = async () =>

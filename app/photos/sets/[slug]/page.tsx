@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PhotoStream } from "@/components/photos/PhotoStream";
 import { getPhotosets } from "@/utils/content/photostream";
+import { photoShareMetadata } from "@/utils/photoShare";
 import { placeLine } from "@/utils/photoPlaces";
 import { formatPhotoDate } from "@/utils/photoDate";
 
@@ -12,11 +13,19 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const collection = (await getPhotosets()).find((item) => item.slug === slug);
-  return {
+  const count = collection?.photos.length ?? 0;
+  return photoShareMetadata({
     title: `${collection?.title ?? "photos"} — Benedict Neo`,
-    description: collection?.description,
-    alternates: { canonical: `https://photos.bneo.xyz/photos/sets/${slug}` },
-  };
+    description:
+      collection?.description ??
+      (collection && `${count} ${count === 1 ? "frame" : "frames"}.`),
+    path: `/sets/${slug}`,
+    photo:
+      collection?.photos.find(
+        (photo) =>
+          photo.id === collection.cover || photo.src === collection.cover
+      ) ?? collection?.photos[0],
+  });
 }
 
 export default async function PhotosetPage({ params }: Props) {
@@ -44,8 +53,8 @@ export default async function PhotosetPage({ params }: Props) {
           <Link
             href={
               collection.parentSlug
-                ? `/photos/sets/${collection.parentSlug}`
-                : "/photos/places"
+                ? `/sets/${collection.parentSlug}`
+                : "/places"
             }
             className="ph-mono ph-back"
           >
@@ -68,7 +77,7 @@ export default async function PhotosetPage({ params }: Props) {
           {collection.sets && collection.sets.length > 1 && (
             <nav className="ph-tabs ph-mono" aria-label="Sets in this trip">
               {collection.sets.map((set) => (
-                <Link key={set.slug} href={`/photos/sets/${set.slug}`}>
+                <Link key={set.slug} href={`/sets/${set.slug}`}>
                   {set.title}
                 </Link>
               ))}

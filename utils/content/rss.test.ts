@@ -38,6 +38,16 @@ describe("RSS feed", () => {
     expect(rss).toContain('src="https://bneo.xyz/images/flower.png"');
     expect(rss).toContain("<guid>https://bneo.xyz/posts/test</guid>");
   });
+  it("makes root-relative links absolute but leaves protocol-relative ones", () => {
+    const rss = buildRssFeed(
+      [{ slug: "a", title: "A", date: "Jan 1, 2025" }],
+      () => "[braces](/posts/braces) and ![x](//cdn.example/x.png)"
+    );
+    expect(rss).toContain('href="https://bneo.xyz/posts/braces"');
+    expect(rss).toContain('src="//cdn.example/x.png"');
+    expect(rss).toContain("<language>en</language>");
+  });
+
   it("supports an empty archive", () => {
     const read = vi.fn();
     expect(buildRssFeed([], read)).not.toContain("Invalid Date");

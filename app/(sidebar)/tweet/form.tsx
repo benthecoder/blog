@@ -51,7 +51,7 @@ export default function Form() {
       <input
         aria-label="What's on your mind?"
         placeholder="What's on your mind?"
-        disabled={isPending}
+        disabled={isMutating}
         maxLength={280}
         onChange={(e) => setRemainingChars(280 - e.target.value.length)}
         name="entry"

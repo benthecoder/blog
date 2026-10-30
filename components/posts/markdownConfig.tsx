@@ -9,6 +9,7 @@ import PostImage from "./PostImage";
 import remarkWikiLink from "./remarkWikiLink";
 import rehypeSidenotes from "./rehypeSidenotes";
 import type { ImageMeta } from "@/utils/content/imageMeta";
+import remarkImageParagraphs from "@/utils/content/remarkImageParagraphs";
 import "katex/dist/katex.min.css";
 
 // Minimal mdast shape — @types/mdast is not a dependency of this repo.
@@ -35,7 +36,7 @@ function flagFirstImage(node: MdastNode): boolean {
 // Flags the first image in the document so its plate can preload: on a
 // photo-led post that image is the LCP element, and lazy-loading it delays
 // the one paint the reader is waiting for.
-function remarkFirstImage() {
+export function remarkFirstImage() {
   return (tree: MdastNode) => {
     flagFirstImage(tree);
   };
@@ -45,6 +46,7 @@ export const remarkPlugins: PluggableList = [
   remarkMath,
   remarkGfm,
   remarkWikiLink,
+  remarkImageParagraphs,
   remarkFirstImage,
 ];
 export const rehypePlugins: PluggableList = [
@@ -70,7 +72,8 @@ export function createBaseComponents(
         const src = first.properties?.src as string;
         const alt = (first.properties?.alt as string) ?? "";
         const meta = getImageMeta?.(src) ?? null;
-        const priority = first.properties?.["data-priority"] === "true";
+        // rehype-raw re-parses the tree, which camel-cases data-* attributes.
+        const priority = first.properties?.dataPriority === "true";
         return (
           <PostImage src={src} alt={alt} meta={meta} priority={priority} />
         );

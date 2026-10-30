@@ -74,7 +74,8 @@ function SearchContent() {
 
   const handleSearch = (e?: FormEvent) => {
     if (e) e.preventDefault();
-    performSearch(searchType, selectedChunkType);
+    if (!query.trim()) clearQuery();
+    else performSearch(searchType, selectedChunkType);
   };
 
   const handleSearchTypeChange = (type: SearchType) => {
@@ -98,8 +99,9 @@ function SearchContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <form onSubmit={handleSearch} className="mb-6">
+    <div className="w-full">
+      <h1 className="mb-6 text-2xl text-primary">search</h1>
+      <form onSubmit={handleSearch} className="mb-5">
         <div className="relative">
           <input
             aria-label="Search posts"
@@ -110,14 +112,14 @@ function SearchContent() {
               setQuery(e.target.value);
             }}
             placeholder="search..."
-            className="w-full px-4 py-3 bg-surface border-2 border-rule dark:border-night-raised focus:border-ink dark:focus:border-chalk-soft transition-colors text-primary text-lg font-medium placeholder-primary/40 outline-hidden selection:bg-ink selection:text-white dark:selection:bg-chalk-soft dark:selection:text-night"
+            className="w-full min-w-0 border-b border-line bg-transparent py-3 pr-9 text-lg text-primary placeholder:text-muted focus:border-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 transition-colors"
           />
           {query && (
             <button
               type="button"
               aria-label="Clear search"
               onClick={clearQuery}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/40 hover:text-ink dark:hover:text-chalk-soft transition-colors"
+              className="absolute right-1 top-1/2 -translate-y-1/2 p-1 text-muted hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 transition-colors"
             >
               ✕
             </button>
@@ -141,7 +143,7 @@ function SearchContent() {
       {error && (
         <div
           role="alert"
-          className="text-red-500 dark:text-red-400 mb-4 p-4 border-l-2 border-red-500"
+          className="mb-4 border-l-2 border-accent pl-4 text-sm text-primary"
         >
           {error}
         </div>
@@ -149,12 +151,12 @@ function SearchContent() {
 
       {results.length > 0 ? (
         <div>
-          <div className="mb-4 pb-2 border-b border-rule dark:border-night-raised">
-            <p className="text-xs text-primary/60 tracking-wide">
-              {results.length} RESULTS
+          <div className="pb-2 border-b border-line">
+            <p className="text-xs text-muted">
+              {results.length} {results.length === 1 ? "result" : "results"}
             </p>
           </div>
-          <div className="space-y-4">
+          <div className="min-w-0">
             {results.map((result, index) => (
               <SearchResult
                 key={`${result.post_slug}-${result.chunk_type}-${index}`}
@@ -169,14 +171,14 @@ function SearchContent() {
         !error &&
         hasSearched &&
         query && (
-          <div className="text-center py-12 border border-rule dark:border-night-raised">
-            <p className="text-primary/70 mb-2">
+          <div className="py-8 border-t border-line">
+            <p className="text-muted mb-2">
               No results found for &quot;{query}&quot;
             </p>
             {selectedChunkType && (
               <button
                 onClick={clearFilters}
-                className="mt-4 text-xs text-ink dark:text-chalk-soft hover:underline"
+                className="mt-2 text-sm text-accent underline underline-offset-4"
               >
                 clear filters
               </button>
@@ -192,7 +194,7 @@ export default function SearchPage() {
   return (
     <Suspense
       fallback={
-        <div className="max-w-3xl mx-auto px-4 py-8">
+        <div className="w-full py-8">
           <Loader text="loading search..." size="md" />
         </div>
       }

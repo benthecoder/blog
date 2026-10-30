@@ -17,7 +17,7 @@ const processor = unified()
   .use(rehypeStringify);
 
 // Split CDATA terminators so an article containing XML examples cannot break the feed.
-function cdata(value: string) {
+export function cdata(value: string) {
   return `<![CDATA[${value.replaceAll("]]>", "]]]]><![CDATA[>")}]]>`;
 }
 
@@ -44,7 +44,12 @@ export function buildRssFeed(
       const url = `${SITE_URL}${basePath}${encodeURIComponent(post.slug)}`;
       const html = String(
         processor.processSync(readContent(post.slug))
-      ).replace(/src="\/images\//g, `src="${SITE_URL}/images/`);
+      ).replace(
+        // Feeds have no base URL, so root-relative links and images (post
+        // cross-links, /images) must be absolute. Leaves //cdn URLs alone.
+        /(src|href)="\/(?!\/)/g,
+        `$1="${SITE_URL}/`
+      );
       const summary = sanitizeHtml(html, {
         allowedTags: [],
         allowedAttributes: {},
@@ -68,6 +73,6 @@ export function buildRssFeed(
 <rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel><title>${title}</title>
 <description>${description}</description>
-<link>${SITE_URL}</link><atom:link href="${SITE_URL}${selfPath}" rel="self" type="application/rss+xml" />
+<link>${SITE_URL}</link><language>en</language><atom:link href="${SITE_URL}${selfPath}" rel="self" type="application/rss+xml" />
 ${date}${items}</channel></rss>`;
 }

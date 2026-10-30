@@ -11,6 +11,11 @@ import PaletteSwitch from "@/components/ui/PaletteSwitch";
 import SearchModal from "@/components/ui/SearchModal";
 import { FloatingControls } from "@/components/layout/FloatingControls";
 import { RandomPostListener } from "@/components/layout/RandomPostListener";
+import {
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+  ogImageUrl,
+} from "@/utils/pageMetadata";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bneo.xyz"),
@@ -19,10 +24,16 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Benedict Neo",
     description: "writing daily",
-    url: "https://bneo.xyz",
     siteName: "Benedict Neo",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: ogImageUrl("Benedict Neo"),
+        width: OG_IMAGE_WIDTH,
+        height: OG_IMAGE_HEIGHT,
+      },
+    ],
   },
   robots: {
     index: true,
@@ -37,7 +48,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     title: "Benedict Neo",
+    creator: "@benedictneo",
     card: "summary_large_image",
+    images: [ogImageUrl("Benedict Neo")],
   },
 };
 
@@ -76,6 +89,9 @@ const averia = localFont({
   ],
   variable: "--font-averia",
   display: "swap",
+  // Six faces ~250KB; a page renders two or three. Unpreloaded, the browser
+  // fetches only the faces the page's CSS actually uses.
+  preload: false,
 });
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -85,15 +101,27 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       lang="en"
       className={`${averia.variable} font-serif`}
     >
+      <head>
+        {/* In <head> rather than metadata.alternates: pages that set their
+            own alternates (every post's canonical) would replace it. */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Benedict Neo"
+          href="https://bneo.xyz/rss.xml"
+        />
+      </head>
       <body className="antialiased text-primary">
         <Providers>
+          <SearchModal />
+          <RandomPostListener />
+          {children}
+          {/* Fixed in the corner, so DOM order is only tab order: after the
+              page, so the skip link is the first stop. */}
           <FloatingControls>
             <PaletteSwitch />
             <ThemeSwitch />
           </FloatingControls>
-          <SearchModal />
-          <RandomPostListener />
-          {children}
         </Providers>
         <SpeedInsights />
         <Analytics />

@@ -5,7 +5,10 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import type { StreamPhoto } from "@/types/photostream";
 import { frameNumber } from "@/utils/photoCamera";
+import { blurBackground, photoAlt } from "@/utils/photoCaption";
 import { PhotoMeta } from "./PhotoMeta";
+import { preloadPhoto } from "./preloadPhoto";
+import { useSwipe } from "./useSwipe";
 
 type Props = {
   photos: StreamPhoto[];
@@ -32,6 +35,13 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
 
   const step = (delta: number) =>
     onIndex(Math.max(0, Math.min(photos.length - 1, index! + delta)));
+  const swipe = useSwipe((direction) => step(direction));
+  useEffect(() => {
+    if (index === null) return;
+    for (const near of [photos[index - 1], photos[index + 1]]) {
+      if (near) preloadPhoto(near.src, 75);
+    }
+  }, [photos, index]);
   return (
     <dialog
       ref={dialog}
@@ -43,6 +53,9 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
       }}
       onKeyDown={(event) => {
         if (index === null) return;
+        if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+          return;
+        }
         if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
           event.preventDefault();
           event.stopPropagation();
@@ -64,11 +77,15 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
               <X size={20} />
             </button>
           </header>
-          <div className="ph-lightbox-image">
+          <div
+            className="ph-lightbox-image"
+            style={blurBackground(photo.blurDataURL)}
+            {...swipe}
+          >
             <Image
               key={photo.id}
               src={photo.src}
-              alt={photo.caption}
+              alt={photoAlt(photo)}
               fill
               sizes="100vw"
               quality={75}

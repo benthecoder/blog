@@ -40,6 +40,11 @@ export const KNOWLEDGE_MAP_JSON = path.join(
   "data",
   "knowledge-map.json"
 );
+export const KNOWLEDGE_MAP_3D_JSON = path.join(
+  ROOT_DIR,
+  "data",
+  "knowledge-map-3d.json"
+);
 export const KNOWLEDGE_MAP_NODES_JSON = path.join(
   DATA_DIR,
   "knowledge-map-nodes.json"

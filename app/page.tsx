@@ -28,7 +28,7 @@ export default function HomePage() {
   return (
     <main>
       <h1 className="sr-only">Benedict Neo</h1>
-      <header className="mx-auto flex max-w-xl items-center justify-between gap-2 px-6 pt-8 md:px-8">
+      <header className="home-header mx-auto flex max-w-xl items-center justify-between gap-2 px-6 pt-8 md:px-8">
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/"

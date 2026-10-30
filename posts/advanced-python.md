@@ -4,7 +4,7 @@ tags: 'programming, python, resources'
 date: 'Jul 19, 2023'
 ---
 
-1. [Fluent Python, 2nd Edition](https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/) ([code](https://github.com/fluentpython/example-code-2es))
+1. [Fluent Python, 2nd Edition](https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/) ([code](https://github.com/fluentpython/example-code-2e))
 2. [dabeaz-course/python-mastery: Advanced Python Mastery (course by @dabeaz)](https://github.com/dabeaz-course/python-mastery)
 3. [Full Stack Python](https://www.fullstackpython.com/)
 4. [Python Design Patterns](https://python-patterns.guide/)

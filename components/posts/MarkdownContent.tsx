@@ -11,6 +11,7 @@ import { getImageMeta } from "@/utils/content/imageMeta";
 import {
   createBaseComponents,
   remarkPlugins,
+  remarkFirstImage,
   rehypePlugins,
 } from "./markdownConfig";
 
@@ -48,11 +49,21 @@ async function CodeBlock({
 
 const components: Components = {
   ...createBaseComponents(getImageMeta),
-  a({ href, children }) {
+  a({ href, children, node: _node, ...props }) {
     const wikiTarget = href ? decodeWikiLinkHref(href) : null;
     if (wikiTarget !== null) {
-      return <WikiLink target={wikiTarget}>{children}</WikiLink>;
+      return (
+        <WikiLink target={wikiTarget} tabIndex={props.tabIndex}>
+          {children}
+        </WikiLink>
+      );
     }
+    if (props.tabIndex === -1)
+      return (
+        <a href={href} {...props}>
+          {children}
+        </a>
+      );
     const slug = href ? postSlugFromHref(href) : null;
     const preview = slug ? getPostPreviewData(slug) : null;
     if (preview) {
@@ -62,7 +73,11 @@ const components: Components = {
         </PostLinkPreview>
       );
     }
-    return <a href={href}>{children}</a>;
+    return (
+      <a href={href} {...props}>
+        {children}
+      </a>
+    );
   },
   pre({ node, children }) {
     const codeNode = node?.children[0] as
@@ -75,7 +90,7 @@ const components: Components = {
 
     if (codeNode?.tagName === "code") {
       const className = codeNode.properties?.className?.join(" ") ?? "";
-      const match = /language-(\w+)/.exec(className);
+      const match = /(?:^|\s)language-(\S+)/.exec(className);
       const text = codeNode.children?.[0];
       if (match && text?.type === "text" && typeof text.value === "string") {
         return (
@@ -121,14 +136,20 @@ const anchoredComponents: Components = {
 export default function MarkdownContent({
   content,
   anchors = false,
+  prioritizeFirstImage = true,
 }: {
   content: string;
   anchors?: boolean;
+  prioritizeFirstImage?: boolean;
 }) {
   return (
     <ReactMarkdown
       components={anchors ? anchoredComponents : components}
-      remarkPlugins={remarkPlugins}
+      remarkPlugins={
+        prioritizeFirstImage
+          ? remarkPlugins
+          : remarkPlugins.filter((plugin) => plugin !== remarkFirstImage)
+      }
       rehypePlugins={rehypePlugins}
       // Keep react-markdown's URL sanitizing, but let our `wikilink:` sentinel
       // scheme through so the `a` handler can resolve it.

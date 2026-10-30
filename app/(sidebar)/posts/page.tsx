@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getPostMetadata } from "@/utils/content/posts";
 import ArchiveClient from "./ArchiveClient";
+import { pageMetadata } from "@/utils/pageMetadata";
+
+export const metadata: Metadata = pageMetadata({
+  title: "archive",
+  path: "/posts",
+});
 
 export const dynamic = "force-static";
 

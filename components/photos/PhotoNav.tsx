@@ -31,13 +31,18 @@ export function PhotoNav() {
         aria-label="Photos"
         className={open ? "is-open" : undefined}
       >
-        <NavLink href="/photos" exact>
+        <NavLink href="/" exact>
           All
         </NavLink>
-        <NavLink href="/photos/places" also="/photos/sets">
+        <NavLink href="/places" also="/sets">
           Places
         </NavLink>
-        <a href="https://bneo.xyz">Blog ↗</a>
+        <a href="https://bneo.xyz">
+          Blog{" "}
+          <span className="photo-out" aria-hidden>
+            ↗
+          </span>
+        </a>
       </nav>
     </>
   );

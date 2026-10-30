@@ -42,8 +42,8 @@ const PostLinkPreview = ({
 
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
-    onOpenChange: (open) => {
-      if (open) {
+    onOpenChange: (open, _event, reason) => {
+      if (open && reason === "hover") {
         // Anchor to wherever the cursor is right now, once. Re-anchoring on
         // every pointermove made `flip` re-decide above-vs-below mid-hover,
         // snapping the card between the two.
@@ -60,6 +60,8 @@ const PostLinkPreview = ({
             height: 0,
           }),
         });
+      } else if (open) {
+        refs.setPositionReference(refs.domReference.current);
       }
       setIsOpen(open);
       if (open && !preview && !fetched.current) {

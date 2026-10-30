@@ -34,7 +34,7 @@ Global warming is **worse than we thought** it was because we were **shielded by
 
 This is also good because it's a massive experiment that shows the effects of local geo-engineering on the atlantic ocean.
 
-Instead of using SO2, one way is to just shoot sea water into the air using [misters](https://www.emicontrols.com/en-us/) that make it super tiny so it can float in the air.
+Instead of using SO2, one way is to just shoot sea water into the air using [misters](https://web.archive.org/web/20230921165200/https://www.emicontrols.com/en-us/) that make it super tiny so it can float in the air.
 
 Most of the water evaporates leaving behind little crystals of salt that then can seed clouds, and falls back down into the ocean.
 

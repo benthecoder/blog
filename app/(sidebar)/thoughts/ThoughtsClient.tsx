@@ -120,6 +120,7 @@ export default function ThoughtsClient({
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
+      <h1 className="sr-only">thoughts</h1>
       <div className="space-y-8">
         {dates.map((date) => (
           <div key={date} className="relative">

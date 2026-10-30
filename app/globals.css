@@ -355,6 +355,10 @@ body {
   width: 100%;
   min-width: 100%;
   position: relative;
+  /* Bare URLs and long inline code otherwise push the page wider than a
+     phone. Only breaks a word that can't fit on its own line; <pre> keeps
+     its own horizontal scroll. */
+  overflow-wrap: anywhere;
 }
 
 .dark .prose {
@@ -497,7 +501,9 @@ body {
 .prose ul li::before {
   content: "\25E6"; /* small circle */
   color: var(--color-ink-muted);
-  display: inline-block;
+  /* Out of the line box (it stays put via the negative margin), so a long
+     URL can't break onto its own line and leave the bullet alone above it. */
+  position: absolute;
   width: 0.75em;
   margin-left: -0.75em;
 }
@@ -991,7 +997,7 @@ body {
    after the paragraph that references it. Below xl the asides stay
    hidden and the endnotes section renders as usual; at xl the asides
    float into the right margin (Tufte-style) and the endnotes section
-   hides itself via .has-sidenotes. On posts the notes hang in the empty
+   becomes visually hidden via .has-sidenotes. On posts the notes hang in the empty
    space right of the centered column, which at xl is wide enough for
    them, so the article never moves. The editor column has borders, so
    it widens on both sides to keep the notes inside them. */
@@ -1048,9 +1054,21 @@ body {
     margin: 0.4em 0;
   }
 
-  .prose section[data-footnotes].has-sidenotes,
-  .essay-prose section[data-footnotes].has-sidenotes {
-    display: none;
+  .prose
+    section[data-footnotes].has-sidenotes:not(:focus-within):not(:has(:target)),
+  .essay-prose
+    section[data-footnotes].has-sidenotes:not(:focus-within):not(
+      :has(:target)
+    ) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 }
 
@@ -1058,6 +1076,8 @@ body {
   color: var(--color-chalk-strong);
 }
 
-body:has(.photo-site) .floating-controls {
+body:has(.home-header) .floating-controls,
+body:has(.photo-site) .floating-controls,
+body:has(.places-explorer) .floating-controls {
   display: none;
 }

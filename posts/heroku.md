@@ -18,7 +18,7 @@ I read [Adam's Heroku values](https://gist.github.com/adamwiggins/5687294), belo
 - **Do-ocracy / interapreneur**: ask forgiveness, not permission. take the initiative to make something happen and take responsibility for failures
 - **Everything is an experiment**: anything is always subject to change. ending an experiment isn't a failure, you learn the most from experiments that don't produce expected results
 - **gradual rollouts**: easy into everything. use feature flags to activate people slowly into changes. test internally -> private beta -> public
-- **design everything**: [Less is More](https://books.google.com.my/books?id=TL1aywAACAAJ&redir_esc=y) & [The Design of Everyday Things](http://books.google.com/books?id=w8pM72p_dpoC)
+- **design everything**: [Less is More](https://books.google.com.my/books?id=TL1aywAACAAJ&redir_esc=y) & [The Design of Everyday Things](https://web.archive.org/web/20130726094136/http://books.google.com:80/books?id=w8pM72p_dpoC)
 - **do less**: can we delete that code? do you need that feature? can you outsource the work to a partner/company so you don't have to build or maintain that?
 - **question everything**: status quo is never good enough
 - **interfaces matter**: everything has an interface (platforms have APIs, teams need to file issues and collaborate) good interfaces are narrow and well-defined

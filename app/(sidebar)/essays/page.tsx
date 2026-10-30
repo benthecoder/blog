@@ -2,17 +2,28 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getEssayMetadata } from "@/utils/content/essays";
 import { formatEssayDate } from "@/utils/content/essayDate";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
 
-export const metadata: Metadata = {
+const base = pageMetadata({
   title: "essays",
   description: "Long-form essays",
-  alternates: {
-    canonical: "/essays",
-    types: { "application/rss+xml": "/essays/rss.xml" },
-  },
-};
+  path: "/essays",
+});
+
+export function generateMetadata(): Metadata {
+  if (getEssayMetadata().length === 0) {
+    return { ...base, robots: { index: false, follow: true } };
+  }
+  return {
+    ...base,
+    alternates: {
+      ...base.alternates,
+      types: { "application/rss+xml": "/essays/rss.xml" },
+    },
+  };
+}
 
 const EssaysPage = () => {
   const essays = getEssayMetadata();

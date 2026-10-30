@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { extractKeywords, getSnippet, highlightText } from "./searchHelpers";
+import { textFragment } from "@/utils/searchTextFragment";
 import type { SearchResultItem } from "@/types/search";
 
 interface SearchResultProps {
@@ -14,60 +15,51 @@ export default function SearchResult({ result, query }: SearchResultProps) {
     : result.content.length > 200
       ? result.content.substring(0, 200) + "..."
       : result.content;
-
-  return (
-    <Link
-      href={`/posts/${result.post_slug}`}
-      className="group block mb-4 p-4 border border-rule/40 dark:border-night-raised/40 bg-paper-raised/40 dark:bg-night-raised/20 hover:border-ink/60 dark:hover:border-chalk-soft/60 hover:bg-paper-tint/60 dark:hover:bg-night-raised/40 transition-[border-color,background-color,box-shadow] duration-200 hover:shadow-xs"
-    >
-      <div className="space-y-2">
-        <div className="flex items-center justify-between gap-3">
-          <h3 className="font-medium text-primary group-hover:text-ink dark:group-hover:text-chalk-soft transition-colors">
-            {result.post_title}
-          </h3>
-          {result.score_type !== "keyword" && (
-            <span className="text-xs px-2 py-1 rounded-full bg-ink/10 dark:bg-chalk-soft/10 text-ink dark:text-chalk-soft font-medium whitespace-nowrap">
-              {Math.round(result.similarity * 100)}%
-            </span>
-          )}
-        </div>
-
-        {result.chunk_type === "code" ? (
-          <pre className="mt-2 bg-paper-warm/40 dark:bg-night-raised p-3 rounded-xs text-sm overflow-x-auto">
-            <code>{snippet}</code>
-          </pre>
-        ) : (
-          <p className="text-primary/70 mt-2 text-sm leading-relaxed">
-            {highlightText(snippet, keywords)}
-          </p>
-        )}
-
-        <div className="flex items-center gap-2 text-xs text-ink/70 dark:text-chalk-soft/70 pt-1">
-          <span className="capitalize font-medium">{result.chunk_type}</span>
-          {result.section && (
-            <>
-              <span>•</span>
-              <span className="text-primary/60 italic">{result.section}</span>
-            </>
-          )}
-          {result.language && (
-            <>
-              <span>•</span>
-              <span className="text-primary/60 font-mono text-[10px]">
-                {result.language}
-              </span>
-            </>
-          )}
-          {result.tags && result.tags.length > 3 && (
-            <>
-              <span>•</span>
-              <span className="text-primary/50">
-                +{result.tags.length - 3} tags
-              </span>
-            </>
-          )}
-        </div>
-      </div>
+  // Text fragments need a full document load to reach the matching passage.
+  const fragment = query
+    ? textFragment(result.content, keywords, result.chunk_type)
+    : null;
+  const href = `/posts/${result.post_slug}`;
+  const className =
+    "group block border-b border-line py-5 last:border-0 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4";
+  const meta = [
+    result.published_date &&
+      new Date(result.published_date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC",
+      }),
+    result.chunk_type === "full-post" ? "post" : result.chunk_type,
+    result.section,
+    result.language,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+  const body = (
+    <>
+      <h2 className="text-base text-accent group-hover:underline underline-offset-4 break-words">
+        {result.post_title}
+      </h2>
+      <p className="mt-1 text-xs text-muted break-words">{meta}</p>
+      {result.chunk_type === "code" ? (
+        <pre className="mt-3 overflow-x-auto border-l border-line pl-3 text-xs leading-relaxed text-primary">
+          <code>{snippet}</code>
+        </pre>
+      ) : (
+        <p className="mt-3 text-sm leading-relaxed text-primary break-words">
+          {highlightText(snippet, keywords)}
+        </p>
+      )}
+    </>
+  );
+  return fragment ? (
+    <a href={`${href}${fragment}`} className={className}>
+      {body}
+    </a>
+  ) : (
+    <Link href={href} className={className}>
+      {body}
     </Link>
   );
 }

@@ -4,8 +4,20 @@ import {
   PHASE_PRODUCTION_BUILD,
 } from "next/constants";
 import { createRequire } from "node:module";
+import fs from "node:fs";
 import path from "node:path";
+import { IMAGE_REMOTE_HOST } from "./config/site";
+import { blogSections, hostRedirects } from "./config/hostRedirects";
 import { prepareMapWorkerAssets } from "./utils/mapWorkerAssets";
+
+const blogSectionNames = blogSections(
+  fs.readdirSync(path.join(process.cwd(), "app", "(sidebar)"), {
+    withFileTypes: true,
+  })
+);
+
+// photos.localhost:3000 stands in for the photos host in development.
+const PHOTOS_HOST = "photos\\.(?:bneo\\.xyz|localhost)";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -18,7 +30,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "pub-e85be102871845218dcda1cc49c78508.r2.dev",
+        hostname: IMAGE_REMOTE_HOST,
         pathname: "/**",
       },
     ],
@@ -37,18 +49,60 @@ const nextConfig: NextConfig = {
   redirects: async () => [
     { source: "/gallery", destination: "/photos", permanent: true },
     { source: "/photos/trips", destination: "/photos/places", permanent: true },
+    // Photos live at the root of their own host: photos.bneo.xyz/places, not
+    // /photos/places. Old /photos links on other hosts go through hostRedirects.
+    {
+      source: "/photos/:path*",
+      has: [{ type: "host", value: PHOTOS_HOST }],
+      destination: "/:path*",
+      permanent: true,
+    },
+    // The UMAP plot of post embeddings moved into the knowledge map on /start.
+    { source: "/viz", destination: "/start", permanent: true },
+    // One app serves three hosts; each only answers for its own pages.
+    ...hostRedirects(blogSectionNames),
   ],
   rewrites: async () => ({
     beforeFiles: [
       {
         source: "/",
-        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        has: [{ type: "host", value: PHOTOS_HOST }],
         destination: "/photos",
+      },
+      {
+        source: "/:section(places|sets|photo|stream)/:path*",
+        has: [{ type: "host", value: PHOTOS_HOST }],
+        destination: "/photos/:section/:path*",
+      },
+      {
+        source: "/rss.xml",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos/rss.xml",
       },
       {
         source: "/",
         has: [{ type: "host", value: "maps.bneo.xyz" }],
         destination: "/map",
+      },
+      {
+        source: "/robots.txt",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos/robots.txt",
+      },
+      {
+        source: "/sitemap.xml",
+        has: [{ type: "host", value: "photos.bneo.xyz" }],
+        destination: "/photos/sitemap.xml",
+      },
+      {
+        source: "/robots.txt",
+        has: [{ type: "host", value: "maps.bneo.xyz" }],
+        destination: "/map/robots.txt",
+      },
+      {
+        source: "/sitemap.xml",
+        has: [{ type: "host", value: "maps.bneo.xyz" }],
+        destination: "/map/sitemap.xml",
       },
     ],
     afterFiles: [
@@ -85,7 +139,8 @@ const nextConfig: NextConfig = {
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: blob: https:",
             "font-src 'self' data:",
-            "connect-src 'self' https://tiles.openfreemap.org https://va.vercel-scripts.com https://vitals.vercel-insights.com",
+            // /hn reads Hacker News' public API straight from the browser.
+            "connect-src 'self' https://tiles.openfreemap.org https://va.vercel-scripts.com https://vitals.vercel-insights.com https://hacker-news.firebaseio.com",
             "worker-src 'self' blob:",
             "frame-src 'self' https:",
             "frame-ancestors 'self'",

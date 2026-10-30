@@ -42,7 +42,7 @@ Fiction
 - [Burnout Society](/posts/burnoutsociety) (Byung-Chul Han)  
 - [Zero to One](/posts/0to1) (Peter Thiel)  
 - [Several Short Sentences About Writing](/posts/shortsentences) (Verlyn linkenborg)  
-- [How to Be a Friend: An Ancient Guide to True Friendship](/posts/[x]ruefriendship) (Marcus Tullius Cicero)  
+- [How to Be a Friend: An Ancient Guide to True Friendship](/posts/truefriendship) (Marcus Tullius Cicero)
 - [The Almanack of Naval Ravikant](/posts/naval) (Naval Ravikant)  
 - [Make Something Wonderful](/posts/makesomethingwonderful) (Steve Jobs)
 
@@ -79,12 +79,12 @@ Fiction
 ## list of essays
 
 - [Hypertext as Literature](https://hypertext.joodaloop.com/#about)
-- [Great essays · Applied Cartography](https://jmduke.com/posts/catalogs/great-essays/)
+- [Great essays · Applied Cartography](https://web.archive.org/web/20250623035214/https://jmduke.com/posts/catalogs/great-essays/)
 - [My favorite essays of life advice | benkuhn.net](https://www.benkuhn.net/weeklyessays/)
 - [My Favorite Essays | favorite_essays](https://vickiboykis.com/favorite_essays/)
 - [Read Something Wonderful](https://readsomethingwonderful.com/p/218/the-no-stats-all-star)
 - [Words That Matter](https://words.getmatter.com/)
-- [Lists — Joanne Peng](https://www.joannepeng.com/lists)
+- [Lists — Joanne Peng](https://web.archive.org/web/20241221150408/https://www.joannepeng.com/lists)
 - [Links | near.blog](https://near.blog/links/)
 
 ## paris review interviews

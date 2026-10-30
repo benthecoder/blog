@@ -19,5 +19,5 @@ Another question is I want to start asking is "What makes you happy?" I think ha
 Some more lists of questions I found for better conversations
 
 - [Real Conversation Questions](http://jackieluo.com/questions)
-- [Questions to Ask People](https://www.calebontiveros.com/questions-to-ask-people/)
+- [Questions to Ask People](https://web.archive.org/web/20230606125317/https://www.calebontiveros.com/questions-to-ask-people/)
 - [Shortlist "No Small Talk' questions (Kristen Berman)](https://docs.google.com/spreadsheets/d/1mnSo5Bg_QfLHrIiI60XJ00HxsHRvm33Yx3p3nYA6CDg/edit#gid=0)

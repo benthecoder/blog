@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CityRows } from "@/components/photos/CityRows";
 import { getPhotostream } from "@/utils/content/photostream";
+import { photoShareMetadata } from "@/utils/photoShare";
 import { placeTree } from "@/utils/photoPlaces";
 
 type Props = { params: Promise<{ country: string }> };
@@ -17,14 +18,13 @@ async function findCountry(slug: string) {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { country: slug } = await params;
   const country = await findCountry(slug);
-  return {
+  return photoShareMetadata({
     title: `${country?.country ?? "places"} — photos`,
     description:
       country && `${count(country.count, "frame")} in ${country.country}.`,
-    alternates: {
-      canonical: `https://photos.bneo.xyz/photos/places/${slug}`,
-    },
-  };
+    path: `/places/${slug}`,
+    photo: country?.cover,
+  });
 }
 
 export default async function CountryPage({ params }: Props) {
@@ -34,7 +34,7 @@ export default async function CountryPage({ params }: Props) {
   return (
     <main className="ph-page">
       <header className="ph-set-intro">
-        <Link href="/photos/places" className="ph-mono ph-back">
+        <Link href="/places" className="ph-mono ph-back">
           ← All places
         </Link>
         <h1>{country.country}</h1>

@@ -1,8 +1,21 @@
+import { notFound, permanentRedirect } from "next/navigation";
+import type { Metadata } from "next";
 import { getPostMetadata } from "@/utils/content/posts";
 import PostPreview from "@/components/posts/PostPreview";
 import { tryDecodeUrlComponent } from "@/utils/links/url";
+import { pageMetadata } from "@/utils/pageMetadata";
 
 export const dynamic = "force-static";
+
+export async function generateMetadata(props: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await props.params;
+  return pageMetadata({
+    title: `#${tryDecodeUrlComponent(slug) ?? slug}`,
+    path: `/tags/${slug}`,
+  });
+}
 
 export const generateStaticParams = async () => {
   const postMetadata = getPostMetadata();
@@ -21,6 +34,17 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   const filteredPosts = getPostMetadata().filter((post) =>
     post.tags.includes(tag)
   );
+  // Any slug renders here, so an unknown tag must 404 rather than show an
+  // empty page with a 200. A different-case spelling of a real tag
+  // (/tags/sf for SF) redirects to it instead.
+  if (filteredPosts.length === 0) {
+    const lower = tag.toLowerCase();
+    const match = getPostMetadata()
+      .flatMap((post) => post.tags)
+      .find((t) => t.toLowerCase() === lower);
+    if (match) permanentRedirect(`/tags/${encodeURIComponent(match)}`);
+    notFound();
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
