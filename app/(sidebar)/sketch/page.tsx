@@ -2,21 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { DRAWINGS_URL } from "@/config/constants";
-
-const SKETCHES = [
-  { file: "handrose.png", label: "hand rose pencil sketch" },
-  { file: "sunflowersketch.png", label: "sunflower pencil sketch" },
-  { file: "peony.png", label: "peony pencil sketch" },
-  { file: "hummingbird.png", label: "hummingbird pencil sketch" },
-  { file: "howl.png", label: "howl's moving castle sketch" },
-  { file: "hokusai.png", label: "hokusai wave ink sketch" },
-  { file: "christ.png", label: "christ sketch" },
-  { file: "metro.png", label: "metro scene sketch" },
-  { file: "wave.png", label: "wave sketch" },
-  { file: "room.png", label: "room interior sketch" },
-  { file: "angel.png", label: "angel sketch" },
-].map(({ file, label }) => ({ src: `${DRAWINGS_URL}/${file}`, label }));
+import { SKETCHES } from "@/config/sketches";
 
 export default function SketchPage() {
   const [selected, setSelected] = useState<(typeof SKETCHES)[number] | null>(
