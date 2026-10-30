@@ -53,6 +53,9 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
       }}
       onKeyDown={(event) => {
         if (index === null) return;
+        if (event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) {
+          return;
+        }
         if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
           event.preventDefault();
           event.stopPropagation();
