@@ -149,12 +149,12 @@ export default function SearchModal() {
       <div className="absolute inset-0 bg-surface/80 backdrop-blur-xs" />
 
       <div
-        className="relative w-full max-w-lg mx-4 bg-paper dark:bg-night-raised border border-rule dark:border-white/8 shadow-lg"
+        className="relative min-w-0 w-full max-w-lg mx-4 bg-raised text-primary border border-line shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center border-b border-rule dark:border-white/6 px-3 gap-2">
+        <div className="flex items-center border-b border-line focus-within:border-accent px-3 gap-2">
           <svg
-            className="w-4 h-4 text-accent/30 shrink-0"
+            className="w-4 h-4 text-muted shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -169,7 +169,7 @@ export default function SearchModal() {
             onChange={(e) => handleInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="search posts…"
-            className="min-w-0 flex-1 py-3 text-sm bg-transparent outline-hidden text-accent placeholder:text-accent/30"
+            className="min-w-0 flex-1 py-3 text-sm bg-transparent text-primary placeholder:text-muted outline-hidden"
           />
           <div className="flex items-center gap-1 shrink-0">
             {(["keyword", "semantic"] as SearchType[]).map((t) => (
@@ -177,10 +177,10 @@ export default function SearchModal() {
                 aria-pressed={searchType === t}
                 key={t}
                 onClick={() => handleTypeToggle(t)}
-                className={`text-[10px] px-1.5 py-0.5 tracking-wide transition-[color,border-color] duration-150 border ${
+                className={`text-xs px-1.5 py-1 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 ${
                   searchType === t
-                    ? "border-accent/50 text-accent"
-                    : "border-transparent text-accent/30 hover:text-accent/60"
+                    ? "bg-accent/10 text-primary"
+                    : "text-muted hover:text-accent"
                 }`}
               >
                 {t}
@@ -190,11 +190,11 @@ export default function SearchModal() {
         </div>
 
         {loading && (
-          <div className="px-4 py-3 text-xs text-accent/40">searching…</div>
+          <div className="px-4 py-3 text-xs text-muted">searching…</div>
         )}
 
         {error && (
-          <p role="alert" className="px-4 py-3 text-xs text-accent">
+          <p role="alert" className="px-4 py-3 text-xs text-primary">
             {error}
           </p>
         )}
@@ -204,7 +204,7 @@ export default function SearchModal() {
           hasSearched &&
           query.trim() &&
           results.length === 0 && (
-            <div className="px-4 py-3 text-xs text-accent/40">no results</div>
+            <div className="px-4 py-3 text-xs text-muted">no results</div>
           )}
 
         {!loading && results.length > 0 && (
@@ -214,15 +214,15 @@ export default function SearchModal() {
                 <button
                   onClick={() => navigate(r)}
                   onMouseEnter={() => setActiveIndex(i)}
-                  className={`w-full text-left px-4 py-2.5 transition-[background-color] duration-100 ${
+                  className={`w-full text-left px-4 py-3 focus-visible:outline-2 focus-visible:outline-accent focus-visible:-outline-offset-2 transition-colors duration-100 ${
                     i === activeIndex ? "bg-accent/5" : ""
                   }`}
                 >
-                  <div className="text-sm text-accent truncate">
+                  <div className="text-sm text-primary truncate">
                     {r.post_title}
                   </div>
                   {r.published_date && (
-                    <div className="text-[10px] text-accent/35 mt-0.5 tabular-nums">
+                    <div className="text-[10px] text-muted mt-0.5 tabular-nums">
                       {new Date(r.published_date).toLocaleDateString("en-US", {
                         year: "numeric",
                         month: "short",
@@ -238,7 +238,7 @@ export default function SearchModal() {
         )}
 
         {results.length > 0 && (
-          <div className="border-t border-rule dark:border-white/6 px-4 py-2 flex gap-3 text-[10px] text-accent/30">
+          <div className="border-t border-line px-4 py-2 flex gap-3 text-[10px] text-muted">
             <span>↑↓ navigate</span>
             <span>↵ open</span>
             <span>esc close</span>
