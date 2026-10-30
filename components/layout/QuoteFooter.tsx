@@ -23,7 +23,7 @@ export function QuoteFooter({ quotes }: { quotes: Quote[] }) {
   const next = () => setStep(step + 1);
 
   return (
-    <footer className="mt-24 text-sm text-muted">
+    <footer className="mt-12 text-sm text-muted">
       <Link
         href={`/posts/${quote.slug}`}
         className="hover:text-accent transition-colors"
