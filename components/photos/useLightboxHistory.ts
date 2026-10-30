@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { StreamPhoto } from "@/types/photostream";
 
 const permalink = (photo: StreamPhoto) =>
-  `/photos/photo/${encodeURIComponent(photo.id)}`;
+  `/photo/${encodeURIComponent(photo.id)}`;
 
 // Gives the lightbox a history entry so back closes it and the address bar
 // shows the photo's permalink. Stepping replaces; only opening pushes.
