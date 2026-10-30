@@ -15,11 +15,7 @@ import {
 } from "@/utils/content/formats";
 
 type View = "all" | PostFormat | "tags";
-const VIEWS = [
-  { id: "all", label: "all" },
-  ...POST_FORMATS,
-  { id: "tags", label: "tags" },
-] as const;
+const VIEWS = [{ id: "all", label: "all" }, ...POST_FORMATS] as const;
 
 const byYear = (posts: PostMetadata[]) => {
   const years = new Map<number, PostMetadata[]>();
@@ -167,7 +163,7 @@ export default function ArchiveClient({
               prefetch={false}
               className="text-muted hover:text-accent"
             >
-              {tag}
+              #{tag}
             </Link>
           ))}
           <Link href="/tags" className="text-accent hover:underline">
