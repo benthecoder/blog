@@ -4,7 +4,7 @@ import HomeConnections from "@/components/ui/HomeConnections";
 import { QuoteFooter } from "@/components/layout/QuoteFooter";
 import { getQuotes } from "@/utils/content/quotes";
 import { SKETCHES } from "@/config/sketches";
-import { getPostMetadata } from "@/utils/content/posts";
+import { getJournalEntries, getPostMetadata } from "@/utils/content/posts";
 import { FAVORITE } from "@/utils/content/tags";
 import { getPhotostream } from "@/utils/content/photostream";
 import { photoAlt } from "@/utils/photoCaption";
@@ -115,7 +115,7 @@ export default async function HomePage() {
   const favorites = posts
     .filter((post) => post.tags.includes(FAVORITE))
     .slice(0, 4);
-  const recent = posts.slice(0, 3);
+  const recent = getJournalEntries().slice(0, 3);
 
   return (
     <>
@@ -148,16 +148,16 @@ export default async function HomePage() {
       </div>
 
       <PostSection
-        id="favorites"
-        title="recent favorites"
+        id="writings"
+        title="recent writings"
         posts={favorites}
-        more={{ href: "/posts?view=favorites", label: "all favorites" }}
+        more={{ href: "/posts?view=favorites", label: "all writings" }}
       />
       <PostSection
-        id="daily-notes"
-        title="recent daily notes"
+        id="journal"
+        title="recent journal entries"
         posts={recent}
-        more={{ href: "/posts", label: "more in the archive" }}
+        more={{ href: "/journal", label: "read the journal" }}
       />
       <Gallery
         id="sketches"

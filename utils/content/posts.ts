@@ -90,3 +90,9 @@ export const getPostMetadata = cache(function getPostMetadata(
   if (immutableDeployment) deployedMetadata = posts;
   return posts;
 });
+
+// Date-named posts (e.g. 241024) are the daily journal; topic-named posts
+// are standalone pieces.
+export function getJournalEntries(): PostMetadata[] {
+  return getPostMetadata().filter((post) => /^\d{6}$/.test(post.slug));
+}
