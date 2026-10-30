@@ -66,6 +66,7 @@ const ProductCell = ({ item }: { item: Product }) => {
           src={`/images/uses/${item.image}`}
           alt={item.name}
           fill
+          sizes="(max-width: 767px) 30vw, (max-width: 1279px) 120px, 160px"
           className="object-contain"
         />
       </div>
