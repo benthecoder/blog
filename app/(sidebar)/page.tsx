@@ -3,6 +3,7 @@ import Link from "next/link";
 import HomeConnections from "@/components/ui/HomeConnections";
 import { SKETCHES } from "@/config/sketches";
 import { getPostMetadata } from "@/utils/content/posts";
+import { FAVORITE } from "@/utils/content/tags";
 import { getPhotostream } from "@/utils/content/photostream";
 import { photoAlt } from "@/utils/photoCaption";
 
@@ -12,9 +13,48 @@ export const revalidate = 3600;
 const FEATURED_SKETCHES = ["howl.png", "wave.png", "peony.png"].flatMap(
   (file) => SKETCHES.filter((sketch) => sketch.file === file)
 );
-const SELECTED_SLUGS = ["311225", "060425", "281024", "values"];
 const entryLink =
   "text-accent hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent";
+
+type PostLink = { slug: string; title: string; date: string };
+
+function PostSection({
+  id,
+  title,
+  posts,
+  more,
+}: {
+  id: string;
+  title: string;
+  posts: PostLink[];
+  more: { href: string; label: string };
+}) {
+  if (posts.length === 0) return null;
+  return (
+    <section aria-labelledby={id} className="mt-10 first-of-type:mt-0">
+      <h2 id={id} className="mb-4 text-base font-bold text-primary">
+        {title}
+      </h2>
+      <ul className="space-y-4">
+        {posts.map((post) => (
+          <li key={post.slug}>
+            <h3 className="text-base">
+              <Link href={`/posts/${post.slug}`} className={entryLink}>
+                {post.title}
+              </Link>
+            </h3>
+            <p className="mt-1 text-xs text-muted">{post.date}</p>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-6 text-sm">
+        <Link href={more.href} className={`${entryLink} text-muted`}>
+          {more.label} →
+        </Link>
+      </p>
+    </section>
+  );
+}
 
 type Tile = {
   key: string;
@@ -70,10 +110,9 @@ function Gallery({
 export default async function HomePage() {
   const posts = getPostMetadata();
   const photos = (await getPhotostream()).slice(0, 3);
-  const selected = SELECTED_SLUGS.flatMap((slug) => {
-    const post = posts.find((entry) => entry.slug === slug);
-    return post ? [post] : [];
-  });
+  const favorites = posts
+    .filter((post) => post.tags.includes(FAVORITE))
+    .slice(0, 4);
   const recent = posts.slice(0, 3);
 
   return (
@@ -106,56 +145,18 @@ export default async function HomePage() {
         * * *
       </div>
 
-      {selected.length > 0 && (
-        <section aria-labelledby="selected-writing">
-          <h2
-            id="selected-writing"
-            className="mb-4 text-base font-bold text-primary"
-          >
-            selected writing
-          </h2>
-          <ul className="space-y-4">
-            {selected.map((post) => (
-              <li key={post.slug}>
-                <h3 className="text-base">
-                  <Link href={`/posts/${post.slug}`} className={entryLink}>
-                    {post.title}
-                  </Link>
-                </h3>
-                <p className="mt-1 text-xs text-muted">{post.date}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {recent.length > 0 && (
-        <section aria-labelledby="recent-writing" className="mt-10">
-          <h2
-            id="recent-writing"
-            className="mb-4 text-base font-bold text-primary"
-          >
-            recent writing
-          </h2>
-          <ul className="space-y-4">
-            {recent.map((post) => (
-              <li key={post.slug}>
-                <h3 className="text-base">
-                  <Link href={`/posts/${post.slug}`} className={entryLink}>
-                    {post.title}
-                  </Link>
-                </h3>
-                <p className="mt-1 text-xs text-muted">{post.date}</p>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-6 text-sm">
-            <Link href="/posts" className={`${entryLink} text-muted`}>
-              more in the archive →
-            </Link>
-          </p>
-        </section>
-      )}
+      <PostSection
+        id="favorites"
+        title="recent favorites"
+        posts={favorites}
+        more={{ href: "/posts?view=favorites", label: "all favorites" }}
+      />
+      <PostSection
+        id="daily-notes"
+        title="recent daily notes"
+        posts={recent}
+        more={{ href: "/posts", label: "more in the archive" }}
+      />
       <Gallery
         id="sketches"
         title="sketches"

@@ -3,14 +3,13 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { PostMetadata } from "@/types/post";
-import { countTagFrequency } from "@/utils/content/tags";
+import { FAVORITE, countTagFrequency } from "@/utils/content/tags";
 import PostLinkPreview from "@/components/posts/PostLinkPreview";
 import Heatmap from "@/components/visualizations/Heatmap";
 import Link from "next/link";
 
 type View = "list" | "favorites" | "tags";
 const VIEWS: View[] = ["list", "favorites", "tags"];
-const FAVORITE = "✰";
 
 const byYear = (posts: PostMetadata[]) => {
   const years = new Map<number, PostMetadata[]>();
