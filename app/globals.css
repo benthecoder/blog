@@ -997,7 +997,7 @@ body {
    after the paragraph that references it. Below xl the asides stay
    hidden and the endnotes section renders as usual; at xl the asides
    float into the right margin (Tufte-style) and the endnotes section
-   hides itself via .has-sidenotes. On posts the notes hang in the empty
+   becomes visually hidden via .has-sidenotes. On posts the notes hang in the empty
    space right of the centered column, which at xl is wide enough for
    them, so the article never moves. The editor column has borders, so
    it widens on both sides to keep the notes inside them. */
@@ -1054,9 +1054,21 @@ body {
     margin: 0.4em 0;
   }
 
-  .prose section[data-footnotes].has-sidenotes,
-  .essay-prose section[data-footnotes].has-sidenotes {
-    display: none;
+  .prose
+    section[data-footnotes].has-sidenotes:not(:focus-within):not(:has(:target)),
+  .essay-prose
+    section[data-footnotes].has-sidenotes:not(:focus-within):not(
+      :has(:target)
+    ) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 }
 

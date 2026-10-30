@@ -12,9 +12,11 @@ import { getLinkIndex } from "@/utils/content/links";
 export default function WikiLink({
   target,
   children,
+  tabIndex,
 }: {
   target: string;
   children: ReactNode;
+  tabIndex?: number;
 }) {
   const entry = getLinkIndex().resolve(target);
 
@@ -23,6 +25,7 @@ export default function WikiLink({
   return (
     <Link
       href={entry.href}
+      tabIndex={tabIndex}
       className="text-ink dark:text-chalk-soft no-underline hover:underline underline-offset-2"
     >
       {children}
