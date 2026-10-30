@@ -9,6 +9,7 @@ import PostImage from "./PostImage";
 import remarkWikiLink from "./remarkWikiLink";
 import rehypeSidenotes from "./rehypeSidenotes";
 import type { ImageMeta } from "@/utils/content/imageMeta";
+import remarkImageParagraphs from "@/utils/content/remarkImageParagraphs";
 import "katex/dist/katex.min.css";
 
 // Minimal mdast shape — @types/mdast is not a dependency of this repo.
@@ -45,6 +46,7 @@ export const remarkPlugins: PluggableList = [
   remarkMath,
   remarkGfm,
   remarkWikiLink,
+  remarkImageParagraphs,
   remarkFirstImage,
 ];
 export const rehypePlugins: PluggableList = [
