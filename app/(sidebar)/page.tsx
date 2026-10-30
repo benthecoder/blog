@@ -9,6 +9,9 @@ import { photoAlt } from "@/utils/photoCaption";
 // Photos are live; refresh hourly so new uploads reach the homepage.
 export const revalidate = 3600;
 
+const FEATURED_SKETCHES = ["howl.png", "wave.png", "peony.png"].flatMap(
+  (file) => SKETCHES.filter((sketch) => sketch.file === file)
+);
 const SELECTED_SLUGS = ["311225", "060425", "281024", "values"];
 const entryLink =
   "text-accent hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent";
@@ -156,7 +159,7 @@ export default async function HomePage() {
       <Gallery
         id="sketches"
         title="sketches"
-        tiles={SKETCHES.slice(0, 3).map((sketch) => ({
+        tiles={FEATURED_SKETCHES.map((sketch) => ({
           key: sketch.file,
           href: "/sketch",
           src: sketch.src,

@@ -35,7 +35,7 @@ export const SKETCHES = [
   },
   {
     file: "hokusai.png",
-    label: "hokusai wave ink sketch",
+    label: "hokusai animal studies sketch",
     width: 1404,
     height: 1872,
   },
