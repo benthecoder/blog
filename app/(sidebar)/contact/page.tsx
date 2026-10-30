@@ -26,7 +26,7 @@ const PROFILES = [
   },
   {
     site: "spotify",
-    user: "profile",
+    user: "benedict neo",
     href: "https://open.spotify.com/user/31w6rspp4fe5ihwoimt4of5tcwiu",
   },
 ];
