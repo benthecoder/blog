@@ -47,14 +47,9 @@ describe("deployment knowledge map preparation", () => {
       expect(
         fs.readFileSync(path.join(dataDir, expected.edgesFilename), "utf8")
       ).toBe(expected.edgesJson);
-      if (expected.summariesFilename) {
-        expect(
-          fs.readFileSync(
-            path.join(dataDir, expected.summariesFilename),
-            "utf8"
-          )
-        ).toBe(expected.summariesJson);
-      }
+      expect(fs.readdirSync(dataDir).some((f) => f.includes("summaries"))).toBe(
+        false
+      );
       expect(
         fs.readFileSync(path.join(sourceDir, "knowledge-map.json"), "utf8")
       ).toBe(original);
