@@ -1,7 +1,8 @@
 ---
-title: 'Favorite Interview Questions'
-tags: 'job, career'
-date: 'Dec 2, 2023'
+title: Favorite Interview Questions
+tags: career, interviews
+date: Dec 2, 2023
+format: resource
 ---
 
 Lenny's [favorite interview questions](https://www.lennysnewsletter.com/p/my-favorite-interview-questions-from) from 100 of his [podcast](https://www.lennysnewsletter.com/podcast) quests.

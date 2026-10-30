@@ -1,3 +1,4 @@
+import type { PostFormat } from "@/types/post";
 import type { LinkItem } from "./types";
 import type { PeriodKind } from "./schedule";
 import { renderWeekly } from "./renderWeekly";
@@ -16,6 +17,7 @@ export interface Draft {
   title: string;
   slug: string;
   tags: string;
+  format: PostFormat;
   body: string;
 }
 
@@ -98,7 +100,8 @@ const weekly: Period = {
     return {
       title: `sunday links #${ctx.nextIssue()}`,
       slug: `${pad(now.getDate())}${pad(now.getMonth() + 1)}${pad(now.getFullYear() % 100)}`,
-      tags: "journal, links",
+      tags: "",
+      format: "links",
       body: renderWeekly(links),
     };
   },
@@ -115,7 +118,8 @@ const monthly: Period = {
     return {
       title: `highlights — ${MONTHS[monthIdx]} ${year}`,
       slug: `highlights-${year}-${pad(monthIdx + 1)}`,
-      tags: "journal, highlights",
+      tags: "highlights",
+      format: "journal",
       body: renderMonthly({
         links: await ctx.collectLinks(since, until),
         watching: weeklies.flatMap((p) => footerLines(p.slug, "watch")),
@@ -135,7 +139,8 @@ const quarterly: Period = {
     return {
       title: `q${q + 1} ${year} reflection`,
       slug: `q${q + 1}-${year}-reflection`,
-      tags: "journal, reflection",
+      tags: "reflection",
+      format: "journal",
       body: renderQuarterly({
         monthly: monthlyPosts(posts, since, until),
         journal: journalPosts(posts, since, until),

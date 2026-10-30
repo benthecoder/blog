@@ -1,7 +1,7 @@
 ---
-title: 'Becoming Influential'
-tags: 'life, people'
-date: 'Jul 12, 2023'
+title: Becoming Influential
+tags: career, communication, leadership
+date: Jul 12, 2023
 ---
 
 How to become influential by [Keith Rabois](https://qr.ae/pyUA9R) on Quora:

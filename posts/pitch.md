@@ -1,7 +1,7 @@
 ---
-title: 'Pitching'
-tags: 'startup, advice'
-date: 'Sep 15, 2023'
+title: Pitching
+tags: startups, presentations, pitching
+date: Sep 15, 2023
 ---
 
 I'm participating in a pitch contest at my university called The ISU Innovation Prize.

@@ -1,7 +1,7 @@
 ---
-title: 'Another day at work'
-tags: 'journal, work'
-date: 'May 22, 2023'
+title: Another day at work
+tags: work, productivity, communication
+date: May 22, 2023
 ---
 
 You get into the office on a Monday morning, your colleague besides you asks how your weekend went.

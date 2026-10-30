@@ -1,13 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import MarkdownContent from "@/components/posts/MarkdownContent";
-import { getJournalEntries, getPostContent } from "@/utils/content/posts";
+import { getPostsByFormat, getPostContent } from "@/utils/content/posts";
 import { pageMetadata } from "@/utils/pageMetadata";
 
 const JOURNAL_PER_PAGE = 10;
 
 export function journalPageCount() {
-  return Math.ceil(getJournalEntries().length / JOURNAL_PER_PAGE);
+  return Math.ceil(getPostsByFormat("journal").length / JOURNAL_PER_PAGE);
 }
 
 const pageHref = (page: number) =>
@@ -28,7 +28,7 @@ const navLink =
 // Journal entries (the date-named posts) read in full, newest first, a page
 // at a time.
 export function JournalStream({ page }: { page: number }) {
-  const posts = getJournalEntries().slice(
+  const posts = getPostsByFormat("journal").slice(
     (page - 1) * JOURNAL_PER_PAGE,
     page * JOURNAL_PER_PAGE
   );
@@ -50,6 +50,7 @@ export function JournalStream({ page }: { page: number }) {
               <MarkdownContent
                 content={getPostContent(post.slug).content}
                 prioritizeFirstImage={false}
+                headingPrefix={`journal-${post.slug}-`}
               />
             </div>
           </article>

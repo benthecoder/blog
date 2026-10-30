@@ -1,7 +1,7 @@
 ---
-title: '10 Principles for Good Design'
-tags: 'design, art'
-date: 'Nov 11, 2023'
+title: 10 Principles for Good Design
+tags: design, product-design, industrial-design
+date: Nov 11, 2023
 ---
 
 [Dieter Rams](https://en.wikipedia.org/wiki/Dieter_Rams?useskin=vector)’s ten principles for good design.

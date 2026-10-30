@@ -1,7 +1,7 @@
 ---
-title: 'Some Thoughts on Photography'
-tags: 'photography, art'
-date: 'Mar 15, 2024'
+title: Some Thoughts on Photography
+tags: photography, visual-storytelling, creativity
+date: Mar 15, 2024
 ---
 
 ![Joaquín Sorolla y Bastida, Capturing the Moment, 1906](/images/capturemoment.jpeg)

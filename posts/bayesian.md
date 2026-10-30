@@ -1,7 +1,7 @@
 ---
-title: 'A Bayesian mindset'
-tags: 'statistics, math'
-date: 'May 9, 2023'
+title: A Bayesian mindset
+tags: statistics, mathematics
+date: May 9, 2023
 ---
 
 > In Bayesian statistics, model parameters are random variables.

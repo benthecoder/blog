@@ -1,7 +1,9 @@
 ---
-title: '10 Rules of Reliable Data Science'
-tags: 'data, advice'
-date: 'Jun 14, 2024'
+title: 10 Rules of Reliable Data Science
+tags: >-
+  data-science, software-design, data-engineering, machine-learning,
+  reproducibility
+date: Jun 14, 2024
 ---
 
 Since I'm starting an MSDS next month, I have to pick up Data Science again.

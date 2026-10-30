@@ -1,7 +1,7 @@
 ---
-title: 'Start With Nothing'
-tags: 'programming'
-date: 'Dec 5, 2023'
+title: Start With Nothing
+tags: programming, software-design, python
+date: Dec 5, 2023
 ---
 
 A good first step when building a thing is to build a thing that [does nothing](https://devblogs.microsoft.com/oldnewthing/20230725-00/?p=108482).

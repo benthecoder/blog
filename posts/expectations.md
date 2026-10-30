@@ -1,7 +1,7 @@
 ---
-title: 'A Cheerful Pessimist'
-tags: 'life, philosophy'
-date: 'Mar 11, 2024'
+title: A Cheerful Pessimist
+tags: philosophy, psychology, stoicism, mental-health, ambition
+date: Mar 11, 2024
 ---
 
 There a survey that says [Danish](https://denmark.dk/people-and-culture/happiness) are the happiest people.

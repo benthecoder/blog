@@ -1,7 +1,7 @@
 ---
-title: 'Live an Asymmetric Life'
-tags: 'life, advice'
-date: 'Jul 24, 2023'
+title: Live an Asymmetric Life
+tags: career, philosophy, habits, risk-taking
+date: Jul 24, 2023
 ---
 
 Graham Weaver shares [four ways](https://www.youtube.com/watch?v=dZxbVGhpEkI) to live an asymmetric life.

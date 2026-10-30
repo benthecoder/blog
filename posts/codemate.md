@@ -1,7 +1,7 @@
 ---
-title: 'Codemate'
-tags: 'work, programming'
-date: 'Oct 16, 2023'
+title: Codemate
+tags: software-engineering, programming, collaboration
+date: Oct 16, 2023
 ---
 
 On how to be a good codemate by [Brian Lee](https://www.moderndescartes.com/essays/codemates/).

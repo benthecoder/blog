@@ -1,7 +1,10 @@
 ---
-title: 'Alcatraz Night Tour'
-tags: 'journal, SF, travel'
-date: 'Aug 12, 2023'
+title: Alcatraz Night Tour
+tags: history, travel, friendship
+date: Aug 12, 2023
+format: journal
+locations:
+  - San Francisco
 ---
 
 > Break the rules and you go to prison. Break the rules in prison and you go to Alcatraz.

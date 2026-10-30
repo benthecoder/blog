@@ -1,7 +1,7 @@
 ---
-title: 'What To Do With Your Life'
-tags: 'journal, life'
-date: 'Jun 1, 2023'
+title: What To Do With Your Life
+tags: career, identity, self-reflection
+date: Jun 1, 2023
 ---
 
 It's the beginning of June.

@@ -1,7 +1,8 @@
 ---
-title: 'The Almanack of Naval Ravikant'
-tags: 'book, life, advice'
-date: 'Apr 12, 2024'
+title: The Almanack of Naval Ravikant
+tags: career, money, entrepreneurship, philosophy
+date: Apr 12, 2024
+format: book
 ---
 
 I finished reading this book in three separate visits to a bookstore while my mother was shopping or getting a haircut.

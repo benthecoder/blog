@@ -1,7 +1,8 @@
 ---
-title: 'AI Engineer curriculum'
-tags: 'resources, AI, learning'
-date: 'Jul 7, 2023'
+title: AI Engineer curriculum
+tags: ai, machine-learning, deep-learning, python, llms
+date: Jul 7, 2023
+format: resource
 ---
 
 A list of great [resources](https://news.ycombinator.com/item?id=36432598) for breaking into [AI Engineering](https://www.latent.space/p/ai-engineer).

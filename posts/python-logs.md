@@ -1,7 +1,7 @@
 ---
-title: 'Writing Better Logs'
-tags: 'programming, python'
-date: 'Jun 28, 2023'
+title: Writing Better Logs
+tags: python, programming, logging, software-engineering
+date: Jun 28, 2023
 ---
 
 Are you still writing logs like this?

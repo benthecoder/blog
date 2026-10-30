@@ -1,7 +1,7 @@
 ---
-title: 'Great Questions'
-tags: 'questions, thinking'
-date: 'Aug 9, 2023'
+title: Great Questions
+tags: innovation, startups, technology, problem-solving
+date: Aug 9, 2023
 ---
 
 > "That's what you need to do: find a question that makes the world interesting. People who do great things look at the same world everyone else does, but notice some odd detail that's compellingly mysterious." - Paul Graham

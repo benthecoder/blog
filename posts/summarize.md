@@ -1,7 +1,7 @@
 ---
-title: 'Summarizing is Thinking'
-tags: 'thinking, learning, writing'
-date: 'May 17, 2024'
+title: Summarizing is Thinking
+tags: learning, writing, critical-thinking
+date: May 17, 2024
 ---
 
 from [My favorite teacher - by Thorsten Ball - Register Spill](https://registerspill.thorstenball.com/p/my-favorite-teacher)

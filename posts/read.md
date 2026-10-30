@@ -1,7 +1,7 @@
 ---
-title: 'How to Read'
-tags: 'reading, advice'
-date: 'Sep 17, 2023'
+title: How to Read
+tags: reading, learning, writing
+date: Sep 17, 2023
 ---
 
 Every finish reading a book, thinking how much you enjoyed it?

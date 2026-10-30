@@ -1,7 +1,10 @@
 ---
-title: 'Arts market and Museum'
-tags: 'journal, SF'
-date: 'Aug 5, 2023'
+title: Arts market and Museum
+tags: art, food, friendship
+date: Aug 5, 2023
+format: journal
+locations:
+  - San Francisco
 ---
 
 Today was an eventful day.

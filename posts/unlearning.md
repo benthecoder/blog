@@ -1,7 +1,7 @@
 ---
-title: 'Machine Unlearning'
-tags: 'ML, AI'
-date: 'Jul 10, 2023'
+title: Machine Unlearning
+tags: ai, machine-learning, privacy, model-evaluation, fairness
+date: Jul 10, 2023
 ---
 
 With the progress of deep learning, there is now widespread use of AI technologies.

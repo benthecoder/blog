@@ -1,7 +1,10 @@
 ---
-title: 'Yosemite Day 1'
-tags: 'journal, hiking'
-date: 'May 27, 2023'
+title: Yosemite Day 1
+tags: hiking, travel, nature, community
+date: May 27, 2023
+format: journal
+locations:
+  - Yosemite
 ---
 
 Last summer everyone talked about going to Yosemite, but it never happened.

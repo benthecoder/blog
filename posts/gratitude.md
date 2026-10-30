@@ -1,7 +1,7 @@
 ---
-title: 'Gratitude'
-tags: 'life, psychology'
-date: 'Aug 14, 2023'
+title: Gratitude
+tags: psychology, mental-health, habits, relationships
+date: Aug 14, 2023
 ---
 
 The simple habit of practicing gratitude everyday can have [immense benefit](https://www.youtube.com/watch?v=OPHLa5BzmFk).

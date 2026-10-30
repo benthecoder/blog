@@ -10,13 +10,7 @@ export default function AdminNavigation({
       aria-label="Admin sections"
       className="mb-6 flex gap-6 border-b border-line pb-3 text-sm"
     >
-      {(
-        [
-          ["posts", "/admin", "Posts"],
-          ["wiki", "/admin/wiki", "Wiki"],
-          ["essays", "/admin/essays", "Essays"],
-        ] as const
-      ).map(([id, href, label]) => (
+      {([["posts", "/admin", "Posts"]] as const).map(([id, href, label]) => (
         <Link
           key={id}
           href={href}

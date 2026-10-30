@@ -1,7 +1,10 @@
 ---
-title: 'Grocery Stores'
-tags: 'journal'
-date: 'Aug 21, 2023'
+title: Grocery Stores
+date: Aug 21, 2023
+format: journal
+tags: travel, family, food, history, shopping
+locations:
+  - Des Moines
 ---
 
 I had a mini trip to Des Moines today to submit my biometrics for my Canadian visitor visa application.

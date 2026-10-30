@@ -1,7 +1,11 @@
+import { formatForLegacyTag } from "@/utils/content/formats";
+import { canonicalTopicTag } from "@/utils/content/tags";
+import { legacyTravelDestination, travelPlaceId } from "@/utils/content/travel";
 import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostMetadata } from "@/utils/content/posts";
-import PostPreview from "@/components/posts/PostPreview";
+import PostList from "@/components/posts/PostList";
+import Link from "next/link";
 import { tryDecodeUrlComponent } from "@/utils/links/url";
 import { pageMetadata } from "@/utils/pageMetadata";
 
@@ -31,6 +35,17 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   // This version passes encoded segments during fallback rendering. Keep the
   // existing one-decode behavior, but do not throw on a literal percent sign.
   const tag = tryDecodeUrlComponent(params.slug) ?? params.slug;
+  const format = formatForLegacyTag(tag);
+  if (format) permanentRedirect(`/posts?view=${format}`);
+  const destination = legacyTravelDestination(tag);
+  if (destination)
+    permanentRedirect(`/posts?view=travels#${travelPlaceId(destination)}`);
+  const canonical = canonicalTopicTag(tag);
+  if (
+    canonical !== tag &&
+    getPostMetadata().some((post) => post.tags.includes(canonical))
+  )
+    permanentRedirect(`/tags/${encodeURIComponent(canonical)}`);
   const filteredPosts = getPostMetadata().filter((post) =>
     post.tags.includes(tag)
   );
@@ -47,23 +62,19 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="mb-8 pb-4 border-b border-rule dark:border-night-raised">
-        <p className="text-xs text-primary/60 tracking-wide mb-2">TAG</p>
-        <div className="flex items-baseline gap-3">
-          <h1 className="text-2xl font-bold text-ink dark:text-chalk-soft">
-            {tag}
-          </h1>
-          <span className="text-sm text-primary/40 font-mono tabular-nums">
-            {filteredPosts.length}
+    <div>
+      <header className="mb-8">
+        <Link href="/tags" className="text-sm text-muted hover:text-accent">
+          all tags →
+        </Link>
+        <h1 className="mt-4 text-base font-bold text-primary">
+          #{tag}{" "}
+          <span className="font-normal text-muted text-xs">
+            · {filteredPosts.length}
           </span>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 text-sm">
-        {filteredPosts.map((post) => (
-          <PostPreview key={post.slug} {...post} />
-        ))}
-      </div>
+        </h1>
+      </header>
+      <PostList posts={filteredPosts} />
     </div>
   );
 };

@@ -1,7 +1,10 @@
 ---
-title: 'AGI House Hackathon'
-tags: 'journal, coding, AI'
-date: 'Jul 22, 2023'
+title: AGI House Hackathon
+tags: hackathons, ai, startups, programming, networking
+date: Jul 22, 2023
+format: journal
+locations:
+  - Palo Alto
 ---
 
 I was at [WING Autonomous Apps Hackathon](https://partiful.com/e/uYzDzXUstD8D8kvuA8Zl) @ AGI House today

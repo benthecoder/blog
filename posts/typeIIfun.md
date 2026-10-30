@@ -1,7 +1,7 @@
 ---
-title: 'Type II fun'
-tags: 'life, hiking'
-date: 'Mar 30, 2024'
+title: Type II fun
+tags: hiking, adventure, motivation
+date: Mar 30, 2024
 ---
 
 Not all fun is created equal.

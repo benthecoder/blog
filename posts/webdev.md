@@ -1,7 +1,8 @@
 ---
-title: 'For Hacking Together a Front-End'
-tags: 'programming, resources, design'
-date: 'Apr 5, 2024'
+title: For Hacking Together a Front-End
+tags: programming, web-development, hackathons, design, ai
+date: Apr 5, 2024
+format: journal
 ---
 
 I learned React and Next.js from building hackathon demos for the past 2 years.

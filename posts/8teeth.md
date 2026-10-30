@@ -1,7 +1,8 @@
 ---
-title: 'I got 8 teeth extracted today'
-tags: 'journal, life'
-date: 'Jan 30, 2024'
+title: I got 8 teeth extracted today
+tags: health, dental-health, body-image, family
+date: Jan 30, 2024
+format: journal
 ---
 
 ![Tooth Puller, 1609 - Caravaggio](/images/tooth.jpg)

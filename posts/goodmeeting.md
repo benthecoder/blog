@@ -1,7 +1,7 @@
 ---
-title: 'What Makes a Good Meeting?'
-tags: 'work, productivity'
-date: 'Feb 4, 2024'
+title: What Makes a Good Meeting?
+tags: work, productivity, communication
+date: Feb 4, 2024
 ---
 
 ![A Reading in the Salon of Mme Geoffrin" by Anicet Charles Gabriel Lemonnier](/images/geoffrin.jpg)

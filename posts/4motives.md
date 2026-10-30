@@ -1,7 +1,7 @@
 ---
-title: 'Four Motives for Writing'
-tags: 'writing, ideas'
-date: 'Feb 15, 2024'
+title: Four Motives for Writing
+tags: writing, creativity, reading, self-reflection
+date: Feb 15, 2024
 ---
 
 !["James Joyce" by Jacques-Émile Blanche (1935)](/images/joyce.jpeg)

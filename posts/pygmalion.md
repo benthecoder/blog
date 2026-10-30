@@ -1,7 +1,7 @@
 ---
-title: 'The Pygmalion Effect'
-tags: 'life, psychology'
-date: 'May 18, 2024'
+title: The Pygmalion Effect
+tags: psychology, education, work, management, expectations
+date: May 18, 2024
 ---
 
 ![Pieter Bruegel the Elder, Children's Games (Bruegel), 1560](/images/childrensgame.jpg)

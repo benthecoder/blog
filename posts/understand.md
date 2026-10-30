@@ -1,7 +1,7 @@
 ---
-title: 'How to Understand things'
-tags: 'thinking, learning, advice'
-date: 'Jan 16, 2024'
+title: How to Understand things
+tags: learning, critical-thinking, philosophy
+date: Jan 16, 2024
 ---
 
 ![The Astronomer, Johannes Vermeer, 1668](/images/astronomer.jpg)

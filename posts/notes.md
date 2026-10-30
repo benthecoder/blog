@@ -1,7 +1,7 @@
 ---
-title: 'Taking Good Reading Notes'
-tags: 'reading, advice'
-date: 'Sep 30, 2023'
+title: Taking Good Reading Notes
+tags: reading, learning, writing, knowledge-management
+date: Sep 30, 2023
 ---
 
 True reading is not a passive process.

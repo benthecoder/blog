@@ -1,7 +1,8 @@
 ---
-title: 'Getting stuck'
-tags: 'work, programming, journal'
-date: 'Aug 2, 2023'
+title: Getting stuck
+tags: programming, work, problem-solving, productivity
+date: Aug 2, 2023
+format: journal
 ---
 
 I've been getting stuck at my work lately.

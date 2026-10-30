@@ -1,7 +1,7 @@
 ---
-title: 'What to Build?'
-tags: 'startup'
-date: 'Dec 1, 2023'
+title: What to Build?
+tags: startups, product-management, career, creativity
+date: Dec 1, 2023
 ---
 
 How do you decide on what to build?

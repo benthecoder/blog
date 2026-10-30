@@ -1,7 +1,8 @@
 ---
-title: 'Heartbreak'
-tags: 'book, love'
-date: 'Aug 20, 2023'
+title: Heartbreak
+tags: relationships, mental-health, reading
+date: Aug 20, 2023
+format: book
 ---
 
 I was at the Denver airport for a layover and read the final chapter of [Heartbreak](https://www.goodreads.com/en/book/show/58085256) by Florence Williams.

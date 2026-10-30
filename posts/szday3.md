@@ -1,7 +1,10 @@
 ---
-title: 'Shenzhen Day 3'
-tags: 'travel, journal, art'
-date: 'Apr 24, 2024'
+title: Shenzhen Day 3
+tags: travel, art, drawing, food
+date: Apr 24, 2024
+format: journal
+locations:
+  - Shenzhen
 ---
 
 ![mom's (left), mine (right) with 美星艺术家 at Dafen](/images/wave.jpg)

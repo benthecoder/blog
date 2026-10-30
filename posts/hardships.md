@@ -1,7 +1,7 @@
 ---
-title: 'Hardship is No Misfortune'
-tags: 'personal, philosophy'
-date: 'Apr 19, 2023'
+title: Hardship is No Misfortune
+tags: health, faith, psychology, resilience
+date: Apr 19, 2023
 ---
 
 > When you face hardship, remember that the thing itself is no misfortune at all. To endure it and prevail is good fortune. It could have happened to anyone. But not everyone could have remained unharmed by it

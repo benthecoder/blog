@@ -1,7 +1,7 @@
 ---
-title: 'On Learning (for programmers)'
-tags: 'programming, learning'
-date: 'Jan 2, 2024'
+title: On Learning (for programmers)
+tags: programming, learning, education
+date: Jan 2, 2024
 ---
 
 It's the start of a new year.

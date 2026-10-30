@@ -1,7 +1,10 @@
 ---
-title: 'Taiwan Day 3'
-tags: 'travel, journal'
-date: 'Jun 3, 2024'
+title: Taiwan Day 3
+tags: travel, family, food, architecture
+date: Jun 3, 2024
+format: journal
+locations:
+  - Jiufen
 ---
 
 ![Jiufen](/images/twday3.jpeg)

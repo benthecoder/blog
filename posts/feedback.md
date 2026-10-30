@@ -1,7 +1,7 @@
 ---
-title: 'Asking For Feedback'
-tags: 'work, advice'
-date: 'Dec 4, 2023'
+title: Asking For Feedback
+tags: communication, work, project-management, writing
+date: Dec 4, 2023
 ---
 
 To receive for constructive and effective feedback, you need to ask for it.

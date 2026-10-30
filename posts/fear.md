@@ -1,7 +1,7 @@
 ---
-title: 'Beautiful minds are free from fear'
-tags: 'fear, psychology'
-date: 'Apr 23, 2023'
+title: Beautiful minds are free from fear
+tags: psychology, habits, mental-health
+date: Apr 23, 2023
 ---
 
 > Today can either be the best day or worst day of my life. It just depends on my perception

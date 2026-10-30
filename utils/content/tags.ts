@@ -1,8 +1,25 @@
 import type { PostFrontmatter, PostMetadata } from "@/types/post";
 
-// Tag that marks a post as a favorite: the archive's favorites tab and the
-// homepage's recent favorites both read it.
-export const FAVORITE = "✰";
+const TOPIC_ALIASES: Record<string, string> = {
+  ml: "machine-learning",
+  coding: "programming",
+  tech: "technology",
+  movies: "film",
+  job: "career",
+  friends: "friendship",
+  love: "relationships",
+  recipe: "cooking",
+  flight: "air-travel",
+  roadtrip: "road-trips",
+  mandarin: "chinese-language",
+  sketching: "drawing",
+  school: "education",
+};
+
+export function canonicalTopicTag(tag: string): string {
+  const normalized = tag.trim().toLowerCase();
+  return TOPIC_ALIASES[normalized] ?? normalized;
+}
 
 /**
  * Normalize a frontmatter `tags` value (array, comma-separated string, or

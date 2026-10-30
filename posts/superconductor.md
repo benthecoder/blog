@@ -1,7 +1,7 @@
 ---
-title: 'First Room-Temperature Superconductor'
-tags: 'science, tech, energy'
-date: 'Jul 26, 2023'
+title: First Room-Temperature Superconductor
+tags: physics, materials-science, energy
+date: Jul 26, 2023
 ---
 
 What might be the biggest physics discovery in my lifetime is contained in this [paper](https://arxiv.org/abs/2307.12008).

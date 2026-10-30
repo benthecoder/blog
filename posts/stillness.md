@@ -1,7 +1,7 @@
 ---
-title: 'Cultivating Depth and Stillness'
-tags: 'work'
-date: 'Feb 13, 2024'
+title: Cultivating Depth and Stillness
+tags: work, productivity, creativity, learning
+date: Feb 13, 2024
 ---
 
 ![Lake Keitele, Akseli Gallen-Kallela, 1905](/images/stillness.jpeg)

@@ -1,7 +1,7 @@
 ---
-title: 'Two Modes of Experience'
-tags: 'life, thinking, advice'
-date: 'May 26, 2024'
+title: Two Modes of Experience
+tags: psychology, mindfulness, christianity, faith
+date: May 26, 2024
 ---
 
 ![John Singer Sargent, Carnation, Lily, Lily, Rose, 1885](/images/lilyrose.jpg)

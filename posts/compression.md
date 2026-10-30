@@ -1,7 +1,7 @@
 ---
-title: 'Compression'
-tags: 'data, intelligence'
-date: 'Oct 1, 2023'
+title: Compression
+tags: data-compression, information-theory, machine-learning
+date: Oct 1, 2023
 ---
 
 I came across this [prize](http://prize.hutter1.net/index.htm) for compressing human knowledge.

@@ -37,8 +37,8 @@ const PapersPage = () => {
       <h1 className="mb-2 text-2xl font-bold lowercase text-primary">papers</h1>
       <p className="mb-10 text-sm text-secondary">
         papers i&apos;ve read, with my notes. each links into the{" "}
-        <Link href="/wiki" className="underline underline-offset-2">
-          wiki
+        <Link href="/posts" className="underline underline-offset-2">
+          archive
         </Link>
         .
       </p>
@@ -60,7 +60,7 @@ const PapersPage = () => {
                   return (
                     <li key={paper.slug}>
                       <Link
-                        href={`/wiki/${paper.slug}`}
+                        href={`/posts/${paper.slug}`}
                         className="group block"
                       >
                         <h3 className="text-base font-bold lowercase text-ink-strong transition-colors group-hover:text-ink dark:text-chalk-strong dark:group-hover:text-chalk-soft">

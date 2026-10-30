@@ -20,7 +20,7 @@ vi.mock("@/utils/content/posts", () => ({
   getPostMetadata: () => [
     { title: "Percent tag post", tags: ["100%"], slug: "percent" },
     { title: "Literal escape post", tags: ["literal%2F"], slug: "escape" },
-    { title: "Ordinary tag post", tags: ["journal"], slug: "ordinary" },
+    { title: "Ordinary tag post", tags: ["life"], slug: "ordinary" },
   ],
 }));
 vi.mock("@/components/posts/PostPreview", () => ({
@@ -80,16 +80,29 @@ describe("tag decoding", () => {
   it.each([
     ["100%", "Percent tag post"],
     ["literal%252F", "Literal escape post"],
-    ["journal", "Ordinary tag post"],
+    ["life", "Ordinary tag post"],
   ])("renders and filters the literal %s tag", async (slug, title) => {
     const html = renderToStaticMarkup(
       await TagPage({ params: Promise.resolve({ slug }) })
     );
     expect(html).toContain(`<h1`);
-    expect(html).toContain(
-      `${slug === "literal%252F" ? "literal%2F" : slug}</h1>`
-    );
+    expect(html).toContain(`#${slug === "literal%252F" ? "literal%2F" : slug}`);
     expect(html).toContain(`<article>${title}</article>`);
     expect(html.match(/<article>/g)).toHaveLength(1);
+  });
+
+  it.each([
+    ["journal", "journal"],
+    ["book", "book"],
+    ["links", "links"],
+    ["resources", "resource"],
+    ["listicles", "resource"],
+    ["%E2%9C%B0", "essay"],
+  ])("redirects the retired %s tag to its format", async (slug, format) => {
+    await expect(
+      TagPage({ params: Promise.resolve({ slug }) })
+    ).rejects.toMatchObject({
+      digest: expect.stringContaining(`/posts?view=${format};308;`),
+    });
   });
 });

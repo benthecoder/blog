@@ -1,7 +1,7 @@
 ---
-title: 'Friendship Tenets'
-tags: 'friends, people'
-date: 'May 15, 2024'
+title: Friendship Tenets
+tags: friendship, relationships, community
+date: May 15, 2024
 ---
 
 ![Caspar David Friedrich, Moonrise over the Sea (Mondaufgang am Meer), 1821, Hermitage Museum, St Petersburg](/images/moonrisesea.jpg)

@@ -1,7 +1,8 @@
 ---
-title: 'Intercom on Starting Up'
-tags: 'startup, book'
-date: 'May 16, 2024'
+title: Intercom on Starting Up
+tags: startups, product-management, product-design, customer-discovery, marketing
+date: May 16, 2024
+format: book
 ---
 
 I'm currently building an app with my friend and we want to turn it into a startup.

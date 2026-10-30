@@ -1,7 +1,7 @@
 ---
-title: 'What is MUJI?'
-tags: 'design, whatis'
-date: 'Dec 28, 2023'
+title: What is MUJI?
+tags: design, software-design, psychology
+date: Dec 28, 2023
 ---
 
 I like [MUJI](https://www.muji.com/us/feature/whatismuji/) products a lot.

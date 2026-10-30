@@ -1,7 +1,8 @@
 ---
-title: 'Internship Showcase'
-tags: 'journal'
-date: 'Aug 1, 2023'
+title: Internship Showcase
+date: Aug 1, 2023
+format: journal
+tags: communication, presentations, work, career
 ---
 
 I participated in an internship showcase today at Tesla.

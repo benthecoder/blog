@@ -1,7 +1,8 @@
 ---
-title: 'Ways of Drawing'
-tags: 'book, art'
-date: 'May 8, 2024'
+title: Ways of Drawing
+tags: drawing, art, reading, creativity
+date: May 8, 2024
+format: book
 ---
 
 ![Leonardo Da Vinci, A star-of-Bethlehem and other plants c.1506-12, Red chalk, pen and ink | 19.8 x 16.0 cm (sheet of paper) | RCIN 912424](/images/leostar.jpeg)

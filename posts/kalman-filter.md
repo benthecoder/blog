@@ -1,7 +1,7 @@
 ---
-title: 'What is a Kalman Filter?'
-tags: 'whatis, ML'
-date: 'Nov 6, 2023'
+title: What is a Kalman Filter?
+tags: statistics, mathematics, machine-learning, control-systems, programming
+date: Nov 6, 2023
 ---
 
 [Kalman Filters](https://www.wikiwand.com/en/Kalman_filter) helps estimate unknown values based on a series of measurements taken over time.

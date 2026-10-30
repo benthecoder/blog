@@ -1,7 +1,7 @@
 ---
-title: 'How to Win Kaggle Competitions'
-tags: 'ML, advice'
-date: 'Nov 10, 2023'
+title: How to Win Kaggle Competitions
+tags: machine-learning, statistics, model-evaluation, kaggle-competitions
+date: Nov 10, 2023
 ---
 
 [Christof Henkel](https://www.kaggle.com/christofhenkel), the current #2 on Kaggle shares in an [interview](https://www.youtube.com/watch?v=RF4LwRl0npQ) how to succeed in a competition.

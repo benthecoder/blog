@@ -1,7 +1,7 @@
 ---
-title: 'Top Five Regrets of the Dying'
-tags: 'life, ideas'
-date: 'Jun 2, 2023'
+title: Top Five Regrets of the Dying
+tags: personal-growth, relationships, work, mental-health, happiness
+date: Jun 2, 2023
 ---
 
 > 1. I wish I'd had the courage to live a life true to myself, not the life others expected of me.

@@ -1,7 +1,7 @@
 ---
-title: 'Launch Side Projects'
-tags: 'coding, startup'
-date: 'Jun 26, 2023'
+title: Launch Side Projects
+tags: startups, programming, creativity, career
+date: Jun 26, 2023
 ---
 
 > Projects are currency in a networked world

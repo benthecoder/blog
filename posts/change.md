@@ -1,7 +1,8 @@
 ---
-title: 'Change'
-tags: 'life, growth'
-date: 'Jun 6, 2023'
+title: Change
+tags: identity, faith, mental-health, personal-growth
+date: Jun 6, 2023
+format: journal
 ---
 
 > People change in four seasons: when they hurt enough they have to, when they see enough they are inspired to, when they learn enough that they want to, and when they receive enough that they are able to. - John C. Maxwell

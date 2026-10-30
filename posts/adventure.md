@@ -1,7 +1,8 @@
 ---
-title: 'Every Day is an Adventure'
-tags: 'journal, life'
-date: 'May 24, 2023'
+title: Every Day is an Adventure
+tags: psychology, self-reflection, habits
+date: May 24, 2023
+format: journal
 ---
 
 > “Adventure may hurt you, but monotony will kill you.” — Marcus Purvis

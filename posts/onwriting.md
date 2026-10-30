@@ -1,7 +1,8 @@
 ---
-title: 'Writing Advice'
-tags: 'advice, writing'
-date: 'Jan 9, 2024'
+title: Writing Advice
+tags: writing, reading, creativity, editing
+date: Jan 9, 2024
+format: resource
 ---
 
 ![Le Printemps, Jean-François Millet (1814 - 1875)](/images/printemps.jpg)

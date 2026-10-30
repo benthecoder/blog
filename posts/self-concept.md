@@ -1,7 +1,7 @@
 ---
-title: 'Life Narrative'
-tags: 'psychology'
-date: 'Nov 7, 2023'
+title: Life Narrative
+tags: psychology, identity, self-reflection
+date: Nov 7, 2023
 ---
 
 We possess a fundamental concept of self. We are aware of our names, our parents, and the milestones of our lives, such as our successes and failures. However, truly grasping our self-concept extends well beyond the mere facts of our personal history.

@@ -1,7 +1,7 @@
 ---
-title: 'Think life a Farmer'
-tags: 'life, advice'
-date: 'May 31, 2024'
+title: Think life a Farmer
+tags: personal-growth, habits, patience
+date: May 31, 2024
 ---
 
 ![Farmhouse in Provence, 1888, Vincent van Gogh](/images/farmhouse.jpg)

@@ -1,7 +1,7 @@
 ---
-title: 'Optimism'
-tags: 'psychology, life'
-date: 'Dec 6, 2023'
+title: Optimism
+tags: psychology, mental-health, emotional-regulation, resilience
+date: Dec 6, 2023
 ---
 
 Dr. Ana talks about healthy optimism and how to cultivate it in her latest [video](https://www.youtube.com/watch?v=ynjOQgll5PE).

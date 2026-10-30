@@ -1,7 +1,7 @@
 ---
-title: '4 Hour Rule for Getting Work Done'
-tags: 'work, productivity, advice, ✰'
-date: 'Mar 27, 2024'
+title: 4 Hour Rule for Getting Work Done
+tags: productivity, work, health, habits
+date: Mar 27, 2024
 ---
 
 Oliver Burkeman, author of [Four Thousand Weeks](https://leebyron.com/4000/): Time Management for Mortals believes there is one hard-and-fast [rule](https://www.oliverburkeman.com/fourhours) of time management that applies to everyone:

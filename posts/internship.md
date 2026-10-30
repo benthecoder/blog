@@ -1,7 +1,7 @@
 ---
-title: 'Coming back to Tesla'
-tags: 'journal, work'
-date: 'May 17, 2023'
+title: Coming back to Tesla
+tags: career, work, self-reflection
+date: May 17, 2023
 ---
 
 I reluctantly returned as an intern at the same team with Tesla this week.

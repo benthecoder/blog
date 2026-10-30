@@ -1,7 +1,7 @@
 ---
-title: '5 Principles of Spatial Design'
-tags: 'design'
-date: 'Nov 16, 2023'
+title: 5 Principles of Spatial Design
+tags: design, user-experience, spatial-computing, technology
+date: Nov 16, 2023
 ---
 
 The [fundamentals of spatial design](https://developer.apple.com/videos/play/wwdc2023/10072/) by Apple WWDC23, best practices for creating comfortable, human-centered experiences that transforms reality.

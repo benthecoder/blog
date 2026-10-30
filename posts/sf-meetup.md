@@ -1,7 +1,8 @@
 ---
-title: 'First SF Meetup'
-tags: 'journal, SF'
-date: 'Jun 27, 2023'
+title: First SF Meetup
+tags: conferences, career, community, data-engineering
+date: Jun 27, 2023
+format: journal
 ---
 
 I went to my first [meetup](https://www.linkedin.com/events/magicmeetup-in-persondataengine7067220027619364864/) in SF today.

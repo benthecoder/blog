@@ -1,7 +1,7 @@
 ---
-title: 'Never been loved'
-tags: 'love, life'
-date: 'Aug 19, 2023'
+title: Never been loved
+tags: relationships, identity, psychology
+date: Aug 19, 2023
 ---
 
 An interesting [video](https://www.youtube.com/watch?v=WdEPs-xysak) about love and romance in 20s.

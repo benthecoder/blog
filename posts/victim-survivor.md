@@ -1,7 +1,7 @@
 ---
-title: 'Victim or Survivor'
-tags: 'personal, life'
-date: 'Jul 2, 2023'
+title: Victim or Survivor
+tags: health, mental-health, psychology, self-acceptance
+date: Jul 2, 2023
 ---
 
 From [Dr. Julie Gurner](https://fs.blog/brain-food/july-2-2023/):

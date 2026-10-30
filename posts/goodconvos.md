@@ -1,7 +1,8 @@
 ---
-title: 'good talks & questions'
-tags: 'talking, people, book'
-date: 'Apr 11, 2024'
+title: good talks & questions
+tags: communication, relationships, psychology
+date: Apr 11, 2024
+format: book
 ---
 
 I came across David Brooks from [a](https://www.youtube.com/watch?v=YwENbKn3tqI) [few](https://www.youtube.com/watch?v=JsZz6cngPeo) [videos](https://www.youtube.com/watch?v=JKXo5RReky4) [on](https://youtu.be/6_cEbY8-3EQ?si=OHBYwY6okRAKPW-0) YouTube

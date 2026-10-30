@@ -49,13 +49,15 @@ export const remarkPlugins: PluggableList = [
   remarkImageParagraphs,
   remarkFirstImage,
 ];
-export const rehypePlugins: PluggableList = [
+export const createRehypePlugins = (headingPrefix = ""): PluggableList => [
   rehypeRaw,
-  rehypeSlug,
+  [rehypeSlug, { prefix: headingPrefix }],
   [rehypeKatex, { strict: false }],
   // Runs last: sidenotes need the footnote section fully rendered.
   rehypeSidenotes,
 ];
+
+export const rehypePlugins = createRehypePlugins();
 
 // `getImageMeta` is only available server-side (it reads the manifest from
 // disk), so the server MarkdownContent passes it and the client admin

@@ -1,7 +1,7 @@
 ---
-title: '16 Life-Learnings'
-tags: 'life, advice'
-date: 'Dec 8, 2023'
+title: 16 Life-Learnings
+tags: philosophy, relationships, habits, productivity
+date: Dec 8, 2023
 ---
 
 ![The Water-Lily Pond](/images/bridge.jpg)

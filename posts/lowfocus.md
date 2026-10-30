@@ -1,7 +1,7 @@
 ---
-title: 'Dealing With Low Focus'
-tags: 'work, productivity'
-date: 'Mar 29, 2024'
+title: Dealing With Low Focus
+tags: productivity, focus, health, work
+date: Mar 29, 2024
 ---
 
 I had a lot of low-focus days the past three months, particularly this month.

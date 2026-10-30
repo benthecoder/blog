@@ -1,7 +1,7 @@
 ---
-title: 'How To Be More Creative'
-tags: 'art'
-date: 'Jan 8, 2024'
+title: How To Be More Creative
+tags: creativity, art, learning
+date: Jan 8, 2024
 ---
 
 ![Pablo Picasso. Bowl of Fruit, Violin and Bottle, 1914](/images/picasso.jpeg)

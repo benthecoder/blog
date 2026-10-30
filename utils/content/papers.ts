@@ -1,5 +1,5 @@
 import { cache } from "react";
-import { WIKI_DIR } from "@/config/paths";
+import { POSTS_DIR } from "@/config/paths";
 import { PAPER_TOPICS, PAPERS_CATEGORY } from "@/config/papers";
 import { scanMarkdownDir } from "./markdown";
 import { readPaperFields } from "./paperFields";
@@ -36,9 +36,9 @@ function labelFor(slug: string): string {
   return slug.replace(/-/g, " ").replace(/^\w/, (c) => c.toUpperCase());
 }
 
-/** Every wiki page under `papers/`, newest `read` first (undated last). */
+/** Every post with a `papers/` category, newest `read` first (undated last). */
 export const getPapers = cache(function getPapers(): PaperEntry[] {
-  return scanMarkdownDir(WIKI_DIR)
+  return scanMarkdownDir(POSTS_DIR)
     .flatMap(({ slug, data }) => {
       const topic = topicOf(
         typeof data.category === "string" ? data.category : ""

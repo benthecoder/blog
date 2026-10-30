@@ -1,7 +1,7 @@
 ---
-title: 'How To become Fluent in Math'
-tags: 'math, learning'
-date: 'May 10, 2024'
+title: How To become Fluent in Math
+tags: mathematics, learning, education
+date: May 10, 2024
 ---
 
 ![Detail of Pythagoras with a tablet of ratios, numbers sacred to the Pythagoreans, from The School of Athens by Raphael. Vatican Palace, Rome, 1509](/images/pythagoras.jpeg)

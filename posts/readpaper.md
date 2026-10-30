@@ -1,7 +1,7 @@
 ---
-title: 'How to Read Papers'
-tags: 'reading, advice'
-date: 'Nov 29, 2023'
+title: How to Read Papers
+tags: research, reading, critical-thinking
+date: Nov 29, 2023
 ---
 
 A paper on [how to read papers](http://ccr.sigcomm.org/online/files/p83-keshavA.pdf).

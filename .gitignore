@@ -60,3 +60,6 @@ scripts/syncAppleNotes.mjs
 /public/robots.txt
 /public/sitemap*.xml
 .cache/
+
+# Local agent design plans and migration previews
+.claude/plans/

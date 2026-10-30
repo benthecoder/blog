@@ -1,7 +1,7 @@
 ---
-title: 'Ingredients for Resiliency'
-tags: 'personal, notes, life'
-date: 'Apr 21, 2023'
+title: Ingredients for Resiliency
+tags: health, mental-health, resilience
+date: Apr 21, 2023
 ---
 
 [Shaka Senghor](https://www.youtube.com/watch?v=ISjRSek5Xbs&t=402s) gave three ingredients towards being resilient.

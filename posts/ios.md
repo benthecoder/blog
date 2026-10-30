@@ -1,7 +1,8 @@
 ---
-title: 'Some IOS Apps I Like'
-tags: 'listicles, tech'
-date: 'Dec 26, 2023'
+title: Some IOS Apps I Like
+tags: design, software-design, ios
+date: Dec 26, 2023
+format: resource
 ---
 
 ![a few ios apps on my i13 mini](/images/ios.jpeg)

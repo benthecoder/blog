@@ -1,7 +1,8 @@
 ---
-title: 'How to Get Things Done'
-tags: 'notes, productivity'
-date: 'Sep 9, 2023'
+title: How to Get Things Done
+tags: productivity, habits, work, project-management
+date: Sep 9, 2023
+format: book
 ---
 
 [Getting things done](https://sive.rs/book/GettingThingsDone) by David Allen is a classic book for productivity.

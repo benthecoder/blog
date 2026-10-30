@@ -1,7 +1,7 @@
 ---
-title: 'Audacious Gardening'
-tags: 'ideas, climate'
-date: 'Dec 21, 2023'
+title: Audacious Gardening
+tags: gardening, climate, nature
+date: Dec 21, 2023
 ---
 
 ![The Artist's Garden at Giverny, 1900 by Claude Monet](/images/giverny.jpg)

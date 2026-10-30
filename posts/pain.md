@@ -1,7 +1,8 @@
 ---
-title: 'when in pain'
-tags: 'journal, advice, life'
-date: 'Apr 17, 2024'
+title: when in pain
+tags: health, mental-health, pain-management, resilience, family
+date: Apr 17, 2024
+format: journal
 ---
 
 ![The Red Tree, Piet Mondrian, 1908-10](/images/redtree.jpeg)

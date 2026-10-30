@@ -1,7 +1,8 @@
 ---
-title: 'Useful Python modules'
-tags: 'programming, python'
-date: 'Jul 5, 2023'
+title: Useful Python modules
+tags: python, programming
+date: Jul 5, 2023
+format: resource
 ---
 
 A list of useful Python modules:

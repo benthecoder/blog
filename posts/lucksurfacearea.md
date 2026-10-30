@@ -1,7 +1,7 @@
 ---
-title: 'Luck Surface Area'
-tags: 'work, advice'
-date: 'Jan 18, 2024'
+title: Luck Surface Area
+tags: career, writing, community, creativity
+date: Jan 18, 2024
 ---
 
 Every success takes a little bit of luck. Hard work alone isn't enough.

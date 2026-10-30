@@ -1,7 +1,8 @@
 ---
-title: 'what is color grading?'
-tags: 'whatis, film'
-date: 'Apr 30, 2024'
+title: what is color grading?
+tags: film, video-editing, photography
+date: Apr 30, 2024
+format: resource
 ---
 
 ![The Matrix color grading](/images/matrixcolor.jpeg)

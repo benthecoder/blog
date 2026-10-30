@@ -1,7 +1,7 @@
 ---
-title: 'How to Be Alone'
-tags: 'journal, life, personal'
-date: 'Jan 22, 2024'
+title: How to Be Alone
+tags: friendship, relationships, mental-health, family, identity
+date: Jan 22, 2024
 ---
 
 ![The Monk by the Sea, Caspar David Friedrich](/images/monk.jpg)

@@ -1,7 +1,8 @@
 ---
-title: 'First KPop Concert'
-tags: 'journal, music'
-date: 'Jun 13, 2023'
+title: First KPop Concert
+tags: music, k-pop, community, psychology
+date: Jun 13, 2023
+format: journal
 ---
 
 I never was really into KPOP.

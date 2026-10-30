@@ -1,7 +1,8 @@
 ---
-title: 'How Proust Can Change Your Life'
-tags: 'book, life, philosophy'
-date: 'Jan 7, 2024'
+title: How Proust Can Change Your Life
+tags: philosophy, reading, relationships, psychology, writing
+date: Jan 7, 2024
+format: book
 ---
 
 ![Marcel Proust sat in bed writing Remembrance of Things Past, English School](/images/proust.jpeg)

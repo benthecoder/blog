@@ -1,7 +1,7 @@
 ---
-title: '100 Blocks a Day'
-tags: 'productivity, life'
-date: 'Apr 25, 2023'
+title: 100 Blocks a Day
+tags: productivity, time-management, self-reflection
+date: Apr 25, 2023
 ---
 
 > It’s always good to step back and think about how we’re using those 100 blocks we get each day. How many of them are put towards making your future better, and how many of them are just there to be enjoyed? How many of them are spent with other people, and how many are for time by yourself? How many are used to create something, and how many are used to consume something? How many of the blocks are focused on your body, how many on your mind, and how many on neither one in particular? Which are your favorite blocks of the day, and which are your least favorite?

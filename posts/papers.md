@@ -1,7 +1,7 @@
 ---
-title: 'Understand ML Papers Quickly'
-tags: 'ML, advice'
-date: 'Aug 28, 2023'
+title: Understand ML Papers Quickly
+tags: machine-learning, research, reading
+date: Aug 28, 2023
 ---
 
 [5 simple questions](https://evjang.com/2021/01/25/understanding-ml.html?curius=2021) by [Eric Jang](https://evjang.com/) for understanding ML papers quickly.

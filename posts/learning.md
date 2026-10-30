@@ -1,7 +1,7 @@
 ---
-title: 'Effortful learning'
-tags: 'learning'
-date: 'Jul 11, 2023'
+title: Effortful learning
+tags: learning, habits, creativity, education
+date: Jul 11, 2023
 ---
 
 I passively consume a lot of information.

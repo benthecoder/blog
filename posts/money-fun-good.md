@@ -1,7 +1,7 @@
 ---
-title: 'Make Money, Have Fun, Do Good'
-tags: 'life, career'
-date: 'Nov 26, 2023'
+title: Make Money, Have Fun, Do Good
+tags: career, money, values
+date: Nov 26, 2023
 ---
 
 I believe anyone wants to be in a position where they can **make money, have fun, and do good**.

@@ -1,7 +1,7 @@
 ---
-title: 'Be bigger than your problems'
-tags: 'philosophy, advice'
-date: 'Aug 31, 2023'
+title: Be bigger than your problems
+tags: psychology, mental-health, emotional-regulation
+date: Aug 31, 2023
 ---
 
 Be [larger than the problems](https://jamesclear.com/3-2-1/august-31-2023) in your life.

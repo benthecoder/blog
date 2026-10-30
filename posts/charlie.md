@@ -1,7 +1,8 @@
 ---
-title: 'Charlie Puth concert'
-tags: 'journal, music'
-date: 'Jul 6, 2023'
+title: Charlie Puth concert
+tags: music
+date: Jul 6, 2023
+format: journal
 ---
 
 Went to my second ever concert today at the Greek Theatre at UC Berkeley.

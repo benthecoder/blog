@@ -1,7 +1,7 @@
 ---
-title: 'Real vs Fake meat'
-tags: 'ideas, science, climate'
-date: 'Aug 23, 2023'
+title: Real vs Fake meat
+tags: food, climate, health, animal-welfare
+date: Aug 23, 2023
 ---
 
 In 2021, a survey of over 1000 americans found that over 2/3 have eaten plant-based meat in the past year.

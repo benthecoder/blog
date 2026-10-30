@@ -1,7 +1,7 @@
 ---
-title: 'A Swift Tour'
-tags: 'programming, notes, learning'
-date: 'Jan 5, 2024'
+title: A Swift Tour
+tags: swift, programming, ios-development, learning
+date: Jan 5, 2024
 ---
 
 Some notes & questions from reading [A Swift Tour](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/guidedtour/).

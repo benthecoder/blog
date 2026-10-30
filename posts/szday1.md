@@ -1,7 +1,10 @@
 ---
-title: 'Shenzhen Day 1'
-tags: 'travel, journal'
-date: 'Apr 22, 2024'
+title: Shenzhen Day 1
+tags: travel, food, chinese-culture, health
+date: Apr 22, 2024
+format: journal
+locations:
+  - Shenzhen
 ---
 
 ![福田下梅林地铁站店](/images/szday1.jpg)

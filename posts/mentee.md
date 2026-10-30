@@ -1,7 +1,8 @@
 ---
-title: 'Golden Rules of Effective Menteeship'
-tags: 'career, work, advice'
-date: 'Sep 24, 2023'
+title: Golden Rules of Effective Menteeship
+tags: career, mentorship, communication, learning
+date: Sep 24, 2023
+format: resource
 ---
 
 There are [Golden Rules](https://www.bmj.com/content/354/bmj.i4147) for being a good mentee.

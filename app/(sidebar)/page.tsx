@@ -4,8 +4,8 @@ import HomeConnections from "@/components/ui/HomeConnections";
 import { QuoteFooter } from "@/components/layout/QuoteFooter";
 import { getQuotes } from "@/utils/content/quotes";
 import { SKETCHES } from "@/config/sketches";
-import { getJournalEntries, getPostMetadata } from "@/utils/content/posts";
-import { FAVORITE } from "@/utils/content/tags";
+import { getPostsByFormat } from "@/utils/content/posts";
+import { formatConfig } from "@/utils/content/formats";
 import { getPhotostream } from "@/utils/content/photostream";
 import { photoAlt } from "@/utils/photoCaption";
 
@@ -110,12 +110,9 @@ function Gallery({
 }
 
 export default async function HomePage() {
-  const posts = getPostMetadata();
   const photos = (await getPhotostream()).slice(0, 3);
-  const favorites = posts
-    .filter((post) => post.tags.includes(FAVORITE))
-    .slice(0, 4);
-  const recent = getJournalEntries().slice(0, 3);
+  const writings = getPostsByFormat("essay").slice(0, 4);
+  const recent = getPostsByFormat("journal").slice(0, 3);
 
   return (
     <>
@@ -140,6 +137,9 @@ export default async function HomePage() {
           <li>
             <Link href="/library">the bookshelf</Link>
           </li>
+          <li>
+            <Link href="/recipes">recipes from my kitchen</Link>
+          </li>
         </ul>
       </article>
 
@@ -149,13 +149,13 @@ export default async function HomePage() {
 
       <PostSection
         id="writings"
-        title="recent writings"
-        posts={favorites}
-        more={{ href: "/posts?view=favorites", label: "all writings" }}
+        title={formatConfig("essay").homeHeading}
+        posts={writings}
+        more={{ href: "/posts?view=essay", label: "all writings" }}
       />
       <PostSection
         id="journal"
-        title="recent journal entries"
+        title={formatConfig("journal").homeHeading}
         posts={recent}
         more={{ href: "/journal", label: "read the journal" }}
       />

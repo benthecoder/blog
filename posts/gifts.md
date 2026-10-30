@@ -1,7 +1,7 @@
 ---
-title: 'Gifts'
-tags: 'people, advice'
-date: 'Dec 19, 2023'
+title: Gifts
+tags: relationships, community, gift-giving
+date: Dec 19, 2023
 ---
 
 ![View of the Gift of the Emperor's Gift Cup – Yōshū (Hashimoto) Chikanobu](/images/gift.jpeg)

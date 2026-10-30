@@ -1,7 +1,8 @@
 ---
-title: 'Graduating'
-tags: 'life, journal'
-date: 'Dec 16, 2023'
+title: Graduating
+tags: education, health, immigration, family, self-reflection
+date: Dec 16, 2023
+format: journal
 ---
 
 ![Unknown artist](/images/hope.jpeg)

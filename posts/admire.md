@@ -1,7 +1,8 @@
 ---
-title: 'Some people I admire'
-tags: 'people, listicles'
-date: 'Dec 27, 2023'
+title: Some people I admire
+tags: community, creativity, reading, writing, programming
+date: Dec 27, 2023
+format: resource
 ---
 
 The selection of people who we choose to inspire us is one of life's most important choices.

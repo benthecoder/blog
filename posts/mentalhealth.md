@@ -1,7 +1,7 @@
 ---
-title: 'Practical Mental Health Tips'
-tags: 'psychology, ✰'
-date: 'Oct 15, 2023'
+title: Practical Mental Health Tips
+tags: mental-health, psychology, habits, emotional-regulation, health
+date: Oct 15, 2023
 ---
 
 Found this 22-minute [article](https://ncase.me/mental-health/) that's a mix of personal story, science of mental health, and practical tips.

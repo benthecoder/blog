@@ -1,7 +1,7 @@
 ---
-title: 'Components of an Effective Apology'
-tags: 'people, advice'
-date: 'Feb 23, 2024'
+title: Components of an Effective Apology
+tags: communication, relationships, psychology
+date: Feb 23, 2024
 ---
 
 ![The Return of the Prodigal Son (Rembrandt)](/images/prodigalson.jpg)

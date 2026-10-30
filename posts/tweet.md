@@ -1,7 +1,7 @@
 ---
 title: 'How to: Twitter'
-tags: 'advice, writing'
-date: 'May 9, 2024'
+tags: social-media, writing, community, friendship
+date: May 9, 2024
 ---
 
 If you're looking to start on Twitter, here's Henrik's [user manual](https://twitter.com/phokarlsson/status/1788463381227225544) for Twitter.

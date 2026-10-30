@@ -1,7 +1,7 @@
 ---
-title: 'Statement of Purpose Formula'
-tags: 'writing'
-date: 'Oct 23, 2023'
+title: Statement of Purpose Formula
+tags: writing, education, career
+date: Oct 23, 2023
 ---
 
 After the entire day of [researching](https://users.ece.cmu.edu/~mabdelm/statement-of-purpose-tips.html) how to write a good statement of purpose for [grad school](https://www.bneo.xyz/posts/grad-school) application, and contemplating [why grad school](https://www.cs.cmu.edu/~harchol/gradschooltalk.pdf), I've devised this formula.

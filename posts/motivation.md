@@ -1,7 +1,7 @@
 ---
-title: 'Goals'
-tags: 'productivity, notes'
-date: 'Aug 29, 2023'
+title: Goals
+tags: psychology, habits, productivity, goal-setting, focus
+date: Aug 29, 2023
 ---
 
 Some notes on how to [set and achieve goals](https://www.youtube.com/watch?v=CrtR12PBKb0) by Andrew Huberman.

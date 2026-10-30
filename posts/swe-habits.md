@@ -1,7 +1,7 @@
 ---
-title: 'Habits of Great SWEs'
-tags: 'programming, advice, work'
-date: 'Nov 8, 2023'
+title: Habits of Great SWEs
+tags: programming, software-engineering, work
+date: Nov 8, 2023
 ---
 
 Software engineers do more than just coding.

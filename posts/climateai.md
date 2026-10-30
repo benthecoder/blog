@@ -1,7 +1,7 @@
 ---
-title: 'Climate Forecast with AI'
-tags: 'climate, AI, notes'
-date: 'Apr 19, 2024'
+title: Climate Forecast with AI
+tags: climate, machine-learning, weather-forecasting, science
+date: Apr 19, 2024
 ---
 
 A few notes on [how AI is improving climate forecasts](https://www.nature.com/articles/d41586-024-00780-8).

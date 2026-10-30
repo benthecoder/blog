@@ -1,7 +1,7 @@
 ---
-title: 'Stuff on GPUs'
-tags: 'tech, AI'
-date: 'Aug 26, 2023'
+title: Stuff on GPUs
+tags: ai, machine-learning, deep-learning, gpu-computing
+date: Aug 26, 2023
 ---
 
 Found a good [article](https://timdettmers.com/2023/01/30/which-gpu-for-deep-learning/#Overview) for choosing GPUs for deep learning.

@@ -1,7 +1,7 @@
 ---
-title: 'Psalm 23'
-tags: 'bible, life'
-date: 'Oct 29, 2023'
+title: Psalm 23
+tags: christianity, faith, bible, spirituality
+date: Oct 29, 2023
 ---
 
 ![pastures](/images/pastures.jpg)

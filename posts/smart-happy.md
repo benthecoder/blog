@@ -1,7 +1,7 @@
 ---
-title: 'Smart != Happier'
-tags: 'intelligence, ideas'
-date: 'Dec 12, 2023'
+title: Smart != Happier
+tags: psychology, intelligence, wisdom, problem-solving, happiness
+date: Dec 12, 2023
 ---
 
 ![Melancholy (c. 1892) by Edvard Munch](/images/melancholy.jpg)

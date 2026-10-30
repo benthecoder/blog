@@ -1,7 +1,8 @@
 ---
-title: 'D-Day'
-tags: 'journal'
-date: 'Mar 1, 2024'
+title: D-Day
+date: Mar 1, 2024
+format: journal
+tags: health, surgery, family, mental-health
 ---
 
 ![Sunflowers (F456), Vincent van Gogh](/images/sunflower.jpg)

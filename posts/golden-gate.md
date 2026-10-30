@@ -1,7 +1,10 @@
 ---
-title: 'SF Trip w Parents'
-tags: 'journal, SF'
-date: 'Jun 4, 2023'
+title: SF Trip w Parents
+tags: family, travel, nature, food, photography
+date: Jun 4, 2023
+format: journal
+locations:
+  - San Francisco
 ---
 
 Day #2 of bringing my parents around to touristy spots in California.

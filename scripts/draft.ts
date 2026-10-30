@@ -8,6 +8,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import fs from "fs";
+import { writeMarkdownFile } from "@/utils/content/markdown";
 import { DRAFTS_DIR, getDraftPath } from "@/config/paths";
 import { resolveLinkTitles } from "./lib/linkTitles";
 import { collectLinks, nextIssueNumber } from "@/utils/digest/collect";
@@ -50,10 +51,18 @@ async function main() {
     day: "numeric",
     year: "numeric",
   });
-  const front = `---\ntitle: '${draft.title}'\ntags: '${draft.tags}'\ndate: '${date}'\n---\n\n`;
-
   fs.mkdirSync(DRAFTS_DIR, { recursive: true });
-  fs.writeFileSync(file, front + draft.body);
+  writeMarkdownFile(
+    file,
+    {
+      title: draft.title,
+      format: draft.format,
+      ...(draft.tags ? { tags: draft.tags } : {}),
+      date,
+    },
+    `\n${draft.body}`,
+    { exclusive: true }
+  );
   console.log(`wrote ${file}`);
 }
 

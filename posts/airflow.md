@@ -1,7 +1,7 @@
 ---
-title: 'What is Airflow?'
-tags: 'data, whatis, tech'
-date: 'Jun 29, 2023'
+title: What is Airflow?
+tags: workflow-orchestration, data-engineering, programming
+date: Jun 29, 2023
 ---
 
 [Airflow](https://github.com/apache/airflow) is an open-source platform for **developing**, **scheduling**, and **monitoring** batch-oriented workflows.

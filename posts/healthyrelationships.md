@@ -1,7 +1,7 @@
 ---
 title: 'how to: healthier relationships'
-tags: 'people, love'
-date: 'Mar 9, 2024'
+tags: relationships, psychology, friendship, communication
+date: Mar 9, 2024
 ---
 
 ![The Dance of Life, Edvard Munch, 1925](/images/danceoflife.jpg)

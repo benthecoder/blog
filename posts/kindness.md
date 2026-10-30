@@ -1,7 +1,7 @@
 ---
-title: 'Kindness'
-tags: 'life, advice'
-date: 'Jan 27, 2024'
+title: Kindness
+tags: community, relationships, psychology
+date: Jan 27, 2024
 ---
 
 ![The Good Samaritan, 1633 by Rembrandt](/images/samaritan.jpeg)

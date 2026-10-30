@@ -1,7 +1,7 @@
 ---
-title: 'Early Indicators of Success'
-tags: 'startup'
-date: 'Mar 14, 2024'
+title: Early Indicators of Success
+tags: startups, business, innovation
+date: Mar 14, 2024
 ---
 
 NVIDIA went through a decade where they were investing in this future of 3D graphics, and the market that fuels NVIDIA today just didn't exist.

@@ -1,7 +1,7 @@
 ---
-title: 'My Information Diet'
-tags: 'reading, productivity'
-date: 'Apr 26, 2023'
+title: My Information Diet
+tags: information-literacy, technology, learning, reading
+date: Apr 26, 2023
 ---
 
 I like consuming information a lot.

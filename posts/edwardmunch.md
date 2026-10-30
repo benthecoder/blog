@@ -1,7 +1,7 @@
 ---
-title: 'Edward Munch'
-tags: 'art, biography'
-date: 'Apr 7, 2024'
+title: Edward Munch
+tags: art, history, psychology
+date: Apr 7, 2024
 ---
 
 ![Edvard Munch, 1893, The Scream](/images/scream.jpg)

@@ -1,7 +1,7 @@
 ---
-title: 'Tasks Pitch'
-tags: 'life, productivity'
-date: 'May 30, 2024'
+title: Tasks Pitch
+tags: career, communication, productivity, writing
+date: May 30, 2024
 ---
 
 [Simone Stolzoff](https://x.com/SimoneStolzoff) said journalists always asks four questions when considering a pitch:

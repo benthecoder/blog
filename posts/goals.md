@@ -1,7 +1,7 @@
 ---
-title: 'The Neuroscience of Achieving Goals'
-tags: 'productivity, neuroscience'
-date: 'May 4, 2023'
+title: The Neuroscience of Achieving Goals
+tags: psychology, habits, productivity
+date: May 4, 2023
 ---
 
 I like listening the [Huberman lab](https://hubermanlab.com/) podcast.

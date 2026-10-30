@@ -9,7 +9,7 @@ vi.mock("@/config/paths", async (importOriginal) => {
   const osm = await import("os");
   const pathm = await import("path");
   root.dir = fsm.mkdtempSync(pathm.join(osm.tmpdir(), "papers-"));
-  return { ...original, WIKI_DIR: root.dir };
+  return { ...original, POSTS_DIR: root.dir };
 });
 import { getPapers, groupPapersByTopic } from "./papers";
 
@@ -23,7 +23,7 @@ function page(slug: string, frontmatter: string) {
 }
 
 describe("papers", () => {
-  it("lists papers/ wiki pages newest-read first, grouped in topic order", () => {
+  it("lists papers/ posts newest-read first, grouped in topic order", () => {
     page(
       "attention",
       "title: Attention Is All You Need\ncategory: papers/llms-and-agents\nauthors: Vaswani et al.\nyear: 2017\nread: 2026-10-01"

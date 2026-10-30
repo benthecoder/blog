@@ -1,7 +1,7 @@
 ---
-title: 'A Better Way To Live'
-tags: 'life'
-date: 'Feb 6, 2024'
+title: A Better Way To Live
+tags: philosophy, relationships, psychology, mental-health
+date: Feb 6, 2024
 ---
 
 ![Nighthawks, 1942, Edward Hopper](/images/nighthawks.jpg)

@@ -1,7 +1,8 @@
 ---
-title: 'Mental Health Toolkit'
-tags: 'psychology, life'
-date: 'Oct 31, 2023'
+title: Mental Health Toolkit
+tags: mental-health, health, fitness, habits, relationships
+date: Oct 31, 2023
+format: resource
 ---
 
 The “Big 6” core pillars for mood and mental health by [Andrew Huberman](https://www.youtube.com/watch?v=CJIXbibQ0jI)

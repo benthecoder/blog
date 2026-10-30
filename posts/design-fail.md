@@ -1,7 +1,7 @@
 ---
-title: 'Design a part to fail'
-tags: 'design, engineering'
-date: 'Jun 16, 2023'
+title: Design a part to fail
+tags: software-design, engineering, testing, mental-health, resilience
+date: Jun 16, 2023
 ---
 
 An idea from the book "101 Things I learned in Engineering School".

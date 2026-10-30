@@ -1,7 +1,7 @@
 ---
-title: 'A chat with a Renewable Energy Technologist'
-tags: 'climate, energy'
-date: 'May 2, 2024'
+title: A chat with a Renewable Energy Technologist
+tags: climate, energy, community, ai
+date: May 2, 2024
 ---
 
 ![Night's Candles Are Burnt Out, Seán Keating, 1889–1977](/images/nightscandles.jpeg)

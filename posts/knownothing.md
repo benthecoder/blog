@@ -1,7 +1,7 @@
 ---
-title: 'Que sais je?'
-tags: 'life, philosophy'
-date: 'Mar 19, 2024'
+title: Que sais je?
+tags: philosophy, self-reflection, learning
+date: Mar 19, 2024
 ---
 
 ![Mark Rothko, Orange, Red, Yellow, 1961](/images/orange-red-yellow.jpg)

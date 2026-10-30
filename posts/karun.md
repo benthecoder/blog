@@ -1,7 +1,7 @@
 ---
-title: 'Coffee Chat with Karun'
-tags: 'chats, people'
-date: 'Sep 27, 2023'
+title: Coffee Chat with Karun
+tags: career, data-science, machine-learning, statistics, communication
+date: Sep 27, 2023
 ---
 
 I had a chat with Karun, he's offering free 1:1s on Topmate.

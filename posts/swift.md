@@ -1,7 +1,8 @@
 ---
-title: 'Swift Starter Pack'
-tags: 'programming, resources'
-date: 'Dec 30, 2023'
+title: Swift Starter Pack
+tags: swift, programming, ios-development
+date: Dec 30, 2023
+format: resource
 ---
 
 ![apple developer suite](/images/swift.jpeg)

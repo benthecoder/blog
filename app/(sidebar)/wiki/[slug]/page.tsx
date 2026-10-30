@@ -1,85 +1,10 @@
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { getWikiMetadata, getWikiContent } from "@/utils/content/wiki";
-import MarkdownContent from "@/components/posts/MarkdownContent";
-import Backlinks from "@/components/content/Backlinks";
-import { pageMetadata } from "@/utils/pageMetadata";
+import { permanentRedirect } from "next/navigation";
 
-export const dynamic = "force-static";
-
-type Params = Promise<{ slug: string }>;
-
-export async function generateMetadata({
+export default async function RetiredEntry({
   params,
 }: {
-  params: Params;
-}): Promise<Metadata | undefined> {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
-  const pages = getWikiMetadata();
-  const page = pages.find((p) => p.slug === slug);
-  if (!page) return;
-
-  return pageMetadata({
-    title: page.title,
-    description: page.description,
-    path: `/wiki/${slug}`,
-  });
+  permanentRedirect(`/posts/${encodeURIComponent(slug)}`);
 }
-
-export const generateStaticParams = async () => {
-  const pages = getWikiMetadata();
-  return pages.map((page) => ({ slug: page.slug }));
-};
-
-const WikiSlugPage = async ({ params }: { params: Params }) => {
-  const { slug } = await params;
-  const pages = getWikiMetadata();
-  const meta = pages.find((p) => p.slug === slug);
-
-  if (!meta) return notFound();
-
-  let content;
-  try {
-    content = getWikiContent(slug);
-  } catch {
-    return notFound();
-  }
-
-  return (
-    <div className="mx-auto max-w-xl px-4 py-12">
-      <div className="mb-10">
-        <Link
-          href="/wiki"
-          className="text-xs lowercase tracking-wide text-ink-soft dark:text-chalk-muted transition-colors hover:text-primary"
-        >
-          ← wiki
-        </Link>
-      </div>
-
-      <div className="mb-10">
-        {meta.tags.length > 0 && (
-          <p className="mb-2 text-xs lowercase tracking-wide text-ink-soft dark:text-chalk-muted">
-            {meta.tags.join(" · ")}
-          </p>
-        )}
-        <h1 className="text-2xl font-bold lowercase text-primary">
-          {meta.title}
-        </h1>
-        {meta.description && (
-          <p className="mt-2 text-sm text-ink-soft dark:text-chalk-muted">
-            {meta.description}
-          </p>
-        )}
-      </div>
-
-      <article className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-primary prose-a:text-ink dark:prose-a:text-chalk-soft prose-a:no-underline prose-a:hover:underline">
-        <MarkdownContent content={content.content} />
-      </article>
-
-      <Backlinks contentRef={{ kind: "wiki", slug }} />
-    </div>
-  );
-};
-
-export default WikiSlugPage;

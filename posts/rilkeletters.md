@@ -1,7 +1,8 @@
 ---
-title: 'Letters to a Young Poet'
-tags: 'book'
-date: 'Feb 9, 2024'
+title: Letters to a Young Poet
+date: Feb 9, 2024
+format: book
+tags: literature, philosophy, mental-health, relationships, writing
 ---
 
 ![A Man Writing at his Desk 1784 - by Jan Ekels II](/images/letter.jpg)

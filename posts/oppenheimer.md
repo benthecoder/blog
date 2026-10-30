@@ -1,7 +1,8 @@
 ---
-title: 'Oppenheimer'
-tags: 'movies, philosophy'
-date: 'Jul 28, 2023'
+title: Oppenheimer
+tags: film, history, science, ethics, war
+date: Jul 28, 2023
+format: journal
 ---
 
 > "The ending of the war by this means, certainly cruel, was not undertaken lightly. But I am not, as of today, confident that a better course was then open. I have not a very good answer to this question."

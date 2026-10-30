@@ -1,7 +1,7 @@
 ---
-title: 'The Physics of Emotions'
-tags: 'emotions, psychology'
-date: 'Apr 20, 2023'
+title: The Physics of Emotions
+tags: psychology, mental-health, habits
+date: Apr 20, 2023
 ---
 
 I learned a couple things about emotions from this [video](https://www.youtube.com/watch?v=TqRYpEDDCrg) by Big Think.

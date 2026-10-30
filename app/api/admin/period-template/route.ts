@@ -32,6 +32,7 @@ export async function GET(request: NextRequest) {
     );
     return NextResponse.json({
       title: draft.title,
+      format: draft.format,
       tags: draft.tags,
       body: draft.body,
     });

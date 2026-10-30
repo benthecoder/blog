@@ -1,7 +1,10 @@
 ---
-title: 'Shenzhen Day 2'
-tags: 'travel, journal'
-date: 'Apr 23, 2024'
+title: Shenzhen Day 2
+tags: travel, food, chinese-culture, technology
+date: Apr 23, 2024
+format: journal
+locations:
+  - Shenzhen
 ---
 
 ![mixC mall](/images/sz2.jpg)

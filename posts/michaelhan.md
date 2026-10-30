@@ -1,7 +1,7 @@
 ---
-title: 'Understand The Data'
-tags: 'data, work'
-date: 'Apr 15, 2024'
+title: Understand The Data
+tags: data-analysis, statistics, finance, career
+date: Apr 15, 2024
 ---
 
 I had a chat with [Michael](https://www.linkedin.com/in/michael-ichin-han/) who I found on [ADPlist](https://adplist.org).

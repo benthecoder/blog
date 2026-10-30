@@ -1,7 +1,7 @@
 ---
-title: 'What Could Be'
-tags: 'ideas'
-date: 'Jan 21, 2024'
+title: What Could Be
+tags: creativity, philosophy, self-reflection
+date: Jan 21, 2024
 ---
 
 ![The Garden of Earthly Delights, Hieronymus Bosch](/images/garden.jpeg)

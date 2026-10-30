@@ -1,7 +1,7 @@
 ---
-title: 'F-beta score'
-tags: 'ML, data'
-date: 'May 14, 2023'
+title: F-beta score
+tags: machine-learning, statistics, mathematics
+date: May 14, 2023
 ---
 
 In classification problems, there's a tradeoff between precision and recall.

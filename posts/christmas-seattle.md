@@ -1,7 +1,8 @@
 ---
-title: 'Christmas in Seattle'
-tags: 'journal, SEA'
-date: 'Dec 25, 2023'
+title: Christmas in Seattle
+tags: family, drawing, food
+date: Dec 25, 2023
+format: journal
 ---
 
 ![The Nativity](/images/drawings/christ.png)

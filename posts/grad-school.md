@@ -1,7 +1,8 @@
 ---
-title: 'Grad School'
-tags: 'resources, learning'
-date: 'Sep 26, 2023'
+title: Grad School
+tags: education, career, research
+date: Sep 26, 2023
+format: resource
 ---
 
 I'm fairly certain of doing grad school now.

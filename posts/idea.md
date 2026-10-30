@@ -1,7 +1,7 @@
 ---
-title: 'Convergent and Divergent Thinking'
-tags: 'thinking, ideas'
-date: 'Nov 14, 2023'
+title: Convergent and Divergent Thinking
+tags: creativity, design, hackathons, learning
+date: Nov 14, 2023
 ---
 
 Some notes from reading a book about design in the design reading room at the design building.

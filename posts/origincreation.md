@@ -1,7 +1,7 @@
 ---
-title: 'looking at life with the eyes of a child'
-tags: 'art, philosophy'
-date: 'Mar 23, 2024'
+title: looking at life with the eyes of a child
+tags: art, creativity, perception
+date: Mar 23, 2024
 ---
 
 ![Open Window, Collioure, Henri Matisse, 1905](/images/window.jpg)

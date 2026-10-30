@@ -123,6 +123,7 @@ export function usePostDraft({
       apply(
         stringifyFrontmatter(data.body, {
           title: data.title,
+          format: data.format,
           tags: data.tags,
           date: formattedDate,
         })

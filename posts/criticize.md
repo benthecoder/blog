@@ -1,7 +1,7 @@
 ---
-title: 'How to Criticize Something'
-tags: 'life, advice'
-date: 'May 5, 2024'
+title: How to Criticize Something
+tags: communication, critical-thinking, philosophy
+date: May 5, 2024
 ---
 
 ![Art Critic (1955) by Norman Rockwell](/images/critic.jpeg)

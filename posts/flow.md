@@ -1,7 +1,7 @@
 ---
-title: 'Flow state'
-tags: 'psychology, work'
-date: 'Jul 27, 2023'
+title: Flow state
+tags: psychology, productivity, programming, work
+date: Jul 27, 2023
 ---
 
 > “Don’t wait for inspiration, it comes while one is working.”

@@ -1,7 +1,7 @@
 ---
-title: 'How to Side Project by Linus'
-tags: 'coding, advice'
-date: 'Aug 3, 2023'
+title: How to Side Project by Linus
+tags: programming, software-development, creativity, productivity
+date: Aug 3, 2023
 ---
 
 I went to Notion HQ in SF today to listen to [Linus Lee](https://thesephist.com/) speak.

@@ -1,7 +1,7 @@
 ---
-title: 'Inversion Thinking'
-tags: 'advice, life'
-date: 'May 19, 2024'
+title: Inversion Thinking
+tags: problem-solving, decision-making, critical-thinking
+date: May 19, 2024
 ---
 
 ![Ivan Aivazovsky, Ship in the Stormy Sea, 1887](/images/stormysea.jpeg)

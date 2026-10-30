@@ -1,7 +1,8 @@
 ---
-title: 'Linear Algebra for ML'
-tags: 'math, ML'
-date: 'Nov 15, 2023'
+title: Linear Algebra for ML
+tags: mathematics, machine-learning
+date: Nov 15, 2023
+format: resource
 ---
 
 I took a [Linear Algebra](https://www.wikiwand.com/en/Linear_algebra) (LA) class in my first year of college, it was taught in such a mathematical and algebraic way that I couldn't appreciate it at all.

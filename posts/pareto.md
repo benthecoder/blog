@@ -1,7 +1,7 @@
 ---
-title: 'Pareto Principle Lifestyle'
-tags: 'productivity, life'
-date: 'May 26, 2023'
+title: Pareto Principle Lifestyle
+tags: productivity, mathematics, prioritization, relationships
+date: May 26, 2023
 ---
 
 The [Pareto principle](https://en.wikipedia.org/wiki/Pareto_principle?useskin=vector): 80% of consequences come from 20% of causes.

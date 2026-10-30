@@ -1,7 +1,7 @@
 ---
-title: 'Economists at Instacart'
-tags: 'tech, work, data'
-date: 'Nov 19, 2023'
+title: Economists at Instacart
+tags: economics, machine-learning, causal-inference, statistics, experimentation
+date: Nov 19, 2023
 ---
 
 Tech companies are [increasingly](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3247794) choosing to hire PhD students in Economics.

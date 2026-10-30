@@ -1,7 +1,7 @@
 ---
-title: 'Keep a Done List'
-tags: 'work'
-date: 'Apr 2, 2024'
+title: Keep a Done List
+tags: productivity, habits, self-reflection
+date: Apr 2, 2024
 ---
 
 I find myself ending my days feeling like I haven't achieved anything.

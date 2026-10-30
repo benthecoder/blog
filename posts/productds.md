@@ -1,7 +1,7 @@
 ---
-title: 'product DS @ meta'
-tags: 'data, work'
-date: 'Jun 26, 2024'
+title: product DS @ meta
+tags: data-science, product-management, ai, model-evaluation, statistics
+date: Jun 26, 2024
 ---
 
 I had a chat with a staff DS at Meta in the Gen AI product and growth team.

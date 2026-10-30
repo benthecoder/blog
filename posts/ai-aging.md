@@ -1,7 +1,7 @@
 ---
-title: 'AI Aging'
-tags: 'ML, AI'
-date: 'Apr 17, 2023'
+title: AI Aging
+tags: machine-learning, model-evaluation, data-engineering, model-monitoring
+date: Apr 17, 2023
 ---
 
 Found this [article](https://www.nannyml.com/blog/91-of-ml-perfomance-degrade-in-time) by NannyML and thought it would be useful for my article writing.

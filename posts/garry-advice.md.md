@@ -1,7 +1,7 @@
 ---
-title: 'Unconventional Advice by Garry Tan'
-tags: 'startup, advice'
-date: 'Nov 4, 2023'
+title: Unconventional Advice by Garry Tan
+tags: startups, career, business, psychology
+date: Nov 4, 2023
 ---
 
 Lessons and [advice](https://youtu.be/Y4yMc99fpfY?si=eWtfIxgEr7FcEz4F) by [Garry Tan](https://www.ycombinator.com/people/garry-tan), current CEO of [YC](https://www.ycombinator.com/)

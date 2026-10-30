@@ -1,7 +1,7 @@
 ---
-title: 'Ending Conversations'
-tags: 'people, talking'
-date: 'Jun 10, 2024'
+title: Ending Conversations
+tags: communication, networking
+date: Jun 10, 2024
 ---
 
 was watching [this part](https://youtu.be/WfzW2pXUXV0?si=_iuA0mH7q9CGptWd&t=1446) in Kevin Rose's podcast episode with Charles Duhigg where he talks about how to gracefully end conversations.

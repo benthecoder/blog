@@ -1,7 +1,8 @@
 ---
-title: 'The Proust Questionnaire'
-tags: 'life, questions'
-date: 'Apr 6, 2024'
+title: The Proust Questionnaire
+tags: literature, self-reflection, writing
+date: Apr 6, 2024
+format: resource
 ---
 
 [The Proust Questionnaire](https://en.wikipedia.org/wiki/Proust_Questionnaire?useskin=vector) is a set of questions answered by French writer Marcel Proust in a [confession book](https://en.wikipedia.org/wiki/Confession_album?useskin=vector) that belonged to his friend Antoinette, titled "An Album to Record Thoughts, Feelings, etc."

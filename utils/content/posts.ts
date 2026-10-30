@@ -2,13 +2,15 @@ import { cache } from "react";
 import fs from "fs";
 import path from "path";
 import { POSTS_DIR, getPostPath } from "@/config/paths";
-import type { PostFrontmatter, PostMetadata } from "@/types/post";
+import type { PostFormat, PostFrontmatter, PostMetadata } from "@/types/post";
 import {
   readMarkdownFile,
   scanMarkdownDir,
   scanMarkdownSlugs,
 } from "./markdown";
 import { extractTags } from "./tags";
+import { formatOf, matchesFormat } from "./formats";
+import { parseLocations } from "./travel";
 
 function calculateWordCount(content: string): number {
   const withoutBlockquotes = content
@@ -71,6 +73,8 @@ export const getPostMetadata = cache(function getPostMetadata(
       title: data.title as string,
       date: data.date as string,
       tags: extractTags(data as PostFrontmatter),
+      format: formatOf(slug, data),
+      locations: parseLocations(data.locations),
       wordcount: calculateWordCount(content),
       slug,
       isDraft: dir.includes("drafts"),
@@ -91,8 +95,6 @@ export const getPostMetadata = cache(function getPostMetadata(
   return posts;
 });
 
-// Date-named posts (e.g. 241024) are the daily journal; topic-named posts
-// are standalone pieces.
-export function getJournalEntries(): PostMetadata[] {
-  return getPostMetadata().filter((post) => /^\d{6}$/.test(post.slug));
+export function getPostsByFormat(format: PostFormat): PostMetadata[] {
+  return getPostMetadata().filter((post) => matchesFormat(post, format));
 }

@@ -1,7 +1,8 @@
 ---
-title: "Man's Search For Meaning"
-tags: 'book, philosophy, life'
-date: 'Jan 31, 2024'
+title: Man's Search For Meaning
+tags: philosophy, meaning, mental-health, reading
+date: Jan 31, 2024
+format: book
 ---
 
 ![Arrival of a Convoy by David Olère](/images/convoy.jpg)

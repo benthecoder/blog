@@ -1,7 +1,7 @@
 ---
-title: 'The Joel Test'
-tags: 'coding, work'
-date: 'Sep 16, 2023'
+title: The Joel Test
+tags: software-engineering, programming
+date: Sep 16, 2023
 ---
 
 [The Joel Test](https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/): An informal test to rate the quality of a software team.

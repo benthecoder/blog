@@ -1,7 +1,10 @@
 ---
 title: 'Boston Day 3: Isabella & MFA'
-tags: 'travel, journal, boston'
-date: 'Nov 22 2023'
+tags: travel, art, history, architecture, food
+date: Nov 22 2023
+format: journal
+locations:
+  - Boston
 ---
 
 ![Isabella Stewart Gardner Museum](/images/isabella.jpeg)

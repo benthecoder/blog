@@ -1,7 +1,7 @@
 ---
-title: "Most People Won't"
-tags: 'ideas, advice'
-date: 'Feb 2, 2024'
+title: Most People Won't
+tags: career, entrepreneurship, risk-taking, design
+date: Feb 2, 2024
 ---
 
 ![The Fool (tarot card)](/images/fool.jpg)

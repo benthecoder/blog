@@ -1,7 +1,7 @@
 ---
-title: 'Extreme Brainstorming Questions'
-tags: 'ideas, startup'
-date: 'Feb 5, 2024'
+title: Extreme Brainstorming Questions
+tags: startups, creativity, productivity
+date: Feb 5, 2024
 ---
 
 ![Composition VII, Wassily Kandinsky](/images/composition.jpg)

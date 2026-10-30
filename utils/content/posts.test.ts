@@ -40,6 +40,33 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllEnvs());
 
 describe("published metadata index", () => {
+  it("reads explicit formats, defaults date-named posts, and excludes drafts from format views", async () => {
+    fixtures.scan.mockImplementation((directory: string) =>
+      directory.endsWith("drafts")
+        ? fixtures.drafts
+        : [
+            {
+              ...fixtures.published[0],
+              slug: "311225",
+              data: { ...fixtures.published[0].data, format: "essay" },
+            },
+            { ...fixtures.published[1], slug: "241024" },
+            { ...fixtures.published[1], slug: "unclassified" },
+          ]
+    );
+    const { getPostMetadata, getPostsByFormat } = await import("./posts");
+    expect(getPostMetadata().find((p) => p.slug === "241024")?.format).toBe(
+      "journal"
+    );
+    expect(
+      getPostMetadata().find((p) => p.slug === "unclassified")?.format
+    ).toBeUndefined();
+    expect(getPostsByFormat("essay").map((p) => p.slug)).toEqual(["311225"]);
+    expect(getPostsByFormat("journal").map((p) => p.slug)).toEqual([
+      "311225",
+      "241024",
+    ]);
+  });
   it("reuses the deployed slug list without reading or parsing post bodies", async () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("VERCEL", "1");

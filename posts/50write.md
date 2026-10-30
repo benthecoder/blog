@@ -1,7 +1,7 @@
 ---
-title: '50 reasons to write'
-tags: 'writing, listicles'
-date: 'May 28, 2024'
+title: 50 reasons to write
+tags: writing, ai, programming, knowledge-management
+date: May 28, 2024
 ---
 
 Imagine this. You found a dozen good articles on writing, but you don't have the time to sit down and read each one of them. Well, LLMs are perfect for this! But how do you feed them to GPT4? Is there already a tool for this? Where you provide your links, and it can start a chat for you?

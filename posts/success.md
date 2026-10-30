@@ -1,7 +1,7 @@
 ---
-title: 'Success'
-tags: 'life, advice'
-date: 'Sep 14, 2023'
+title: Success
+tags: psychology, resilience
+date: Sep 14, 2023
 ---
 
 [Professor G](https://www.youtube.com/watch?v=-gfEjOgxBfI) on success.

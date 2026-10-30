@@ -1,7 +1,7 @@
 ---
-title: 'Daido Moriyama'
-tags: 'photography'
-date: 'Mar 12, 2024'
+title: Daido Moriyama
+tags: photography, japanese-culture, creativity
+date: Mar 12, 2024
 ---
 
 ![Daido Moriyama. Stray Dog, Misawa. 1971](/images/dog.jpg)

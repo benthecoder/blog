@@ -1,7 +1,7 @@
 ---
-title: 'Self-judgement'
-tags: 'people'
-date: 'Apr 14, 2024'
+title: Self-judgement
+tags: psychology, empathy, self-acceptance
+date: Apr 14, 2024
 ---
 
 ![Olive Trees with Yellow Sky and Sun, Vincent Van Gogh, 1889](/images/olivetrees.jpeg)

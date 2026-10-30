@@ -1,7 +1,7 @@
 ---
-title: 'Developing Technical Taste'
-tags: 'programming, AI, advice'
-date: 'Jun 16, 2024'
+title: Developing Technical Taste
+tags: software-design, programming, product-management, ai
+date: Jun 16, 2024
 ---
 
 Sam Schillace is the founder of six startups, including Writely, which was acquired by Google and became Google Docs. He served as the VP of engineering for Google Maps. He is currently the the CVP and Deputy CTO at Microsoft.

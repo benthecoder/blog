@@ -1,7 +1,8 @@
 ---
-title: 'The Elements Of Style'
-tags: 'book, writing'
-date: 'Feb 1, 2024'
+title: The Elements Of Style
+tags: writing, communication, learning
+date: Feb 1, 2024
+format: book
 ---
 
 !["Young Woman Writing" by Pierre Bonnard (1908)](/images/womanwriting.png)

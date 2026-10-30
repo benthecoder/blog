@@ -1,7 +1,8 @@
 ---
-title: '12 Favorite Problems'
-tags: 'ideas'
-date: 'Mar 10, 2024'
+title: 12 Favorite Problems
+tags: creativity, research, learning, productivity
+date: Mar 10, 2024
+format: resource
 ---
 
 In Gian-Carlo Rota's _Ten Lessons I Wish I Had Been Taught_, he [shares](https://www.ams.org/notices/199701/comm-rota.pdf?curius=2790) the Feynman Method.

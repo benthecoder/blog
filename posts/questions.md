@@ -1,7 +1,8 @@
 ---
-title: '12 Important Questions'
-tags: 'questions, life'
-date: 'Jun 22, 2023'
+title: 12 Important Questions
+tags: philosophy, personal-growth, decision-making
+date: Jun 22, 2023
+format: resource
 ---
 
 The right question at the right time can change the course of a life, still a turbulent mind, or heal an angry heart.

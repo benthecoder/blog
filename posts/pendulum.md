@@ -1,7 +1,7 @@
 ---
-title: 'Life Swings like a Pendulum'
-tags: 'philosophy, life'
-date: 'Jun 25, 2023'
+title: Life Swings like a Pendulum
+tags: philosophy, psychology, creativity, flow-state
+date: Jun 25, 2023
 ---
 
 > "Life swings like a pendulum backward and forward between pain and boredom" - Arthur Schopenhauer

@@ -1,7 +1,7 @@
 ---
-title: 'How to be popular?'
-tags: 'people, advice'
-date: 'Jun 13, 2024'
+title: How to be popular?
+tags: psychology, communication, friendship, social-skills
+date: Jun 13, 2024
 ---
 
 ![Bal du moulin de la Galette, Pierre-Auguste Renoir, 1876](/images/lemoulin.jpg)

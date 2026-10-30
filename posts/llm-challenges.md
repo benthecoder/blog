@@ -1,7 +1,7 @@
 ---
-title: '10 LLM Challenges'
-tags: 'AI, tech'
-date: 'Jul 3, 2023'
+title: 10 LLM Challenges
+tags: llms, software-design, model-evaluation, privacy
+date: Jul 3, 2023
 ---
 
 [Challenges](https://www.youtube.com/watch?v=spamOhG7BOA) of building LLM applications for production by [Chip Huyen](https://huyenchip.com/)

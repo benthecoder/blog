@@ -1,7 +1,8 @@
 ---
-title: 'Stroop effect'
-tags: 'neuroscience, psychology'
-date: 'May 6, 2023'
+title: Stroop effect
+tags: psychology, neuroscience
+date: May 6, 2023
+format: journal
 ---
 
 > In psychology, the Stroop effect is the delay in reaction time between congruent and incongruent stimuli.

@@ -1,7 +1,7 @@
 ---
-title: 'Work Docs'
-tags: 'work, productivity, writing'
-date: 'Apr 3, 2024'
+title: Work Docs
+tags: productivity, work, career, habits, writing
+date: Apr 3, 2024
 ---
 
 [Brie Wolfson](https://www.briewolfson.com/) shares a couple [docs](https://review.firstround.com/ditch-your-to-do-list-and-use-these-docs-to-make-more-impact) that help so you make more impact at work.

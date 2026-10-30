@@ -1,7 +1,7 @@
 ---
-title: 'Skill of Humor'
-tags: 'talking, people'
-date: 'Jun 15, 2023'
+title: Skill of Humor
+tags: communication, psychology, creativity
+date: Jun 15, 2023
 ---
 
 > "In today's overworked, underappreciated, stress-filled, sleep-deprived culture, humor is a necessity."

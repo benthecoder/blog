@@ -1,7 +1,10 @@
 ---
-title: 'Hong Kong Day 3'
-tags: 'travel, journal'
-date: 'Apr 25, 2024'
+title: Hong Kong Day 3
+tags: travel, art, family, chinese-culture, identity
+date: Apr 25, 2024
+format: journal
+locations:
+  - Hong Kong
 ---
 
 ![Central Pier, HK](/images/hkpier.jpg)

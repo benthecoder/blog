@@ -1,7 +1,7 @@
 ---
-title: 'Signs of Burnout'
-tags: 'work, life'
-date: 'Jun 19, 2023'
+title: Signs of Burnout
+tags: mental-health, work, psychology, identity
+date: Jun 19, 2023
 ---
 
 [Burnout](https://www.youtube.com/watch?v=FOFYc2voq9E) is not just feeling a little stressed or overwhelmed.

@@ -1,7 +1,7 @@
 ---
-title: 'Pure and Simple Joy'
-tags: 'life, emotions'
-date: 'May 25, 2023'
+title: Pure and Simple Joy
+tags: psychology, relationships, emotional-health
+date: May 25, 2023
 ---
 
 John [talks](https://www.youtube.com/watch?v=zv8OY46itRE) about how emotions are multitudinous and complex, and how he's never really able to feel something purely.

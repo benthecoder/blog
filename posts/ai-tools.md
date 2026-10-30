@@ -1,7 +1,8 @@
 ---
-title: 'Useful AI Tools'
-tags: 'listicles, AI, resources'
-date: 'Oct 30, 2023'
+title: Useful AI Tools
+tags: ai, programming, research, art, music
+date: Oct 30, 2023
+format: resource
 ---
 
 This is a living document for useful AI tools for all applications in life.

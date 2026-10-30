@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { getPostContent } from "@/utils/content/posts";
+import { matchesFormat } from "@/utils/content/formats";
 import type { PostMetadata } from "@/types/post";
 
 const byDate = (a: PostMetadata, b: PostMetadata) =>
@@ -27,7 +28,10 @@ export const journalPosts = (posts: PostMetadata[], since: Date, until: Date) =>
     posts,
     since,
     until,
-    (p) => p.tags.includes("journal") && !p.tags.includes("links")
+    (p) =>
+      matchesFormat(p, "journal") &&
+      p.format !== "links" &&
+      !/^sunday links\b/i.test(p.title)
   );
 
 export const sundayLinksPosts = (

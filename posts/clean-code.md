@@ -1,7 +1,7 @@
 ---
-title: 'Clean Code - Google'
-tags: 'programming'
-date: 'Nov 9, 2023'
+title: Clean Code - Google
+tags: software-design, programming
+date: Nov 9, 2023
 ---
 
 When you read code and find it hard to understand, you're experiencing [cognitive load](https://en.wikipedia.org/wiki/Cognitive_load).

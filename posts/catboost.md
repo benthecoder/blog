@@ -1,7 +1,7 @@
 ---
-title: 'Catboost for tabular data'
-tags: 'ML'
-date: 'Nov 2, 2023'
+title: Catboost for tabular data
+tags: machine-learning, data-science, statistics
+date: Nov 2, 2023
 ---
 
 Catboost is an open-source ML [Gradient](https://en.wikipedia.org/wiki/Gradient_boosting?useskin=vector) Boosted Decision [Trees](https://developers.google.com/machine-learning/decision-forests/intro-to-gbdt) algorithm, it's name come from the terms “Category” and “Boosting.” It was developed by Yandex (Russian Google ) in 2017

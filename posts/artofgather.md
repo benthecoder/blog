@@ -1,7 +1,8 @@
 ---
-title: 'The Art of Gathering'
-tags: 'people, book, advice'
-date: 'Apr 10, 2024'
+title: The Art of Gathering
+tags: community, communication, relationships, events
+date: Apr 10, 2024
+format: book
 ---
 
 I've been trying to start Luminary in Kuala Lumpur but it's been difficult because I'm not in uni anymore and I've been going through a lot of changes with surgery and braces. But I love the idea of gathering people together, where unique backgrounds and experiences, exchange thoughts and ideas that alchemize into new forms of elements.

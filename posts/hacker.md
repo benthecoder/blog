@@ -1,7 +1,7 @@
 ---
-title: 'The Hacker Attitude'
-tags: 'programming, philosophy'
-date: 'Dec 29, 2023'
+title: The Hacker Attitude
+tags: programming, creativity, open-source
+date: Dec 29, 2023
 ---
 
 I'm writing this on the roads of Oregon, where I can see the beautiful hills powdered with snow, en route to Twin Falls.

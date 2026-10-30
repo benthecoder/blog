@@ -1,7 +1,8 @@
 ---
-title: 'Make Something Wonderful'
-tags: 'book, biography'
-date: 'Apr 27, 2024'
+title: Make Something Wonderful
+tags: creativity, design, career, entrepreneurship, philosophy
+date: Apr 27, 2024
+format: book
 ---
 
 ![Stay Hungry, Stay Foolish](/images/somethingwonderful.png)

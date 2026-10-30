@@ -1,7 +1,7 @@
 ---
-title: 'How GitHub code search works'
-tags: 'tech'
-date: 'Aug 24, 2023'
+title: How GitHub code search works
+tags: search-engines, data-engineering, distributed-systems, programming
+date: Aug 24, 2023
 ---
 
 GitHub [built](https://github.blog/2023-02-06-the-technology-behind-githubs-new-code-search/?utm_source=theblueprint&curius=1433) a [code search engine](https://github.com/search?type=code&auto_enroll=true) from scratch in rust, called Blackbird.

@@ -1,7 +1,8 @@
 ---
-title: 'Dropbox LLM meetup'
-tags: 'journal, SF'
-date: 'Jul 17, 2023'
+title: Dropbox LLM meetup
+tags: ai, llms, conferences, startups
+date: Jul 17, 2023
+format: journal
 ---
 
 Went to my first [LLM meetup](https://www.meetup.com/elastic-san-francisco-user-group/events/294476508) today.

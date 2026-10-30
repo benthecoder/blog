@@ -1,7 +1,8 @@
 ---
-title: 'Reading on the plane'
-tags: 'journal'
-date: 'May 13, 2023'
+title: Reading on the plane
+date: May 13, 2023
+format: resource
+tags: air-travel, career, machine-learning, reading
 ---
 
 I flew from Iowa to San Jose today.

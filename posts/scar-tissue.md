@@ -1,7 +1,7 @@
 ---
-title: 'Relationship Scar Tissues'
-tags: 'people'
-date: 'May 31, 2023'
+title: Relationship Scar Tissues
+tags: relationships, communication, conflict-resolution
+date: May 31, 2023
 ---
 
 Read this great [lecture](https://gist.github.com/gtallen1187/27a585fcf36d6e657db2#file-scar_tissue-md): "Scar Tissues Make Relationships Wear Out", by a CS Stanford professor [John Ousterhout](https://web.stanford.edu/~ouster/).

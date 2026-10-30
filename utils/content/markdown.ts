@@ -23,9 +23,15 @@ export function writeMarkdownFile(
   filePath: string,
   data: Record<string, unknown>,
   content: string,
-  { exclusive = false }: { exclusive?: boolean } = {}
+  {
+    exclusive = false,
+    preserveBody = false,
+  }: { exclusive?: boolean; preserveBody?: boolean } = {}
 ) {
-  writeAtomicFile(filePath, stringifyFrontmatter(content, data), { exclusive });
+  let markdown = stringifyFrontmatter(content, data);
+  // Metadata-only migrations must not add a newline to an existing body.
+  if (preserveBody && !content.endsWith("\n")) markdown = markdown.slice(0, -1);
+  writeAtomicFile(filePath, markdown, { exclusive });
 }
 
 // Slugs only — a readdir with no file reads and no frontmatter parsing. Use

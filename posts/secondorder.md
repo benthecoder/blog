@@ -1,7 +1,7 @@
 ---
-title: 'Second Order Thinking'
-tags: 'thinking'
-date: 'Dec 23, 2023'
+title: Second Order Thinking
+tags: decision-making, problem-solving, critical-thinking, systems-thinking, work
+date: Dec 23, 2023
 ---
 
 > A core component of making great decisions is understanding the rationale behind previous decisions. If we don’t understand how we got “here,” we run the risk of making things much worse.

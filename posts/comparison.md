@@ -1,7 +1,8 @@
 ---
-title: 'Stop comparing yourself to others'
-tags: 'success, motivation'
-date: 'Apr 24, 2023'
+title: Stop comparing yourself to others
+tags: psychology, career, self-reflection
+date: Apr 24, 2023
+format: journal
 ---
 
 > Don't Compare Your Insides to Others' Outsides

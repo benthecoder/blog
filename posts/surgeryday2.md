@@ -1,7 +1,8 @@
 ---
-title: 'The Day After'
-tags: 'personal, journal, movies'
-date: 'Mar 2, 2024'
+title: The Day After
+tags: health, family, film, mental-health, identity
+date: Mar 2, 2024
+format: journal
 ---
 
 I woke up at 4 a.m. I tried to sleep more but it was too uncomfortable.

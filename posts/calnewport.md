@@ -1,7 +1,7 @@
 ---
-title: "Cal Newport's Top 3 Advice For Work"
-tags: 'productivity'
-date: 'Mar 20, 2024'
+title: Cal Newport's Top 3 Advice For Work
+tags: productivity, work, time-management
+date: Mar 20, 2024
 ---
 
 ![Italienische Gartenlandschaft, Gustav Klimt, 1913](/images/italian_garden.jpeg)

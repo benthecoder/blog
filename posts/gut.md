@@ -1,7 +1,7 @@
 ---
-title: 'Food and Gut'
-tags: 'science'
-date: 'Aug 27, 2023'
+title: Food and Gut
+tags: health, nutrition, science
+date: Aug 27, 2023
 ---
 
 There are trillions of bacteria, viruses, and fungi that lives in our bodies.

@@ -1,7 +1,7 @@
 ---
-title: 'Overcome Your Inner Coward'
-tags: 'philosophy, life'
-date: 'Jun 11, 2024'
+title: Overcome Your Inner Coward
+tags: philosophy, stoicism, personal-growth, problem-solving
+date: Jun 11, 2024
 ---
 
 ![Joan of Arc, John Everett Millais, 1865](/images/courage.jpeg)

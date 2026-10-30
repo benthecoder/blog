@@ -1,7 +1,8 @@
 ---
-title: 'Lessons from Running Tech Meetups'
-tags: 'tech, advice'
-date: 'Dec 7, 2023'
+title: Lessons from Running Tech Meetups
+tags: community, event-planning, communication, technology
+date: Dec 7, 2023
+format: resource
 ---
 
 In the summer, I would take the train down to SF every week to attend fireside chats, meetups, and hackathons. In each event, I would meet new people, practice my social skills, and get inspired by the speakers and other attendees. I remember it feeling surreal how all these people who I read about on the internet, were in the same room as me.

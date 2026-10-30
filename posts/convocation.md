@@ -1,7 +1,8 @@
 ---
-title: 'Convocation'
-tags: 'journal, life'
-date: 'Dec 15, 2023'
+title: Convocation
+tags: education, family, health, self-reflection
+date: Dec 15, 2023
+format: journal
 ---
 
 Today was the College of Liberal Arts and Sciences Fall 2023 Undergraduate Convocation [ceremony](https://www.youtube.com/live/amFC54Qeykw?si=5C4qdOCNjTfHPe_o).

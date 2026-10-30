@@ -1,7 +1,8 @@
 ---
-title: 'O, Death!'
-tags: 'life, book'
-date: 'Oct 4, 2023'
+title: O, Death!
+tags: death, philosophy, meaning, reading
+date: Oct 4, 2023
+format: book
 ---
 
 > If a man lives he believes in something. If he did not believe that one must live for something, he would not live.

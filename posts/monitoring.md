@@ -1,7 +1,7 @@
 ---
-title: 'Self-Monitoring'
-tags: 'productivity, ideas'
-date: 'Sep 29, 2023'
+title: Self-Monitoring
+tags: productivity, habits, time-management, self-monitoring
+date: Sep 29, 2023
 ---
 
 [Self monitoring](https://cppastudents.medium.com/time-management-the-importance-of-self-monitoring-c9dfff241af1) is the idea of tracking some sort of progress on your goal, say number of times you did activity X or amount of time spent on task Y.

@@ -1,7 +1,8 @@
 ---
-title: 'Why (and How) Joan Didion writes'
-tags: 'writing, art'
-date: 'Apr 4, 2024'
+title: Why (and How) Joan Didion writes
+tags: writing, creativity, literature, reading
+date: Apr 4, 2024
+format: book
 ---
 
 I remember reading Joan Didion's essay [Self-respect: Its Source, Its Power](https://www.vogue.com/article/joan-didion-self-respect-essay-1961) and being really absorbed by her writing and wanting to write like her.

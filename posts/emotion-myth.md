@@ -1,7 +1,7 @@
 ---
-title: 'Myths about emotion'
-tags: 'psychology, emotions'
-date: 'Jun 20, 2023'
+title: Myths about emotion
+tags: psychology, neuroscience, emotional-regulation, mental-health
+date: Jun 20, 2023
 ---
 
 > You are an architect of your experiences – Lisa Feldman

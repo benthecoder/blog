@@ -1,7 +1,8 @@
 ---
-title: 'How To Make Millions Before Grandma Dies'
-tags: 'movies, journal, life'
-date: 'Jun 15, 2024'
+title: How To Make Millions Before Grandma Dies
+tags: film, family, aging, relationships, chinese-culture
+date: Jun 15, 2024
+format: journal
 ---
 
 watched this movie today with my mom at Wangsa Walk, which brings back memories because I used to come here with my mom back in high school.

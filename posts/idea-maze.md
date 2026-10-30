@@ -1,7 +1,7 @@
 ---
-title: 'Idea Maze'
-tags: 'startup, ideas'
-date: 'Jun 14, 2023'
+title: Idea Maze
+tags: startups, innovation, history, product-management
+date: Jun 14, 2023
 ---
 
 Working on a startup is like entering a [maze](https://cdixon.org/2013/08/04/the-idea-maze).

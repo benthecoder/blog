@@ -1,7 +1,7 @@
 ---
-title: 'Writing Tips For Work'
-tags: 'writing, work, advice'
-date: 'Jun 19, 2024'
+title: Writing Tips For Work
+tags: writing, communication, work
+date: Jun 19, 2024
 ---
 
 Ryan shares three [writing tactics](https://www.developing.dev/p/writing-tactics-part-1) that help you be more effective at work

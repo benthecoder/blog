@@ -1,7 +1,8 @@
 ---
-title: 'Ask For What You Want'
-tags: 'journal, advice'
-date: 'Jan 10, 2024'
+title: Ask For What You Want
+tags: networking, community, career, communication
+date: Jan 10, 2024
+format: journal
 ---
 
 Ask for what you want.

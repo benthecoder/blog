@@ -1,7 +1,7 @@
 ---
-title: 'Stress is Enhancing'
-tags: 'stress'
-date: 'Jan 12, 2024'
+title: Stress is Enhancing
+tags: psychology, health, stress, productivity
+date: Jan 12, 2024
 ---
 
 I've always been told that stress is bad and I should avoid it. That I'm overworking myself and it's my body telling me to stop. I agree that chronic stress is an issue, but I always believed that the right amounts of stress can be good.

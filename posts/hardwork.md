@@ -1,7 +1,7 @@
 ---
-title: 'Hard Work'
-tags: 'work, advice'
-date: 'Aug 8, 2023'
+title: Hard Work
+tags: learning, work, habits, productivity
+date: Aug 8, 2023
 ---
 
 A collection of interviews on hard work.

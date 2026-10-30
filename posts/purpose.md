@@ -1,7 +1,7 @@
 ---
-title: 'Finding Your Purpose'
-tags: 'life, ✰'
-date: 'Mar 6, 2024'
+title: Finding Your Purpose
+tags: philosophy, identity, career, purpose
+date: Mar 6, 2024
 ---
 
 ![The Alchemist Discovering Phosphorus, Joseph Wright of Derby, 1795](/images/phosphorus.jpeg)

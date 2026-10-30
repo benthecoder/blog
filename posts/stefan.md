@@ -1,7 +1,8 @@
 ---
-title: 'Coffee chat with Stefan Mai'
-tags: 'AI'
-date: 'May 11, 2023'
+title: Coffee chat with Stefan Mai
+tags: career, programming, machine-learning, ai, communication
+date: May 11, 2023
+format: journal
 ---
 
 I had a 30-min chat today with [Stefan Mai](https://www.linkedin.com/in/stefanmai/), who's been at Amazon and Meta for 10 years.

@@ -1,7 +1,8 @@
 ---
 title: 'Art Nouveau: 50 Works Of Art You Should Know'
-tags: 'art, book'
-date: 'May 11, 2024'
+tags: art, art-nouveau, design, architecture
+date: May 11, 2024
+format: book
 ---
 
 ![Alphonse Mucha, Zodiac, 1869](/images/mucha.jpeg)
