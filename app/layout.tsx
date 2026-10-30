@@ -3,6 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import "./scrollbars.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "./providers";
 import ThemeSwitch from "@/components/ui/ThemeSwitch";
@@ -84,7 +85,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       lang="en"
       className={`${averia.variable} font-serif`}
     >
-      <body className="antialiased">
+      <body className="antialiased text-primary">
         <Providers>
           <FloatingControls>
             <PaletteSwitch />

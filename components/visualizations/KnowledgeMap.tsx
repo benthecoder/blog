@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { findNearestMapNode } from "@/utils/chunking/mapHitTest";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -34,9 +33,6 @@ import {
 } from "@/utils/chunking/mapZoom";
 import UMAPLoader from "./UMAPLoader";
 
-const NOISE_COLOR_LIGHT = "#a3a19b";
-const NOISE_COLOR_DARK = "#707070";
-
 // Canvas can't use CSS classes, so palette colors are read off the document
 // element — which is where the [data-palette] custom properties resolve.
 function readToken(name: string): string {
@@ -50,15 +46,10 @@ export default function KnowledgeMap({
 }: {
   className?: string;
 }) {
-  const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [articles, setArticles] = useState<ArticleNode[]>([]);
   const [edgesUrl, setEdgesUrl] = useState<string | null>(null);
-  const [summariesUrl, setSummariesUrl] = useState<string | null>(null);
-  const [summaries, setSummaries] = useState<Record<string, string> | null>(
-    null
-  );
   const [connectionsLoaded, setConnectionsLoaded] = useState(false);
   const [neighborsById, setNeighborsById] = useState<
     Map<string, { id: string; sim: number }[]>
@@ -72,31 +63,18 @@ export default function KnowledgeMap({
     useState<ArticleNode | null>(null);
   const [selectedArticleNode, setSelectedArticleNode] =
     useState<ArticleNode | null>(null);
-  const [clickPos, setClickPos] = useState<{ x: number; y: number } | null>(
-    null
-  );
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCluster, setSelectedCluster] = useState<number | null>(null);
+  const [showTopics, setShowTopics] = useState(false);
   const [hoveredCluster, setHoveredCluster] = useState<number | null>(null);
   const [transform, setTransform] = useState({ k: 1, x: 0, y: 0 });
   const [canvasVersion, setCanvasVersion] = useState(0);
-  const [showLegend, setShowLegend] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [plotSize, setPlotSize] = useState({ width: 0, height: 0 });
   const { theme } = useTheme();
   const zoomBehaviorRef = useRef<ZoomBehavior<Element, unknown> | null>(null);
-  const selectedArticleNodeRef = useRef<ArticleNode | null>(null);
   const labelBoxesRef = useRef<PlacedLabel[]>([]);
-  const zoomToClusterRef = useRef<(id: number) => void>(() => {});
-
-  // matchMedia is client-only; reading it in an initializer would run
-  // during SSR/hydration and mismatch.
-  useEffect(() => {
-    setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
-  }, []);
-
-  useEffect(() => {
-    selectedArticleNodeRef.current = selectedArticleNode;
-  }, [selectedArticleNode]);
+  const zoomToClusterRef = useRef<(id: number, immediate?: boolean) => void>(
+    () => {}
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -111,7 +89,6 @@ export default function KnowledgeMap({
         if (!result.success) throw new Error("Map unavailable");
         setArticles(result.data);
         setEdgesUrl(result.similarityEdgesUrl);
-        setSummariesUrl(result.summariesUrl ?? null);
         setClusterLabels(result.clusterLabels || {});
       } catch {
         if (!controller.signal.aborted) setError("error loading data");
@@ -153,34 +130,12 @@ export default function KnowledgeMap({
     return () => controller.abort();
   }, [hasFocusedNode, edgesUrl, connectionsLoaded, articles]);
 
-  // One-line summaries load on the first hover, not with the landing payload
-  useEffect(() => {
-    if (!hasFocusedNode || !summariesUrl || summaries) return;
-    const controller = new AbortController();
-    fetch(summariesUrl, { signal: controller.signal })
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("summaries"))))
-      .then((data: Record<string, string>) => setSummaries(data))
-      .catch(() => {
-        // the card works without summaries; a later hover retries
-      });
-    return () => controller.abort();
-  }, [hasFocusedNode, summariesUrl, summaries]);
-
   const filtered = useMemo(
     () =>
-      articles.filter((article) => {
-        if (
-          searchQuery &&
-          !article.postTitle.toLowerCase().includes(searchQuery.toLowerCase())
-        ) {
-          return false;
-        }
-        if (selectedCluster !== null && article.cluster !== selectedCluster) {
-          return false;
-        }
-        return true;
-      }),
-    [articles, searchQuery, selectedCluster]
+      selectedCluster === null
+        ? articles
+        : articles.filter((article) => article.cluster === selectedCluster),
+    [articles, selectedCluster]
   );
 
   const clusterStats = useMemo(() => {
@@ -205,7 +160,6 @@ export default function KnowledgeMap({
   // Stable identity required: dep of the canvas render effect below
   const getClusterColor = useCallback(
     (cluster: number, isDark: boolean): string => {
-      if (cluster === -1) return isDark ? NOISE_COLOR_DARK : NOISE_COLOR_LIGHT;
       const palette = isDark ? CLUSTER_COLORS_DARK : CLUSTER_COLORS_LIGHT;
       return palette[(clusterStats.slots.get(cluster) ?? 0) % palette.length];
     },
@@ -242,7 +196,7 @@ export default function KnowledgeMap({
   }, [filtered]);
 
   const cancelZoomRef = useRef<() => void>(() => {});
-  const animateTo = useCallback((target: ZoomState) => {
+  const animateTo = useCallback((target: ZoomState, immediate = false) => {
     const canvas = canvasRef.current;
     const behavior = zoomBehaviorRef.current;
     if (!canvas || !behavior) return;
@@ -256,18 +210,22 @@ export default function KnowledgeMap({
           zoomIdentity.translate(x, y).scale(k)
         ),
       {
-        reducedMotion: prefersReducedMotion(window.matchMedia.bind(window)),
+        reducedMotion:
+          immediate || prefersReducedMotion(window.matchMedia.bind(window)),
       }
     );
   }, []);
 
   useEffect(() => {
-    zoomToClusterRef.current = (id: number) => {
+    zoomToClusterRef.current = (id: number, immediate = false) => {
       const members = clusterStats.byCluster.get(id);
       const container = containerRef.current;
       if (!members || !container) return;
       const r = container.getBoundingClientRect();
-      animateTo(fitCluster(members, { width: r.width, height: r.height }));
+      animateTo(
+        fitCluster(members, { width: r.width, height: r.height }),
+        immediate
+      );
     };
   }, [clusterStats, animateTo]);
 
@@ -299,7 +257,9 @@ export default function KnowledgeMap({
       const yScale = scaleLinear().domain([0, 1000]).range([0, height]);
       const isDark = theme === "dark";
 
-      const dotDefault = readToken(isDark ? "--color-chalk" : "--color-ink");
+      const dotMuted = readToken(
+        isDark ? "--color-chalk-muted" : "--color-ink-muted"
+      );
       const dotHover = readToken(
         isDark ? "--color-chalk-strong" : "--color-ink-strong"
       );
@@ -354,7 +314,9 @@ export default function KnowledgeMap({
         const isSelected = article.id === selectedArticleNode?.id;
         const isHovered = article.id === hoveredArticleNode?.id;
 
-        let color = getClusterColor(article.cluster, isDark);
+        let color = isNoise
+          ? dotMuted
+          : getClusterColor(article.cluster, isDark);
 
         if (active !== null) {
           if (article.cluster === active) {
@@ -368,12 +330,6 @@ export default function KnowledgeMap({
         if (isSelected || isHovered) {
           color = dotHover;
           opacity = 1;
-        } else if (
-          searchQuery &&
-          article.postTitle.toLowerCase().includes(searchQuery.toLowerCase())
-        ) {
-          color = dotDefault;
-          opacity = 0.85;
         }
 
         ctx.globalAlpha = opacity;
@@ -426,7 +382,7 @@ export default function KnowledgeMap({
         const shown = ranked
           .slice(0, limit)
           .concat(ranked.filter(([id], i) => i >= limit && id === active));
-        const font = compact ? 10 : 11;
+        const font = compact ? 11 : 12;
         ctx.font = `500 ${font}px ${fontFamily}`;
         const requests = shown.map(([id, count]) => {
           const at = toLayout(clusterStats.medoids.get(id)!);
@@ -455,11 +411,6 @@ export default function KnowledgeMap({
       // scale the cached layout to the live zoom, then add the pan offset
       const s = k / layoutK;
       const fontFamily = getComputedStyle(container).fontFamily;
-      const chrome = [
-        { x1: 0, y1: 0, x2: 200, y2: 48 }, // search
-        { x1: 0, y1: height - 44, x2: 180, y2: height }, // hint
-        { x1: width - 120, y1: height - 44, x2: width, y2: height }, // legend
-      ];
       const visible: PlacedLabel[] = [];
       for (const b of boxes) {
         const w = b.x2 - b.x1;
@@ -473,13 +424,6 @@ export default function KnowledgeMap({
         const y1 = Math.min(Math.max(cy - h / 2, 4), height - h - 4);
         const box = { id: b.id, x1, y1, x2: x1 + w, y2: y1 + h };
         const midY = y1 + h / 2;
-        if (
-          chrome.some(
-            (c) =>
-              box.x1 < c.x2 && box.x2 > c.x1 && box.y1 < c.y2 && box.y2 > c.y1
-          )
-        )
-          continue;
         visible.push(box);
         ctx.globalAlpha = active === null || active === b.id ? 1 : 0.25;
         ctx.font = `500 ${b.font}px ${fontFamily}`;
@@ -502,7 +446,6 @@ export default function KnowledgeMap({
     theme,
     hoveredArticleNode,
     selectedArticleNode,
-    searchQuery,
     neighborsById,
     getClusterColor,
     clusterLabels,
@@ -521,6 +464,7 @@ export default function KnowledgeMap({
 
     const dpr = window.devicePixelRatio || 1;
     const rect = container.getBoundingClientRect();
+    setPlotSize({ width: rect.width, height: rect.height });
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
     canvas.style.width = `${rect.width}px`;
@@ -528,6 +472,11 @@ export default function KnowledgeMap({
 
     const zoomBehavior = d3Zoom()
       .scaleExtent([0.5, 10])
+      .filter((event) => {
+        if (event.type === "wheel") return event.ctrlKey || event.metaKey;
+        if (event.type === "touchstart") return event.touches.length > 1;
+        return !event.button;
+      })
       .on("zoom", (event) => {
         const { k, x, y } = event.transform;
         transformRef.current = { k, x, y };
@@ -542,6 +491,7 @@ export default function KnowledgeMap({
 
     const handleResize = () => {
       const newRect = container.getBoundingClientRect();
+      setPlotSize({ width: newRect.width, height: newRect.height });
       canvas.width = newRect.width * dpr;
       canvas.height = newRect.height * dpr;
       canvas.style.width = `${newRect.width}px`;
@@ -589,7 +539,10 @@ export default function KnowledgeMap({
       setHoveredArticleNode(closest);
     };
 
-    const handleMouseLeave = () => setHoveredCluster(null);
+    const handleMouseLeave = () => {
+      setHoveredCluster(null);
+      setHoveredArticleNode(null);
+    };
 
     const handleClick = (e: MouseEvent) => {
       const label = labelAt(e.clientX, e.clientY);
@@ -601,17 +554,11 @@ export default function KnowledgeMap({
 
       if (!closest) {
         setSelectedArticleNode(null);
-        setClickPos(null);
         return;
       }
 
-      if (selectedArticleNodeRef.current?.id === closest.id) {
-        router.push(`/posts/${encodeURIComponent(closest.postSlug)}`);
-      } else {
-        const cr = containerRef.current!.getBoundingClientRect();
-        setClickPos({ x: e.clientX - cr.left, y: e.clientY - cr.top });
-        setSelectedArticleNode(closest);
-      }
+      setShowTopics(false);
+      setSelectedArticleNode(closest);
     };
 
     window.addEventListener("resize", handleResize);
@@ -632,209 +579,238 @@ export default function KnowledgeMap({
       canvas.removeEventListener("wheel", stopAnimation);
       canvas.removeEventListener("pointerdown", stopAnimation);
     };
-  }, [articles.length, router, scheduleDraw]);
+  }, [articles.length, scheduleDraw]);
 
-  if (loading) return <UMAPLoader className={className} />;
+  const topics = Object.entries(clusterLabels)
+    .map(([id, label]) => ({
+      id: Number(id),
+      label,
+      count: clusterStats.byCluster.get(Number(id))?.length ?? 0,
+    }))
+    .filter((topic) => topic.count > 0)
+    .sort((a, b) => a.label.localeCompare(b.label));
 
-  if (error) {
-    return (
-      <div className={`flex items-center justify-center ${className}`}>
-        <p className="text-sm text-red-500">{error}</p>
-      </div>
+  const resetMap = () => {
+    setSelectedCluster(null);
+    setSelectedArticleNode(null);
+    setHoveredArticleNode(null);
+    animateTo({ k: 1, x: 0, y: 0 }, true);
+  };
+
+  const changeZoom = (factor: number) => {
+    const plot = containerRef.current;
+    if (!plot) return;
+    const current = transformRef.current;
+    const k = Math.max(0.5, Math.min(10, current.k * factor));
+    const ratio = k / current.k;
+    animateTo(
+      {
+        k,
+        x: plot.clientWidth / 2 - (plot.clientWidth / 2 - current.x) * ratio,
+        y: plot.clientHeight / 2 - (plot.clientHeight / 2 - current.y) * ratio,
+      },
+      true
     );
-  }
+  };
 
+  const isFiltered = selectedCluster !== null;
   const isMoved =
     Math.abs(transform.k - 1) > 0.01 ||
     Math.abs(transform.x) > 1 ||
     Math.abs(transform.y) > 1;
-  const displayArticleNode = selectedArticleNode ?? hoveredArticleNode;
-  const isPinned = selectedArticleNode !== null;
+  const control =
+    "inline-flex size-8 items-center justify-center text-accent hover:bg-accent/10 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent";
 
-  const getPanelPosition = () => {
-    if (!isPinned || !clickPos || !containerRef.current)
-      return { top: "1rem", right: "1rem" };
-    const cw = containerRef.current.clientWidth;
-    const ch = containerRef.current.clientHeight;
-    const W = 240;
-    const H = 230;
-    const GAP = 12;
-    let left = clickPos.x + GAP;
-    let top = clickPos.y + GAP;
-    if (left + W > cw - 8) left = clickPos.x - W - GAP;
-    if (top + H > ch - 8) top = clickPos.y - H - GAP;
-    return { left: Math.max(8, left), top: Math.max(8, top) };
-  };
+  const previewWidth = Math.min(228, Math.max(0, plotSize.width - 24));
+  const selectedPosition = selectedArticleNode
+    ? {
+        left: Math.max(
+          12,
+          Math.min(
+            transform.x +
+              (selectedArticleNode.x / 1000) * plotSize.width * transform.k +
+              12,
+            plotSize.width - previewWidth - 12
+          )
+        ),
+        top: Math.max(
+          12,
+          Math.min(
+            transform.y +
+              (selectedArticleNode.y / 1000) * plotSize.height * transform.k -
+              84,
+            plotSize.height - 100
+          )
+        ),
+        width: previewWidth,
+      }
+    : undefined;
+
+  if (loading) return <UMAPLoader className={`h-96 ${className}`} />;
+  if (error)
+    return (
+      <p className="py-8 text-sm text-muted">couldn&apos;t load connections.</p>
+    );
 
   return (
-    <div ref={containerRef} className={`relative ${className} bg-surface`}>
-      {/* Search */}
-      <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
-        <input
-          type="text"
-          placeholder="search..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-36 px-2 py-1 text-xs bg-surface/90 text-accent border border-rule dark:border-white/8 focus:outline-hidden placeholder:text-accent/25 backdrop-blur-xs"
-        />
-        {isMoved && (
-          <button
-            onClick={() => animateTo({ k: 1, x: 0, y: 0 })}
-            className="bg-surface/90 px-2 py-1 border border-rule dark:border-white/8 text-xs text-accent/60 hover:text-accent transition-colors backdrop-blur-xs"
-          >
-            reset
-          </button>
-        )}
-      </div>
-
-      {/* Canvas */}
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full block"
-        style={{ background: "transparent" }}
-      />
-
-      {/* ArticleNode detail panel — hover preview or pinned detail */}
-      {displayArticleNode && (
-        <div
-          className="absolute z-20 w-60 px-3.5 py-3 bg-surface border border-rule dark:border-white/10 shadow-[0_6px_20px_rgb(0_0_0/0.06)] pointer-events-none"
-          style={getPanelPosition()}
-        >
-          <p className="flex items-baseline justify-between gap-3 text-[11px] lowercase tabular-nums text-accent/50">
-            <span className="truncate">
-              {clusterLabels[displayArticleNode.cluster] ?? "unclustered"}
-            </span>
-            {displayArticleNode.publishedDate && (
-              <span className="shrink-0">
-                {new Date(displayArticleNode.publishedDate).toLocaleDateString(
-                  "en-US",
-                  { year: "numeric", month: "short", timeZone: "UTC" }
-                )}
-              </span>
-            )}
-          </p>
-          <h3 className="mt-1.5 text-sm font-medium leading-snug text-primary">
-            {displayArticleNode.postTitle}
-          </h3>
-          {summaries?.[displayArticleNode.postSlug] && (
-            <p className="mt-1 text-xs leading-relaxed text-accent/75 line-clamp-3">
-              {summaries[displayArticleNode.postSlug]}
-            </p>
+    <div className={className}>
+      <div className="flex items-center justify-between gap-3">
+        <p aria-live="polite" className="text-xs text-muted">
+          {isFiltered ? `${filtered.length.toLocaleString("en-US")} of ` : ""}
+          {articles.length.toLocaleString("en-US")} entries
+        </p>
+        <div className="flex items-center gap-1">
+          {(isFiltered || isMoved) && (
+            <button
+              onClick={resetMap}
+              className="mr-2 text-xs text-accent underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-accent"
+            >
+              show all
+            </button>
           )}
-          {isPinned ? (
-            <div className="pointer-events-auto mt-2.5 flex items-center justify-between text-xs">
-              <Link
-                href={`/posts/${displayArticleNode.postSlug}`}
-                className="text-accent underline underline-offset-4 decoration-accent/25 hover:decoration-current"
-              >
-                read →
-              </Link>
+          <button
+            aria-label="Zoom out"
+            onClick={() => changeZoom(1 / 1.5)}
+            disabled={transform.k <= 0.5}
+            className={control}
+          >
+            −
+          </button>
+          <button
+            aria-label="Zoom in"
+            onClick={() => changeZoom(1.5)}
+            disabled={transform.k >= 10}
+            className={control}
+          >
+            +
+          </button>
+        </div>
+      </div>
+      <div
+        ref={containerRef}
+        className="relative mt-2 h-[22rem] w-full border border-accent/35 sm:h-[28rem]"
+      >
+        <canvas
+          ref={canvasRef}
+          role="img"
+          aria-label={`${filtered.length} entries arranged by topic`}
+          className="block h-full w-full"
+          style={{ background: "transparent" }}
+        />
+        <div className="absolute bottom-3 right-3 z-10">
+          <button
+            aria-expanded={showTopics}
+            aria-controls="map-clusters"
+            onClick={() => {
+              setSelectedArticleNode(null);
+              setShowTopics((open) => !open);
+            }}
+            className="max-w-48 truncate border border-accent/25 bg-surface/95 px-3 py-1.5 text-xs text-accent focus-visible:outline-2 focus-visible:outline-accent"
+          >
+            {showTopics ? "close clusters" : "clusters"}
+          </button>
+          {showTopics && (
+            <div
+              id="map-clusters"
+              className="absolute bottom-10 right-0 max-h-60 w-60 max-w-[75vw] overflow-y-auto overscroll-contain border border-accent/35 bg-surface p-2 shadow-sm"
+            >
               <button
-                onClick={() => {
-                  setSelectedArticleNode(null);
-                  setClickPos(null);
-                }}
-                className="text-ink/50 hover:text-ink dark:text-chalk/50 dark:hover:text-chalk"
+                onClick={resetMap}
+                className="w-full px-2 py-2 text-left text-xs text-accent hover:bg-accent/10 focus-visible:outline-2 focus-visible:outline-accent"
               >
-                close
+                show all entries
+              </button>
+              {topics.map((topic) => (
+                <button
+                  key={topic.id}
+                  aria-pressed={selectedCluster === topic.id}
+                  onClick={() => {
+                    const id = selectedCluster === topic.id ? null : topic.id;
+                    setSelectedCluster(id);
+                    setSelectedArticleNode(null);
+                    setHoveredArticleNode(null);
+                    if (id === null) animateTo({ k: 1, x: 0, y: 0 }, true);
+                    else zoomToClusterRef.current(id, true);
+                  }}
+                  onMouseEnter={() => setHoveredCluster(topic.id)}
+                  onMouseLeave={() => setHoveredCluster(null)}
+                  onFocus={() => setHoveredCluster(topic.id)}
+                  onBlur={() => setHoveredCluster(null)}
+                  className={`flex w-full items-baseline justify-between gap-3 px-2 py-2 text-left text-xs text-primary hover:bg-accent/10 focus-visible:outline-2 focus-visible:outline-accent ${selectedCluster === topic.id ? "bg-accent/10 font-bold" : ""}`}
+                >
+                  <span>{topic.label}</span>
+                  <span className="text-muted tabular-nums">{topic.count}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        {filtered.length === 0 && (
+          <p className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-muted">
+            no entries in this cluster.
+          </p>
+        )}
+        {hoveredArticleNode && !selectedArticleNode && (
+          <div className="pointer-events-none absolute top-3 right-3 max-w-[75%] border border-accent/25 bg-surface/95 px-3 py-2 text-xs text-primary">
+            {hoveredArticleNode.postTitle}
+          </div>
+        )}
+        {selectedArticleNode && (
+          <article
+            aria-live="polite"
+            style={selectedPosition}
+            className="absolute z-10 border border-accent/35 bg-surface px-3 py-2"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h3 className="text-sm text-primary">
+                  <Link
+                    href={`/posts/${encodeURIComponent(selectedArticleNode.postSlug)}`}
+                    className="line-clamp-2 hover:underline underline-offset-4"
+                  >
+                    {selectedArticleNode.postTitle} →
+                  </Link>
+                </h3>
+                {selectedArticleNode.publishedDate && (
+                  <p className="mt-1 text-xs text-muted">
+                    {new Date(
+                      selectedArticleNode.publishedDate
+                    ).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                      timeZone: "UTC",
+                    })}
+                  </p>
+                )}
+              </div>
+              <button
+                aria-label="Close entry preview"
+                onClick={() => setSelectedArticleNode(null)}
+                className="-m-1 shrink-0 p-1 text-sm text-muted hover:text-accent focus-visible:outline-2 focus-visible:outline-accent"
+              >
+                ×
               </button>
             </div>
-          ) : (
-            isTouchDevice && (
-              <p className="mt-2 text-[11px] text-accent/40">
-                tap again to read
-              </p>
-            )
-          )}
-        </div>
-      )}
-
-      {/* Cluster legend toggle */}
-      {Object.keys(clusterLabels).length > 0 && (
-        <div className="absolute bottom-4 right-4 z-10">
-          <button
-            onClick={() => setShowLegend(!showLegend)}
-            className="bg-surface/90 px-2 py-1 border border-rule dark:border-white/8 text-xs text-accent/60 hover:text-accent transition-colors backdrop-blur-xs"
+          </article>
+        )}
+        {isFiltered && filtered.length > 0 && !selectedArticleNode && (
+          <ul
+            aria-label="Matching entries"
+            className="absolute top-3 left-3 right-3 max-h-[40%] space-y-2 overflow-y-auto overscroll-contain border border-accent/25 bg-surface p-3 text-sm"
           >
-            {showLegend
-              ? "hide"
-              : selectedCluster !== null
-                ? `cluster: ${clusterLabels[selectedCluster] ?? "unclustered"}`
-                : "clusters"}
-          </button>
-          {showLegend && (
-            <div className="absolute bottom-8 right-0 bg-surface/95 px-3 py-2 border border-rule dark:border-white/8 max-h-[min(60vh,18rem)] overflow-y-auto shadow-xs min-w-[200px] backdrop-blur-xs">
-              {selectedCluster !== null && (
-                <button
-                  onClick={() => setSelectedCluster(null)}
-                  className="w-full mb-2 px-2 py-1 text-xs bg-rule/30 dark:bg-white/6 hover:bg-rule/50 dark:hover:bg-white/10 transition-colors"
+            {filtered.slice(0, 6).map((article) => (
+              <li key={article.id}>
+                <Link
+                  href={`/posts/${encodeURIComponent(article.postSlug)}`}
+                  className="text-accent hover:underline underline-offset-4"
                 >
-                  show all clusters
-                </button>
-              )}
-              <div className="space-y-0.5">
-                {Object.entries(clusterLabels)
-                  .map(([clusterId, label]) => ({
-                    id: Number(clusterId),
-                    label,
-                    count:
-                      clusterStats.byCluster.get(Number(clusterId))?.length ??
-                      0,
-                  }))
-                  .filter((c) => c.id !== -1)
-                  .sort((a, b) => b.count - a.count)
-                  .concat(
-                    clusterStats.byCluster.has(-1)
-                      ? [
-                          {
-                            id: -1,
-                            label: "unclustered",
-                            count: clusterStats.byCluster.get(-1)!.length,
-                          },
-                        ]
-                      : []
-                  )
-                  .map(({ id, label, count }) => {
-                    const isActive = selectedCluster === id;
-                    return (
-                      <button
-                        key={id}
-                        onClick={() => setSelectedCluster(isActive ? null : id)}
-                        onMouseEnter={() => setHoveredCluster(id)}
-                        onMouseLeave={() => setHoveredCluster(null)}
-                        onFocus={() => setHoveredCluster(id)}
-                        onBlur={() => setHoveredCluster(null)}
-                        className={`w-full flex items-center gap-2 text-xs py-0.5 px-1 rounded transition-colors ${
-                          isActive
-                            ? "bg-rule/40 dark:bg-white/6"
-                            : "hover:bg-rule/20 dark:hover:bg-white/4"
-                        }`}
-                      >
-                        <div
-                          className="w-2 h-2 rounded-full shrink-0"
-                          style={{
-                            backgroundColor: getClusterColor(
-                              id,
-                              theme === "dark"
-                            ),
-                          }}
-                        />
-                        <span className="text-accent/70 text-left">
-                          {label}{" "}
-                          <span className="text-accent/40">({count})</span>
-                        </span>
-                      </button>
-                    );
-                  })}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Instructions */}
-      <div className="absolute bottom-4 left-4 z-10 bg-surface/80 px-3 py-1 border border-rule dark:border-white/8 text-xs text-accent/40 pointer-events-none backdrop-blur-xs">
-        {isTouchDevice ? "pinch · drag · tap" : "scroll · drag · click"}
+                  {article.postTitle}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
