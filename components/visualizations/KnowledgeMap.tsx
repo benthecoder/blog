@@ -836,23 +836,6 @@ export default function KnowledgeMap({
             )}
           </article>
         )}
-        {isFiltered && filtered.length > 0 && !selectedArticleNode && (
-          <ul
-            aria-label="Matching entries"
-            className="absolute top-3 left-3 right-3 max-h-[40%] space-y-2 overflow-y-auto overscroll-contain border border-accent/25 bg-surface p-3 text-sm"
-          >
-            {filtered.slice(0, 6).map((article) => (
-              <li key={article.id}>
-                <Link
-                  href={`/posts/${encodeURIComponent(article.postSlug)}`}
-                  className="text-accent hover:underline underline-offset-4"
-                >
-                  {article.postTitle}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </div>
   );
