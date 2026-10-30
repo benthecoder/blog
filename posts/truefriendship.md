@@ -1,7 +1,8 @@
 ---
-title: 'How to Be a Friend'
-tags: 'book, friends, philosophy'
-date: 'Mar 24, 2024'
+title: How to Be a Friend
+tags: friends, philosophy
+date: Mar 24, 2024
+format: book
 ---
 
 ![Two Men Contemplating the Moon, Caspar David Friedrich, 1825](/images/twomen.jpg)

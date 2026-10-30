@@ -1,7 +1,8 @@
 ---
-title: 'Several Short Sentences on Writing'
-tags: 'book, writing'
-date: 'Mar 21, 2024'
+title: Several Short Sentences on Writing
+tags: writing
+date: Mar 21, 2024
+format: book
 ---
 
 ![The Passion of Creation by Leonid Pasternak](/images/creation.jpeg)

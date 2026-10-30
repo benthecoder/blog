@@ -1,7 +1,8 @@
 ---
-title: 'Live in the Present'
-tags: 'life, journal'
-date: 'Feb 19, 2024'
+title: Live in the Present
+tags: life
+date: Feb 19, 2024
+format: journal
 ---
 
 ![Luncheon of the Boating Party Painting by Pierre-Auguste Renoir](/images/party.jpg)

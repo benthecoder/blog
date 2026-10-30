@@ -1,7 +1,8 @@
 ---
-title: 'Hong Kong Day 1'
-tags: 'travel, journal'
-date: 'Apr 20, 2024'
+title: Hong Kong Day 1
+tags: travel
+date: Apr 20, 2024
+format: journal
 ---
 
 ![rainy HK near temple street](/images/hk1.jpeg)

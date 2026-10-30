@@ -1,7 +1,8 @@
 ---
-title: 'Volleyball'
-tags: 'journal, sports'
-date: 'Aug 13, 2023'
+title: Volleyball
+tags: sports
+date: Aug 13, 2023
+format: journal
 ---
 
 I experienced my first Voleyball game at Ponderosa Park in Sunnyvale today.

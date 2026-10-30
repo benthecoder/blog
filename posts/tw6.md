@@ -1,7 +1,8 @@
 ---
-title: 'Taiwan Day 6'
-tags: 'travel, journal'
-date: 'Jun 6, 2024'
+title: Taiwan Day 6
+tags: travel
+date: Jun 6, 2024
+format: journal
 ---
 
 ![Taoyuan International Airport Terminal 1](/images/twday6.jpeg)

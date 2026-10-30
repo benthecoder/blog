@@ -1,7 +1,8 @@
 ---
-title: 'Advice from 8 Artists'
-tags: 'advice, art, listicles'
-date: 'Mar 13, 2024'
+title: Advice from 8 Artists
+tags: advice, art
+date: Mar 13, 2024
+format: resource
 ---
 
 Some [advice](https://www.youtube.com/watch?v=qyKXw24JX5g) from 8 artists.

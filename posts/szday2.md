@@ -1,7 +1,8 @@
 ---
-title: 'Shenzhen Day 2'
-tags: 'travel, journal'
-date: 'Apr 23, 2024'
+title: Shenzhen Day 2
+tags: travel
+date: Apr 23, 2024
+format: journal
 ---
 
 ![mixC mall](/images/sz2.jpg)

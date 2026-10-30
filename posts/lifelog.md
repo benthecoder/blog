@@ -1,7 +1,8 @@
 ---
-title: 'Lifeloggers'
-tags: 'life, journal'
-date: 'Sep 12, 2023'
+title: Lifeloggers
+tags: life
+date: Sep 12, 2023
+format: journal
 ---
 
 There's a wikipedia page about lifelogging, an act of recording one's daily life to learn about [how](https://doras.dcu.ie/19998/1/FnTIR_lifelogging_journal.pdf) people live their lives.

@@ -1,7 +1,8 @@
 ---
-title: 'Writing Book Summaries'
-tags: 'reading, writing, book'
-date: 'Feb 10, 2024'
+title: Writing Book Summaries
+tags: reading, writing
+date: Feb 10, 2024
+format: book
 ---
 
 Lately I've been reading a lot, or more than I used to.

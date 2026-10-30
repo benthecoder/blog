@@ -1,7 +1,8 @@
 ---
-title: 'Talking to Strangers'
-tags: 'journal, talking'
-date: 'May 19, 2023'
+title: Talking to Strangers
+tags: talking
+date: May 19, 2023
+format: journal
 ---
 
 The friends I made last summer aren't back at Tesla yet, so it's a weird feeling being back again but not having them around.

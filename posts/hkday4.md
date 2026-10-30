@@ -1,7 +1,8 @@
 ---
-title: 'Hong Kong Day 4'
-tags: 'travel, journal'
-date: 'Apr 26, 2024'
+title: Hong Kong Day 4
+tags: travel
+date: Apr 26, 2024
+format: journal
 ---
 
 ![Tsim Sha Tsui Ferry Pier](/images/hkday4.jpg)

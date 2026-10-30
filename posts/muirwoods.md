@@ -1,7 +1,8 @@
 ---
-title: 'Muir Woods'
-tags: 'travel, journal'
-date: 'Jul 8, 2023'
+title: Muir Woods
+tags: travel
+date: Jul 8, 2023
+format: journal
 ---
 
 I went to [Muir Woods National Monument](https://www.nps.gov/muwo/planyourvisit/hike.htm) today with a bunch of friends.

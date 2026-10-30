@@ -1,7 +1,8 @@
 ---
-title: 'Advanced Python resources'
-tags: 'programming, python, resources'
-date: 'Jul 19, 2023'
+title: Advanced Python resources
+tags: programming, python
+date: Jul 19, 2023
+format: resource
 ---
 
 1. [Fluent Python, 2nd Edition](https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/) ([code](https://github.com/fluentpython/example-code-2e))

@@ -1,7 +1,8 @@
 ---
-title: 'Taiwan Day 4'
-tags: 'travel, journal, TPE'
-date: 'Jun 4, 2024'
+title: Taiwan Day 4
+tags: travel, TPE
+date: Jun 4, 2024
+format: journal
 ---
 
 ![Raohe Street Night Market](/images/twday4.jpeg)

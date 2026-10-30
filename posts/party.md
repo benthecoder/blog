@@ -1,7 +1,7 @@
 ---
-title: 'First Party Experience'
-tags: 'journal'
-date: 'May 20, 2023'
+title: First Party Experience
+date: May 20, 2023
+format: journal
 ---
 
 It's 1am, I just got back from a Tesla interns party.

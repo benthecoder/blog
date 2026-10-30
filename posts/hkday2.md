@@ -1,7 +1,8 @@
 ---
-title: 'Hong Kong Day 2'
-tags: 'travel, journal'
-date: 'Apr 21, 2024'
+title: Hong Kong Day 2
+tags: travel
+date: Apr 21, 2024
+format: journal
 ---
 
 ![Bohemian Garden, Level 5F, K11 KREA mall](/images/hk2.jpeg)

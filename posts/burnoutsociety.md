@@ -1,7 +1,7 @@
 ---
-title: 'The Burnout Society'
-tags: 'book'
-date: 'Feb 11, 2024'
+title: The Burnout Society
+date: Feb 11, 2024
+format: book
 ---
 
 ![A Sunday on La Grande Jatte, Georges Seurat, 1884](/images/la_grande_jatte.jpg)

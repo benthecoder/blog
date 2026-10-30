@@ -1,7 +1,8 @@
 ---
 title: 'ISU classes: A Review'
-tags: 'life, learning, ✰'
-date: 'Dec 14, 2023'
+tags: life, learning
+date: Dec 14, 2023
+format: essay
 ---
 
 ![The School of Athens](/images/athens.jpeg)

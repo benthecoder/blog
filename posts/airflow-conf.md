@@ -1,7 +1,8 @@
 ---
-title: 'Airflow Summit Day 1'
-tags: 'journal, tech, travel'
-date: 'Sep 19, 2023'
+title: Airflow Summit Day 1
+tags: tech, travel
+date: Sep 19, 2023
+format: journal
 ---
 
 ![Airflow summit main stage](/images/airflow-summit.jpeg)

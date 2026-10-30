@@ -1,7 +1,7 @@
 ---
-title: 'Good Day'
-tags: 'life, advice, ✰'
-date: 'Jul 13, 2023'
+title: Good Day
+tags: life, advice
+date: Jul 13, 2023
 ---
 
 Don't ask whether today will be a good day.

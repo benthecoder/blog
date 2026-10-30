@@ -1,7 +1,8 @@
 ---
-title: 'YouTube Archive'
-tags: 'listicles, movies, resources'
-date: 'Feb 8, 2024'
+title: YouTube Archive
+tags: movies
+date: Feb 8, 2024
+format: resource
 ---
 
 ![The Great Library of Alexandria, O. Von Corven, 19th century](/images/alexandria.jpeg)

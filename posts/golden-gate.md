@@ -1,7 +1,8 @@
 ---
-title: 'SF Trip w Parents'
-tags: 'journal, SF'
-date: 'Jun 4, 2023'
+title: SF Trip w Parents
+tags: SF
+date: Jun 4, 2023
+format: journal
 ---
 
 Day #2 of bringing my parents around to touristy spots in California.

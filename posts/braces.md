@@ -1,7 +1,8 @@
 ---
-title: 'I got braces today'
-tags: 'journal, art, book'
-date: 'Feb 20, 2024'
+title: I got braces today
+tags: art
+date: Feb 20, 2024
+format: book
 ---
 
 Today is the day where the next ~2 years of my life will be forever changed.

@@ -1,7 +1,8 @@
 ---
-title: 'Art as Therapy'
-tags: 'art, book, psychology'
-date: 'Dec 10, 2023'
+title: Art as Therapy
+tags: art, psychology
+date: Dec 10, 2023
+format: book
 ---
 
 ![Ejiri in Suruga Province](/images/ejiri.jpeg)

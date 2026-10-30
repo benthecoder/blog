@@ -1,7 +1,8 @@
 ---
-title: 'The Joy of Being Average'
-tags: 'journal, life, personal'
-date: 'Feb 26, 2024'
+title: The Joy of Being Average
+tags: life, personal
+date: Feb 26, 2024
+format: journal
 ---
 
 ![The Milkmaid, Johannes Vermeer, c. 1660](/images/milkmaid.jpeg)

@@ -1,7 +1,8 @@
 ---
-title: 'Flying to Toronto'
-tags: 'travel, journal'
-date: 'Sep 18, 2023'
+title: Flying to Toronto
+tags: travel
+date: Sep 18, 2023
+format: journal
 ---
 
 ![The CN Tower](/images/toronto.jpeg)

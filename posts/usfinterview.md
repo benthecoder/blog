@@ -1,7 +1,7 @@
 ---
-title: 'USF Interview Jitters'
-tags: 'journal'
-date: 'Feb 27, 2024'
+title: USF Interview Jitters
+date: Feb 27, 2024
+format: journal
 ---
 
 I'm writing this after finishing the 20-minute technical interview for the University of San Francisco's (USF) Master of Science in Data Science (MSDS) program. My hands are shaky. My body overdosed on adrenaline.

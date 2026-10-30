@@ -1,7 +1,8 @@
 ---
-title: 'Cure?'
-tags: 'journal, life'
-date: 'Jan 11, 2024'
+title: Cure?
+tags: life
+date: Jan 11, 2024
+format: essay
 ---
 
 Today, I visited the third specialist for my condition.

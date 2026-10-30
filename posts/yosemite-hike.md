@@ -1,7 +1,8 @@
 ---
-title: 'Hiking Yosemite Falls'
-tags: 'journal, hiking'
-date: 'May 28, 2023'
+title: Hiking Yosemite Falls
+tags: hiking
+date: May 28, 2023
+format: journal
 ---
 
 We got up at 6 a.m. sharp, and headed straight for Yosemite Falls.

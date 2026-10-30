@@ -1,7 +1,8 @@
 ---
 title: 'Boston Day 1: Quincy Market'
-tags: 'travel, journal, boston'
-date: 'Nov 20, 2023'
+tags: travel, boston
+date: Nov 20, 2023
+format: journal
 ---
 
 ![Quincy market](/images/boston1.jpeg)

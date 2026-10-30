@@ -1,7 +1,7 @@
 ---
-title: 'Qualities of Intelligent People'
-tags: 'learning, intelligence, thinking, ✰'
-date: 'Feb 12, 2024'
+title: Qualities of Intelligent People
+tags: learning, intelligence, thinking
+date: Feb 12, 2024
 ---
 
 ![Archimedes, Domenico Fetti, 1620](/images/archimedes.jpeg)

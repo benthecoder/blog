@@ -1,7 +1,7 @@
 ---
-title: 'Staying Home'
-tags: 'journal'
-date: 'Aug 25, 2023'
+title: Staying Home
+date: Aug 25, 2023
+format: journal
 ---
 
 I've been staying at home ever since I got back.

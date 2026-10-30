@@ -1,7 +1,8 @@
 ---
-title: '5 Questions to Ask in Climate'
-tags: 'book, climate, energy'
-date: 'Apr 9, 2024'
+title: 5 Questions to Ask in Climate
+tags: climate, energy
+date: Apr 9, 2024
+format: book
 ---
 
 I'm on Chapter 3 of Bill Gates' book on climate.

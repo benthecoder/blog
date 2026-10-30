@@ -1,7 +1,8 @@
 ---
-title: 'Ox 9 Lanzhou'
-tags: 'journal, travel'
-date: 'Aug 16, 2023'
+title: Ox 9 Lanzhou
+tags: travel
+date: Aug 16, 2023
+format: journal
 ---
 
 Dubbed the “Best noodles in China”, the Lanzhou beef noodles were first created by a cook named Ma Liuqi, a native of Dongxiang ethnic group, under the reign of Emperor Guangxu (1875 - 1908) in the Qing Dynasty (1616 - 1911).

@@ -1,7 +1,8 @@
 ---
-title: 'Second Party experience'
-tags: 'journal, talking'
-date: 'Jun 23, 2023'
+title: Second Party experience
+tags: talking
+date: Jun 23, 2023
+format: journal
 ---
 
 Went to my second intern party today in Palo Alto.

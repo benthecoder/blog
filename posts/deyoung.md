@@ -1,7 +1,8 @@
 ---
-title: 'Arts market and Museum'
-tags: 'journal, SF'
-date: 'Aug 5, 2023'
+title: Arts market and Museum
+tags: SF
+date: Aug 5, 2023
+format: journal
 ---
 
 Today was an eventful day.

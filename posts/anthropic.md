@@ -1,7 +1,8 @@
 ---
-title: 'Claude 2 Hackathon'
-tags: 'journal, coding, AI'
-date: 'Jul 29, 2023'
+title: Claude 2 Hackathon
+tags: coding, AI
+date: Jul 29, 2023
+format: journal
 ---
 
 Walk towards the ferry building, go up the central stairs, through the glass doors, turn left, walk straight all the way, you'll find Shack15.

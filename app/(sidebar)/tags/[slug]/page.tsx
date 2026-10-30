@@ -1,3 +1,4 @@
+import { formatForLegacyTag } from "@/utils/content/formats";
 import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostMetadata } from "@/utils/content/posts";
@@ -31,6 +32,8 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   // This version passes encoded segments during fallback rendering. Keep the
   // existing one-decode behavior, but do not throw on a literal percent sign.
   const tag = tryDecodeUrlComponent(params.slug) ?? params.slug;
+  const format = formatForLegacyTag(tag);
+  if (format) permanentRedirect(`/posts?view=${format}`);
   const filteredPosts = getPostMetadata().filter((post) =>
     post.tags.includes(tag)
   );

@@ -1,9 +1,5 @@
 import type { PostFrontmatter, PostMetadata } from "@/types/post";
 
-// Tag that marks a post as a favorite: the archive's favorites tab and the
-// homepage's recent favorites both read it.
-export const FAVORITE = "✰";
-
 /**
  * Normalize a frontmatter `tags` value (array, comma-separated string, or
  * missing) into a clean string array. Shared by posts and wiki.

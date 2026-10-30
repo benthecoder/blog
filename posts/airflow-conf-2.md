@@ -1,7 +1,8 @@
 ---
-title: 'Airflow Summit Day 2'
-tags: 'journal, tech, travel'
-date: 'Sep 20, 2023'
+title: Airflow Summit Day 2
+tags: tech, travel
+date: Sep 20, 2023
+format: journal
 ---
 
 ![Kensington Chinatown](/images/chinatown.jpeg)

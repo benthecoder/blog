@@ -1,7 +1,8 @@
 ---
-title: 'Golfing Experience'
-tags: 'journal, sports'
-date: 'May 15, 2023'
+title: Golfing Experience
+tags: sports
+date: May 15, 2023
+format: journal
 ---
 
 It was my second time trying out golfing at Top Golf today.

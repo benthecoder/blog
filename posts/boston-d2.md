@@ -1,7 +1,8 @@
 ---
 title: 'Boston Day 2: Harvard & MIT'
-tags: 'travel, journal, boston'
-date: 'Nov 21, 2023'
+tags: travel, boston
+date: Nov 21, 2023
+format: journal
 ---
 
 ![mit](/images/mit.jpeg)

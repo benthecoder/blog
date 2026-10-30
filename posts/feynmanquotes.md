@@ -1,7 +1,7 @@
 ---
-title: 'Feynman on Purpose'
-tags: 'life, advice, ✰'
-date: 'Jun 9, 2024'
+title: Feynman on Purpose
+tags: life, advice
+date: Jun 9, 2024
 ---
 
 ![Paul Signac, The Harbour at Marseilles (1906)](/images/harbourmarseilles.jpeg)

@@ -1,7 +1,8 @@
 ---
-title: 'Advice for Starting Programmers'
-tags: 'programming, advice, listicles'
-date: 'Dec 22, 2023'
+title: Advice for Starting Programmers
+tags: programming, advice
+date: Dec 22, 2023
+format: resource
 ---
 
 ![Advice to Subscribers, published in Le Charivari, April 1, 1840](/images/advice.jpeg)

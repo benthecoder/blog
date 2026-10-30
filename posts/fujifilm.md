@@ -1,7 +1,8 @@
 ---
-title: 'I bought a Fujifilm x100s'
-tags: 'journal, photography'
-date: 'Mar 7, 2024'
+title: I bought a Fujifilm x100s
+tags: photography
+date: Mar 7, 2024
+format: journal
 ---
 
 A video on [Fuji X100VI](https://www.youtube.com/watch?v=jNb4hPvLWYQ) popped up on my YT feed one day and that started a week-long rabbit hole down digital film cameras.

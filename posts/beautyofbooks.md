@@ -1,7 +1,8 @@
 ---
-title: 'The Beauty of Books'
-tags: 'book, reading, listicles'
-date: 'Mar 28, 2024'
+title: The Beauty of Books
+tags: reading
+date: Mar 28, 2024
+format: book
 ---
 
 ![The Yellow Books, 1887, Vincent van Gogh](/images/books.jpeg)

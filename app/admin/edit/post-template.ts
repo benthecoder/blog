@@ -1,6 +1,7 @@
 export const DEFAULT_POST_TEMPLATE = `---
 title:
-tags: journal
+format: journal
+tags:
 date:
 ---
 

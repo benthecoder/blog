@@ -1,7 +1,8 @@
 ---
-title: 'Places to Find Art Online'
-tags: 'art, listicles, resources'
-date: 'Jan 17, 2024'
+title: Places to Find Art Online
+tags: art
+date: Jan 17, 2024
+format: resource
 ---
 
 ![The Tribuna of the Uffizi (Zoffany)](/images/art.jpg)

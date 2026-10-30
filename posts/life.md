@@ -1,7 +1,8 @@
 ---
-title: 'What To Do With Your Life'
-tags: 'journal, life'
-date: 'Jun 1, 2023'
+title: What To Do With Your Life
+tags: life
+date: Jun 1, 2023
+format: journal
 ---
 
 It's the beginning of June.

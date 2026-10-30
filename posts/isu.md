@@ -1,7 +1,8 @@
 ---
-title: 'Graduating'
-tags: 'life, journal'
-date: 'Dec 16, 2023'
+title: Graduating
+tags: life
+date: Dec 16, 2023
+format: journal
 ---
 
 ![Unknown artist](/images/hope.jpeg)

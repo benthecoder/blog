@@ -1,7 +1,8 @@
 ---
-title: 'Golf and bowling'
-tags: 'journal, sports'
-date: 'Aug 18, 2023'
+title: Golf and bowling
+tags: sports
+date: Aug 18, 2023
+format: journal
 ---
 
 I started my internship with Top Golf and ended it with Top Golf.

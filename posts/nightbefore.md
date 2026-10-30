@@ -1,7 +1,8 @@
 ---
-title: 'The Night Before'
-tags: 'personal, journal, life'
-date: 'Feb 29, 2024'
+title: The Night Before
+tags: personal, life
+date: Feb 29, 2024
+format: journal
 ---
 
 ![The Voyage of Life: Childhood, 1842, Thomas Cole](/images/childhood.jpeg)

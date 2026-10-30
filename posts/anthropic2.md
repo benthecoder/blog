@@ -1,7 +1,8 @@
 ---
-title: 'Claude 2 Hackathon Day 2'
-tags: 'journal, coding, AI'
-date: 'Jul 30, 2023'
+title: Claude 2 Hackathon Day 2
+tags: coding, AI
+date: Jul 30, 2023
+format: journal
 ---
 
 I woke up from the couch and Atal called me over.

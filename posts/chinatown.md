@@ -1,7 +1,8 @@
 ---
-title: 'Dim Sum and sneakers'
-tags: 'journal, SF'
-date: 'May 29, 2023'
+title: Dim Sum and sneakers
+tags: SF
+date: May 29, 2023
+format: journal
 ---
 
 I woke up today and decided to do two things.

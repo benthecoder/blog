@@ -1,7 +1,8 @@
 ---
-title: 'Shenzhen Day 1'
-tags: 'travel, journal'
-date: 'Apr 22, 2024'
+title: Shenzhen Day 1
+tags: travel
+date: Apr 22, 2024
+format: journal
 ---
 
 ![福田下梅林地铁站店](/images/szday1.jpg)

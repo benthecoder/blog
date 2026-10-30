@@ -1,7 +1,8 @@
 ---
-title: 'what you value most'
-tags: 'life, philosophy, questions, ✰'
-date: 'Jun 27, 2024'
+title: what you value most
+tags: life, philosophy, questions
+date: Jun 27, 2024
+format: essay
 ---
 
 ![The Hunters in the Snow, Pieter Bruegel the Elder, 1565](/images/huntersnow.jpg)

@@ -2,14 +2,24 @@
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useState, type ReactNode } from "react";
-import { PostMetadata } from "@/types/post";
-import { FAVORITE, countTagFrequency } from "@/utils/content/tags";
+import type { PostFormat, PostMetadata } from "@/types/post";
+import { countTagFrequency } from "@/utils/content/tags";
 import PostLinkPreview from "@/components/posts/PostLinkPreview";
 import Heatmap from "@/components/visualizations/Heatmap";
 import Link from "next/link";
+import {
+  POST_FORMATS,
+  formatConfig,
+  isPostFormat,
+  matchesFormat,
+} from "@/utils/content/formats";
 
-type View = "list" | "favorites" | "tags";
-const VIEWS: View[] = ["list", "favorites", "tags"];
+type View = "all" | PostFormat | "tags";
+const VIEWS = [
+  { id: "all", label: "all" },
+  ...POST_FORMATS,
+  { id: "tags", label: "tags" },
+] as const;
 
 const byYear = (posts: PostMetadata[]) => {
   const years = new Map<number, PostMetadata[]>();
@@ -43,14 +53,7 @@ function PostRow({ post }: { post: PostMetadata }) {
       slug={post.slug}
       className="group flex items-baseline gap-3 cursor-crosshair text-sm md:text-base"
     >
-      <span className="text-accent group-hover:underline">
-        {post.title}
-        {post.tags.includes(FAVORITE) && (
-          <span className="text-muted ml-1.5" aria-label="favorite">
-            {FAVORITE}
-          </span>
-        )}
-      </span>
+      <span className="text-accent group-hover:underline">{post.title}</span>
       <span
         aria-hidden
         className="flex-1 min-w-4 border-b border-dotted border-rule dark:border-night-rule translate-y-[-0.3em]"
@@ -72,24 +75,31 @@ export default function ArchiveClient({
   const pathname = usePathname();
   const [prefetchTag, setPrefetchTag] = useState<string | null>(null);
 
-  // Old ?view=year links fall back to the list, which reads the same ?year.
+  // Keep old list/year URLs working; favorites now points to essays.
   const param = searchParams.get("view");
-  const view: View = VIEWS.includes(param as View) ? (param as View) : "list";
+  const view: View =
+    param === "favorites"
+      ? "essay"
+      : isPostFormat(param) || param === "tags"
+        ? param
+        : "all";
 
-  const setView = (v: View) => {
+  const viewHref = (v: View, year?: number) => {
     const params = new URLSearchParams();
-    if (v !== "list") params.set("view", v);
+    if (v !== "all") params.set("view", v);
+    if (year) params.set("year", String(year));
     const query = params.toString();
-    router.push(query ? `${pathname}?${query}` : pathname);
+    return query ? `${pathname}?${query}` : pathname;
   };
 
-  const sortedTags = countTagFrequency(allPosts, [FAVORITE]);
-  const posts =
-    view === "favorites"
-      ? allPosts.filter((p) => p.tags.includes(FAVORITE))
-      : allPosts;
-  // The list shows one year at a time, newest first; ?year= picks another.
-  const years = byYear(allPosts);
+  const sortedTags = countTagFrequency(allPosts);
+  const posts = isPostFormat(view)
+    ? allPosts.filter((post) => matchesFormat(post, view))
+    : allPosts;
+  const config = isPostFormat(view) ? formatConfig(view) : undefined;
+  // All and journal retain year navigation; smaller formats show all years.
+  const yearly = view === "all" || view === "journal";
+  const years = byYear(posts);
   const yearParam = Number(searchParams.get("year"));
   const index = Math.max(
     0,
@@ -105,27 +115,29 @@ export default function ArchiveClient({
 
   return (
     <div>
-      <h1 className="sr-only">archive</h1>
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex gap-4 text-sm">
-          {VIEWS.map((v) => (
+      <h1 className="sr-only">
+        {config?.heading ?? (view === "tags" ? "tags" : "archive")}
+      </h1>
+      <div className="flex items-start justify-between gap-4 mb-8">
+        <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+          {VIEWS.map(({ id, label }) => (
             <button
-              key={v}
-              onClick={() => setView(v)}
-              aria-pressed={view === v}
+              key={id}
+              onClick={() => router.push(viewHref(id))}
+              aria-pressed={view === id}
               className={`transition-[color] duration-150 ${
-                view === v
+                view === id
                   ? "text-accent"
                   : "text-accent/35 hover:text-accent/70"
               }`}
             >
-              {v}
+              {label}
             </button>
           ))}
         </div>
         <Link
           href="/search"
-          className="text-accent/35 hover:text-accent/70 transition-[color] duration-150"
+          className="shrink-0 mt-1 text-accent/35 hover:text-accent/70 transition-[color] duration-150"
           aria-label="search"
         >
           <svg
@@ -143,20 +155,47 @@ export default function ArchiveClient({
         </Link>
       </div>
 
-      {view === "list" && year && (
+      {view === "all" && (
+        <nav
+          aria-label="Topics"
+          className="flex flex-wrap gap-x-3 gap-y-2 text-xs mb-8"
+        >
+          {sortedTags.slice(0, 10).map(([tag]) => (
+            <Link
+              key={tag}
+              href={`/tags/${encodeURIComponent(tag)}`}
+              prefetch={false}
+              className="text-muted hover:text-accent"
+            >
+              {tag}
+            </Link>
+          ))}
+          <Link href="/tags" className="text-accent hover:underline">
+            all tags →
+          </Link>
+        </nav>
+      )}
+
+      {config && (
+        <div className="mb-6">
+          <h2 className="text-base font-bold text-primary">{config.heading}</h2>
+          <p className="mt-1 text-sm text-muted">{config.description}</p>
+        </div>
+      )}
+      {view !== "tags" && posts.length === 0 && (
+        <p className="text-sm text-muted">Nothing here yet.</p>
+      )}
+
+      {yearly && year && (
         <section>
           <div className="flex items-baseline justify-between mb-3 text-sm tabular-nums">
             <div className="flex items-baseline gap-4">
               {older && (
-                <YearLink href={`${pathname}?year=${older}`}>
-                  ← {older}
-                </YearLink>
+                <YearLink href={viewHref(view, older)}>← {older}</YearLink>
               )}
               <h2 className="text-accent">{year}</h2>
               {newer && (
-                <YearLink href={`${pathname}?year=${newer}`}>
-                  {newer} →
-                </YearLink>
+                <YearLink href={viewHref(view, newer)}>{newer} →</YearLink>
               )}
             </div>
             <span className="text-xs text-accent/40">
@@ -165,7 +204,7 @@ export default function ArchiveClient({
           </div>
           <div className="mb-5">
             <Heatmap
-              posts={allPosts}
+              posts={posts}
               year={year}
               month={0}
               showNavigation={false}
@@ -179,12 +218,15 @@ export default function ArchiveClient({
         </section>
       )}
 
-      {view === "favorites" &&
-        byYear(posts).map(([favYear, favPosts]) => (
-          <section key={favYear} className="mb-10">
-            <h2 className="text-sm text-accent mb-3 tabular-nums">{favYear}</h2>
+      {!yearly &&
+        view !== "tags" &&
+        byYear(posts).map(([postYear, yearGroup]) => (
+          <section key={postYear} className="mb-10">
+            <h2 className="text-sm text-accent mb-3 tabular-nums">
+              {postYear}
+            </h2>
             <div className="space-y-1">
-              {favPosts.map((post) => (
+              {yearGroup.map((post) => (
                 <PostRow key={post.slug} post={post} />
               ))}
             </div>
@@ -195,7 +237,7 @@ export default function ArchiveClient({
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-0">
           {sortedTags.map(([tag, count]) => (
             <Link
-              href={`/tags/${tag}`}
+              href={`/tags/${encodeURIComponent(tag)}`}
               key={tag}
               prefetch={prefetchTag === tag ? null : false}
               onMouseEnter={() => setPrefetchTag(tag)}

@@ -1,7 +1,8 @@
 ---
-title: 'Useful MacOS Apps'
-tags: 'listicles, tech, resources'
-date: 'Oct 21, 2023'
+title: Useful MacOS Apps
+tags: tech
+date: Oct 21, 2023
+format: resource
 ---
 
 This is a living post of useful apps/tools I use on MacOS.

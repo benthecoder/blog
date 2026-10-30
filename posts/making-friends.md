@@ -1,7 +1,8 @@
 ---
-title: 'Friendships in California'
-tags: 'journal, friends'
-date: 'Apr 18, 2023'
+title: Friendships in California
+tags: friends
+date: Apr 18, 2023
+format: journal
 ---
 
 I read this [article](https://www.wbur.org/hereandnow/2021/11/10/making-friends-adults) about making friends as an adult, and it made me reflect about my time in Cali.

@@ -1,7 +1,8 @@
 ---
-title: 'for rainy days'
-tags: 'life, resources'
-date: 'May 1, 2024'
+title: for rainy days
+tags: life
+date: May 1, 2024
+format: resource
 ---
 
 ![Vincent van Gogh, Rain, 1889, Philadelphia Museum of Art (F650)](/images/rain.jpg)

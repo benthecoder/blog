@@ -1,7 +1,8 @@
 ---
-title: 'A Short Guide to a Happy Life'
-tags: 'book, life'
-date: 'Jul 1, 2023'
+title: A Short Guide to a Happy Life
+tags: life
+date: Jul 1, 2023
+format: book
 ---
 
 > “Life is made of moments, small pieces of silver amidst long stretches of tedium. It would be wonderful if they came to us unsummoned, but particularly in lives as busy as the ones most of us lead now, that won’t happen. We have to teach ourselves now to live, really live . . . to love the journey, not the destination.” - Anna Quindlen

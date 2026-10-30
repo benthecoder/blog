@@ -1,7 +1,8 @@
 ---
-title: 'The Sun Also Rises'
-tags: 'book, reading'
-date: 'Sep 21, 2023'
+title: The Sun Also Rises
+tags: reading
+date: Sep 21, 2023
+format: book
 ---
 
 A life of booze, dancing, and living, truly living. Carpe diem.

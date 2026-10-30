@@ -1,7 +1,8 @@
 ---
-title: 'How To Feel Good'
-tags: 'psychology, emotions'
-date: 'Feb 17, 2024'
+title: How To Feel Good
+tags: psychology, emotions
+date: Feb 17, 2024
+format: essay
 ---
 
 ![Melencolia I, 1514 engraving by Albrecht Dürer](/images/melencolia.jpg)

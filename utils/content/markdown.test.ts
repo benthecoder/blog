@@ -2,7 +2,11 @@ import fs from "fs";
 import os from "os";
 import path from "path";
 import { afterAll, describe, expect, it } from "vitest";
-import { readMarkdownFile, scanMarkdownDir } from "./markdown";
+import {
+  readMarkdownFile,
+  scanMarkdownDir,
+  writeMarkdownFile,
+} from "./markdown";
 
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), "markdown-test-"));
 fs.writeFileSync(
@@ -14,6 +18,19 @@ fs.writeFileSync(path.join(dir, "notes.txt"), "not markdown");
 afterAll(() => fs.rmSync(dir, { recursive: true, force: true }));
 
 describe("readMarkdownFile", () => {
+  it.each([
+    "body without a newline",
+    "body with a newline\n",
+    "",
+    "\n\nbody\n\n",
+  ])("preserves a body exactly during metadata-only changes: %j", (body) => {
+    const file = path.join(dir, "migration.md");
+    writeMarkdownFile(file, { title: "unchanged", format: "essay" }, body, {
+      preserveBody: true,
+    });
+    expect(readMarkdownFile(file).content).toBe(body);
+    fs.unlinkSync(file);
+  });
   it("parses frontmatter and content, and is JSON-serializable", () => {
     const result = readMarkdownFile(path.join(dir, "hello.md"));
     expect(result.data.title).toBe("hello");

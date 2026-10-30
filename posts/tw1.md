@@ -1,7 +1,8 @@
 ---
-title: 'Taiwan Day 1'
-tags: 'travel, journal, TPE'
-date: 'Jun 1, 2024'
+title: Taiwan Day 1
+tags: travel, TPE
+date: Jun 1, 2024
+format: journal
 ---
 
 ![Ningxia night market](/images/twday1.jpeg)

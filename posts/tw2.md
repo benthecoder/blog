@@ -1,7 +1,8 @@
 ---
-title: 'Taiwan Day 2'
-tags: 'travel, journal'
-date: 'Jun 2, 2024'
+title: Taiwan Day 2
+tags: travel
+date: Jun 2, 2024
+format: journal
 ---
 
 ![Taipei 101](/images/twday2.jpeg)
