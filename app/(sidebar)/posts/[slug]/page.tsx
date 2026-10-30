@@ -147,7 +147,7 @@ const PostPage = async ({ params }: { params: Params }) => {
         hero={hero ? <MarkdownContent content={hero} /> : undefined}
         backlinks={<Backlinks contentRef={{ kind: "post", slug }} />}
       >
-        <MarkdownContent content={body} />
+        <MarkdownContent content={body} prioritizeFirstImage={!hero} />
       </RenderPost>
     </>
   );

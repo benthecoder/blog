@@ -11,6 +11,7 @@ import { getImageMeta } from "@/utils/content/imageMeta";
 import {
   createBaseComponents,
   remarkPlugins,
+  remarkFirstImage,
   rehypePlugins,
 } from "./markdownConfig";
 
@@ -135,14 +136,20 @@ const anchoredComponents: Components = {
 export default function MarkdownContent({
   content,
   anchors = false,
+  prioritizeFirstImage = true,
 }: {
   content: string;
   anchors?: boolean;
+  prioritizeFirstImage?: boolean;
 }) {
   return (
     <ReactMarkdown
       components={anchors ? anchoredComponents : components}
-      remarkPlugins={remarkPlugins}
+      remarkPlugins={
+        prioritizeFirstImage
+          ? remarkPlugins
+          : remarkPlugins.filter((plugin) => plugin !== remarkFirstImage)
+      }
       rehypePlugins={rehypePlugins}
       // Keep react-markdown's URL sanitizing, but let our `wikilink:` sentinel
       // scheme through so the `a` handler can resolve it.
