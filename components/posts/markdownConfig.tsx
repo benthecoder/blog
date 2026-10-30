@@ -36,7 +36,7 @@ function flagFirstImage(node: MdastNode): boolean {
 // Flags the first image in the document so its plate can preload: on a
 // photo-led post that image is the LCP element, and lazy-loading it delays
 // the one paint the reader is waiting for.
-function remarkFirstImage() {
+export function remarkFirstImage() {
   return (tree: MdastNode) => {
     flagFirstImage(tree);
   };
