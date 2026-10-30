@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, Fragment, type CSSProperties } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PostMetadata } from "@/types/post";
 import {
@@ -71,27 +70,36 @@ function DayCell({
   isToday,
   onHover,
   onLeave,
-  onClick,
 }: {
   day: DayData;
   isToday: boolean;
   onHover: (day: DayData) => void;
   onLeave: () => void;
-  onClick: (day: DayData) => void;
 }) {
-  return (
-    <div
-      className={`w-(--hm-cell) h-(--hm-cell) rounded-xs ${wordCountColor(day.posts)} ${
-        day.posts.length > 0
-          ? "cursor-pointer hover:ring-1 hover:ring-accent"
-          : ""
-      } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-[box-shadow] duration-150`}
-      onMouseEnter={() => day.posts.length > 0 && onHover(day)}
-      onMouseLeave={onLeave}
-      onClick={() => onClick(day)}
-      title={day.date.toDateString()}
-    />
-  );
+  const className = `w-(--hm-cell) h-(--hm-cell) rounded-xs ${wordCountColor(day.posts)} ${
+    day.posts.length > 0 ? "cursor-pointer hover:ring-1 hover:ring-accent" : ""
+  } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-[box-shadow] duration-150`;
+  const events = {
+    onMouseEnter: () => day.posts.length > 0 && onHover(day),
+    onMouseLeave: onLeave,
+  };
+  const title = day.date.toDateString();
+  if (day.posts.length === 1) {
+    const post = day.posts[0];
+    return (
+      <Link
+        href={`/posts/${post.slug}`}
+        prefetch={false}
+        className={`${className} block focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2`}
+        title={title}
+        aria-label={`${title}: ${post.title}`}
+        onFocus={() => onHover(day)}
+        onBlur={onLeave}
+        {...events}
+      />
+    );
+  }
+  return <div className={className} title={title} {...events} />;
 }
 
 function HoverInfo({ day }: { day: DayData }) {
@@ -143,7 +151,6 @@ const Heatmap = ({
   showNavigation = true,
   navigationPath = "/calendar",
 }: HeatmapProps) => {
-  const router = useRouter();
   const [hoveredDay, setHoveredDay] = useState<DayData | null>(null);
 
   const postYears = posts.map((post) => new Date(post.date).getFullYear());
@@ -154,12 +161,6 @@ const Heatmap = ({
   const weeks = buildWeeks(year, groupPostsByDate(posts));
   const monthLabels = getMonthLabels(weeks, year);
   const todayKey = dateKey(new Date());
-
-  const handleDayClick = (day: DayData) => {
-    if (day.posts.length === 1) {
-      router.push(`/posts/${day.posts[0].slug}`);
-    }
-  };
 
   return (
     // The cell size is computed from the container width so the grid spans
@@ -211,7 +212,6 @@ const Heatmap = ({
                     isToday={day.dateKey === todayKey}
                     onHover={setHoveredDay}
                     onLeave={() => setHoveredDay(null)}
-                    onClick={handleDayClick}
                   />
                 );
               })}
