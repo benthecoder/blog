@@ -109,7 +109,7 @@ function DayCell({
 
 function HoverInfo({ day }: { day: DayData }) {
   return (
-    <div className="text-xs">
+    <div className="truncate text-xs">
       <span className="text-muted">
         {day.date.toLocaleDateString("en-US", {
           month: "short",
@@ -225,8 +225,8 @@ const Heatmap = ({
         </div>
       </div>
 
-      {/* Info bar below - compact */}
-      <div className="pt-2">
+      {/* Info bar below: one fixed line, so hovering never shifts the page */}
+      <div className="pt-2 h-6">
         {hoveredDay ? <HoverInfo day={hoveredDay} /> : <Legend />}
       </div>
     </div>
