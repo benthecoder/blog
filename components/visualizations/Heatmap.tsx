@@ -2,6 +2,7 @@
 
 import { useState, Fragment, type CSSProperties } from "react";
 import Link from "next/link";
+import { hoverTick } from "@/utils/hoverTick";
 import { PostMetadata } from "@/types/post";
 import {
   DayData,
@@ -80,7 +81,11 @@ function DayCell({
     day.posts.length > 0 ? "cursor-pointer hover:ring-1 hover:ring-accent" : ""
   } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-[box-shadow] duration-150`;
   const events = {
-    onMouseEnter: () => day.posts.length > 0 && onHover(day),
+    onMouseEnter: () => {
+      if (day.posts.length === 0) return;
+      hoverTick();
+      onHover(day);
+    },
     onMouseLeave: onLeave,
   };
   const title = day.date.toDateString();
