@@ -10,6 +10,7 @@ import { MapPinned } from "lucide-react";
 
 const links = [
   { path: "/posts", text: "archive", icon: "archive.svg" },
+  { path: "/photos", text: "photos", icon: "gallery.svg" },
   { path: "/random", text: "random", icon: "random.svg" },
   { path: "/contact", text: "findme", icon: "contact.svg" },
   { path: "/hn", text: "hn", icon: "news.svg" },
@@ -20,7 +21,7 @@ const links = [
   { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
 ];
 
-export function SidebarNav() {
+export function SidebarNav({ home = false }: { home?: boolean }) {
   const pathname = usePathname();
   const [spinning, setSpinning] = useState(false);
   const [prefetchPath, setPrefetchPath] = useState<string | null>(null);
@@ -80,7 +81,14 @@ export function SidebarNav() {
       {/* Extra bottom gap on small screens: the nav used to sit against a
           white content card that separated it from the page title, and
           without that card the two run together. */}
-      <nav className="flex flex-row flex-wrap gap-2 justify-center lg:flex-col lg:flex-nowrap lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0">
+      <nav
+        aria-label="Site navigation"
+        className={
+          home
+            ? "grid w-full grid-cols-5 gap-x-1 gap-y-4 lg:fixed lg:w-auto lg:left-6 lg:top-1/2 lg:-translate-y-1/2 lg:flex lg:flex-col lg:gap-2"
+            : "flex flex-row flex-wrap gap-2 justify-center lg:flex-col lg:flex-nowrap lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0"
+        }
+      >
         {links.map(({ path, text, icon }) => (
           <Link
             key={path}
@@ -88,12 +96,12 @@ export function SidebarNav() {
             prefetch={
               path !== "/random" && prefetchPath === path ? null : false
             }
-            className={`inline-flex w-8 h-8 lg:w-11 lg:h-11 transition-opacity ${
+            className={`inline-flex ${home ? "flex-col items-center gap-1 text-xs text-accent lg:flex-row lg:gap-2" : "w-8 h-8 lg:w-11 lg:h-11"} transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
               pathname === path ? "opacity-50" : "hover:opacity-70"
             }`}
             onMouseEnter={(e) => {
               setPrefetchPath(path);
-              handleMouseEnter(e, text);
+              if (!home) handleMouseEnter(e, text);
             }}
             onFocus={() => setPrefetchPath(path)}
             onMouseLeave={() => setHoveredLink(null)}
@@ -109,8 +117,8 @@ export function SidebarNav() {
             {icon ? (
               <SketchIcon
                 src={`/icons/${icon}`}
-                label={text}
-                className={`w-full h-full${path === "/random" && spinning ? " dice-spin" : ""}`}
+                label={home ? undefined : text}
+                className={`${home ? "size-8 shrink-0" : "w-full h-full"}${path === "/random" && spinning ? " dice-spin" : ""}`}
               />
             ) : (
               <MapPinned
@@ -118,6 +126,17 @@ export function SidebarNav() {
                 className="w-full h-full p-1.5"
                 strokeWidth={1.25}
               />
+            )}
+            {home && (
+              <span>
+                {text === "findme"
+                  ? "contact"
+                  : text === "hn"
+                    ? "news"
+                    : text === "curius"
+                      ? "bookmarks"
+                      : text}
+              </span>
             )}
           </Link>
         ))}

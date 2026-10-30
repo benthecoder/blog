@@ -1076,6 +1076,7 @@ body {
   color: var(--color-chalk-strong);
 }
 
+body:has(.home-header) .floating-controls,
 body:has(.photo-site) .floating-controls,
 body:has(.places-explorer) .floating-controls {
   display: none;

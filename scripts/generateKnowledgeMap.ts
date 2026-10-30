@@ -76,15 +76,9 @@ const SUMMARY_CACHE = ".cache/map-summaries.json";
 const SUMMARY_VECTOR_CACHE = ".cache/map-summary-vectors.json";
 
 function writeBrowserAssets(map: KnowledgeMapOutput) {
-  const {
-    previewJson,
-    edgesJson,
-    edgesFilename,
-    summariesJson,
-    summariesFilename,
-  } = splitKnowledgeMap(map);
+  const { previewJson, edgesJson, edgesFilename } = splitKnowledgeMap(map);
   fs.mkdirSync(DATA_DIR, { recursive: true });
-  const keep = new Set([edgesFilename, summariesFilename]);
+  const keep = new Set([edgesFilename]);
   // hashed files from earlier snapshots are dead weight once nodes point elsewhere
   for (const file of fs.readdirSync(DATA_DIR)) {
     if (
@@ -95,9 +89,6 @@ function writeBrowserAssets(map: KnowledgeMapOutput) {
     }
   }
   fs.writeFileSync(path.join(DATA_DIR, edgesFilename), edgesJson);
-  if (summariesFilename && summariesJson) {
-    fs.writeFileSync(path.join(DATA_DIR, summariesFilename), summariesJson);
-  }
   fs.writeFileSync(KNOWLEDGE_MAP_NODES_JSON, previewJson);
 }
 

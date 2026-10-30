@@ -34,7 +34,7 @@ the crawlers that harvest for training are disallowed in robots.txt.
 - [all posts](${SITE_URL}/posts)
 - [about](${SITE_URL}/about)
 - [now](${SITE_URL}/now)
-- [start here](${SITE_URL}/start)
+- [home](${SITE_URL}/)
 - [places map](${SITE_URL}/map)
 - [photos](https://photos.bneo.xyz)
 - [rss feed](${SITE_URL}/api/rss)

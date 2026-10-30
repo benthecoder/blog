@@ -64,16 +64,10 @@ describe("knowledge map browser assets", () => {
     expect(JSON.parse(assets.edgesJson)).toEqual([]);
     expect(JSON.parse(assets.previewJson).data).toEqual(map.data);
   });
-  it("ships summaries as a separate content-addressed file", () => {
+  it("keeps summaries out of the browser payload", () => {
     const withSummaries = { ...map, summaries: { first: "about firsts" } };
-    const assets = splitKnowledgeMap(withSummaries);
-    const preview = JSON.parse(assets.previewJson);
+    const preview = JSON.parse(splitKnowledgeMap(withSummaries).previewJson);
     expect(preview.summaries).toBeUndefined();
-    expect(preview.summariesUrl).toBe(`/data/${assets.summariesFilename}`);
-    expect(JSON.parse(assets.summariesJson!)).toEqual(withSummaries.summaries);
-    expect(assets.summariesFilename).toMatch(
-      /^knowledge-map-summaries-[a-f0-9]{64}\.json$/
-    );
-    expect(splitKnowledgeMap(map).summariesFilename).toBeUndefined();
+    expect(preview.summariesUrl).toBeUndefined();
   });
 });

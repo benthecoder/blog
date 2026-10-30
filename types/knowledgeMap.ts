@@ -69,5 +69,4 @@ export type KnowledgeMapPreview = Omit<
   "similarityEdges" | "summaries"
 > & {
   similarityEdgesUrl: string;
-  summariesUrl?: string;
 };
