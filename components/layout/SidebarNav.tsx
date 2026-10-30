@@ -10,7 +10,6 @@ import { MapPinned } from "lucide-react";
 
 const links = [
   { path: "/posts", text: "archive", icon: "archive.svg" },
-  { path: "/photos", text: "photos", icon: "gallery.svg" },
   { path: "/random", text: "random", icon: "random.svg" },
   { path: "/contact", text: "findme", icon: "contact.svg" },
   { path: "/hn", text: "hn", icon: "news.svg" },
@@ -19,6 +18,7 @@ const links = [
   { path: "/projects", text: "projects", icon: "code.svg" },
   { path: "/library", text: "library", icon: "library.svg" },
   { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
+  { path: "/photos", text: "photos", icon: "gallery.svg" },
 ];
 
 export function SidebarNav() {
@@ -83,7 +83,7 @@ export function SidebarNav() {
           without that card the two run together. */}
       <nav
         aria-label="Site navigation"
-        className="flex flex-row flex-wrap gap-2 justify-center lg:flex-col lg:flex-nowrap lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0"
+        className="flex flex-row flex-wrap gap-2 justify-center lg:flex-col lg:flex-nowrap lg:items-center lg:w-28 lg:fixed lg:top-44 lg:left-10 mb-12 lg:mb-0"
       >
         {links.map(({ path, text, icon }) => (
           <Link
@@ -92,7 +92,7 @@ export function SidebarNav() {
             prefetch={
               path !== "/random" && prefetchPath === path ? null : false
             }
-            className={`inline-flex w-8 h-8 lg:w-11 lg:h-11 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+            className={`inline-flex w-8 h-8 lg:w-9 lg:h-9 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
               pathname === path ? "opacity-50" : "hover:opacity-70"
             }`}
             onMouseEnter={(e) => {
