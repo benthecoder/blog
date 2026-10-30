@@ -76,11 +76,13 @@ export default function ArtworkStrip() {
   }, []);
 
   return (
-    <section aria-label="Drawings" className="relative mt-8 mb-8">
+    <section aria-label="Drawings" className="mt-8 mb-8">
       <div
         ref={strip}
         role="region"
         aria-label="Sketchbook"
+        data-start={edges.start}
+        data-end={edges.end}
         className={`${styles.strip} -mx-1 flex gap-2 overflow-x-auto overscroll-x-contain px-1 py-1`}
       >
         {SKETCHES.map(([file, width, height], index) => (
@@ -103,18 +105,6 @@ export default function ArtworkStrip() {
           </Link>
         ))}
       </div>
-      {(["start", "end"] as const).map((side) => (
-        <div
-          key={side}
-          aria-hidden="true"
-          data-hidden={!edges[side]}
-          className={`${styles.edge} ${styles[side]}`}
-        >
-          <span />
-          <span />
-          <span />
-        </div>
-      ))}
     </section>
   );
 }
