@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { DRAWINGS_URL } from "@/config/constants";
 
@@ -22,6 +22,28 @@ export default function SketchPage() {
   const [selected, setSelected] = useState<(typeof SKETCHES)[number] | null>(
     null
   );
+
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const close = () => {
+    dialogRef.current?.close();
+    setSelected(null);
+  };
+
+  useEffect(() => {
+    if (!selected) return;
+    const dialog = dialogRef.current;
+    dialog?.showModal();
+    const { overflow, paddingRight } = document.body.style;
+    const gutter = window.innerWidth - document.documentElement.clientWidth;
+    const padding = parseFloat(getComputedStyle(document.body).paddingRight);
+    document.body.style.overflow = "hidden";
+    if (gutter > 0) document.body.style.paddingRight = `${padding + gutter}px`;
+    return () => {
+      dialog?.close();
+      document.body.style.overflow = overflow;
+      document.body.style.paddingRight = paddingRight;
+    };
+  }, [selected]);
 
   return (
     <div>
@@ -45,27 +67,38 @@ export default function SketchPage() {
         ))}
       </div>
 
-      {selected && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={selected.label}
-          className="fixed inset-0 bg-black/75 flex justify-center items-center z-50"
-          onClick={() => setSelected(null)}
-          onKeyDown={(e) => {
-            if (e.key === "Escape") setSelected(null);
-          }}
-        >
-          <div className="relative w-full h-full max-w-4xl max-h-[90vh] m-4">
-            <Image
-              src={selected.src}
-              alt={selected.label}
-              fill
-              className="object-contain"
-            />
-          </div>
-        </div>
-      )}
+      <dialog
+        ref={dialogRef}
+        aria-label={selected?.label ?? "Sketch viewer"}
+        className="fixed inset-0 m-0 h-full max-h-none w-full max-w-none border-0 p-0 bg-black/75 hidden open:flex justify-center items-center z-50 backdrop:bg-transparent"
+        onClick={close}
+        onCancel={(event) => {
+          event.preventDefault();
+          close();
+        }}
+      >
+        {selected && (
+          <>
+            <div className="relative w-full h-full max-w-4xl max-h-[90vh] m-4">
+              <Image
+                src={selected.src}
+                alt={selected.label}
+                fill
+                className="object-contain"
+              />
+            </div>
+            <button
+              type="button"
+              autoFocus
+              aria-label="Close sketch"
+              onClick={close}
+              className="absolute top-5 right-5 px-2 py-1 text-xs text-chalk-soft hover:text-chalk-strong focus-visible:outline-2 focus-visible:outline-chalk focus-visible:outline-offset-2"
+            >
+              esc
+            </button>
+          </>
+        )}
+      </dialog>
     </div>
   );
 }
