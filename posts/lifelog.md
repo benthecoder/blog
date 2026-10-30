@@ -1,6 +1,6 @@
 ---
 title: Lifeloggers
-tags: life
+tags: productivity, writing, work, personal-knowledge-management
 date: Sep 12, 2023
 format: journal
 ---

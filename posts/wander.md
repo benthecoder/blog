@@ -1,7 +1,7 @@
 ---
-title: 'Allow yourself to be lost'
-tags: 'life, advice'
-date: 'Jun 21, 2023'
+title: Allow yourself to be lost
+tags: career, identity, purpose, productivity
+date: Jun 21, 2023
 ---
 
 Breaking Bad actor Bryan Cranston went on a journey of self-discovery when he was 20 on his motorcycle with his brother.

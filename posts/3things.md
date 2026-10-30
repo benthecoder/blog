@@ -1,7 +1,7 @@
 ---
-title: 'You Only Need 3 Things'
-tags: 'life, philosophy'
-date: 'Feb 7, 2024'
+title: You Only Need 3 Things
+tags: philosophy, friendship, self-reflection
+date: Feb 7, 2024
 ---
 
 ![Boys in a Pasture, 1874 by Winslow Homer](/images/boys.jpeg)

@@ -1,7 +1,7 @@
 ---
-title: 'Predict New Medicine with ML'
-tags: 'ML, science'
-date: 'May 24, 2024'
+title: Predict New Medicine with ML
+tags: machine-learning, drug-discovery, bioinformatics, chemistry
+date: May 24, 2024
 ---
 
 There's a Kaggle competition that I'm working on with a grandmaster.

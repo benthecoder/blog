@@ -1,7 +1,7 @@
 ---
-title: 'Film photography 101'
-tags: 'photography, art'
-date: 'May 7, 2023'
+title: Film photography 101
+tags: photography
+date: May 7, 2023
 ---
 
 I like taking [pictures](https://vsco.co/benxneo/gallery).

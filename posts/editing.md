@@ -1,7 +1,7 @@
 ---
-title: 'Importance of Editing'
-tags: 'film, art'
-date: 'Jul 31, 2023'
+title: Importance of Editing
+tags: film, video-editing, cinematography
+date: Jul 31, 2023
 ---
 
 The conversation scene at the start of the movie The Social Network was attention-grabbing.

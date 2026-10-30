@@ -1,8 +1,10 @@
 ---
 title: Hong Kong Day 1
-tags: travel
+tags: travel, transportation, photography, chinese-culture
 date: Apr 20, 2024
 format: journal
+locations:
+  - Hong Kong
 ---
 
 ![rainy HK near temple street](/images/hk1.jpeg)

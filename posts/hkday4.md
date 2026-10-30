@@ -1,8 +1,10 @@
 ---
 title: Hong Kong Day 4
-tags: travel
+tags: travel, reading, color-theory, history
 date: Apr 26, 2024
 format: journal
+locations:
+  - Hong Kong
 ---
 
 ![Tsim Sha Tsui Ferry Pier](/images/hkday4.jpg)

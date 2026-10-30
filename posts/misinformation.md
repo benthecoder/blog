@@ -1,7 +1,7 @@
 ---
-title: 'Misinformation and AI'
-tags: 'AI, tech'
-date: 'Jun 30, 2023'
+title: Misinformation and AI
+tags: ai, social-media, technology, ethics, misinformation
+date: Jun 30, 2023
 ---
 
 Misinformation is eroding people's trust in science.

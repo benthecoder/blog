@@ -1,6 +1,6 @@
 ---
 title: Volleyball
-tags: sports
+tags: volleyball, fitness
 date: Aug 13, 2023
 format: journal
 ---

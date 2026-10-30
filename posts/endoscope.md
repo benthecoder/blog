@@ -1,8 +1,8 @@
 ---
 title: 'Endoscope #3'
-tags: life
+tags: health, christianity, family, reading, mental-health
 date: Jan 19, 2024
-format: book
+format: journal
 ---
 
 ![The Storm on the Sea of Galilee, 1633 - Rembrandt](/images/christboat.jpeg)

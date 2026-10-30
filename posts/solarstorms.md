@@ -1,7 +1,7 @@
 ---
-title: 'Solar Storms'
-tags: 'science'
-date: 'Mar 22, 2024'
+title: Solar Storms
+tags: science, history, space-weather, technology
+date: Mar 22, 2024
 ---
 
 ![A drawing of the aurora observed from Nagoya, Japan, on September 17, 1770](/images/aurora_nagoya.jpeg)

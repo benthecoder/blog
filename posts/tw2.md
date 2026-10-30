@@ -1,8 +1,10 @@
 ---
 title: Taiwan Day 2
-tags: travel
+tags: travel, faith, family, chinese-language
 date: Jun 2, 2024
 format: journal
+locations:
+  - Taipei
 ---
 
 ![Taipei 101](/images/twday2.jpeg)

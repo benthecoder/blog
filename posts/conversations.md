@@ -1,7 +1,7 @@
 ---
-title: '7 Ways to Make a Conversation'
-tags: 'people'
-date: 'Jun 5, 2023'
+title: 7 Ways to Make a Conversation
+tags: communication, relationships
+date: Jun 5, 2023
 ---
 
 A fun [TED talk](https://www.youtube.com/watch?v=F4Zu5ZZAG7I) on how to start conversations with strangers.

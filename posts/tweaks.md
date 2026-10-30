@@ -1,7 +1,7 @@
 ---
-title: 'Tiny Word Tweaks'
-tags: 'writing, advice, talking'
-date: 'Nov 30, 2023'
+title: Tiny Word Tweaks
+tags: communication, relationships, work
+date: Nov 30, 2023
 ---
 
 6 [wording tweaks](https://careercutler.substack.com/p/6-tiny-wording-tweaks-to-level-up) to level up your communication, can by applied to all situations.

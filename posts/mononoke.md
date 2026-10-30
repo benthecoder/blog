@@ -1,7 +1,8 @@
 ---
-title: 'Princess Mononoke'
-tags: 'movies, art'
-date: 'Oct 6, 2023'
+title: Princess Mononoke
+tags: film, nature, philosophy
+date: Oct 6, 2023
+format: journal
 ---
 
 > “You must see with eyes unclouded by hate. See the good in that which is evil, and the evil in that which is good. Pledge yourself to neither side, but vow instead to preserve the balance that exists between the two.”

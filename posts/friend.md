@@ -1,7 +1,7 @@
 ---
-title: 'What is a Friend?'
-tags: 'friends, whatis'
-date: 'May 21, 2023'
+title: What is a Friend?
+tags: friendship, relationships
+date: May 21, 2023
 ---
 
 > I think friendship has 10 increasing levels of strength, and the best friends – true friends – live near the top of this pyramid, around 8-10.

@@ -1,7 +1,8 @@
 ---
-title: 'Git Best Practice'
-tags: 'programming, coding'
-date: 'Nov 13, 2023'
+title: Git Best Practice
+tags: programming, version-control, software-development
+date: Nov 13, 2023
+format: resource
 ---
 
 In my past 2 years of programming with Python and React in various little hackathon projects and side projects like this blog, I've never really worked much with pull requests or creating branches. I've just been pushing to the main branch.

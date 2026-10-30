@@ -1,6 +1,6 @@
 ---
 title: Practical Mental Health Tips
-tags: psychology
+tags: mental-health, psychology, habits, emotional-regulation, health
 date: Oct 15, 2023
 ---
 

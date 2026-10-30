@@ -1,8 +1,7 @@
 ---
 title: I bought a Fujifilm x100s
-tags: photography
+tags: photography, cameras
 date: Mar 7, 2024
-format: journal
 ---
 
 A video on [Fuji X100VI](https://www.youtube.com/watch?v=jNb4hPvLWYQ) popped up on my YT feed one day and that started a week-long rabbit hole down digital film cameras.

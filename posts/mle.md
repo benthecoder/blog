@@ -1,7 +1,7 @@
 ---
-title: 'MoM and MLE'
-tags: 'statistics, math'
-date: 'Oct 9, 2023'
+title: MoM and MLE
+tags: statistics, mathematics, probability
+date: Oct 9, 2023
 ---
 
 It's my last statistics class for my bachelor's degree, and my midterm is tomorrow, these are some resources I found for these concepts.

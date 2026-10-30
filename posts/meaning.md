@@ -1,6 +1,6 @@
 ---
 title: Man's Search For Meaning
-tags: philosophy, life
+tags: philosophy, meaning, mental-health, reading
 date: Jan 31, 2024
 format: book
 ---

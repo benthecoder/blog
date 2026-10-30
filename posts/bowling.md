@@ -1,6 +1,6 @@
 ---
 title: Golf and bowling
-tags: sports
+tags: fitness, golf, bowling
 date: Aug 18, 2023
 format: journal
 ---

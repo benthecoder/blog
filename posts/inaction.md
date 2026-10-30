@@ -1,7 +1,7 @@
 ---
-title: 'Cost of Inaction'
-tags: 'action, life'
-date: 'Jul 16, 2023'
+title: Cost of Inaction
+tags: productivity, habits, personal-growth, goals
+date: Jul 16, 2023
 ---
 
 > Action is expensive, but inaction costs a fortune - [FS](https://fs.blog/brain-food/july-16-2023/)

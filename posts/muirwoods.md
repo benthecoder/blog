@@ -1,8 +1,10 @@
 ---
 title: Muir Woods
-tags: travel
+tags: hiking, nature, travel, friendship
 date: Jul 8, 2023
 format: journal
+locations:
+  - Muir Woods
 ---
 
 I went to [Muir Woods National Monument](https://www.nps.gov/muwo/planyourvisit/hike.htm) today with a bunch of friends.

@@ -1,7 +1,7 @@
 ---
-title: 'Stress is Good'
-tags: 'stress'
-date: 'Aug 10, 2023'
+title: Stress is Good
+tags: mental-health, psychology, resilience
+date: Aug 10, 2023
 ---
 
 There's a [study](https://www.youtube.com/watch?v=iG7L9IIlYpQ) with over 30,000 people people had higher risk of illness and death related to stress only if they thought stress is bad for them.

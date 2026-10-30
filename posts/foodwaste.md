@@ -1,7 +1,7 @@
 ---
-title: 'Food Waste'
-tags: 'climate, science'
-date: 'Jun 7, 2023'
+title: Food Waste
+tags: climate, food, food-waste, policy
+date: Jun 7, 2023
 ---
 
 I worked at the dining center in my school campus remember feeling horrified by how much food was dumped in just a day.

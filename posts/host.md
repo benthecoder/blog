@@ -2,6 +2,7 @@
 title: Meeting my Airbnb Host
 date: May 18, 2023
 format: journal
+tags: community, immigration, relationships, chinese-language
 ---
 
 I came back to my airbnb after walking 30 minutes from a bus stop and saw a car parked out.

@@ -1,6 +1,6 @@
 ---
 title: The Joy of Being Average
-tags: life, personal
+tags: philosophy, career, self-reflection
 date: Feb 26, 2024
 format: journal
 ---

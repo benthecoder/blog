@@ -1,7 +1,7 @@
 ---
-title: 'Plastic is everywhere'
-tags: 'climate, science'
-date: 'Oct 12, 2023'
+title: Plastic is everywhere
+tags: climate, pollution, sustainability, recycling
+date: Oct 12, 2023
 ---
 
 Some statistics on plastic

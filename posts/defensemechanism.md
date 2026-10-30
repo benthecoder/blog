@@ -1,7 +1,7 @@
 ---
-title: 'Defense Mechanisms'
-tags: 'psychology'
-date: 'Jan 13, 2024'
+title: Defense Mechanisms
+tags: psychology, mental-health
+date: Jan 13, 2024
 ---
 
 ![Melancholy, Edgar Degas](/images/melancholy.jpeg)

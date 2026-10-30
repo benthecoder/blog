@@ -1,7 +1,8 @@
 ---
-title: 'Design Books'
-tags: 'reading'
-date: 'Dec 24, 2023'
+title: Design Books
+tags: design, reading, graphic-design, typography
+date: Dec 24, 2023
+format: resource
 ---
 
 [Design books](https://www.stripe.press/recommended/design-books.html) for non-designers, recommended by [Stripe](https://stripe.press/) Design team.

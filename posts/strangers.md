@@ -1,6 +1,6 @@
 ---
 title: Talking to Strangers
-tags: talking
+tags: community, social-skills, communication, friendship
 date: May 19, 2023
 format: journal
 ---

@@ -1,8 +1,10 @@
 ---
 title: Airflow Summit Day 1
-tags: tech, travel
+tags: workflow-orchestration, data-engineering, career, community, travel
 date: Sep 19, 2023
 format: journal
+locations:
+  - Toronto
 ---
 
 ![Airflow summit main stage](/images/airflow-summit.jpeg)

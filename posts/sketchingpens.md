@@ -1,7 +1,7 @@
 ---
-title: 'sketching pens'
-tags: 'art'
-date: 'Jun 25, 2024'
+title: sketching pens
+tags: art, drawing, creativity
+date: Jun 25, 2024
 ---
 
 got distracted by a few sketching videos on youtube today when I should be packing and doing other work

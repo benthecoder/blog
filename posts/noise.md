@@ -1,7 +1,7 @@
 ---
-title: 'Noise vs Music'
-tags: 'music, art'
-date: 'Jun 10, 2023'
+title: Noise vs Music
+tags: music, art, philosophy, creativity
+date: Jun 10, 2023
 ---
 
 > Everything we do is music. - John Cage

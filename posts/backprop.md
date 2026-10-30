@@ -1,7 +1,7 @@
 ---
-title: "what is backprop?"
-tags: 'whatis, AI'
-date: "Apr 29, 2024"
+title: what is backprop?
+tags: machine-learning, programming, mathematics, learning
+date: Apr 29, 2024
 ---
 
 I finally finished Andrej Karpathy's [video on backprop](https://www.youtube.com/watch?v=VMj-3S1tku0) that I started last year.

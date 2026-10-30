@@ -1,7 +1,7 @@
 ---
-title: 'How New Ideas Arise'
-tags: 'ideas, thinking'
-date: 'May 3, 2024'
+title: How New Ideas Arise
+tags: creativity, innovation, science, art
+date: May 3, 2024
 ---
 
 ![The Port of Saint-Tropez, Paul Signac, 1901 - 1902](/images/sainttropez.jpeg)

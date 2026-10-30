@@ -1,7 +1,7 @@
 ---
-title: 'The Four Gospels'
-tags: 'bible'
-date: 'May 8, 2023'
+title: The Four Gospels
+tags: christianity, faith, history, bible
+date: May 8, 2023
 ---
 
 > Luke 1:1–4 (NIV): Many have undertaken to draw up an account of the things that have been fulfilled among us, just as they were handed down to us by those who from the first were eyewitnesses and servants of the word. With this in mind, since I myself have carefully investigated everything from the beginning, I too decided to write an orderly account for you, most excellent Theophilus, so that you may know the certainty of the things you have been taught.

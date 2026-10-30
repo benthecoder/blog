@@ -1,6 +1,6 @@
 ---
 title: How To Feel Good
-tags: psychology, emotions
+tags: mental-health, psychology, habits, meditation
 date: Feb 17, 2024
 format: essay
 ---

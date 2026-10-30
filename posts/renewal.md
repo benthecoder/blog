@@ -1,7 +1,7 @@
 ---
-title: 'Life is Not a Mountain'
-tags: 'life'
-date: 'Mar 4, 2024'
+title: Life is Not a Mountain
+tags: philosophy, psychology, identity
+date: Mar 4, 2024
 ---
 
 ![Snow Storm: Hannibal and his Army Crossing the Alps, J. M. W. Turner, 1812](/images/life_mountain.jpg)

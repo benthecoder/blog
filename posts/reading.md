@@ -1,7 +1,7 @@
 ---
-title: 'How To Read Well'
-tags: 'reading, advice'
-date: 'Jan 15, 2024'
+title: How To Read Well
+tags: reading, creativity, philosophy
+date: Jan 15, 2024
 ---
 
 ![The Bookworm (Spitzweg), Carl Spitzweg](/images/reading.jpg)

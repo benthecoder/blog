@@ -1,7 +1,7 @@
 ---
-title: 'Most Important Traits for AI Research'
-tags: 'AI'
-date: 'Jul 18, 2023'
+title: Most Important Traits for AI Research
+tags: research, learning, communication, career
+date: Jul 18, 2023
 ---
 
 > Feedback is like a gradient, it tells you which direction to go to become a better researcher.

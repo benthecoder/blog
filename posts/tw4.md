@@ -1,8 +1,11 @@
 ---
 title: Taiwan Day 4
-tags: travel, TPE
+tags: travel, family, food, taiwanese-culture, nature
 date: Jun 4, 2024
 format: journal
+locations:
+  - Yilan
+  - Taipei
 ---
 
 ![Raohe Street Night Market](/images/twday4.jpeg)

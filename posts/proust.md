@@ -1,6 +1,6 @@
 ---
 title: How Proust Can Change Your Life
-tags: life, philosophy
+tags: philosophy, reading, relationships, psychology, writing
 date: Jan 7, 2024
 format: book
 ---

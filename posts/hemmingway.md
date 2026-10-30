@@ -1,7 +1,7 @@
 ---
-title: 'Ernest Hemingway'
-tags: 'life, biography'
-date: 'Oct 3, 2023'
+title: Ernest Hemingway
+tags: history, mental-health, writing
+date: Oct 3, 2023
 ---
 
 > “Best of all he loved the fall  

@@ -1,7 +1,7 @@
 ---
-title: 'Small Writing Habits'
-tags: 'writing, advice'
-date: 'Sep 25, 2023'
+title: Small Writing Habits
+tags: writing, creativity, habits
+date: Sep 25, 2023
 ---
 
 I've been writing daily on this blog and it's built into my life right now.

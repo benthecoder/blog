@@ -1,7 +1,7 @@
 ---
-title: 'Music & Emotion'
-tags: 'music, psychology'
-date: 'Jan 26, 2024'
+title: Music & Emotion
+tags: music, psychology, emotional-regulation, science
+date: Jan 26, 2024
 ---
 
 ![Three Musicians, 1921 by Pablo Picasso](/images/musicians.jpg)

@@ -1,6 +1,6 @@
 ---
 title: First KPop Concert
-tags: music
+tags: music, k-pop, community, psychology
 date: Jun 13, 2023
 format: journal
 ---

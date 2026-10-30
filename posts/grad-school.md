@@ -1,6 +1,6 @@
 ---
 title: Grad School
-tags: learning
+tags: education, career, research
 date: Sep 26, 2023
 format: resource
 ---

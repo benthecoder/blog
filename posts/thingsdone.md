@@ -1,7 +1,7 @@
 ---
-title: 'Getting things done'
-tags: 'work, productivity, advice'
-date: 'Jan 14, 2024'
+title: Getting things done
+tags: productivity, work, programming, software-design
+date: Jan 14, 2024
 ---
 
 Some useful tactics to [getting things done](https://dubroy.com/blog/getting-things-done-in-small-increments/) in small increments by Patrick Dubroy.

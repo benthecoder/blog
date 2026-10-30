@@ -1,7 +1,8 @@
 ---
-title: 'Startup Checklist'
-tags: 'startup'
-date: 'Aug 17, 2023'
+title: Startup Checklist
+tags: startups, business, product-management, finance
+date: Aug 17, 2023
+format: resource
 ---
 
 A [checklist](https://twitter.com/lennysan/status/1691918945522204680?s=20) by Rujul Zaparde and Lu Cheng for what a great startup idea needs to hit.

@@ -1,7 +1,7 @@
 ---
-title: 'How To Present like Steve Jobs'
-tags: 'talking, advice'
-date: 'Apr 30, 2023'
+title: How To Present like Steve Jobs
+tags: communication, presentations, rhetoric, storytelling
+date: Apr 30, 2023
 ---
 
 > "iPhone is a revolutionary and magical product that is literally five years ahead of any other mobile phone"

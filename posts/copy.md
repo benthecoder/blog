@@ -1,7 +1,7 @@
 ---
-title: 'How to Copy'
-tags: 'work'
-date: 'Jul 23, 2023'
+title: How to Copy
+tags: creativity, learning, innovation
+date: Jul 23, 2023
 ---
 
 > Originality is the presence of new ideas, not the absence of old ones

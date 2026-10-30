@@ -1,7 +1,7 @@
 ---
-title: 'Learn by Writing'
-tags: 'writing, learning'
-date: 'Sep 11, 2023'
+title: Learn by Writing
+tags: learning, writing, education
+date: Sep 11, 2023
 ---
 
 [Write](https://addyosmani.com/blog/write-learn/) about what you learn.

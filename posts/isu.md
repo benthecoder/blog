@@ -1,6 +1,6 @@
 ---
 title: Graduating
-tags: life
+tags: education, health, immigration, family, self-reflection
 date: Dec 16, 2023
 format: journal
 ---

@@ -1,6 +1,6 @@
 ---
 title: I got 8 teeth extracted today
-tags: life
+tags: health, dental-health, body-image, family
 date: Jan 30, 2024
 format: journal
 ---

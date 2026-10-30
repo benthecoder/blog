@@ -1,7 +1,7 @@
 ---
-title: 'Neuroticism'
-tags: 'psychology, life'
-date: 'May 23, 2024'
+title: Neuroticism
+tags: psychology, mental-health, creativity
+date: May 23, 2024
 ---
 
 ![Pablo Picasso, Garçon à la pipe, 1905](/images/boypipe.jpg)

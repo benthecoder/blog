@@ -1,7 +1,7 @@
 ---
-title: '3 attributes of a good community'
-tags: 'people'
-date: 'Apr 13, 2024'
+title: 3 attributes of a good community
+tags: community, identity, communication, friendship
+date: Apr 13, 2024
 ---
 
 [Minn Kim](https://twitter.com/minney_cat), early-stage, community-builder, O1 Visa advocate for immigrants @ [Plymouth](https://www.plymouthstreet.com/#about) [talks](https://youtu.be/-auYFuWxjgY?si=0EZTFYAvSAHwIzD-&t=1394) about what makes a good community.

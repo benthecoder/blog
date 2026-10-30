@@ -1,7 +1,7 @@
 ---
-title: 'Testing'
-tags: 'statistics, data'
-date: 'Oct 17, 2023'
+title: Testing
+tags: statistics, mathematics, research, data-science
+date: Oct 17, 2023
 ---
 
 My professor was teaching about [hypothesis testing](https://www.wikiwand.com/en/Statistical_hypothesis_testing) in class today.

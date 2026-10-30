@@ -1,8 +1,10 @@
 ---
 title: Shenzhen Day 2
-tags: travel
+tags: travel, food, chinese-culture, technology
 date: Apr 23, 2024
 format: journal
+locations:
+  - Shenzhen
 ---
 
 ![mixC mall](/images/sz2.jpg)

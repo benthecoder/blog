@@ -1,7 +1,7 @@
 ---
-title: 'Relax for the Same Results'
-tags: 'ideas, productivity'
-date: 'Nov 25, 2023'
+title: Relax for the Same Results
+tags: productivity, health, habits, work
+date: Nov 25, 2023
 ---
 
 Derek Sivers [shares](https://sive.rs/relax) how he would go full-on, 100 percent, all-out for his bike rides, trying to beat his 43 minute mark.

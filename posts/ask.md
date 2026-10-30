@@ -1,6 +1,6 @@
 ---
 title: Ask For What You Want
-tags: advice
+tags: networking, community, career, communication
 date: Jan 10, 2024
 format: journal
 ---

@@ -1,6 +1,6 @@
 ---
 title: Useful MacOS Apps
-tags: tech
+tags: macos, productivity, utilities
 date: Oct 21, 2023
 format: resource
 ---

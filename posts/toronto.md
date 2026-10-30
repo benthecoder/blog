@@ -1,8 +1,10 @@
 ---
 title: Flying to Toronto
-tags: travel
+tags: travel, food, friendship
 date: Sep 18, 2023
 format: journal
+locations:
+  - Toronto
 ---
 
 ![The CN Tower](/images/toronto.jpeg)

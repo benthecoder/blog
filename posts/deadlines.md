@@ -1,7 +1,7 @@
 ---
-title: 'Value of Deadlines'
-tags: 'life, advice'
-date: 'May 14, 2024'
+title: Value of Deadlines
+tags: productivity, creativity, writing, communication
+date: May 14, 2024
 ---
 
 ![Vanitas, Still Life with Books and Manuscripts and a Skull, Edwaert Collier, 1663](/images/bookskull.jpeg)

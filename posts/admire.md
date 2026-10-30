@@ -1,6 +1,6 @@
 ---
 title: Some people I admire
-tags: people
+tags: community, creativity, reading, writing, programming
 date: Dec 27, 2023
 format: resource
 ---

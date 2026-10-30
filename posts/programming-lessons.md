@@ -1,7 +1,7 @@
 ---
-title: 'Lessons on Programming'
-tags: 'programming, advice'
-date: 'Jun 12, 2023'
+title: Lessons on Programming
+tags: programming, software-design, productivity
+date: Jun 12, 2023
 ---
 
 Matt Rickard shares his [reflection](https://matt-rickard.com/reflections-on-10-000-hours-of-programming) on 10,000 hours of programming

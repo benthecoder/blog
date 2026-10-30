@@ -1,7 +1,7 @@
 ---
-title: '6 Forces That Fuel Friendship'
-tags: 'friends, people'
-date: 'Dec 20, 2023'
+title: 6 Forces That Fuel Friendship
+tags: friendship, relationships, community, psychology
+date: Dec 20, 2023
 ---
 
 ![Two Men before a Waterfall at Sunset, 1823 by Johan Christian Dahl](/images/friendshipforces.jpeg)

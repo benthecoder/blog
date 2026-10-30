@@ -1,6 +1,6 @@
 ---
 title: Swift Starter Pack
-tags: programming
+tags: swift, programming, ios-development
 date: Dec 30, 2023
 format: resource
 ---

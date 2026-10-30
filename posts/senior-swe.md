@@ -1,7 +1,7 @@
 ---
-title: '6 senior SWE skills'
-tags: 'programming'
-date: 'Oct 27, 2023'
+title: 6 senior SWE skills
+tags: software-design, data-engineering, programming, distributed-systems, career
+date: Oct 27, 2023
 ---
 
 Six [skills](https://levelupsoftwareengineering.substack.com/p/6-skills-required-to-be-a-senior) one should develop to grow into senior+ SWE positions.

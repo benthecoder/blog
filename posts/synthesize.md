@@ -1,7 +1,7 @@
 ---
-title: 'How to Synthesize Books'
-tags: 'reading, learning'
-date: 'Apr 27, 2023'
+title: How to Synthesize Books
+tags: reading, learning, knowledge-management
+date: Apr 27, 2023
 ---
 
 I saw this comment on an [Ask HN](https://news.ycombinator.com/item?id=35728268) question and it made me recall a fun challenge I used to do.

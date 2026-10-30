@@ -1,7 +1,7 @@
 ---
-title: 'Books are Freedom!'
-tags: 'reading'
-date: 'Nov 24, 2023'
+title: Books are Freedom!
+tags: reading, privacy, media-literacy
+date: Nov 24, 2023
 ---
 
 I took a picture of this quote, framed, at Forest Books in Japantown, SF in the summer.

@@ -1,7 +1,8 @@
 ---
-title: 'Dinner with Kevin'
-tags: 'chats, people'
-date: 'May 23, 2023'
+title: Dinner with Kevin
+tags: workflow-orchestration, data-engineering, open-source, career, startups
+date: May 23, 2023
+format: journal
 ---
 
 I had dinner with [Kevin Kho](https://www.linkedin.com/in/kvnkho/) today at [Layang Layang](https://www.yelp.com/biz/layang-layang-milpitas).

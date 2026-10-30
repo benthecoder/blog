@@ -1,7 +1,7 @@
 ---
-title: 'Professional vs personal growth'
-tags: 'work, life'
-date: 'Sep 7, 2023'
+title: Professional vs personal growth
+tags: work, psychology, productivity
+date: Sep 7, 2023
 ---
 
 When I was working with Tesla during the summer, I felt I had to put my personal development on hold, because everyday when I got back from work, I felt mentally depleted.

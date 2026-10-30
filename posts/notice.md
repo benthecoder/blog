@@ -1,7 +1,7 @@
 ---
-title: "If This Isn't Nice, I Don't Know What Is"
-tags: 'life, advice'
-date: 'May 30, 2023'
+title: If This Isn't Nice, I Don't Know What Is
+tags: mindfulness, mental-health, self-reflection
+date: May 30, 2023
 ---
 
 > And I urge you to please notice when you are happy, and exclaim or murmur or think at some point, 'If this isn't nice, I don't know what is. ― Kurt Vonnegut Jr., A Man Without a Country

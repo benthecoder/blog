@@ -1,6 +1,6 @@
 ---
 title: 1 Year of Blogging
-tags: writing
+tags: writing, reading, self-reflection, habits, creativity
 date: Apr 16, 2024
 format: journal
 ---

@@ -1,7 +1,8 @@
 ---
-title: 'Day One'
-tags: 'writing'
-date: 'Apr 16, 2023'
+title: Day One
+tags: writing, programming, web-development
+date: Apr 16, 2023
+format: journal
 ---
 
 Working on this blog was hard, next.js and tailwindcss isn't easy lol.

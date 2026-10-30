@@ -2,6 +2,7 @@
 title: Commonplace Book
 date: Feb 25, 2024
 format: resource
+tags: knowledge-management, reading, writing
 ---
 
 ![A commonplace book from the mid-seventeenth century](/images/commonplace.jpg)

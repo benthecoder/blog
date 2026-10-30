@@ -1,8 +1,7 @@
 ---
 title: Coming back to Tesla
-tags: work
+tags: career, work, self-reflection
 date: May 17, 2023
-format: journal
 ---
 
 I reluctantly returned as an intern at the same team with Tesla this week.

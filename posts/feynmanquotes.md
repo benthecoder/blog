@@ -1,6 +1,6 @@
 ---
 title: Feynman on Purpose
-tags: life, advice
+tags: career, purpose, identity, writing, startups
 date: Jun 9, 2024
 ---
 

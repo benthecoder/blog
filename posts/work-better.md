@@ -1,7 +1,7 @@
 ---
-title: 'How to Work Better'
-tags: 'work, advice'
-date: 'Oct 8, 2023'
+title: How to Work Better
+tags: work, communication, productivity
+date: Oct 8, 2023
 ---
 
 How to [work better](https://alexgraveley.com/archive/how-to-work-better), from a wall at the [Tate Modern London](https://www.tate.org.uk/visit/tate-modern)

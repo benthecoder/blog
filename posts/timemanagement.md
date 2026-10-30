@@ -1,7 +1,7 @@
 ---
-title: '26 Time Management Hacks'
-tags: 'productivity, work, advice'
-date: 'May 21, 2024'
+title: 26 Time Management Hacks
+tags: productivity, habits, work, focus
+date: May 21, 2024
 ---
 
 ![Clock and Telephone, Rufino Tamayo, 1925](/images/clock.jpeg)

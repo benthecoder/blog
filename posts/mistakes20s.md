@@ -1,7 +1,7 @@
 ---
-title: 'Biggest mistakes in your 20s'
-tags: 'life, advice'
-date: 'Jun 12, 2024'
+title: Biggest mistakes in your 20s
+tags: habits, career, money, health, relationships
+date: Jun 12, 2024
 ---
 
 ![Luxe, Calme et Volupté ("Luxury, Calm and Pleasure"), Henri Matisse, 1904](/images/luxe.jpg)

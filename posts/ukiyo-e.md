@@ -1,7 +1,7 @@
 ---
-title: 'Ukiyo-e style'
-tags: 'art, whatis'
-date: 'Oct 26, 2023'
+title: Ukiyo-e style
+tags: art, history, japanese-culture, printmaking
+date: Oct 26, 2023
 ---
 
 ![wave](/images/wave.jpeg)

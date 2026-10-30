@@ -1,7 +1,7 @@
 ---
-title: "Don't Follow Your Dreams"
-tags: 'life, advice'
-date: 'May 20, 2024'
+title: Don't Follow Your Dreams
+tags: career, learning, productivity
+date: May 20, 2024
 ---
 
 Grant Sanderson, aka [3blue1brown](https://www.youtube.com/c/3blue1brown), a mathematician and programmer who makes beautiful animated math videos, talks about what "Follow Your Dreams" misses, and some advice in his [commencement speech](https://www.youtube.com/watch?v=W3I3kAg2J7w) at Harvey Mudd.

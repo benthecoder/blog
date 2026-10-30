@@ -1,7 +1,7 @@
 ---
-title: "Jakob's Law"
-tags: 'design'
-date: 'May 7, 2024'
+title: Jakob's Law
+tags: human-computer-interaction, software-design, psychology
+date: May 7, 2024
 ---
 
 I've been coding this new app with W for the past few days and this idea intrigued me. I've been taking inspirations from other apps to design the look and feel of the app, and I wonder if it's just based on my expectations because I'm a user of those apps, and whether they're transferrable if you're not a user.

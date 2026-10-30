@@ -1,7 +1,7 @@
 ---
-title: 'Learn to Code'
-tags: 'programming, learning'
-date: 'Jan 1, 2024'
+title: Learn to Code
+tags: programming, learning, reading, writing
+date: Jan 1, 2024
 ---
 
 Learning [how to program](http://www.catb.org/~esr/faqs/hacker-howto.html#skills1) is a complex skill.

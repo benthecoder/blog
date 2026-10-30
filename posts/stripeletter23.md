@@ -1,7 +1,8 @@
 ---
-title: 'New Progress in Tech'
-tags: 'tech, climate, energy'
-date: 'Mar 16, 2024'
+title: New Progress in Tech
+tags: climate, energy, robotics, agriculture, ai
+date: Mar 16, 2024
+format: resource
 ---
 
 In [Stripe 2023 Annual Letter](https://assets.ctfassets.net/fzn2n1nzq965/1gMd12owbzJaSe4Y560OEJ/2a1dd409beabd1b4796a907554425b45/Stripe_2023_annual_letter.pdf), they have a section on new progress in technology, outlining four sectors that breed an optimistic future.

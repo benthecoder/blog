@@ -1,7 +1,8 @@
 ---
-title: 'A fable about life'
-tags: 'life, philosophy'
-date: 'Jun 11, 2023'
+title: A fable about life
+tags: christianity, faith, philosophy, meaning
+date: Jun 11, 2023
+format: book
 ---
 
 > There is an old Eastern fable about a traveler who is taken unawares on the steppes by a ferocious wild animal. In order to escape the beast the traveler hides in an empty well, but at the bottom of the well he sees a dragon with its jaws open, ready to devour him. The poor fellow does not dare to climb out because he is afraid of being eaten by the rapacious beast, neither does he dare drop to the bottom of the well for fear of being eaten by the dragon.

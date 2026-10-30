@@ -1,6 +1,6 @@
 ---
 title: Places to Find Art Online
-tags: art
+tags: art, digital-archives
 date: Jan 17, 2024
 format: resource
 ---

@@ -1,7 +1,7 @@
 ---
-title: 'Painful Questions'
-tags: 'life, questions'
-date: 'Nov 1, 2023'
+title: Painful Questions
+tags: psychology, self-reflection
+date: Nov 1, 2023
 ---
 
 [Questions](https://sashachapin.substack.com/p/some-painful-questions-we-ask-ourselves) that can sting, a little bit or a lot, based on our past or current lives.

@@ -1,7 +1,7 @@
 ---
-title: 'Negative Triggers'
-tags: 'psychology, emotions'
-date: 'Jan 24, 2024'
+title: Negative Triggers
+tags: psychology, mental-health, emotional-regulation, mindfulness
+date: Jan 24, 2024
 ---
 
 ![The Scream, 1893 by Edvard Munch](/images/scream.jpg)

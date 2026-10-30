@@ -1,7 +1,7 @@
 ---
-title: 'Playing Freely on the Streets'
-tags: 'friends, life'
-date: 'Dec 11, 2023'
+title: Playing Freely on the Streets
+tags: friendship, community, social-media, psychology
+date: Dec 11, 2023
 ---
 
 When you grew up, did you play freely on the street?

@@ -2,6 +2,7 @@
 title: why SF?
 date: Jun 22, 2024
 format: journal
+tags: immigration, identity, career, community, startups
 ---
 
 i'm flying off to SF with my friend in a week and our families had dinner together

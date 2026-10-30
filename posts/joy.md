@@ -1,7 +1,8 @@
 ---
-title: 'Things That Bring Me Joy'
-tags: 'life'
-date: 'Jan 23, 2024'
+title: Things That Bring Me Joy
+tags: cooking, reading, art, music, nature
+date: Jan 23, 2024
+format: resource
 ---
 
 ![Dance (Matisse), 1910](/images/dance.jpg)

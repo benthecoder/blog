@@ -1,7 +1,7 @@
 ---
-title: 'More Interesting Conversations'
-tags: 'talking, questions, people'
-date: 'Apr 22, 2023'
+title: More Interesting Conversations
+tags: communication, friendship, relationships, psychology
+date: Apr 22, 2023
 ---
 
 > When seated at a table with people you don't know, ask "what are you interested in?" or "what have you been thinking about lately?" instead of "what do you do?" – [Sam Altman](https://blog.samaltman.com/more-interesting-dinner-conversations)

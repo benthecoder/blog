@@ -1,7 +1,7 @@
 ---
-title: 'How Engines work'
-tags: 'science'
-date: 'Sep 6, 2023'
+title: How Engines work
+tags: engineering, energy, climate
+date: Sep 6, 2023
 ---
 
 A great [TED-Ed video](https://www.youtube.com/watch?v=DgzxhDHjzms) on ICE vs EVs.

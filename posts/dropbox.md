@@ -1,6 +1,6 @@
 ---
 title: Dropbox LLM meetup
-tags: SF
+tags: ai, llms, conferences, startups
 date: Jul 17, 2023
 format: journal
 ---

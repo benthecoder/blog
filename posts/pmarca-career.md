@@ -1,7 +1,7 @@
 ---
-title: "Marc Andreessen's Career Advice"
-tags: 'work, life, advice'
-date: 'Apr 1, 2024'
+title: Marc Andreessen's Career Advice
+tags: career, startups, learning, communication, work
+date: Apr 1, 2024
 ---
 
 I'm starting April strong with career advice by Marc Andreessen, cofounder of a16z, VC firm in SV.

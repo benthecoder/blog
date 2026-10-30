@@ -1,6 +1,6 @@
 ---
 title: The Elements Of Style
-tags: writing
+tags: writing, communication, learning
 date: Feb 1, 2024
 format: book
 ---

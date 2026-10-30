@@ -1,6 +1,6 @@
 ---
 title: Intercom on Starting Up
-tags: startup
+tags: startups, product-management, product-design, customer-discovery, marketing
 date: May 16, 2024
 format: book
 ---

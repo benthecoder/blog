@@ -1,7 +1,7 @@
 ---
-title: 'Peerless genius vs Ordinary genius'
-tags: 'notes, science'
-date: 'Jun 9, 2023'
+title: Peerless genius vs Ordinary genius
+tags: science, history, sociology
+date: Jun 9, 2023
 ---
 
 There are [two classes](https://www.youtube.com/watch?v=XsBcdfKfy9o) of geniuses: Peerless and Ordinary.

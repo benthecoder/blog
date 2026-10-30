@@ -1,7 +1,7 @@
 ---
-title: 'Apophenia'
-tags: 'life, psychology'
-date: 'Sep 4, 2023'
+title: Apophenia
+tags: psychology, critical-thinking
+date: Sep 4, 2023
 ---
 
 > Apophenia: A tendency to perceive correlations between unrelated things, because your mind can only deal with tiny sample sizes and assuming things are correlated creates easy/comforting explanations of how the world works.

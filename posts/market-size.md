@@ -1,7 +1,7 @@
 ---
-title: 'Market Size'
-tags: 'AI, startup'
-date: 'Sep 8, 2023'
+title: Market Size
+tags: startups, ai, business, economics
+date: Sep 8, 2023
 ---
 
 > “every person will have an AI assistant/coach/mentor/trainer/advisor/therapist that is infinitely patient, infinitely compassionate, infinitely knowledgeable, and infinitely helpful. The AI assistant will be present through all of life’s opportunities and challenges, maximizing every person’s outcomes.” - [Marc](https://a16z.com/ai-will-save-the-world/)

@@ -1,6 +1,6 @@
 ---
 title: Several Short Sentences on Writing
-tags: writing
+tags: writing, editing, reading, grammar
 date: Mar 21, 2024
 format: book
 ---

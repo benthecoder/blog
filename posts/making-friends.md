@@ -1,6 +1,6 @@
 ---
 title: Friendships in California
-tags: friends
+tags: friendship, relationships, community
 date: Apr 18, 2023
 format: journal
 ---

@@ -1,7 +1,7 @@
 ---
-title: '9 Principles of Better Stories'
-tags: 'ideas'
-date: 'Jan 4, 2024'
+title: 9 Principles of Better Stories
+tags: storytelling, writing, communication
+date: Jan 4, 2024
 ---
 
 Our lives are made up of moments, big and small.

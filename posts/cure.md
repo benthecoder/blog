@@ -1,6 +1,6 @@
 ---
 title: Cure?
-tags: life
+tags: health, family, money, mental-health
 date: Jan 11, 2024
 format: essay
 ---

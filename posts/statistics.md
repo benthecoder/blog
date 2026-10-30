@@ -1,7 +1,7 @@
 ---
-title: 'What all Statisticians Should Know'
-tags: 'statistics'
-date: 'Dec 13, 2023'
+title: What all Statisticians Should Know
+tags: statistics, probability, experimental-design
+date: Dec 13, 2023
 ---
 
 I'm graduating with a Statistics bachelor's degree but felt like I don't really understand anything about statistics yet.

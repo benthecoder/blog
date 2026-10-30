@@ -1,7 +1,7 @@
 ---
-title: 'Geoengineering'
-tags: 'climate, science'
-date: 'Aug 4, 2023'
+title: Geoengineering
+tags: climate, geoengineering, science
+date: Aug 4, 2023
 ---
 
 It's [scary times](https://www.youtube.com/watch?v=dk8pwE3IByg) here on Earth. The North Atlantic Sea Surface temperature is higher than ever.

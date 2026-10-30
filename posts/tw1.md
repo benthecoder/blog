@@ -1,8 +1,10 @@
 ---
 title: Taiwan Day 1
-tags: travel, TPE
+tags: travel, energy, climate, food, family
 date: Jun 1, 2024
 format: journal
+locations:
+  - Taipei
 ---
 
 ![Ningxia night market](/images/twday1.jpeg)

@@ -1,7 +1,7 @@
 ---
-title: "Naval's advice to his younger self"
-tags: 'life, advice'
-date: 'Jun 18, 2024'
+title: Naval's advice to his younger self
+tags: philosophy, relationships, productivity, identity
+date: Jun 18, 2024
 ---
 
 if [Naval](/posts/naval) want to say something to his younger self, this is what he would say:

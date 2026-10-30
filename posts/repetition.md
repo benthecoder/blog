@@ -1,7 +1,7 @@
 ---
-title: 'Habits Control Us'
-tags: 'productivity'
-date: 'Aug 15, 2023'
+title: Habits Control Us
+tags: habits, psychology, behavior-change
+date: Aug 15, 2023
 ---
 
 [Bad habits](https://www.youtube.com/watch?v=Ywec1MbeQDk) have friction.

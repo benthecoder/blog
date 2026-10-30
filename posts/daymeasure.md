@@ -1,7 +1,7 @@
 ---
-title: 'Measuring Your Days'
-tags: 'life'
-date: 'Jun 7, 2024'
+title: Measuring Your Days
+tags: productivity, wellbeing, nature, creativity, relationships
+date: Jun 7, 2024
 ---
 
 ![Vincent van Gogh, Head of a skeleton with a burning cigarette, 1885](/images/skull.jpg)

@@ -1,7 +1,7 @@
 ---
-title: 'Stop saying "Fail"'
-tags: 'life, advice'
-date: 'Oct 2, 2023'
+title: Stop saying "Fail"
+tags: psychology, learning, communication
+date: Oct 2, 2023
 ---
 
 > Success is not final, failure is not fatal: It is the courage to continue that counts. — Winston Churchill

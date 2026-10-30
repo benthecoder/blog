@@ -2,6 +2,7 @@
 title: On exams
 date: May 10, 2023
 format: journal
+tags: education, learning, psychology, self-reflection
 ---
 
 Finished my finals today and thought about dumping some thoughts on exams.

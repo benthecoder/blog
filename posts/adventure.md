@@ -1,6 +1,6 @@
 ---
 title: Every Day is an Adventure
-tags: life
+tags: psychology, self-reflection, habits
 date: May 24, 2023
 format: journal
 ---

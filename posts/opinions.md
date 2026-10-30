@@ -1,7 +1,7 @@
 ---
-title: 'Strong Opinions, Weakly Held'
-tags: 'ideas, thinking'
-date: 'Jan 29, 2024'
+title: Strong Opinions, Weakly Held
+tags: psychology, critical-thinking
+date: Jan 29, 2024
 ---
 
 !["Saint Jerome in His Study" by Albrecht Dürer (1514) ](/images/jerome.jpg)

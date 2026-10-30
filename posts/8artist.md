@@ -1,6 +1,6 @@
 ---
 title: Advice from 8 Artists
-tags: advice, art
+tags: art, creativity, career
 date: Mar 13, 2024
 format: resource
 ---

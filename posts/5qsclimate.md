@@ -1,6 +1,6 @@
 ---
 title: 5 Questions to Ask in Climate
-tags: climate, energy
+tags: climate, energy, climate-science, economics
 date: Apr 9, 2024
 format: book
 ---

@@ -1,7 +1,8 @@
 ---
-title: 'Visualizing 1700 internet bookmarks'
-tags: 'tech, data, programming'
-date: 'Mar 18, 2024'
+title: Visualizing 1700 internet bookmarks
+tags: programming, data-engineering, data-visualization, ai
+date: Mar 18, 2024
+format: journal
 ---
 
 ![my curius links](/images/curius.png)

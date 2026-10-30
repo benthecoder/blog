@@ -1,7 +1,7 @@
 ---
-title: 'Heroku Values'
-tags: 'startup, work'
-date: 'Jan 28, 2024'
+title: Heroku Values
+tags: startups, software-design, product-management, programming, writing
+date: Jan 28, 2024
 ---
 
 ![The Iron Rolling Mill (Modern Cyclopes), Adolph Menzel](/images/ironmill.jpg)

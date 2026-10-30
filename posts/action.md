@@ -1,6 +1,6 @@
 ---
 title: Bias Towards Action
-tags: action, life, advice
+tags: productivity, habits, creativity
 date: Jul 21, 2023
 ---
 

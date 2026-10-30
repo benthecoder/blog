@@ -1,8 +1,10 @@
 ---
 title: Airflow Summit Day 2
-tags: tech, travel
+tags: conferences, travel, data-engineering, networking
 date: Sep 20, 2023
 format: journal
+locations:
+  - Toronto
 ---
 
 ![Kensington Chinatown](/images/chinatown.jpeg)

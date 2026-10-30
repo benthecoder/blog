@@ -1,7 +1,7 @@
 ---
-title: 'How To Do Great Work'
-tags: 'ideas, work'
-date: 'Oct 18, 2023'
+title: How To Do Great Work
+tags: career, work, creativity
+date: Oct 18, 2023
 ---
 
 Paul Graham wrote about how to do [great work](http://www.paulgraham.com/greatwork.html), and he distilled the recipe below in his recent article "[superlinear](http://www.paulgraham.com/superlinear.html)":

@@ -1,7 +1,7 @@
 ---
-title: 'Why Thinking Hard Makes you tired'
-tags: 'neuroscience, science'
-date: 'Nov 17, 2023'
+title: Why Thinking Hard Makes you tired
+tags: neuroscience, psychology, health
+date: Nov 17, 2023
 ---
 
 A [study](https://tinyurl.com/ywklyraz) published in Current Biology found that participants who spent > 6 hours working on a mentally taxing task had higher levels of [glutamate](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8586693/).

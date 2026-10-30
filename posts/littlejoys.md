@@ -1,7 +1,8 @@
 ---
-title: 'Little Joys'
-tags: 'life'
-date: 'Feb 18, 2024'
+title: Little Joys
+tags: wellbeing, nature, philosophy, productivity
+date: Feb 18, 2024
+format: book
 ---
 
 ![Children Playing on the Beach, 1884, Mary Cassatt](/images/littlejoys.jpeg)

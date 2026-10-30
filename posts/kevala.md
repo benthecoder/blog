@@ -1,7 +1,7 @@
 ---
 title: 'Kevala: Grid Intelligence'
-tags: 'climate, energy'
-date: 'May 6, 2024'
+tags: climate, energy, data-engineering, statistics, career
+date: May 6, 2024
 ---
 
 I had a chat with Troy, DS manager @ [Kevala](https://www.kevala.com/).

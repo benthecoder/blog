@@ -1,8 +1,10 @@
 ---
 title: Dim Sum and sneakers
-tags: SF
+tags: food, chinese-cuisine, travel, shopping
 date: May 29, 2023
 format: journal
+locations:
+  - San Francisco
 ---
 
 I woke up today and decided to do two things.

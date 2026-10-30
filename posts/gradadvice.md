@@ -1,7 +1,7 @@
 ---
-title: 'Advice for New College Grads'
-tags: 'advice, career'
-date: 'Dec 17, 2023'
+title: Advice for New College Grads
+tags: career, money, relationships, productivity, communication
+date: Dec 17, 2023
 ---
 
 Some [advice](https://enlightenedcaveman.com/2006/06/25/advice_for_new_college_grads/) for new college grads by Chris from 2006.

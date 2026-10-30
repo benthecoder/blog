@@ -1,7 +1,7 @@
 ---
-title: 'Impact Bias'
-tags: 'psychology'
-date: 'Jul 25, 2023'
+title: Impact Bias
+tags: psychology, health, relationships
+date: Jul 25, 2023
 ---
 
 > Greek philosopher Epictetus: Going lame is an impediment to your leg, but not to your will.

@@ -2,6 +2,7 @@
 title: The Burnout Society
 date: Feb 11, 2024
 format: book
+tags: philosophy, work, mental-health, psychology
 ---
 
 ![A Sunday on La Grande Jatte, Georges Seurat, 1884](/images/la_grande_jatte.jpg)

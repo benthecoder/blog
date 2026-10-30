@@ -1,6 +1,6 @@
 ---
 title: The Almanack of Naval Ravikant
-tags: life, advice
+tags: career, money, entrepreneurship, philosophy
 date: Apr 12, 2024
 format: book
 ---

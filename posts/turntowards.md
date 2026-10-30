@@ -1,7 +1,7 @@
 ---
-title: 'Turn Towards'
-tags: 'people, love, advice'
-date: 'May 4, 2024'
+title: Turn Towards
+tags: relationships, psychology, communication, friendship
+date: May 4, 2024
 ---
 
 ![The Conversation, Matisse, 1908-1912](/images/conversation.jpg)

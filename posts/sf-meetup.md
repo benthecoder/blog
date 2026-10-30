@@ -1,6 +1,6 @@
 ---
 title: First SF Meetup
-tags: SF
+tags: conferences, career, community, data-engineering
 date: Jun 27, 2023
 format: journal
 ---

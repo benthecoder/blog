@@ -1,6 +1,6 @@
 ---
 title: How To Make Millions Before Grandma Dies
-tags: movies, life
+tags: film, family, aging, relationships, chinese-culture
 date: Jun 15, 2024
 format: journal
 ---

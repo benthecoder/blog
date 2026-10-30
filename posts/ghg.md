@@ -1,7 +1,7 @@
 ---
-title: 'Tracking Carbon Emission'
-tags: 'climate, tech'
-date: 'Jan 25, 2024'
+title: Tracking Carbon Emission
+tags: climate, carbon-accounting, sustainability
+date: Jan 25, 2024
 ---
 
 ![Coalbrookdale by Night, 1801, Philip James de Loutherbourg](/images/loutherbourg.jpg)

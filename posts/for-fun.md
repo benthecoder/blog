@@ -1,7 +1,7 @@
 ---
-title: 'Just for Fun'
-tags: 'programming, ideas'
-date: 'Feb 28, 2024'
+title: Just for Fun
+tags: programming, creativity, ai
+date: Feb 28, 2024
 ---
 
 > The programmer, like the poet, works only slightly removed from pure thought-stuff. He builds his castles in the air, from air, creating by exertion of the imagination. Few media of creation are so flexible, so easy to polish and rework, so readily capable of realizing grand conceptual structures.... Yet the program construct, unlike the poet's words, is real in the sense that it moves and works, producing visible outputs separate from the construct itself.

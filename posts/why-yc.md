@@ -1,7 +1,7 @@
 ---
-title: 'Why YC'
-tags: 'startup, advice'
-date: 'Oct 11, 2023'
+title: Why YC
+tags: startups, ai, career, fundraising
+date: Oct 11, 2023
 ---
 
 Founders of these companies:

@@ -1,7 +1,8 @@
 ---
-title: 'Resources for Getting Into Climate'
-tags: 'work, startup, climate'
-date: 'Apr 8, 2024'
+title: Resources for Getting Into Climate
+tags: climate, career, startups, machine-learning
+date: Apr 8, 2024
+format: resource
 ---
 
 ![Edvard Munch, The Sun, 1911](/images/thesun.png)

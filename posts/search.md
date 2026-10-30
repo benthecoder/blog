@@ -1,7 +1,7 @@
 ---
-title: 'semantic search @ elicit'
-tags: 'AI'
-date: 'Jun 24, 2024'
+title: semantic search @ elicit
+tags: information-retrieval, machine-learning, research
+date: Jun 24, 2024
 ---
 
 read this [article](https://blog.elicit.com/semantic-search/) by [elicit](https://elicit.com/) on how they're implementing SOTA semantic search specifically for research papers, bringing us on a journey from string matching and full-text search, to semantic search and agent-based search.

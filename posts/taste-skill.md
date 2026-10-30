@@ -1,7 +1,7 @@
 ---
-title: 'Taste > Skill'
-tags: 'ideas, work, advice'
-date: 'Dec 18, 2023'
+title: Taste > Skill
+tags: design, creativity, learning, startups
+date: Dec 18, 2023
 ---
 
 To do any great work, you need two fundamental assets: [taste and skill](https://refactoring.fm/p/taste-vs-skills).

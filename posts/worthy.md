@@ -1,7 +1,7 @@
 ---
-title: 'Be Worthy of Your Sufferings'
-tags: 'life, philosophy'
-date: 'Jan 20, 2024'
+title: Be Worthy of Your Sufferings
+tags: philosophy, meaning, resilience
+date: Jan 20, 2024
 ---
 
 ![The Raft of the Medusa, Théodore Géricault](/images/medusa-raft.jpg)

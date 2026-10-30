@@ -1,7 +1,7 @@
 ---
-title: 'Cursed Dreams'
-tags: 'movies'
-date: 'Mar 3, 2024'
+title: Cursed Dreams
+tags: identity, career, startups, money, self-reflection
+date: Mar 3, 2024
 ---
 
 ![curseddreams](/images/curseddreams.jpeg)

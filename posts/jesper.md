@@ -1,7 +1,7 @@
 ---
-title: 'Design is Just Engineering'
-tags: 'design'
-date: 'Mar 17, 2024'
+title: Design is Just Engineering
+tags: design, creativity, music, startups
+date: Mar 17, 2024
 ---
 
 ![TP-7](/images/teenageengineering.jpeg)

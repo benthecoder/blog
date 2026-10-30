@@ -1,7 +1,8 @@
 ---
-title: "The World in Seven Colors"
-tags: 'art'
-date: "Apr 28, 2024"
+title: The World in Seven Colors
+tags: color, history, art, culture
+date: Apr 28, 2024
+format: book
 ---
 
 I was flipping through [The World According to Color](https://www.goodreads.com/book/show/57693329-the-world-according-to-color) by [James Fox](https://www.youtube.com/watch?v=wD_CbJOPbnQ) in estlite in Tsim Sha Tsui, HK.

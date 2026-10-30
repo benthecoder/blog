@@ -1,7 +1,7 @@
 ---
-title: 'Happiness Habits'
-tags: 'psychology, life'
-date: 'May 3, 2023'
+title: Happiness Habits
+tags: psychology, mental-health, habits, relationships
+date: May 3, 2023
 ---
 
 > "The more you notice how happy or how grateful you are, the more it grows"

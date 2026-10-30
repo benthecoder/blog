@@ -1,7 +1,7 @@
 ---
-title: 'Sermon on Money'
-tags: 'bible, notes'
-date: 'Aug 6, 2023'
+title: Sermon on Money
+tags: christianity, faith, money, contentment
+date: Aug 6, 2023
 ---
 
 A raw draft of notes I took at church today at Resonate, Fremont.

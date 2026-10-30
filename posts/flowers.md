@@ -1,7 +1,8 @@
 ---
-title: 'Flowers'
-tags: 'art, science'
-date: 'Jun 8, 2024'
+title: Flowers
+tags: nature, science, art, gardening
+date: Jun 8, 2024
+format: resource
 ---
 
 ![Rachel Ruysch, Flowers in a Glass Vase, 1704](/images/flowers.jpg)

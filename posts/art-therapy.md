@@ -1,6 +1,6 @@
 ---
 title: Art as Therapy
-tags: art, psychology
+tags: art, psychology, self-reflection
 date: Dec 10, 2023
 format: book
 ---

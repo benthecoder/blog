@@ -1,7 +1,7 @@
 ---
-title: 'Casino Odds'
-tags: 'facts'
-date: 'Jun 24, 2023'
+title: Casino Odds
+tags: gambling, statistics, probability
+date: Jun 24, 2023
 ---
 
 Some [Casino Odds facts](https://www.youtube.com/watch?v=3kGlk1E_Cnw) from Yuchun Lee, professional blackjack player and former member of the MIT card counting team.

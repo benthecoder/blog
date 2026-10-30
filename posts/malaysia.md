@@ -2,6 +2,7 @@
 title: Why I Hate It Here
 date: Feb 14, 2024
 format: essay
+tags: identity, immigration, family, friendship, community
 ---
 
 ![The Sleep of Reason Produces Monsters by Francisco de Goya](/images/here.jpg)

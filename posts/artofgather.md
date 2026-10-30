@@ -1,6 +1,6 @@
 ---
 title: The Art of Gathering
-tags: people, advice
+tags: community, communication, relationships, events
 date: Apr 10, 2024
 format: book
 ---

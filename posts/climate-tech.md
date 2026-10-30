@@ -1,7 +1,8 @@
 ---
-title: '15 Climate Tech Companies'
-tags: 'climate'
-date: 'Oct 5, 2023'
+title: 15 Climate Tech Companies
+tags: climate, energy, clean-energy, technology
+date: Oct 5, 2023
+format: resource
 ---
 
 These are companies that [MIT Tech Review](https://www.technologyreview.com/2023/10/04/1080528/2023-climate-tech-companies-electric-vehicles-batteries-carbon-removal-energy-storage/) believes has the best shot at making a difference on climate change.

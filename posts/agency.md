@@ -1,7 +1,7 @@
 ---
-title: 'How To Increase Agency (Flowchart)'
-tags: 'life, advice, productivity'
-date: 'May 22, 2024'
+title: How To Increase Agency (Flowchart)
+tags: productivity, psychology
+date: May 22, 2024
 ---
 
 Emmett Shear tweeted that agency is 100% teachable. "It's a mindset but it's also just a set of skills"

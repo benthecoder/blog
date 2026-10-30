@@ -1,7 +1,7 @@
 ---
-title: 'What is dbt?'
-tags: 'tech, whatis'
-date: 'Sep 23, 2023'
+title: What is dbt?
+tags: data-engineering, sql, software-design
+date: Sep 23, 2023
 ---
 
 [dbt](https://www.getdbt.com/) (data build tool) is a CLT that enables data analyst and [engineers](https://www.getdbt.com/data-teams/hiring-data-engineer) to transform data in their [data warehouses](https://docs.getdbt.com/terms/data-warehouse) more effectively.

@@ -1,7 +1,8 @@
 ---
-title: 'Reading Rules'
-tags: 'reading, advice'
-date: 'Sep 10, 2023'
+title: Reading Rules
+tags: reading, learning, philosophy
+date: Sep 10, 2023
+format: resource
 ---
 
 Some [reading rules](https://ryanholiday.net/these-38-reading-rules-changed-my-life) by Ryan Holiday that I like.

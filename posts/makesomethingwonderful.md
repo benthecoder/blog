@@ -1,6 +1,6 @@
 ---
 title: Make Something Wonderful
-tags: biography
+tags: creativity, design, career, entrepreneurship, philosophy
 date: Apr 27, 2024
 format: book
 ---

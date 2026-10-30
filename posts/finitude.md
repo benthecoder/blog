@@ -1,7 +1,7 @@
 ---
-title: '10 Tools for Embracing Finitude'
-tags: 'life, productivity'
-date: 'Feb 22, 2024'
+title: 10 Tools for Embracing Finitude
+tags: time-management, productivity, relationships, habits
+date: Feb 22, 2024
 ---
 
 ![The Ambassadors, Hans Holbein the Younger, 1533](/images/ambassadors.jpg)

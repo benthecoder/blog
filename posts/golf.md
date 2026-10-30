@@ -1,6 +1,6 @@
 ---
 title: Golfing Experience
-tags: sports
+tags: golf
 date: May 15, 2023
 format: journal
 ---

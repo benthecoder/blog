@@ -1,7 +1,7 @@
 ---
-title: "Grice's Four Maxims for Conversations"
-tags: 'ideas, people'
-date: 'May 13, 2024'
+title: Grice's Four Maxims for Conversations
+tags: communication, linguistics, philosophy
+date: May 13, 2024
 ---
 
 ![Thomas Gainsborough, Conversation in a Park (1746)](/images/conversationpark.jpg)

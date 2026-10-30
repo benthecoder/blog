@@ -1,6 +1,6 @@
 ---
 title: Ways of Drawing
-tags: art
+tags: drawing, art, reading, creativity
 date: May 8, 2024
 format: book
 ---

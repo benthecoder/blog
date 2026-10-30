@@ -1,7 +1,7 @@
 ---
-title: 'XY Problem'
-tags: 'work, programming, advice'
-date: 'Aug 22, 2023'
+title: XY Problem
+tags: communication, problem-solving, programming
+date: Aug 22, 2023
 ---
 
 You want to do X, and you think Y is the best way of doing so.

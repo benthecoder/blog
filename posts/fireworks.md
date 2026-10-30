@@ -1,8 +1,10 @@
 ---
 title: Fireworks
-tags: SF
+tags: science, history, community
 date: Jul 4, 2023
 format: journal
+locations:
+  - San Francisco
 ---
 
 Went to pier 39 with a bunch of other friends to watch the [fireworks](https://en.wikipedia.org/wiki/Fireworks?useskin=vector) in SF today.

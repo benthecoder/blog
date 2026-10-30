@@ -1,7 +1,7 @@
 ---
-title: 'Mindset of Successful People'
-tags: 'psychology, advice'
-date: 'Nov 23, 2023'
+title: Mindset of Successful People
+tags: psychology, motivation, personal-growth, productivity, self-efficacy
+date: Nov 23, 2023
 ---
 
 If you feel like everything that happens to you is beyond your control, that there is nothing you can do to set yourself up for success, and not even try, you don't have the mindset of a successful person.

@@ -1,7 +1,7 @@
 ---
-title: 'Three Types of Conversations'
-tags: 'people, talking, advice'
-date: 'May 25, 2024'
+title: Three Types of Conversations
+tags: communication, relationships, psychology
+date: May 25, 2024
 ---
 
 Charles Duhigg shares some insights into how to be come a supercommunicator in episode 133. of Think Fast, Talk Smart: From Good to Great: How Supercommunicators Unlock the Secrets to Connection.

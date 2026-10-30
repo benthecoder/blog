@@ -1,6 +1,6 @@
 ---
 title: 'Art Nouveau: 50 Works Of Art You Should Know'
-tags: art
+tags: art, art-nouveau, design, architecture
 date: May 11, 2024
 format: book
 ---

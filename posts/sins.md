@@ -1,7 +1,7 @@
 ---
-title: '7 Deadly Sins of Programming'
-tags: 'programming'
-date: 'May 12, 2023'
+title: 7 Deadly Sins of Programming
+tags: programming, software-design, software-engineering
+date: May 12, 2023
 ---
 
 > Any fool can write code that a computer can understand. Good programmers write code that humans can understand - Martin Fowler

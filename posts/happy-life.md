@@ -1,6 +1,6 @@
 ---
 title: A Short Guide to a Happy Life
-tags: life
+tags: happiness, meaning, mindfulness, relationships
 date: Jul 1, 2023
 format: book
 ---

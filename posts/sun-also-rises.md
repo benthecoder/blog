@@ -1,6 +1,6 @@
 ---
 title: The Sun Also Rises
-tags: reading
+tags: literature, reading, relationships
 date: Sep 21, 2023
 format: book
 ---

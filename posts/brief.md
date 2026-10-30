@@ -1,7 +1,7 @@
 ---
-title: 'Be Brief, be Positive'
-tags: 'talking, people'
-date: 'May 2, 2023'
+title: Be Brief, be Positive
+tags: communication, relationships
+date: May 2, 2023
 ---
 
 A useful rule when speaking to others is to [be brief, and be positive](https://bakadesuyo.com/2014/01/interesting/).

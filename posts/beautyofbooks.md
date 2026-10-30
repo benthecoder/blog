@@ -1,8 +1,8 @@
 ---
 title: The Beauty of Books
-tags: reading
+tags: reading, literature
 date: Mar 28, 2024
-format: book
+format: resource
 ---
 
 ![The Yellow Books, 1887, Vincent van Gogh](/images/books.jpeg)

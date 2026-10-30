@@ -1,6 +1,6 @@
 ---
 title: 4 Hour Rule for Getting Work Done
-tags: work, productivity, advice
+tags: productivity, work, health, habits
 date: Mar 27, 2024
 ---
 

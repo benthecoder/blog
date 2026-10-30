@@ -1,6 +1,6 @@
 ---
 title: Getting stuck
-tags: work, programming
+tags: programming, work, problem-solving, productivity
 date: Aug 2, 2023
 format: journal
 ---

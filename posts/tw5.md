@@ -1,8 +1,10 @@
 ---
 title: Taiwan Day 5
-tags: travel
+tags: travel, food, family, self-reflection
 date: Jun 5, 2024
 format: journal
+locations:
+  - Taipei
 ---
 
 ![Tatung University](/images/twday5.jpeg)

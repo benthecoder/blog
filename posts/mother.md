@@ -1,7 +1,7 @@
 ---
-title: 'Mother'
-tags: 'life, people'
-date: 'May 12, 2024'
+title: Mother
+tags: family, relationships, psychology, parenting
+date: May 12, 2024
 ---
 
 ![Pierre-Auguste Renoir, Mother and Child, 1881](/images/mother.png)

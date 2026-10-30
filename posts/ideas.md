@@ -1,7 +1,7 @@
 ---
-title: 'How to Get and Evaluate Startup Ideas'
-tags: 'startup, ideas'
-date: 'Aug 30, 2023'
+title: How to Get and Evaluate Startup Ideas
+tags: startups, product-management, business
+date: Aug 30, 2023
 ---
 
 I was chatting with a friend and we talked about validating our startup idea with marketing and outreach before spending time building out the product.

@@ -1,7 +1,7 @@
 ---
 title: '@property in Python'
-tags: 'python, programming'
-date: 'May 16, 2023'
+tags: python, programming, software-design
+date: May 16, 2023
 ---
 
 Learning to write more Pythonic code is one of my goals.

@@ -1,8 +1,10 @@
 ---
 title: Scale AI hackathon in SF
-tags: coding
+tags: hackathons, programming, ai, community, software-development
 date: Jul 15, 2023
 format: journal
+locations:
+  - San Francisco
 ---
 
 I attended my first ever in-person hackathon hosted by Scale AI in SF today at The Pearl.

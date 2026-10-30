@@ -1,7 +1,7 @@
 ---
-title: 'Solving Hard Problems'
-tags: 'work, advice'
-date: 'Aug 7, 2023'
+title: Solving Hard Problems
+tags: software-design, programming, productivity
+date: Aug 7, 2023
 ---
 
 Jonathan Blow shares how his insights on solving hard problems in this [clip](https://www.youtube.com/watch?v=6XAu4EPQRmY).

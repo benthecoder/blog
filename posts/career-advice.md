@@ -1,7 +1,8 @@
 ---
-title: 'Career Advice for 20s'
-tags: 'career'
-date: 'Nov 12, 2023'
+title: Career Advice for 20s
+tags: career, learning, friendship, identity
+date: Nov 12, 2023
+format: resource
 ---
 
 [Molly Graham](https://www.linkedin.com/in/mograham/) shares [10 things](https://mollyg.substack.com/p/early-career-advice?) she wish she knew at the beginning of her 20s.

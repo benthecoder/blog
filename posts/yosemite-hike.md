@@ -1,8 +1,10 @@
 ---
 title: Hiking Yosemite Falls
-tags: hiking
+tags: hiking, nature, travel, friendship, resilience
 date: May 28, 2023
 format: journal
+locations:
+  - Yosemite
 ---
 
 We got up at 6 a.m. sharp, and headed straight for Yosemite Falls.

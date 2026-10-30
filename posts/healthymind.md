@@ -1,7 +1,7 @@
 ---
-title: 'What is a Healthy Mind?'
-tags: 'psychology, whatis'
-date: 'Feb 21, 2024'
+title: What is a Healthy Mind?
+tags: psychology, mental-health, self-compassion
+date: Feb 21, 2024
 ---
 
 ![The Calm Sea, 1869, Gustave Courbet](/images/calmsea.jpeg)

@@ -1,7 +1,7 @@
 ---
-title: 'Designers & Developers'
-tags: 'ideas, AI'
-date: 'Oct 22, 2023'
+title: Designers & Developers
+tags: software-design, ai, collaboration, human-computer-interaction
+date: Oct 22, 2023
 ---
 
 I talked to J today, a UX designer.

@@ -1,6 +1,6 @@
 ---
 title: Convocation
-tags: life
+tags: education, family, health, self-reflection
 date: Dec 15, 2023
 format: journal
 ---

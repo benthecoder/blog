@@ -1,8 +1,7 @@
 ---
 title: AI Engineer Summit
-tags: AI
+tags: ai, conferences, llms
 date: Oct 10, 2023
-format: journal
 ---
 
 Listing down the speakers for the [AI Engineer Summit](https://www.ai.engineer/summit) 2023 for Day [1](https://www.youtube.com/watch?v=veShHxQYPzo) and [2](https://www.youtube.com/watch?v=qw4PrtyvJI0) so I can look them up later.

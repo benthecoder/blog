@@ -1,7 +1,7 @@
 ---
-title: 'Overdose on Boredom'
-tags: 'ideas'
-date: 'Nov 18, 2023'
+title: Overdose on Boredom
+tags: education, creativity, psychology
+date: Nov 18, 2023
 ---
 
 Immersion in boredom is a universal in [biographies of exceptional people](https://www.henrikkarlsson.xyz/p/childhoods).

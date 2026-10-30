@@ -1,6 +1,6 @@
 ---
 title: Claude 2 Hackathon
-tags: coding, AI
+tags: hackathons, ai, programming, software-design, startups
 date: Jul 29, 2023
 format: journal
 ---

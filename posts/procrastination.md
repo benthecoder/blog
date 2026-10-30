@@ -1,7 +1,7 @@
 ---
-title: 'Structured Procrastination'
-tags: 'productivity, work'
-date: 'Oct 19, 2023'
+title: Structured Procrastination
+tags: productivity, habits, psychology, time-management
+date: Oct 19, 2023
 ---
 
 > anyone can do any amount of work, provided it isn't the work he is supposed to be doing at that moment. -- Robert Benchley, in Chips off the Old Benchley, 1949

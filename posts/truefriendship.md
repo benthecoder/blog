@@ -1,6 +1,6 @@
 ---
 title: How to Be a Friend
-tags: friends, philosophy
+tags: friendship, relationships, philosophy
 date: Mar 24, 2024
 format: book
 ---

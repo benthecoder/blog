@@ -1,7 +1,7 @@
 ---
-title: 'DoorDash & Generative AI'
-tags: 'AI, ML'
-date: 'Apr 29, 2023'
+title: DoorDash & Generative AI
+tags: ai, llms, product-management, privacy
+date: Apr 29, 2023
 ---
 
 5 ways [DoorDash](https://doordash.engineering/2023/04/26/doordash-identifies-five-big-areas-for-using-generative-ai/) plans to capitalize on Generative AI.

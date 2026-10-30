@@ -1,6 +1,6 @@
 ---
 title: 'ISU classes: A Review'
-tags: life, learning
+tags: education, statistics, programming, mathematics, career
 date: Dec 14, 2023
 format: essay
 ---

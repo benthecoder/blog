@@ -1,7 +1,7 @@
 ---
-title: 'Every Great Conversation has a Goal'
-tags: 'talking, people'
-date: 'Sep 1, 2023'
+title: Every Great Conversation has a Goal
+tags: communication, relationships, negotiation
+date: Sep 1, 2023
 ---
 
 The most important step of every great conversation is to enter it with a goal in mind.

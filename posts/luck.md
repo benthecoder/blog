@@ -1,7 +1,7 @@
 ---
-title: 'Surface Area of Luck'
-tags: 'work, advice'
-date: 'Sep 3, 2023'
+title: Surface Area of Luck
+tags: community, hackathons, career, social-skills
+date: Sep 3, 2023
 ---
 
 > 'Give yourself a lot of shots to get lucky' is even better advice than it appears on the surface. Luck isn’t an independent variable but increases super-linearly with more surface area—you meet more people, make more connections between new ideas, learn patterns, etc. — Sam Altman

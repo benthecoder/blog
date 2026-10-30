@@ -1,7 +1,8 @@
 ---
-title: 'How To Look At Art'
-tags: 'art'
-date: 'Mar 26, 2024'
+title: How To Look At Art
+tags: art, psychology, creativity, mindfulness
+date: Mar 26, 2024
+format: resource
 ---
 
 ![The Night Watch, Rembrandt van Rijn, 1642](/images/nightwatch.jpg)

@@ -1,7 +1,7 @@
 ---
-title: 'Psyop Yourself'
-tags: 'psychology, advice'
-date: 'Jul 20, 2023'
+title: Psyop Yourself
+tags: psychology, habits, self-reflection
+date: Jul 20, 2023
 ---
 
 The story you tell yourself matters.

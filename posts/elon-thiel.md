@@ -1,7 +1,7 @@
 ---
-title: 'Best Co-founder Duo'
-tags: 'startup, people'
-date: 'Nov 5, 2023'
+title: Best Co-founder Duo
+tags: startups, entrepreneurship, psychology
+date: Nov 5, 2023
 ---
 
 The best co-founder duo is a combination of:

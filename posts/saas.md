@@ -1,7 +1,8 @@
 ---
-title: 'Advice by SaaS Startup Founders'
-tags: 'startup, advice'
-date: 'Oct 13, 2023'
+title: Advice by SaaS Startup Founders
+tags: startups, business, marketing, finance, customer-discovery
+date: Oct 13, 2023
+format: resource
 ---
 
 Some [advice](https://www.justbeepit.com/post/saas-startup-founders-what-advice-would-you-give-your-younger-selves-here-s-what-they-said) that Saas startup founders would give to their younger selves.

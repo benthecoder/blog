@@ -1,6 +1,6 @@
 ---
 title: AI Engineer curriculum
-tags: AI, learning
+tags: ai, machine-learning, deep-learning, python, llms
 date: Jul 7, 2023
 format: resource
 ---

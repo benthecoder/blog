@@ -1,7 +1,7 @@
 ---
-title: 'Startup Advice for Students'
-tags: 'startup'
-date: 'Jun 18, 2023'
+title: Startup Advice for Students
+tags: startups, career, learning, entrepreneurship
+date: Jun 18, 2023
 ---
 
 Some [advice](https://twitter.com/snowmaker/status/1670557756175290369?s=20) by [Jared Friedman](https://twitter.com/snowmaker) on startups for students.

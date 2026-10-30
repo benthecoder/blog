@@ -1,8 +1,8 @@
 ---
 title: I got braces today
-tags: art
+tags: health, mental-health, relationships, reading, identity
 date: Feb 20, 2024
-format: book
+format: journal
 ---
 
 Today is the day where the next ~2 years of my life will be forever changed.

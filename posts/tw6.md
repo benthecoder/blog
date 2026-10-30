@@ -1,8 +1,10 @@
 ---
 title: Taiwan Day 6
-tags: travel
+tags: travel, family, identity, health
 date: Jun 6, 2024
 format: journal
+locations:
+  - Taipei
 ---
 
 ![Taoyuan International Airport Terminal 1](/images/twday6.jpeg)

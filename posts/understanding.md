@@ -1,6 +1,6 @@
 ---
 title: Qualities of Intelligent People
-tags: learning, intelligence, thinking
+tags: learning, critical-thinking, writing
 date: Feb 12, 2024
 ---
 

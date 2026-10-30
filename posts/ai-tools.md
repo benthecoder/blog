@@ -1,6 +1,6 @@
 ---
 title: Useful AI Tools
-tags: AI
+tags: ai, programming, research, art, music
 date: Oct 30, 2023
 format: resource
 ---

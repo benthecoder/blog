@@ -1,8 +1,11 @@
 ---
 title: 'Boston Day 2: Harvard & MIT'
-tags: travel, boston
+tags: travel, history, architecture, reading, science
 date: Nov 21, 2023
-format: journal
+format: resource
+locations:
+  - Cambridge
+  - Boston
 ---
 
 ![mit](/images/mit.jpeg)

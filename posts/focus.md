@@ -1,7 +1,8 @@
 ---
-title: 'Tools for Keeping Focus'
-tags: 'work, productivity'
-date: 'Jan 3, 2024'
+title: Tools for Keeping Focus
+tags: productivity, habits, technology, attention
+date: Jan 3, 2024
+format: resource
 ---
 
 Some things I do to help keep focus on my Macbook and iPhone, inspired by this LessWrong [post](https://www.lesswrong.com/posts/mXgsd5o9uuYaQKHMz/tools-for-keeping-focused) by [Ben Kuhn](https://www.benkuhn.net/)

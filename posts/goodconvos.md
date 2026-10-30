@@ -1,6 +1,6 @@
 ---
 title: good talks & questions
-tags: talking, people
+tags: communication, relationships, psychology
 date: Apr 11, 2024
 format: book
 ---

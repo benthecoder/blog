@@ -1,7 +1,7 @@
 ---
-title: 'On Effort'
-tags: 'work, philosophy'
-date: 'Aug 11, 2023'
+title: On Effort
+tags: habits, learning, problem-solving, persistence
+date: Aug 11, 2023
 ---
 
 > Do what you can. If you can't do something you wanted to do, then you will be forgiven, but if you don't want to try to do anything, you will not be forgiven. - Nikolai Vavilov

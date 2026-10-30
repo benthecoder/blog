@@ -1,7 +1,8 @@
 ---
-title: 'Coding Reminders'
-tags: 'programming'
-date: 'Nov 28, 2023'
+title: Coding Reminders
+tags: programming, productivity, habits, health, software-design
+date: Nov 28, 2023
+format: resource
 ---
 
 Things to [remind ourselves](https://changelog.com/posts/things-we-always-remind-ourselves-while-coding) while coding.

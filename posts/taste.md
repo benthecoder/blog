@@ -1,7 +1,7 @@
 ---
-title: 'What is "taste"'
-tags: 'whatis, ideas, art'
-date: 'Dec 9, 2023'
+title: What is "taste"
+tags: aesthetics, design, creativity, art
+date: Dec 9, 2023
 ---
 
 ![Veronese Room, Gardner Museum](/images/veronese.jpeg)

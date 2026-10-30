@@ -1,7 +1,7 @@
 ---
-title: '3 Ways to Write a Song'
-tags: 'art, writing'
-date: 'Oct 14, 2023'
+title: 3 Ways to Write a Song
+tags: songwriting, music, writing, creativity
+date: Oct 14, 2023
 ---
 
 A few tips that [Jillian](https://jillianhess.substack.com/p/the-beatles-notes-3-ways-to-write) found after researching John and the Beatles.

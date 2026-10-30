@@ -1,7 +1,7 @@
 ---
-title: 'Learned Helplessness'
-tags: 'psychology'
-date: 'Jul 14, 2023'
+title: Learned Helplessness
+tags: psychology, mental-health, health
+date: Jul 14, 2023
 ---
 
 > Grant me the serenity to accept the things I cannot change, the courage to change the things I can, and the wisdom to know the difference.

@@ -1,7 +1,7 @@
 ---
-title: 'Stealing code'
-tags: 'programming'
-date: 'Oct 20, 2023'
+title: Stealing code
+tags: programming, ai, software-design, learning
+date: Oct 20, 2023
 ---
 
 > Good artists borrow, great artists steal. -- Pablo Picasso

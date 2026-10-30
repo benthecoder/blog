@@ -1,7 +1,7 @@
 ---
-title: 'Intro to LLMs'
-tags: 'AI, notes'
-date: 'Nov 27, 2023'
+title: Intro to LLMs
+tags: ai, machine-learning, llms, model-evaluation, fine-tuning
+date: Nov 27, 2023
 ---
 
 [Andrej Karpathy](https://karpathy.ai/), the GOAT who gifted us the [Neural Networks from Zero To Hero](https://www.youtube.com/playlist?list=PLAqhIrjkxbuWI23v9cThsA9GvCAUhRvKZ) videos, released a 1hr [Intro to LLMs](https://www.youtube.com/watch?v=zjkBMFhNj_g) video ([slides](https://drive.google.com/file/d/1pxx_ZI7O-Nwl7ZLNk5hI3WzAsTLwvNU7/view))

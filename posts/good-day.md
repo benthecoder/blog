@@ -1,6 +1,6 @@
 ---
 title: Good Day
-tags: life, advice
+tags: productivity, relationships, creativity
 date: Jul 13, 2023
 ---
 

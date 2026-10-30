@@ -1,6 +1,6 @@
 ---
 title: O, Death!
-tags: life
+tags: death, philosophy, meaning, reading
 date: Oct 4, 2023
 format: book
 ---

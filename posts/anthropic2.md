@@ -1,6 +1,6 @@
 ---
 title: Claude 2 Hackathon Day 2
-tags: coding, AI
+tags: hackathons, startups, community, presentations
 date: Jul 30, 2023
 format: journal
 ---

@@ -1,7 +1,7 @@
 ---
-title: 'How to Be a Good Listener'
-tags: 'people, talking'
-date: 'Mar 8, 2024'
+title: How to Be a Good Listener
+tags: communication, psychology, relationships
+date: Mar 8, 2024
 ---
 
 ![In the Conservatory, Édouard Manet, 1879](/images/listen.jpg)

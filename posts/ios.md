@@ -1,6 +1,6 @@
 ---
 title: Some IOS Apps I Like
-tags: tech
+tags: design, software-design, ios
 date: Dec 26, 2023
 format: resource
 ---

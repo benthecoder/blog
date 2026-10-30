@@ -1,7 +1,7 @@
 ---
-title: 'Ma 間'
-tags: 'philosophy, design'
-date: 'Sep 13, 2023'
+title: Ma 間
+tags: minimalism, philosophy, japanese-culture, design
+date: Sep 13, 2023
 ---
 
 We're all desperate for more in today's world.

@@ -1,6 +1,6 @@
 ---
 title: Second Party experience
-tags: talking
+tags: friendship, social-skills, startups, career, immigration
 date: Jun 23, 2023
 format: journal
 ---

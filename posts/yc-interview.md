@@ -1,7 +1,7 @@
 ---
-title: 'YC interview Experience'
-tags: 'startup, advice'
-date: 'Oct 7, 2023'
+title: YC interview Experience
+tags: startups, interviews, career
+date: Oct 7, 2023
 ---
 
 One of my life goals is to get into [YC](https://www.ycombinator.com/).
