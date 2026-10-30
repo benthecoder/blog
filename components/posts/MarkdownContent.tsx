@@ -89,7 +89,7 @@ const components: Components = {
 
     if (codeNode?.tagName === "code") {
       const className = codeNode.properties?.className?.join(" ") ?? "";
-      const match = /language-(\w+)/.exec(className);
+      const match = /(?:^|\s)language-(\S+)/.exec(className);
       const text = codeNode.children?.[0];
       if (match && text?.type === "text" && typeof text.value === "string") {
         return (
