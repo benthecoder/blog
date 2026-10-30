@@ -137,6 +137,9 @@ export default async function HomePage() {
           <li>
             <Link href="/library">the bookshelf</Link>
           </li>
+          <li>
+            <Link href="/recipes">recipes from my kitchen</Link>
+          </li>
         </ul>
       </article>
 

@@ -1,5 +1,5 @@
 /**
- * Topics on /papers, in display order. A paper note's wiki category is
+ * Topics on /papers, in display order. A paper note's post category is
  * `papers/<slug>`; unknown slugs are listed after these under their own name.
  */
 export const PAPER_TOPICS = [

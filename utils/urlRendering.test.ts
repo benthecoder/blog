@@ -86,9 +86,7 @@ describe("tag decoding", () => {
       await TagPage({ params: Promise.resolve({ slug }) })
     );
     expect(html).toContain(`<h1`);
-    expect(html).toContain(
-      `${slug === "literal%252F" ? "literal%2F" : slug}</h1>`
-    );
+    expect(html).toContain(`#${slug === "literal%252F" ? "literal%2F" : slug}`);
     expect(html).toContain(`<article>${title}</article>`);
     expect(html.match(/<article>/g)).toHaveLength(1);
   });

@@ -1,5 +1,10 @@
-import { Editor } from "../../../edit/[slug]/Editor";
+import { redirect } from "next/navigation";
 
-export default function EditEssayPage() {
-  return <Editor kind="essay" />;
+export default async function RetiredAdminEditor({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  redirect(`/admin/edit/${encodeURIComponent(slug)}`);
 }

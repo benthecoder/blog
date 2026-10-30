@@ -10,6 +10,7 @@ import {
 } from "./markdown";
 import { extractTags } from "./tags";
 import { formatOf, matchesFormat } from "./formats";
+import { parseLocations } from "./travel";
 
 function calculateWordCount(content: string): number {
   const withoutBlockquotes = content
@@ -73,6 +74,7 @@ export const getPostMetadata = cache(function getPostMetadata(
       date: data.date as string,
       tags: extractTags(data as PostFrontmatter),
       format: formatOf(slug, data),
+      locations: parseLocations(data.locations),
       wordcount: calculateWordCount(content),
       slug,
       isDraft: dir.includes("drafts"),

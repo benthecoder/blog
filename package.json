@@ -25,6 +25,7 @@
     "sync": "tsx scripts/syncAnki.ts",
     "draft": "tsx scripts/draft.ts",
     "migrate:formats": "tsx scripts/migrateFormats.ts",
+    "audit:apply": "tsx scripts/applyPostAudit.ts",
     "analyze-vector-db": "tsx scripts/analyzeVectorDB.ts",
     "prepare": "husky",
     "promote-images": "tsx scripts/promoteStrandedImages.ts",

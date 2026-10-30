@@ -5,6 +5,7 @@ export interface PostMetadata {
   date: string;
   tags: string[];
   format?: PostFormat;
+  locations?: string[];
   wordcount: number;
   slug: string;
   prev: PostMetadata | null;
@@ -17,6 +18,7 @@ export interface PostFrontmatter {
   tags?: string[] | string;
   date?: string;
   format?: PostFormat;
+  locations?: string[];
   [key: string]: unknown;
 }
 

@@ -1,12 +1,14 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import type { PostFormat, PostMetadata } from "@/types/post";
 import { countTagFrequency } from "@/utils/content/tags";
-import PostLinkPreview from "@/components/posts/PostLinkPreview";
+import PostList from "@/components/posts/PostList";
+import TagDirectory from "@/components/posts/TagDirectory";
 import Heatmap from "@/components/visualizations/Heatmap";
 import Link from "next/link";
+import { groupTravelPosts, travelPlaceId } from "@/utils/content/travel";
 import {
   POST_FORMATS,
   formatConfig,
@@ -14,8 +16,12 @@ import {
   matchesFormat,
 } from "@/utils/content/formats";
 
-type View = "all" | PostFormat | "tags";
-const VIEWS = [{ id: "all", label: "all" }, ...POST_FORMATS] as const;
+type View = "all" | PostFormat | "travels" | "tags";
+const VIEWS = [
+  { id: "all", label: "all" },
+  ...POST_FORMATS,
+  { id: "travels", label: "travels" },
+] as const;
 
 const byYear = (posts: PostMetadata[]) => {
   const years = new Map<number, PostMetadata[]>();
@@ -42,25 +48,6 @@ const YearLink = ({
   </Link>
 );
 
-// Title, dotted leader, then the day; the year is the section heading.
-function PostRow({ post }: { post: PostMetadata }) {
-  return (
-    <PostLinkPreview
-      slug={post.slug}
-      className="group flex items-baseline gap-3 cursor-crosshair text-sm md:text-base"
-    >
-      <span className="text-accent group-hover:underline">{post.title}</span>
-      <span
-        aria-hidden
-        className="flex-1 min-w-4 border-b border-dotted border-rule dark:border-night-rule translate-y-[-0.3em]"
-      />
-      <span className="text-muted shrink-0 text-xs md:text-sm tabular-nums">
-        {post.date.replace(/,? \d{4}$/, "")}
-      </span>
-    </PostLinkPreview>
-  );
-}
-
 export default function ArchiveClient({
   allPosts,
 }: {
@@ -69,14 +56,13 @@ export default function ArchiveClient({
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const [prefetchTag, setPrefetchTag] = useState<string | null>(null);
 
   // Keep old list/year URLs working; favorites now points to essays.
   const param = searchParams.get("view");
   const view: View =
     param === "favorites"
       ? "essay"
-      : isPostFormat(param) || param === "tags"
+      : isPostFormat(param) || param === "tags" || param === "travels"
         ? param
         : "all";
 
@@ -93,6 +79,7 @@ export default function ArchiveClient({
     ? allPosts.filter((post) => matchesFormat(post, view))
     : allPosts;
   const config = isPostFormat(view) ? formatConfig(view) : undefined;
+  const travelRegions = view === "travels" ? groupTravelPosts(allPosts) : [];
   // All and journal retain year navigation; smaller formats show all years.
   const yearly = view === "all" || view === "journal";
   const years = byYear(posts);
@@ -112,7 +99,12 @@ export default function ArchiveClient({
   return (
     <div>
       <h1 className="sr-only">
-        {config?.heading ?? (view === "tags" ? "tags" : "archive")}
+        {config?.heading ??
+          (view === "tags"
+            ? "tags"
+            : view === "travels"
+              ? "travels"
+              : "archive")}
       </h1>
       <div className="flex items-start justify-between gap-4 mb-8">
         <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
@@ -206,48 +198,70 @@ export default function ArchiveClient({
               showNavigation={false}
             />
           </div>
-          <div className="space-y-1">
-            {yearPosts.map((post) => (
-              <PostRow key={post.slug} post={post} />
-            ))}
-          </div>
+          <PostList posts={yearPosts} showYear={false} />
         </section>
       )}
 
+      {view === "travels" && (
+        <>
+          <div className="mb-6">
+            <h2 className="text-base font-bold text-primary">travels</h2>
+            <p className="mt-1 text-sm text-muted">places i&apos;ve been</p>
+          </div>
+          {travelRegions.length === 0 && (
+            <p className="text-sm text-muted">nothing here yet</p>
+          )}
+          {travelRegions.map((region) => (
+            <section key={region.label} className="mb-10">
+              {region.destinations.length > 1 && (
+                <h2 className="mb-5 text-base font-bold text-primary">
+                  {region.label}
+                </h2>
+              )}
+              <div className="space-y-8">
+                {region.destinations.map(({ label, posts: entries }) => (
+                  <section
+                    key={label}
+                    id={travelPlaceId(label)}
+                    className="scroll-mt-6"
+                  >
+                    {region.destinations.length > 1 ? (
+                      <h3 className="mb-3 text-sm text-accent">
+                        {label}{" "}
+                        <span className="text-muted text-xs">
+                          · {entries.length}
+                        </span>
+                      </h3>
+                    ) : (
+                      <h2 className="mb-3 text-sm text-accent">
+                        {label}{" "}
+                        <span className="text-muted text-xs">
+                          · {entries.length}
+                        </span>
+                      </h2>
+                    )}
+                    <PostList posts={entries} />
+                  </section>
+                ))}
+              </div>
+            </section>
+          ))}
+        </>
+      )}
+
       {!yearly &&
+        view !== "travels" &&
         view !== "tags" &&
         byYear(posts).map(([postYear, yearGroup]) => (
           <section key={postYear} className="mb-10">
             <h2 className="text-sm text-accent mb-3 tabular-nums">
               {postYear}
             </h2>
-            <div className="space-y-1">
-              {yearGroup.map((post) => (
-                <PostRow key={post.slug} post={post} />
-              ))}
-            </div>
+            <PostList posts={yearGroup} showYear={false} />
           </section>
         ))}
 
-      {view === "tags" && (
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-0">
-          {sortedTags.map(([tag, count]) => (
-            <Link
-              href={`/tags/${encodeURIComponent(tag)}`}
-              key={tag}
-              prefetch={prefetchTag === tag ? null : false}
-              onMouseEnter={() => setPrefetchTag(tag)}
-              onFocus={() => setPrefetchTag(tag)}
-              className="border border-rule dark:border-night-raised hover:bg-accent/5 px-2 py-1.5 flex justify-between items-center gap-1.5 transition-colors duration-150"
-            >
-              <span className="text-xs text-accent truncate">{tag}</span>
-              <span className="text-[10px] text-accent/30 font-mono shrink-0">
-                {count}
-              </span>
-            </Link>
-          ))}
-        </div>
-      )}
+      {view === "tags" && <TagDirectory tags={sortedTags} />}
     </div>
   );
 }
