@@ -50,6 +50,7 @@ export function JournalStream({ page }: { page: number }) {
               <MarkdownContent
                 content={getPostContent(post.slug).content}
                 prioritizeFirstImage={false}
+                headingPrefix={`journal-${post.slug}-`}
               />
             </div>
           </article>
