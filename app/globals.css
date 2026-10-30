@@ -839,27 +839,18 @@ body {
   animation: diceSpin 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
-/* Home page artwork: a hard cut, deliberately not a crossfade. The drawings
-   have different footprints inside the square box, so fading one into the
-   next reads as two mismatched objects overlapping. The incoming layer is
-   held invisible until it has decoded, then swapped in on one frame. */
 /* The sketches are scans on white paper. Dropped onto the page as-is they
    read as a white rectangle pasted over the cream — you can see the edges.
    `multiply` lets the page show through anywhere the scan is light, so only
    the graphite survives and the drawing sits *on* the paper. Dark mode
    inverts first, then `screen` drops the (now black) ground instead. */
-.artwork-layer {
-  opacity: 0;
+.sketch-ink {
   mix-blend-mode: multiply;
 }
 
-.dark .artwork-layer {
+.dark .sketch-ink {
   filter: invert(1);
   mix-blend-mode: screen;
-}
-
-.artwork-layer[data-shown="true"] {
-  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

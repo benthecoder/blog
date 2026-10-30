@@ -1,16 +1,72 @@
+import Image from "next/image";
 import Link from "next/link";
 import HomeConnections from "@/components/ui/HomeConnections";
-import ArtworkStrip from "@/components/ui/ArtworkStrip";
+import { SKETCHES } from "@/config/sketches";
 import { getPostMetadata } from "@/utils/content/posts";
+import { getPhotostream } from "@/utils/content/photostream";
+import { photoAlt } from "@/utils/photoCaption";
 
-export const dynamic = "force-static";
+// Photos are live; refresh hourly so new uploads reach the homepage.
+export const revalidate = 3600;
 
 const SELECTED_SLUGS = ["311225", "060425", "281024", "values"];
 const entryLink =
   "text-accent hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent";
 
-export default function HomePage() {
+type Tile = {
+  key: string;
+  href: string;
+  src: string;
+  alt: string;
+  ink?: boolean;
+};
+
+function Gallery({
+  id,
+  title,
+  tiles,
+  more,
+}: {
+  id: string;
+  title: string;
+  tiles: Tile[];
+  more: { href: string; label: string };
+}) {
+  return (
+    <section aria-labelledby={id} className="mt-10">
+      <h2 id={id} className="mb-4 text-base font-bold text-primary">
+        {title}
+      </h2>
+      <ul className="grid grid-cols-3 gap-2">
+        {tiles.map((tile) => (
+          <li key={tile.key}>
+            <Link
+              href={tile.href}
+              className="relative block aspect-square overflow-hidden rounded-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              <Image
+                src={tile.src}
+                alt={tile.alt}
+                fill
+                sizes="(max-width: 640px) 33vw, 200px"
+                className={`object-cover transition-opacity hover:opacity-80${tile.ink ? " sketch-ink" : ""}`}
+              />
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <p className="mt-4 text-sm">
+        <Link href={more.href} className={`${entryLink} text-muted`}>
+          {more.label} →
+        </Link>
+      </p>
+    </section>
+  );
+}
+
+export default async function HomePage() {
   const posts = getPostMetadata();
+  const photos = (await getPhotostream()).slice(0, 3);
   const selected = SELECTED_SLUGS.flatMap((slug) => {
     const post = posts.find((entry) => entry.slug === slug);
     return post ? [post] : [];
@@ -20,7 +76,6 @@ export default function HomePage() {
   return (
     <>
       <h1 className="sr-only">Benedict Neo</h1>
-      <ArtworkStrip />
       <article className="prose text-base leading-relaxed">
         <p>welcome to my corner on the internet.</p>
         <p>
@@ -100,6 +155,31 @@ export default function HomePage() {
             </Link>
           </p>
         </section>
+      )}
+      <Gallery
+        id="sketches"
+        title="sketches"
+        tiles={SKETCHES.slice(0, 3).map((sketch) => ({
+          key: sketch.file,
+          href: "/sketch",
+          src: sketch.src,
+          alt: sketch.label,
+          ink: true,
+        }))}
+        more={{ href: "/sketch", label: "all sketches" }}
+      />
+      {photos.length > 0 && (
+        <Gallery
+          id="photos"
+          title="photos"
+          tiles={photos.map((photo) => ({
+            key: photo.id,
+            href: `/photos/photo/${photo.id}`,
+            src: photo.src,
+            alt: photoAlt(photo),
+          }))}
+          more={{ href: "/photos", label: "all photos" }}
+        />
       )}
       <HomeConnections />
     </>
