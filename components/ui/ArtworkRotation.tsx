@@ -63,7 +63,9 @@ export default function ArtworkRotation() {
   // decode that resolves after it has been superseded is simply ignored.
   const [current, setCurrent] = useState<Layer>({ index: 0, id: 0 });
   const [pending, setPending] = useState<Layer | null>(null);
-  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const paused = hovered || focused;
   const [hidden, setHidden] = useState(false);
   const currentId = useRef(0);
 
@@ -119,8 +121,10 @@ export default function ArtworkRotation() {
           <Link
             href="/sketch"
             className="relative w-full aspect-square max-h-[calc(100vh-320px)] md:max-h-[calc(100vh-280px)] cursor-pointer"
-            onPointerEnter={() => setPaused(true)}
-            onPointerLeave={() => setPaused(false)}
+            onPointerEnter={() => setHovered(true)}
+            onPointerLeave={() => setHovered(false)}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
           >
             {/* No opacity here: any value below 1 opens a stacking context,
                 which isolates the layers' mix-blend-mode so they'd composite
