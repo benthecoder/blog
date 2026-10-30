@@ -74,7 +74,8 @@ function SearchContent() {
 
   const handleSearch = (e?: FormEvent) => {
     if (e) e.preventDefault();
-    performSearch(searchType, selectedChunkType);
+    if (!query.trim()) clearQuery();
+    else performSearch(searchType, selectedChunkType);
   };
 
   const handleSearchTypeChange = (type: SearchType) => {
