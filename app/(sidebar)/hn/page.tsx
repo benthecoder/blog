@@ -72,26 +72,26 @@ export default function HackerNewsPage() {
               </li>
             ))}
           </ol>
-          <div className="mt-8 flex gap-4 text-sm">
-            {currentPage > 0 && (
-              <button
-                onClick={handleBackPage}
-                className="text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
-              >
-                back
-              </button>
-            )}
-            {currentPage < MAX_PAGES - 1 && (
-              <button
-                onClick={handleNextPage}
-                className="text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
-              >
-                next
-              </button>
-            )}
-          </div>
         </div>
       )}
+      <div className="mt-8 flex gap-4 text-sm">
+        {currentPage > 0 && (
+          <button
+            onClick={handleBackPage}
+            className="text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
+          >
+            back
+          </button>
+        )}
+        {currentPage < MAX_PAGES - 1 && (
+          <button
+            onClick={handleNextPage}
+            className="text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
+          >
+            next
+          </button>
+        )}
+      </div>
     </div>
   );
 }
