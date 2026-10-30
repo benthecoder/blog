@@ -13,6 +13,7 @@ import {
   remarkPlugins,
   remarkFirstImage,
   rehypePlugins,
+  createRehypePlugins,
 } from "./markdownConfig";
 
 // Server component: fenced code is highlighted with shiki at render time
@@ -136,10 +137,12 @@ const anchoredComponents: Components = {
 export default function MarkdownContent({
   content,
   anchors = false,
+  headingPrefix = "",
   prioritizeFirstImage = true,
 }: {
   content: string;
   anchors?: boolean;
+  headingPrefix?: string;
   prioritizeFirstImage?: boolean;
 }) {
   return (
@@ -150,7 +153,9 @@ export default function MarkdownContent({
           ? remarkPlugins
           : remarkPlugins.filter((plugin) => plugin !== remarkFirstImage)
       }
-      rehypePlugins={rehypePlugins}
+      rehypePlugins={
+        headingPrefix ? createRehypePlugins(headingPrefix) : rehypePlugins
+      }
       // Keep react-markdown's URL sanitizing, but let our `wikilink:` sentinel
       // scheme through so the `a` handler can resolve it.
       urlTransform={(url) =>
