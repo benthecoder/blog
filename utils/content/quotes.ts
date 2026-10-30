@@ -20,8 +20,7 @@ const EXCERPT = /^(\.\.\.|…|[a-z])|["“”]/;
 const parser = unified().use(remarkParse);
 let quotes: Quote[] | undefined;
 
-// Parsed once per process: every sidebar page renders the footer, so a
-// static build would otherwise reparse all posts per page.
+// Parsed once per process, so homepage revalidations don't reparse every post.
 export function getQuotes(): Quote[] {
   if (quotes) return quotes;
   const seen = new Set<string>();

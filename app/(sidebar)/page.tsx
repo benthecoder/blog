@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import HomeConnections from "@/components/ui/HomeConnections";
+import { QuoteFooter } from "@/components/layout/QuoteFooter";
+import { getQuotes } from "@/utils/content/quotes";
 import { SKETCHES } from "@/config/sketches";
 import { getPostMetadata } from "@/utils/content/posts";
 import { FAVORITE } from "@/utils/content/tags";
@@ -183,6 +185,7 @@ export default async function HomePage() {
         />
       )}
       <HomeConnections />
+      <QuoteFooter quotes={getQuotes()} />
     </>
   );
 }

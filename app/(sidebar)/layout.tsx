@@ -1,7 +1,5 @@
 import type { ReactNode } from "react";
 import { Sidebar } from "@/components/layout/SideBar";
-import { QuoteFooter } from "@/components/layout/QuoteFooter";
-import { getQuotes } from "@/utils/content/quotes";
 
 export default function SidebarLayout({ children }: { children: ReactNode }) {
   return (
@@ -20,7 +18,6 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
         className="focus:outline-none flex-auto text-base lg:mt-0 px-2 lg:px-10 max-w-xl xl:max-w-3xl mx-auto w-full selection:bg-chalk-soft/20 dark:selection:bg-chalk-strong/20 mb-40"
       >
         {children}
-        <QuoteFooter quotes={getQuotes()} />
       </main>
     </div>
   );
