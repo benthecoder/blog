@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { pageMetadata } from "@/utils/pageMetadata";
-import LastPlayed from "./LastPlayed";
 
 export const metadata: Metadata = pageMetadata({
   title: "findme",
@@ -25,10 +24,12 @@ const PROFILES = [
     user: "benthecoder",
     href: "https://github.com/benthecoder",
   },
+  {
+    site: "spotify",
+    user: "profile",
+    href: "https://open.spotify.com/user/31w6rspp4fe5ihwoimt4of5tcwiu",
+  },
 ];
-
-const SPOTIFY_PROFILE =
-  "https://open.spotify.com/user/31w6rspp4fe5ihwoimt4of5tcwiu";
 
 const row = "contents";
 const label = "text-muted";
@@ -64,10 +65,6 @@ const ContactPage = () => (
             </span>
           </div>
         ))}
-        <div className={row}>
-          <span className={label}>spotify</span>
-          <LastPlayed profileUrl={SPOTIFY_PROFILE} />
-        </div>
       </div>
     </article>
   </div>
