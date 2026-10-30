@@ -2,6 +2,7 @@
 
 import { useState, Fragment, type CSSProperties } from "react";
 import Link from "next/link";
+import { hoverTick } from "@/utils/hoverTick";
 import { PostMetadata } from "@/types/post";
 import {
   DayData,
@@ -80,7 +81,11 @@ function DayCell({
     day.posts.length > 0 ? "cursor-pointer hover:ring-1 hover:ring-accent" : ""
   } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-[box-shadow] duration-150`;
   const events = {
-    onMouseEnter: () => day.posts.length > 0 && onHover(day),
+    onMouseEnter: () => {
+      if (day.posts.length === 0) return;
+      hoverTick();
+      onHover(day);
+    },
     onMouseLeave: onLeave,
   };
   const title = day.date.toDateString();
@@ -104,7 +109,7 @@ function DayCell({
 
 function HoverInfo({ day }: { day: DayData }) {
   return (
-    <div className="text-xs">
+    <div className="truncate text-xs">
       <span className="text-muted">
         {day.date.toLocaleDateString("en-US", {
           month: "short",
@@ -220,8 +225,8 @@ const Heatmap = ({
         </div>
       </div>
 
-      {/* Info bar below - compact */}
-      <div className="pt-2">
+      {/* Info bar below: one fixed line, so hovering never shifts the page */}
+      <div className="pt-2 h-6">
         {hoveredDay ? <HoverInfo day={hoveredDay} /> : <Legend />}
       </div>
     </div>

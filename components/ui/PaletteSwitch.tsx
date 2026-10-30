@@ -22,17 +22,12 @@ const PALETTE_LABELS: Record<Palette, string> = {
   rose: "rose",
 };
 
-const PaletteSwitch = ({ compact = false }: { compact?: boolean }) => {
+const PaletteSwitch = () => {
   const mounted = useMounted();
   const { palette, setPalette } = usePalette();
 
   if (!mounted)
-    return (
-      <div
-        className={compact ? "size-8" : "w-6 h-6 md:w-12 md:h-12"}
-        aria-hidden="true"
-      />
-    );
+    return <div className="w-6 h-6 md:w-12 md:h-12" aria-hidden="true" />;
 
   const next = PALETTES[(PALETTES.indexOf(palette) + 1) % PALETTES.length];
 
@@ -42,21 +37,13 @@ const PaletteSwitch = ({ compact = false }: { compact?: boolean }) => {
       data-cuelume-toggle="bloom"
       title={`${PALETTE_LABELS[palette]} → ${PALETTE_LABELS[next]}`}
       aria-label={`Change color palette to ${PALETTE_LABELS[next]}`}
-      className={
-        compact
-          ? "flex size-8 items-center justify-center text-muted hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          : "flex w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
-      }
+      className="flex w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
     >
       {/* SketchIcon masks the black line art with bg-accent, so the
           drawing tints with the palette it switches to. */}
       <SketchIcon
         src="/icons/palette.svg"
-        className={
-          compact
-            ? "size-8"
-            : "w-6 h-6 md:w-12 md:h-12 transition-opacity duration-200 opacity-80 hover:opacity-100"
-        }
+        className="w-6 h-6 md:w-12 md:h-12 transition-opacity duration-200 opacity-80 hover:opacity-100"
       />
     </button>
   );

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { DRAWINGS_URL } from "@/config/constants";
 import styles from "./ArtworkStrip.module.css";
 
@@ -24,6 +24,26 @@ const SKETCHES = [
 
 export default function ArtworkStrip() {
   const strip = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ start: false, end: true });
+
+  useEffect(() => {
+    const element = strip.current;
+    if (!element) return;
+    const update = () => {
+      const end = element.scrollWidth - element.clientWidth;
+      setEdges({
+        start: element.scrollLeft > 1,
+        end: element.scrollLeft < end - 1,
+      });
+    };
+    update();
+    element.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      element.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
 
   useEffect(() => {
     const element = strip.current;
@@ -61,6 +81,8 @@ export default function ArtworkStrip() {
         ref={strip}
         role="region"
         aria-label="Sketchbook"
+        data-start={edges.start}
+        data-end={edges.end}
         className={`${styles.strip} -mx-1 flex gap-2 overflow-x-auto overscroll-x-contain px-1 py-1`}
       >
         {SKETCHES.map(([file, width, height], index) => (

@@ -4,13 +4,12 @@ import type { MouseEvent } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
-import { play } from "cuelume";
+import { hoverTick } from "@/utils/hoverTick";
 import { SketchIcon } from "../ui/SketchIcon";
 import { MapPinned } from "lucide-react";
 
 const links = [
   { path: "/posts", text: "archive", icon: "archive.svg" },
-  { path: "/photos", text: "photos", icon: "gallery.svg" },
   { path: "/random", text: "random", icon: "random.svg" },
   { path: "/contact", text: "findme", icon: "contact.svg" },
   { path: "/hn", text: "hn", icon: "news.svg" },
@@ -19,9 +18,10 @@ const links = [
   { path: "/projects", text: "projects", icon: "code.svg" },
   { path: "/library", text: "library", icon: "library.svg" },
   { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
+  { path: "/photos", text: "photos", icon: "gallery.svg" },
 ];
 
-export function SidebarNav({ home = false }: { home?: boolean }) {
+export function SidebarNav() {
   const pathname = usePathname();
   const [spinning, setSpinning] = useState(false);
   const [prefetchPath, setPrefetchPath] = useState<string | null>(null);
@@ -51,11 +51,7 @@ export function SidebarNav({ home = false }: { home?: boolean }) {
     const rect = e.currentTarget.getBoundingClientRect();
     const isMobile = window.innerWidth < 1024;
 
-    // Not data-cuelume-hover: its 150ms throttle is global, so fast sweeps
-    // drop ticks. Pointer check skips touch, where taps emulate mouseenter.
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-      play("tick");
-    }
+    hoverTick();
 
     if (isMobile) {
       // Position below and centered on mobile
@@ -83,11 +79,7 @@ export function SidebarNav({ home = false }: { home?: boolean }) {
           without that card the two run together. */}
       <nav
         aria-label="Site navigation"
-        className={
-          home
-            ? "grid w-full grid-cols-5 gap-x-1 gap-y-4 lg:fixed lg:w-auto lg:left-6 lg:top-1/2 lg:-translate-y-1/2 lg:flex lg:flex-col lg:gap-2"
-            : "flex flex-row flex-wrap gap-2 justify-center lg:flex-col lg:flex-nowrap lg:fixed lg:top-1/2 lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0"
-        }
+        className="flex flex-row flex-wrap gap-2 justify-center lg:flex-col lg:flex-nowrap lg:fixed lg:top-[max(50%,24.5rem)] lg:-translate-y-1/2 lg:left-10 mb-12 lg:mb-0"
       >
         {links.map(({ path, text, icon }) => (
           <Link
@@ -96,12 +88,12 @@ export function SidebarNav({ home = false }: { home?: boolean }) {
             prefetch={
               path !== "/random" && prefetchPath === path ? null : false
             }
-            className={`inline-flex ${home ? "flex-col items-center gap-1 text-xs text-accent lg:flex-row lg:gap-2" : "w-8 h-8 lg:w-11 lg:h-11"} transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+            className={`inline-flex w-8 h-8 lg:w-9 lg:h-9 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
               pathname === path ? "opacity-50" : "hover:opacity-70"
             }`}
             onMouseEnter={(e) => {
               setPrefetchPath(path);
-              if (!home) handleMouseEnter(e, text);
+              handleMouseEnter(e, text);
             }}
             onFocus={() => setPrefetchPath(path)}
             onMouseLeave={() => setHoveredLink(null)}
@@ -117,8 +109,8 @@ export function SidebarNav({ home = false }: { home?: boolean }) {
             {icon ? (
               <SketchIcon
                 src={`/icons/${icon}`}
-                label={home ? undefined : text}
-                className={`${home ? "size-8 shrink-0" : "w-full h-full"}${path === "/random" && spinning ? " dice-spin" : ""}`}
+                label={text}
+                className={`w-full h-full${path === "/random" && spinning ? " dice-spin" : ""}`}
               />
             ) : (
               <MapPinned
@@ -126,17 +118,6 @@ export function SidebarNav({ home = false }: { home?: boolean }) {
                 className="w-full h-full p-1.5"
                 strokeWidth={1.25}
               />
-            )}
-            {home && (
-              <span>
-                {text === "findme"
-                  ? "contact"
-                  : text === "hn"
-                    ? "news"
-                    : text === "curius"
-                      ? "bookmarks"
-                      : text}
-              </span>
             )}
           </Link>
         ))}

@@ -817,8 +817,10 @@ export default function KnowledgeMap({
             </div>
             {selectedConnections.length > 0 && (
               <div className="mt-3">
-                <p className="text-xs text-muted">closest entries</p>
-                <ul className="mt-1 space-y-1 text-xs">
+                <p className="text-[0.625rem] uppercase tracking-[0.12em] text-muted">
+                  closest entries
+                </p>
+                <ul className="mt-1.5 space-y-1 text-xs">
                   {selectedConnections.map((article) => (
                     <li key={article.id}>
                       <Link
