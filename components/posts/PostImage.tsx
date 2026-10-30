@@ -23,6 +23,7 @@ export default function PostImage({
   const [entered, setEntered] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
   // A cached image can finish loading before React attaches onLoad, which
@@ -37,19 +38,18 @@ export default function PostImage({
   const fadeIn = !meta?.blurDataURL;
 
   const close = useCallback(() => {
+    dialogRef.current?.close();
     setEntered(false);
     setExpanded(false);
     // Send focus back to the plate, or the page loses its place.
-    triggerRef.current?.focus();
+    triggerRef.current?.focus({ preventScroll: true });
   }, []);
 
   useEffect(() => {
     if (!expanded) return;
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") close();
-    };
-    document.addEventListener("keydown", onKeyDown);
+    const dialog = dialogRef.current;
+    dialog?.showModal();
 
     // Lock scroll behind the overlay, preserving the gutter so the page
     // doesn't shift sideways as the scrollbar disappears.
@@ -64,12 +64,12 @@ export default function PostImage({
     });
 
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
+      dialog?.close();
       document.body.style.overflow = overflow;
       document.body.style.paddingRight = paddingRight;
       cancelAnimationFrame(raf);
     };
-  }, [expanded, close]);
+  }, [expanded]);
 
   return (
     <figure className="my-8 not-prose">
@@ -114,12 +114,15 @@ export default function PostImage({
 
       {expanded &&
         createPortal(
-          <div
-            role="dialog"
-            aria-modal="true"
+          <dialog
+            ref={dialogRef}
             aria-label={alt || "Expanded image"}
+            onCancel={(event) => {
+              event.preventDefault();
+              close();
+            }}
             onClick={close}
-            className={`fixed inset-0 z-100 flex flex-col items-center justify-center gap-4 p-6 sm:p-12 cursor-zoom-out bg-night/90 backdrop-blur-sm transition-opacity duration-200 ease-out motion-reduce:transition-none ${
+            className={`fixed inset-0 z-100 m-0 h-full max-h-none w-full max-w-none border-0 flex flex-col items-center justify-center gap-4 p-6 sm:p-12 cursor-zoom-out bg-night/90 backdrop:bg-transparent backdrop-blur-sm transition-opacity duration-200 ease-out motion-reduce:transition-none ${
               entered ? "opacity-100" : "opacity-0"
             }`}
           >
@@ -150,7 +153,7 @@ export default function PostImage({
             >
               esc
             </button>
-          </div>,
+          </dialog>,
           document.body
         )}
     </figure>
