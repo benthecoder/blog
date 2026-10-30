@@ -13,27 +13,35 @@ const shouldSkipCount = () => {
 };
 
 const PostViewTracker = ({ slug }: PostViewTrackerProps) => {
-  const [count, setCount] = useState<number | null>(null);
+  const [views, setViews] = useState<{
+    slug: string;
+    count: number | null;
+  } | null>(null);
 
   useEffect(() => {
     if (!slug) return;
+    const controller = new AbortController();
 
     const track = async () => {
       try {
         if (shouldSkipCount()) {
           const res = await fetch(
-            `/api/views?slug=${encodeURIComponent(slug)}`
+            `/api/views?slug=${encodeURIComponent(slug)}`,
+            { signal: controller.signal }
           );
           const data = await res.json();
-          setCount(data.count ?? null);
+          if (!controller.signal.aborted)
+            setViews({ slug, count: data.count ?? null });
         } else {
           const res = await fetch("/api/views", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ slug }),
+            signal: controller.signal,
           });
           const data = await res.json();
-          setCount(data.count ?? null);
+          if (!controller.signal.aborted)
+            setViews({ slug, count: data.count ?? null });
         }
       } catch {
         // Ignore failures; don't block page render.
@@ -41,12 +49,15 @@ const PostViewTracker = ({ slug }: PostViewTrackerProps) => {
     };
 
     track();
+    return () => controller.abort();
   }, [slug]);
 
-  if (count === null) return null;
+  if (views?.slug !== slug || views.count === null) return null;
 
   // Colour and size come from the metadata row so the whole line stays uniform.
-  return <span className="tabular-nums">{count.toLocaleString()} views</span>;
+  return (
+    <span className="tabular-nums">{views.count.toLocaleString()} views</span>
+  );
 };
 
 export default PostViewTracker;
