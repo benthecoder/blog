@@ -14,6 +14,8 @@ export const ESSAY_SLUGS = new Set([
   "nightbefore",
   "isu",
   "strangers",
+  "alone",
+  "whyus",
 ]);
 
 const removedTags = new Set<string>([
