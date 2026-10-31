@@ -117,24 +117,6 @@ export default async function HomePage() {
   return (
     <>
       <h1 className="sr-only">Benedict Neo</h1>
-      <figure className="mx-auto mb-10 w-4/5 max-w-md">
-        <a
-          href="https://en.wikipedia.org/wiki/The_Great_Wave_off_Kanagawa"
-          className="block transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
-        >
-          <Image
-            src="/images/wave.jpeg"
-            alt="The Great Wave off Kanagawa by Katsushika Hokusai, with boats beneath a breaking wave and Mount Fuji in the distance"
-            width={2000}
-            height={1368}
-            sizes="(max-width: 640px) 80vw, 448px"
-            className="h-auto w-full"
-          />
-        </a>
-        <figcaption className="mt-2 text-xs text-muted">
-          <span lang="ja">神奈川沖浪裏</span> · Katsushika Hokusai
-        </figcaption>
-      </figure>
       <article className="prose mb-10 text-base leading-relaxed">
         <p>welcome to my corner on the internet.</p>
         <p>
