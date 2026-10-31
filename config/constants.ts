@@ -23,12 +23,6 @@ export const MAX_RETRIES = 5;
 export const INITIAL_RETRY_DELAY = 2000;
 export const API_TIMEOUT = 60000;
 
-// Anki flashcards: synced locally via the AnkiConnect add-on (Anki must be
-// running). Override the deck per-run with `pnpm sync-anki "Deck Name"`.
-export const ANKI_CONNECT_URL =
-  process.env.ANKI_CONNECT_URL || "http://127.0.0.1:8765";
-export const ANKI_DECK = process.env.ANKI_DECK || "Default";
-
 // Clustering: Ward linkage on a 10D UMAP of idea-summary vectors, with the
 // cluster count picked by silhouette; the 2D layout is supervised by the
 // clusters so each one occupies a contiguous region

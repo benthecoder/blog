@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 import type { Metadata } from "next";
 import MarkdownContent from "@/components/posts/MarkdownContent";
 import { getPostsByFormat, getPostContent } from "@/utils/content/posts";
@@ -37,23 +38,44 @@ export function JournalStream({ page }: { page: number }) {
   return (
     <>
       <h1 className="sr-only">journal</h1>
-      <div className="space-y-16">
-        {posts.map((post) => (
-          <article key={post.slug}>
-            <p className="text-xs text-muted">{post.date}</p>
-            <h2 className="mt-1 mb-4 text-base font-bold">
-              <Link href={`/posts/${post.slug}`} className={navLink}>
-                {post.title}
-              </Link>
-            </h2>
-            <div className="prose">
-              <MarkdownContent
-                content={getPostContent(post.slug).content}
-                prioritizeFirstImage={false}
-                headingPrefix={`journal-${post.slug}-`}
-              />
-            </div>
-          </article>
+      <div>
+        {posts.map((post, index) => (
+          <Fragment key={post.slug}>
+            {index > 0 && (
+              <div
+                role="separator"
+                aria-label="Next journal entry"
+                className="my-24 text-center text-2xl tracking-[0.6em] text-accent/60"
+              >
+                <span aria-hidden="true">•••</span>
+              </div>
+            )}
+            <article>
+              <header className="mb-8">
+                <time dateTime={post.date} className="text-sm text-muted">
+                  {new Date(post.date).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    timeZone: "UTC",
+                  })}
+                </time>
+                <h2 className="mt-2 text-2xl font-bold">
+                  <Link href={`/posts/${post.slug}`} className={navLink}>
+                    {post.title}
+                  </Link>
+                </h2>
+              </header>
+              <div className="prose">
+                <MarkdownContent
+                  content={getPostContent(post.slug).content}
+                  prioritizeFirstImage={false}
+                  headingPrefix={`journal-${post.slug}-`}
+                />
+              </div>
+            </article>
+          </Fragment>
         ))}
       </div>
       <nav
