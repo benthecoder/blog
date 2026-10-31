@@ -190,14 +190,16 @@ export default function ArchiveClient({
               {yearPosts.length} posts · {words(yearPosts)} words
             </span>
           </div>
-          <div className="mb-5">
-            <Heatmap
-              posts={posts}
-              year={year}
-              month={0}
-              showNavigation={false}
-            />
-          </div>
+          {view === "journal" && (
+            <div className="mb-5">
+              <Heatmap
+                posts={posts}
+                year={year}
+                month={0}
+                showNavigation={false}
+              />
+            </div>
+          )}
           <PostList posts={yearPosts} showYear={false} />
         </section>
       )}
