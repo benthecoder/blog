@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function TagDirectory({ tags }: { tags: [string, number][] }) {
   const [prefetchTag, setPrefetchTag] = useState<string | null>(null);
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-0">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-0">
       {tags.map(([tag, count]) => (
         <Link
           key={tag}
