@@ -15,7 +15,7 @@ export function buildSearchDocuments(): SearchDocument[] {
       .replace(/<!--[\s\S]*?-->/g, "")
       .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
       .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
-      .replace(/<[^>]+>/g, "")
+      .replace(/[<>]/g, "")
       .replace(/^```[^\n]*$/gm, "")
       .replace(/^#{1,6}\s+|^>\s?/gm, "")
       .replace(/`/g, "")
