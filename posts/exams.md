@@ -1,7 +1,7 @@
 ---
 title: On exams
 date: May 10, 2023
-format: journal
+format: essay
 tags: education, learning, psychology, self-reflection
 ---
 

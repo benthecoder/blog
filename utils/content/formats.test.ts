@@ -37,11 +37,13 @@ describe("format migration", () => {
   it("migrates the supplied essays, overriding legacy book/journal tags", () => {
     expect([...ESSAY_SLUGS].sort()).toEqual([
       "2023",
+      "240224",
       "281024",
       "311224",
       "311225",
       "alone",
       "curseddreams",
+      "exams",
       "isu",
       "nightbefore",
       "strangers",
