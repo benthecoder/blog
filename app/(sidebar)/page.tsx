@@ -117,7 +117,7 @@ export default async function HomePage() {
   return (
     <>
       <h1 className="sr-only">Benedict Neo</h1>
-      <article className="prose text-base leading-relaxed">
+      <article className="prose mb-10 text-base leading-relaxed">
         <p>welcome to my corner on the internet.</p>
         <p>
           i&apos;m benedict, <Link href="/about">born</Link> in Kuala Lumpur,
@@ -135,14 +135,10 @@ export default async function HomePage() {
             <Link href="/library">the bookshelf</Link>
           </li>
           <li>
-            <Link href="/recipes">recipes from my kitchen</Link>
+            <Link href="/recipes">recipes</Link>
           </li>
         </ul>
       </article>
-
-      <div className="my-8 text-center text-accent" aria-hidden="true">
-        * * *
-      </div>
 
       <PostSection
         id="writings"

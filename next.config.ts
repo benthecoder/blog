@@ -47,6 +47,7 @@ const nextConfig: NextConfig = {
     "/api/**": ["app/og/*.jpg"],
   },
   redirects: async () => [
+    { source: "/wave", destination: "/", permanent: true },
     { source: "/search", destination: "/posts", permanent: true },
     { source: "/gallery", destination: "/photos", permanent: true },
     { source: "/photos/trips", destination: "/photos/places", permanent: true },
