@@ -132,7 +132,7 @@ export default async function HomePage() {
           />
         </a>
         <figcaption className="mt-2 text-xs text-muted">
-          <span lang="ja">神奈川沖浪裏</span> · hokusai
+          <span lang="ja">神奈川沖浪裏</span> · Katsushika Hokusai
         </figcaption>
       </figure>
       <article className="prose mb-10 text-base leading-relaxed">
