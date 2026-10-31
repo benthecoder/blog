@@ -120,8 +120,8 @@ export default async function HomePage() {
       <article className="prose mb-10 text-base leading-relaxed">
         <p>welcome to my corner on the internet.</p>
         <p>
-          i&apos;m benedict, <Link href="/about">born</Link> in Kuala Lumpur,
-          Malaysia.
+          i&apos;m benedict, born and <Link href="/about">raised</Link> in Kuala
+          Lumpur, Malaysia.
         </p>
         <p>
           see what i&apos;m up to <Link href="/now">now</Link>.
