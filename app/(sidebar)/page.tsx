@@ -140,9 +140,24 @@ export default async function HomePage() {
         </ul>
       </article>
 
-      <div className="my-8 text-center text-accent" aria-hidden="true">
-        * * *
-      </div>
+      <figure className="my-10">
+        <a
+          href="https://en.wikipedia.org/wiki/The_Great_Wave_off_Kanagawa"
+          className="block transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+        >
+          <Image
+            src="/images/wave.jpeg"
+            alt="The Great Wave off Kanagawa by Katsushika Hokusai, with boats beneath a breaking wave and Mount Fuji in the distance"
+            width={2000}
+            height={1368}
+            sizes="(max-width: 768px) 100vw, 688px"
+            className="h-auto w-full"
+          />
+        </a>
+        <figcaption className="mt-2 text-xs text-muted">
+          the great wave off kanagawa · hokusai ↗
+        </figcaption>
+      </figure>
 
       <PostSection
         id="writings"
