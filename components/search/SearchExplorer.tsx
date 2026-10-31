@@ -39,6 +39,7 @@ export default function SearchExplorer({
   const remote = useLatestSearch();
   const { execute, cancel } = remote;
   const listRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const previewRef = useRef<HTMLElement>(null);
   const router = useRouter();
   const id = useId();
@@ -156,14 +157,19 @@ export default function SearchExplorer({
   const error = local ? indexError : remote.error;
 
   return (
-    <div className="min-w-0 text-primary">
+    <div
+      data-search-page={modal ? undefined : ""}
+      className="min-w-0 text-primary"
+    >
       {!modal && <h1 className="sr-only">search</h1>}
       <div className="flex items-center gap-3 border border-line bg-surface px-4 focus-within:border-accent">
         <input
+          ref={inputRef}
           // Focus is intentional for the user-invoked search dialog.
           autoFocus={modal}
           maxLength={500}
-          type="search"
+          type="text"
+          inputMode="search"
           role="combobox"
           aria-label="Search posts"
           aria-autocomplete="list"
@@ -179,8 +185,32 @@ export default function SearchExplorer({
           }}
           onKeyDown={onKeyDown}
           placeholder="search anything…"
-          className="w-full min-w-0 bg-transparent py-4 text-xl outline-hidden placeholder:text-muted"
+          className="w-full min-w-0 bg-transparent py-3 text-base md:text-lg outline-hidden placeholder:text-muted"
         />
+        {query && (
+          <button
+            type="button"
+            aria-label="Clear search"
+            onClick={() => {
+              cancel();
+              setQuery("");
+              setActive(0);
+              inputRef.current?.focus();
+            }}
+            className="shrink-0 p-2 text-muted hover:text-accent focus-visible:outline-2 focus-visible:outline-accent"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="h-4 w-4"
+            >
+              <path d="m6 6 12 12M6 18 18 6" />
+            </svg>
+          </button>
+        )}
         {modal && (
           <button
             onClick={onNavigate}
