@@ -2,7 +2,7 @@
 title: The Night Before
 tags: health, mental-health, christianity, family, friendship
 date: Feb 29, 2024
-format: journal
+format: essay
 ---
 
 ![The Voyage of Life: Childhood, 1842, Thomas Cole](/images/childhood.jpeg)

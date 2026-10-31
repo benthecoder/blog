@@ -2,7 +2,7 @@
 title: Talking to Strangers
 tags: community, social-skills, communication, friendship
 date: May 19, 2023
-format: journal
+format: essay
 ---
 
 The friends I made last summer aren't back at Tesla yet, so it's a weird feeling being back again but not having them around.

@@ -40,6 +40,10 @@ describe("format migration", () => {
       "281024",
       "311224",
       "311225",
+      "curseddreams",
+      "isu",
+      "nightbefore",
+      "strangers",
     ]);
     const result = migrateFormat("311224", {
       tags: "journal, book, life, ✰",

@@ -5,7 +5,16 @@ import { parseTags } from "./tags";
 // Explicit editorial picks: original, sustained reflections, not length or topic.
 // Keep this migration list aligned with Ben's selected essays; never infer an
 // essay from a favorite tag, a summary, or word count alone.
-export const ESSAY_SLUGS = new Set(["311225", "281024", "2023", "311224"]);
+export const ESSAY_SLUGS = new Set([
+  "311225",
+  "281024",
+  "2023",
+  "311224",
+  "curseddreams",
+  "nightbefore",
+  "isu",
+  "strangers",
+]);
 
 const removedTags = new Set<string>([
   ...POST_FORMATS.flatMap(({ legacyTags }) => [...legacyTags]),
