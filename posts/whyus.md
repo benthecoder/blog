@@ -1,7 +1,7 @@
 ---
 title: why SF?
 date: Jun 22, 2024
-format: journal
+format: essay
 tags: immigration, identity, career, community, startups
 ---
 

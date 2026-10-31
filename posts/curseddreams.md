@@ -2,6 +2,7 @@
 title: Cursed Dreams
 tags: identity, career, startups, money, self-reflection
 date: Mar 3, 2024
+format: essay
 ---
 
 ![curseddreams](/images/curseddreams.jpeg)
