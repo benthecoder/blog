@@ -12,26 +12,18 @@ import {
   extractKeywords,
   getSnippet,
   highlightText,
-} from "@/app/(sidebar)/search/searchHelpers";
-import SearchFilters from "@/app/(sidebar)/search/SearchFilters";
+} from "@/components/search/searchHelpers";
+import SearchFilters from "@/components/search/SearchFilters";
 import { textFragment } from "@/utils/searchTextFragment";
 
 export default function SearchExplorer({
-  initialQuery = "",
-  initialType = "keyword",
-  initialChunk = "",
-  modal = false,
   onNavigate,
 }: {
-  initialQuery?: string;
-  initialType?: SearchType;
-  initialChunk?: ChunkType | "";
-  modal?: boolean;
-  onNavigate?: () => void;
+  onNavigate: () => void;
 }) {
-  const [query, setQuery] = useState(initialQuery.slice(0, 500));
-  const [searchType, setSearchType] = useState<SearchType>(initialType);
-  const [chunkType, setChunkType] = useState<ChunkType | "">(initialChunk);
+  const [query, setQuery] = useState("");
+  const [searchType, setSearchType] = useState<SearchType>("keyword");
+  const [chunkType, setChunkType] = useState<ChunkType | "">("");
   const [engine, setEngine] = useState<LocalSearch | null>(null);
   const [indexError, setIndexError] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -64,17 +56,6 @@ export default function SearchExplorer({
   }, [retry]);
 
   useEffect(() => {
-    setQuery(initialQuery.slice(0, 500));
-    setActive(0);
-  }, [initialQuery]);
-
-  useEffect(() => {
-    setSearchType(initialType);
-    setChunkType(initialChunk);
-    setActive(0);
-  }, [initialType, initialChunk]);
-
-  useEffect(() => {
     cancel();
     if (local || !query.trim()) return;
     const timer = setTimeout(() => {
@@ -85,20 +66,6 @@ export default function SearchExplorer({
       cancel();
     };
   }, [query, searchType, chunkType, local, execute, cancel]);
-
-  useEffect(() => {
-    if (modal) return;
-    const params = new URLSearchParams();
-    if (query.trim()) params.set("q", query);
-    if (searchType !== "keyword") params.set("type", searchType);
-    if (chunkType) params.set("chunkType", chunkType);
-    const suffix = params.toString();
-    window.history.replaceState(
-      null,
-      "",
-      `/search${suffix ? `?${suffix}` : ""}`
-    );
-  }, [query, searchType, chunkType, modal]);
 
   const results = useMemo(() => {
     const found = local ? (engine?.(query) ?? []) : remote.results;
@@ -130,7 +97,7 @@ export default function SearchExplorer({
   };
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.nativeEvent.isComposing) return;
-    if (event.key === "Escape" && modal) {
+    if (event.key === "Escape") {
       event.preventDefault();
       event.stopPropagation();
       onNavigate?.();
@@ -157,16 +124,12 @@ export default function SearchExplorer({
   const error = local ? indexError : remote.error;
 
   return (
-    <div
-      data-search-page={modal ? undefined : ""}
-      className="min-w-0 text-primary"
-    >
-      {!modal && <h1 className="sr-only">search</h1>}
+    <div className="min-w-0 text-primary">
       <div className="flex items-center gap-3 border border-line bg-surface px-4 focus-within:border-accent">
         <input
           ref={inputRef}
           // Focus is intentional for the user-invoked search dialog.
-          autoFocus={modal}
+          autoFocus
           maxLength={500}
           type="text"
           inputMode="search"
@@ -211,15 +174,13 @@ export default function SearchExplorer({
             </svg>
           </button>
         )}
-        {modal && (
-          <button
-            onClick={onNavigate}
-            aria-label="Close search"
-            className="text-xs text-muted hover:text-accent p-2"
-          >
-            esc
-          </button>
-        )}
+        <button
+          onClick={onNavigate}
+          aria-label="Close search"
+          className="text-xs text-muted hover:text-accent p-2"
+        >
+          esc
+        </button>
       </div>
       <div className="flex items-center justify-between gap-3 py-3 text-xs text-muted">
         <span role="status" aria-live="polite">
@@ -268,9 +229,7 @@ export default function SearchExplorer({
           </button>
         </div>
       ) : results.length > 0 ? (
-        <div
-          className={`grid min-w-0 border border-line bg-surface md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.65fr)] ${modal ? "h-[60vh]" : "h-[65vh] min-h-80"}`}
-        >
+        <div className="grid h-[60vh] min-w-0 border border-line bg-surface md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.65fr)]">
           <div
             ref={listRef}
             onKeyDown={onKeyDown}
@@ -354,7 +313,7 @@ export default function SearchExplorer({
         </p>
       ) : null}
       <p className="mt-3 text-[10px] text-muted">
-        ↑↓ navigate · enter to open{modal ? " · esc to close" : ""}
+        ↑↓ navigate · enter to open · esc to close
       </p>
     </div>
   );

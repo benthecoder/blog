@@ -41,6 +41,7 @@ module.exports = {
     "/apple-icon.png",
     "/icon.ico",
     "/llms.txt",
+    "/search-index.json",
     // Posts are in the hand-built /posts-sitemap.xml (real lastmod). The
     // /posts archive page itself stays here.
     "/posts/*",

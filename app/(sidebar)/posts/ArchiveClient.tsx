@@ -123,8 +123,9 @@ export default function ArchiveClient({
             </button>
           ))}
         </div>
-        <Link
-          href="/search"
+        <button
+          type="button"
+          onClick={() => document.dispatchEvent(new Event("openSearch"))}
           className="shrink-0 mt-1 text-accent/35 hover:text-accent/70 transition-[color] duration-150"
           aria-label="search"
         >
@@ -140,7 +141,7 @@ export default function ArchiveClient({
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
-        </Link>
+        </button>
       </div>
 
       {view === "all" && (

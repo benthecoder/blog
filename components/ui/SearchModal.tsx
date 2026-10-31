@@ -80,7 +80,7 @@ export default function SearchModal() {
         className="relative mx-3 w-full min-w-0 max-w-5xl text-primary"
         onClick={(event) => event.stopPropagation()}
       >
-        {open && <SearchExplorer modal onNavigate={() => setOpen(false)} />}
+        {open && <SearchExplorer onNavigate={() => setOpen(false)} />}
       </div>
     </dialog>
   );

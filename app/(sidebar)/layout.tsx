@@ -15,7 +15,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
       <main
         id="content"
         tabIndex={-1}
-        className="focus:outline-none flex-auto text-base lg:mt-0 px-2 lg:px-10 max-w-xl xl:max-w-3xl has-[[data-search-page]]:max-w-6xl lg:has-[[data-search-page]]:ml-36 mx-auto w-full selection:bg-chalk-soft/20 dark:selection:bg-chalk-strong/20 mb-40"
+        className="focus:outline-none flex-auto text-base lg:mt-0 px-2 lg:px-10 max-w-xl xl:max-w-3xl mx-auto w-full selection:bg-chalk-soft/20 dark:selection:bg-chalk-strong/20 mb-40"
       >
         {children}
       </main>
