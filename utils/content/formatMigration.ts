@@ -2,22 +2,10 @@ import type { PostFormat } from "@/types/post";
 import { formatOf, isPostFormat, POST_FORMATS } from "./formats";
 import { parseTags } from "./tags";
 
-// Ben's starting list; undecided pieces and summaries are deliberately omitted.
-export const ESSAY_SLUGS = new Set([
-  "22",
-  "311225",
-  "060425",
-  "310324",
-  "feelgood",
-  "isuclasses",
-  "2023",
-  "backhome",
-  "malaysia",
-  "cure",
-  "280724",
-  "281024",
-  "values",
-]);
+// Explicit editorial picks: original, sustained reflections, not length or topic.
+// Keep this migration list aligned with Ben's selected essays; never infer an
+// essay from a favorite tag, a summary, or word count alone.
+export const ESSAY_SLUGS = new Set(["311225", "281024", "2023", "311224"]);
 
 const removedTags = new Set<string>([
   ...POST_FORMATS.flatMap(({ legacyTags }) => [...legacyTags]),
