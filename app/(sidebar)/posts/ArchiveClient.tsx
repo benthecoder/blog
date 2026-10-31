@@ -123,47 +123,46 @@ export default function ArchiveClient({
             </button>
           ))}
         </div>
-        <button
-          type="button"
-          onClick={() => document.dispatchEvent(new Event("openSearch"))}
-          className="shrink-0 mt-1 text-accent/35 hover:text-accent/70 transition-[color] duration-150"
-          aria-label="search"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="w-3.5 h-3.5"
+        <div className="flex shrink-0 items-center gap-1">
+          <Link
+            href="/tags"
+            aria-label="browse tags"
+            title="tags"
+            className="inline-flex h-6 w-6 items-center justify-center text-accent/35 hover:text-accent/70 transition-[color] duration-150"
           >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
-          </svg>
-        </button>
-      </div>
-
-      {view === "all" && (
-        <nav
-          aria-label="Topics"
-          className="flex flex-wrap gap-x-3 gap-y-2 text-xs mb-8"
-        >
-          {sortedTags.slice(0, 10).map(([tag]) => (
-            <Link
-              key={tag}
-              href={`/tags/${encodeURIComponent(tag)}`}
-              prefetch={false}
-              className="text-muted hover:text-accent"
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className="h-3.5 w-3.5"
             >
-              #{tag}
-            </Link>
-          ))}
-          <Link href="/tags" className="text-accent hover:underline">
-            all tags →
+              <path d="M4 9h16M3 15h16M10 3 8 21M16 3l-2 18" />
+            </svg>
           </Link>
-        </nav>
-      )}
+          <button
+            type="button"
+            onClick={() => document.dispatchEvent(new Event("openSearch"))}
+            className="inline-flex h-6 w-6 items-center justify-center text-accent/35 hover:text-accent/70 transition-[color] duration-150"
+            aria-label="search"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-3.5 h-3.5"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </button>
+        </div>
+      </div>
 
       {config && (
         <div className="mb-6">
