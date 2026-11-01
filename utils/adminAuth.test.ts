@@ -3,6 +3,8 @@ import { NextRequest } from "next/server";
 import { proxy } from "@/proxy";
 import {
   ADMIN_COOKIE,
+  ADMIN_SESSION_SECONDS,
+  verifyAdminSession,
   checkAdminAuth,
   sessionToken,
   verifyAdminPassword,
@@ -24,7 +26,10 @@ function production() {
   vi.stubEnv("ADMIN_SECRET", SECRET);
 }
 
-afterEach(() => vi.unstubAllEnvs());
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.restoreAllMocks();
+});
 
 describe("admin password comparison", () => {
   it("accepts matching UTF-8 secrets", () => {
@@ -48,8 +53,11 @@ describe("admin password comparison", () => {
 });
 
 describe("admin session access", () => {
-  it("accepts the existing Web Crypto cookie in the proxy and route guard", async () => {
+  it("accepts an expiring Web Crypto cookie in the proxy and route guard", async () => {
     production();
+    const now = Date.now();
+    vi.spyOn(Date, "now").mockReturnValue(now);
+    const expires = String(Math.floor(now / 1000) + ADMIN_SESSION_SECONDS);
     const key = await crypto.subtle.importKey(
       "raw",
       new TextEncoder().encode(SECRET),
@@ -60,9 +68,9 @@ describe("admin session access", () => {
     const signature = await crypto.subtle.sign(
       "HMAC",
       key,
-      new TextEncoder().encode(ADMIN_COOKIE)
+      new TextEncoder().encode(`${ADMIN_COOKIE}:${expires}`)
     );
-    const cookie = Buffer.from(signature).toString("hex");
+    const cookie = `${expires}.${Buffer.from(signature).toString("hex")}`;
     expect(sessionToken(SECRET)).toBe(cookie);
     const req = request("/api/admin/get-post", cookie);
     expect(proxy(req).headers.get("x-middleware-next")).toBe("1");
@@ -117,5 +125,21 @@ describe("admin session access", () => {
     const req = request("/api/admin/get-post");
     expect(proxy(req).headers.get("x-middleware-next")).toBe("1");
     expect(checkAdminAuth(req)).toBeNull();
+  });
+});
+
+describe("session lifetime", () => {
+  it("rejects expiry, forged expiry, and legacy non-expiring tokens", () => {
+    const now = 1_800_000_000_000;
+    const token = sessionToken(SECRET, now);
+    expect(verifyAdminSession(token, SECRET, now)).toBe(true);
+    expect(
+      verifyAdminSession(token, SECRET, now + ADMIN_SESSION_SECONDS * 1000)
+    ).toBe(false);
+    const [expires, signature] = token.split(".");
+    expect(
+      verifyAdminSession(`${Number(expires) + 86400}.${signature}`, SECRET, now)
+    ).toBe(false);
+    expect(verifyAdminSession("a".repeat(64), SECRET, now)).toBe(false);
   });
 });

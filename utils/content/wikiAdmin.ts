@@ -3,12 +3,9 @@ import { z } from "zod";
 import { createHash } from "crypto";
 import { getWikiPath, isSafeSlug } from "@/config/paths";
 import { readMarkdownFile, writeMarkdownFile } from "./markdown";
+import { wikiFrontmatterSchema, type WikiFrontmatter } from "./schemas";
 import { parseTags } from "./tags";
-import {
-  paperFrontmatter,
-  PAPER_FIELD_KEYS,
-  readPaperFields,
-} from "./paperFields";
+import { paperFrontmatter, readPaperFields } from "./paperFields";
 import type { WikiEditorPage } from "@/types/wiki";
 
 export class WikiEditError extends Error {
@@ -43,10 +40,10 @@ function readPage(slug: string) {
     throw new WikiEditError("Wiki page not found", 404);
   if (!fs.lstatSync(filePath).isFile())
     throw new WikiEditError("Wiki page must be a regular file", 400);
-  return readMarkdownFile(filePath);
+  return readMarkdownFile(filePath, wikiFrontmatterSchema);
 }
 
-function versionOf(data: Record<string, unknown>, content: string) {
+function versionOf(data: WikiFrontmatter, content: string) {
   return createHash("sha256")
     .update(JSON.stringify({ data, content }))
     .digest("hex");
@@ -56,17 +53,11 @@ export function getWikiEditorPage(slug: string): WikiEditorPage {
   const { data, content } = readPage(slug);
   return {
     slug,
-    title: typeof data.title === "string" ? data.title : slug,
-    category:
-      typeof data.category === "string" ? data.category : "uncategorized",
-    description: typeof data.description === "string" ? data.description : "",
-    tags: parseTags(data.tags).filter(
-      (tag) => typeof tag === "string" && tag.trim() !== ""
-    ),
-    lastUpdated:
-      data.lastUpdated instanceof Date
-        ? data.lastUpdated.toISOString()
-        : String(data.lastUpdated ?? ""),
+    title: data.title ?? slug,
+    category: data.category ?? "uncategorized",
+    description: data.description ?? "",
+    tags: parseTags(data.tags).filter((tag) => tag.trim() !== ""),
+    lastUpdated: data.lastUpdated ?? "",
     content,
     version: versionOf(data, content),
     paper: readPaperFields(data),
@@ -123,7 +114,7 @@ export function saveWikiEditorPage(input: unknown): WikiEditorPage {
     paper,
   } = parsed.data;
   const filePath = wikiPath(slug);
-  let existingData: Record<string, unknown> = {};
+  let existingData: WikiFrontmatter = {};
   if (create) {
     if (fs.existsSync(filePath))
       throw new WikiEditError("A wiki page already uses this address", 409);
@@ -140,11 +131,8 @@ export function saveWikiEditorPage(input: unknown): WikiEditorPage {
   }
   // When the editor sends paper fields it owns them: cleared fields are removed.
   if (paper) {
-    existingData = Object.fromEntries(
-      Object.entries(existingData).filter(
-        ([key]) => !(PAPER_FIELD_KEYS as readonly string[]).includes(key)
-      )
-    );
+    const { authors, year, url, read, source, ...rest } = existingData;
+    existingData = rest;
   }
   try {
     writeMarkdownFile(

@@ -7,7 +7,7 @@ import type { WikiTemplate } from "@/types/wiki";
 import type { WritingCheck } from "@/utils/content/writingChecks";
 
 const linkButton =
-  "text-left text-accent underline underline-offset-4 disabled:opacity-50";
+  "focus-ring text-left text-accent underline underline-offset-4 disabled:opacity-50";
 
 /**
  * Local writing checks for the wiki editor. Each broken [[link]] offers the
@@ -112,7 +112,7 @@ export default function WritingTools({
         type="button"
         disabled={pending || saving}
         onClick={() => void check()}
-        className="min-h-11 px-3 text-sm text-accent underline underline-offset-4 disabled:opacity-50"
+        className="focus-ring min-h-11 px-3 text-sm text-accent underline underline-offset-4 disabled:opacity-50"
       >
         {pending ? "Checking…" : "Check writing"}
       </button>
@@ -147,7 +147,7 @@ export default function WritingTools({
                       <button
                         type="button"
                         onClick={() => onJump(finding.line)}
-                        className="text-left underline underline-offset-4"
+                        className="focus-ring text-left underline underline-offset-4"
                       >
                         near line {finding.line}: {finding.label}
                       </button>

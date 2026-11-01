@@ -20,6 +20,7 @@ import {
 } from "@/utils/content/paperFields";
 import { retargetWikiLinks } from "@/utils/content/writingChecks";
 import WritingTools from "./WritingTools";
+import { Button } from "@/components/ui/Button";
 
 function pageForm(page: WikiEditorPage | null, initialTitle = "") {
   return {
@@ -194,33 +195,25 @@ export default function WikiEditor({
                 Unsaved changes
               </span>
             )}
-            <button
-              type="button"
+            <Button
               aria-expanded={tools}
               aria-controls="wiki-writing-tools"
               onClick={() => setTools(!tools)}
-              className="text-sm text-ink-soft dark:text-chalk-muted hover:underline"
             >
               Check
-            </button>
-            <button
-              type="button"
-              aria-pressed={preview}
-              onClick={() => setPreview(!preview)}
-              className="text-sm text-ink-soft dark:text-chalk-muted hover:underline"
-            >
+            </Button>
+            <Button aria-pressed={preview} onClick={() => setPreview(!preview)}>
               {preview ? "Edit" : "Preview"}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              variant="solid"
               onClick={() => void save()}
               disabled={
                 saving || !form.title.trim() || !form.slug || (!dirty && !isNew)
               }
-              className="rounded-xs bg-accent text-surface px-4 py-2 text-sm disabled:opacity-40"
             >
               {saving ? "Saving…" : "Save"}
-            </button>
+            </Button>
           </div>
         </header>
         {tools && (

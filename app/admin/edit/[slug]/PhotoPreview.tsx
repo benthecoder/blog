@@ -3,6 +3,8 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Loader2, X } from "lucide-react";
 import { photoFileUrl } from "@/utils/photoTransfer";
+import { Button } from "@/components/ui/Button";
+import { IconButton } from "@/components/ui/IconButton";
 
 type Photo = { id: string; name: string; time: string };
 
@@ -38,14 +40,11 @@ export function PhotoPreview({
   }, []);
   const ready = loadedId === photo.id;
   const failed = failedId === photo.id;
-  const quietButton =
-    "min-h-11 min-w-11 inline-flex items-center justify-center text-ink-soft dark:text-chalk-muted hover:text-accent disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
-
   return (
     <dialog
       ref={dialogRef}
       aria-labelledby={titleId}
-      className="m-auto w-[calc(100vw-2rem)] max-w-4xl max-h-[calc(100dvh-2rem)] p-0 border border-line bg-surface text-accent backdrop:bg-black/50"
+      className="m-auto w-[calc(100vw-2rem)] max-w-4xl max-h-[calc(100dvh-2rem)] p-0 border border-line bg-surface text-accent backdrop:bg-night/50"
       onCancel={(event) => {
         event.preventDefault();
         if (!busy) onClose();
@@ -69,14 +68,13 @@ export function PhotoPreview({
         <h2 id={titleId} className="text-sm truncate">
           {photo.name}
         </h2>
-        <button
+        <IconButton
           onClick={onClose}
           disabled={busy}
           aria-label="Close photo preview"
-          className={quietButton}
         >
           <X size={18} strokeWidth={1.5} />
-        </button>
+        </IconButton>
       </header>
       <div
         className="relative h-[60dvh] flex items-center justify-center bg-paper-sunken dark:bg-night-raised"
@@ -112,33 +110,27 @@ export function PhotoPreview({
       )}
       <footer className="flex flex-wrap items-center justify-between gap-3 px-4 py-2">
         <div className="flex items-center gap-2">
-          <button
+          <IconButton
             onClick={onPrevious}
             disabled={!hasPrevious || busy}
             aria-label="Previous photo"
-            className={quietButton}
           >
             <ChevronLeft size={18} strokeWidth={1.5} />
-          </button>
+          </IconButton>
           <span className="text-xs tabular-nums text-ink-soft dark:text-chalk-muted">
             {photo.time}
           </span>
-          <button
+          <IconButton
             onClick={onNext}
             disabled={!hasNext || busy}
             aria-label="Next photo"
-            className={quietButton}
           >
             <ChevronRight size={18} strokeWidth={1.5} />
-          </button>
+          </IconButton>
         </div>
-        <button
-          onClick={onInsert}
-          disabled={busy || !ready}
-          className="min-h-11 px-4 text-sm bg-ink text-paper dark:bg-chalk dark:text-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-        >
+        <Button variant="solid" onClick={onInsert} disabled={busy || !ready}>
           {busy ? "opening…" : "insert"}
-        </button>
+        </Button>
       </footer>
     </dialog>
   );

@@ -5,6 +5,7 @@ import { ImageOff, Loader2, X } from "lucide-react";
 
 import { PHOTO_TRANSFER_TYPE, photoFileUrl } from "@/utils/photoTransfer";
 import { PhotoPreview } from "./PhotoPreview";
+import { IconButton } from "@/components/ui/IconButton";
 
 type Photo = { id: string; name: string; time: string };
 
@@ -62,7 +63,8 @@ export function PhotoPanel({
     setPreviewId(null);
     setPicking(null);
 
-    (async () => {
+    // Fire and forget: failures land in the error state below.
+    void (async () => {
       try {
         const res = await fetch(
           `/api/admin/photos?date=${encodeURIComponent(date)}`,
@@ -76,7 +78,7 @@ export function PhotoPanel({
         setPhotos(data.photos);
       } catch (err) {
         if (!controller.signal.aborted)
-          setError(`Couldn't load photos (${err})`);
+          setError(`Couldn't load photos (${String(err)})`);
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -107,7 +109,8 @@ export function PhotoPanel({
       setPreviewId(null);
       onPick(new File([blob], `${name}.jpg`, { type: "image/jpeg" }), name);
     } catch (err) {
-      if (!controller.signal.aborted) setError(`Couldn't fetch photo (${err})`);
+      if (!controller.signal.aborted)
+        setError(`Couldn't fetch photo (${String(err)})`);
     } finally {
       if (pickRequest.current === controller) {
         pickRequest.current = null;
@@ -132,14 +135,9 @@ export function PhotoPanel({
             </span>
           )}
         </span>
-        <button
-          onClick={onClose}
-          className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-xs text-ink-soft dark:text-chalk-muted hover:text-accent hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90"
-          title="Close"
-          aria-label="Close photos"
-        >
+        <IconButton onClick={onClose} title="Close" aria-label="Close photos">
           <X size={18} />
-        </button>
+        </IconButton>
       </div>
 
       <div
@@ -157,7 +155,7 @@ export function PhotoPanel({
         )}
         {error && (
           <div className="mb-2 text-xs" role="alert">
-            <p className="text-red-600 dark:text-red-500">{error}</p>
+            <p className="text-danger">{error}</p>
             {!loading && photos.length === 0 && (
               <button
                 type="button"
@@ -220,7 +218,7 @@ export function PhotoPanel({
                 title="Preview or drag into the text"
                 aria-label={`Preview ${photo.name}, taken ${photo.time}`}
               >
-                <div className="aspect-square rounded-sm outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-accent bg-paper-sunken dark:bg-night-raised overflow-hidden relative transition-[scale] duration-150 ease-out motion-safe:group-active:scale-[0.96]">
+                <div className="aspect-square rounded-sm outline outline-1 -outline-offset-1 outline-primary/10 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-accent bg-paper-sunken dark:bg-night-raised overflow-hidden relative transition-[scale] duration-150 ease-out motion-safe:group-active:scale-[0.96]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={photoFileUrl(photo.id, "thumb")}
@@ -241,7 +239,7 @@ export function PhotoPanel({
                 </div>
               </button>
               <div className="flex items-center justify-between gap-1">
-                <span className="text-[11px] tabular-nums text-ink-soft dark:text-chalk-muted">
+                <span className="text-caption tabular-nums text-ink-soft dark:text-chalk-muted">
                   {photo.time}
                 </span>
                 <button

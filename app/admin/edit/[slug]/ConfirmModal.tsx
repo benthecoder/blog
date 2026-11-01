@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
+import { Button } from "@/components/ui/Button";
 
 export interface ConfirmConfig {
   title: string;
@@ -34,7 +35,7 @@ export function ConfirmModal({
         event.preventDefault();
         onCancel();
       }}
-      className="m-auto bg-surface border border-line p-8 max-w-md w-[calc(100vw-2rem)] backdrop:bg-black/40"
+      className="m-auto bg-surface border border-line p-8 max-w-md w-[calc(100vw-2rem)] backdrop:bg-night/40"
     >
       <h2
         id={titleId}
@@ -49,18 +50,12 @@ export function ConfirmModal({
         {config.message}
       </p>
       <div className="flex gap-3 justify-end">
-        <button
-          onClick={onCancel}
-          className="min-h-11 px-4 py-1.5 text-sm border border-line text-accent hover:border-accent transition-colors"
-        >
+        <Button variant="outline" onClick={onCancel}>
           {config.labels[0]}
-        </button>
-        <button
-          onClick={config.onConfirm}
-          className="min-h-11 px-4 py-1.5 text-sm border border-accent text-accent hover:bg-ink hover:text-white dark:hover:bg-chalk dark:hover:text-night transition-colors"
-        >
+        </Button>
+        <Button variant="solid" onClick={config.onConfirm}>
           {config.labels[1]}
-        </button>
+        </Button>
       </div>
     </dialog>
   );

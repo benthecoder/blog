@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { POSTS_DIR, DRAFTS_DIR } from "@/config/paths";
 import { scanMarkdownDir, writeMarkdownFile } from "@/utils/content/markdown";
+import { postFrontmatterSchema } from "@/utils/content/schemas";
 import {
   auditDecisionSchema,
   auditedMetadata,
@@ -35,7 +36,7 @@ const plan = [
   { dir: POSTS_DIR, kind: "published" },
   ...(includeDrafts ? [{ dir: DRAFTS_DIR, kind: "drafts" }] : []),
 ].flatMap(({ dir, kind }) =>
-  scanMarkdownDir(dir).map(({ slug, data, content }) => {
+  scanMarkdownDir(dir, postFrontmatterSchema).map(({ slug, data, content }) => {
     const id = `${kind}/${slug}`;
     const decision = decisions.get(id);
     if (!decision) throw new Error(`Missing audit decision: ${id}`);

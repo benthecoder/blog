@@ -14,7 +14,7 @@
  * Paths resolve against --base (default http://localhost:3000). Arguments that
  * name an existing local file are captured from disk instead.
  */
-import { execFileSync } from "child_process";
+import { execFileSync, spawn } from "child_process";
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -74,23 +74,50 @@ function slugify(value: string): string {
   return value.replace(/^\/+|\/+$/g, "").replace(/[^a-z0-9]+/gi, "-") || "home";
 }
 
-function capture(browser: string, url: string, size: string, out: string) {
-  execFileSync(
+async function capture(
+  browser: string,
+  url: string,
+  size: string,
+  out: string
+): Promise<void> {
+  const child = spawn(
     browser,
     [
       "--headless=new",
-      // Software WebGL, so MapLibre pages like /map render instead of erroring.
-      "--enable-unsafe-swiftshader",
-      "--use-angle=swiftshader",
+      // Real GPU through Metal. Without WebGL, MapLibre throws and /map shows
+      // its error page; software WebGL (swiftshader) stalls about half the time.
+      "--use-angle=metal",
       "--hide-scrollbars",
       `--window-size=${size}`,
-      "--virtual-time-budget=8000",
+      // A real-time wait, not --virtual-time-budget: pages that never go idle
+      // (MapLibre keeps fetching tiles) would make the virtual budget hang forever.
+      "--timeout=8000",
       `--screenshot=${out}`,
       url,
     ],
-    { stdio: "ignore", timeout: 60_000 }
+    // Own process group, so the GPU and renderer helpers die with the browser.
+    { stdio: "ignore", detached: true }
   );
-  if (!fs.existsSync(out)) throw new Error(`Screenshot failed for ${url}`);
+  // Headless Chromium sometimes writes the file and then never exits, so wait
+  // for the file rather than the process, and stop the browser either way.
+  const deadline = Date.now() + 30_000;
+  try {
+    while (Date.now() < deadline) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      if (fs.existsSync(out) && fs.statSync(out).size > 0) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        return;
+      }
+      if (child.exitCode !== null) break;
+    }
+    throw new Error(`Screenshot failed for ${url}`);
+  } finally {
+    try {
+      if (child.pid) process.kill(-child.pid, "SIGKILL");
+    } catch {
+      // Already exited.
+    }
+  }
 }
 
 async function upload(file: string, key: string): Promise<string> {
@@ -126,7 +153,11 @@ async function main() {
     const label = isFile ? path.basename(pagePath, ".html") : pagePath;
     const name = `${slugify(label)}-${viewport}-${source}-${stamp}.png`;
     const file = path.join(dir, name);
-    capture(browser, url, VIEWPORTS[viewport], file);
+    // Software WebGL occasionally stalls before the first paint; one retry
+    // clears it.
+    await capture(browser, url, VIEWPORTS[viewport], file).catch(() =>
+      capture(browser, url, VIEWPORTS[viewport], file)
+    );
     const imageUrl = await upload(file, `pr/${branch}/${name}`);
     console.log(`![${label} (${viewport}, ${source})](${imageUrl})`);
   }

@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { ESSAYS_DIR, ESSAY_DRAFTS_DIR, getEssayPath } from "@/config/paths";
 import { readMarkdownFile, scanMarkdownDir } from "./markdown";
-import { toDateString } from "./essayDate";
+import { essayFrontmatterSchema } from "./schemas";
 import { parseTags } from "./tags";
 
 export interface EssayMetadata {
@@ -21,16 +21,15 @@ function countWords(content: string): number {
 
 export const getEssayMetadata = cache(
   function getEssayMetadata(): EssayMetadata[] {
-    return scanMarkdownDir(ESSAYS_DIR)
+    return scanMarkdownDir(ESSAYS_DIR, essayFrontmatterSchema)
       .map(({ slug, data, content }) => {
         const wordcount = countWords(content);
-        const updated = toDateString(data.updated);
         return {
           slug,
-          title: (data.title as string) || slug,
-          subtitle: (data.subtitle as string) || "",
-          date: toDateString(data.date),
-          updated: updated || null,
+          title: data.title || slug,
+          subtitle: data.subtitle || "",
+          date: data.date,
+          updated: data.updated || null,
           tags: parseTags(data.tags),
           wordcount,
           readingTime: Math.max(1, Math.round(wordcount / 200)),
@@ -41,7 +40,7 @@ export const getEssayMetadata = cache(
 );
 
 export const getEssayContent = cache(function getEssayContent(slug: string) {
-  return readMarkdownFile(getEssayPath(slug));
+  return readMarkdownFile(getEssayPath(slug), essayFrontmatterSchema);
 });
 
 export interface EssayAdminEntry {
@@ -55,11 +54,11 @@ export interface EssayAdminEntry {
 // Admin only: drafts live outside the public loader's folder and never ship.
 export function getEssayAdminList(): EssayAdminEntry[] {
   const read = (dir: string, isDraft: boolean) =>
-    scanMarkdownDir(dir).map(({ slug, data }) => ({
+    scanMarkdownDir(dir, essayFrontmatterSchema).map(({ slug, data }) => ({
       slug,
-      title: (data.title as string) || slug,
-      subtitle: (data.subtitle as string) || "",
-      date: toDateString(data.date),
+      title: data.title || slug,
+      subtitle: data.subtitle || "",
+      date: data.date,
       isDraft,
     }));
   return [...read(ESSAY_DRAFTS_DIR, true), ...read(ESSAYS_DIR, false)].sort(

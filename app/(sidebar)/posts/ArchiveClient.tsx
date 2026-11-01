@@ -111,7 +111,7 @@ export default function ArchiveClient({
               key={id}
               onClick={() => router.push(viewHref(id))}
               aria-pressed={view === id}
-              className={`transition-[color] duration-150 ${
+              className={`focus-ring transition-[color] duration-150 ${
                 view === id
                   ? "text-accent"
                   : "text-accent/35 hover:text-accent/70"
@@ -143,7 +143,7 @@ export default function ArchiveClient({
           <button
             type="button"
             onClick={() => document.dispatchEvent(new Event("openSearch"))}
-            className="inline-flex h-6 w-6 items-center justify-center text-accent/35 hover:text-accent/70 transition-[color] duration-150"
+            className="focus-ring inline-flex h-6 w-6 items-center justify-center text-accent/35 hover:text-accent/70 transition-[color] duration-150"
             aria-label="search"
           >
             <svg

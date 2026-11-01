@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless";
 import { getPostContent } from "@/utils/content/posts";
+import { parseRows, tweetRowSchema } from "@/utils/thoughts";
 import { matchesFormat } from "@/utils/content/formats";
 import type { PostMetadata } from "@/types/post";
 
@@ -68,12 +69,16 @@ export async function thoughts(
   until: Date
 ): Promise<{ at: Date; text: string }[]> {
   const sql = neon(process.env.POSTGRES_URL!);
-  const rows = (await sql`
-    SELECT content, created_at FROM tweets
-    WHERE link IS NULL
-      AND created_at >= ${since.toISOString()}
-      AND created_at < ${until.toISOString()}
-    ORDER BY created_at
-  `) as { content: string; created_at: string }[];
-  return rows.map((r) => ({ at: new Date(r.created_at), text: r.content }));
+  const rows = parseRows(
+    tweetRowSchema.pick({ content: true, created_at: true }),
+    await sql`
+      SELECT content, created_at FROM tweets
+      WHERE link IS NULL
+        AND created_at >= ${since.toISOString()}
+        AND created_at < ${until.toISOString()}
+      ORDER BY created_at
+    `,
+    "digest thoughts"
+  );
+  return rows.map((r) => ({ at: r.created_at, text: r.content }));
 }

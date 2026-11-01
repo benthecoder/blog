@@ -42,14 +42,14 @@
     "typescript/no-unnecessary-type-constraint": "error",
     "typescript/no-unsafe-function-type": "error",
 
-    "typescript/no-floating-promises": "warn",
-    "typescript/no-base-to-string": "warn",
-    "typescript/restrict-template-expressions": "warn",
-    "typescript/unbound-method": "warn",
-    "typescript/require-array-sort-compare": "warn",
-    "typescript/no-meaningless-void-operator": "warn",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-base-to-string": "error",
+    "typescript/restrict-template-expressions": "error",
+    "typescript/unbound-method": "error",
+    "typescript/require-array-sort-compare": "error",
+    "typescript/no-meaningless-void-operator": "error",
 
-    "import/no-anonymous-default-export": "warn",
+    "import/no-anonymous-default-export": "error",
 
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/no-static-element-interactions": "off",

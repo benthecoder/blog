@@ -11,7 +11,8 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
-import { parseFrontmatter } from "@/utils/content/frontmatter";
+import { FrontmatterError, parseMarkdown } from "@/utils/content/frontmatter";
+import { draftFrontmatterSchema } from "@/utils/content/schemas";
 import { ArrowLeft, Calendar, Camera } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useMounted } from "@/components/ui/ThemeSwitch";
@@ -19,7 +20,7 @@ import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import type { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import type { ContentKind } from "@/utils/content/kind";
 import { essayProseClasses } from "@/components/essays/essayProse";
-import { formatEssayDate, toDateString } from "@/utils/content/essayDate";
+import { formatEssayDate } from "@/utils/content/essayDate";
 import { usePostDraft } from "./usePostDraft";
 import { useImageManager } from "./useImageManager";
 import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
@@ -45,6 +46,7 @@ import {
   markdownEditorSetup,
 } from "@/components/admin/markdownEditorConfig";
 import { postEditorExtensions } from "@/components/admin/postEditorExtensions";
+import { Button } from "@/components/ui/Button";
 
 const desktopQuery = "(min-width: 1024px)";
 function subscribeToDesktop(callback: () => void) {
@@ -366,8 +368,6 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
     return () => window.removeEventListener("keydown", listener, true);
   }, []);
 
-  const ghostBtn =
-    "min-h-11 sm:min-h-9 px-2 text-xs text-ink-soft dark:text-chalk-muted hover:text-accent disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-accent";
   const menuItemCls =
     "block w-full px-3 py-2 text-left rounded-xs hover:bg-paper-sunken dark:hover:bg-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-accent";
   const primaryActive = isNew || publishing || draft.hasUnsavedChanges;
@@ -416,7 +416,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               <span className="inline-flex items-center gap-1.5 text-xs text-ink-soft dark:text-chalk-muted">
                 <span
                   aria-hidden="true"
-                  className={`h-1.5 w-1.5 rounded-full ${draft.isDraft ? "bg-muted" : "bg-green-600 dark:bg-green-500"}`}
+                  className={`h-1.5 w-1.5 rounded-full ${draft.isDraft ? "bg-muted" : "bg-success"}`}
                 />
                 {draft.isDraft ? "draft" : "live"}
               </span>
@@ -432,28 +432,23 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              size="sm"
               onClick={() => setShowPreview(!showPreview)}
-              className={ghostBtn}
               title={showPreview ? "edit (⌘⇧P)" : "preview (⌘⇧P)"}
               aria-pressed={showPreview}
             >
               {showPreview ? "edit" : "preview"}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              size="sm"
+              variant={primaryActive ? "solid" : "outline"}
               onClick={runPrimary}
               disabled={busy}
               title={`${publishing ? "publish" : isNew ? "save" : "update"} (⌘⏎)`}
-              className={`min-h-11 sm:min-h-9 px-3 py-1.5 text-xs rounded-xs border disabled:opacity-30 ${
-                primaryActive
-                  ? "bg-ink text-paper border-ink dark:bg-chalk dark:text-night dark:border-chalk"
-                  : "border-rule text-ink-soft hover:text-ink dark:border-night-rule dark:text-chalk-muted dark:hover:text-chalk"
-              }`}
             >
               {primaryLabel}
-            </button>
+            </Button>
             {!isNew && (
               <EditorPopover
                 plain
@@ -539,9 +534,9 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                         disabled={draft.deleting}
                         onClick={() => {
                           close();
-                          void draft.handleDelete();
+                          draft.handleDelete();
                         }}
-                        className={`${menuItemCls} text-muted hover:text-accent`}
+                        className={`focus-ring ${menuItemCls} text-muted hover:text-accent`}
                       >
                         {draft.deleting ? "deleting…" : "delete…"}
                       </button>
@@ -573,11 +568,17 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                 {(() => {
                   let parsed;
                   try {
-                    parsed = parseFrontmatter(draft.markdown);
-                  } catch {
+                    parsed = parseMarkdown(
+                      draft.markdown,
+                      draftFrontmatterSchema,
+                      "frontmatter"
+                    );
+                  } catch (error) {
                     return (
-                      <p role="alert">
+                      <p role="alert" className="whitespace-pre-line">
                         Frontmatter needs fixing. Return to Edit to correct it.
+                        {error instanceof FrontmatterError &&
+                          `\n\n${error.detail}`}
                       </p>
                     );
                   }
@@ -585,17 +586,17 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
 
                   if (isEssay) {
                     const date = formatEssayDate(
-                      toDateString(frontmatter.date || draft.date)
+                      frontmatter.date || draft.date
                     );
                     return (
                       <div className="mx-auto max-w-[65ch]">
                         <header className="mb-10">
                           <h1 className="text-2xl font-bold lowercase leading-tight tracking-tight text-balance text-primary md:text-4xl">
-                            {(frontmatter.title || "Untitled").toString()}
+                            {frontmatter.title || "Untitled"}
                           </h1>
                           {frontmatter.subtitle ? (
                             <p className="mt-3 text-base text-secondary">
-                              {frontmatter.subtitle.toString()}
+                              {frontmatter.subtitle}
                             </p>
                           ) : null}
                           {date && (
@@ -613,9 +614,9 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
 
                   const post = {
                     data: {
-                      title: (frontmatter.title || "Untitled").toString(),
-                      tags: (frontmatter.tags || "").toString(),
-                      date: (frontmatter.date || draft.date).toString(),
+                      title: frontmatter.title || "Untitled",
+                      tags: frontmatter.tags || "",
+                      date: frontmatter.date || draft.date,
                     },
                     content: content,
                   };
@@ -684,9 +685,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                   <span
                     role="status"
                     className={
-                      message.includes("✓")
-                        ? "text-green-600 dark:text-green-500"
-                        : "text-red-600 dark:text-red-500"
+                      message.includes("✓") ? "text-success" : "text-danger"
                     }
                   >
                     {message}
@@ -736,9 +735,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                 <span
                   role="status"
                   className={
-                    message.includes("✓")
-                      ? "text-green-600 dark:text-green-500"
-                      : "text-red-600 dark:text-red-500"
+                    message.includes("✓") ? "text-success" : "text-danger"
                   }
                 >
                   {message}
@@ -798,7 +795,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         <button
           type="button"
           onClick={() => setFocusMode(false)}
-          className="fixed bottom-3 left-3 z-20 min-h-9 px-3 text-xs text-ink-soft dark:text-chalk-muted opacity-40 hover:opacity-100 focus-visible:opacity-100 bg-surface rounded-xs"
+          className="focus-ring fixed bottom-3 left-3 z-20 min-h-9 px-3 text-xs text-ink-soft dark:text-chalk-muted opacity-40 hover:opacity-100 focus-visible:opacity-100 bg-surface rounded-xs"
           title="Exit focus mode (Esc)"
         >
           exit focus · esc
@@ -809,7 +806,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         <button
           type="button"
           onClick={() => setPhotosOpen(true)}
-          className="fixed right-0 top-24 z-20 inline-flex flex-col items-center gap-2 rounded-l-xs border border-r-0 border-line bg-surface px-1.5 py-3 text-ink-soft dark:text-chalk-muted hover:text-accent transition-colors"
+          className="focus-ring fixed right-0 top-24 z-20 inline-flex flex-col items-center gap-2 rounded-l-xs border border-r-0 border-line bg-surface px-1.5 py-3 text-ink-soft dark:text-chalk-muted hover:text-accent transition-colors"
           title="photos from this day"
           aria-label="Photos from this day"
         >
@@ -826,7 +823,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               type="button"
               aria-label="Close photos"
               onClick={() => setPhotosOpen(false)}
-              className="fixed inset-0 z-20 bg-black/20"
+              className="focus-ring fixed inset-0 z-20 bg-night/20"
             />
           )}
           <PhotoPanel

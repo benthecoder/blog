@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
@@ -59,13 +60,13 @@ export default function NewEssayForm({ existing }: { existing: string[] }) {
 
   if (!open) {
     return (
-      <button
-        type="button"
+      <Button
+        variant="solid"
         onClick={() => setOpen(true)}
-        className="shrink-0 whitespace-nowrap rounded-xs bg-accent text-surface px-4 py-2 text-sm"
+        className="shrink-0 whitespace-nowrap"
       >
         new essay
-      </button>
+      </Button>
     );
   }
 
@@ -86,26 +87,20 @@ export default function NewEssayForm({ existing }: { existing: string[] }) {
           aria-label="essay slug"
           className="w-48 rounded-xs border border-line bg-transparent px-3 py-2 text-sm text-primary"
         />
-        <button
-          type="submit"
-          disabled={busy}
-          className="rounded-xs bg-accent text-surface px-4 py-2 text-sm disabled:opacity-30"
-        >
+        <Button type="submit" variant="solid" disabled={busy}>
           {busy ? "creating…" : "create"}
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
           onClick={() => {
             setOpen(false);
             setError("");
           }}
-          className="px-2 py-2 text-sm text-ink-soft dark:text-chalk-muted"
         >
           cancel
-        </button>
+        </Button>
       </div>
       {error && (
-        <p role="alert" className="text-xs text-red-600 dark:text-red-500">
+        <p role="alert" className="text-xs text-danger">
           {error}
         </p>
       )}

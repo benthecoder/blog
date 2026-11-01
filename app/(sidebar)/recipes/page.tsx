@@ -16,12 +16,10 @@ const RecipesPage = () => {
   const recipes = getRecipeMetadata();
 
   return (
-    <div className="mx-auto max-w-[65ch] py-12 text-ink-strong dark:text-chalk-strong">
+    <div className="mx-auto max-w-[65ch] py-12 text-primary">
       <h1 className="mb-8 text-2xl font-bold lowercase">recipes</h1>
       {recipes.length === 0 ? (
-        <p className="text-sm text-ink-strong/40 dark:text-chalk-strong/40">
-          Nothing here yet.
-        </p>
+        <p className="text-sm text-primary/40">Nothing here yet.</p>
       ) : (
         <ul className="flex flex-col gap-8">
           {recipes.map((recipe) => (
@@ -46,7 +44,7 @@ const RecipesPage = () => {
                     {recipe.title}
                   </span>
                   {recipe.description && (
-                    <span className="mt-1 block text-sm text-ink-strong/60 dark:text-chalk-strong/60">
+                    <span className="mt-1 block text-sm text-primary/60">
                       {recipe.description}
                     </span>
                   )}

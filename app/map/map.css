@@ -19,7 +19,9 @@
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
 }
-.places-explorer button,
+/* Chips (components/ui/Chip) set their own size and color with utilities,
+   which unlayered rules like this one would otherwise override. */
+.places-explorer button:not([data-ui]),
 .places-explorer input,
 .places-explorer select {
   font: inherit;
@@ -36,13 +38,7 @@
 .places-explorer :is(button, a, summary, label) {
   touch-action: manipulation;
 }
-.places-explorer
-  :is(
-    .icon-button,
-    .category-options button,
-    .map-tools button,
-    .sheet-toggle
-  ) {
+.places-explorer :is(.icon-button, .map-tools button, .sheet-toggle) {
   -webkit-user-select: none;
   user-select: none;
 }
@@ -276,29 +272,6 @@
   gap: 4px;
   margin-top: 8px;
 }
-.category-options button {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  height: 22px;
-  padding: 0 7px;
-  border: 1px solid var(--map-rule);
-  font-size: 11px;
-}
-@media (hover: hover) and (pointer: fine) {
-  .category-options button:hover {
-    border-color: var(--map-muted);
-  }
-}
-.category-options button[aria-pressed="true"] {
-  border-color: var(--map-ink);
-  background: var(--map-hover);
-}
-.category-options button > span {
-  color: var(--map-muted);
-  font-variant-numeric: tabular-nums;
-}
-
 /* Places: full-width rows on hairlines; the selected one gets a bar in
    its category color. */
 .place-list {

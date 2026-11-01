@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { X } from "lucide-react";
+import { IconButton } from "@/components/ui/IconButton";
 
 export type PostImage = { name: string; url: string };
 
@@ -22,13 +23,9 @@ export function ImageStrip({
         <span className="text-xs text-ink-soft dark:text-chalk-muted lowercase">
           images · {images.length}
         </span>
-        <button
-          onClick={onClose}
-          aria-label="Close images"
-          className="text-ink-soft dark:text-chalk-muted hover:text-accent"
-        >
+        <IconButton size="sm" onClick={onClose} aria-label="Close images">
           <X size={14} />
-        </button>
+        </IconButton>
       </div>
       <div className="flex gap-3 overflow-x-auto pb-2">
         {images.map((img) => {
@@ -45,12 +42,12 @@ export function ImageStrip({
               />
               <button
                 onClick={() => onDelete(img.name)}
-                className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="focus-ring absolute top-1 right-1 bg-danger hover:bg-danger/80 text-surface rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                 title="Delete"
               >
                 <X size={12} />
               </button>
-              <div className="text-[10px] text-ink-soft dark:text-chalk-muted mt-1 truncate w-20">
+              <div className="text-2xs text-ink-soft dark:text-chalk-muted mt-1 truncate w-20">
                 {img.name.replace(`${slug}-`, "")}
               </div>
             </div>

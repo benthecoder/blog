@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { draftQueue } from "@/utils/adminDraftQueue";
 import { PostMetadata } from "@/types/post";
+import { Button } from "@/components/ui/Button";
 
 interface CalendarViewProps {
   posts: PostMetadata[];
@@ -164,26 +165,19 @@ export default function CalendarView({ posts }: CalendarViewProps) {
           {monthNames[month]} {year}
         </h2>
         <div className="flex gap-3">
-          <button
+          <Button
+            variant="outline"
             aria-label="Previous month"
             onClick={prevMonth}
-            className="px-4 py-2 border border-line rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-accent"
           >
             ←
-          </button>
-          <button
-            onClick={() => setCurrentDate(new Date())}
-            className="px-4 py-2 border border-line rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-accent"
-          >
+          </Button>
+          <Button variant="outline" onClick={() => setCurrentDate(new Date())}>
             今日
-          </button>
-          <button
-            aria-label="Next month"
-            onClick={nextMonth}
-            className="px-4 py-2 border border-line rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-accent"
-          >
+          </Button>
+          <Button variant="outline" aria-label="Next month" onClick={nextMonth}>
             →
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -213,7 +207,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
             <button
               key={day}
               onClick={() => handleDateClick(day)}
-              className={`
+              className={`focus-ring 
                 min-h-20 sm:aspect-square border rounded-xs p-1 sm:p-3 flex flex-col items-start justify-between relative
                 hover:border-accent hover:shadow-xs transition-[border-color,box-shadow]
                 ${isTodayDate ? "border-accent bg-chalk-soft dark:bg-night-raised shadow-xs" : "border-line"}
@@ -235,7 +229,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
                   {day}
                 </span>
                 {isDraft && (
-                  <span className="text-accent text-[10px] font-medium uppercase tracking-wide">
+                  <span className="text-accent text-2xs font-medium uppercase tracking-wide">
                     draft
                   </span>
                 )}
