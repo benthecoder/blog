@@ -145,14 +145,14 @@ const PostLinkPreview = ({
               <p className="text-xs font-bold text-ink dark:text-chalk-strong mb-0.5">
                 {preview.title}
               </p>
-              <p className="text-[10px] text-ink-soft mb-1.5">
+              <p className="text-2xs text-ink-soft mb-1.5">
                 {new Date(preview.date).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
                 })}
               </p>
-              <p className="text-[11px] leading-relaxed text-muted">
+              <p className="text-caption leading-relaxed text-muted">
                 {preview.excerpt}
               </p>
             </div>

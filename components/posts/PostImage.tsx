@@ -140,7 +140,7 @@ export default function PostImage({
             {alt && (
               // Not .photo-label: that resolves to the light-mode ink colour,
               // and this overlay is dark in both themes.
-              <figcaption className="max-w-prose text-center text-[0.6875rem] lowercase tracking-[0.08em] text-chalk-soft">
+              <figcaption className="max-w-prose text-center text-caption lowercase tracking-[0.08em] text-chalk-soft">
                 {alt}
               </figcaption>
             )}

@@ -241,7 +241,7 @@ export function PhotoPanel({
                 </div>
               </button>
               <div className="flex items-center justify-between gap-1">
-                <span className="text-[11px] tabular-nums text-ink-soft dark:text-chalk-muted">
+                <span className="text-caption tabular-nums text-ink-soft dark:text-chalk-muted">
                   {photo.time}
                 </span>
                 <button

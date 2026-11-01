@@ -235,7 +235,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
                   {day}
                 </span>
                 {isDraft && (
-                  <span className="text-accent text-[10px] font-medium uppercase tracking-wide">
+                  <span className="text-accent text-2xs font-medium uppercase tracking-wide">
                     draft
                   </span>
                 )}

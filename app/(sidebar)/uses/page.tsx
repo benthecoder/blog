@@ -70,7 +70,7 @@ const ProductCell = ({ item }: { item: Product }) => {
           className="object-contain"
         />
       </div>
-      <p className="text-[10px] text-center">{item.name}</p>
+      <p className="text-2xs text-center">{item.name}</p>
     </>
   );
 
@@ -101,14 +101,14 @@ export default function ProductsPage() {
   return (
     <div className="w-full flex flex-col items-center">
       <h1 className="sr-only">uses</h1>
-      <p className="text-[10px] tracking-[0.3em] uppercase opacity-30 mb-12">
+      <p className="text-2xs tracking-[0.3em] uppercase opacity-30 mb-12">
         日用品
       </p>
 
       <div className="w-full max-w-3xl px-4 space-y-12">
         {categories.map((category) => (
           <div key={category.name}>
-            <p className="text-[10px] tracking-[0.2em] uppercase opacity-40 mb-4 text-center">
+            <p className="text-2xs tracking-[0.2em] uppercase opacity-40 mb-4 text-center">
               {category.name}
             </p>
             <div className="grid grid-cols-3 md:grid-cols-4 border-t border-l border-line/40">

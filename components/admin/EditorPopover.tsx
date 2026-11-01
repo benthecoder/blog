@@ -66,7 +66,7 @@ export function EditorPopover({
           {label}
         </span>
         {!plain && (
-          <span aria-hidden="true" className="text-muted text-[10px]">
+          <span aria-hidden="true" className="text-muted text-2xs">
             ⌄
           </span>
         )}
