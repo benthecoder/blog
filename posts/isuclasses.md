@@ -2,7 +2,6 @@
 title: 'ISU classes: A Review'
 tags: education, statistics, programming, mathematics, career
 date: Dec 14, 2023
-format: essay
 ---
 
 ![The School of Athens](/images/athens.jpeg)

@@ -35,11 +35,33 @@ describe("post formats", () => {
 
 describe("format migration", () => {
   it("migrates the supplied essays, overriding legacy book/journal tags", () => {
-    expect(ESSAY_SLUGS.size).toBe(13);
-    const result = migrateFormat("backhome", {
+    expect([...ESSAY_SLUGS].sort()).toEqual([
+      "2023",
+      "240224",
+      "281024",
+      "311224",
+      "311225",
+      "alone",
+      "curseddreams",
+      "exams",
+      "isu",
+      "nightbefore",
+      "strangers",
+      "whyus",
+    ]);
+    const result = migrateFormat("311224", {
       tags: "journal, book, life, ✰",
     });
     expect(result.data).toEqual({ tags: "life", format: "essay" });
+    for (const slug of [
+      "060425",
+      "280724",
+      "backhome",
+      "310324",
+      "isuclasses",
+    ]) {
+      expect(migrateFormat(slug, { tags: "life" }).format).not.toBe("essay");
+    }
     expect(migrateFormat("030325", { tags: "journal, chats" }).format).toBe(
       "journal"
     );

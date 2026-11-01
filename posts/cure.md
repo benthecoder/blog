@@ -2,7 +2,6 @@
 title: Cure?
 tags: health, family, money
 date: Jan 11, 2024
-format: essay
 ---
 
 Today, I visited the third specialist for my condition.

@@ -2,7 +2,6 @@
 title: Going Back Home
 tags: health, immigration, family, reading
 date: Jan 6, 2024
-format: essay
 ---
 
 ![The Great Fire at Ryōgoku Bridge, Kobayashi Kiyochika, 1881](/images/fire.jpeg)

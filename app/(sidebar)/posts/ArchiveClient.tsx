@@ -251,7 +251,10 @@ export default function ArchiveClient({
         </>
       )}
 
+      {view === "essay" && <PostList posts={posts} />}
+
       {!yearly &&
+        view !== "essay" &&
         view !== "travels" &&
         view !== "tags" &&
         byYear(posts).map(([postYear, yearGroup]) => (

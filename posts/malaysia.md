@@ -1,7 +1,6 @@
 ---
 title: Why I Hate It Here
 date: Feb 14, 2024
-format: essay
 tags: identity, immigration, family, friendship, community
 ---
 
