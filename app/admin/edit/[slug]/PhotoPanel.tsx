@@ -5,6 +5,7 @@ import { ImageOff, Loader2, X } from "lucide-react";
 
 import { PHOTO_TRANSFER_TYPE, photoFileUrl } from "@/utils/photoTransfer";
 import { PhotoPreview } from "./PhotoPreview";
+import { IconButton } from "@/components/ui/IconButton";
 
 type Photo = { id: string; name: string; time: string };
 
@@ -134,14 +135,9 @@ export function PhotoPanel({
             </span>
           )}
         </span>
-        <button
-          onClick={onClose}
-          className="min-h-11 min-w-11 inline-flex items-center justify-center rounded-xs text-ink-soft dark:text-chalk-muted hover:text-accent hover:bg-paper dark:hover:bg-night-raised transition-[color,background-color,transform] active:scale-90"
-          title="Close"
-          aria-label="Close photos"
-        >
+        <IconButton onClick={onClose} title="Close" aria-label="Close photos">
           <X size={18} />
-        </button>
+        </IconButton>
       </div>
 
       <div

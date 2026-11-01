@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { ArrowUpRight, ChevronDown, List, Moon, Sun, X } from "lucide-react";
 import { useMounted } from "@/components/ui/ThemeSwitch";
+import { Chip } from "@/components/ui/Chip";
 import CategoryDot from "./CategoryDot";
 import {
   categories,
@@ -255,21 +256,25 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
             role="group"
             aria-label="Filter by kind"
           >
-            <button
-              aria-pressed={!selectedCategories.length}
+            <Chip
+              pressed={!selectedCategories.length}
+              count={allPlaces.length}
               onClick={() => {
                 setSelectedCategories([]);
                 clearSelection();
               }}
             >
-              all <span>{allPlaces.length}</span>
-            </button>
+              all
+            </Chip>
             {categories
               .filter((tag) => allPlaces.some((p) => p.tags.includes(tag)))
               .map((tag) => (
-                <button
+                <Chip
                   key={tag}
-                  aria-pressed={selectedCategories.includes(tag)}
+                  pressed={selectedCategories.includes(tag)}
+                  count={
+                    allPlaces.filter((place) => place.tags.includes(tag)).length
+                  }
                   onClick={() => {
                     setSelectedCategories((current) =>
                       current.includes(tag)
@@ -280,14 +285,8 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                   }}
                 >
                   <CategoryDot category={tag} />
-                  {tag}{" "}
-                  <span>
-                    {
-                      allPlaces.filter((place) => place.tags.includes(tag))
-                        .length
-                    }
-                  </span>
-                </button>
+                  {tag}
+                </Chip>
               ))}
           </div>
         </div>

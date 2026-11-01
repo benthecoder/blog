@@ -46,6 +46,7 @@ import {
   markdownEditorSetup,
 } from "@/components/admin/markdownEditorConfig";
 import { postEditorExtensions } from "@/components/admin/postEditorExtensions";
+import { Button } from "@/components/ui/Button";
 
 const desktopQuery = "(min-width: 1024px)";
 function subscribeToDesktop(callback: () => void) {
@@ -367,8 +368,6 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
     return () => window.removeEventListener("keydown", listener, true);
   }, []);
 
-  const ghostBtn =
-    "min-h-11 sm:min-h-9 px-2 text-xs text-ink-soft dark:text-chalk-muted hover:text-accent disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-accent";
   const menuItemCls =
     "block w-full px-3 py-2 text-left rounded-xs hover:bg-paper-sunken dark:hover:bg-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-accent";
   const primaryActive = isNew || publishing || draft.hasUnsavedChanges;
@@ -433,28 +432,23 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              type="button"
+            <Button
+              size="sm"
               onClick={() => setShowPreview(!showPreview)}
-              className={ghostBtn}
               title={showPreview ? "edit (⌘⇧P)" : "preview (⌘⇧P)"}
               aria-pressed={showPreview}
             >
               {showPreview ? "edit" : "preview"}
-            </button>
-            <button
-              type="button"
+            </Button>
+            <Button
+              size="sm"
+              variant={primaryActive ? "solid" : "outline"}
               onClick={runPrimary}
               disabled={busy}
               title={`${publishing ? "publish" : isNew ? "save" : "update"} (⌘⏎)`}
-              className={`min-h-11 sm:min-h-9 px-3 py-1.5 text-xs rounded-xs border disabled:opacity-30 ${
-                primaryActive
-                  ? "bg-accent text-paper border-accent dark:text-night"
-                  : "border-line text-ink-soft hover:text-accent dark:text-chalk-muted"
-              }`}
             >
               {primaryLabel}
-            </button>
+            </Button>
             {!isNew && (
               <EditorPopover
                 plain
@@ -542,7 +536,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                           close();
                           draft.handleDelete();
                         }}
-                        className={`${menuItemCls} text-muted hover:text-accent`}
+                        className={`focus-ring ${menuItemCls} text-muted hover:text-accent`}
                       >
                         {draft.deleting ? "deleting…" : "delete…"}
                       </button>
@@ -801,7 +795,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         <button
           type="button"
           onClick={() => setFocusMode(false)}
-          className="fixed bottom-3 left-3 z-20 min-h-9 px-3 text-xs text-ink-soft dark:text-chalk-muted opacity-40 hover:opacity-100 focus-visible:opacity-100 bg-surface rounded-xs"
+          className="focus-ring fixed bottom-3 left-3 z-20 min-h-9 px-3 text-xs text-ink-soft dark:text-chalk-muted opacity-40 hover:opacity-100 focus-visible:opacity-100 bg-surface rounded-xs"
           title="Exit focus mode (Esc)"
         >
           exit focus · esc
@@ -812,7 +806,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         <button
           type="button"
           onClick={() => setPhotosOpen(true)}
-          className="fixed right-0 top-24 z-20 inline-flex flex-col items-center gap-2 rounded-l-xs border border-r-0 border-line bg-surface px-1.5 py-3 text-ink-soft dark:text-chalk-muted hover:text-accent transition-colors"
+          className="focus-ring fixed right-0 top-24 z-20 inline-flex flex-col items-center gap-2 rounded-l-xs border border-r-0 border-line bg-surface px-1.5 py-3 text-ink-soft dark:text-chalk-muted hover:text-accent transition-colors"
           title="photos from this day"
           aria-label="Photos from this day"
         >
@@ -829,7 +823,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               type="button"
               aria-label="Close photos"
               onClick={() => setPhotosOpen(false)}
-              className="fixed inset-0 z-20 bg-night/20"
+              className="focus-ring fixed inset-0 z-20 bg-night/20"
             />
           )}
           <PhotoPanel

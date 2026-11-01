@@ -87,7 +87,7 @@ export function WordLookup({ selection }: { selection: WordSelection }) {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="px-2 py-1 rounded-xs bg-paper dark:bg-night-raised border border-line shadow-sm text-ink-soft dark:text-chalk-muted hover:text-accent"
+          className="focus-ring px-2 py-1 rounded-xs bg-paper dark:bg-night-raised border border-line shadow-sm text-ink-soft dark:text-chalk-muted hover:text-accent"
         >
           define
         </button>

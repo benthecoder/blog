@@ -152,7 +152,7 @@
   /* One keyboard focus treatment. Add the class; it only draws on
      :focus-visible, so mouse clicks stay quiet. */
   .focus-ring:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid var(--role-accent);
     outline-offset: 2px;
   }
 
@@ -1105,7 +1105,7 @@ body {
   color: var(--color-chalk-strong);
 }
 
-body:has(.photo-site) .floating-controls,
-body:has(.places-explorer) .floating-controls {
+body:has(.photo-site:not([data-specimen])) .floating-controls,
+body:has(.places-explorer:not([data-specimen])) .floating-controls {
   display: none;
 }

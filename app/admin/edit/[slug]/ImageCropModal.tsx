@@ -9,6 +9,9 @@ import ReactCrop, {
 } from "react-image-crop";
 import type { Crop, PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import { Button } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
+import { IconButton } from "@/components/ui/IconButton";
 
 /** Largest centred crop of `aspect` that fits the image, in percent units. */
 function centeredCrop(width: number, height: number, aspect?: number): Crop {
@@ -256,8 +259,7 @@ export function ImageCropModal({
 
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <div className="flex items-center gap-1 mr-2 pr-3 border-r border-line">
-          <button
-            type="button"
+          <IconButton
             aria-label="Rotate left 90 degrees"
             title="Rotate left 90°"
             disabled={disabled || !original}
@@ -265,12 +267,10 @@ export function ImageCropModal({
               setRotation((angle) => (angle + 270) % 360);
               setCompleted(undefined);
             }}
-            className="min-h-11 min-w-11 inline-flex items-center justify-center text-accent disabled:opacity-30"
           >
             <RotateCcw size={18} />
-          </button>
-          <button
-            type="button"
+          </IconButton>
+          <IconButton
             aria-label="Rotate right 90 degrees"
             title="Rotate right 90°"
             disabled={disabled || !original}
@@ -278,10 +278,9 @@ export function ImageCropModal({
               setRotation((angle) => (angle + 90) % 360);
               setCompleted(undefined);
             }}
-            className="min-h-11 min-w-11 inline-flex items-center justify-center text-accent disabled:opacity-30"
           >
             <RotateCw size={18} />
-          </button>
+          </IconButton>
         </div>
         {(
           [
@@ -291,20 +290,15 @@ export function ImageCropModal({
             ["free", undefined],
           ] as const
         ).map(([label, value]) => (
-          <button
+          <Chip
             key={label}
-            type="button"
             disabled={disabled || !previewReady}
-            aria-pressed={aspect === value}
+            pressed={aspect === value}
             onClick={() => changeAspect(value)}
-            className={`px-2.5 py-1 text-xs rounded-xs border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
-              aspect === value
-                ? "border-accent text-accent"
-                : "border-line text-muted hover:text-accent"
-            }`}
+            className="rounded-xs"
           >
             {label}
-          </button>
+          </Chip>
         ))}
       </div>
 
@@ -328,20 +322,16 @@ export function ImageCropModal({
         </p>
       )}
       <div className="flex gap-3 justify-end">
-        <button
-          onClick={onCancel}
-          disabled={disabled}
-          className="min-h-11 px-4 py-1.5 text-sm text-ink-soft dark:text-chalk-muted hover:text-accent disabled:opacity-30 transition-colors"
-        >
+        <Button onClick={onCancel} disabled={disabled}>
           cancel
-        </button>
-        <button
+        </Button>
+        <Button
+          variant="solid"
           onClick={confirm}
           disabled={disabled || !previewReady || !completed?.width}
-          className="min-h-11 px-4 py-1.5 text-sm bg-accent text-surface hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
         >
           {disabled ? "uploading…" : "upload"}
-        </button>
+        </Button>
       </div>
     </dialog>
   );

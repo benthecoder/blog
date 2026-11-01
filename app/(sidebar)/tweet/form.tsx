@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import type { FormEvent } from "react";
+import { Button } from "@/components/ui/Button";
 
 export default function Form() {
   const router = useRouter();
@@ -68,13 +69,15 @@ export default function Form() {
         )}
       </div>
 
-      <button
-        className="flex items-center justify-center absolute right-1 top-1 px-2 py-1 font-medium h-8 bg-line/40 hover:bg-line text-accent transition-colors w-16"
-        disabled={isMutating}
+      <Button
         type="submit"
+        variant="outline"
+        size="sm"
+        className="absolute right-1 top-1 w-16"
+        disabled={isMutating}
       >
         🌊
-      </button>
+      </Button>
     </form>
   );
 }
