@@ -105,7 +105,7 @@ export default function NewEssayForm({ existing }: { existing: string[] }) {
         </button>
       </div>
       {error && (
-        <p role="alert" className="text-xs text-red-600 dark:text-red-500">
+        <p role="alert" className="text-xs text-danger">
           {error}
         </p>
       )}

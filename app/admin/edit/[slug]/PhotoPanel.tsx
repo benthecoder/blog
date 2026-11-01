@@ -157,7 +157,7 @@ export function PhotoPanel({
         )}
         {error && (
           <div className="mb-2 text-xs" role="alert">
-            <p className="text-red-600 dark:text-red-500">{error}</p>
+            <p className="text-danger">{error}</p>
             {!loading && photos.length === 0 && (
               <button
                 type="button"
@@ -220,7 +220,7 @@ export function PhotoPanel({
                 title="Preview or drag into the text"
                 aria-label={`Preview ${photo.name}, taken ${photo.time}`}
               >
-                <div className="aspect-square rounded-sm outline outline-1 -outline-offset-1 outline-black/10 dark:outline-white/10 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-accent bg-paper-sunken dark:bg-night-raised overflow-hidden relative transition-[scale] duration-150 ease-out motion-safe:group-active:scale-[0.96]">
+                <div className="aspect-square rounded-sm outline outline-1 -outline-offset-1 outline-primary/10 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-accent bg-paper-sunken dark:bg-night-raised overflow-hidden relative transition-[scale] duration-150 ease-out motion-safe:group-active:scale-[0.96]">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={photoFileUrl(photo.id, "thumb")}

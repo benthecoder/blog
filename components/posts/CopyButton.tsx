@@ -31,7 +31,7 @@ export default function CopyButton({ code }: { code: string }) {
       onClick={copy}
       aria-label={label}
       title={label}
-      className="absolute top-2 right-2 p-1.5 rounded-sm text-ink-soft hover:text-accent dark:text-chalk-muted hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-150"
+      className="absolute top-2 right-2 p-1.5 rounded-sm text-ink-soft hover:text-accent dark:text-chalk-muted hover:bg-primary/10 transition-colors duration-150"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

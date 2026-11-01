@@ -95,6 +95,21 @@
   --role-line: var(--color-rule);
 }
 
+/* Status roles. Muted, print-like pigments rather than screen primaries, so
+   an error reads like red ink on paper. Every light/dark value is >= 4.5:1
+   against its surface (paper / night). They do not follow data-palette. */
+:root {
+  --role-danger: #b23b2e;
+  --role-success: #4f7a3a;
+  --role-warning: #9e6510;
+}
+
+.dark {
+  --role-danger: #e0806f;
+  --role-success: #9cc283;
+  --role-warning: #e0b062;
+}
+
 .dark,
 .dark .colophon-swatch {
   --role-primary: var(--color-chalk-strong);
@@ -114,11 +129,21 @@
   --color-surface: var(--role-surface); /* page */
   --color-raised: var(--role-raised); /* cards, overlays */
   --color-line: var(--role-line); /* rules, borders */
+  --color-danger: var(--role-danger); /* errors, destructive actions */
+  --color-success: var(--role-success); /* published, saved, ok */
+  --color-warning: var(--role-warning); /* caution, drafts */
 }
 
 /* Small caps label above a list or section ("favorites", "linked from").
    60% keeps it quiet without dropping below readable contrast. */
 @layer components {
+  /* One keyboard focus treatment. Add the class; it only draws on
+     :focus-visible, so mouse clicks stay quiet. */
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
   .eyebrow {
     font-size: 10px;
     letter-spacing: 0.1em;

@@ -56,7 +56,7 @@ export default function SketchPage() {
       <dialog
         ref={dialogRef}
         aria-label={selected?.label ?? "Sketch viewer"}
-        className="fixed inset-0 m-0 h-full max-h-none w-full max-w-none border-0 p-0 bg-black/75 hidden open:flex justify-center items-center z-50 backdrop:bg-transparent"
+        className="fixed inset-0 m-0 h-full max-h-none w-full max-w-none border-0 p-0 bg-night/75 hidden open:flex justify-center items-center z-50 backdrop:bg-transparent"
         onClick={close}
         onCancel={(event) => {
           event.preventDefault();

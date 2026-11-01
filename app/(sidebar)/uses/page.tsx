@@ -80,7 +80,7 @@ const ProductCell = ({ item }: { item: Product }) => {
         href={item.link}
         target="_blank"
         rel="noopener noreferrer"
-        className="aspect-square flex flex-col items-center justify-center p-2 border-r border-b border-rule/40 dark:border-white/10"
+        className="aspect-square flex flex-col items-center justify-center p-2 border-r border-b border-line/40"
         style={{
           cursor: `url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24'><text y='20' font-size='20'>🔗</text></svg>") 12 12, pointer`,
         }}
@@ -91,7 +91,7 @@ const ProductCell = ({ item }: { item: Product }) => {
   }
 
   return (
-    <div className="aspect-square flex flex-col items-center justify-center p-2 border-r border-b border-rule/40 dark:border-white/10">
+    <div className="aspect-square flex flex-col items-center justify-center p-2 border-r border-b border-line/40">
       {content}
     </div>
   );
@@ -111,7 +111,7 @@ export default function ProductsPage() {
             <p className="text-[10px] tracking-[0.2em] uppercase opacity-40 mb-4 text-center">
               {category.name}
             </p>
-            <div className="grid grid-cols-3 md:grid-cols-4 border-t border-l border-rule/40 dark:border-white/10">
+            <div className="grid grid-cols-3 md:grid-cols-4 border-t border-l border-line/40">
               {category.items.map((item) => (
                 <ProductCell key={item.name} item={item} />
               ))}

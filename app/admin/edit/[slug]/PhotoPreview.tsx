@@ -45,7 +45,7 @@ export function PhotoPreview({
     <dialog
       ref={dialogRef}
       aria-labelledby={titleId}
-      className="m-auto w-[calc(100vw-2rem)] max-w-4xl max-h-[calc(100dvh-2rem)] p-0 border border-line bg-surface text-accent backdrop:bg-black/50"
+      className="m-auto w-[calc(100vw-2rem)] max-w-4xl max-h-[calc(100dvh-2rem)] p-0 border border-line bg-surface text-accent backdrop:bg-night/50"
       onCancel={(event) => {
         event.preventDefault();
         if (!busy) onClose();

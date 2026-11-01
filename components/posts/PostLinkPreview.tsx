@@ -140,7 +140,7 @@ const PostLinkPreview = ({
                 ...transitionStyles,
                 transitionTimingFunction: EASE_OUT,
               }}
-              className="origin-bottom max-w-xs p-3 rounded-md shadow-md border border-rule dark:border-white/10 bg-raised"
+              className="origin-bottom max-w-xs p-3 rounded-md shadow-md border border-line bg-raised"
             >
               <p className="text-xs font-bold text-ink dark:text-chalk-strong mb-0.5">
                 {preview.title}
