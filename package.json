@@ -16,6 +16,7 @@
     "generate:knowledge-map-3d": "tsx scripts/generateKnowledgeMap3d.ts",
     "generate:image-meta": "tsx scripts/generateImageMeta.ts",
     "image": "tsx scripts/prepareImage.ts",
+    "pr:screenshot": "tsx scripts/prScreenshot.ts",
     "prebuild": "pnpm run generate:knowledge-map",
     "postbuild": "next-sitemap",
     "generate-embeddings": "tsx scripts/generateEmbeddings.ts",

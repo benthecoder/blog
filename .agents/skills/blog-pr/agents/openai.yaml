@@ -1,0 +1,3 @@
+interface:
+  display_name: "Blog PRs"
+  short_description: "House rules for commits and pull requests"
