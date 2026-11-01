@@ -12,7 +12,7 @@ import Link from "next/link";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
 import { parseFrontmatter } from "@/utils/content/frontmatter";
-import { ArrowLeft, Calendar, Camera, Moon, Sun } from "lucide-react";
+import { ArrowLeft, Calendar, Camera } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useMounted } from "@/components/ui/ThemeSwitch";
 import CodeMirror, { EditorView } from "@uiw/react-codemirror";
@@ -25,6 +25,8 @@ import { useImageManager } from "./useImageManager";
 import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
 import { ImageCropModal } from "./ImageCropModal";
 import { ImageStrip } from "./ImageStrip";
+import { PostTimer } from "./PostTimer";
+import { DraftNavigation } from "./DraftNavigation";
 import { DayNav } from "./DayNav";
 import { PhotoPanel } from "./PhotoPanel";
 import { WordLookup, wordSelection, type WordSelection } from "./WordLookup";
@@ -72,7 +74,8 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   );
   const [message, setMessage] = useState("");
   const [showPreview, setShowPreview] = useState(false);
-  const [photosOpen, setPhotosOpen] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
+  const [photosOpen, setPhotosOpen] = useState<boolean | null>(null);
   const [modalConfig, setModalConfig] = useState<ConfirmConfig | null>(null);
   const [lookup, setLookup] = useState<WordSelection | null>(null);
   const cmRef = useRef<ReactCodeMirrorRef>(null);
@@ -287,6 +290,9 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   }, [slug, isNew, isEssay, searchParams, draft.date]);
   // The PhotoKit helper only runs locally; the photo routes 404 in production.
   const photoDate = process.env.NODE_ENV === "production" ? null : dayDate;
+  const showPhotos = Boolean(
+    photoDate && !showPreview && (photosOpen ?? desktop)
+  );
 
   const bodyWords = useMemo(() => {
     // Count the writing, not frontmatter or Markdown image destinations.
@@ -317,6 +323,12 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
     onKeyRef.current = (event) => {
       if (document.querySelector("dialog[open], [role=dialog]")) return;
       if (event.key === "Escape") {
+        if (focusMode) {
+          event.preventDefault();
+          event.stopPropagation();
+          setFocusMode(false);
+          return;
+        }
         setPhotosOpen(false);
         return;
       }
@@ -326,7 +338,11 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         event.preventDefault();
         event.stopPropagation();
       };
-      if (key === "enter") {
+      if (key === "enter" && event.shiftKey) {
+        claim();
+        setFocusMode((value) => !value);
+        setShowPreview(false);
+      } else if (key === "enter") {
         claim();
         if (!busy) runPrimary();
       } else if (key === "p" && event.shiftKey) {
@@ -375,10 +391,12 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
           : "saved";
 
   return (
-    <div className="h-dvh bg-surface">
+    <div className={`h-dvh bg-surface ${showPhotos ? "lg:pr-72" : ""}`}>
       <div className="editor-column mx-auto w-full h-full min-w-0 flex flex-col relative max-w-[760px] sm:border-x border-line">
         {/* Top bar */}
-        <div className="min-h-14 shrink-0 border-b border-line px-4 sm:px-6 py-2 flex flex-wrap gap-3 justify-between items-center">
+        <div
+          className={`${focusMode ? "hidden" : "flex"} min-h-14 shrink-0 border-b border-line px-4 sm:px-6 py-2 flex-wrap gap-3 justify-between items-center`}
+        >
           <div className="flex items-center gap-4">
             <Link
               href={
@@ -445,6 +463,34 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               >
                 {(close) => (
                   <div className="text-xs">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        close();
+                        setFocusMode(true);
+                        setShowPreview(false);
+                        cmRef.current?.view?.focus();
+                      }}
+                      className={menuItemCls}
+                    >
+                      focus mode{" "}
+                      <span className="float-right text-muted">⌘⇧↵</span>
+                    </button>
+                    {mounted && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          close();
+                          setTheme(resolvedTheme === "dark" ? "light" : "dark");
+                        }}
+                        className={menuItemCls}
+                      >
+                        {resolvedTheme === "dark"
+                          ? "light appearance"
+                          : "dark appearance"}
+                      </button>
+                    )}
+
                     {!draft.isDraft && (
                       <>
                         <button
@@ -615,49 +661,97 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
           )}
         </div>
 
-        {/* Bottom bar */}
-        <div className="shrink-0 border-t border-line px-4 sm:px-6 py-2 flex items-center justify-between gap-3 text-xs text-ink-soft dark:text-chalk-muted">
-          <span className="tabular-nums">
-            {bodyWords} words · {Math.max(1, Math.ceil(bodyWords / 200))} min
-            read
-          </span>
-          {message ? (
-            <span
-              role="status"
-              className={
-                message.includes("✓")
-                  ? "text-green-600 dark:text-green-500"
-                  : "text-red-600 dark:text-red-500"
+        {/* One footer: quiet metadata on the left, next action at the right edge. */}
+        <div
+          className={`${focusMode ? "hidden" : "flex"} shrink-0 min-h-14 border-t border-line px-4 sm:px-6 py-1.5 items-center justify-between gap-4 text-xs text-ink-soft dark:text-chalk-muted`}
+        >
+          {!isEssay && !isNew ? (
+            <DraftNavigation
+              metadata={
+                <>
+                  <span className="tabular-nums">
+                    {bodyWords} words ·{" "}
+                    {Math.max(1, Math.ceil(bodyWords / 200))} min read
+                  </span>
+                  <PostTimer
+                    key={`${kind}:${slug}:${dateParam ?? ""}`}
+                    post={`${kind}:${slug}:${dateParam ?? ""}`}
+                  />
+                </>
               }
-            >
-              {message}
-            </span>
+              saveStatus={
+                message ? (
+                  <span
+                    role="status"
+                    className={
+                      message.includes("✓")
+                        ? "text-green-600 dark:text-green-500"
+                        : "text-red-600 dark:text-red-500"
+                    }
+                  >
+                    {message}
+                  </span>
+                ) : (
+                  <span
+                    role="status"
+                    className={`transition-opacity duration-700 ${status === "saved" && !draft.savedFlash ? "opacity-0" : "opacity-100"}`}
+                  >
+                    {status}
+                  </span>
+                )
+              }
+              slug={slug}
+              date={draft.date}
+              isDraft={draft.isDraft}
+              disabled={
+                draft.loading ||
+                draft.saving ||
+                draft.publishing ||
+                draft.deleting ||
+                images.uploading
+              }
+              onNext={async (nextSlug) => {
+                if (draft.isDraft) {
+                  if (!(await draft.handlePublish())) return;
+                } else if (
+                  draft.hasUnsavedChanges &&
+                  !(await draft.handleSave())
+                ) {
+                  return;
+                }
+                router.push(
+                  nextSlug
+                    ? `/admin/edit/${encodeURIComponent(nextSlug)}`
+                    : "/admin"
+                );
+              }}
+            />
           ) : (
-            <span
-              role="status"
-              className={`transition-opacity duration-700 ${status === "saved" && !draft.savedFlash ? "opacity-0" : "opacity-100"}`}
-            >
-              {status}
-            </span>
-          )}
-          {mounted ? (
-            <button
-              type="button"
-              onClick={() =>
-                setTheme(resolvedTheme === "dark" ? "light" : "dark")
-              }
-              className="min-h-11 min-w-11 sm:min-h-9 sm:min-w-9 -mr-2 inline-flex items-center justify-center rounded-xs hover:text-accent"
-              title="toggle dark mode"
-              aria-label="Toggle dark mode"
-            >
-              {resolvedTheme === "dark" ? (
-                <Sun size={16} />
+            <>
+              <span className="tabular-nums">
+                {bodyWords} words · {Math.max(1, Math.ceil(bodyWords / 200))}{" "}
+                min read
+              </span>
+              {message ? (
+                <span
+                  role="status"
+                  className={
+                    message.includes("✓")
+                      ? "text-green-600 dark:text-green-500"
+                      : "text-red-600 dark:text-red-500"
+                  }
+                >
+                  {message}
+                </span>
               ) : (
-                <Moon size={16} />
+                <span
+                  role="status"
+                  className={`transition-opacity duration-700 ${status === "saved" && !draft.savedFlash ? "opacity-0" : "opacity-100"}`}
+                >
+                  {status}
+                </span>
               )}
-            </button>
-          ) : (
-            <span className="w-9" aria-hidden="true" />
+            </>
           )}
         </div>
 
@@ -673,7 +767,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
           />
         )}
 
-        {lookup && !showPreview && (
+        {lookup && !showPreview && !focusMode && (
           <WordLookup
             key={`${lookup.word}:${lookup.x}:${lookup.y}`}
             selection={lookup}
@@ -688,7 +782,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         )}
       </div>
 
-      {!isEssay && (
+      {!isEssay && !focusMode && (
         <DayNav
           date={dayDate}
           isNew={isNew}
@@ -700,7 +794,18 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         />
       )}
 
-      {photoDate && !showPreview && !photosOpen && (
+      {focusMode && (
+        <button
+          type="button"
+          onClick={() => setFocusMode(false)}
+          className="fixed bottom-3 left-3 z-20 min-h-9 px-3 text-xs text-ink-soft dark:text-chalk-muted opacity-40 hover:opacity-100 focus-visible:opacity-100 bg-surface rounded-xs"
+          title="Exit focus mode (Esc)"
+        >
+          exit focus · esc
+        </button>
+      )}
+
+      {photoDate && !showPreview && !showPhotos && (
         <button
           type="button"
           onClick={() => setPhotosOpen(true)}
@@ -712,7 +817,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         </button>
       )}
 
-      {photoDate && photosOpen && !showPreview && (
+      {photoDate && showPhotos && (
         <>
           {!desktop && (
             // The drawer covers the text on narrow screens; tapping the rest

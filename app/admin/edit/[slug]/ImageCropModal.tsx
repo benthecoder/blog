@@ -1,7 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, useId } from "react";
-import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
+import { RotateCcw, RotateCw } from "lucide-react";
+import ReactCrop, {
+  centerCrop,
+  makeAspectCrop,
+  convertToPixelCrop,
+} from "react-image-crop";
 import type { Crop, PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
@@ -26,17 +31,22 @@ export type CropRect = { x: number; y: number; width: number; height: number };
  * encoding twice and visibly softening the result. sharp cuts from the
  * untouched original instead, leaving exactly one lossy step.
  */
-function toSourceRect(image: HTMLImageElement, crop: PixelCrop): CropRect {
-  const scaleX = image.naturalWidth / image.width;
-  const scaleY = image.naturalHeight / image.height;
+function toSourceRect(
+  image: HTMLImageElement,
+  crop: PixelCrop,
+  sourceWidth: number,
+  sourceHeight: number
+): CropRect {
+  const scaleX = sourceWidth / image.width;
+  const scaleY = sourceHeight / image.height;
   const x = Math.max(0, Math.round(crop.x * scaleX));
   const y = Math.max(0, Math.round(crop.y * scaleY));
   return {
     x,
     y,
     // Clamp so rounding can never ask for a pixel past the edge.
-    width: Math.min(Math.round(crop.width * scaleX), image.naturalWidth - x),
-    height: Math.min(Math.round(crop.height * scaleY), image.naturalHeight - y),
+    width: Math.min(Math.round(crop.width * scaleX), sourceWidth - x),
+    height: Math.min(Math.round(crop.height * scaleY), sourceHeight - y),
   };
 }
 
@@ -54,7 +64,8 @@ export function ImageCropModal({
   onNameChange: (value: string) => void;
   onConfirm: (
     file: File,
-    crop: CropRect | null
+    crop: CropRect | null,
+    rotation: number
   ) => Promise<boolean | undefined>;
   onCancel: () => void;
   uploading: boolean;
@@ -71,6 +82,13 @@ export function ImageCropModal({
     return () => dialog?.close();
   }, []);
   const [src, setSrc] = useState("");
+  const [rotation, setRotation] = useState(0);
+  const [original, setOriginal] = useState<{
+    file: File;
+    image: HTMLImageElement;
+  } | null>(null);
+  const [previewAngle, setPreviewAngle] = useState<number | null>(null);
+  const [previewError, setPreviewError] = useState("");
   const [crop, setCrop] = useState<Crop>();
   const [completed, setCompleted] = useState<PixelCrop>();
   // Square by default: post images render as square plates, so this is the
@@ -80,15 +98,87 @@ export function ImageCropModal({
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
+    let cancelled = false;
     const url = URL.createObjectURL(file);
-    setSrc(url);
-    return () => URL.revokeObjectURL(url);
+    const image = new Image();
+    image.onload = () => {
+      if (!cancelled) setOriginal({ file, image });
+    };
+    image.onerror = () => {
+      if (!cancelled) setPreviewError("Couldn’t load this image.");
+    };
+    image.src = url;
+    return () => {
+      cancelled = true;
+      URL.revokeObjectURL(url);
+    };
   }, [file]);
+
+  useEffect(() => {
+    if (!original || original.file !== file) return;
+    let cancelled = false;
+    let previewUrl: string | undefined;
+    const image = original.image;
+    const scale = Math.min(
+      1,
+      1600 / Math.max(image.naturalWidth, image.naturalHeight)
+    );
+    const width = Math.round(image.naturalWidth * scale);
+    const height = Math.round(image.naturalHeight * scale);
+    const sideways = rotation === 90 || rotation === 270;
+    const canvas = document.createElement("canvas");
+    canvas.width = sideways ? height : width;
+    canvas.height = sideways ? width : height;
+    const context = canvas.getContext("2d");
+    if (!context) {
+      queueMicrotask(() => {
+        if (!cancelled) setPreviewError("Couldn’t prepare the image preview.");
+      });
+      return () => {
+        cancelled = true;
+      };
+    }
+    context.translate(canvas.width / 2, canvas.height / 2);
+    context.rotate((rotation * Math.PI) / 180);
+    context.drawImage(image, -width / 2, -height / 2, width, height);
+    // Preview only. The untouched original is rotated and cropped by sharp on upload.
+    canvas.toBlob((blob) => {
+      if (cancelled) return;
+      if (!blob) {
+        setPreviewError("Couldn’t prepare the image preview.");
+        return;
+      }
+      previewUrl = URL.createObjectURL(blob);
+      setSrc(previewUrl);
+      setPreviewAngle(rotation);
+    }, "image/png");
+    return () => {
+      cancelled = true;
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [original, file, rotation]);
+
+  const sideways = rotation === 90 || rotation === 270;
+  const sourceWidth = original
+    ? sideways
+      ? original.image.naturalHeight
+      : original.image.naturalWidth
+    : 0;
+  const sourceHeight = original
+    ? sideways
+      ? original.image.naturalWidth
+      : original.image.naturalHeight
+    : 0;
+  const previewReady = Boolean(
+    src && original?.file === file && previewAngle === rotation
+  );
 
   const onImageLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
       const { width, height } = e.currentTarget;
-      setCrop(centeredCrop(width, height, aspect));
+      const next = centeredCrop(width, height, aspect);
+      setCrop(next);
+      setCompleted(convertToPixelCrop(next, width, height));
     },
     [aspect]
   );
@@ -96,22 +186,27 @@ export function ImageCropModal({
   const changeAspect = (next: number | undefined) => {
     setAspect(next);
     const img = imgRef.current;
-    if (img) setCrop(centeredCrop(img.width, img.height, next));
+    if (img) {
+      const selection = centeredCrop(img.width, img.height, next);
+      setCrop(selection);
+      setCompleted(convertToPixelCrop(selection, img.width, img.height));
+    }
   };
 
   const confirm = async () => {
     const img = imgRef.current;
-    if (!img || !completed?.width || !completed?.height) return;
-    const rect = toSourceRect(img, completed);
+    if (!previewReady || !img || !completed?.width || !completed?.height)
+      return;
+    const rect = toSourceRect(img, completed, sourceWidth, sourceHeight);
     // A selection covering the whole frame needs no extract step at all.
     const full =
       rect.x === 0 &&
       rect.y === 0 &&
-      rect.width === img.naturalWidth &&
-      rect.height === img.naturalHeight;
+      rect.width === sourceWidth &&
+      rect.height === sourceHeight;
     setBusy(true);
     try {
-      await onConfirm(file, full ? null : rect);
+      await onConfirm(file, full ? null : rect, rotation);
     } finally {
       setBusy(false);
     }
@@ -138,8 +233,9 @@ export function ImageCropModal({
 
       {/* Fixed height so the dialog doesn't jump when the image decodes. */}
       <div className="h-[55vh] flex items-center justify-center bg-paper-sunken dark:bg-night-raised rounded-xs p-2 mb-4">
-        {src && (
+        {previewReady && (
           <ReactCrop
+            disabled={busy || uploading}
             crop={crop}
             onChange={(_, percentCrop) => setCrop(percentCrop)}
             onComplete={(c) => setCompleted(c)}
@@ -159,6 +255,34 @@ export function ImageCropModal({
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-4">
+        <div className="flex items-center gap-1 mr-2 pr-3 border-r border-line">
+          <button
+            type="button"
+            aria-label="Rotate left 90 degrees"
+            title="Rotate left 90°"
+            disabled={disabled || !original}
+            onClick={() => {
+              setRotation((angle) => (angle + 270) % 360);
+              setCompleted(undefined);
+            }}
+            className="min-h-11 min-w-11 inline-flex items-center justify-center text-accent disabled:opacity-30"
+          >
+            <RotateCcw size={18} />
+          </button>
+          <button
+            type="button"
+            aria-label="Rotate right 90 degrees"
+            title="Rotate right 90°"
+            disabled={disabled || !original}
+            onClick={() => {
+              setRotation((angle) => (angle + 90) % 360);
+              setCompleted(undefined);
+            }}
+            className="min-h-11 min-w-11 inline-flex items-center justify-center text-accent disabled:opacity-30"
+          >
+            <RotateCw size={18} />
+          </button>
+        </div>
         {(
           [
             ["square", 1],
@@ -170,6 +294,7 @@ export function ImageCropModal({
           <button
             key={label}
             type="button"
+            disabled={disabled || !previewReady}
             aria-pressed={aspect === value}
             onClick={() => changeAspect(value)}
             className={`px-2.5 py-1 text-xs rounded-xs border transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
@@ -196,9 +321,9 @@ export function ImageCropModal({
         className="w-full px-3 py-2 mb-6 border border-line bg-transparent text-accent focus:outline-hidden focus:border-accent rounded-xs"
       />
 
-      {error && (
+      {(error || previewError) && (
         <p role="alert" className="mb-4 text-sm text-accent">
-          {error}
+          {error || previewError}
         </p>
       )}
       <div className="flex gap-3 justify-end">
@@ -211,7 +336,7 @@ export function ImageCropModal({
         </button>
         <button
           onClick={confirm}
-          disabled={disabled || !completed?.width}
+          disabled={disabled || !previewReady || !completed?.width}
           className="min-h-11 px-4 py-1.5 text-sm bg-accent text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
         >
           {disabled ? "uploading…" : "upload"}

@@ -1,12 +1,14 @@
 import { EditorView, keymap } from "@codemirror/view";
 import { Prec } from "@codemirror/state";
 import { markdown, markdownKeymap } from "@codemirror/lang-markdown";
+import { editorLinks } from "./editorLinks";
 import { indentWithTab } from "@codemirror/commands";
 
 // Shared by post and wiki editors; stable extensions preserve undo history.
 export const markdownEditorExtensions = [
   markdown({ extensions: { remove: ["SetextHeading"] } }),
   EditorView.lineWrapping,
+  editorLinks,
   Prec.highest(
     keymap.of([
       {

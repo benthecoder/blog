@@ -2,6 +2,8 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { draftQueue } from "@/utils/adminDraftQueue";
 import { PostMetadata } from "@/types/post";
 
 interface CalendarViewProps {
@@ -43,14 +45,26 @@ export default function CalendarView({ posts }: CalendarViewProps) {
   const postsByDate = new Map<string, PostMetadata>();
   posts.forEach((post) => {
     const slug = post.slug;
-    if (slug.length === 6) {
+    if (/^\d{6}$/.test(slug)) {
       const day = slug.substring(0, 2);
       const mon = slug.substring(2, 4);
       const yr = slug.substring(4, 6);
       const dateKey = `20${yr}-${mon}-${day}`;
-      postsByDate.set(dateKey, post);
+      const existing = postsByDate.get(dateKey);
+      if (!existing || post.isDraft || !existing.isDraft)
+        postsByDate.set(dateKey, post);
     }
   });
+
+  const drafts = draftQueue(posts);
+  const datedPosts = [...postsByDate.entries()]
+    .filter(([key]) =>
+      key.startsWith(`${year}-${String(month + 1).padStart(2, "0")}-`)
+    )
+    .map(([, post]) => post);
+  const monthDrafts = datedPosts.filter((post) => post.isDraft);
+  const monthPublished = datedPosts.length - monthDrafts.length;
+  const oldest = drafts[0];
 
   const handleDateClick = (day: number) => {
     const dd = String(day).padStart(2, "0");
@@ -110,12 +124,48 @@ export default function CalendarView({ posts }: CalendarViewProps) {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="mb-8 flex items-center justify-between">
+      <section
+        aria-label="Writing progress"
+        className="mb-8 border-b border-line pb-5 flex flex-wrap items-center justify-between gap-4"
+      >
+        <div>
+          <p className="text-xl text-accent tabular-nums">
+            {drafts.length} drafts left
+          </p>
+          <p className="mt-1 text-xs text-ink-soft dark:text-chalk-muted">
+            {monthDrafts.length} this month · {monthPublished} published
+          </p>
+        </div>
+        {oldest && (
+          <Link
+            href={`/admin/edit/${encodeURIComponent(oldest.slug)}`}
+            className="min-h-11 inline-flex items-center text-sm text-accent underline underline-offset-4"
+          >
+            continue oldest draft →
+          </Link>
+        )}
+        {datedPosts.length > 0 && (
+          <div className="w-full">
+            <progress
+              aria-label="Published entries this month"
+              max={datedPosts.length}
+              value={monthPublished}
+              className="block h-1.5 w-full accent-accent"
+            />
+            <p className="mt-2 text-xs text-ink-soft dark:text-chalk-muted">
+              {monthPublished} of {datedPosts.length} entries published this
+              month
+            </p>
+          </div>
+        )}
+      </section>
+      <div className="mb-8 flex flex-wrap gap-4 items-center justify-between">
         <h2 className="text-3xl font-light tracking-wide text-accent">
           {monthNames[month]} {year}
         </h2>
         <div className="flex gap-3">
           <button
+            aria-label="Previous month"
             onClick={prevMonth}
             className="px-4 py-2 border border-line rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-accent"
           >
@@ -128,6 +178,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
             今日
           </button>
           <button
+            aria-label="Next month"
             onClick={nextMonth}
             className="px-4 py-2 border border-line rounded-xs hover:bg-paper dark:hover:bg-night-raised transition-colors text-accent"
           >
@@ -136,7 +187,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-3">
+      <div className="grid grid-cols-7 gap-1 sm:gap-3">
         {dayNames.map((day) => (
           <div
             key={day}
@@ -163,10 +214,10 @@ export default function CalendarView({ posts }: CalendarViewProps) {
               key={day}
               onClick={() => handleDateClick(day)}
               className={`
-                aspect-square border rounded-xs p-3 flex flex-col items-start justify-between relative
+                min-h-20 sm:aspect-square border rounded-xs p-1 sm:p-3 flex flex-col items-start justify-between relative
                 hover:border-accent hover:shadow-xs transition-[border-color,box-shadow]
                 ${isTodayDate ? "border-accent bg-chalk-soft dark:bg-night-raised shadow-xs" : "border-line"}
-                ${isDraft ? "border-2 border-dashed border-blue-400 dark:border-blue-500 bg-blue-50 dark:bg-blue-950/20" : ""}
+                ${isDraft ? "border-dashed border-accent bg-accent/5" : ""}
                 ${post && !isTodayDate && !isDraft ? "bg-paper dark:bg-night-raised/50" : ""}
                 ${!post && !isTodayDate ? "bg-paper-raised dark:bg-night" : ""}
               `}
@@ -184,7 +235,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
                   {day}
                 </span>
                 {isDraft && (
-                  <span className="text-blue-500 dark:text-blue-400 text-[10px] font-medium uppercase tracking-wide">
+                  <span className="text-accent text-[10px] font-medium uppercase tracking-wide">
                     draft
                   </span>
                 )}
