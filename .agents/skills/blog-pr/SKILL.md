@@ -23,7 +23,7 @@ Benedict reads every PR to learn, not only to approve. Write each one as a short
 <2-4 sentences on the outcome and why>
 
 ## screenshots
-<before/after images; see below>
+<before/after images, only when something visible changed; see below>
 
 ## what to learn from this
 <the lesson>
@@ -36,7 +36,9 @@ Benedict reads every PR to learn, not only to approve. Write each one as a short
 
 ## Screenshots
 
-Every PR has them. Start `pnpm dev` if `localhost:3000` is down, then:
+Screenshots show a change a reader of the site can see: layout, styling, copy, a new page or state. Include them whenever the rendered site changes, and leave the section out entirely when it does not (types, lint, scripts, ci, refactors with identical output). Never screenshot terminal output or a page the diff does not change; the `## verify` section covers proof for those.
+
+Start `pnpm dev` if `localhost:3000` is down, then:
 
 ```sh
 pnpm pr:screenshot /changed/route                       # after, from localhost
@@ -44,7 +46,7 @@ pnpm pr:screenshot --base https://bneo.xyz /changed/route  # before, from produc
 pnpm pr:screenshot --mobile /changed/route              # add when layout changes
 ```
 
-Each command prints a markdown image line. Paste them under `## screenshots`, before then after. For changes with no visible page (scripts, tooling), screenshot the page the change feeds, or the terminal output of the verify step, and say so.
+Each command prints a markdown image line. Paste them under `## screenshots`, before then after.
 
 ## Verify before opening
 

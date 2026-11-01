@@ -35,7 +35,7 @@ A task is done when the repo looks like you were never there, apart from the int
 
 ## Commits and PRs
 
-Before any commit, push, or PR, load the `blog-pr` skill (`.agents/skills/blog-pr/SKILL.md`). Short version: lowercase, no AI attribution, always screenshots, and a "what to learn from this" section.
+Before any commit, push, or PR, load the `blog-pr` skill (`.agents/skills/blog-pr/SKILL.md`). Short version: lowercase, no AI attribution, screenshots for visible changes only, and a "what to learn from this" section.
 
 ## Skills
 
