@@ -40,7 +40,7 @@ export default function SketchPage() {
         {SKETCHES.map((sketch) => (
           <button
             key={sketch.src}
-            className="break-inside-avoid mb-0 cursor-crosshair w-full text-left"
+            className="focus-ring break-inside-avoid mb-0 cursor-crosshair w-full text-left"
             onClick={() => setSelected(sketch)}
           >
             <Image

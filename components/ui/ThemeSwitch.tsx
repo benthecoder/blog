@@ -28,7 +28,7 @@ const ThemeSwitcher = () => {
       onClick={toggleTheme}
       data-cuelume-toggle="toggle"
       aria-label={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} mode`}
-      className="flex w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
+      className="focus-ring flex w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
     >
       <SketchIcon
         src={`/icons/${icon}`}

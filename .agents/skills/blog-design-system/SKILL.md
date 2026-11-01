@@ -131,6 +131,11 @@ Use motion to communicate interaction or loading. Existing examples include imag
 | Image and caption | Photographs within writing | `PostImage`; framed preview, caption, full-image overlay |
 | Appearance controls | Mode and palette selection | `ThemeSwitch`, `PaletteSwitch`, `FloatingControls`; respect the active page shell’s placement |
 | Search | Finding existing content | `SearchModal` and search-page components; preserve keyboard navigation, result hierarchy, and loading/empty/error handling |
+| `Button` / `ButtonLink` | Any action (`Button`) or link that should look like one (`ButtonLink`) | `components/ui/Button.tsx`. `variant` `quiet` (default, text only), `outline`, `solid`; `size` `sm`/`md`; `tone="danger"` for destructive actions. Defaults to `type="button"`; pass `type="submit"` in forms |
+| `IconButton` | A control that is only an icon | `components/ui/IconButton.tsx`. `aria-label` is required by the props type. `size` `sm` (tight, 14px icons) or `md` (44px target) |
+| `Chip` | A filter that toggles | `components/ui/Chip.tsx`. `pressed` becomes `aria-pressed`, the selected look keys off it; optional `count`. Used by the map category filter |
+
+The primitives are styled by roles only, carry `focus-ring`, and set `data-ui` so theme CSS (`map.css`, `photos.css`) leaves them alone, so they render correctly in notebook, washi and darkroom. Reach for them before writing a `<button className=...>`; every new button needs a `focus-visible` treatment, and the primitives already have it.
 
 For controls without a shared component, use the nearest existing treatment. A link navigates; a button performs an action. Prefer low-emphasis text or icon actions for secondary tasks. Use an explicit text label when the action’s scope is unclear. Filters should communicate whether one or several values can be selected, show selection clearly, and offer a reset when needed. Do not introduce a new button or chip style for each page.
 
@@ -164,3 +169,8 @@ These patterns apply across archives, wiki, library, projects, galleries, photog
 Use concise, direct UI labels and the blog’s personal voice. Preserve authored titles and descriptions. Show only meaningful metadata; avoid empty placeholders for optional fields.
 
 For a visual change, compare the page with an existing page of the same type. Check narrow and wide layouts, long titles, sparse and dense content, applicable interaction states, and both color modes. Verify the active palette and the composition as a whole. Update only the affected component or pattern; introduce a shared token or component when a repeated need justifies it.
+
+## Checking your work
+
+- `/design` (`app/design/page.tsx`) is the specimen: role swatches, status colors, the type scale, and every primitive in every state, rendered in the notebook, washi (`.places-explorer`) and darkroom (`.photo-site`) themes. Add new primitives there, and screenshot it in design PRs.
+- `pnpm lint:design` (`scripts/checkDesignTokens.ts`, also a CI step) fails on hex colors, Tailwind default palette classes and arbitrary `text-[Npx]` sizes in `app/` and `components/`. Fix the hit with a role or size token; only add to its `ALLOW` list, with a reason, for a genuinely intentional exception.

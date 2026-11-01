@@ -25,7 +25,7 @@ export function ContactSheet({ photos, offset = 0, onOpen }: Props) {
             className="ph-cell"
           >
             <button
-              className="ph-frame"
+              className="focus-ring ph-frame"
               aria-label={`Open photo: ${photoAlt(photo)}`}
               onClick={() => onOpen(offset + index)}
             >

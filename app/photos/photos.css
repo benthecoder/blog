@@ -36,11 +36,11 @@
   -webkit-user-select: none;
   user-select: none;
 }
-.photo-site a {
+.photo-site a:not([data-ui]) {
   color: inherit;
   text-decoration: none;
 }
-.photo-site button {
+.photo-site button:not([data-ui]) {
   color: inherit;
   font: inherit;
   letter-spacing: inherit;

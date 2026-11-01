@@ -37,7 +37,7 @@ const PaletteSwitch = () => {
       data-cuelume-toggle="bloom"
       title={`${PALETTE_LABELS[palette]} → ${PALETTE_LABELS[next]}`}
       aria-label={`Change color palette to ${PALETTE_LABELS[next]}`}
-      className="flex w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
+      className="focus-ring flex w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
     >
       {/* SketchIcon masks the black line art with bg-accent, so the
           drawing tints with the palette it switches to. */}
