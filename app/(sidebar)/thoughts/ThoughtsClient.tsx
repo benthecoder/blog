@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, type ReactNode } from "react";
 import Link from "next/link";
 import { fetchThoughtPage } from "@/utils/thoughtsPage";
 import { parsePublicUrl } from "@/utils/tweets/link";
-import type { Thought } from "@/types/thoughts";
+import type { Thought } from "@/utils/thoughts";
 
 const PAGE_SIZE = 100;
 const formatter = new Intl.DateTimeFormat("en-US", {

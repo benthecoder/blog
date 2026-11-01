@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
+import { parseRows, thoughtRowSchema } from "@/utils/thoughts";
 
 export const dynamic = "force-dynamic";
 
@@ -59,12 +60,15 @@ export async function GET(request: NextRequest) {
           `;
 
     // Public data only. Browsers recheck; shared caches absorb repeated reads.
-    return NextResponse.json(thoughts, {
-      headers: {
-        "Cache-Control":
-          "public, max-age=0, s-maxage=60, stale-while-revalidate=60",
-      },
-    });
+    return NextResponse.json(
+      parseRows(thoughtRowSchema, thoughts, "thoughts feed"),
+      {
+        headers: {
+          "Cache-Control":
+            "public, max-age=0, s-maxage=60, stale-while-revalidate=60",
+        },
+      }
+    );
   } catch (error) {
     console.error("Error fetching thoughts:", error);
     return NextResponse.json(

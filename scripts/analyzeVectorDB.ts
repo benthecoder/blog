@@ -332,4 +332,5 @@ async function main() {
   }
 }
 
-main();
+// main catches every failure itself and exits 1.
+void main();

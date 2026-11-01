@@ -1,8 +1,8 @@
 import { neon } from "@neondatabase/serverless";
 import { Metadata } from "next";
 import ThoughtsClient from "./ThoughtsClient";
-import type { Thought } from "@/types/thoughts";
 import { pageMetadata } from "@/utils/pageMetadata";
+import { parseRows, thoughtRowSchema, type Thought } from "@/utils/thoughts";
 
 // ISR requires the Node runtime; Edge ignored the hourly revalidation.
 export const dynamic = "force-static";
@@ -18,12 +18,13 @@ const sql = neon(process.env.POSTGRES_URL!);
 const INITIAL_LIMIT = 100;
 
 async function getInitialThoughts(): Promise<Thought[]> {
-  return sql`
+  const rows = await sql`
     SELECT id, content, link, link_title, created_at
     FROM tweets
     ORDER BY id DESC
     LIMIT ${INITIAL_LIMIT}
-  ` as unknown as Thought[];
+  `;
+  return parseRows(thoughtRowSchema, rows, "thoughts");
 }
 
 export default async function ThoughtsPage() {

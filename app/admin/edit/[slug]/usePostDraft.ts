@@ -3,9 +3,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { useRouter, useSearchParams } from "next/navigation";
 import {
-  parseFrontmatter,
+  FrontmatterError,
+  parseMarkdown,
   stringifyFrontmatter,
 } from "@/utils/content/frontmatter";
+import { draftFrontmatterSchema } from "@/utils/content/schemas";
 import {
   draftRecoveryKey,
   readDraftBackup,
@@ -13,7 +15,7 @@ import {
   removeDraftBackup,
 } from "@/utils/content/draftRecovery";
 import type { ContentKind } from "@/utils/content/kind";
-import { toDateString } from "@/utils/content/essayDate";
+
 import {
   publishImagePaths,
   unpublishImagePaths,
@@ -131,7 +133,9 @@ export function usePostDraft({
       );
     } catch (err) {
       if (!controller.signal.aborted)
-        notify(`✗ Template: ${err instanceof Error ? err.message : err}`);
+        notify(
+          `✗ Template: ${err instanceof Error ? err.message : String(err)}`
+        );
     } finally {
       if (!controller.signal.aborted) setTemplateLoading(false);
     }
@@ -140,7 +144,8 @@ export function usePostDraft({
   const switchTemplate = (kind: PeriodKind | "blank") => {
     const dateParam = searchParams.get("date");
     if (!dateParam || kind === template) return;
-    const run = () => loadTemplate(kind, dateParam, date);
+    // loadTemplate catches its own failures and reports them through notify.
+    const run = () => void loadTemplate(kind, dateParam, date);
     if (hasUnsavedChanges) {
       confirmAction(
         "replace your writing?",
@@ -295,7 +300,9 @@ export function usePostDraft({
         const suggested = hasSavedDraft
           ? undefined
           : suggestPeriods(dateObj)[0];
-        if (suggested) loadTemplate(suggested, newDateParam, formattedDate);
+        // Fire and forget: loadTemplate reports its own failures via notify.
+        if (suggested)
+          void loadTemplate(suggested, newDateParam, formattedDate);
       } else {
         setMarkdown(DEFAULT_POST_TEMPLATE);
         initialContentRef.current = { markdown: DEFAULT_POST_TEMPLATE };
@@ -322,13 +329,16 @@ export function usePostDraft({
       if (!auto) notify("");
 
       try {
-        const { data: frontmatter, content } = parseFrontmatter(toSave);
+        // Throws a FrontmatterError naming the bad field; caught below.
+        const { data: frontmatter, content } = parseMarkdown(
+          toSave,
+          draftFrontmatterSchema,
+          "frontmatter"
+        );
 
-        const parsedTitle = (frontmatter.title || "").toString().trim();
-        const parsedTags = (frontmatter.tags || "").toString().trim();
-        const parsedDate = isEssay
-          ? toDateString(frontmatter.date || date)
-          : (frontmatter.date || date).toString().trim();
+        const parsedTitle = (frontmatter.title ?? "").trim();
+        const parsedTags = (frontmatter.tags ?? "").trim();
+        const parsedDate = (frontmatter.date || date).trim();
 
         let slugToUse = slug;
 
@@ -350,7 +360,7 @@ export function usePostDraft({
             slug: slugToUse,
             title: parsedTitle,
             tags: parsedTags,
-            ...(frontmatter.format !== undefined
+            ...(frontmatter.format != null
               ? { format: frontmatter.format }
               : {}),
             date: parsedDate,
@@ -359,8 +369,8 @@ export function usePostDraft({
             ...(isEssay
               ? {
                   ...kindBody,
-                  subtitle: (frontmatter.subtitle || "").toString().trim(),
-                  updated: toDateString(frontmatter.updated),
+                  subtitle: (frontmatter.subtitle ?? "").trim(),
+                  updated: frontmatter.updated ?? "",
                 }
               : {}),
           }),
@@ -400,7 +410,11 @@ export function usePostDraft({
           notify(`✗ Error: ${data.error}`);
         }
       } catch (error) {
-        notify(`✗ Error: ${error}`);
+        notify(
+          error instanceof FrontmatterError
+            ? `✗ Frontmatter: ${error.detail}`
+            : `✗ Error: ${String(error)}`
+        );
       } finally {
         saveInFlight.current = false;
         settleSave();
@@ -482,7 +496,7 @@ export function usePostDraft({
         notify(`✗ Error: ${data.error}`);
       }
     } catch (error) {
-      notify(`✗ Error: ${error}`);
+      notify(`✗ Error: ${String(error)}`);
     } finally {
       setPublishing(false);
     }
@@ -510,7 +524,7 @@ export function usePostDraft({
         notify(`✗ Error: ${data.error}`);
       }
     } catch (error) {
-      notify(`✗ Error: ${error}`);
+      notify(`✗ Error: ${String(error)}`);
     } finally {
       setPublishing(false);
     }
@@ -554,7 +568,7 @@ export function usePostDraft({
           }
         } catch (error) {
           deletingRef.current = false;
-          notify(`✗ Error: ${error}`);
+          notify(`✗ Error: ${String(error)}`);
         } finally {
           if (!deleted) {
             deletingRef.current = false;
@@ -680,7 +694,8 @@ export function usePostDraft({
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "s") {
         e.preventDefault();
-        handleSave();
+        // handleSave reports failures through notify and never rejects.
+        void handleSave();
       }
     };
 

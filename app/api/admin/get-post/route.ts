@@ -1,7 +1,11 @@
 import fs from "fs";
 import { readMarkdownFile } from "@/utils/content/markdown";
+import { FrontmatterError } from "@/utils/content/frontmatter";
 import { NextRequest, NextResponse } from "next/server";
-import { toDateString } from "@/utils/content/essayDate";
+import {
+  essayFrontmatterSchema,
+  postFrontmatterSchema,
+} from "@/utils/content/schemas";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { isSafeSlug } from "@/config/paths";
 import { parseKind, contentPaths } from "@/utils/content/kind";
@@ -45,23 +49,35 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
-    const { data, content } = readMarkdownFile(filePath);
-
+    if (kind === "essay") {
+      const { data, content } = readMarkdownFile(
+        filePath,
+        essayFrontmatterSchema
+      );
+      return NextResponse.json({
+        subtitle: data.subtitle ?? "",
+        updated: data.updated ?? "",
+        format: data.format,
+        title: data.title,
+        tags: data.tags ?? "",
+        date: data.date,
+        content,
+        isDraft,
+      });
+    }
+    const { data, content } = readMarkdownFile(filePath, postFrontmatterSchema);
     return NextResponse.json({
-      ...(kind === "essay"
-        ? {
-            subtitle: data.subtitle || "",
-            updated: data.updated ? toDateString(data.updated) : "",
-          }
-        : {}),
       format: data.format,
-      title: data.title || "",
-      tags: data.tags || "",
-      date: kind === "essay" ? toDateString(data.date) : data.date || "",
+      title: data.title,
+      tags: data.tags ?? "",
+      date: data.date,
       content,
       isDraft,
     });
-  } catch {
+  } catch (error) {
+    if (error instanceof FrontmatterError) {
+      return NextResponse.json({ error: error.message }, { status: 422 });
+    }
     return NextResponse.json({ error: "Post not found" }, { status: 404 });
   }
 }
