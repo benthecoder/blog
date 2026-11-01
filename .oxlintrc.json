@@ -7,18 +7,50 @@
     "react",
     "nextjs",
     "jsx-a11y",
-    "import"
+    "import",
+    "promise"
   ],
   "categories": { "correctness": "error" },
+  "options": { "typeAware": true },
   "rules": {
+    "react/rules-of-hooks": "error",
     "react/exhaustive-deps": "warn",
     "react/set-state-in-effect": "warn",
     "react/refs": "warn",
     "react/purity": "warn",
+    "react/unsupported-syntax": "warn",
+    "react/display-name": "error",
+    "react/jsx-no-comment-textnodes": "error",
+    "react/no-unescaped-entities": "error",
+    "react/require-render-return": "error",
+
     "no-unused-vars": [
       "error",
       { "ignoreRestSiblings": true, "argsIgnorePattern": "^_" }
     ],
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-rest-params": "error",
+    "prefer-spread": "error",
+    "no-array-constructor": "error",
+
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/no-namespace": "error",
+    "typescript/no-require-imports": "error",
+    "typescript/no-unnecessary-type-constraint": "error",
+    "typescript/no-unsafe-function-type": "error",
+
+    "typescript/no-floating-promises": "warn",
+    "typescript/no-base-to-string": "warn",
+    "typescript/restrict-template-expressions": "warn",
+    "typescript/unbound-method": "warn",
+    "typescript/require-array-sort-compare": "warn",
+    "typescript/no-meaningless-void-operator": "warn",
+
+    "import/no-anonymous-default-export": "warn",
+
     "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/no-static-element-interactions": "off",
     "jsx-a11y/no-noninteractive-element-interactions": "off",
@@ -26,9 +58,19 @@
     "jsx-a11y/label-has-associated-control": "off",
     "jsx-a11y/no-autofocus": "off"
   },
+  "overrides": [
+    {
+      "files": ["scripts/**", "utils/chunking/**"],
+      "rules": {
+        "typescript/no-explicit-any": "warn",
+        "typescript/no-require-imports": "off"
+      }
+    }
+  ],
   "env": { "builtin": true, "browser": true, "node": true },
   "ignorePatterns": [
     ".next",
+    ".claude",
     "node_modules",
     "public",
     "next-env.d.ts",
