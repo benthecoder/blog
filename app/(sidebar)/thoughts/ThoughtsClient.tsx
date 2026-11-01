@@ -105,7 +105,8 @@ export default function ThoughtsClient({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          loadMore();
+          // loadMore logs its own failures; the next scroll retries.
+          void loadMore();
         }
       },
       { threshold: 0.1 }

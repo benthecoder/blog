@@ -205,8 +205,8 @@ export default function KnowledgeMap({
       transformRef.current,
       target,
       ({ k, x, y }) =>
-        select<Element, unknown>(canvas).call(
-          behavior.transform,
+        behavior.transform(
+          select<Element, unknown>(canvas),
           zoomIdentity.translate(x, y).scale(k)
         ),
       {

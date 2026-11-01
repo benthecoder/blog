@@ -540,7 +540,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                         disabled={draft.deleting}
                         onClick={() => {
                           close();
-                          void draft.handleDelete();
+                          draft.handleDelete();
                         }}
                         className={`${menuItemCls} text-muted hover:text-accent`}
                       >

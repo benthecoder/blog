@@ -62,7 +62,8 @@ export function PhotoPanel({
     setPreviewId(null);
     setPicking(null);
 
-    (async () => {
+    // Fire and forget: failures land in the error state below.
+    void (async () => {
       try {
         const res = await fetch(
           `/api/admin/photos?date=${encodeURIComponent(date)}`,
@@ -76,7 +77,7 @@ export function PhotoPanel({
         setPhotos(data.photos);
       } catch (err) {
         if (!controller.signal.aborted)
-          setError(`Couldn't load photos (${err})`);
+          setError(`Couldn't load photos (${String(err)})`);
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -107,7 +108,8 @@ export function PhotoPanel({
       setPreviewId(null);
       onPick(new File([blob], `${name}.jpg`, { type: "image/jpeg" }), name);
     } catch (err) {
-      if (!controller.signal.aborted) setError(`Couldn't fetch photo (${err})`);
+      if (!controller.signal.aborted)
+        setError(`Couldn't fetch photo (${String(err)})`);
     } finally {
       if (pickRequest.current === controller) {
         pickRequest.current = null;

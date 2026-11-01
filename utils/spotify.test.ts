@@ -115,11 +115,13 @@ describe("Spotify caching", () => {
     async (stage) => {
       let stalledSignal: AbortSignal | undefined;
       const controllers: AbortController[] = [];
-      vi.spyOn(AbortSignal, "timeout").mockImplementation(() => {
-        const controller = new AbortController();
-        controllers.push(controller);
-        return controller.signal;
-      });
+      const timeout = vi
+        .spyOn(AbortSignal, "timeout")
+        .mockImplementation(() => {
+          const controller = new AbortController();
+          controllers.push(controller);
+          return controller.signal;
+        });
       let markStarted!: () => void;
       const started = new Promise<void>((resolve) => {
         markStarted = resolve;
@@ -151,7 +153,7 @@ describe("Spotify caching", () => {
       const apiResponse = GET();
       await started;
       expect(stalledSignal).toBeDefined();
-      expect(AbortSignal.timeout).toHaveBeenCalledWith(10_000);
+      expect(timeout).toHaveBeenCalledWith(10_000);
       const stalled = controllers.find(
         (controller) => controller.signal === stalledSignal
       )!;
