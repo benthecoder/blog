@@ -75,6 +75,11 @@ export const getPostMetadata = cache(function getPostMetadata(
       tags: extractTags(data as PostFrontmatter),
       format: formatOf(slug, data),
       locations: parseLocations(data.locations),
+      placeContext: ["visit", "transit", "mention"].includes(
+        String(data.place_context)
+      )
+        ? (data.place_context as PostMetadata["placeContext"])
+        : undefined,
       wordcount: calculateWordCount(content),
       slug,
       isDraft: dir.includes("drafts"),

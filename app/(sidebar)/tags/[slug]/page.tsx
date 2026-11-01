@@ -39,7 +39,7 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   if (format) permanentRedirect(`/posts?view=${format}`);
   const destination = legacyTravelDestination(tag);
   if (destination)
-    permanentRedirect(`/posts?view=travels#${travelPlaceId(destination)}`);
+    permanentRedirect(`/posts?view=places#${travelPlaceId(destination)}`);
   const canonical = canonicalTopicTag(tag);
   if (
     canonical !== tag &&

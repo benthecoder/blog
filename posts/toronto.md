@@ -5,6 +5,7 @@ date: Sep 18, 2023
 format: journal
 locations:
   - Toronto
+place_context: visit
 ---
 
 ![The CN Tower](/images/toronto.jpeg)

@@ -6,6 +6,7 @@ export interface PostMetadata {
   tags: string[];
   format?: PostFormat;
   locations?: string[];
+  placeContext?: "visit" | "transit" | "mention";
   wordcount: number;
   slug: string;
   prev: PostMetadata | null;
