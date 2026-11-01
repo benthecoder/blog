@@ -36,25 +36,26 @@ function parseMonthName(dateStr: string): Date | null {
 
 export function extractPostDate(
   filePath: string,
-  frontmatter: Record<string, unknown> | null
+  frontmatter: { date?: string } | null
 ): Date {
-  if (frontmatter?.date) {
+  const date = frontmatter?.date;
+  if (date) {
     // Date-only ISO strings parse as UTC midnight; keep them local like the
     // other formats so toISODateString round-trips in any timezone.
-    const iso = String(frontmatter.date).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const iso = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (iso) {
       const local = new Date(+iso[1], +iso[2] - 1, +iso[3]);
       if (!isNaN(local.getTime())) return local;
     }
 
-    const direct = new Date(frontmatter.date as string);
+    const direct = new Date(date);
     if (!isNaN(direct.getTime())) return direct;
 
-    const fromName = parseMonthName(String(frontmatter.date));
+    const fromName = parseMonthName(date);
     if (fromName) return fromName;
 
     console.warn(
-      `Could not parse date '${frontmatter.date}' from frontmatter in ${filePath}`
+      `Could not parse date '${date}' from frontmatter in ${filePath}`
     );
   }
 
@@ -71,6 +72,16 @@ export function extractPostDate(
 export function toISODateString(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+/**
+ * Frontmatter dates carry no timezone. `new Date("2023-05-27")` is UTC
+ * midnight, which renders as May 26 west of UTC, so read the ISO form as
+ * local midnight like the "May 27, 2023" form already is.
+ */
+export function parsePostDate(date: string): Date {
+  const iso = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return iso ? new Date(+iso[1], +iso[2] - 1, +iso[3]) : new Date(date);
 }
 
 // Frontmatter dates carry no timezone, so read them with local getters.

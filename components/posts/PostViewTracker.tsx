@@ -48,7 +48,8 @@ const PostViewTracker = ({ slug }: PostViewTrackerProps) => {
       }
     };
 
-    track();
+    // A view count is best effort: track swallows its own failures.
+    void track();
     return () => controller.abort();
   }, [slug]);
 

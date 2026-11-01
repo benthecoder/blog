@@ -1,4 +1,6 @@
 import type { PostFrontmatter, PostMetadata } from "@/types/post";
+import type { z } from "zod";
+import type { tagsSchema } from "./schemas";
 
 const TOPIC_ALIASES: Record<string, string> = {
   ml: "machine-learning",
@@ -25,15 +27,18 @@ export function canonicalTopicTag(tag: string): string {
  * Normalize a frontmatter `tags` value (array, comma-separated string, or
  * missing) into a clean string array. Shared by posts and wiki.
  */
-export function parseTags(value: unknown): string[] {
+export function parseTags(
+  value: z.infer<typeof tagsSchema> | undefined
+): string[] {
   if (!value) return [];
-  if (Array.isArray(value)) return value as string[];
-  if (typeof value === "string") return value.split(",").map((t) => t.trim());
-  return [];
+  if (Array.isArray(value)) return value;
+  return value.split(",").map((t) => t.trim());
 }
 
-export function extractTags(frontmatter: PostFrontmatter): string[] {
-  return parseTags(frontmatter?.tags);
+export function extractTags(
+  frontmatter: Pick<PostFrontmatter, "tags">
+): string[] {
+  return parseTags(frontmatter.tags);
 }
 
 export function countTagFrequency(

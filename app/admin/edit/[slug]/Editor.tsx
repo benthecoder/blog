@@ -11,7 +11,8 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import RenderPost from "@/components/posts/RenderPost";
 import MarkdownPreview from "@/components/posts/MarkdownPreview";
-import { parseFrontmatter } from "@/utils/content/frontmatter";
+import { FrontmatterError, parseMarkdown } from "@/utils/content/frontmatter";
+import { draftFrontmatterSchema } from "@/utils/content/schemas";
 import { ArrowLeft, Calendar, Camera } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useMounted } from "@/components/ui/ThemeSwitch";
@@ -19,7 +20,7 @@ import CodeMirror, { EditorView } from "@uiw/react-codemirror";
 import type { ReactCodeMirrorRef } from "@uiw/react-codemirror";
 import type { ContentKind } from "@/utils/content/kind";
 import { essayProseClasses } from "@/components/essays/essayProse";
-import { formatEssayDate, toDateString } from "@/utils/content/essayDate";
+import { formatEssayDate } from "@/utils/content/essayDate";
 import { usePostDraft } from "./usePostDraft";
 import { useImageManager } from "./useImageManager";
 import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
@@ -539,7 +540,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                         disabled={draft.deleting}
                         onClick={() => {
                           close();
-                          void draft.handleDelete();
+                          draft.handleDelete();
                         }}
                         className={`${menuItemCls} text-muted hover:text-accent`}
                       >
@@ -573,11 +574,17 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                 {(() => {
                   let parsed;
                   try {
-                    parsed = parseFrontmatter(draft.markdown);
-                  } catch {
+                    parsed = parseMarkdown(
+                      draft.markdown,
+                      draftFrontmatterSchema,
+                      "frontmatter"
+                    );
+                  } catch (error) {
                     return (
-                      <p role="alert">
+                      <p role="alert" className="whitespace-pre-line">
                         Frontmatter needs fixing. Return to Edit to correct it.
+                        {error instanceof FrontmatterError &&
+                          `\n\n${error.detail}`}
                       </p>
                     );
                   }
@@ -585,17 +592,17 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
 
                   if (isEssay) {
                     const date = formatEssayDate(
-                      toDateString(frontmatter.date || draft.date)
+                      frontmatter.date || draft.date
                     );
                     return (
                       <div className="mx-auto max-w-[65ch]">
                         <header className="mb-10">
                           <h1 className="text-2xl font-bold lowercase leading-tight tracking-tight text-balance text-primary md:text-4xl">
-                            {(frontmatter.title || "Untitled").toString()}
+                            {frontmatter.title || "Untitled"}
                           </h1>
                           {frontmatter.subtitle ? (
                             <p className="mt-3 text-base text-secondary">
-                              {frontmatter.subtitle.toString()}
+                              {frontmatter.subtitle}
                             </p>
                           ) : null}
                           {date && (
@@ -613,9 +620,9 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
 
                   const post = {
                     data: {
-                      title: (frontmatter.title || "Untitled").toString(),
-                      tags: (frontmatter.tags || "").toString(),
-                      date: (frontmatter.date || draft.date).toString(),
+                      title: frontmatter.title || "Untitled",
+                      tags: frontmatter.tags || "",
+                      date: frontmatter.date || draft.date,
                     },
                     content: content,
                   };

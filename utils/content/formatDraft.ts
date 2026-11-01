@@ -170,10 +170,8 @@ export function formatDraft(markdown: string): string {
   const m = text.match(FRONTMATTER_RE);
 
   let body = formatBody(m ? text.slice(m[0].length) : text);
-  if (
-    m &&
-    /^sunday links\b/i.test(String(parseFrontmatter(text).data.title ?? ""))
-  )
+  const title = m ? parseFrontmatter(text).data.title : undefined;
+  if (typeof title === "string" && /^sunday links\b/i.test(title))
     body = withoutSundayIssueHeading(body);
   if (!m) return body ? body + "\n" : "";
 

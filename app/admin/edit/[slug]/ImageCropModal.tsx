@@ -313,7 +313,8 @@ export function ImageCropModal({
         value={name}
         onChange={(e) => onNameChange(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && !disabled) confirm();
+          // Same as the button: upload failures show in the modal, not here.
+          if (e.key === "Enter" && !disabled) void confirm();
         }}
         aria-label="Image name"
         placeholder="image-name"

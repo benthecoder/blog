@@ -1,5 +1,6 @@
 import { DRAFTS_DIR, POSTS_DIR } from "@/config/paths";
 import { scanMarkdownDir } from "@/utils/content/markdown";
+import { postFrontmatterSchema } from "@/utils/content/schemas";
 import { SOURCES } from "./sources";
 import { mergeLinks } from "./merge";
 import type { LinkItem } from "./types";
@@ -23,7 +24,7 @@ export async function collectLinks(
 
 export function nextIssueNumber(): number {
   const titles = [POSTS_DIR, DRAFTS_DIR]
-    .flatMap((d) => scanMarkdownDir(d))
-    .map((f) => String(f.data.title ?? "").match(/^sunday links #(\d+)/i));
+    .flatMap((d) => scanMarkdownDir(d, postFrontmatterSchema))
+    .map((f) => f.data.title.match(/^sunday links #(\d+)/i));
   return Math.max(0, ...titles.map((m) => (m ? Number(m[1]) : 0))) + 1;
 }

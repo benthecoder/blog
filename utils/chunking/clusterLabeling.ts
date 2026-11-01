@@ -179,7 +179,7 @@ export async function labelClusters(
       );
     } catch (error) {
       console.warn(
-        `  labeling failed: ${error instanceof Error ? error.message.slice(0, 120) : error}`
+        `  labeling failed: ${error instanceof Error ? error.message.slice(0, 120) : String(error)}`
       );
     }
     unlabeled = unlabeled.filter((id) => !labels.has(id));

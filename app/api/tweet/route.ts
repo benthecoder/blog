@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
 
 const sql = neon(process.env.POSTGRES_URL!);
@@ -62,8 +63,15 @@ export async function DELETE(request: Request) {
     return new Response(null, { status: 403 });
   }
 
-  const body = await request.json();
-  const id = body.id;
+  const body = z
+    .object({ id: z.number().int().positive() })
+    .safeParse(await request.json());
+  if (!body.success) {
+    return new Response(JSON.stringify({ error: "Invalid id" }), {
+      status: 400,
+    });
+  }
+  const { id } = body.data;
 
   try {
     await sql`DELETE FROM tweets WHERE id = ${id}`;

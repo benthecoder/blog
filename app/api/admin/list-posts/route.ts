@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { readMarkdownFile } from "@/utils/content/markdown";
+import { postFrontmatterSchema } from "@/utils/content/schemas";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { POSTS_DIR, DRAFTS_DIR } from "@/config/paths";
@@ -19,10 +20,8 @@ export async function GET(request: NextRequest) {
 
     const getPostDate = (filePath: string) => {
       try {
-        const { data } = readMarkdownFile(filePath);
-        return data.date
-          ? new Date(data.date as string | number | Date).getTime()
-          : 0;
+        const { data } = readMarkdownFile(filePath, postFrontmatterSchema);
+        return new Date(data.date).getTime();
       } catch {
         return 0;
       }

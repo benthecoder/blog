@@ -244,7 +244,10 @@ export default function PlacesMap({
     if (!instance || instance !== ready) return;
     const data = placesGeoJSON(places);
     const source = instance.getSource("places") as GeoJSONSource | undefined;
-    if (source) source.setData(data);
+    if (source)
+      source.setData(data).catch((error: unknown) => {
+        console.error("Places map could not update its data", error);
+      });
     else {
       instance.addSource("places", {
         type: "geojson",

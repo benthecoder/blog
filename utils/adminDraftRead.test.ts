@@ -32,7 +32,10 @@ describe("opening a saved draft", () => {
       content: "Original writing\n\n## sunday links\n\nSaved links",
     });
     const response = await GET(request());
-    expect(readMarkdownFile).toHaveBeenCalledWith(getDraftPath("270725"));
+    expect(readMarkdownFile).toHaveBeenCalledWith(
+      getDraftPath("270725"),
+      expect.anything()
+    );
     expect(await response.json()).toMatchObject({
       isDraft: true,
       content: expect.stringContaining("Original writing\n\n## sunday links"),
@@ -73,7 +76,12 @@ describe("saving post format", () => {
   beforeEach(() => {
     vi.spyOn(fs, "existsSync").mockReturnValue(true);
     vi.mocked(readMarkdownFile).mockReturnValue({
-      data: { title: "Original", format: "links", location: "Taiwan" },
+      data: {
+        title: "Original",
+        date: "July 27, 2025",
+        format: "links",
+        locations: ["Taiwan"],
+      },
       content: "Original body",
     });
   });
@@ -88,7 +96,7 @@ describe("saving post format", () => {
       getDraftPath("270725"),
       expect.objectContaining({
         format: "essay",
-        location: "Taiwan",
+        locations: ["Taiwan"],
         title: "Edited title",
       }),
       "Edited body",
@@ -107,6 +115,23 @@ describe("saving post format", () => {
   });
   it("rejects unknown formats without writing", async () => {
     expect((await POST(saveRequest("banana"))).status).toBe(400);
+    expect(writeMarkdownFile).not.toHaveBeenCalled();
+  });
+  it("refuses to write a date the site build would reject", async () => {
+    const response = await POST(
+      new NextRequest("http://localhost:3000/api/admin/save-post", {
+        method: "POST",
+        body: JSON.stringify({
+          slug: "270725",
+          title: "Edited title",
+          tags: "nature",
+          date: "someday",
+          content: "Edited body",
+        }),
+      })
+    );
+    expect(response.status).toBe(400);
+    expect((await response.json()).error).toMatch(/^date: not a date/);
     expect(writeMarkdownFile).not.toHaveBeenCalled();
   });
 });

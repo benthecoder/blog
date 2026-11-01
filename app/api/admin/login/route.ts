@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import {
   ADMIN_COOKIE,
   sessionToken,
@@ -15,9 +16,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { password } = await request.json();
+  const body = z
+    .object({ password: z.string() })
+    .safeParse(await request.json());
 
-  if (typeof password !== "string" || !verifyAdminPassword(password, secret)) {
+  if (!body.success || !verifyAdminPassword(body.data.password, secret)) {
     return NextResponse.json({ error: "Invalid password" }, { status: 401 });
   }
 

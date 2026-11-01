@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useEffectEvent } from "react";
 import type { ReactNode } from "react";
 import { fetchThoughtPage } from "@/utils/thoughtsPage";
-import type { Thought } from "@/types/thoughts";
+import type { Thought } from "@/utils/thoughts";
 
 const TZ = "America/New_York";
 const PAGE_SIZE = 100;
@@ -105,7 +105,8 @@ export default function ThoughtsClient({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          loadMore();
+          // loadMore logs its own failures; the next scroll retries.
+          void loadMore();
         }
       },
       { threshold: 0.1 }
