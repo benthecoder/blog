@@ -14,6 +14,15 @@ export async function POST(request: NextRequest) {
     const file = formData.get("file");
     const customName = formData.get("name") as string | null;
     const published = formData.get("published") === "true";
+    const rotationRaw = formData.get("rotation");
+    if (
+      rotationRaw !== null &&
+      (typeof rotationRaw !== "string" ||
+        !["0", "90", "180", "270"].includes(rotationRaw))
+    ) {
+      return NextResponse.json({ error: "Invalid rotation" }, { status: 400 });
+    }
+    const rotation = Number(rotationRaw ?? 0);
 
     // Crop region in the source image's own pixels, sent by the crop modal.
     const cropRaw = formData.get("crop");
@@ -59,15 +68,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Auto-rotate based on EXIF orientation
-    let processor = image.rotate();
+    // Apply EXIF orientation first, then the manual rotation shown in the preview.
+    let processor = image.autoOrient().rotate(rotation);
 
-    // Orientations 5-8 are quarter turns, so .rotate() swaps the axes. The
+    // EXIF orientations 5-8 and manual quarter turns each swap the axes. The
     // crop arrived in the browser's coordinates, and browsers display the
     // already-oriented image — so compare against the post-rotation size.
     const turned = (metadata.orientation ?? 1) >= 5;
-    const srcW = (turned ? metadata.height : metadata.width) ?? 0;
-    const srcH = (turned ? metadata.width : metadata.height) ?? 0;
+    const swapped = turned !== (rotation === 90 || rotation === 270);
+    const srcW = (swapped ? metadata.height : metadata.width) ?? 0;
+    const srcH = (swapped ? metadata.width : metadata.height) ?? 0;
 
     // Cut the requested region straight out of the original: cropping in
     // the browser first would have meant a second lossy JPEG pass.

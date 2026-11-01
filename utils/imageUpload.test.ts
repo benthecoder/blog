@@ -22,12 +22,18 @@ beforeEach(() => {
 });
 afterEach(() => fs.rmSync(state.directory, { recursive: true, force: true }));
 
-function request(file: File | string, published = false, crop?: object) {
+function request(
+  file: File | string,
+  published = false,
+  crop?: object,
+  rotation?: string
+) {
   const body = new FormData();
   body.set("file", file);
   body.set("name", "photo");
   body.set("published", String(published));
   if (crop) body.set("crop", JSON.stringify(crop));
+  if (rotation !== undefined) body.set("rotation", rotation);
   return new NextRequest("http://localhost/api/admin/upload-image", {
     method: "POST",
     body,
@@ -92,4 +98,70 @@ it("preserves EXIF orientation and cropping in browser coordinates", async () =>
     await sharp(path.join(state.directory, "photo.jpg")).metadata()
   ).toMatchObject({ format: "jpeg", width: 6, height: 8 });
   expect(state.put).not.toHaveBeenCalled();
+});
+
+it("rotates before cropping, using the same coordinates as the preview", async () => {
+  const pixels = Buffer.alloc(40 * 20 * 3);
+  for (let y = 0; y < 20; y++)
+    for (let x = 0; x < 40; x++)
+      pixels[(y * 40 + x) * 3 + (x < 20 ? 0 : 2)] = 255;
+  const input = await sharp(pixels, {
+    raw: { width: 40, height: 20, channels: 3 },
+  })
+    .png()
+    .toBuffer();
+  const response = await POST(
+    request(
+      new File([new Uint8Array(input)], "two-colours.png"),
+      false,
+      { x: 0, y: 20, width: 20, height: 20 },
+      "90"
+    )
+  );
+  expect(response.status).toBe(200);
+  const output = sharp(path.join(state.directory, "photo.jpg"));
+  expect(await output.metadata()).toMatchObject({ width: 20, height: 20 });
+  const { data } = await output.raw().toBuffer({ resolveWithObject: true });
+  const centre = (10 * 20 + 10) * 3;
+  expect(data[centre + 2]).toBeGreaterThan(220);
+  expect(data[centre]).toBeLessThan(30);
+});
+it("combines EXIF orientation with a manual quarter turn", async () => {
+  const input = await original()
+    .withMetadata({ orientation: 6 })
+    .jpeg()
+    .toBuffer();
+  expect(
+    (
+      await POST(
+        request(
+          new File([new Uint8Array(input)], "camera.jpg"),
+          false,
+          undefined,
+          "90"
+        )
+      )
+    ).status
+  ).toBe(200);
+  expect(
+    await sharp(path.join(state.directory, "photo.jpg")).metadata()
+  ).toMatchObject({ width: 24, height: 12 });
+});
+it("rejects unsupported rotations before writing", async () => {
+  const input = await original().png().toBuffer();
+  for (const rotation of ["45", "-90", "NaN", ""]) {
+    expect(
+      (
+        await POST(
+          request(
+            new File([new Uint8Array(input)], "photo.png"),
+            false,
+            undefined,
+            rotation
+          )
+        )
+      ).status
+    ).toBe(400);
+  }
+  expect(fs.readdirSync(state.directory)).toEqual([]);
 });

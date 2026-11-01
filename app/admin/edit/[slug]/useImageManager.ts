@@ -94,7 +94,8 @@ export function useImageManager({
   const handleImageUpload = async (
     file: File,
     customName?: string,
-    crop?: CropRect | null
+    crop?: CropRect | null,
+    rotation = 0
   ) => {
     if (uploadRequestRef.current) return false;
     const controller = new AbortController();
@@ -125,6 +126,7 @@ export function useImageManager({
       // so the image is only JPEG-encoded once. Cropping in the browser first
       // meant two lossy passes, which showed as softness.
       if (crop) formData.append("crop", JSON.stringify(crop));
+      formData.append("rotation", String(rotation));
 
       const response = await fetch("/api/admin/upload-image", {
         method: "POST",
@@ -251,7 +253,8 @@ export function useImageManager({
   /** The modal hands back the original file plus the region to cut from it. */
   const confirmImageUpload = async (
     original?: File,
-    crop?: CropRect | null
+    crop?: CropRect | null,
+    rotation = 0
   ) => {
     const file = original ?? pendingImageFile;
     if (!file) return;
@@ -259,7 +262,7 @@ export function useImageManager({
     const rawName = imageNameInput.trim() || file.name.replace(/\.[^/.]+$/, "");
     // Standardize: lowercase and replace spaces with hyphens
     const finalName = rawName.toLowerCase().replace(/\s+/g, "-");
-    const saved = await handleImageUpload(file, finalName, crop);
+    const saved = await handleImageUpload(file, finalName, crop, rotation);
     if (!saved) return false;
 
     setShowImageNameModal(false);
