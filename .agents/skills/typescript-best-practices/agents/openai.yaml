@@ -1,0 +1,5 @@
+interface:
+  display_name: "TypeScript Best Practices"
+  short_description: "Type-system rules for .ts and .tsx"
+policy:
+  allow_implicit_invocation: false

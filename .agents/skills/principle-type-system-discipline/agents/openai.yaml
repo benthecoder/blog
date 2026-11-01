@@ -1,0 +1,5 @@
+interface:
+  display_name: "Type System Discipline"
+  short_description: "Make illegal states unrepresentable"
+policy:
+  allow_implicit_invocation: false
