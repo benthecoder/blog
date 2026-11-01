@@ -116,7 +116,7 @@ async function main() {
   const stamp = Date.now().toString(36);
 
   for (const pagePath of options.paths) {
-    const isFile = fs.existsSync(pagePath);
+    const isFile = fs.existsSync(pagePath) && fs.statSync(pagePath).isFile();
     const url = isFile
       ? pathToFileURL(path.resolve(pagePath)).toString()
       : new URL(pagePath, options.base).toString();
