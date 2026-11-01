@@ -1,4 +1,5 @@
 import "server-only";
+import { z } from "zod";
 
 const client_id = process.env.SPOTIFY_CLIENT_ID!;
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET!;
@@ -8,25 +9,28 @@ const basic = Buffer.from(`${client_id}:${client_secret}`).toString("base64");
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
 const RECENTLY_PLAYED_ENDPOINT = `https://api.spotify.com/v1/me/player/recently-played`;
 
-interface SpotifyArtist {
-  name: string;
-}
+// Only the fields /now reads. z.object drops the rest, so new fields Spotify
+// adds never break parsing; a missing or renamed one fails loudly here.
+const tokenResponseSchema = z.object({
+  access_token: z.string().optional(),
+  expires_in: z.number().optional(),
+  error: z.string().optional(),
+  error_description: z.string().optional(),
+});
 
-interface SpotifyAlbum {
-  images: { url: string }[];
-}
-
-interface SpotifyTrack {
-  name: string;
-  artists: SpotifyArtist[];
-  album: SpotifyAlbum;
-  external_urls: { spotify: string };
-}
-
-interface SpotifyRecentItem {
-  track: SpotifyTrack;
-  played_at: string;
-}
+const recentlyPlayedSchema = z.object({
+  items: z.array(
+    z.object({
+      track: z.object({
+        name: z.string(),
+        artists: z.array(z.object({ name: z.string() })),
+        album: z.object({ images: z.array(z.object({ url: z.string() })) }),
+        external_urls: z.object({ spotify: z.string() }),
+      }),
+      played_at: z.string(),
+    })
+  ),
+});
 
 // Access tokens last an hour, so they're held in module memory and reused
 // across requests. Without this every visitor to /now would trigger its own
@@ -61,7 +65,7 @@ async function refreshAccessToken(): Promise<{ access_token: string }> {
     signal: AbortSignal.timeout(10_000),
   });
 
-  const data = await response.json();
+  const data = tokenResponseSchema.parse(await response.json());
 
   // A revoked or expired refresh token comes back as 400 invalid_grant. Left
   // unchecked it yields `Bearer undefined` on the next call, which fails as a
@@ -79,7 +83,7 @@ async function refreshAccessToken(): Promise<{ access_token: string }> {
     expiresAt: Date.now() + ttl - 60_000,
   };
 
-  return data;
+  return { access_token: data.access_token };
 }
 
 async function fetchRecentlyPlayed(limit: number) {
@@ -99,9 +103,9 @@ async function fetchRecentlyPlayed(limit: number) {
     );
   }
 
-  const data = await response.json();
+  const data = recentlyPlayedSchema.parse(await response.json());
 
-  const tracks = (data.items as SpotifyRecentItem[]).map((item) => ({
+  const tracks = data.items.map((item) => ({
     title: item.track.name,
     artist: item.track.artists.map((a) => a.name).join(", "),
     albumImageUrl:
