@@ -62,7 +62,7 @@ export default function SpotifyNowPlaying() {
               rel="noopener noreferrer"
               className="flex items-center gap-3 no-underline text-inherit hover:opacity-70 transition-opacity"
             >
-              <span className="text-[11px] opacity-35 w-4 text-right shrink-0">
+              <span className="text-caption opacity-35 w-4 text-right shrink-0">
                 {i + 1}
               </span>
               {track.albumImageUrl && (
@@ -79,7 +79,7 @@ export default function SpotifyNowPlaying() {
                 <p className="text-[13px] font-medium truncate">
                   {track.title}
                 </p>
-                <p className="text-[11px] opacity-55 truncate">
+                <p className="text-caption opacity-55 truncate">
                   {track.artist}
                 </p>
               </div>

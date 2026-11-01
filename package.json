@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "oxlint",
+    "lint:design": "tsx scripts/checkDesignTokens.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write .",

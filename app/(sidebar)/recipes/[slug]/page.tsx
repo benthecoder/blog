@@ -44,7 +44,7 @@ const RecipePage = async ({ params }: { params: Params }) => {
   const content = getRecipeContent(slug);
 
   return (
-    <div className="mx-auto max-w-[65ch] pb-12 text-ink-strong dark:text-chalk-strong">
+    <div className="mx-auto max-w-[65ch] pb-12 text-primary">
       <h1 className="mb-6 text-2xl font-bold lowercase">{recipe.title}</h1>
 
       {recipe.image && (
@@ -60,7 +60,7 @@ const RecipePage = async ({ params }: { params: Params }) => {
         </div>
       )}
 
-      <article className="prose prose-sm dark:prose-invert max-w-none prose-h2:mt-6 prose-h2:mb-2 prose-h2:text-sm prose-headings:font-bold prose-headings:lowercase prose-headings:text-ink-strong dark:prose-headings:text-chalk-strong prose-a:text-ink dark:prose-a:text-chalk-soft">
+      <article className="prose prose-sm dark:prose-invert max-w-none prose-h2:mt-6 prose-h2:mb-2 prose-h2:text-sm prose-headings:font-bold prose-headings:lowercase prose-headings:text-primary prose-a:text-ink dark:prose-a:text-chalk-soft">
         <MarkdownContent content={content.content} />
       </article>
 

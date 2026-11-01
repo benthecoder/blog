@@ -235,7 +235,7 @@ export default function WikiGraph({
         })}
       </svg>
 
-      <p className="pointer-events-none absolute bottom-2 left-2 text-[10px] text-muted/60">
+      <p className="pointer-events-none absolute bottom-2 left-2 text-2xs text-muted/60">
         drag to rearrange · click a topic to open
       </p>
     </div>

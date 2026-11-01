@@ -37,6 +37,8 @@ jobs:
 
       - run: pnpm lint
 
+      - run: pnpm lint:design
+
       - run: pnpm build
         env:
           VERCEL: "1"

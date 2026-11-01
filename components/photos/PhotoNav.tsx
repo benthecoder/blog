@@ -18,7 +18,7 @@ export function PhotoNav() {
   return (
     <>
       <button
-        className="photo-menu-button"
+        className="focus-ring photo-menu-button"
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
         aria-controls="photo-nav"

@@ -74,7 +74,7 @@ export function WordLookup({ selection }: { selection: WordSelection }) {
               ([label, text]) =>
                 text && (
                   <section key={label} className="min-w-0">
-                    <h3 className="mb-1 text-[11px] text-muted">{label}</h3>
+                    <h3 className="mb-1 text-caption text-muted">{label}</h3>
                     <p className="max-h-64 overflow-y-auto whitespace-pre-line leading-relaxed pr-1 [scrollbar-width:thin] [scrollbar-color:var(--scrollbar-thumb-quiet)_transparent]">
                       {formatEntry(text)}
                     </p>
@@ -87,7 +87,7 @@ export function WordLookup({ selection }: { selection: WordSelection }) {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="px-2 py-1 rounded-xs bg-paper dark:bg-night-raised border border-line shadow-sm text-ink-soft dark:text-chalk-muted hover:text-accent"
+          className="focus-ring px-2 py-1 rounded-xs bg-paper dark:bg-night-raised border border-line shadow-sm text-ink-soft dark:text-chalk-muted hover:text-accent"
         >
           define
         </button>

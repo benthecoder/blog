@@ -64,7 +64,7 @@ export function DraftNavigation({
           <button
             type="button"
             onClick={() => setRetry((value) => value + 1)}
-            className="min-h-9 underline"
+            className="focus-ring min-h-9 underline"
           >
             try again
           </button>

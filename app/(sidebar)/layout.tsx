@@ -7,7 +7,7 @@ export default function SidebarLayout({ children }: { children: ReactNode }) {
       {/* Keyboard users would otherwise tab through every nav icon first. */}
       <a
         href="#content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-3 focus:py-2 focus:text-sm focus:bg-paper focus:text-ink focus:border focus:border-rule dark:focus:bg-night dark:focus:text-chalk-strong dark:focus:border-night-rule"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-3 focus:py-2 focus:text-sm focus:bg-surface focus:text-ink focus:border focus:border-line dark:focus:text-chalk-strong"
       >
         skip to content
       </a>

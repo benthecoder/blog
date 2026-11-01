@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { loginDestination } from "@/utils/loginDestination";
+import { Button } from "@/components/ui/Button";
 
 function LoginForm() {
   const router = useRouter();
@@ -59,17 +60,18 @@ function LoginForm() {
           className="w-full px-3 py-2 mb-4 border border-line bg-transparent text-accent focus:outline-hidden focus:border-accent rounded-xs"
         />
         {error && (
-          <p className="text-xs text-primary mb-4" role="alert">
+          <p className="text-xs text-danger mb-4" role="alert">
             {error}
           </p>
         )}
-        <button
+        <Button
           type="submit"
+          variant="solid"
           disabled={submitting}
-          className="w-full px-4 py-2 text-sm bg-ink text-paper dark:bg-chalk dark:text-night hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
+          className="w-full"
         >
           {submitting ? "signing in…" : "sign in"}
-        </button>
+        </Button>
       </form>
     </div>
   );
