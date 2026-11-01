@@ -123,6 +123,14 @@ const INK_VARS = {
   surface: "--map-paper",
 } as const;
 
+function hasWebGL2() {
+  try {
+    return !!document.createElement("canvas").getContext("webgl2");
+  } catch {
+    return false;
+  }
+}
+
 export default function PlacesMap({
   places,
   selected,
@@ -204,6 +212,12 @@ export default function PlacesMap({
 
   useEffect(() => {
     if (!container.current) return;
+    // MapLibre builds half an instance before it notices there is no WebGL,
+    // and its teardown then throws past our catch. Ask the browser first.
+    if (!hasWebGL2()) {
+      setError(true);
+      return;
+    }
     let instance: MapInstance;
     try {
       setWorkerUrl(`/vendor/maplibre/${getVersion()}/maplibre-gl-worker.mjs`);
@@ -589,7 +603,7 @@ export default function PlacesMap({
       {!ready && (
         <div className="map-status" role="status">
           {error
-            ? "Map unavailable. Places and directions are still available in the list."
+            ? "map unavailable in this browser. the list still works."
             : "Loading map..."}
         </div>
       )}
