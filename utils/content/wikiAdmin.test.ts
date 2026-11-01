@@ -13,6 +13,7 @@ vi.mock("@/config/paths", async (importOriginal) => {
 });
 import { getWikiEditorPage, saveWikiEditorPage } from "./wikiAdmin";
 import { readMarkdownFile, writeMarkdownFile } from "./markdown";
+import { wikiFrontmatterSchema } from "./schemas";
 
 const page = {
   slug: "christianity",
@@ -43,7 +44,10 @@ describe("local wiki authoring", () => {
     });
     expect(saved.version).toMatch(/^[a-f0-9]{64}$/);
     expect(
-      readMarkdownFile(path.join(state.root, "christianity.md")).content
+      readMarkdownFile(
+        path.join(state.root, "christianity.md"),
+        wikiFrontmatterSchema
+      ).content
     ).toBe(page.content);
     expect(fs.readdirSync(state.root)).toEqual(["christianity.md"]);
   });
@@ -68,7 +72,10 @@ describe("local wiki authoring", () => {
     });
     expect(saved.version).not.toBe(original.version);
     expect(
-      readMarkdownFile(path.join(state.root, "christianity.md")).data.custom
+      readMarkdownFile(
+        path.join(state.root, "christianity.md"),
+        wikiFrontmatterSchema
+      ).data.custom
     ).toEqual({ source: "books" });
   });
   it("rejects stale saves after another tab or IDE edits the file", () => {
@@ -114,9 +121,12 @@ describe("local wiki authoring", () => {
     );
     expect(() => getWikiEditorPage(page.slug)).toThrow("regular file");
     expect(() => saveWikiEditorPage(page)).toThrow("already uses");
-    expect(readMarkdownFile(path.join(state.root, "target.md")).content).toBe(
-      "Original\n"
-    );
+    expect(
+      readMarkdownFile(
+        path.join(state.root, "target.md"),
+        wikiFrontmatterSchema
+      ).content
+    ).toBe("Original\n");
   });
   it("writes paper fields and removes cleared ones", () => {
     saveWikiEditorPage({
@@ -131,7 +141,10 @@ describe("local wiki authoring", () => {
         source: "",
       },
     });
-    const file = readMarkdownFile(path.join(state.root, "attention.md")).data;
+    const file = readMarkdownFile(
+      path.join(state.root, "attention.md"),
+      wikiFrontmatterSchema
+    ).data;
     expect(file).toMatchObject({
       authors: "Vaswani et al.",
       year: 2017,
@@ -148,7 +161,10 @@ describe("local wiki authoring", () => {
       paper: { ...current.paper, url: "" },
     });
     expect(
-      readMarkdownFile(path.join(state.root, "attention.md")).data
+      readMarkdownFile(
+        path.join(state.root, "attention.md"),
+        wikiFrontmatterSchema
+      ).data
     ).not.toHaveProperty("url");
   });
 });

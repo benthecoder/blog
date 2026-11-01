@@ -5,6 +5,7 @@ import type { RelatedPost } from "@/utils/content/related";
 import type { SameDayPost } from "@/utils/content/onThisDay";
 import type { TocEntry } from "@/utils/content/toc";
 import { extractTags } from "@/utils/content/tags";
+import { parsePostDate } from "@/utils/dateUtils";
 import OnThisDay from "./OnThisDay";
 import PostArrowKeys from "./PostArrowKeys";
 import PostViewTracker from "./PostViewTracker";
@@ -50,7 +51,7 @@ const RenderPost = ({
 
   const meta = [
     date &&
-      new Date(date as string).toLocaleDateString("en-US", {
+      parsePostDate(date).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -62,7 +63,7 @@ const RenderPost = ({
 
   const heading = (
     <h1 className="font-bold text-2xl md:text-4xl leading-tight tracking-tight text-balance text-ink dark:text-chalk-strong">
-      {title as string}
+      {title}
     </h1>
   );
 

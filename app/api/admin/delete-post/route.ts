@@ -1,5 +1,6 @@
 import fs from "fs";
 import { readMarkdownFile } from "@/utils/content/markdown";
+import { postFrontmatterSchema } from "@/utils/content/schemas";
 import { nextPostDay, nextDayHref } from "@/utils/adminNextDay";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
@@ -36,7 +37,10 @@ export async function DELETE(request: NextRequest) {
     const fileToDelete = fs.existsSync(draftPath) ? draftPath : publishedPath;
     const nextDay =
       kind === "post" && fs.existsSync(fileToDelete)
-        ? nextPostDay(slug, readMarkdownFile(fileToDelete).data.date)
+        ? nextPostDay(
+            slug,
+            readMarkdownFile(fileToDelete, postFrontmatterSchema).data.date
+          )
         : null;
 
     let deleted = false;

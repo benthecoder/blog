@@ -53,8 +53,8 @@ export function getPostPreviewData(slug: string): PostPreviewData | null {
 
   const preview = {
     slug,
-    title: post.data.title as string,
-    date: post.data.date as string,
+    title: post.data.title,
+    date: post.data.date,
     excerpt,
   };
   if (immutableDeployment) deployedPreviews.set(slug, preview);
