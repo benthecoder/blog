@@ -34,11 +34,11 @@ export default function ColophonPage() {
               <span
                 key={name}
                 data-palette={name}
-                className="colophon-swatch inline-flex items-center gap-1.5 text-ink dark:text-chalk"
+                className="colophon-swatch inline-flex items-center gap-1.5 text-accent"
                 title={name}
               >
                 <span
-                  className="inline-block size-3.5 rounded-full bg-ink dark:bg-chalk"
+                  className="inline-block size-3.5 rounded-full bg-accent"
                   aria-hidden="true"
                 />
                 <span className="font-mono text-xs">{hex}</span>

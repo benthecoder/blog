@@ -448,8 +448,8 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               title={`${publishing ? "publish" : isNew ? "save" : "update"} (⌘⏎)`}
               className={`min-h-11 sm:min-h-9 px-3 py-1.5 text-xs rounded-xs border disabled:opacity-30 ${
                 primaryActive
-                  ? "bg-ink text-paper border-ink dark:bg-chalk dark:text-night dark:border-chalk"
-                  : "border-rule text-ink-soft hover:text-ink dark:border-night-rule dark:text-chalk-muted dark:hover:text-chalk"
+                  ? "bg-accent text-paper border-accent dark:text-night"
+                  : "border-line text-ink-soft hover:text-accent dark:text-chalk-muted"
               }`}
             >
               {primaryLabel}

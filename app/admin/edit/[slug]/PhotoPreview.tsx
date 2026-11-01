@@ -135,7 +135,7 @@ export function PhotoPreview({
         <button
           onClick={onInsert}
           disabled={busy || !ready}
-          className="min-h-11 px-4 text-sm bg-ink text-paper dark:bg-chalk dark:text-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="min-h-11 px-4 text-sm bg-accent text-paper dark:text-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           {busy ? "opening…" : "insert"}
         </button>
