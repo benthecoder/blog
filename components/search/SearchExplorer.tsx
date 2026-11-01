@@ -91,7 +91,6 @@ export default function SearchExplorer({
     const fragment = textFragment(result.content, keywords, result.chunk_type);
     const href = `/posts/${encodeURIComponent(result.post_slug)}`;
     // Text fragments require a document navigation to highlight the passage.
-    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     if (fragment) window.location.assign(href + fragment);
     else router.push(href);
   };
@@ -230,6 +229,9 @@ export default function SearchExplorer({
         </div>
       ) : results.length > 0 ? (
         <div className="grid h-[60vh] min-w-0 border border-line bg-surface md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.65fr)]">
+          {/* Combobox pattern: focus stays in the input, which points here via
+              aria-activedescendant, so the listbox itself is not focusable. */}
+          {/* oxlint-disable-next-line jsx-a11y/interactive-supports-focus */}
           <div
             ref={listRef}
             onKeyDown={onKeyDown}
@@ -239,6 +241,8 @@ export default function SearchExplorer({
             className="min-w-0 overflow-y-auto overscroll-contain md:border-r md:border-line"
           >
             {results.map((result, index) => (
+              // Each option is named by its button's text content.
+              // oxlint-disable-next-line jsx-a11y/control-has-associated-label
               <div
                 key={result.post_slug}
                 id={`${id}-${index}`}

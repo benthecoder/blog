@@ -7,7 +7,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "oxlint && eslint .",
+    "lint": "oxlint",
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "prettier --write .",
@@ -102,14 +102,13 @@
     "ai": "^7.0.133",
     "babel-plugin-react-compiler": "^1.0.0",
     "chalk": "^5.6.2",
-    "eslint": "^9.18.0",
-    "eslint-config-next": "16.4.3",
     "husky": "^9.1.7",
     "knip": "^6.39.0",
     "lint-staged": "^16.2.5",
     "next-sitemap": "^4.2.3",
     "ora": "^9.0.0",
-    "oxlint": "1.86.0",
+    "oxlint": "1.88.0",
+    "oxlint-tsgolint": "7.0.2004",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.3.2",
     "tsx": "^4.22.4",
@@ -120,7 +119,6 @@
   "lint-staged": {
     "*.{ts,tsx}": [
       "oxlint",
-      "eslint --no-warn-ignored",
       "prettier --write"
     ],
     "*.{js,jsx,json,css,md,mjs}": [
