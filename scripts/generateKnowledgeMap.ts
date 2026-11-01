@@ -99,7 +99,7 @@ function loadSummaryInputs(slugs: string[]) {
     const file = path.join(POSTS_DIR, `${slug}.md`);
     if (!fs.existsSync(file)) continue;
     const markdown = fs.readFileSync(file, "utf8");
-    const { title, tags } = readFrontmatter(markdown);
+    const { title, tags } = readFrontmatter(markdown, file);
     const text = cleanPostText(markdown, SUMMARY_MAX_CHARS);
     items.push({
       slug,
@@ -522,4 +522,5 @@ async function generateKnowledgeMap() {
   }
 }
 
-generateKnowledgeMap();
+// Catches every failure itself and exits 1, which stops the build.
+void generateKnowledgeMap();
