@@ -1,6 +1,6 @@
 ---
 title: 'Boston Day 3: Isabella & MFA'
-tags: travel, art, history, architecture, food
+tags: travel, art, history, architecture
 date: Nov 22 2023
 format: journal
 locations:

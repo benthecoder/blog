@@ -1,6 +1,6 @@
 ---
 title: Defense Mechanisms
-tags: psychology, mental-health
+tags: psychology
 date: Jan 13, 2024
 ---
 

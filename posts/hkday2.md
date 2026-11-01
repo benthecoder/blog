@@ -1,6 +1,6 @@
 ---
 title: Hong Kong Day 2
-tags: travel, family, identity, psychology, mental-health
+tags: travel, family, identity, psychology
 date: Apr 21, 2024
 format: journal
 locations:

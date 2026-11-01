@@ -1,6 +1,6 @@
 ---
 title: Change
-tags: identity, faith, mental-health, personal-growth
+tags: identity, faith, personal-growth
 date: Jun 6, 2023
 format: journal
 ---

@@ -1,6 +1,6 @@
 ---
 title: Taiwan Day 4
-tags: travel, family, food, taiwanese-culture, nature
+tags: travel, family, taiwanese-culture, nature
 date: Jun 4, 2024
 format: journal
 locations:

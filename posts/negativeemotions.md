@@ -1,6 +1,6 @@
 ---
 title: Negative Triggers
-tags: psychology, mental-health, emotional-regulation, mindfulness
+tags: psychology, emotional-regulation, mindfulness
 date: Jan 24, 2024
 ---
 

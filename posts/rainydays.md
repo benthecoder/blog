@@ -1,6 +1,6 @@
 ---
 title: for rainy days
-tags: mental-health, coping, music, film
+tags: coping, music, film
 date: May 1, 2024
 format: resource
 ---

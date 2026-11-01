@@ -1,6 +1,6 @@
 ---
 title: Flying to Toronto
-tags: travel, food, friendship
+tags: travel, friendship
 date: Sep 18, 2023
 format: journal
 locations:

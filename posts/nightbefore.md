@@ -1,6 +1,6 @@
 ---
 title: The Night Before
-tags: health, mental-health, christianity, family, friendship
+tags: health, christianity, family, friendship
 date: Feb 29, 2024
 format: journal
 ---

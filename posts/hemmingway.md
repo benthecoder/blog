@@ -1,6 +1,6 @@
 ---
 title: Ernest Hemingway
-tags: history, mental-health, writing
+tags: history, writing
 date: Oct 3, 2023
 ---
 

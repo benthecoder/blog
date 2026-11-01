@@ -1,6 +1,6 @@
 ---
 title: Ingredients for Resiliency
-tags: health, mental-health, resilience
+tags: health, resilience
 date: Apr 21, 2023
 ---
 

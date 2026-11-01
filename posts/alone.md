@@ -1,6 +1,6 @@
 ---
 title: How to Be Alone
-tags: friendship, relationships, mental-health, family, identity
+tags: friendship, relationships, family, identity
 date: Jan 22, 2024
 ---
 

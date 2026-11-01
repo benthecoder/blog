@@ -1,6 +1,6 @@
 ---
 title: Myths about emotion
-tags: psychology, neuroscience, emotional-regulation, mental-health
+tags: psychology, neuroscience, emotional-regulation
 date: Jun 20, 2023
 ---
 

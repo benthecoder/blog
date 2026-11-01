@@ -2,7 +2,7 @@
 title: D-Day
 date: Mar 1, 2024
 format: journal
-tags: health, surgery, family, mental-health
+tags: health, surgery, family
 ---
 
 ![Sunflowers (F456), Vincent van Gogh](/images/sunflower.jpg)

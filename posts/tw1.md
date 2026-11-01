@@ -1,6 +1,6 @@
 ---
 title: Taiwan Day 1
-tags: travel, energy, climate, food, family
+tags: travel, energy, climate, family
 date: Jun 1, 2024
 format: journal
 locations:

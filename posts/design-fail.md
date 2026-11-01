@@ -1,6 +1,6 @@
 ---
 title: Design a part to fail
-tags: software-design, engineering, testing, mental-health, resilience
+tags: software-design, engineering, testing, resilience
 date: Jun 16, 2023
 ---
 

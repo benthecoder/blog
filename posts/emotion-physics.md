@@ -1,6 +1,6 @@
 ---
 title: The Physics of Emotions
-tags: psychology, mental-health, habits
+tags: psychology, habits
 date: Apr 20, 2023
 ---
 

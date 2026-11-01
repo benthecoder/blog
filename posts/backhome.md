@@ -1,6 +1,6 @@
 ---
 title: Going Back Home
-tags: health, immigration, family, mental-health, reading
+tags: health, immigration, family, reading
 date: Jan 6, 2024
 format: essay
 ---

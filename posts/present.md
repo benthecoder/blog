@@ -1,6 +1,6 @@
 ---
 title: Live in the Present
-tags: psychology, mental-health, self-reflection
+tags: psychology, self-reflection
 date: Feb 19, 2024
 format: journal
 ---

@@ -1,6 +1,6 @@
 ---
 title: when in pain
-tags: health, mental-health, pain-management, resilience, family
+tags: health, pain-management, resilience, family
 date: Apr 17, 2024
 format: journal
 ---

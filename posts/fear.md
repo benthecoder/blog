@@ -1,6 +1,6 @@
 ---
 title: Beautiful minds are free from fear
-tags: psychology, habits, mental-health
+tags: psychology, habits
 date: Apr 23, 2023
 ---
 

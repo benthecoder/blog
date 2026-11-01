@@ -1,6 +1,6 @@
 ---
 title: 'Endoscope #3'
-tags: health, christianity, family, reading, mental-health
+tags: health, christianity, family, reading
 date: Jan 19, 2024
 format: journal
 ---

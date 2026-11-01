@@ -1,6 +1,6 @@
 ---
 title: Shenzhen Day 3
-tags: travel, art, drawing, food
+tags: travel, art, drawing
 date: Apr 24, 2024
 format: journal
 locations:

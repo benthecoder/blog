@@ -1,6 +1,6 @@
 ---
 title: Victim or Survivor
-tags: health, mental-health, psychology, self-acceptance
+tags: health, psychology, self-acceptance
 date: Jul 2, 2023
 ---
 

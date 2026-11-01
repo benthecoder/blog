@@ -2,7 +2,7 @@
 title: music addiction
 date: Apr 18, 2024
 format: journal
-tags: music, psychology, mental-health, habits
+tags: music, psychology, habits
 ---
 
 This video popped up in my feed recently: _[I didn't listen to music for 3 months (a science experiment)](https://www.youtube.com/watch?v=L3gwLK5ZVgE)._

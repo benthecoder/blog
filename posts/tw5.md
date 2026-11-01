@@ -1,6 +1,6 @@
 ---
 title: Taiwan Day 5
-tags: travel, food, family, self-reflection
+tags: travel, family, self-reflection
 date: Jun 5, 2024
 format: journal
 locations:

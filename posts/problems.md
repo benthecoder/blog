@@ -1,6 +1,6 @@
 ---
 title: Be bigger than your problems
-tags: psychology, mental-health, emotional-regulation
+tags: psychology, emotional-regulation
 date: Aug 31, 2023
 ---
 

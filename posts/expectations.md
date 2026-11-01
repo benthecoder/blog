@@ -1,6 +1,6 @@
 ---
 title: A Cheerful Pessimist
-tags: philosophy, psychology, stoicism, mental-health, ambition
+tags: philosophy, psychology, stoicism, ambition
 date: Mar 11, 2024
 ---
 

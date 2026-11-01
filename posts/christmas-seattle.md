@@ -1,6 +1,6 @@
 ---
 title: Christmas in Seattle
-tags: family, drawing, food
+tags: family, drawing
 date: Dec 25, 2023
 format: journal
 ---
