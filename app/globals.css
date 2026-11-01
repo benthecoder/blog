@@ -58,6 +58,12 @@
   /* -- Type & motion ------------------------------------------------------ */
   --font-serif: var(--font-averia);
 
+  /* Type roles. Plain @theme (not inline) so a scoped theme can reassign them
+     and every `font-body` / `font-display` / `font-ui` below it follows. */
+  --font-body: var(--font-serif);
+  --font-display: var(--font-serif);
+  --font-ui: var(--font-serif);
+
   /* Sizes below Tailwind's text-xs (12px). Font-size only: no paired
      line-height, so these inherit it exactly as text-[10px] used to. */
   --text-3xs: 0.5625rem; /* 9px */
@@ -260,6 +266,19 @@
    reads them by name.
    ========================================================================== */
 .places-explorer {
+  /* Shared role names (see ROLES), so role utilities work on this page.
+     They reference --map-*, which already switch in .dark below. */
+  --role-surface: var(--map-paper);
+  --role-raised: var(--map-hover);
+  --role-line: var(--map-rule);
+  --role-primary: var(--map-ink);
+  --role-accent: var(--map-accent);
+  --role-secondary: var(--map-ink);
+  --role-muted: var(--map-muted);
+  --font-body: var(--map-font);
+  --font-display: var(--map-names);
+  --font-ui: var(--map-font);
+
   --map-paper: #f2e9d6; /* washi */
   --map-hover: #e9dec6;
   --map-rule: #d8c9a8;
