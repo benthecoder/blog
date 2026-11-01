@@ -79,10 +79,12 @@ function capture(browser: string, url: string, size: string, out: string) {
     browser,
     [
       "--headless=new",
-      "--disable-gpu",
+      // Software WebGL, so MapLibre pages like /map render instead of erroring.
+      "--enable-unsafe-swiftshader",
+      "--use-angle=swiftshader",
       "--hide-scrollbars",
       `--window-size=${size}`,
-      "--virtual-time-budget=4000",
+      "--virtual-time-budget=8000",
       `--screenshot=${out}`,
       url,
     ],
