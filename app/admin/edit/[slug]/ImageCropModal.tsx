@@ -218,7 +218,7 @@ export function ImageCropModal({
     <dialog
       ref={dialogRef}
       aria-labelledby={titleId}
-      className="m-auto bg-surface border border-line p-6 w-[calc(100vw-2rem)] max-w-2xl max-h-[calc(100dvh-2rem)] overflow-y-auto admin-scrollbar rounded-xs backdrop:bg-black/40"
+      className="m-auto bg-surface border border-line p-6 w-[calc(100vw-2rem)] max-w-2xl max-h-[calc(100dvh-2rem)] overflow-y-auto admin-scrollbar rounded-xs backdrop:bg-night/40"
       onCancel={(event) => {
         event.preventDefault();
         if (!disabled) onCancel();
@@ -337,7 +337,7 @@ export function ImageCropModal({
         <button
           onClick={confirm}
           disabled={disabled || !previewReady || !completed?.width}
-          className="min-h-11 px-4 py-1.5 text-sm bg-accent text-white dark:text-night hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
+          className="min-h-11 px-4 py-1.5 text-sm bg-accent text-surface hover:opacity-90 disabled:opacity-30 transition-opacity rounded-xs"
         >
           {disabled ? "uploading…" : "upload"}
         </button>

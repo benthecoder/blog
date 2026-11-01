@@ -316,7 +316,7 @@ export default function SearchExplorer({
           no posts found for “{query}”
         </p>
       ) : null}
-      <p className="mt-3 text-[10px] text-muted">
+      <p className="mt-3 text-2xs text-muted">
         ↑↓ navigate · enter to open · esc to close
       </p>
     </div>

@@ -45,7 +45,7 @@ export function PhotoPreview({
     <dialog
       ref={dialogRef}
       aria-labelledby={titleId}
-      className="m-auto w-[calc(100vw-2rem)] max-w-4xl max-h-[calc(100dvh-2rem)] p-0 border border-line bg-surface text-accent backdrop:bg-black/50"
+      className="m-auto w-[calc(100vw-2rem)] max-w-4xl max-h-[calc(100dvh-2rem)] p-0 border border-line bg-surface text-accent backdrop:bg-night/50"
       onCancel={(event) => {
         event.preventDefault();
         if (!busy) onClose();
@@ -135,7 +135,7 @@ export function PhotoPreview({
         <button
           onClick={onInsert}
           disabled={busy || !ready}
-          className="min-h-11 px-4 text-sm bg-ink text-paper dark:bg-chalk dark:text-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          className="min-h-11 px-4 text-sm bg-accent text-paper dark:text-night disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
           {busy ? "opening…" : "insert"}
         </button>

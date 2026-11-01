@@ -54,7 +54,7 @@ export default function RecentList({ items }: { items: Item[] }) {
             aria-label="delete"
             disabled={deleting !== null}
             onClick={() => remove(t.id)}
-            className="shrink-0 text-xs text-muted hover:text-red-500 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
+            className="shrink-0 text-xs text-muted hover:text-danger opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
           >
             delete
           </button>

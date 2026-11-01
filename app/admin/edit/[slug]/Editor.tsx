@@ -416,7 +416,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               <span className="inline-flex items-center gap-1.5 text-xs text-ink-soft dark:text-chalk-muted">
                 <span
                   aria-hidden="true"
-                  className={`h-1.5 w-1.5 rounded-full ${draft.isDraft ? "bg-muted" : "bg-green-600 dark:bg-green-500"}`}
+                  className={`h-1.5 w-1.5 rounded-full ${draft.isDraft ? "bg-muted" : "bg-success"}`}
                 />
                 {draft.isDraft ? "draft" : "live"}
               </span>
@@ -448,8 +448,8 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               title={`${publishing ? "publish" : isNew ? "save" : "update"} (⌘⏎)`}
               className={`min-h-11 sm:min-h-9 px-3 py-1.5 text-xs rounded-xs border disabled:opacity-30 ${
                 primaryActive
-                  ? "bg-ink text-paper border-ink dark:bg-chalk dark:text-night dark:border-chalk"
-                  : "border-rule text-ink-soft hover:text-ink dark:border-night-rule dark:text-chalk-muted dark:hover:text-chalk"
+                  ? "bg-accent text-paper border-accent dark:text-night"
+                  : "border-line text-ink-soft hover:text-accent dark:text-chalk-muted"
               }`}
             >
               {primaryLabel}
@@ -684,9 +684,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                   <span
                     role="status"
                     className={
-                      message.includes("✓")
-                        ? "text-green-600 dark:text-green-500"
-                        : "text-red-600 dark:text-red-500"
+                      message.includes("✓") ? "text-success" : "text-danger"
                     }
                   >
                     {message}
@@ -736,9 +734,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                 <span
                   role="status"
                   className={
-                    message.includes("✓")
-                      ? "text-green-600 dark:text-green-500"
-                      : "text-red-600 dark:text-red-500"
+                    message.includes("✓") ? "text-success" : "text-danger"
                   }
                 >
                   {message}
@@ -826,7 +822,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               type="button"
               aria-label="Close photos"
               onClick={() => setPhotosOpen(false)}
-              className="fixed inset-0 z-20 bg-black/20"
+              className="fixed inset-0 z-20 bg-night/20"
             />
           )}
           <PhotoPanel

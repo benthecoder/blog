@@ -74,7 +74,7 @@ export function WordLookup({ selection }: { selection: WordSelection }) {
               ([label, text]) =>
                 text && (
                   <section key={label} className="min-w-0">
-                    <h3 className="mb-1 text-[11px] text-muted">{label}</h3>
+                    <h3 className="mb-1 text-caption text-muted">{label}</h3>
                     <p className="max-h-64 overflow-y-auto whitespace-pre-line leading-relaxed pr-1 [scrollbar-width:thin] [scrollbar-color:var(--scrollbar-thumb-quiet)_transparent]">
                       {formatEntry(text)}
                     </p>

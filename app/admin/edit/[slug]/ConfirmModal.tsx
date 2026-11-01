@@ -34,7 +34,7 @@ export function ConfirmModal({
         event.preventDefault();
         onCancel();
       }}
-      className="m-auto bg-surface border border-line p-8 max-w-md w-[calc(100vw-2rem)] backdrop:bg-black/40"
+      className="m-auto bg-surface border border-line p-8 max-w-md w-[calc(100vw-2rem)] backdrop:bg-night/40"
     >
       <h2
         id={titleId}
@@ -57,7 +57,7 @@ export function ConfirmModal({
         </button>
         <button
           onClick={config.onConfirm}
-          className="min-h-11 px-4 py-1.5 text-sm border border-accent text-accent hover:bg-ink hover:text-white dark:hover:bg-chalk dark:hover:text-night transition-colors"
+          className="min-h-11 px-4 py-1.5 text-sm border border-accent text-accent hover:bg-accent hover:text-surface transition-colors"
         >
           {config.labels[1]}
         </button>

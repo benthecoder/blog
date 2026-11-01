@@ -50,6 +50,25 @@ Values shown are the steel baseline. Other palettes are indigo, olive, gold, ver
 | `muted` | ink-muted → chalk-muted | dates, captions, meta |
 | `surface` / `raised` | paper → night, paper-raised → night-raised | page, cards and overlays |
 | `line` | rule → night-rule | rules, borders |
+| `danger` | #b23b2e → #e0806f | errors, destructive actions |
+| `success` | #4f7a3a → #9cc283 | saved, published, ok |
+| `warning` | #9e6510 → #e0b062 | caution, pending |
+
+Status roles are muted print pigments (each >= 4.5:1 on its surface) and do not follow `data-palette`. Never reach for Tailwind's default palette (`red-500`, `gray-200`, `black`, `white`): use a status role, or `night/NN` for a dimming overlay. Text on a filled role takes `text-surface` so it flips with the mode.
+
+**Focus.** Add `focus-ring` to any interactive element for the one house keyboard treatment (2px `accent` outline, 2px offset, `:focus-visible` only).
+
+### Themes
+
+Three themes share one vocabulary. Each sets the same role names (`--role-*`) and font roles (`--font-body`, `--font-display`, `--font-ui`), so role utilities and shared components render correctly in all three:
+
+| Theme | Scope | Look |
+| --- | --- | --- |
+| notebook (default) | `:root` / `.dark` in `globals.css` | paper, colored ink, serif |
+| washi | `.places-explorer` (`/map`) | printed map, sumi ink, own dark toggle |
+| darkroom | `.photo-site` (`/photos`) | dark contact sheet, geist sans + mono |
+
+Write `text-primary` / `bg-raised` / `border-line` and a component works in any of them. Theme-only tokens (`--map-cat-*`, `--ph-faint`) stay private to their theme.
 
 Write `text-primary`, not `text-ink-strong dark:text-chalk-strong`. Opacity modifiers work (`text-accent/60`). Plain CSS uses `var(--color-primary)` and so on. Use raw `ink-*`/`chalk-*` pairs only when the two modes intentionally use different roles. For text people need to read, keep opacity at 60% or above; lower values are for decoration and disabled states. Use the `eyebrow` utility for small uppercase section labels.
 
@@ -69,6 +88,7 @@ The primary family is locally hosted **Averia Serif Libre**, exposed through `--
 | In-prose h1 / h2 / h3 | 1.5rem / 1.2rem / 1.1rem in global CSS | Headings inside Markdown content |
 | Index row | `text-sm md:text-base` in `PostPreview` | Browsable entry titles |
 | Metadata | Usually `text-xs` or `text-sm` | Dates, counts, reading time, captions |
+| Small print | `text-caption` 11px, `text-2xs` 10px, `text-3xs` 9px | Chart labels, badges, thumbnails; font-size only, line-height inherits. No arbitrary `text-[Npx]` |
 
 These are contextual roles, not a universal heading ladder. Page titles and headings inside an article are separate treatments. Preserve heading semantics even when visual sizes differ. Lowercase labels and essay/wiki titles are existing conventions; do not mechanically lowercase authored post titles. Reserve wide tracking and uppercase for short utility labels.
 

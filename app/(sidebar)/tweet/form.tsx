@@ -57,19 +57,19 @@ export default function Form() {
         name="entry"
         type="text"
         required
-        className="pl-4 pr-24 py-2 mt-1 focus:outline-hidden block w-full border border-rule dark:border-white/8 bg-paper dark:bg-night-raised text-accent placeholder:text-accent/30"
+        className="pl-4 pr-24 py-2 mt-1 focus:outline-hidden block w-full border border-line bg-paper dark:bg-night-raised text-accent placeholder:text-accent/30"
       />
       <div className="flex items-center justify-between mt-1">
         <span className="text-xs text-accent/40">
           {remainingChars} remaining
         </span>
         {submitError && (
-          <span className="text-xs text-red-500">{submitError}</span>
+          <span className="text-xs text-danger">{submitError}</span>
         )}
       </div>
 
       <button
-        className="flex items-center justify-center absolute right-1 top-1 px-2 py-1 font-medium h-8 bg-rule/40 dark:bg-white/8 hover:bg-rule dark:hover:bg-white/[0.14] text-accent transition-colors w-16"
+        className="flex items-center justify-center absolute right-1 top-1 px-2 py-1 font-medium h-8 bg-line/40 hover:bg-line text-accent transition-colors w-16"
         disabled={isMutating}
         type="submit"
       >
