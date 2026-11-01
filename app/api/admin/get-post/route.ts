@@ -32,15 +32,15 @@ export async function GET(request: NextRequest) {
     const publishedPath = getPublished(slug);
     const draftPath = getDraft(slug);
 
-    // Check published first, then drafts
+    // Continue unpublished edits when a draft and published post share a date.
     let filePath: string;
     let isDraft = false;
 
-    if (fs.existsSync(publishedPath)) {
-      filePath = publishedPath;
-    } else if (fs.existsSync(draftPath)) {
+    if (fs.existsSync(draftPath)) {
       filePath = draftPath;
       isDraft = true;
+    } else if (fs.existsSync(publishedPath)) {
+      filePath = publishedPath;
     } else {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
@@ -54,6 +54,7 @@ export async function GET(request: NextRequest) {
             updated: data.updated ? toDateString(data.updated) : "",
           }
         : {}),
+      format: data.format,
       title: data.title || "",
       tags: data.tags || "",
       date: kind === "essay" ? toDateString(data.date) : data.date || "",

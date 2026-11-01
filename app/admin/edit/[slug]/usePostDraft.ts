@@ -68,6 +68,7 @@ export function usePostDraft({
   const loading = loadedKey !== recoveryKey;
   const latestMarkdownRef = useRef("");
   const saveInFlight = useRef(false);
+  const saveSettledRef = useRef<Promise<void> | null>(null);
   const wasDirtyRef = useRef(false);
   const templateRequestRef = useRef<AbortController | null>(null);
   const formatRef = useRef(formatMarkdown);
@@ -198,6 +199,7 @@ export function usePostDraft({
     setTemplateLoading(false);
     wasDirtyRef.current = false;
     deletingRef.current = false;
+    setDeleting(false);
     const offerRecovery = (formattedDate: string, baseline: string) => {
       const backup =
         readDraftBackup(draftKey) ??
@@ -237,11 +239,17 @@ export function usePostDraft({
               ? {
                   title: data.title,
                   subtitle: data.subtitle,
+                  ...(data.format ? { format: data.format } : {}),
                   date: data.date,
                   ...(data.updated ? { updated: data.updated } : {}),
                   ...(data.tags ? { tags: data.tags } : {}),
                 }
-              : { title: data.title, tags: data.tags, date: data.date }
+              : {
+                  title: data.title,
+                  ...(data.format ? { format: data.format } : {}),
+                  tags: data.tags,
+                  date: data.date,
+                }
           );
           setMarkdown(rawContent);
           setDate(data.date);
@@ -306,6 +314,10 @@ export function usePostDraft({
   const saveMarkdown = useCallback(
     async (toSave: string, auto: boolean) => {
       saveInFlight.current = true;
+      let settleSave: () => void = () => {};
+      saveSettledRef.current = new Promise<void>((resolve) => {
+        settleSave = resolve;
+      });
       setSaving(true);
       if (!auto) notify("");
 
@@ -338,6 +350,9 @@ export function usePostDraft({
             slug: slugToUse,
             title: parsedTitle,
             tags: parsedTags,
+            ...(frontmatter.format !== undefined
+              ? { format: frontmatter.format }
+              : {}),
             date: parsedDate,
             content: content,
             isNew,
@@ -388,6 +403,8 @@ export function usePostDraft({
         notify(`✗ Error: ${error}`);
       } finally {
         saveInFlight.current = false;
+        settleSave();
+        saveSettledRef.current = null;
         setSaving(false);
       }
       return false;
@@ -429,10 +446,10 @@ export function usePostDraft({
   };
 
   const handlePublish = async () => {
-    if (loading || saving || publishing || isNew) return;
+    if (loading || saving || publishing || isNew) return false;
     // Publishing must stop when the preceding save fails. Always saves so
     // the published file is formatted even when autosave already ran.
-    if (!(await handleSave())) return;
+    if (!(await handleSave())) return false;
 
     setPublishing(true);
     notify("");
@@ -460,6 +477,7 @@ export function usePostDraft({
         notify("✓ Published!", true);
         rewriteImagePaths(publishImagePaths);
         setIsDraft(false);
+        return true;
       } else {
         notify(`✗ Error: ${data.error}`);
       }
@@ -468,6 +486,7 @@ export function usePostDraft({
     } finally {
       setPublishing(false);
     }
+    return false;
   };
 
   const handleUnpublish = async () => {
@@ -498,6 +517,7 @@ export function usePostDraft({
   };
 
   const handleDelete = () => {
+    if (loading || publishing || templateLoading || deletingRef.current) return;
     confirmAction(
       isEssay ? "delete this essay?" : "delete this post?",
       "The file is removed and this can't be undone.",
@@ -507,7 +527,10 @@ export function usePostDraft({
         setDeleting(true);
         notify("");
 
+        let deleted = false;
         try {
+          // A request already on the wire must finish before deleting its file.
+          await saveSettledRef.current;
           const response = await fetch(
             `/api/admin/delete-post?slug=${encodeURIComponent(slug)}${kindQuery}`,
             { method: "DELETE" }
@@ -518,15 +541,13 @@ export function usePostDraft({
           if (response.ok) {
             removeDraftBackup(recoveryKey);
             notify(isEssay ? "✓ Essay deleted" : "✓ Post deleted");
-            setTimeout(() => {
-              router.push(
-                isEssay
-                  ? "/admin/essays"
-                  : searchParams.get("month")
-                    ? `/admin?month=${searchParams.get("month")}`
-                    : "/admin"
-              );
-            }, 1000);
+            deleted = true;
+            initialContentRef.current = { markdown: latestMarkdownRef.current };
+            wasDirtyRef.current = false;
+            setHasUnsavedChanges(false);
+            router.replace(
+              data.nextHref || (isEssay ? "/admin/essays" : "/admin")
+            );
           } else {
             deletingRef.current = false;
             notify(`✗ Error: ${data.error}`);
@@ -535,7 +556,10 @@ export function usePostDraft({
           deletingRef.current = false;
           notify(`✗ Error: ${error}`);
         } finally {
-          setDeleting(false);
+          if (!deleted) {
+            deletingRef.current = false;
+            setDeleting(false);
+          }
         }
       }
     );
@@ -544,7 +568,7 @@ export function usePostDraft({
   // Track unsaved changes + back up the draft to localStorage
   useEffect(() => {
     latestMarkdownRef.current = markdown;
-    if (loading) return;
+    if (loading || deletingRef.current) return;
     const hasChanged = markdown !== initialContentRef.current.markdown;
     setHasUnsavedChanges(hasChanged);
 

@@ -1,5 +1,6 @@
 import fs from "fs";
-import { writeMarkdownFile } from "@/utils/content/markdown";
+import { isPostFormat } from "@/utils/content/formats";
+import { readMarkdownFile, writeMarkdownFile } from "@/utils/content/markdown";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { isSafeSlug } from "@/config/paths";
@@ -15,6 +16,7 @@ export async function POST(request: NextRequest) {
       slug,
       title,
       tags,
+      format,
       date,
       content,
       isNew,
@@ -37,6 +39,10 @@ export async function POST(request: NextRequest) {
     // Security: prevent path traversal
     if (!isSafeSlug(slug)) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+    }
+
+    if (format !== undefined && !isPostFormat(format)) {
+      return NextResponse.json({ error: "Invalid format" }, { status: 400 });
     }
 
     const paths = contentPaths(kind);
@@ -69,10 +75,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Determine where to save: if already published, keep it published; otherwise save as draft
-    const isPublished = fs.existsSync(publishedPath);
+    // Save back to the same version opened by get-post, preferring a pending draft.
+    const isPublished =
+      !fs.existsSync(draftPath) && fs.existsSync(publishedPath);
     const filePath = isPublished ? publishedPath : draftPath;
 
+    const existing = fs.existsSync(filePath)
+      ? readMarkdownFile(filePath).data
+      : {};
     const frontmatter =
       kind === "essay"
         ? {
@@ -84,9 +94,18 @@ export async function POST(request: NextRequest) {
           }
         : { title, tags, date };
 
-    writeMarkdownFile(filePath, frontmatter, content, {
-      exclusive: Boolean(isNew),
-    });
+    writeMarkdownFile(
+      filePath,
+      {
+        ...existing,
+        ...frontmatter,
+        ...(format !== undefined ? { format } : {}),
+      },
+      content,
+      {
+        exclusive: Boolean(isNew),
+      }
+    );
 
     return NextResponse.json({ success: true, slug, isDraft: !isPublished });
   } catch (error) {

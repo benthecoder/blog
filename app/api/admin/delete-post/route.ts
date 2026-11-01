@@ -1,4 +1,6 @@
 import fs from "fs";
+import { readMarkdownFile } from "@/utils/content/markdown";
+import { nextPostDay, nextDayHref } from "@/utils/adminNextDay";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { parseKind, contentPaths } from "@/utils/content/kind";
@@ -31,6 +33,12 @@ export async function DELETE(request: NextRequest) {
     const draftPath = paths.draftPath(slug);
     const publishedPath = paths.publishedPath(slug);
 
+    const fileToDelete = fs.existsSync(draftPath) ? draftPath : publishedPath;
+    const nextDay =
+      kind === "post" && fs.existsSync(fileToDelete)
+        ? nextPostDay(slug, readMarkdownFile(fileToDelete).data.date)
+        : null;
+
     let deleted = false;
     let deletedFrom = "";
 
@@ -58,15 +66,34 @@ export async function DELETE(request: NextRequest) {
 
       postImages.forEach((file) => {
         const filePath = path.join(imagesDir, file);
-        fs.unlinkSync(filePath);
+        try {
+          fs.unlinkSync(filePath);
+          imagesDeleted++;
+        } catch (error) {
+          console.error(
+            "Image cleanup after deleting post failed:",
+            file,
+            error
+          );
+        }
       });
-      imagesDeleted = postImages.length;
     }
 
     return NextResponse.json({
       success: true,
       deletedFrom,
       imagesDeleted,
+      nextHref:
+        kind === "essay"
+          ? "/admin/essays"
+          : nextDayHref(
+              nextDay,
+              Boolean(
+                nextDay &&
+                  (fs.existsSync(paths.draftPath(nextDay.slug)) ||
+                    fs.existsSync(paths.publishedPath(nextDay.slug)))
+              )
+            ),
     });
   } catch (error) {
     console.error("Delete error:", error);
