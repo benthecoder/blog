@@ -1,3 +1,4 @@
+import { highlightExcerpt } from "./highlightExcerpt";
 import type { LinkItem } from "./types";
 
 function quote(text: string): string {
@@ -12,27 +13,23 @@ function quote(text: string): string {
  * when present. Personal updates and reactions are always the author’s.
  */
 export function renderWeekly(items: LinkItem[]): string {
-  // Annotated links form the article; bare saves remain optional footer material.
-  const main = items.filter((i) => i.highlights.length || i.take);
-  const also = items.filter((i) => !i.highlights.length && !i.take);
-
-  const blocks = main.map((i) => {
+  const blocks = items.map((i) => {
     const lines = [`- [${i.title}](${i.url})`];
     if (i.highlights.length)
-      lines.push(i.highlights.map(quote).join("\n  >\n"));
+      lines.push(
+        i.highlights
+          .map(highlightExcerpt)
+          .filter(Boolean)
+          .map(quote)
+          .join("\n  >\n")
+      );
     if (i.take?.trim()) lines.push(`  ${i.take.trim().replace(/\n/g, "\n  ")}`);
     return lines.join("\n");
   });
 
   const parts = [
-    "<!-- a short personal update, with a photo if you want. -->",
-    "## sunday links",
+    "<!-- optional: a short update or a one-line overview of these links. -->",
     blocks.join("\n\n"),
   ];
-  if (also.length) {
-    parts.push(
-      "---\n\nlinks:\n" + also.map((i) => `- [${i.title}](${i.url})`).join("\n")
-    );
-  }
   return parts.filter(Boolean).join("\n\n") + "\n";
 }

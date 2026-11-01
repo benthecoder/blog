@@ -10,7 +10,7 @@ interface CuriusLink {
   highlights: {
     highlight: string;
     createdDate: string;
-    comment?: string | null;
+    comment?: string | { text?: string; userId?: number } | null;
   }[];
 }
 
@@ -41,15 +41,23 @@ export const curius: LinkSource = {
       for (const l of userSaved) {
         const saved = new Date(l.createdDate);
         if (saved < since || saved >= until) continue;
-        const marks = l.highlights.filter((h) => h.highlight.trim());
+        const marks = (l.highlights ?? []).filter(
+          (h) => typeof h.highlight === "string" && h.highlight.trim()
+        );
         out.push({
           url: l.link,
           title: l.title,
           savedAt: new Date(l.createdDate),
           highlights: marks.map((h) => h.highlight.trim()),
           take:
-            marks
-              .map((h) => h.comment?.trim())
+            (l.highlights ?? [])
+              .map((h) =>
+                typeof h.comment === "string"
+                  ? h.comment.trim()
+                  : h.comment?.userId === USER_ID
+                    ? h.comment.text?.trim()
+                    : ""
+              )
               .filter(Boolean)
               .join(" ") || undefined,
         });

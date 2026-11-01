@@ -81,3 +81,22 @@ export function sundayLinksBeforeDailyLog(body: string): string {
   const links = body.slice(start).trimEnd();
   return [before, links, footer].filter(Boolean).join("\n\n") + "\n";
 }
+
+/** The page title already names the series and issue. Keep that heading out of the article. */
+export function withoutSundayIssueHeading(body: string): string {
+  const headings = parser
+    .parse(body)
+    .children.filter(
+      (node) =>
+        node.type === "heading" &&
+        /^#{1,3}[ \t]+sunday links(?:[ \t]+#\d+)?[ \t]*$/i.test(
+          body.slice(node.position!.start.offset!, node.position!.end.offset!)
+        )
+    );
+  let result = body;
+  for (const node of headings.reverse())
+    result =
+      result.slice(0, node.position!.start.offset!) +
+      result.slice(node.position!.end.offset!);
+  return result.replace(/\n{3,}/g, "\n\n").trimStart();
+}

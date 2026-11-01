@@ -40,7 +40,7 @@ describe("mergeLinks", () => {
 });
 
 describe("renderWeekly", () => {
-  it("puts annotated links in the article and bare saves in the footer without empty prompts", () => {
+  it("keeps links in the article without duplicate issue headings, forced takes, or empty prompts", () => {
     const out = renderWeekly([
       {
         url: "https://a.com",
@@ -58,10 +58,11 @@ describe("renderWeekly", () => {
       },
     ]);
     expect(out).not.toContain("take:");
-    expect(out).toContain("## sunday links");
+    expect(out).not.toContain("## sunday links");
     expect(out).not.toMatch(/(?:read|watch)\n\n- /);
     expect(out).toContain("  > q1\n  >\n  > q2");
-    expect(out).toMatch(/---\n\nlinks:\n- \[B\]/);
+    expect(out).toContain("- [B](https://b.com)");
+    expect(out).not.toContain("links:");
   });
 });
 

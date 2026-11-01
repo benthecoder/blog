@@ -155,3 +155,13 @@ links:
     expect(out).toContain("wake: 1030  \n");
   });
 });
+
+it("keeps Sunday Links numbering in the page title, not duplicated in the body", () => {
+  const markdown =
+    "---\ntitle: sunday links #19\nformat: links\ndate: Mar 15, 2026\n---\n\na short update.\n\n## sunday links #19\n\n- [source](https://example.com)\n\n---\n\nmeals:\n- dinner: noodles\n";
+  const result = formatDraft(markdown);
+  expect(result).toContain("sunday links #19");
+  expect(result).not.toContain("## sunday links");
+  expect(result.indexOf("[source]")).toBeLessThan(result.indexOf("meals:"));
+  expect(formatDraft(result)).toBe(result);
+});
