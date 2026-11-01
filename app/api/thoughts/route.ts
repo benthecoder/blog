@@ -6,6 +6,13 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
+    const query = (searchParams.get("q") ?? "").trim();
+    if (query.length > 200) {
+      return NextResponse.json(
+        { error: "Search is limited to 200 characters" },
+        { status: 400, headers: { "Cache-Control": "no-store" } }
+      );
+    }
     const rawCursor = searchParams.get("cursor");
     if (
       rawCursor !== null &&
@@ -28,20 +35,27 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    const thoughts =
-      cursor !== null
+    const thoughts = query
+      ? cursor !== null
         ? await sql`
-            SELECT id, TRIM(content || ' ' || COALESCE(link, '')) AS content, created_at
-            FROM tweets
+            SELECT id, content, link, link_title, created_at FROM tweets
             WHERE id < ${cursor}
-            ORDER BY id DESC
-            LIMIT ${limit}
+              AND STRPOS(LOWER(CONCAT_WS(' ', content, link, link_title)), LOWER(${query})) > 0
+            ORDER BY id DESC LIMIT ${limit}
           `
         : await sql`
-            SELECT id, TRIM(content || ' ' || COALESCE(link, '')) AS content, created_at
-            FROM tweets
-            ORDER BY id DESC
-            LIMIT ${limit}
+            SELECT id, content, link, link_title, created_at FROM tweets
+            WHERE STRPOS(LOWER(CONCAT_WS(' ', content, link, link_title)), LOWER(${query})) > 0
+            ORDER BY id DESC LIMIT ${limit}
+          `
+      : cursor !== null
+        ? await sql`
+            SELECT id, content, link, link_title, created_at FROM tweets
+            WHERE id < ${cursor} ORDER BY id DESC LIMIT ${limit}
+          `
+        : await sql`
+            SELECT id, content, link, link_title, created_at FROM tweets
+            ORDER BY id DESC LIMIT ${limit}
           `;
 
     // Public data only. Browsers recheck; shared caches absorb repeated reads.

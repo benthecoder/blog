@@ -35,6 +35,8 @@ module.exports = {
   exclude: [
     "/admin",
     "/admin/*",
+    "/thoughts/new",
+    "/tweet",
     // robots.txt disallows /api; listing it here is a contradiction crawlers report.
     "/api/*",
     // Files, not pages. Feeds are announced by <link rel="alternate"> instead.
