@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useEffectEvent } from "react";
 import type { ReactNode } from "react";
 import { fetchThoughtPage } from "@/utils/thoughtsPage";
-import type { Thought } from "@/types/thoughts";
+import type { Thought } from "@/utils/thoughts";
 
 const TZ = "America/New_York";
 const PAGE_SIZE = 100;

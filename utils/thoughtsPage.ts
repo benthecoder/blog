@@ -1,4 +1,7 @@
-import type { Thought } from "@/types/thoughts";
+import { z } from "zod";
+import { thoughtJsonSchema, type Thought } from "@/utils/thoughts";
+
+const pageSchema = z.array(thoughtJsonSchema).max(100);
 
 export async function fetchThoughtPage(
   cursor: number,
@@ -12,24 +15,13 @@ export async function fetchThoughtPage(
   });
   if (!response.ok)
     throw new Error(`Thoughts request failed (${response.status})`);
-  const data: unknown = await response.json();
-  if (!Array.isArray(data) || data.length > 100)
-    throw new Error("Invalid thoughts page");
+  const page = pageSchema.safeParse(await response.json());
+  if (!page.success) throw new Error("Invalid thoughts page");
+  // Each page must continue strictly below the cursor, newest first.
   let previousId = cursor;
-  for (const entry of data) {
-    if (
-      !entry ||
-      typeof entry !== "object" ||
-      !Number.isSafeInteger(entry.id) ||
-      entry.id < 1 ||
-      entry.id >= previousId ||
-      typeof entry.content !== "string" ||
-      typeof entry.created_at !== "string" ||
-      !Number.isFinite(Date.parse(entry.created_at))
-    ) {
-      throw new Error("Invalid thoughts page");
-    }
-    previousId = entry.id;
+  for (const { id } of page.data) {
+    if (id >= previousId) throw new Error("Invalid thoughts page");
+    previousId = id;
   }
-  return data as Thought[];
+  return page.data;
 }
