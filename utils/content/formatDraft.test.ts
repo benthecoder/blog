@@ -33,12 +33,12 @@ describe("formatDraft frontmatter", () => {
 });
 
 describe("formatDraft body", () => {
-  it("moves a leading epigraph to the end under quote:", () => {
+  it("moves a leading epigraph under quote, keeping links last", () => {
     const out = formatDraft(
       fm("> a line\n> – someone\n\nbody text\n\nlinks:\n- x\n")
     );
     expect(
-      out.endsWith("links:\n- x\n\nquote:\n\n> a line\n> – someone\n")
+      out.endsWith("quote:\n\n> a line\n> – someone\n\nlinks:\n- x\n")
     ).toBe(true);
     expect(out).toContain("---\n\nbody text\n");
   });
@@ -136,13 +136,13 @@ meals:
 wake: 1030  
 sleep: 0430
 
-links:
-- [x](https://example.com/a:b)
-
 quote:
 
 > The only way out is through.
 > – Robert Frost
+
+links:
+- [x](https://example.com/a:b)
 `);
   });
 

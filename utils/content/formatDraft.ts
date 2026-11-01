@@ -1,3 +1,4 @@
+import { linksAtBottom, sundayLinksBeforeDailyLog } from "./linksAtBottom";
 import { parseFrontmatter } from "@/utils/content/frontmatter";
 
 // Normalizes a draft's markdown to the house style seen in published posts.
@@ -157,7 +158,7 @@ function formatBody(body: string): string {
   lines = spaced;
 
   while (lines.length && lines[lines.length - 1] === "") lines.pop();
-  return lines.join("\n");
+  return linksAtBottom(sundayLinksBeforeDailyLog(lines.join("\n"))).trimEnd();
 }
 
 export function formatDraft(markdown: string): string {

@@ -40,7 +40,7 @@ describe("mergeLinks", () => {
 });
 
 describe("renderWeekly", () => {
-  it("gives annotated links a take slot and bare links an also entry", () => {
+  it("puts annotated links in the article and bare saves in the footer without empty prompts", () => {
     const out = renderWeekly([
       {
         url: "https://a.com",
@@ -57,9 +57,11 @@ describe("renderWeekly", () => {
         sources: ["curius"],
       },
     ]);
-    expect(out).toContain("  - take:");
+    expect(out).not.toContain("take:");
+    expect(out).toContain("## sunday links");
+    expect(out).not.toMatch(/(?:read|watch)\n\n- /);
     expect(out).toContain("  > q1\n  >\n  > q2");
-    expect(out).toMatch(/also\n\n- \[B\]/);
+    expect(out).toMatch(/---\n\nlinks:\n- \[B\]/);
   });
 });
 
