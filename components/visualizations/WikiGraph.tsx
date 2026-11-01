@@ -1,5 +1,8 @@
 "use client";
 
+// Retained for future wiki pages with a navigable link graph.
+// Load from wiki routes so the graph stays out of the global reading shell.
+
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
