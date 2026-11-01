@@ -28,9 +28,8 @@ export const thoughtJsonSchema = thoughtRowSchema.extend({
   }),
 });
 
-export type Thought =
-  | z.infer<typeof thoughtRowSchema>
-  | z.infer<typeof thoughtJsonSchema>;
+export type ThoughtJson = z.infer<typeof thoughtJsonSchema>;
+export type Thought = z.infer<typeof thoughtRowSchema> | ThoughtJson;
 
 /** Validate query results once, where they leave the database. */
 export function parseRows<S extends z.ZodType>(
