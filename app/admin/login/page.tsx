@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { loginDestination } from "@/utils/loginDestination";
 import { Button } from "@/components/ui/Button";
 
 function LoginForm() {
@@ -25,7 +26,8 @@ function LoginForm() {
       });
 
       if (response.ok) {
-        router.push(searchParams.get("next") || "/admin");
+        router.replace(loginDestination(searchParams.get("next")));
+        router.refresh();
       } else {
         const data = await response.json();
         setError(data.error || "Login failed");
@@ -44,13 +46,16 @@ function LoginForm() {
         className="w-full max-w-sm p-8 border border-line bg-raised"
       >
         <h1 className="text-lg font-light mb-6 text-accent tracking-wide">
-          Admin Login
+          sign in
         </h1>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="Admin password"
+          aria-label="Admin password"
+          autoComplete="current-password"
+          required
           autoFocus
           className="w-full px-3 py-2 mb-4 border border-line bg-transparent text-accent focus:outline-hidden focus:border-accent rounded-xs"
         />
@@ -65,7 +70,7 @@ function LoginForm() {
           disabled={submitting}
           className="w-full"
         >
-          {submitting ? "Logging in..." : "Log in"}
+          {submitting ? "signing in…" : "sign in"}
         </Button>
       </form>
     </div>

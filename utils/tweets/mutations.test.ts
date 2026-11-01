@@ -1,6 +1,7 @@
 import { beforeEach, afterEach, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({ sql: vi.fn(), revalidatePath: vi.fn() }));
+vi.mock("server-only", () => ({}));
 vi.mock("@neondatabase/serverless", () => ({ neon: () => mocks.sql }));
 vi.mock("next/cache", () => ({ revalidatePath: mocks.revalidatePath }));
 import { POST, DELETE } from "@/app/api/tweet/route";
