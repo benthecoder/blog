@@ -90,6 +90,15 @@ describe("Spotify caching", () => {
     await expect(getRecentlyPlayed(10)).resolves.toHaveProperty("tracks");
     expect(fetchMock).toHaveBeenCalledTimes(3);
   });
+  it("rejects a response whose shape changed instead of rendering undefined", async () => {
+    fetchMock.mockImplementation(async (url: string) =>
+      url.includes("/api/token")
+        ? response({ access_token: "test-token", expires_in: 3600 })
+        : response({ items: [{ ...item, track: { name: "renamed" } }] })
+    );
+    const { getRecentlyPlayed } = await import("./spotify");
+    await expect(getRecentlyPlayed(10)).rejects.toThrow("artists");
+  });
   it("rejects invalid limits before upstream calls", async () => {
     const { getRecentlyPlayed } = await import("./spotify");
     for (const limit of [0, 51, NaN, Infinity, 1.5])
@@ -115,11 +124,13 @@ describe("Spotify caching", () => {
     async (stage) => {
       let stalledSignal: AbortSignal | undefined;
       const controllers: AbortController[] = [];
-      vi.spyOn(AbortSignal, "timeout").mockImplementation(() => {
-        const controller = new AbortController();
-        controllers.push(controller);
-        return controller.signal;
-      });
+      const timeout = vi
+        .spyOn(AbortSignal, "timeout")
+        .mockImplementation(() => {
+          const controller = new AbortController();
+          controllers.push(controller);
+          return controller.signal;
+        });
       let markStarted!: () => void;
       const started = new Promise<void>((resolve) => {
         markStarted = resolve;
@@ -151,7 +162,7 @@ describe("Spotify caching", () => {
       const apiResponse = GET();
       await started;
       expect(stalledSignal).toBeDefined();
-      expect(AbortSignal.timeout).toHaveBeenCalledWith(10_000);
+      expect(timeout).toHaveBeenCalledWith(10_000);
       const stalled = controllers.find(
         (controller) => controller.signal === stalledSignal
       )!;

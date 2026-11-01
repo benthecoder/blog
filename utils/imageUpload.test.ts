@@ -165,3 +165,60 @@ it("rejects unsupported rotations before writing", async () => {
   }
   expect(fs.readdirSync(state.directory)).toEqual([]);
 });
+
+it("rejects malformed crop fields without replacing an existing image", async () => {
+  const input = await original().png().toBuffer();
+  const existing = path.join(state.directory, "photo.jpg");
+  fs.writeFileSync(existing, "untouched original");
+  const invalidCrops = [
+    "{",
+    "null",
+    "[]",
+    JSON.stringify({ x: 0, y: 0, width: 6 }),
+    JSON.stringify({ x: "0", y: 0, width: 6, height: 8 }),
+    JSON.stringify({ x: 0, y: 0, width: 0, height: 8 }),
+    JSON.stringify({ x: 0, y: 0, width: 6, height: -1 }),
+    '{"x":0,"y":0,"width":1e400,"height":8}',
+    new File(["crop"], "crop.json"),
+  ];
+  for (const published of [false, true]) {
+    for (const crop of invalidCrops) {
+      const body = await request(
+        new File([new Uint8Array(input)], "photo.png"),
+        published
+      ).formData();
+      body.set("crop", crop);
+      const response = await POST(
+        new NextRequest("http://localhost/api/admin/upload-image", {
+          method: "POST",
+          body,
+        })
+      );
+      expect(response.status).toBe(400);
+      expect(await response.json()).toEqual({ error: "Invalid crop" });
+      expect(fs.readFileSync(existing, "utf8")).toBe("untouched original");
+      expect(state.put).not.toHaveBeenCalled();
+    }
+  }
+});
+
+it("rejects files submitted as image names before writing", async () => {
+  const input = await original().png().toBuffer();
+  for (const published of [false, true]) {
+    const body = await request(
+      new File([new Uint8Array(input)], "photo.png"),
+      published
+    ).formData();
+    body.set("name", new File(["photo"], "name.txt"));
+    const response = await POST(
+      new NextRequest("http://localhost/api/admin/upload-image", {
+        method: "POST",
+        body,
+      })
+    );
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({ error: "Invalid file name" });
+  }
+  expect(fs.readdirSync(state.directory)).toEqual([]);
+  expect(state.put).not.toHaveBeenCalled();
+});

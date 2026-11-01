@@ -26,18 +26,24 @@ describe("papers", () => {
   it("lists papers/ posts newest-read first, grouped in topic order", () => {
     page(
       "attention",
-      "title: Attention Is All You Need\ncategory: papers/llms-and-agents\nauthors: Vaswani et al.\nyear: 2017\nread: 2026-10-01"
+      "title: Attention Is All You Need\ndate: Oct 1, 2026\ncategory: papers/llms-and-agents\nauthors: Vaswani et al.\nyear: 2017\nread: 2026-10-01"
     );
     page(
       "rlhf",
-      "title: InstructGPT\ncategory: papers/llms-and-agents\nyear: 2022\nread: 2026-10-09"
+      "title: InstructGPT\ndate: Oct 9, 2026\ncategory: papers/llms-and-agents\nyear: 2022\nread: 2026-10-09"
     );
     page(
       "pitfalls",
-      "title: ML Pitfalls\ncategory: papers/deep-learning-foundations"
+      "title: ML Pitfalls\ndate: Oct 1, 2026\ncategory: papers/deep-learning-foundations"
     );
-    page("odd", "title: Odd\ncategory: papers/new-topic\nread: 2026-01-01");
-    page("christianity", "title: Christianity\ncategory: religion");
+    page(
+      "odd",
+      "title: Odd\ndate: Jan 1, 2026\ncategory: papers/new-topic\nread: 2026-01-01"
+    );
+    page(
+      "christianity",
+      "title: Christianity\ndate: Jan 1, 2026\ncategory: religion"
+    );
     const papers = getPapers();
     expect(papers.map((p) => p.slug)).toEqual([
       "rlhf",

@@ -1,3 +1,4 @@
+import { z } from "zod";
 import {
   ESSAYS_DIR,
   ESSAY_DRAFTS_DIR,
@@ -16,6 +17,12 @@ export function parseKind(value: unknown): ContentKind | null {
   if (value === undefined || value === null || value === "") return "post";
   return value === "post" || value === "essay" ? value : null;
 }
+
+/** Body of publish-post and unpublish-post. The slug is checked by isSafeSlug. */
+export const postTransitionBodySchema = z.object({
+  slug: z.string().optional(),
+  kind: z.unknown().optional(),
+});
 
 /** Where each kind keeps its drafts and published files. */
 export function contentPaths(kind: ContentKind) {

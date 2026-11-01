@@ -1,4 +1,8 @@
-export type PostFormat = "journal" | "essay" | "book" | "links" | "resource";
+import type { MarkdownFile } from "@/utils/content/markdown";
+import type { PostFormat, PostFrontmatter } from "@/utils/content/schemas";
+
+// The frontmatter shape is owned by the zod schema in utils/content/schemas.
+export type { PostFormat, PostFrontmatter };
 
 export interface PostMetadata {
   title: string;
@@ -6,7 +10,7 @@ export interface PostMetadata {
   tags: string[];
   format?: PostFormat;
   locations?: string[];
-  placeContext?: "visit" | "transit" | "mention";
+  placeContext?: PostFrontmatter["place_context"];
   wordcount: number;
   slug: string;
   prev: PostMetadata | null;
@@ -14,16 +18,4 @@ export interface PostMetadata {
   isDraft?: boolean;
 }
 
-export interface PostFrontmatter {
-  title?: string;
-  tags?: string[] | string;
-  date?: string;
-  format?: PostFormat;
-  locations?: string[];
-  [key: string]: unknown;
-}
-
-export interface ParsedPost {
-  data: PostFrontmatter;
-  content: string;
-}
+export type ParsedPost = MarkdownFile<PostFrontmatter>;

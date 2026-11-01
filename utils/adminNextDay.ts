@@ -1,12 +1,12 @@
 /** Calendar arithmetic, rather than +24 hours, handles month/year and DST boundaries. */
 export function nextPostDay(
   slug: string,
-  date: unknown
+  date: string
 ): { slug: string; date: string; month: string } | null {
   const match = /^(\d{2})(\d{2})(\d{2})$/.exec(slug);
   const current = match
     ? new Date(2000 + Number(match[3]), Number(match[2]) - 1, Number(match[1]))
-    : new Date(String(date ?? ""));
+    : new Date(date);
   if (!Number.isFinite(current.getTime())) return null;
   if (
     match &&

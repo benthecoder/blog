@@ -39,7 +39,7 @@ describe("wardPartitions", () => {
 
   it("returns every partition in the requested range", () => {
     const parts = wardPartitions(blobs(centers, 10), 2, 5);
-    expect([...parts.keys()].sort()).toEqual([2, 3, 4, 5]);
+    expect([...parts.keys()].sort((a, b) => a - b)).toEqual([2, 3, 4, 5]);
   });
 });
 

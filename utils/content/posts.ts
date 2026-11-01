@@ -2,13 +2,14 @@ import { cache } from "react";
 import fs from "fs";
 import path from "path";
 import { POSTS_DIR, getPostPath } from "@/config/paths";
-import type { PostFormat, PostFrontmatter, PostMetadata } from "@/types/post";
+import type { PostFormat, PostMetadata } from "@/types/post";
 import {
   readMarkdownFile,
   scanMarkdownDir,
   scanMarkdownSlugs,
 } from "./markdown";
-import { extractTags } from "./tags";
+import { postFrontmatterSchema } from "./schemas";
+import { parseTags } from "./tags";
 import { formatOf, matchesFormat } from "./formats";
 import { parseLocations } from "./travel";
 
@@ -41,7 +42,7 @@ export function getAllPosts(includeDrafts = false): string[] {
 }
 
 export const getPostContent = cache(function getPostContent(slug: string) {
-  return readMarkdownFile(getPostPath(slug));
+  return readMarkdownFile(getPostPath(slug), postFrontmatterSchema);
 });
 
 // Published files in a Vercel deployment are immutable. Keep the index across
@@ -69,23 +70,21 @@ export const getPostMetadata = cache(function getPostMetadata(
     : [POSTS_DIR];
 
   const posts: PostMetadata[] = dirs.flatMap((dir) =>
-    scanMarkdownDir(dir).map(({ slug, data, content }) => ({
-      title: data.title as string,
-      date: data.date as string,
-      tags: extractTags(data as PostFrontmatter),
-      format: formatOf(slug, data),
-      locations: parseLocations(data.locations),
-      placeContext: ["visit", "transit", "mention"].includes(
-        String(data.place_context)
-      )
-        ? (data.place_context as PostMetadata["placeContext"])
-        : undefined,
-      wordcount: calculateWordCount(content),
-      slug,
-      isDraft: dir.includes("drafts"),
-      prev: null,
-      next: null,
-    }))
+    scanMarkdownDir(dir, postFrontmatterSchema).map(
+      ({ slug, data, content }) => ({
+        title: data.title,
+        date: data.date,
+        tags: parseTags(data.tags),
+        format: formatOf(slug, data),
+        locations: parseLocations(data.locations),
+        placeContext: data.place_context,
+        wordcount: calculateWordCount(content),
+        slug,
+        isDraft: dir.includes("drafts"),
+        prev: null,
+        next: null,
+      })
+    )
   );
 
   const postTimes = new Map(

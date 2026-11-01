@@ -87,7 +87,7 @@ export function useImageManager({
         notify(`✗ Failed to delete ${fileName}`);
       }
     } catch (error) {
-      notify(`✗ Error: ${error}`);
+      notify(`✗ Error: ${String(error)}`);
     }
   };
 
@@ -149,7 +149,7 @@ export function useImageManager({
       }
     } catch (error) {
       if (!controller.signal.aborted) {
-        const message = `Upload error: ${error}`;
+        const message = `Upload error: ${String(error)}`;
         setUploadError(message);
         notify(`✗ ${message}`);
       }
@@ -281,7 +281,8 @@ export function useImageManager({
   // Structural rather than React's ClipboardEvent: the CodeMirror editor
   // hands this the native DOM event, and only these two members are used —
   // so both satisfy it without a cast at the call site.
-  const handlePaste = async (e: {
+  // Synchronous: it only opens the crop modal; the upload happens on confirm.
+  const handlePaste = (e: {
     clipboardData: DataTransfer | null;
     preventDefault: () => void;
   }) => {

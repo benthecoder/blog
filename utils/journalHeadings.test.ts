@@ -3,6 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { expect, it } from "vitest";
 import MarkdownContent from "@/components/posts/MarkdownContent";
 import { readMarkdownFile } from "@/utils/content/markdown";
+import { postFrontmatterSchema } from "@/utils/content/schemas";
 import { getPostPath } from "@/config/paths";
 
 it("gives repeated journal sections distinct targets and matching heading links", () => {
@@ -40,7 +41,8 @@ it("renders the two affected recipe entries without duplicate section IDs", () =
     .map((slug) =>
       renderToStaticMarkup(
         createElement(MarkdownContent, {
-          content: readMarkdownFile(getPostPath(slug)).content,
+          content: readMarkdownFile(getPostPath(slug), postFrontmatterSchema)
+            .content,
           headingPrefix: `journal-${slug}-`,
           prioritizeFirstImage: false,
         })

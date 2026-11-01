@@ -3,7 +3,11 @@ import path from "path";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
-import { parseKind, contentPaths } from "@/utils/content/kind";
+import {
+  parseKind,
+  contentPaths,
+  postTransitionBodySchema,
+} from "@/utils/content/kind";
 import { acquirePostTransition } from "@/utils/content/postTransition";
 import { writeAtomicFile } from "@/utils/content/atomicFile";
 import { r2ListImages, r2GetImage, r2DeleteImage } from "@/utils/r2";
@@ -16,7 +20,11 @@ export async function POST(request: NextRequest) {
   const createdImages: string[] = [];
   let draftCreated = false;
   try {
-    const { slug, kind: rawKind } = await request.json();
+    const body = postTransitionBodySchema.safeParse(await request.json());
+    if (!body.success) {
+      return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
+    }
+    const { slug, kind: rawKind } = body.data;
     const kind = parseKind(rawKind);
     if (!kind) {
       return NextResponse.json({ error: "Invalid kind" }, { status: 400 });

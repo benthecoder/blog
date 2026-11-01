@@ -108,7 +108,7 @@ describe("format migration", () => {
 
   it("does not write redundant defaults and is idempotent for every selection", () => {
     expect(migrateFormat("241024", { tags: "journal" }).data).toEqual({});
-    for (const [slug, data] of [
+    const cases: [string, { tags: string | string[] }][] = [
       ["241024", { tags: "journal, life" }],
       ["22", { tags: "journal, ✰" }],
       ["roundup", { tags: "links" }],
@@ -116,7 +116,8 @@ describe("format migration", () => {
       ["tools", { tags: "listicles, resources" }],
       ["trip", { tags: "journal, travel" }],
       ["airflow", { tags: "whatis, tech" }],
-    ] as const) {
+    ];
+    for (const [slug, data] of cases) {
       const first = migrateFormat(slug, data);
       expect(migrateFormat(slug, first.data).changed).toBe(false);
     }
