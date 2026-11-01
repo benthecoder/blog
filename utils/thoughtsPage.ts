@@ -12,15 +12,7 @@ function isThoughtJson(entry: unknown): entry is ThoughtJson {
     typeof entry !== "object" ||
     !("id" in entry) ||
     !("content" in entry) ||
-    !("created_at" in entry) ||
-    ("link" in entry &&
-      entry.link !== undefined &&
-      entry.link !== null &&
-      typeof entry.link !== "string") ||
-    ("link_title" in entry &&
-      entry.link_title !== undefined &&
-      entry.link_title !== null &&
-      typeof entry.link_title !== "string")
+    !("created_at" in entry)
   )
     return false;
   const { id, content, created_at } = entry;
@@ -35,18 +27,13 @@ function isThoughtJson(entry: unknown): entry is ThoughtJson {
 }
 
 export async function fetchThoughtPage(
-  cursor: number | null,
+  cursor: number,
   signal: AbortSignal,
-  fetcher: typeof fetch = fetch,
-  query = ""
+  fetcher: typeof fetch = fetch
 ): Promise<ThoughtJson[]> {
-  if (cursor !== null && (!Number.isSafeInteger(cursor) || cursor < 1))
+  if (!Number.isSafeInteger(cursor) || cursor < 1)
     throw new Error("Invalid thoughts cursor");
-  const params = new URLSearchParams();
-  if (cursor !== null) params.set("cursor", String(cursor));
-  params.set("limit", "100");
-  if (query) params.set("q", query);
-  const response = await fetcher(`/api/thoughts?${params}`, {
+  const response = await fetcher(`/api/thoughts?cursor=${cursor}&limit=100`, {
     signal,
   });
   if (!response.ok)
@@ -57,7 +44,7 @@ export async function fetchThoughtPage(
   const entries: unknown[] = data;
   const page: ThoughtJson[] = [];
   // Each page must continue strictly below the cursor, newest first.
-  let previousId = cursor ?? Infinity;
+  let previousId = cursor;
   for (const entry of entries) {
     if (!isThoughtJson(entry) || entry.id >= previousId)
       throw new Error("Invalid thoughts page");

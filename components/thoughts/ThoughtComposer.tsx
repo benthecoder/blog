@@ -75,7 +75,7 @@ export default function ThoughtComposer() {
     try {
       const response = await fetch("/api/admin/login", { method: "DELETE" });
       if (!response.ok) throw new Error("Sign-out failed");
-      router.replace("/admin/login?next=%2Fthoughts%2Fnew");
+      router.replace("/admin/login?next=%2Ftweet");
       router.refresh();
     } catch {
       setState({ kind: "error", message: "Couldn’t sign out. Try again." });
@@ -179,7 +179,7 @@ export default function ThoughtComposer() {
         <p role="alert" className="text-sm text-primary">
           Your session expired.{" "}
           <Link
-            href="/admin/login?next=%2Fthoughts%2Fnew"
+            href="/admin/login?next=%2Ftweet"
             target="_blank"
             rel="noopener noreferrer"
             className="underline"

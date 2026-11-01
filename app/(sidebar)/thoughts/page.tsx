@@ -19,7 +19,7 @@ const INITIAL_LIMIT = 100;
 
 async function getInitialThoughts(): Promise<Thought[]> {
   const rows = await sql`
-    SELECT id, content, link, link_title, created_at
+    SELECT id, TRIM(content || ' ' || COALESCE(link, '')) AS content, created_at
     FROM tweets
     ORDER BY id DESC
     LIMIT ${INITIAL_LIMIT}

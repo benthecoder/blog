@@ -14,17 +14,12 @@ export const tweetRowSchema = z.object({
 });
 export type TweetRow = z.infer<typeof tweetRowSchema>;
 
-/** Public stream rows retain link metadata; older clients may omit it. */
-export const thoughtRowSchema = tweetRowSchema
-  .pick({
-    id: true,
-    content: true,
-    created_at: true,
-  })
-  .extend({
-    link: tweetRowSchema.shape.link.optional(),
-    link_title: tweetRowSchema.shape.link_title.optional(),
-  });
+/** What /thoughts selects: the link is folded into `content`. */
+export const thoughtRowSchema = tweetRowSchema.pick({
+  id: true,
+  content: true,
+  created_at: true,
+});
 
 /** The same row after JSON, from /api/thoughts: the timestamp is a string. */
 export const thoughtJsonSchema = thoughtRowSchema.extend({

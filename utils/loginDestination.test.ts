@@ -1,7 +1,7 @@
 import { expect, it } from "vitest";
 import { loginDestination } from "./loginDestination";
 it("keeps sign-in redirects on the current origin", () => {
-  expect(loginDestination("/thoughts/new")).toBe("/thoughts/new");
+  expect(loginDestination("/tweet")).toBe("/tweet");
   expect(loginDestination("/admin/edit/new?draft=true")).toBe(
     "/admin/edit/new?draft=true"
   );

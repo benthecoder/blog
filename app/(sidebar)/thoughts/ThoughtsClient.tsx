@@ -1,249 +1,179 @@
 "use client";
 
-import { useState, useEffect, useRef, type ReactNode } from "react";
-import Link from "next/link";
+import { useState, useEffect, useRef, useEffectEvent } from "react";
+import type { ReactNode } from "react";
 import { fetchThoughtPage } from "@/utils/thoughtsPage";
-import { parsePublicUrl } from "@/utils/tweets/link";
 import type { Thought } from "@/utils/thoughts";
 
+const TZ = "America/New_York";
 const PAGE_SIZE = 100;
-const formatter = new Intl.DateTimeFormat("en-US", {
-  timeZone: "America/New_York",
-  year: "numeric",
-  month: "short",
-  day: "numeric",
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  timeZone: TZ,
+  year: "2-digit",
+  month: "2-digit",
+  day: "2-digit",
+});
+const timeFormatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: TZ,
   hour: "2-digit",
   minute: "2-digit",
   hour12: false,
 });
 
-function linkedText(content: string): ReactNode[] {
-  return content.split(/(https?:\/\/[^\s]+)/g).map((part, index) => {
-    const url = parsePublicUrl(part);
-    return url ? (
-      <a
-        key={index}
-        href={url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="underline underline-offset-4 hover:text-accent wrap-anywhere"
-      >
-        {part}
-      </a>
-    ) : (
-      part
-    );
+function parseContent(content: string): ReactNode[] {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const parts = content.split(urlRegex);
+
+  return parts.map((part, index) => {
+    if (part.startsWith("http://") || part.startsWith("https://")) {
+      return (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 hover:text-accent/70 transition-colors break-all"
+        >
+          {part}
+        </a>
+      );
+    }
+    return part;
   });
 }
 
-type Page = { query: string; thoughts: Thought[]; hasMore: boolean };
+interface ThoughtsClientProps {
+  initialThoughts: Thought[];
+}
+
 export default function ThoughtsClient({
   initialThoughts,
-}: {
-  initialThoughts: Thought[];
-}) {
-  const [query, setQuery] = useState("");
-  const [page, setPage] = useState<Page>({
-    query: "",
-    thoughts: initialThoughts,
-    hasMore: initialThoughts.length === PAGE_SIZE,
-  });
+}: ThoughtsClientProps) {
+  const [thoughts, setThoughts] = useState<Thought[]>(initialThoughts);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [retry, setRetry] = useState(0);
-  const pending = useRef<AbortController | null>(null);
-  const trimmedQuery = query.trim();
+  const [hasMore, setHasMore] = useState(initialThoughts.length === PAGE_SIZE);
+  const observerRef = useRef<HTMLDivElement>(null);
+  const pendingRequest = useRef<AbortController | null>(null);
+
+  const groupedByDate = thoughts.reduce(
+    (acc, entry) => {
+      const dateStr = dateFormatter.format(new Date(entry.created_at));
+      (acc[dateStr] ??= []).push(entry);
+      return acc;
+    },
+    {} as Record<string, Thought[]>
+  );
+
+  const dates = Object.keys(groupedByDate);
+
+  // Read current pagination state without reconnecting the observer whenever
+  // loading toggles. Failed pages can retry after leaving/re-entering view.
+  const loadMore = useEffectEvent(async () => {
+    if (pendingRequest.current || !hasMore) return;
+    const controller = new AbortController();
+    pendingRequest.current = controller;
+    const timeout = setTimeout(() => controller.abort(), 10_000);
+
+    setLoading(true);
+    try {
+      const lastId = thoughts[thoughts.length - 1]?.id;
+      if (lastId === undefined) return;
+      const newThoughts = await fetchThoughtPage(lastId, controller.signal);
+      if (controller.signal.aborted) return;
+
+      if (newThoughts.length > 0) {
+        setThoughts((prev) => [...prev, ...newThoughts]);
+        setHasMore(newThoughts.length === PAGE_SIZE);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        console.error("Error loading more thoughts:", error);
+      }
+    } finally {
+      clearTimeout(timeout);
+      pendingRequest.current = null;
+      setLoading(false);
+    }
+  });
+
+  useEffect(() => () => pendingRequest.current?.abort(), []);
 
   useEffect(() => {
-    if (!trimmedQuery) return;
-    const controller = new AbortController();
-    pending.current = controller;
-    const timer = setTimeout(async () => {
-      setLoading(true);
-      setError(false);
-      try {
-        const thoughts = await fetchThoughtPage(
-          null,
-          AbortSignal.any([controller.signal, AbortSignal.timeout(10_000)]),
-          fetch,
-          trimmedQuery
-        );
-        if (!controller.signal.aborted)
-          setPage({
-            query: trimmedQuery,
-            thoughts,
-            hasMore: thoughts.length === PAGE_SIZE,
-          });
-      } catch {
-        if (!controller.signal.aborted) setError(true);
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-        if (pending.current === controller) pending.current = null;
-      }
-    }, 300);
-    return () => {
-      clearTimeout(timer);
-      controller.abort();
-    };
-  }, [trimmedQuery, retry]);
-  useEffect(() => () => pending.current?.abort(), []);
+    if (!hasMore) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          // loadMore logs its own failures; the next scroll retries.
+          void loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
 
-  async function loadMore() {
-    if (pending.current || !page.hasMore || page.query !== trimmedQuery) return;
-    const cursor = page.thoughts.at(-1)?.id;
-    if (cursor === undefined) return;
-    const controller = new AbortController();
-    pending.current = controller;
-    setLoading(true);
-    setError(false);
-    try {
-      const thoughts = await fetchThoughtPage(
-        cursor,
-        AbortSignal.any([controller.signal, AbortSignal.timeout(10_000)]),
-        fetch,
-        trimmedQuery
-      );
-      if (!controller.signal.aborted)
-        setPage((previous) => ({
-          query: previous.query,
-          thoughts: [...previous.thoughts, ...thoughts],
-          hasMore: thoughts.length === PAGE_SIZE,
-        }));
-    } catch {
-      if (!controller.signal.aborted) setError(true);
-    } finally {
-      if (!controller.signal.aborted) setLoading(false);
-      if (pending.current === controller) pending.current = null;
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
     }
-  }
 
-  const current = page.query === trimmedQuery;
+    return () => observer.disconnect();
+  }, [hasMore, thoughts.length]);
+
   return (
-    <section className="py-8 sm:py-12">
-      <header className="mb-9 flex items-baseline justify-between gap-4">
-        <div>
-          <h1 className="text-3xl text-primary">thoughts</h1>
-          <p className="mt-3 text-sm text-muted">
-            notes in passing. things worth keeping.
-          </p>
-        </div>
-        <Link
-          href="/thoughts/new"
-          className="shrink-0 text-xs text-muted underline underline-offset-4 hover:text-accent"
-        >
-          write a thought
-        </Link>
-      </header>
-      <label htmlFor="thought-search" className="sr-only">
-        Search thoughts
-      </label>
-      <input
-        id="thought-search"
-        type="search"
-        value={query}
-        maxLength={200}
-        placeholder="search the stream…"
-        onChange={(event) => {
-          if (event.target.value.trim() !== trimmedQuery) {
-            pending.current?.abort();
-            pending.current = null;
-            setError(false);
-            setLoading(false);
-          }
-          setQuery(event.target.value);
-          if (!event.target.value.trim())
-            setPage({
-              query: "",
-              thoughts: initialThoughts,
-              hasMore: initialThoughts.length === PAGE_SIZE,
-            });
-        }}
-        className="mb-10 w-full rounded-sm border border-line bg-raised px-4 py-3 text-base text-primary placeholder:text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-      />
-      {!current && !error && (
-        <p role="status" className="py-8 text-sm text-muted">
-          searching the stream…
-        </p>
-      )}
-      {current && (
-        <div className="space-y-10 sm:space-y-12">
-          {page.thoughts.map((entry) => {
-            const date = new Date(entry.created_at);
-            const link = entry.link ? parsePublicUrl(entry.link) : null;
-            return (
-              <article
-                id={`thought-${entry.id}`}
-                key={entry.id}
-                className="grid gap-3 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:gap-6 scroll-mt-8"
-              >
-                <time
-                  dateTime={date.toISOString()}
-                  className="text-xs leading-relaxed text-muted"
-                >
-                  {formatter.format(date)}
-                </time>
-                <div className="min-w-0 space-y-3">
-                  {entry.content && (
-                    <p className="whitespace-pre-wrap wrap-break-word text-base leading-relaxed text-primary">
-                      {linkedText(entry.content)}
+    <div className="max-w-3xl mx-auto px-6 py-12">
+      <h1 className="sr-only">thoughts</h1>
+      <div className="space-y-8">
+        {dates.map((date) => (
+          <div key={date} className="relative">
+            <div className="mb-2 pb-2 border-b border-rule dark:border-chalk-muted/30">
+              <p className="text-xs text-accent/50 tracking-wide lowercase text-center">
+                {date}
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              {groupedByDate[date].map((entry) => {
+                const time = timeFormatter.format(new Date(entry.created_at));
+
+                return (
+                  <div key={entry.id} className="flex gap-4 items-baseline">
+                    <span className="text-xs text-accent/50 shrink-0 select-none w-10">
+                      {time}
+                    </span>
+                    <p className="text-sm text-accent leading-relaxed wrap-break-word whitespace-pre-wrap flex-1">
+                      {parseContent(entry.content)}
                     </p>
-                  )}
-                  {link && (
-                    <a
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block border-l-2 border-line pl-4 text-sm leading-relaxed text-accent hover:text-primary wrap-anywhere"
-                    >
-                      <span className="underline underline-offset-4">
-                        {entry.link_title ||
-                          new URL(link).hostname.replace(/^www\./, "")}
-                      </span>
-                      {entry.link_title && (
-                        <span className="mt-1 block text-xs text-muted">
-                          {new URL(link).hostname.replace(/^www\./, "")}
-                        </span>
-                      )}
-                    </a>
-                  )}
-                </div>
-              </article>
-            );
-          })}
-          {page.thoughts.length === 0 && (
-            <p role="status" className="py-12 text-sm text-muted">
-              {trimmedQuery
-                ? "no thoughts match this search."
-                : "nothing here yet. a thought can start anywhere."}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+
+        {thoughts.length === 0 && (
+          <div className="text-center py-16">
+            <p className="text-sm text-accent">empty stream...</p>
+          </div>
+        )}
+
+        {hasMore && (
+          <div ref={observerRef} className="py-12 text-center">
+            {loading && (
+              <p className="text-xs text-accent tracking-wide">
+                loading more...
+              </p>
+            )}
+          </div>
+        )}
+
+        {!hasMore && thoughts.length > 0 && (
+          <div className="py-12 text-center">
+            <p className="text-xs text-accent tracking-wide">
+              ~ end of stream ~
             </p>
-          )}
-        </div>
-      )}
-      {error && (
-        <div role="alert" className="mt-8 text-sm text-primary">
-          couldn’t load thoughts.{" "}
-          <button
-            type="button"
-            className="underline underline-offset-4"
-            onClick={() => {
-              if (!current) setRetry((value) => value + 1);
-              else void loadMore();
-            }}
-          >
-            try again
-          </button>
-        </div>
-      )}
-      {current && page.hasMore && (
-        <button
-          type="button"
-          onClick={() => void loadMore()}
-          disabled={loading}
-          className="mt-12 min-h-11 w-full border-t border-line py-4 text-sm text-accent disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent"
-        >
-          {loading ? "loading…" : "older thoughts ↓"}
-        </button>
-      )}
-    </section>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

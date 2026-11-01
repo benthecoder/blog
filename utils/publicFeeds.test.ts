@@ -13,14 +13,10 @@ const readThoughts = (query = "") =>
 
 describe("public feed cache boundaries", () => {
   it("returns the same thought rows with shared caching and bounded SQL pagination", async () => {
-    const rows = [
-      { id: 9, content: "hello", created_at: new Date("2026-10-07T00:00:00Z") },
-    ];
+    const rows = [{ id: 9, content: "hello", created_at: "2026-10-07" }];
     sql.mockResolvedValue(rows);
     const response = await readThoughts("?cursor=10&limit=999");
-    expect(await response.json()).toEqual([
-      { id: 9, content: "hello", created_at: "2026-10-07T00:00:00.000Z" },
-    ]);
+    expect(await response.json()).toEqual(rows);
     expect(sql.mock.calls[0].slice(1)).toEqual([10, 200]);
     expect(sql.mock.calls[0][0].join("")).toContain("WHERE id <");
     expect(response.headers.get("cache-control")).toBe(

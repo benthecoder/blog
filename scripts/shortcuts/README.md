@@ -1,10 +1,12 @@
 # posting thoughts from anywhere
 
-Open `/thoughts/new` on any device and sign in with the passphrase configured as
+The writing form is unlisted: bookmark `/tweet` directly. It has no link from the
+public thoughts page and is excluded from the sitemap. Sign in with your existing
+admin password, configured as
 `ADMIN_SECRET`. The browser keeps an HttpOnly session for 30 days; the server
 checks its signed expiry. Existing sessions need one fresh sign-in after this
 change. A note can contain up to 5,000 characters, with an optional link and
-link title. `/tweet` redirects to the writing page.
+link title.
 
 Production sign-in and publishing require `UPSTASH_REDIS_REST_URL` and
 `UPSTASH_REDIS_REST_TOKEN`. Both fail closed if the rate-limit service is

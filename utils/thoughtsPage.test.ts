@@ -55,10 +55,6 @@ describe("thoughts pagination", () => {
     // The client guard stands in for the schema to keep zod off /thoughts.
     for (const entry of [
       thought(9),
-      { ...thought(9), link: null, link_title: null },
-      { ...thought(9), link: "https://example.com", link_title: "article" },
-      { ...thought(9), link: 42 },
-      { ...thought(9), link_title: {} },
       { ...thought(9), id: 0 },
       { ...thought(9), id: 1.5 },
       { ...thought(9), id: "9" },
@@ -84,22 +80,4 @@ describe("thoughts pagination", () => {
       );
     expect(fetcher).not.toHaveBeenCalled();
   });
-});
-
-it("searches the entire stream without a cursor and preserves link metadata", async () => {
-  const page = [
-    {
-      ...thought(9),
-      link: "https://example.com/read",
-      link_title: "An article",
-    },
-  ];
-  const fetcher = vi.fn<typeof fetch>().mockResolvedValue(Response.json(page));
-  expect(await fetchThoughtPage(null, signal, fetcher, "tea & code")).toEqual(
-    page
-  );
-  expect(fetcher).toHaveBeenCalledWith(
-    "/api/thoughts?limit=100&q=tea+%26+code",
-    { signal }
-  );
 });

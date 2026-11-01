@@ -51,8 +51,8 @@ function LoginForm() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Passphrase"
-          aria-label="Passphrase"
+          placeholder="Admin password"
+          aria-label="Admin password"
           autoComplete="current-password"
           required
           autoFocus
