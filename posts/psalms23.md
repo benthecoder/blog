@@ -1,6 +1,6 @@
 ---
 title: Psalm 23
-tags: christianity, faith, bible, spirituality
+tags: faith, bible, spirituality
 date: Oct 29, 2023
 ---
 

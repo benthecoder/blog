@@ -16,6 +16,7 @@ const TOPIC_ALIASES: Record<string, string> = {
   mandarin: "chinese-language",
   sketching: "drawing",
   school: "education",
+  christianity: "faith",
 };
 
 export function canonicalTopicTag(tag: string): string {
