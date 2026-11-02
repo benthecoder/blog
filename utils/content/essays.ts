@@ -1,6 +1,6 @@
 import { cache } from "react";
-import { ESSAYS_DIR, ESSAY_DRAFTS_DIR, getEssayPath } from "@/config/paths";
-import { readMarkdownFile, scanMarkdownDir } from "./markdown";
+import { ESSAYS_DIR, ESSAY_DRAFTS_DIR } from "@/config/paths";
+import { scanMarkdownDir } from "./markdown";
 import { essayFrontmatterSchema } from "./schemas";
 import { parseTags } from "./tags";
 
@@ -38,10 +38,6 @@ export const getEssayMetadata = cache(
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }
 );
-
-export const getEssayContent = cache(function getEssayContent(slug: string) {
-  return readMarkdownFile(getEssayPath(slug), essayFrontmatterSchema);
-});
 
 export interface EssayAdminEntry {
   slug: string;

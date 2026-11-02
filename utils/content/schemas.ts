@@ -9,7 +9,7 @@ import { postDateISO } from "@/utils/dateUtils";
 //
 // Client-safe: no fs, so the admin editor can validate what Benedict types.
 
-export const POST_FORMAT_IDS = [
+const POST_FORMAT_IDS = [
   "journal",
   "essay",
   "book",
@@ -19,7 +19,7 @@ export const POST_FORMAT_IDS = [
 export const postFormatSchema = z.enum(POST_FORMAT_IDS);
 export type PostFormat = z.infer<typeof postFormatSchema>;
 
-export const PLACE_CONTEXTS = ["visit", "transit", "mention"] as const;
+const PLACE_CONTEXTS = ["visit", "transit", "mention"] as const;
 
 /**
  * js-yaml turns an unquoted `2026-05-01` into a Date at UTC midnight. Read it
@@ -31,7 +31,7 @@ const requiredOr =
   ({ input }: { input?: unknown }) =>
     input === undefined ? "required" : message;
 
-export const dateTextSchema = z.union(
+const dateTextSchema = z.union(
   [z.string(), z.date().transform((d) => d.toISOString().slice(0, 10))],
   { error: requiredOr(NOT_A_DATE) }
 );
@@ -80,7 +80,6 @@ export const essayFrontmatterSchema = z.strictObject({
   tags: tagsSchema.optional(),
   format: postFormatSchema.optional(),
 });
-export type EssayFrontmatter = z.infer<typeof essayFrontmatterSchema>;
 
 // Loose: wiki pages are a personal encyclopedia and may carry any extra
 // metadata (the wiki editor preserves it on save). The known fields are typed.
@@ -134,4 +133,3 @@ export const draftFrontmatterSchema = z.looseObject({
   updated: dateTextSchema.nullish(),
   format: postFormatSchema.nullish(),
 });
-export type DraftFrontmatter = z.infer<typeof draftFrontmatterSchema>;
