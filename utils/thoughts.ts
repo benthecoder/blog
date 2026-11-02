@@ -12,7 +12,6 @@ export const tweetRowSchema = z.object({
   link_title: z.string().nullable(),
   created_at: z.date(),
 });
-export type TweetRow = z.infer<typeof tweetRowSchema>;
 
 /** What /thoughts selects: the link is folded into `content`. */
 export const thoughtRowSchema = tweetRowSchema.pick({
