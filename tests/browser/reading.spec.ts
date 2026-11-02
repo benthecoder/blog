@@ -13,6 +13,36 @@ for (const width of [320, 390, 640, 1440]) {
     // Wait for a post's client component to hydrate before stress-testing
     // its DOM, otherwise React correctly replaces our injected content.
     await expect(page.getByText("0 views", { exact: true })).toBeVisible();
+    const floating = page.getByRole("button", {
+      name: /^(Switch to .+ mode|Change color palette to .+)$/,
+    });
+    await expect(floating).toHaveCount(2);
+    const collisions = await floating.evaluateAll((buttons) => {
+      const brands = document.querySelectorAll('a[href="/"], a[href="/about"]');
+      return buttons.flatMap((button) => {
+        const a = button.getBoundingClientRect();
+        return Array.from(brands)
+          .filter((brand) => {
+            const b = brand.getBoundingClientRect();
+            return (
+              a.left < b.right &&
+              a.right > b.left &&
+              a.top < b.bottom &&
+              a.bottom > b.top
+            );
+          })
+          .map((brand) => ({
+            button: button.getAttribute("aria-label"),
+            link: brand.getAttribute("href"),
+          }));
+      });
+    });
+    expect(collisions).toEqual([]);
+    for (const button of await floating.all()) {
+      const rect = await button.boundingBox();
+      expect(rect!.width).toBeGreaterThanOrEqual(44);
+      expect(rect!.height).toBeGreaterThanOrEqual(44);
+    }
     await page.evaluate(() => {
       document.querySelector("h1")!.textContent = "AnUnbrokenTitle".repeat(15);
       const article = document.querySelector("article.prose")!;
@@ -86,4 +116,31 @@ test("article images open by keyboard and return focus after Escape", async ({
   await page.keyboard.press("Escape");
   await expect(dialog).not.toBeVisible();
   await expect(trigger).toBeFocused();
+});
+
+test("real highlighted code keeps its copy target clear of text", async ({
+  page,
+  isMobile,
+}) => {
+  await page.goto("/posts/300925");
+  await expect(page.getByText("0 views", { exact: true })).toBeVisible();
+  const block = page.locator(".code-block").first();
+  const button = block.getByRole("button", { name: "Copy code", exact: true });
+  await button.scrollIntoViewIfNeeded();
+  const geometry = await block.evaluate((element) => {
+    const button = element.querySelector("button")!.getBoundingClientRect();
+    const range = document.createRange();
+    range.selectNodeContents(element.querySelector("pre.shiki .line")!);
+    return {
+      width: button.width,
+      height: button.height,
+      bottom: button.bottom,
+      textTop: range.getBoundingClientRect().top,
+    };
+  });
+  expect(geometry.width).toBeGreaterThanOrEqual(isMobile ? 44 : 24);
+  expect(geometry.height).toBeGreaterThanOrEqual(isMobile ? 44 : 24);
+  expect(geometry.textTop).toBeGreaterThanOrEqual(geometry.bottom + 4);
+  await button.focus();
+  await expect(button).toHaveCSS("outline-style", "solid");
 });

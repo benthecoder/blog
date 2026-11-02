@@ -659,6 +659,17 @@ body {
   background-color: var(--color-paper-sunken) !important;
 }
 
+/* Keep the copy action above the text even when its touch target is 44px. */
+.prose .code-block pre.shiki {
+  padding-top: 3.75rem;
+}
+
+@media (min-width: 40rem) and (pointer: fine) {
+  .prose .code-block pre.shiki {
+    padding-top: 2.5rem;
+  }
+}
+
 .dark .prose pre {
   border: none !important;
   box-shadow: none !important;

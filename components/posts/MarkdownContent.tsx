@@ -41,7 +41,7 @@ async function CodeBlock({
   }
 
   return (
-    <div className="relative group/code">
+    <div className="code-block relative group/code">
       <CopyButton code={code} />
       <div dangerouslySetInnerHTML={{ __html: html }} />
     </div>

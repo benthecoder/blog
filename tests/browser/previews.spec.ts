@@ -38,7 +38,24 @@ test("preview follows placement, stays hoverable and dismisses with Escape", asy
   await trigger.hover();
   await expect(tooltip).toBeVisible();
   await expect(tooltip).toHaveAttribute("data-placement", /^top/);
-  await tooltip.hover();
+  const linkRect = (await trigger.boundingBox())!;
+  const tooltipRect = (await tooltip.boundingBox())!;
+  const from = {
+    x: linkRect.x + linkRect.width / 2,
+    y: linkRect.y + linkRect.height / 2,
+  };
+  const to = {
+    x: tooltipRect.x + tooltipRect.width / 2,
+    y: tooltipRect.y + tooltipRect.height / 2,
+  };
+  // Exercise the gap between the link and the preview, not just the endpoints.
+  for (let step = 1; step <= 10; step++) {
+    await page.mouse.move(
+      from.x + ((to.x - from.x) * step) / 10,
+      from.y + ((to.y - from.y) * step) / 10
+    );
+    await expect(tooltip).toBeVisible();
+  }
   await expect(card).toHaveAttribute("data-status", "open");
   const origin = await card.evaluate((element) => ({
     y: parseFloat(getComputedStyle(element).transformOrigin.split(" ")[1]),
@@ -70,7 +87,8 @@ test("a failed lazy preview retries on the next focus without blocking its link"
 }) => {
   let requests = 0;
   await page.route("**/api/post-preview/ask", async (route) => {
-    if (++requests === 1) await route.fulfill({ status: 503 });
+    if (++requests === 1)
+      await route.fulfill({ status: 503, body: "Unavailable" });
     else
       await route.fulfill({
         json: {
@@ -86,8 +104,18 @@ test("a failed lazy preview retries on the next focus without blocking its link"
     name: "fetched preview",
     exact: true,
   });
+  const failedResponse = page.waitForResponse(
+    (response) =>
+      response.url().endsWith("/api/post-preview/ask") &&
+      response.status() === 503
+  );
   await trigger.focus();
-  await expect.poll(() => requests).toBe(1);
+  await failedResponse;
+  // Give the component's response handlers a render turn before refocusing.
+  // The preview deliberately does not consume a failed response's body.
+  await page.evaluate(
+    () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
+  );
   await expect(trigger).toHaveAttribute("href", "/posts/ask");
   await trigger.blur();
   await trigger.focus();

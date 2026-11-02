@@ -60,6 +60,7 @@ test("search supports arrow keys, Escape, focus return and a fresh reopen", asyn
 
 test("search announces loading, recovers from failure and explains empty results", async ({
   page,
+  isMobile,
 }) => {
   let release: () => void = () => {};
   const pending = new Promise<void>((resolve) => {
@@ -87,6 +88,30 @@ test("search announces loading, recovers from failure and explains empty results
   await expect(
     dialog.getByText("no posts found", { exact: false })
   ).toBeVisible();
+  await dialog.locator("summary").click();
+  const targets = await dialog
+    .locator("button:visible, summary:visible")
+    .evaluateAll((controls) =>
+      controls.map((control) => {
+        const rect = control.getBoundingClientRect();
+        return {
+          name: control.getAttribute("aria-label") ?? control.textContent,
+          width: rect.width,
+          height: rect.height,
+        };
+      })
+    );
+  for (const target of targets) {
+    expect(
+      target.width,
+      target.name ?? "search control"
+    ).toBeGreaterThanOrEqual(isMobile ? 44 : 24);
+    expect(
+      target.height,
+      target.name ?? "search control"
+    ).toBeGreaterThanOrEqual(isMobile ? 44 : 24);
+  }
+  await dialog.locator("summary").click();
   await expect
     .poll(() =>
       page.evaluate(

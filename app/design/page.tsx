@@ -119,6 +119,9 @@ function Primitives() {
         <Button size="sm" variant="outline">
           small
         </Button>
+        <IconButton size="sm" aria-label="small copy">
+          <Copy size={14} />
+        </IconButton>
         <ButtonLink href="/design" variant="outline">
           link
         </ButtonLink>

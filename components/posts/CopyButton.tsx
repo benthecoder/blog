@@ -45,7 +45,7 @@ export default function CopyButton({ code }: { code: string }) {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className={`absolute transition-[opacity,transform,filter] duration-150 ${
+        className={`absolute transition-[opacity,transform,filter] duration-150 motion-reduce:transition-none ${
           copied
             ? "opacity-0 scale-[0.8] blur-xs"
             : "opacity-100 scale-100 blur-none"
@@ -65,7 +65,7 @@ export default function CopyButton({ code }: { code: string }) {
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className={`absolute transition-[opacity,transform,filter] duration-150 ${
+        className={`absolute transition-[opacity,transform,filter] duration-150 motion-reduce:transition-none ${
           copied
             ? "opacity-100 scale-100 blur-none"
             : "opacity-0 scale-[0.8] blur-xs"
