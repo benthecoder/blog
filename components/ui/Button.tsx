@@ -41,7 +41,7 @@ const variants: Record<ButtonTone, Record<ButtonVariant, string>> = {
   },
 };
 
-export function buttonClass({
+function buttonClass({
   variant = "quiet",
   size = "md",
   tone = "default",
