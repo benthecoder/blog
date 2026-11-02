@@ -659,6 +659,17 @@ body {
   background-color: var(--color-paper-sunken) !important;
 }
 
+/* Keep the copy action above the text even when its touch target is 44px. */
+.prose .code-block pre.shiki {
+  padding-top: 3.75rem;
+}
+
+@media (min-width: 40rem) and (pointer: fine) {
+  .prose .code-block pre.shiki {
+    padding-top: 2.5rem;
+  }
+}
+
 .dark .prose pre {
   border: none !important;
   box-shadow: none !important;
@@ -889,6 +900,48 @@ body {
 .dark .sketch-ink {
   filter: invert(1);
   mix-blend-mode: screen;
+}
+
+.post-link-preview {
+  opacity: 1;
+  transition: opacity 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.post-link-preview[data-status="initial"],
+.post-link-preview[data-status="close"] {
+  opacity: 0;
+}
+
+.post-link-preview[data-status="close"] {
+  transition-duration: 100ms;
+}
+
+[data-placement^="top"] > .post-link-preview {
+  transform-origin: bottom;
+}
+
+[data-placement^="bottom"] > .post-link-preview {
+  transform-origin: top;
+}
+
+[data-placement^="left"] > .post-link-preview {
+  transform-origin: right;
+}
+
+[data-placement^="right"] > .post-link-preview {
+  transform-origin: left;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .post-link-preview {
+    transform: scale(1);
+    transition-property: opacity, transform;
+  }
+
+  .post-link-preview[data-status="initial"],
+  .post-link-preview[data-status="close"] {
+    transform: scale(0.94);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

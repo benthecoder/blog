@@ -68,7 +68,7 @@ const RenderPost = ({
   );
 
   return (
-    <div className="relative max-w-[65ch] mx-auto">
+    <div className="relative min-w-0 max-w-[65ch] mx-auto wrap-anywhere">
       {(prev || next) && (
         <PostArrowKeys
           prevHref={prev ? `/posts/${prev.slug}` : undefined}
