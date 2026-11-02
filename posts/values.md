@@ -1,6 +1,6 @@
 ---
 title: what you value most
-tags: values, philosophy, christianity, self-reflection
+tags: values, philosophy, faith, self-reflection
 date: Jun 27, 2024
 ---
 

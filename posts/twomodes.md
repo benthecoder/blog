@@ -1,6 +1,6 @@
 ---
 title: Two Modes of Experience
-tags: psychology, mindfulness, christianity, faith
+tags: psychology, mindfulness, faith
 date: May 26, 2024
 ---
 

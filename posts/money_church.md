@@ -1,6 +1,6 @@
 ---
 title: Sermon on Money
-tags: christianity, faith, money, contentment
+tags: faith, money, contentment
 date: Aug 6, 2023
 ---
 

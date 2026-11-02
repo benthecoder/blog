@@ -1,6 +1,6 @@
 ---
 title: A fable about life
-tags: christianity, faith, philosophy, meaning
+tags: faith, philosophy, meaning
 date: Jun 11, 2023
 format: book
 ---
