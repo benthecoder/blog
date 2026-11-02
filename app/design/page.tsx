@@ -3,6 +3,10 @@ import { Copy, X } from "lucide-react";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { IconButton } from "@/components/ui/IconButton";
+import PostLinkPreview from "@/components/posts/PostLinkPreview";
+import { getPostPreviewData } from "@/utils/content/preview";
+import { photoCollections } from "@/config/photoCollections";
+import { PhotoExample } from "./PhotoExample";
 // Theme scopes live next to their routes; the specimen borrows them.
 import "@/app/map/map.css";
 import "@/app/photos/photos.css";
@@ -262,6 +266,30 @@ export default function DesignPage() {
       <Section title="darkroom (.photo-site)">
         <div className="photo-site" data-specimen style={block}>
           <Primitives />
+        </div>
+      </Section>
+
+      <Section title="post previews">
+        <div className="flex flex-wrap gap-6">
+          <PostLinkPreview
+            slug="ask"
+            preview={getPostPreviewData("ask") ?? undefined}
+            className="focus-ring text-accent underline"
+          >
+            inline preview
+          </PostLinkPreview>
+          <PostLinkPreview
+            slug="ask"
+            className="focus-ring text-accent underline"
+          >
+            fetched preview
+          </PostLinkPreview>
+        </div>
+      </Section>
+
+      <Section title="photo viewer">
+        <div className="photo-site" data-specimen style={block}>
+          <PhotoExample photos={photoCollections[0].photos.slice(0, 2)} />
         </div>
       </Section>
     </main>

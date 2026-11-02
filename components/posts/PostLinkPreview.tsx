@@ -10,16 +10,15 @@ import {
   flip,
   shift,
   useHover,
+  safePolygon,
   useFocus,
   useDismiss,
   useRole,
   useInteractions,
-  useTransitionStyles,
+  useTransitionStatus,
   FloatingPortal,
 } from "@floating-ui/react";
 import type { PostPreviewData } from "@/utils/content/preview";
-
-const EASE_OUT = "cubic-bezier(0.23, 1, 0.32, 1)";
 
 // Hover card for internal post links. Markdown links pass `preview` resolved
 // on the server; list contexts with too many posts to inline (e.g. the
@@ -40,7 +39,7 @@ const PostLinkPreview = ({
   const fetched = useRef(false);
   const pointerPos = useRef({ x: 0, y: 0 });
 
-  const { refs, floatingStyles, context } = useFloating({
+  const { refs, floatingStyles, context, placement } = useFloating({
     open: isOpen,
     onOpenChange: (open, _event, reason) => {
       if (open && reason === "hover") {
@@ -88,6 +87,7 @@ const PostLinkPreview = ({
 
   const hover = useHover(context, {
     move: false,
+    handleClose: safePolygon(),
     delay: { open: 150, close: 0 },
   });
   const focus = useFocus(context);
@@ -96,9 +96,8 @@ const PostLinkPreview = ({
 
   // Scale/opacity enter-exit, decoupled from the position transform below so
   // each can ease independently.
-  const { isMounted, styles: transitionStyles } = useTransitionStyles(context, {
+  const { isMounted, status } = useTransitionStatus(context, {
     duration: { open: 150, close: 100 },
-    initial: { opacity: 0, transform: "scale(0.94)" },
   });
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
@@ -133,19 +132,17 @@ const PostLinkPreview = ({
             ref={refs.setFloating}
             style={floatingStyles}
             {...getFloatingProps()}
-            className="z-50 pointer-events-none"
+            className="z-50"
+            data-placement={placement}
           >
             <div
-              style={{
-                ...transitionStyles,
-                transitionTimingFunction: EASE_OUT,
-              }}
-              className="origin-bottom max-w-xs p-3 rounded-md shadow-md border border-line bg-raised"
+              data-status={status}
+              className="post-link-preview max-w-xs p-3 rounded-md shadow-md border border-line bg-raised"
             >
-              <p className="text-xs font-bold text-ink dark:text-chalk-strong mb-0.5">
+              <p className="text-xs font-bold text-primary mb-0.5">
                 {preview.title}
               </p>
-              <p className="text-2xs text-ink-soft mb-1.5">
+              <p className="text-2xs text-secondary mb-1.5">
                 {new Date(preview.date).toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",

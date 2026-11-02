@@ -12,7 +12,7 @@ interface SearchFiltersProps {
 
 const CHUNK_TYPES: ChunkType[] = ["code", "full-post", "quote", "section"];
 const filterClass = (selected: boolean) =>
-  `py-1 underline-offset-4 transition-colors duration-150 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4 ${
+  `focus-ring min-h-11 min-w-11 touch-manipulation py-1 underline-offset-4 transition-colors duration-150 sm:pointer-fine:min-h-6 sm:pointer-fine:min-w-6 ${
     selected
       ? "text-primary underline decoration-accent/60"
       : "text-muted hover:text-accent"
@@ -81,7 +81,7 @@ export default function SearchFilters({
             <button
               type="button"
               onClick={onClearFilters}
-              className="py-1 text-xs text-muted hover:text-accent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
+              className="focus-ring min-h-11 min-w-11 touch-manipulation py-1 text-xs text-muted hover:text-accent sm:pointer-fine:min-h-6 sm:pointer-fine:min-w-6"
             >
               reset
             </button>

@@ -11,7 +11,7 @@ export type IconButtonProps = Omit<ComponentProps<"button">, "aria-label"> & {
 };
 
 const sizes = {
-  sm: "p-1.5",
+  sm: "min-h-11 min-w-11 p-1.5 sm:pointer-fine:min-h-6 sm:pointer-fine:min-w-6",
   md: "min-h-11 min-w-11",
 };
 
@@ -32,7 +32,7 @@ export function IconButton({
       type={type}
       data-ui="icon-button"
       className={cx(
-        "focus-ring inline-flex cursor-pointer items-center justify-center rounded-sm transition-colors disabled:cursor-default disabled:opacity-30",
+        "focus-ring inline-flex touch-manipulation cursor-pointer items-center justify-center rounded-sm transition-colors disabled:cursor-default disabled:opacity-30",
         sizes[size],
         tones[tone],
         className

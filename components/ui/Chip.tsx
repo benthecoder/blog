@@ -26,7 +26,7 @@ export function Chip({
       aria-pressed={pressed}
       data-ui="chip"
       className={cx(
-        "focus-ring inline-flex h-[22px] cursor-pointer select-none items-center gap-[5px] border border-line px-[7px] text-caption text-primary transition-colors hover:border-muted aria-pressed:border-primary aria-pressed:bg-raised disabled:cursor-default disabled:opacity-30",
+        "focus-ring inline-flex min-h-11 min-w-11 touch-manipulation cursor-pointer select-none items-center justify-center gap-1 border border-line px-2 text-caption text-primary transition-colors hover:border-muted aria-pressed:border-primary aria-pressed:bg-raised disabled:cursor-default disabled:opacity-30 sm:pointer-fine:min-h-6 sm:pointer-fine:min-w-6",
         className
       )}
       {...props}
