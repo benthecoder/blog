@@ -1,7 +1,7 @@
 import type { PaperFields } from "@/types/wiki";
 import type { PostFrontmatter, WikiFrontmatter } from "./schemas";
 
-export const PAPER_FIELD_KEYS = [
+const PAPER_FIELD_KEYS = [
   "authors",
   "year",
   "url",
@@ -9,18 +9,13 @@ export const PAPER_FIELD_KEYS = [
   "source",
 ] as const satisfies readonly (keyof PaperFields)[];
 
-export const EMPTY_PAPER_FIELDS: PaperFields = {
+const EMPTY_PAPER_FIELDS: PaperFields = {
   authors: "",
   year: "",
   url: "",
   read: "",
   source: "",
 };
-
-/** Paper notes live under `papers/<topic>`. */
-export function isPaperCategory(category: string): boolean {
-  return /^papers(\/|$)/.test(category.trim());
-}
 
 /** Read paper fields from validated frontmatter; missing fields become "". */
 export function readPaperFields(
