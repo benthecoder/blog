@@ -6,6 +6,7 @@ import { pageMetadata } from "@/utils/pageMetadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "archive",
+  description: "every post, by date",
   path: "/posts",
 });
 

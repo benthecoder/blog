@@ -313,7 +313,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                     onMouseLeave={() => setListHoverId(null)}
                     onFocus={() => setListHoverId(place.id)}
                     onBlur={() => setListHoverId(null)}
-                    aria-label={`Show ${place.name} on map`}
                     aria-pressed={place.id === selectedId}
                   >
                     <span className="place-copy">

@@ -6,6 +6,7 @@ import { pageMetadata } from "@/utils/pageMetadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "tags",
+  description: "every tag used across posts",
   path: "/tags",
 });
 
