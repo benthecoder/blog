@@ -24,9 +24,9 @@ import { usePostDraft } from "./usePostDraft";
 import { useImageManager } from "./useImageManager";
 import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
 import { ImageStrip } from "./ImageStrip";
-import { PostTimer } from "./PostTimer";
 import { DraftNavigation } from "./DraftNavigation";
-import { DayNav } from "./DayNav";
+import { ShortcutsSheet } from "./ShortcutsSheet";
+import { fetchPostOrder } from "./postOrder";
 import { WordLookup, wordSelection, type WordSelection } from "./WordLookup";
 import { TemplatePicker } from "./TemplatePicker";
 import { EditorPopover } from "@/components/admin/EditorPopover";
@@ -44,6 +44,15 @@ import {
 } from "@/components/admin/markdownEditorConfig";
 import { postEditorExtensions } from "@/components/admin/postEditorExtensions";
 import { Button } from "@/components/ui/Button";
+import { dayHref, monthHref, monthOf } from "@/utils/adminDayNav";
+import { readStoredString, writeStoredString } from "@/utils/browserStorage";
+
+const widths = [
+  { label: "narrow", cls: "max-w-[620px]" },
+  { label: "default", cls: "max-w-[760px]" },
+  { label: "wide", cls: "max-w-[960px]" },
+];
+const widthKey = "editor-width";
 
 const desktopQuery = "(min-width: 1024px)";
 function subscribeToDesktop(callback: () => void) {
@@ -90,6 +99,9 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   const [photosOpen, setPhotosOpen] = useState<boolean | null>(null);
   const [modalConfig, setModalConfig] = useState<ConfirmConfig | null>(null);
   const [lookup, setLookup] = useState<WordSelection | null>(null);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [widthIndex, setWidthIndex] = useState(1);
+  const calendarLinkRef = useRef<HTMLAnchorElement>(null);
   const cmRef = useRef<ReactCodeMirrorRef>(null);
   const mounted = useMounted();
   const { resolvedTheme, setTheme } = useTheme();
@@ -303,7 +315,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   // The PhotoKit helper only runs locally; the photo routes 404 in production.
   const photoDate = process.env.NODE_ENV === "production" ? null : dayDate;
   const showPhotos = Boolean(
-    photoDate && !showPreview && (photosOpen ?? desktop)
+    photoDate && !showPreview && !focusMode && (photosOpen ?? desktop)
   );
 
   const bodyWords = useMemo(() => {
@@ -328,6 +340,49 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   const runPrimary = () =>
     publishing ? void draft.handlePublish() : void draft.handleSave();
 
+  useEffect(() => {
+    const stored = widths.findIndex(
+      (width) => width.label === readStoredString(widthKey)
+    );
+    // Stored after hydration so the server and first client render agree.
+    if (stored >= 0) setWidthIndex(stored);
+  }, []);
+  const cycleWidth = () => {
+    const next = (widthIndex + 1) % widths.length;
+    setWidthIndex(next);
+    writeStoredString(widthKey, widths[next].label);
+  };
+
+  const setFocus = (on: boolean) => {
+    setFocusMode(on);
+    if (on) {
+      setShowPreview(false);
+      setPhotosOpen(false);
+    }
+  };
+
+  // Day and month steps share the unsaved-changes guard with link clicks.
+  const step = async (unit: "day" | "month", direction: -1 | 1) => {
+    if (isEssay) return;
+    if (unit === "day" && !isNew) {
+      const target = direction < 0 ? draft.prevSlug : draft.nextSlug;
+      if (target) draft.leaveTo(`/admin/edit/${target}`);
+      return;
+    }
+    let slugs: string[];
+    try {
+      slugs = await fetchPostOrder();
+    } catch {
+      return;
+    }
+    if (unit === "month") {
+      if (dayDate) draft.leaveTo(monthHref(dayDate, direction, slugs));
+      return;
+    }
+    const target = direction < 0 ? draft.prevDate : draft.nextDate;
+    if (target) draft.leaveTo(dayHref(target, slugs));
+  };
+
   // Latest-render handler behind one stable listener. Capture phase so the
   // editor's own ⌘Enter / ⌘[ / ⌘] bindings don't swallow these first.
   const onKeyRef = useRef<(event: KeyboardEvent) => void>(() => {});
@@ -344,6 +399,14 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         setPhotosOpen(false);
         return;
       }
+      if (event.key === "?" && !event.metaKey && !event.ctrlKey) {
+        const target = event.target as HTMLElement | null;
+        if (!target?.closest("input, textarea, select, [contenteditable]")) {
+          event.preventDefault();
+          setShowShortcuts(true);
+        }
+        return;
+      }
       if (!(event.metaKey || event.ctrlKey)) return;
       const key = event.key.toLowerCase();
       const claim = () => {
@@ -352,23 +415,30 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
       };
       if (key === "enter" && event.shiftKey) {
         claim();
-        setFocusMode((value) => !value);
-        setShowPreview(false);
+        setFocus(!focusMode);
       } else if (key === "enter") {
         claim();
         if (!busy) runPrimary();
       } else if (key === "p" && event.shiftKey) {
         claim();
         setShowPreview((value) => !value);
+      } else if (key === "/") {
+        claim();
+        setShowShortcuts(true);
+      } else if (key === "\\") {
+        claim();
+        cycleWidth();
+      } else if (key === ".") {
+        claim();
+        // Click the link so the unsaved-changes guard still applies.
+        calendarLinkRef.current?.click();
       } else if (["[", "]", "{", "}"].includes(key) && !isEssay) {
         claim();
-        // Click the nav link so the unsaved-changes guard still applies.
         // Shift turns [ ] into { } on US layouts; shift steps a month.
-        const step = event.shiftKey ? "month" : "day";
-        const dir = key === "[" || key === "{" ? "previous" : "next";
-        document
-          .querySelector<HTMLAnchorElement>(`a[aria-label="${dir} ${step}"]`)
-          ?.click();
+        void step(
+          event.shiftKey ? "month" : "day",
+          key === "[" || key === "{" ? -1 : 1
+        );
       }
     };
   });
@@ -390,6 +460,11 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
       : isNew
         ? "save"
         : "update";
+  const backHref = isEssay
+    ? "/admin/essays"
+    : (dayDate ? monthOf(dayDate) : monthParam)
+      ? `/admin?month=${dayDate ? monthOf(dayDate) : monthParam}`
+      : "/admin";
   const status = draft.loading
     ? "loading…"
     : images.uploading
@@ -400,24 +475,38 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
           ? "unsaved"
           : "saved";
 
+  const saveStatus = message ? (
+    <span
+      role="status"
+      className={message.includes("✓") ? "text-success" : "text-danger"}
+    >
+      {message}
+    </span>
+  ) : (
+    <span
+      role="status"
+      className={`transition-opacity duration-700 ${status === "saved" && !draft.savedFlash ? "opacity-0" : "opacity-100"}`}
+    >
+      {status}
+    </span>
+  );
+  const wordCount = <span className="tabular-nums">{bodyWords} words</span>;
+
   return (
     <div className={`h-dvh bg-surface ${showPhotos ? "lg:pr-72" : ""}`}>
-      <div className="editor-column mx-auto w-full h-full min-w-0 flex flex-col relative max-w-[760px] sm:border-x border-line">
+      <div
+        className={`editor-column mx-auto w-full h-full min-w-0 flex flex-col relative ${widths[widthIndex].cls} sm:border-x border-line`}
+      >
         {/* Top bar */}
         <div
           className={`${focusMode ? "hidden" : "flex"} min-h-14 shrink-0 border-b border-line px-4 sm:px-6 py-2 flex-wrap gap-3 justify-between items-center`}
         >
           <div className="flex items-center gap-4">
             <Link
-              href={
-                isEssay
-                  ? "/admin/essays"
-                  : monthParam
-                    ? `/admin?month=${monthParam}`
-                    : "/admin"
-              }
+              ref={calendarLinkRef}
+              href={backHref}
               className="text-ink-soft dark:text-chalk-muted hover:text-accent transition-colors"
-              title={isEssay ? "Back to essays" : "Back to calendar"}
+              title={`${isEssay ? "Back to essays" : "Back to calendar"} (⌘.)`}
               aria-label={isEssay ? "Back to essays" : "Back to calendar"}
             >
               {isEssay ? <ArrowLeft size={18} /> : <Calendar size={18} />}
@@ -441,121 +530,125 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
             )}
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              onClick={() => setShowPreview(!showPreview)}
-              title={showPreview ? "edit (⌘⇧P)" : "preview (⌘⇧P)"}
-              aria-pressed={showPreview}
-            >
-              {showPreview ? "edit" : "preview"}
-            </Button>
-            <Button
-              size="sm"
-              variant={primaryActive ? "solid" : "outline"}
-              onClick={runPrimary}
-              disabled={busy}
-              title={`${publishing ? "publish" : isNew ? "save" : "update"} (⌘⏎)`}
-            >
-              {primaryLabel}
-            </Button>
-            {!isNew && (
-              <EditorPopover
-                plain
-                align="end"
-                label="⋯"
-                name={isEssay ? "More essay actions" : "More post actions"}
-              >
-                {(close) => (
-                  <div className="text-xs">
+          <EditorPopover
+            plain
+            align="end"
+            label="⋯"
+            name={isEssay ? "More essay actions" : "More post actions"}
+          >
+            {(close) => (
+              <div className="text-xs">
+                <button
+                  type="button"
+                  onClick={() => {
+                    close();
+                    setShowPreview(!showPreview);
+                  }}
+                  className={menuItemCls}
+                >
+                  {showPreview ? "edit" : "preview"}{" "}
+                  <span className="float-right text-muted">⌘⇧P</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    close();
+                    setFocus(true);
+                    cmRef.current?.view?.focus();
+                  }}
+                  className={menuItemCls}
+                >
+                  focus mode <span className="float-right text-muted">⌘⇧↵</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    close();
+                    cycleWidth();
+                  }}
+                  className={menuItemCls}
+                >
+                  width: {widths[widthIndex].label}{" "}
+                  <span className="float-right text-muted">⌘\</span>
+                </button>
+                {mounted && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close();
+                      setTheme(resolvedTheme === "dark" ? "light" : "dark");
+                    }}
+                    className={menuItemCls}
+                  >
+                    {resolvedTheme === "dark"
+                      ? "light appearance"
+                      : "dark appearance"}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    close();
+                    setShowShortcuts(true);
+                  }}
+                  className={menuItemCls}
+                >
+                  shortcuts <span className="float-right text-muted">⌘/</span>
+                </button>
+                {!isNew && !draft.isDraft && (
+                  <>
                     <button
                       type="button"
+                      disabled={busy}
                       onClick={() => {
                         close();
-                        setFocusMode(true);
-                        setShowPreview(false);
-                        cmRef.current?.view?.focus();
+                        void draft.handleUnpublish();
                       }}
                       className={menuItemCls}
                     >
-                      focus mode{" "}
-                      <span className="float-right text-muted">⌘⇧↵</span>
+                      move to drafts
                     </button>
-                    {mounted && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          close();
-                          setTheme(resolvedTheme === "dark" ? "light" : "dark");
-                        }}
-                        className={menuItemCls}
-                      >
-                        {resolvedTheme === "dark"
-                          ? "light appearance"
-                          : "dark appearance"}
-                      </button>
-                    )}
-
-                    {!draft.isDraft && (
-                      <>
-                        <button
-                          type="button"
-                          disabled={busy}
-                          onClick={() => {
-                            close();
-                            void draft.handleUnpublish();
-                          }}
-                          className={menuItemCls}
-                        >
-                          move to drafts
-                        </button>
-                        <a
-                          href={`${isEssay ? "/essays" : "/posts"}/${slug}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          onClick={close}
-                          className={menuItemCls}
-                        >
-                          view on site <span aria-hidden="true">↗</span>
-                        </a>
-                      </>
-                    )}
-                    {images.postImages.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          close();
-                          images.setShowImages(!images.showImages);
-                        }}
-                        className={menuItemCls}
-                      >
-                        images ({images.postImages.length})
-                      </button>
-                    )}
-                    <div
-                      className={
-                        !draft.isDraft || images.postImages.length > 0
-                          ? "mt-1 pt-1 border-t border-line"
-                          : ""
-                      }
+                    <a
+                      href={`${isEssay ? "/essays" : "/posts"}/${slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      onClick={close}
+                      className={menuItemCls}
                     >
-                      <button
-                        type="button"
-                        disabled={draft.deleting}
-                        onClick={() => {
-                          close();
-                          draft.handleDelete();
-                        }}
-                        className={`focus-ring ${menuItemCls} text-muted hover:text-accent`}
-                      >
-                        {draft.deleting ? "deleting…" : "delete…"}
-                      </button>
-                    </div>
+                      view on site <span aria-hidden="true">↗</span>
+                    </a>
+                  </>
+                )}
+                {!isNew && images.postImages.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close();
+                      images.setShowImages(!images.showImages);
+                    }}
+                    className={menuItemCls}
+                  >
+                    images ({images.postImages.length})
+                  </button>
+                )}
+                {!isNew && (
+                  <div className="mt-1 pt-1 border-t border-line">
+                    <button
+                      type="button"
+                      disabled={draft.deleting}
+                      onClick={() => {
+                        close();
+                        draft.handleDelete();
+                      }}
+                      className={`focus-ring ${menuItemCls} text-muted hover:text-accent`}
+                    >
+                      {draft.deleting ? "deleting…" : "delete…"}
+                    </button>
                   </div>
                 )}
-              </EditorPopover>
+              </div>
             )}
-          </div>
+          </EditorPopover>
         </div>
 
         {images.showImages && !isNew && (
@@ -672,46 +765,18 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
           )}
         </div>
 
-        {/* One footer: quiet metadata on the left, next action at the right edge. */}
+        {/* One footer: word count and save status, then the one primary action. */}
         <div
           className={`${focusMode ? "hidden" : "flex"} shrink-0 min-h-14 border-t border-line px-4 sm:px-6 py-1.5 items-center justify-between gap-4 text-xs text-ink-soft dark:text-chalk-muted`}
         >
           {!isEssay && !isNew ? (
             <DraftNavigation
-              metadata={
-                <>
-                  <span className="tabular-nums">
-                    {bodyWords} words ·{" "}
-                    {Math.max(1, Math.ceil(bodyWords / 200))} min read
-                  </span>
-                  <PostTimer
-                    key={`${kind}:${slug}:${dateParam ?? ""}`}
-                    post={`${kind}:${slug}:${dateParam ?? ""}`}
-                  />
-                </>
-              }
-              saveStatus={
-                message ? (
-                  <span
-                    role="status"
-                    className={
-                      message.includes("✓") ? "text-success" : "text-danger"
-                    }
-                  >
-                    {message}
-                  </span>
-                ) : (
-                  <span
-                    role="status"
-                    className={`transition-opacity duration-700 ${status === "saved" && !draft.savedFlash ? "opacity-0" : "opacity-100"}`}
-                  >
-                    {status}
-                  </span>
-                )
-              }
+              words={wordCount}
+              saveStatus={saveStatus}
               slug={slug}
               date={draft.date}
               isDraft={draft.isDraft}
+              dirty={draft.hasUnsavedChanges}
               disabled={
                 draft.loading ||
                 draft.saving ||
@@ -719,6 +784,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                 draft.deleting ||
                 images.uploading
               }
+              onSave={() => void draft.handleSave()}
               onNext={async (nextSlug) => {
                 if (draft.isDraft) {
                   if (!(await draft.handlePublish())) return;
@@ -737,27 +803,19 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
             />
           ) : (
             <>
-              <span className="tabular-nums">
-                {bodyWords} words · {Math.max(1, Math.ceil(bodyWords / 200))}{" "}
-                min read
-              </span>
-              {message ? (
-                <span
-                  role="status"
-                  className={
-                    message.includes("✓") ? "text-success" : "text-danger"
-                  }
+              {wordCount}
+              <div className="flex items-center gap-3">
+                {saveStatus}
+                <Button
+                  size="sm"
+                  variant={primaryActive ? "solid" : "outline"}
+                  onClick={runPrimary}
+                  disabled={busy}
+                  title={`${publishing ? "publish" : isNew ? "save" : "update"} (⌘⏎)`}
                 >
-                  {message}
-                </span>
-              ) : (
-                <span
-                  role="status"
-                  className={`transition-opacity duration-700 ${status === "saved" && !draft.savedFlash ? "opacity-0" : "opacity-100"}`}
-                >
-                  {status}
-                </span>
-              )}
+                  {primaryLabel}
+                </Button>
+              </div>
             </>
           )}
         </div>
@@ -781,6 +839,14 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
           />
         )}
 
+        {showShortcuts && (
+          <ShortcutsSheet
+            primary={publishing ? "publish" : isNew ? "save" : "update"}
+            isEssay={isEssay}
+            onClose={() => setShowShortcuts(false)}
+          />
+        )}
+
         {modalConfig && (
           <ConfirmModal
             config={modalConfig}
@@ -789,22 +855,10 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         )}
       </div>
 
-      {!isEssay && !focusMode && (
-        <DayNav
-          date={dayDate}
-          isNew={isNew}
-          prevSlug={draft.prevSlug}
-          nextSlug={draft.nextSlug}
-          prevDate={draft.prevDate}
-          nextDate={draft.nextDate}
-          monthParam={monthParam}
-        />
-      )}
-
       {focusMode && (
         <button
           type="button"
-          onClick={() => setFocusMode(false)}
+          onClick={() => setFocus(false)}
           className="focus-ring fixed bottom-3 left-3 z-20 min-h-9 px-3 text-xs text-ink-soft dark:text-chalk-muted opacity-40 hover:opacity-100 focus-visible:opacity-100 bg-surface rounded-xs"
           title="Exit focus mode (Esc)"
         >
@@ -812,7 +866,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         </button>
       )}
 
-      {photoDate && !showPreview && !showPhotos && (
+      {photoDate && !showPreview && !focusMode && !showPhotos && (
         <button
           type="button"
           onClick={() => setPhotosOpen(true)}
