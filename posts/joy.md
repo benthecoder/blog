@@ -23,7 +23,7 @@ format: resource
 - exploring new cities
 - sunrise and sunsets
 - sound and smell of rain
-- talking walks (alone or with friends)
+- taking walks (alone or with friends)
 - taking photos
 - coding side projects (better with friends)
 - scrolling through cosmos and twitter

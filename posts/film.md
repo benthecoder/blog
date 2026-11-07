@@ -12,7 +12,7 @@ They also serve as portals to my past, allowing me relive past experiences and i
 
 One goal I have, is to get into film photography at some point. I think I'll enjoy it a lot. The craft and detail that goes into taking each shot, and the adventure in choosing the right camera and roll of film.
 
-I watched this [video](https://www.youtube.com/watch?v=Ax4Yn16Rw8s) and got to learn a little but more about film photography.
+I watched this [video](https://www.youtube.com/watch?v=Ax4Yn16Rw8s) and got to learn a little bit more about film photography.
 
 First, **how does film work**?
 

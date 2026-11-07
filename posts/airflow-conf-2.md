@@ -15,7 +15,7 @@ I decided to skip the sessions before lunch, I can just watch the recording anyw
 
 I walked to Yin Ji Chang Fen to eat some rice noodles. I got some pork baos too. I chose take out, so I could eat it at a park in UofT.
 
-I walked through the campus and saw many [Romanseque Revival-style](https://en.wikipedia.org/wiki/Romanesque_Revival_architecture) buildings.
+I walked through the campus and saw many [Romanesque Revival-style](https://en.wikipedia.org/wiki/Romanesque_Revival_architecture) buildings.
 
 I walked 20 minutes to Queen's park, and saw a protest going on. I sat down on a bench and ate my rice noodles.
 

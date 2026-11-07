@@ -14,7 +14,7 @@ I read [Adam's Heroku values](https://gist.github.com/adamwiggins/5687294), belo
 - **divide and conquer**: cut big, hard problems into small pieces.
 - **throw things away**: it's not code that is valuable, but the understanding you've gain from building it. don't be afraid to throw something away to do it again, it will almost always be faster to build and much better the second (or nth) time around.
 - **Machate design**: create a single, general-purpose tool that is simple to understand but can be applied to many problems. product version of occam's razor. (create iPhones, not TV remotes)
-- **small sharp tools**: composability. simple tolls that do one thing well can be composed with other tools to create a nearly infinite number of results.
+- **small sharp tools**: composability. simple tools that do one thing well can be composed with other tools to create a nearly infinite number of results.
 - **Do-ocracy / interapreneur**: ask forgiveness, not permission. take the initiative to make something happen and take responsibility for failures
 - **Everything is an experiment**: anything is always subject to change. ending an experiment isn't a failure, you learn the most from experiments that don't produce expected results
 - **gradual rollouts**: easy into everything. use feature flags to activate people slowly into changes. test internally -> private beta -> public
@@ -26,5 +26,5 @@ I read [Adam's Heroku values](https://gist.github.com/adamwiggins/5687294), belo
 - **ignore the competition**: except to borrow good ideas.
 - **write well**: clear writing is clear thinking
 - **strong opinions, weakly held**: have a strong opinion and argue passionately for it. but when you encounter new information, be willing to change your mind.
-- **candor**: be blunt, honest, and truthful. constructive criticism is the best kind. don't keep quite for the sake of politeness.
+- **candor**: be blunt, honest, and truthful. constructive criticism is the best kind. don't keep quiet for the sake of politeness.
 - **programming literacy for all**: everyone can and should be able to write software

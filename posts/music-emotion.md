@@ -14,7 +14,7 @@ So I did a search and started reading this wikipedia page: [Music and Emotion](h
 
 Here are some things interesting insights.
 
-- music is good for developing knowledge of emotions during childhood (motherly singing as a way to relay emotional messages), may play a role in [identify formation](https://journals.sagepub.com/doi/10.1177/10298649020050S103)
+- music is good for developing knowledge of emotions during childhood (motherly singing as a way to relay emotional messages), may play a role in [identity formation](https://journals.sagepub.com/doi/10.1177/10298649020050S103)
 - children at age of 4 are able to distinguish emotions in music in ways similar to adults
 - People high in agreeableness have higher emotional responses to music in general
   - Stronger sad feelings have been associated with people high in agreeableness and neuroticism

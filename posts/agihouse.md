@@ -21,7 +21,7 @@ I teamed up with a bunch of undergrads, a Palo Alto Councilmember with a tech ba
 
 We built a automated marketing tool for campaigns, using agents to extract relevant information from donors and the politician, and draft personalized emails.
 
-It was fun building this, I worked on integrating agents with gmail, but it was finnicky and I ended up just using google-api for drafting the emails.
+It was fun building this, I worked on integrating agents with gmail, but it was finicky and I ended up just using google-api for drafting the emails.
 
 It was exciting at the end, we were racing against time trying to tie all the pieces together, and have something presentable.
 

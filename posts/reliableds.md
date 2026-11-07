@@ -116,7 +116,7 @@ Below is the full structure of their template
 
 - notebooks are tools for rapid, iterative, and serendipitous explorations that give a tight feedback loop showing the immediate results of change
 - also invaluable as artifacts for communicating and explaining analyses
-- why notebooks bad for reproducability
+- why notebooks bad for reproducibility
   - manually opening and running cells is not automation
   - hard to test and introduce complications that go against the grain of common system conventions (logging, where output is directed STDERR vs STDOUT, return of error codes, what process fails on uncaught exceptions, working directories, etc.)
   - challenging for source control, merge conflicts

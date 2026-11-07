@@ -17,7 +17,7 @@ Ideas can arise:
 3. in the most disparate places
    - Roland Barthes: train > airplanes for invention
    - French anthropologist Marc Augé: bicycle for concentrating and having new ideas
-   - Virginia Wolf: hot bath for novel plots
+   - Virginia Woolf: hot bath for novel plots
    - Wayne Silby: isolation for sensorial deprivation to solve financial problems
 4. at any moment
    - Wassily Kandinsky paints only during the day and with incredible regularity
