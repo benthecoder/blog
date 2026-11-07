@@ -61,8 +61,8 @@ const RenderPost = dynamic(() => import("@/components/posts/RenderPost"));
 const MarkdownPreview = dynamic(
   () => import("@/components/posts/MarkdownPreview")
 );
-const PhotoPreview = dynamic(() =>
-  import("./PhotoPreview").then((m) => m.PhotoPreview)
+const PhotoViewer = dynamic(() =>
+  import("./PhotoViewer").then((m) => m.PhotoViewer)
 );
 const PhotoTray = dynamic(() => import("./PhotoTray").then((m) => m.PhotoTray));
 
@@ -78,7 +78,6 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   const [showPreview, setShowPreview] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
   const [photosOpen, setPhotosOpen] = useState(false);
-  const [previewOrigin, setPreviewOrigin] = useState<DOMRect | null>(null);
   const [removed, setRemoved] = useState<{ url: string; name: string } | null>(
     null
   );
@@ -907,16 +906,17 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         </div>
 
         {images.showImageNameModal && images.pendingImageFile && (
-          <PhotoPreview
-            file={images.pendingImageFile}
-            name={images.imageNameInput}
-            origin={previewOrigin}
-            onNameChange={images.setImageNameInput}
-            onConfirm={images.confirmImageUpload}
-            onCancel={() => {
-              images.cancelImageUpload();
-              setPreviewOrigin(null);
-            }}
+          <PhotoViewer
+            photos={[
+              {
+                key: "pending",
+                name: images.imageNameInput,
+                source: { file: images.pendingImageFile },
+              },
+            ]}
+            origin={null}
+            onInsert={images.confirmImageUpload}
+            onClose={images.cancelImageUpload}
           />
         )}
 
@@ -978,10 +978,6 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         onRetry={images.retryUpload}
         onRemove={removeImage}
         onInsert={images.quickInsert}
-        onPreview={(file, name, tile) => {
-          setPreviewOrigin(tile);
-          images.openCropModalWith(file, name);
-        }}
       />
 
       {removed && (

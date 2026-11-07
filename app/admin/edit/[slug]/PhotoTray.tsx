@@ -1,9 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { ImageOff, Loader2, X } from "lucide-react";
+import type { CropRect } from "./ImageCropper";
 
 import { PHOTO_TRANSFER_TYPE, photoFileUrl } from "@/utils/photoTransfer";
+
+const PhotoViewer = dynamic(() =>
+  import("./PhotoViewer").then((m) => m.PhotoViewer)
+);
 
 type Photo = { id: string; name: string; time: string };
 type Tile =
@@ -36,7 +42,7 @@ const ease = "ease-[cubic-bezier(0.23,1,0.32,1)]";
 /**
  * The post's photos: images already in it first, then the day's photos from
  * the Photos app. It loads when the draft opens, so opening it is instant.
- * Arrows move, Enter inserts as is, Space (or a click) opens the preview, and
+ * Arrows move, Enter inserts as is, Space (or a click) opens the viewer, and
  * Backspace removes an image from the post.
  */
 export function PhotoTray({
@@ -47,7 +53,6 @@ export function PhotoTray({
   onRetry,
   onRemove,
   onInsert,
-  onPreview,
 }: {
   open: boolean;
   /** YYYY-MM-DD, when the Photos helper can list the day. */
@@ -57,8 +62,12 @@ export function PhotoTray({
   onRetry: (url: string) => void;
   /** Called once the tile has collapsed. */
   onRemove: (image: { url: string; name: string }) => void;
-  onInsert: (file: File, name: string) => void;
-  onPreview: (file: File, name: string, tile: DOMRect) => void;
+  onInsert: (
+    file: File,
+    name: string,
+    crop?: CropRect | null,
+    rotation?: number
+  ) => void;
 }) {
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [status, setStatus] = useState<"ok" | "not-built" | "denied">("ok");
@@ -68,6 +77,10 @@ export function PhotoTray({
   const [selected, setSelected] = useState(0);
   const [picking, setPicking] = useState<string | null>(null);
   const [leaving, setLeaving] = useState<string[]>([]);
+  const [viewer, setViewer] = useState<{
+    index: number;
+    origin: DOMRect | null;
+  } | null>(null);
   const tiles = useRef<(HTMLButtonElement | null)[]>([]);
   const click = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const pickRequest = useRef<AbortController | null>(null);
@@ -166,10 +179,19 @@ export function PhotoTray({
     const picked = await fetchFull(photo);
     if (picked) onInsert(picked.file, picked.name);
   };
-  const preview = async (photo: Photo, index: number) => {
-    const rect = tiles.current[index]?.getBoundingClientRect();
-    const picked = await fetchFull(photo);
-    if (picked && rect) onPreview(picked.file, picked.name, rect);
+  // Opens at once: the viewer loads the large version itself.
+  const view = (photo: Photo, index: number) =>
+    setViewer({
+      index: photos.indexOf(photo),
+      origin: tiles.current[index]?.getBoundingClientRect() ?? null,
+    });
+  const closeViewer = () => {
+    if (!viewer) return;
+    // The viewer may have browsed away from the tile it opened on.
+    const tile = images.length + viewer.index;
+    setViewer(null);
+    setSelected(tile);
+    requestAnimationFrame(() => tiles.current[tile]?.focus());
   };
   const remove = (image: { url: string; name: string }) => {
     if (leaving.includes(image.url)) return;
@@ -204,7 +226,7 @@ export function PhotoTray({
       void insert(tile.photo);
     } else if (tile.kind === "day" && event.key === " ") {
       event.preventDefault();
-      void preview(tile.photo, current);
+      view(tile.photo, current);
     } else if (
       tile.kind === "post" &&
       (event.key === "Backspace" || event.key === "Delete")
@@ -304,7 +326,7 @@ export function PhotoTray({
                     clearTimeout(click.current);
                     // A second click inserts instead.
                     click.current = setTimeout(
-                      () => void preview(tile.photo, index),
+                      () => view(tile.photo, index),
                       220
                     );
                   }}
@@ -397,6 +419,24 @@ export function PhotoTray({
           })}
         </div>
       </div>
+      {viewer && (
+        <PhotoViewer
+          photos={photos.map((photo) => ({
+            key: photo.id,
+            name: slugifyName(photo.name),
+            source: { id: photo.id },
+          }))}
+          start={viewer.index}
+          origin={viewer.origin}
+          onIndexChange={(index) => setViewer((v) => v && { ...v, index })}
+          onInsert={(file, name, crop, rotation) => {
+            onInsert(file, name, crop, rotation);
+            closeViewer();
+            return true;
+          }}
+          onClose={closeViewer}
+        />
+      )}
     </aside>
   );
 }
