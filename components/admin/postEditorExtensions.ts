@@ -1,7 +1,8 @@
-import { EditorView } from "@codemirror/view";
+import { EditorView, keymap } from "@codemirror/view";
 import { Prec } from "@codemirror/state";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { tags } from "@lezer/highlight";
+import { insertLink, toggleBold, toggleItalic } from "./markdownFormat";
 
 // Prose-style writing surface for the post editor (the wiki editor keeps the
 // plain monospace look). Markdown syntax is dimmed so the words read first.
@@ -17,6 +18,13 @@ const highlightStyle = HighlightStyle.define([
 
 export const postEditorExtensions = [
   syntaxHighlighting(highlightStyle),
+  Prec.highest(
+    keymap.of([
+      { key: "Mod-b", run: toggleBold },
+      { key: "Mod-i", run: toggleItalic },
+      { key: "Mod-k", run: insertLink },
+    ])
+  ),
   Prec.high(
     EditorView.theme({
       "&.cm-editor .cm-scroller": {
@@ -25,8 +33,6 @@ export const postEditorExtensions = [
         lineHeight: "1.7",
       },
       "&.cm-editor .cm-content": {
-        maxWidth: "65ch",
-        margin: "0 auto",
         padding: "0 0 40vh",
         minHeight: "50vh",
       },
