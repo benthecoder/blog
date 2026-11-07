@@ -9,8 +9,7 @@ import {
 } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import RenderPost from "@/components/posts/RenderPost";
-import MarkdownPreview from "@/components/posts/MarkdownPreview";
+import dynamic from "next/dynamic";
 import { FrontmatterError, parseMarkdown } from "@/utils/content/frontmatter";
 import { draftFrontmatterSchema } from "@/utils/content/schemas";
 import { ArrowLeft, Calendar, Camera } from "lucide-react";
@@ -24,11 +23,10 @@ import { formatEssayDate } from "@/utils/content/essayDate";
 import { usePostDraft } from "./usePostDraft";
 import { useImageManager } from "./useImageManager";
 import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
-import { ImageCropModal } from "./ImageCropModal";
 import { ImageStrip } from "./ImageStrip";
 import { DraftNavigation } from "./DraftNavigation";
 import { ShortcutsSheet } from "./ShortcutsSheet";
-import { PhotoPanel } from "./PhotoPanel";
+import { fetchPostOrder } from "./postOrder";
 import { WordLookup, wordSelection, type WordSelection } from "./WordLookup";
 import { TemplatePicker } from "./TemplatePicker";
 import { EditorPopover } from "@/components/admin/EditorPopover";
@@ -68,6 +66,19 @@ function isDesktop() {
 function serverDesktop() {
   return false;
 }
+
+// Off the first load: the preview pulls in react-markdown, remark, rehype and
+// katex, and the modal and drawer only open on demand.
+const RenderPost = dynamic(() => import("@/components/posts/RenderPost"));
+const MarkdownPreview = dynamic(
+  () => import("@/components/posts/MarkdownPreview")
+);
+const ImageCropModal = dynamic(() =>
+  import("./ImageCropModal").then((m) => m.ImageCropModal)
+);
+const PhotoPanel = dynamic(() =>
+  import("./PhotoPanel").then((m) => m.PhotoPanel)
+);
 
 export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   const params = useParams();
@@ -358,10 +369,9 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
       if (target) draft.leaveTo(`/admin/edit/${target}`);
       return;
     }
-    let slugs: string[] = [];
+    let slugs: string[];
     try {
-      const response = await fetch("/api/admin/list-posts");
-      if (response.ok) slugs = await response.json();
+      slugs = await fetchPostOrder();
     } catch {
       return;
     }

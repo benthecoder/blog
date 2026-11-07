@@ -6,6 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { POSTS_DIR, DRAFTS_DIR } from "@/config/paths";
 
+const dateCache = new Map<string, { mtimeMs: number; timestamp: number }>();
+
 export async function GET(request: NextRequest) {
   const authError = checkAdminAuth(request);
   if (authError) return authError;
@@ -20,8 +22,14 @@ export async function GET(request: NextRequest) {
 
     const getPostDate = (filePath: string) => {
       try {
+        // Only the date is needed, so reparse a file only after it changes.
+        const mtimeMs = fs.statSync(filePath).mtimeMs;
+        const cached = dateCache.get(filePath);
+        if (cached?.mtimeMs === mtimeMs) return cached.timestamp;
         const { data } = readMarkdownFile(filePath, postFrontmatterSchema);
-        return new Date(data.date).getTime();
+        const timestamp = new Date(data.date).getTime();
+        dateCache.set(filePath, { mtimeMs, timestamp });
+        return timestamp;
       } catch {
         return 0;
       }

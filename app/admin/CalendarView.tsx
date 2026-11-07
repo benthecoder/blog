@@ -7,8 +7,10 @@ import { draftQueue } from "@/utils/adminDraftQueue";
 import { PostMetadata } from "@/types/post";
 import { Button } from "@/components/ui/Button";
 
+type CalendarPost = Pick<PostMetadata, "slug" | "title" | "date" | "isDraft">;
+
 interface CalendarViewProps {
-  posts: PostMetadata[];
+  posts: CalendarPost[];
 }
 
 export default function CalendarView({ posts }: CalendarViewProps) {
@@ -43,7 +45,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
   const daysInMonth = lastDayOfMonth.getDate();
   const startingDayOfWeek = firstDayOfMonth.getDay();
 
-  const postsByDate = new Map<string, PostMetadata>();
+  const postsByDate = new Map<string, CalendarPost>();
   posts.forEach((post) => {
     const slug = post.slug;
     if (/^\d{6}$/.test(slug)) {
