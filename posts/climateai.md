@@ -25,7 +25,7 @@ Three ways AI is used for climate modelling
      - [QuickClim](https://www.nature.com/articles/s43247-023-01011-0): forecast temperature 1M times faster than a conventional model
      - [ACE: A fast, skillful learned global atmospheric model for climate prediction](https://arxiv.org/abs/2310.02074)): accurately predicted 90% of atmospheric variables, 100 times faster and 100 times more energy-efficient
 2. Foundational models
-   - what: picking up hidden patterns, fundamental, possibly unknown, patterns in the data that are predictive of futruefuture climate
+   - what: picking up hidden patterns, fundamental, possibly unknown, patterns in the data that are predictive of future climate
    - [ClimaX: A foundation model for weather and climate](https://arxiv.org/abs/2301.10343)
      - **general training**: Microsoft trained on the output from five physics-based climate models that simulated the global weather and climate from 1850 to 2015, including factors such as air temperature, air pressure and humidity, simulated on timescales from hours to years
      - **fine-tuning** on wide-range of tasks: one of it (from a [benchmark](https://agupubs.onlinelibrary.wiley.com/doi/10.1029/2021MS002954) for comparing AI climate models) was predicted the average surface temperature, daily temperature range and rainfall worldwide from input variables of carbon dioxide, sulphur dioxide, black carbon and methane levels

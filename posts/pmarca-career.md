@@ -61,7 +61,7 @@ below are the ideas that struck me.
 - <mark>optimize at all times for being in the most dynamic and exciting pond you can find.</mark>
 - which company? go to the one where all the action is happening.
 - starting a company? aim at the largest and most interesting market
-- which startup? look for one where you understand teh product, see how it might fit into a very large market, and really like and respect the people who are already there
+- which startup? look for one where you understand the product, see how it might fit into a very large market, and really like and respect the people who are already there
 - <mark>Every job, every role, every company you go to is an opportunity to learn how a business works and how an industry works.</mark>
 
 > Think strategically: how would I start a firm like this today? Or, if I were starting a company in this industry today, how would it be different than this firm? Why is this firm and other firms in this industry doing what they do? What are the assumptions underneath their behavior? Should those assumptions be changing? How might this industry work differently? Which customers are being underserved? What new technologies might change things completely? How were things working 10 years ago, versus today, versus 10 years from now? And, my favorite: if the creators of this industry were starting out today, what would they be doing now?

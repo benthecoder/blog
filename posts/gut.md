@@ -16,7 +16,7 @@ What function does it have?
 
 Gut health also affects your mental health, weight, blood sugar, and liver
 
-Our diet pays a significant role in maintaining a healthy gut.
+Our diet plays a significant role in maintaining a healthy gut.
 
 Prebiotic foods (whole grains, bananas, greens, onions, garlic, soybeans, and artichokes) act as food for healthy gut bacteria.
 

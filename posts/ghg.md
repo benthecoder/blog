@@ -8,7 +8,7 @@ date: Jan 25, 2024
 
 > "Companies that persist in treating climate change solely as a corporate social responsibility issue, rather than a business problem, will risk the greatest consequences." – Michael E. Porter and Forest L. Reinhardt
 
-I came across the company [Watershed](https://watershed.com/) on LinkedIn last year while I was in Cali. I want to work in the climate tech space, so this company peaked my curiosity.
+I came across the company [Watershed](https://watershed.com/) on LinkedIn last year while I was in Cali. I want to work in the climate tech space, so this company piqued my curiosity.
 
 I have ~7 months (-1 for surgery recovery) in Malaysia if things go well with grad school (still no interviews btw I'm freaking out). I googled for climate tech companies in Malaysia and [Pantas](https://pantas.com/) was the first result.
 
