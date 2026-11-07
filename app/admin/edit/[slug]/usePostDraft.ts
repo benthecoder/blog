@@ -648,6 +648,24 @@ export function usePostDraft({
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [hasUnsavedChanges]);
 
+  const confirmLeave = (href: string) =>
+    confirmAction(
+      "leave without saving?",
+      "Your unsaved changes stay in this browser's copy, not the file.",
+      ["stay", "leave"],
+      () => {
+        // Temporarily disable beforeunload warning before navigating
+        setHasUnsavedChanges(false);
+        setTimeout(() => {
+          window.location.href = href;
+        }, 0);
+      }
+    );
+
+  // Keyboard navigation goes through the same guard as link clicks.
+  const leaveTo = (href: string) =>
+    hasUnsavedChanges ? confirmLeave(href) : router.push(href);
+
   // Intercept in-app link clicks while there are unsaved changes
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -666,18 +684,7 @@ export function usePostDraft({
         e.preventDefault();
         e.stopPropagation();
 
-        confirmAction(
-          "leave without saving?",
-          "Your unsaved changes stay in this browser's copy, not the file.",
-          ["stay", "leave"],
-          () => {
-            // Temporarily disable beforeunload warning before navigating
-            setHasUnsavedChanges(false);
-            setTimeout(() => {
-              window.location.href = anchor.href;
-            }, 0);
-          }
-        );
+        confirmLeave(anchor.href);
       }
     };
 
@@ -717,6 +724,7 @@ export function usePostDraft({
     template,
     templateLoading,
     switchTemplate,
+    leaveTo,
     prevSlug,
     nextSlug,
     prevDate,
