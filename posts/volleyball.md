@@ -5,7 +5,7 @@ date: Aug 13, 2023
 format: journal
 ---
 
-I experienced my first Voleyball game at Ponderosa Park in Sunnyvale today.
+I experienced my first Volleyball game at Ponderosa Park in Sunnyvale today.
 
 "Can you bump, set, and spike?" I was asked.
 

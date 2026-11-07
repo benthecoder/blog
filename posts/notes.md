@@ -17,7 +17,7 @@ Some key points
 - Read the book the first time swiftly, capturing key ideas that stand out as useful, interesting, or inspiring
   - write questions or concepts described in a few words (these act as hints to remember what you captured at the time)
   - Use [unique markings](https://zettelkasten.de/posts/making-proper-marks-in-books/) to divide text into it's functions, i.e. D for definition, M for main idea, A for argument, star for important, ? for questions, etc.
-  - Write a few bullet points to summarize at the end of each chapter, make ti personal, something applicable to your life.
+  - Write a few bullet points to summarize at the end of each chapter, make it personal, something applicable to your life.
 - Read the second time, but only your markings and notes
 - Transfer notes into a digital palace (for retrieval)
 

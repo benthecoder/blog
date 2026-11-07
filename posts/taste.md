@@ -34,7 +34,7 @@ Some notes on "taste" on [Are.na](https://www.are.na/blog/notes-on-taste).
   - Steve Jobs said, "I think part of what made the Macintosh great was that the people working on it were musicians and poets and artists and zoologists and historians who also happened to be the best computer scientists in the world."
 - John Folley: "Good taste is simply to have a well formed opinion, in accordance to the realities of the Good and the True". There are tasteful and non-tasteful choices.
 - Taste is not the same as correctness. Taste intrigues, compels, moves, enchants, fascinates, and seduces.
-- Taste requires originality, it invokes aspirational authenticity (i.e. writing stories that only ou can write, to be joyfully and defiantly yourself)
+- Taste requires originality, it invokes aspirational authenticity (i.e. writing stories that only you can write, to be joyfully and defiantly yourself)
 - Taste honors someone's standard of quality, but also the distinctive way the world bounces off a person. It reflects what they know about how the world works, and what they're working with in their inner worlds.
 - By turning the chaotic and overwhelming pool of information into a steady stream of things we find beautiful, we can define and cultivate our tastes.
 - There are no shortcuts to taste. Take your time learning what you find compelling, and why.

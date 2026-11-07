@@ -20,7 +20,7 @@ Work at big tech for a few years, earn some money, found a startup with friends,
 
 I like to plan things, to know what to expect.
 
-But life after graduation has so my variables that it's not possible to plan.
+But life after graduation has so many variables that it's not possible to plan.
 
 So right now I'm just taking the next best step, living life one day at a time.
 

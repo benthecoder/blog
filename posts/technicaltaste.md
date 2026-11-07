@@ -4,7 +4,7 @@ tags: software-design, programming, product-management, ai
 date: Jun 16, 2024
 ---
 
-Sam Schillace is the founder of six startups, including Writely, which was acquired by Google and became Google Docs. He served as the VP of engineering for Google Maps. He is currently the the CVP and Deputy CTO at Microsoft.
+Sam Schillace is the founder of six startups, including Writely, which was acquired by Google and became Google Docs. He served as the VP of engineering for Google Maps. He is currently the CVP and Deputy CTO at Microsoft.
 
 I love the way Sam talks, his words flow smoothly and you can easily capture what he's saying. Hearing him talk about the creation of Google Docs, his thoughts on AI, and his advice for future software engineers was so compelling, I had to capture some of his ideas down.
 

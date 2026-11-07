@@ -19,7 +19,7 @@ They help you be more focused, context-aware, and in-control of your daily workf
 - "It's Only The Weekend When" Post-It
   - what: 3 things you would be disappointed to go into the weekend without completing
   - why: tells you what you should be doing right now
-  - how: block time fo focus them, use actual post-it if possible to move them around and stick in various places
+  - how: block time to focus on them, use actual post-it if possible to move them around and stick in various places
 - "What I'm proud of" scrapbook
   - what: a collection of things you're proud of
   - why: figure out work that truly satisfies you and gives you energy and make you tick

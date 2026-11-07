@@ -4,7 +4,7 @@ tags: mental-health, psychology, resilience
 date: Aug 10, 2023
 ---
 
-There's a [study](https://www.youtube.com/watch?v=iG7L9IIlYpQ) with over 30,000 people people had higher risk of illness and death related to stress only if they thought stress is bad for them.
+There's a [study](https://www.youtube.com/watch?v=iG7L9IIlYpQ) with over 30,000 people had higher risk of illness and death related to stress only if they thought stress is bad for them.
 
 Those who didn't have negative view of stress had lowest mortality rate, even those who experienced low amount of stress.
 
@@ -44,7 +44,7 @@ stress level scales don't make sense because
 
 terrifying and fear mongering
 
-how you conceptuqlize and respond to stress is crucial whether ou have positive or negative outcome
+how you conceptualize and respond to stress is crucial whether ou have positive or negative outcome
 
 it's not your actual stress level, it's how you cope with it.
 
@@ -59,7 +59,7 @@ A lot of people with anxiety disorder overestimate/overinflate their interpretat
 
 Some ways turn into challenge response
 
-**Shift and persist** - shift your mindset on stress from something to be avoided to something you can use to your advan tage and persist by maintaining optimisim even in the face of painful experiences
+**Shift and persist** - shift your mindset on stress from something to be avoided to something you can use to your advan tage and persist by maintaining optimism even in the face of painful experiences
 
 also known as (antifragility, growth mindset, resilienace, grit)
 
