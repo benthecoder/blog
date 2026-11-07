@@ -44,6 +44,10 @@ const mincho = Zen_Old_Mincho({
   subsets: ["latin"],
   variable: "--font-mincho",
   display: "swap",
+  // The CSS carries ~120 unicode-range slices (CJK). Preloading emitted a hint
+  // for every one, ~2.9MB on /map and on any page that prefetches it. Without
+  // the hints the browser fetches only the slices the page's glyphs fall in.
+  preload: false,
 });
 
 export default function MapPage() {
