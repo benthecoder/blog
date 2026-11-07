@@ -56,7 +56,7 @@ But reading [this](https://evanjconrad.com/posts/how-to-feel-good) completely ch
 
 - you can let thoughts happen and not suffer the physical feelings
 - reading about this isn't enough to make you feel better, it's a skill that you can master.
-- you're learning the ability to chose when to stop watching the movie, and when to continue.
+- you're learning the ability to choose when to stop watching the movie, and when to continue.
 - people who build this skill become happier because they choose what things effect them, and how much.
 - you're a film critic
   - saying "just don't let it bother you" is like asking you yo change the plot of a movie you're not in charge of.
@@ -96,7 +96,7 @@ But reading [this](https://evanjconrad.com/posts/how-to-feel-good) completely ch
   - #3 change it: write a new thought/movie that shows a more rational view of the situation
 - goals
   - slow down: instead of catastrophizing, take a moment and see if the thought is even valid. it forces you to stop and notice what's going on and detach yourself from the rollercoaster of emotions.
-  - be a scientist: question the hypothesis of your thoughts and challenge it like a scientist. TRhis is what therapists are good at, they help you see where your logic is wrong.
+  - be a scientist: question the hypothesis of your thoughts and challenge it like a scientist. This is what therapists are good at, they help you see where your logic is wrong.
 
 ## exercise #2: predictions
 
@@ -134,7 +134,7 @@ But reading [this](https://evanjconrad.com/posts/how-to-feel-good) completely ch
 - watch your breath, no need to force it
 - notice the mind wandering, noticing is the meditation.
 - watch the thoughts think themselves.
-- if you notice that your mind is wandering, gently let the thought go adn bring your attention back
+- if you notice that your mind is wandering, gently let the thought go and bring your attention back
 - if the voice says "this is boring", notice the thought, notice the boring. Then let it go
 - listen to the voices, notice the thought, examine it, hold this judgement until the timer ends.
 

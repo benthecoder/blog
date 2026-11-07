@@ -14,6 +14,6 @@ from a [tweet](https://x.com/QCompounding/status/1795700139782545589):
 - Choose the best plants for the soil
 - Irrigate and fertilise
 - Remove weeds
-- Remember you wil have good seasons and bad seasons – you can't control the weather only be prepared for it
+- Remember you will have good seasons and bad seasons – you can't control the weather only be prepared for it
 
 Applies to life too.

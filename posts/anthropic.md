@@ -13,7 +13,7 @@ I also switched teams halfway, which is something I've never thought I was capab
 
 I attribute that to [Atal Agarwal](https://www.linkedin.com/in/atalovesyou/), a very convincing and unique individual, with a positive aura.
 
-At first, I was having fun prompting Claude 2 and GPT-4 to perform document QnA, and then using web sockets to make a s perplexity search, and obtain internet sources.
+At first, I was having fun prompting Claude 2 and GPT-4 to perform document QnA, and then using web sockets to make a perplexity search, and obtain internet sources.
 
 Then my only coding partner decided to leave, and I started to panic. I realized I was left alone to build out the entire prototype.
 

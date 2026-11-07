@@ -12,7 +12,7 @@ His aesthetics [influenced](https://onlyonceshop.com/collection/braun) Apple des
 2. makes a product **useful** – products are bought to be used. It satisfies the criteria of not just function, but psychological and aesthetic
 3. is **aesthetic** – aesthetic is integral to its usefulness, products have an effect on people's well-being.
 4. makes a product **understandable** – it can make the product talk, at best, it is self-explanatory
-5. is **unobstrusive** – should be neutral and restrained, leaving room for the user's self expression
+5. is **unobtrusive** – should be neutral and restrained, leaving room for the user's self expression
 6. is **honest** – does not make a product more innovative, powerful or valuable that it really is
 7. is **long-lasting** – avoids being fashionable and therefore never appears antiquated
 8. is **thorough** down to the last detail – care and accuracy shows respect towards consumer

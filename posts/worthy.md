@@ -12,7 +12,7 @@ What does it mean to be worthy of your sufferings?
 
 From "Mans search for meaning" by V. Frankl, he describes the conditions of the prisoners minds in the camps and the context of this quote.
 
-In each suffering lies two choices: to either **embrace suffering with dignity, bravery and moral perseverance**, or to decay, in his fight for self preservation, into an animal. This determines whether or not a man is worth of his suffering. The suffering of the greatest kind is the suffering where humans are depraved of all choices and yet, the last of human freedom is the choice of how we deal with our suffering.
+In each suffering lies two choices: to either **embrace suffering with dignity, bravery and moral perseverance**, or to decay, in his fight for self preservation, into an animal. This determines whether or not a man is worth of his suffering. The suffering of the greatest kind is the suffering where humans are deprived of all choices and yet, the last of human freedom is the choice of how we deal with our suffering.
 
 There's also the stoics view, who believed a true sage was someone worthy of all challenges the gods sent their way.
 
