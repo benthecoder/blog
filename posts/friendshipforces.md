@@ -24,7 +24,7 @@ From 100 conversations with people talking about friendships, she believes that 
    - friendship takes energy and thought; they take work. showing up for your friends take effort, but it should be joy.
 4. Ritual
    - have something baked into your schedule so all you have to do is show up
-   - book clubs, monthly hikes, dinner parties, group chats than run all day, etc.
+   - book clubs, monthly hikes, dinner parties, group chats that run all day, etc.
 5. Imagination
    - society places friendship on the sideline, it's playing supporting roles to work, family, and romance; design your life so friendship plays the role you want
    - ex: buying a house together, going therapy together, raising their children together, friends are people who choose to love each other radically every day.

@@ -52,7 +52,15 @@ jobs:
           path: test-results/
           retention-days: 7
 
-      - run: pnpm build
+      - name: Build
+        run: |
+          pnpm run generate:knowledge-map
+          if [ -n "$POSTGRES_URL" ]; then
+            pnpm exec next build
+            pnpm exec next-sitemap
+          else
+            pnpm exec next build --experimental-build-mode compile
+          fi
         env:
           VERCEL: "1"
           POSTGRES_URL: ${{ secrets.POSTGRES_URL }}

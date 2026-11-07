@@ -27,7 +27,7 @@ I thought about it for so long that eventually the shuttle came.
 
 In my mind I'm thinking, because of my overthinking, I missed the opportunity to network with this person, who could've fed me a new piece of information, or connected me with another person, both of which could've changed the course of my life.
 
-I went in the shuttle, want to the very last row, and sat beside a chinese guy in his mid 20s.
+I went in the shuttle, went to the very last row, and sat beside a chinese guy in his mid 20s.
 
 I've seen him before at the office.
 

@@ -22,7 +22,7 @@ On pitching and selling
 
 On MVP
 
-- focus on **distriboution & discvery** \- rely less on tech, unless it's revolutionary
+- focus on **distribution & discovery** \- rely less on tech, unless it's revolutionary
 - distinguish whether goal is to be **"rich" or "king"** \- rich = raising outside capital at risk of reduced equity and control, king = bootstrapping and maintaining control
 - be careful of VCs \- can lose control and focus on business
 - right amount for seed - building and validating business plan doesn't require that much money
@@ -34,7 +34,7 @@ On picking partners/co-founders
 - keep in touch with old friendships - already built trust
 - find co-founder with B2B sales background - can help you close deals
 - hand over marketing to specialists - someone who can diagnose and prescribe the best solution, instead of presenting marketing strategies
-- hire **part-time bookkeeper** within $0-1m ARR - then hireh Director of Finance ($1-5m) to manage [AR/AP](https://www.zoho.com/books/articles/accounts-receivable-accounts-payable-guide.html), audits, [ASC 606](https://certinia.com/learn/revenue-recognition/complying-with-asc-606-and-ifrs-15/), financial modelling, key revenue benchmark. After >$5m, hire CFO.
+- hire **part-time bookkeeper** within $0-1m ARR - then hire Director of Finance ($1-5m) to manage [AR/AP](https://www.zoho.com/books/articles/accounts-receivable-accounts-payable-guide.html), audits, [ASC 606](https://certinia.com/learn/revenue-recognition/complying-with-asc-606-and-ifrs-15/), financial modelling, key revenue benchmark. After >$5m, hire CFO.
 - it takes **7 months** to fully recruit someone - 1 month for interview, 3 months to leave old job, 3 months to ramp up to speed
 - create strategy for recruiting people + evaluate performance - hiring legal, financial is easier due to industry guardrails, hiring sales and marketing is harder
 - get product off ground != scaling business - most are only needed for a certain phase of time

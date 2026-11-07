@@ -6,7 +6,7 @@ date: Aug 19, 2023
 
 An interesting [video](https://www.youtube.com/watch?v=WdEPs-xysak) about love and romance in 20s.
 
-People who date are afraid fo being alone
+People who date are afraid of being alone
 
 For those who like being alone, they are scared of dating because it's like the unknown
 

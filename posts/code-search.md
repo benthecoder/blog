@@ -90,7 +90,7 @@ Here's the process.
    - **Indexing is decoupled from crawling** through the use of Kafka and the **ordering** of messages in Kafka is how we gain **query consistency**.
 5. Indexer shards take the documents and build the indices
    - tokenizing to construct n-gram indices (for content, symbols) and other useful indices (languages, owners, etc) before serializing and flushing to disk when enough work has accumulated.
-6. Finally the shards run compaction to collapse up smaller indices to larger onces that are more efficient to query.
+6. Finally the shards run compaction to collapse up smaller indices to larger ones that are more efficient to query.
    - Compaction also k-merges the posting list by score so relevant documents have lower IDs and will be returned first by lazy iterators.
 
 During initial ingest, we delay compact and do one big run at the end, but then as index keeps up with incremental changes, compaction is run on shorter intervals to handle things like document deletion.
@@ -101,7 +101,7 @@ Redis is used to **manage quotas** and **cache some access control data**.
 
 1. front end accepts user query and passes it to query service
 2. service parses query into abstract syntax tree and rewrites it
-   - resolves languages to canonical [Linguist](https://github.com/github-linguist/linguist) language ID (determine what langauge it is)
+   - resolves languages to canonical [Linguist](https://github.com/github-linguist/linguist) language ID (determine what language it is)
    - tags extra clauses for permissions and scopes
 3. Fan out and send n concurrent request
    - query must be sent to each shard in search cluster due to sharding strategy
@@ -158,7 +158,7 @@ We started with 115 TB of content to search, deduplication and delta indexing br
 - [delta encoding](https://en.wikipedia.org/wiki/Delta_encoding?useskin=vector): storing data in form of deltas, storing only the differences
 - [minimum spanning tree](https://en.wikipedia.org/wiki/Minimum_spanning_tree?useskin=vector): a subset of edges of a connected, edge-weighted, undirected graph that connects all vertices together **without cycles** and with **minimum possible total edge weight**.
 - [k-merges](https://en.wikipedia.org/wiki/K-way_merge_algorithm?useskin=vector): merging k sorted arrays to produce a single sorted
-- compaction: collapse smaller indices to larger ones
+- compaction: collapse up smaller indices to larger ones
 - [bitmask](https://stackoverflow.com/questions/10493411/what-is-bit-masking): data used for bitwise operation
 - Probabilistic data structures: [MinHash](https://en.wikipedia.org/wiki/MinHash?useskin=vector) and [HyperLogLog](https://en.wikipedia.org/wiki/HyperLogLog?useskin=vector)
 - Serializing: convert object state to byte stream

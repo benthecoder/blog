@@ -38,7 +38,7 @@ Once you have one in mind, here's his 3 step approach.
 
 - now you've converged on a final model, and are no longer experimenting
 - it's time to use all of the data and "scale up" the model
-- this means hyperparameter turning, using a deeper model, etc.
+- this means hyperparameter tuning, using a deeper model, etc.
 - happens at the last 2-3 weeks of comp
 
 ### Summary

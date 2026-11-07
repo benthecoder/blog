@@ -4,7 +4,7 @@ tags: productivity, habits, creativity
 date: Jul 21, 2023
 ---
 
-If you're someone who hestiates or overthink about doing things, think about how you can [bias towards action](https://www.benkuhn.net/college/#bias-towards-action) and apply the [regret minimization framework](https://sahilbloom.substack.com/p/the-bezos-regret-minimization-framework).
+If you're someone who hesitates or overthink about doing things, think about how you can [bias towards action](https://www.benkuhn.net/college/#bias-towards-action) and apply the [regret minimization framework](https://sahilbloom.substack.com/p/the-bezos-regret-minimization-framework).
 
 Action can mean many things, but the fundamental idea is to do cool shit.
 

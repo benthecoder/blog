@@ -44,7 +44,7 @@ This is why writing is important. Writing is thinking, you can't lie to yourself
 
 ## 3. Experimentation
 
-They third is they understand through **experiments**.
+The third is they understand through **experiments**.
 
 Physicist Michael Faraday always had to repeat, and perhaps, extend the experiments of others to assess their work. Hearing or reading was never enough for him. This lifelong habit is what led to his discovery of electromagnetism.
 

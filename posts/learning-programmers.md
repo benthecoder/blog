@@ -31,7 +31,7 @@ Below outlines [10](https://cacm.acm.org/magazines/2024/1/278891-10-things-softw
   - modification is more likely on recently formed memories
 - <mark>spreading activation</mark>: when trying to remember something, we activate a pathway of neurons to access the targeted information
   - pathways can stay **primed for hours**
-  - this activation is not contained within one pathway, and cat spread to other connected pathways
+  - this activation is not contained within one pathway, and can spread to other connected pathways
   - implications
     - negative: recall can be unreliable as imprecise information can be mixed and conflated with target information
     - positive: stepping away from problems can allow two unrelated areas to connect, arising creative and unique solutions. this is why taking walks and showers helps.
@@ -47,7 +47,7 @@ Below outlines [10](https://cacm.acm.org/magazines/2024/1/278891-10-things-softw
     - analogy: CPU registers
 - long-term vs wm
   - wm is roughly fixed at birth, higher wm != higher general intelligence, but faster learning.
-  - ex: expert programmers can have low or high wm but it's contents of their long-term memory that mke them experts
+  - ex: expert programmers can have low or high wm but it's contents of their long-term memory that make them experts
 - <mark>chunking</mark>
   - group multiple piece of information as one piece in wm
     - ex: ben@gmail.com is one piece of information, and not a random string of characters
