@@ -200,24 +200,14 @@ export function useImageManager({
     }
   };
 
-  /** Routes an already-picked file (e.g. from the photo panel) through the same crop -> name -> upload flow as a drop. */
-  const openCropModalWith = (file: File, name: string) => {
-    markInsertion();
-    setPendingImageFile(file);
-    setImageNameInput(name);
-    setShowImageNameModal(true);
-  };
-
-  /** The modal hands back the original file plus the region to cut from it. */
+  /** The viewer hands back the original file plus the region to cut from it. */
   const confirmImageUpload = async (
-    original?: File,
-    crop?: CropRect | null,
-    rotation = 0
+    file: File,
+    name: string,
+    crop: CropRect | null,
+    rotation: number
   ) => {
-    const file = original ?? pendingImageFile;
-    if (!file) return;
-
-    const rawName = imageNameInput.trim() || file.name.replace(/\.[^/.]+$/, "");
+    const rawName = name.trim() || file.name.replace(/\.[^/.]+$/, "");
     // Standardize: lowercase and replace spaces with hyphens
     startUpload(
       file,
@@ -272,14 +262,12 @@ export function useImageManager({
     showImageNameModal,
     pendingImageFile,
     imageNameInput,
-    setImageNameInput,
     handleDeleteImage,
     handleDragOver,
     handleDragLeave,
     handleDrop,
     handlePaste,
-    openCropModalWith,
-    quickInsert: (file: File, name: string) => startUpload(file, name),
+    quickInsert: startUpload,
     confirmImageUpload,
     cancelImageUpload,
   };

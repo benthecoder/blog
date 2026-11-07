@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { RotateCcw, RotateCw } from "lucide-react";
 import ReactCrop, {
   centerCrop,
   makeAspectCrop,
@@ -9,9 +8,7 @@ import ReactCrop, {
 } from "react-image-crop";
 import type { Crop, PixelCrop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import { Button } from "@/components/ui/Button";
-import { Chip } from "@/components/ui/Chip";
-import { IconButton } from "@/components/ui/IconButton";
+import { ViewerButton } from "./ViewerButton";
 
 /** Largest centred crop of `aspect` that fits the image, in percent units. */
 function centeredCrop(width: number, height: number, aspect?: number): Crop {
@@ -54,18 +51,22 @@ function toSourceRect(
 }
 
 /**
- * Crop, rotate and name a photo before it is inserted. Rotation and crop are
- * only described here; sharp applies them to the untouched original on upload.
- * R rotates, Enter inserts.
+ * Crop mode of the photo viewer: crop, rotate and name a photo before it is
+ * inserted. Rotation and crop are only described here; sharp applies them to
+ * the untouched original on upload. R rotates, Enter inserts; leaving (Esc or
+ * "back") is the viewer's call.
  */
 export function ImageCropper({
   file,
   name,
+  fallbackSrc,
   onNameChange,
   onConfirm,
-  onCancel,
+  onBack,
 }: {
   file: File;
+  /** Shown at the same size until the cropper's own preview is ready. */
+  fallbackSrc: string;
   name: string;
   onNameChange: (value: string) => void;
   onConfirm: (
@@ -73,7 +74,7 @@ export function ImageCropper({
     crop: CropRect | null,
     rotation: number
   ) => Promise<boolean | undefined>;
-  onCancel: () => void;
+  onBack: () => void;
 }) {
   const [src, setSrc] = useState("");
   const [rotation, setRotation] = useState(0);
@@ -90,6 +91,10 @@ export function ImageCropper({
   const [aspect, setAspect] = useState<number | undefined>(1);
   const [busy, setBusy] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
+  const areaRef = useRef<HTMLDivElement>(null);
+
+  // R and Enter work from the crop area; the name is one Tab away.
+  useEffect(() => areaRef.current?.focus(), []);
 
   useEffect(() => {
     let cancelled = false;
@@ -115,7 +120,7 @@ export function ImageCropper({
     const image = original.image;
     const scale = Math.min(
       1,
-      1600 / Math.max(image.naturalWidth, image.naturalHeight)
+      2400 / Math.max(image.naturalWidth, image.naturalHeight)
     );
     const width = Math.round(image.naturalWidth * scale);
     const height = Math.round(image.naturalHeight * scale);
@@ -136,16 +141,20 @@ export function ImageCropper({
     context.rotate((rotation * Math.PI) / 180);
     context.drawImage(image, -width / 2, -height / 2, width, height);
     // Preview only. The untouched original is rotated and cropped by sharp on upload.
-    canvas.toBlob((blob) => {
-      if (cancelled) return;
-      if (!blob) {
-        setPreviewError("Couldn’t prepare the image preview.");
-        return;
-      }
-      previewUrl = URL.createObjectURL(blob);
-      setSrc(previewUrl);
-      setPreviewAngle(rotation);
-    }, "image/png");
+    canvas.toBlob(
+      (blob) => {
+        if (cancelled) return;
+        if (!blob) {
+          setPreviewError("Couldn’t prepare the image preview.");
+          return;
+        }
+        previewUrl = URL.createObjectURL(blob);
+        setSrc(previewUrl);
+        setPreviewAngle(rotation);
+      },
+      "image/jpeg",
+      0.92
+    );
     return () => {
       cancelled = true;
       if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -229,15 +238,15 @@ export function ImageCropper({
         }
       }}
     >
-      {/* Fixed height so the dialog doesn't jump when the image decodes. */}
-      {/* Focusable so R can rotate without typing into the name. */}
+      {/* Same box as the viewer's, so the photo doesn't move between modes. */}
       <div
+        ref={areaRef}
         // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex
         tabIndex={0}
         aria-label="Crop area"
-        className="focus-ring h-[55vh] flex items-center justify-center bg-paper-sunken dark:bg-night-raised rounded-xs p-2 mb-4"
+        className="flex h-[78dvh] w-[92vw] items-center justify-center focus-visible:outline-hidden"
       >
-        {previewReady && (
+        {previewReady ? (
           <ReactCrop
             disabled={busy}
             crop={crop}
@@ -252,76 +261,70 @@ export function ImageCropper({
               src={src}
               alt="Crop preview"
               onLoad={onImageLoad}
-              style={{ maxHeight: "calc(55vh - 1rem)", width: "auto" }}
+              style={{ maxHeight: "78dvh", maxWidth: "92vw", width: "auto" }}
             />
           </ReactCrop>
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={fallbackSrc}
+            alt=""
+            className="max-h-full max-w-full object-contain"
+          />
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-4">
-        <div className="flex items-center gap-1 mr-2 pr-3 border-r border-line">
-          <IconButton
-            aria-label="Rotate left 90 degrees"
-            title="Rotate left 90°"
-            disabled={disabled || !original}
-            onClick={() => rotate(270)}
-          >
-            <RotateCcw size={18} />
-          </IconButton>
-          <IconButton
-            aria-label="Rotate right 90 degrees"
-            title="Rotate right 90° (R)"
+      <div className="mt-3 flex h-18 flex-col items-center justify-center gap-1">
+        {previewError && (
+          <p role="alert" className="text-xs text-chalk-strong">
+            {previewError}
+          </p>
+        )}
+        <div className="flex flex-wrap items-center justify-center">
+          <ViewerButton
             disabled={disabled || !original}
             onClick={() => rotate(90)}
+            title="Rotate right 90° (R), left with Shift"
           >
-            <RotateCw size={18} />
-          </IconButton>
+            rotate (r)
+          </ViewerButton>
+          {(
+            [
+              ["square", 1],
+              ["4:3", 4 / 3],
+              ["3:4", 3 / 4],
+              ["free", undefined],
+            ] as const
+          ).map(([label, value]) => (
+            <ViewerButton
+              key={label}
+              disabled={disabled || !previewReady}
+              pressed={aspect === value}
+              onClick={() => changeAspect(value)}
+            >
+              {label}
+            </ViewerButton>
+          ))}
         </div>
-        {(
-          [
-            ["square", 1],
-            ["4:3", 4 / 3],
-            ["3:4", 3 / 4],
-            ["free", undefined],
-          ] as const
-        ).map(([label, value]) => (
-          <Chip
-            key={label}
-            disabled={disabled || !previewReady}
-            pressed={aspect === value}
-            onClick={() => changeAspect(value)}
-            className="rounded-xs"
+        <div className="flex items-center justify-center gap-2">
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => onNameChange(e.target.value)}
+            aria-label="Image name"
+            placeholder="image-name"
+            className="w-44 border-b border-chalk/40 bg-transparent px-1 py-1 text-sm text-chalk-strong placeholder:text-chalk-muted focus:border-chalk focus:outline-hidden"
+          />
+          <ViewerButton onClick={onBack} disabled={disabled}>
+            back (esc)
+          </ViewerButton>
+          <ViewerButton
+            onClick={confirm}
+            disabled={disabled || !previewReady || !completed?.width}
           >
-            {label}
-          </Chip>
-        ))}
-      </div>
-
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => onNameChange(e.target.value)}
-        aria-label="Image name"
-        placeholder="image-name"
-        className="w-full px-3 py-2 mb-6 border border-line bg-transparent text-accent focus:outline-hidden focus:border-accent rounded-xs"
-      />
-
-      {previewError && (
-        <p role="alert" className="mb-4 text-sm text-accent">
-          {previewError}
-        </p>
-      )}
-      <div className="flex gap-3 justify-end">
-        <Button onClick={onCancel} disabled={disabled}>
-          back
-        </Button>
-        <Button
-          variant="solid"
-          onClick={confirm}
-          disabled={disabled || !previewReady || !completed?.width}
-        >
-          insert
-        </Button>
+            insert (⏎)
+          </ViewerButton>
+        </div>
       </div>
     </div>
   );
