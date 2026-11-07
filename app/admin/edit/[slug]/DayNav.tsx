@@ -8,6 +8,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import { fetchPostOrder } from "./postOrder";
 
 const navCls =
   "fixed -translate-y-1/2 z-10 hidden lg:flex h-16 w-10 items-center justify-center rounded-xs text-ink-soft dark:text-chalk-muted opacity-30 hover:opacity-100 focus-visible:opacity-100 transition-opacity focus-visible:outline-2 focus-visible:outline-accent";
@@ -54,14 +55,17 @@ export function DayNav({
   const [slugs, setSlugs] = useState<string[] | null>(null);
   useEffect(() => {
     if (!date) return;
-    const controller = new AbortController();
-    fetch("/api/admin/list-posts", { signal: controller.signal })
-      .then((res) => (res.ok ? res.json() : []))
-      .then((list: string[]) => setSlugs(list))
+    let cancelled = false;
+    fetchPostOrder()
+      .then((list) => {
+        if (!cancelled) setSlugs(list);
+      })
       .catch((error: unknown) => {
-        if (!controller.signal.aborted) console.error(error);
+        if (!cancelled) console.error(error);
       });
-    return () => controller.abort();
+    return () => {
+      cancelled = true;
+    };
   }, [date]);
 
   // A new post's neighbour day may already have a post; opening it as "new"

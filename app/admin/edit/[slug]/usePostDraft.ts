@@ -22,6 +22,7 @@ import {
 } from "@/utils/content/draftImages";
 import { DEFAULT_POST_TEMPLATE } from "../post-template";
 import { suggestPeriods, type PeriodKind } from "@/utils/digest/schedule";
+import { fetchPostOrder } from "./postOrder";
 
 interface UsePostDraftArgs {
   slug: string;
@@ -162,11 +163,11 @@ export function usePostDraft({
   useEffect(() => {
     if (isNew || isEssay) return;
 
-    const abortController = new AbortController();
+    let cancelled = false;
 
-    fetch("/api/admin/list-posts", { signal: abortController.signal })
-      .then((res) => res.json())
-      .then((sortedPosts: string[]) => {
+    fetchPostOrder()
+      .then((sortedPosts) => {
+        if (cancelled) return;
         const currentIndex = sortedPosts.indexOf(slug);
 
         setPrevSlug(currentIndex > 0 ? sortedPosts[currentIndex - 1] : null);
@@ -177,12 +178,12 @@ export function usePostDraft({
         );
       })
       .catch((err) => {
-        if (err.name !== "AbortError") {
-          console.error("Error loading posts:", err);
-        }
+        if (!cancelled) console.error("Error loading posts:", err);
       });
 
-    return () => abortController.abort();
+    return () => {
+      cancelled = true;
+    };
   }, [slug, isNew, isEssay]);
 
   // Prev/next dates for new posts: pure function of the date param
