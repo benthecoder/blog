@@ -21,7 +21,7 @@ type StyleOptions = {
 };
 
 const base =
-  "focus-ring inline-flex touch-manipulation cursor-pointer items-center justify-center gap-1.5 rounded-xs border border-transparent transition-colors disabled:cursor-default disabled:opacity-30";
+  "focus-ring inline-flex touch-manipulation cursor-pointer items-center justify-center gap-1.5 rounded-xs border border-transparent transition-[color,background-color,border-color,opacity,scale] duration-150 ease-out motion-safe:active:scale-[0.97] disabled:cursor-default disabled:opacity-30";
 
 const sizes: Record<ButtonSize, string> = {
   sm: "min-h-11 px-3 text-xs sm:pointer-fine:min-h-9",

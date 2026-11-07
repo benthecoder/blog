@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef } from "react";
 import { Button } from "@/components/ui/Button";
+import { animateIn } from "@/components/admin/enterAnimation";
 
 export interface ConfirmConfig {
   title: string;
@@ -23,7 +24,11 @@ export function ConfirmModal({
   const descriptionId = useId();
   useEffect(() => {
     const dialog = dialogRef.current;
-    dialog?.showModal();
+    if (dialog) {
+      dialog.showModal();
+      // A modal stays centered, so it grows from its middle.
+      animateIn(dialog, { from: 0.96, duration: 150, origin: "50% 50%" });
+    }
     return () => dialog?.close();
   }, []);
   return (
@@ -35,7 +40,7 @@ export function ConfirmModal({
         event.preventDefault();
         onCancel();
       }}
-      className="m-auto bg-surface border border-line p-8 max-w-md w-[calc(100vw-2rem)] backdrop:bg-night/40"
+      className="m-auto bg-raised text-primary rounded-xs shadow-lg p-8 max-w-md w-[calc(100vw-2rem)] backdrop:bg-night/40"
     >
       <h2
         id={titleId}

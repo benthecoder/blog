@@ -32,7 +32,7 @@ export function IconButton({
       type={type}
       data-ui="icon-button"
       className={cx(
-        "focus-ring inline-flex touch-manipulation cursor-pointer items-center justify-center rounded-sm transition-colors disabled:cursor-default disabled:opacity-30",
+        "focus-ring inline-flex touch-manipulation cursor-pointer items-center justify-center rounded-sm transition-[color,background-color,opacity,scale] duration-150 ease-out motion-safe:active:scale-[0.97] disabled:cursor-default disabled:opacity-30",
         sizes[size],
         tones[tone],
         className

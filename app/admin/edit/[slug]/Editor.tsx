@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useState,
-  useRef,
-  useMemo,
-  useEffect,
-  useSyncExternalStore,
-} from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -23,11 +17,10 @@ import { formatEssayDate } from "@/utils/content/essayDate";
 import { usePostDraft } from "./usePostDraft";
 import { useImageManager } from "./useImageManager";
 import { ConfirmModal, type ConfirmConfig } from "./ConfirmModal";
-import { ImageStrip } from "./ImageStrip";
 import { DraftNavigation } from "./DraftNavigation";
 import { ShortcutsSheet } from "./ShortcutsSheet";
 import { fetchPostOrder } from "./postOrder";
-import { WordLookup, wordSelection, type WordSelection } from "./WordLookup";
+import { DefineBubble } from "./DefineBubble";
 import { TemplatePicker } from "./TemplatePicker";
 import { EditorPopover } from "@/components/admin/EditorPopover";
 import { suggestPeriods } from "@/utils/digest/schedule";
@@ -44,6 +37,10 @@ import {
 } from "@/components/admin/markdownEditorConfig";
 import { postEditorExtensions } from "@/components/admin/postEditorExtensions";
 import { Button } from "@/components/ui/Button";
+import { IconButton } from "@/components/ui/IconButton";
+import { animateIn } from "@/components/admin/enterAnimation";
+import { wordBubble, type WordSelection } from "@/components/admin/wordBubble";
+import { imageRange, postImages } from "@/utils/postImages";
 import { dayHref, monthHref, monthOf } from "@/utils/adminDayNav";
 import { readStoredString, writeStoredString } from "@/utils/browserStorage";
 
@@ -54,31 +51,20 @@ const widths = [
 ];
 const widthKey = "editor-width";
 
-const desktopQuery = "(min-width: 1024px)";
-function subscribeToDesktop(callback: () => void) {
-  const query = window.matchMedia(desktopQuery);
-  query.addEventListener("change", callback);
-  return () => query.removeEventListener("change", callback);
-}
-function isDesktop() {
-  return window.matchMedia(desktopQuery).matches;
-}
-function serverDesktop() {
-  return false;
-}
+const enterToast = (node: HTMLElement | null) => {
+  if (node) animateIn(node, { from: 0.96, duration: 125, origin: "0 100%" });
+};
 
 // Off the first load: the preview pulls in react-markdown, remark, rehype and
-// katex, and the modal and drawer only open on demand.
+// katex, and the tray and crop preview only matter once photos are in play.
 const RenderPost = dynamic(() => import("@/components/posts/RenderPost"));
 const MarkdownPreview = dynamic(
   () => import("@/components/posts/MarkdownPreview")
 );
-const ImageCropModal = dynamic(() =>
-  import("./ImageCropModal").then((m) => m.ImageCropModal)
+const PhotoPreview = dynamic(() =>
+  import("./PhotoPreview").then((m) => m.PhotoPreview)
 );
-const PhotoPanel = dynamic(() =>
-  import("./PhotoPanel").then((m) => m.PhotoPanel)
-);
+const PhotoTray = dynamic(() => import("./PhotoTray").then((m) => m.PhotoTray));
 
 export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   const params = useParams();
@@ -88,17 +74,18 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   const isEssay = kind === "essay";
   const isNew = !isEssay && slug === "new";
 
-  const desktop = useSyncExternalStore(
-    subscribeToDesktop,
-    isDesktop,
-    serverDesktop
-  );
   const [message, setMessage] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
-  const [photosOpen, setPhotosOpen] = useState<boolean | null>(null);
+  const [photosOpen, setPhotosOpen] = useState(false);
+  const [previewOrigin, setPreviewOrigin] = useState<DOMRect | null>(null);
+  const [removed, setRemoved] = useState<{ url: string; name: string } | null>(
+    null
+  );
   const [modalConfig, setModalConfig] = useState<ConfirmConfig | null>(null);
-  const [lookup, setLookup] = useState<WordSelection | null>(null);
+  const [bubble, setBubble] = useState<
+    (WordSelection & { expanded: boolean }) | null
+  >(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [widthIndex, setWidthIndex] = useState(1);
   const calendarLinkRef = useRef<HTMLAnchorElement>(null);
@@ -182,6 +169,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         )
       : null;
 
+  const photosOpenRef = useRef(false);
   const insertMarkdown = (image: string) => {
     const view = cmRef.current?.view;
     if (view) {
@@ -198,7 +186,8 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         selection: { anchor: pos + snippet.length },
         effects: setImageInsertion.of(null),
       });
-      view.focus();
+      // Inserting from the photo tray keeps the keyboard there for the next one.
+      if (!photosOpenRef.current) view.focus();
     } else {
       draft.setMarkdown(draft.markdown + "\n\n" + image + "\n");
     }
@@ -242,13 +231,22 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
 
   const extensions = useMemo(
     () => [
+      // Before the markdown keymap, so Tab can open the entry first.
+      ...wordBubble(
+        // An expanded bubble holds focus, which the editor reports as a blur.
+        (selection) =>
+          setBubble((current) =>
+            selection
+              ? { ...selection, expanded: false }
+              : current?.expanded
+                ? current
+                : null
+          ),
+        (selection) => setBubble({ ...selection, expanded: true })
+      ),
       ...markdownEditorExtensions,
       ...postEditorExtensions,
       imageInsertionPoint,
-      EditorView.updateListener.of((update) => {
-        if (update.selectionSet || update.focusChanged)
-          setLookup(wordSelection(update));
-      }),
       EditorView.contentAttributes.of({
         "aria-label": isEssay ? "Essay Markdown" : "Post Markdown",
         spellcheck: "true",
@@ -314,9 +312,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   }, [slug, isNew, isEssay, searchParams, draft.date]);
   // The PhotoKit helper only runs locally; the photo routes 404 in production.
   const photoDate = process.env.NODE_ENV === "production" ? null : dayDate;
-  const showPhotos = Boolean(
-    photoDate && !showPreview && !focusMode && (photosOpen ?? desktop)
-  );
+  const showTray = photosOpen && !focusMode && !showPreview;
 
   const bodyWords = useMemo(() => {
     // Count the writing, not frontmatter or Markdown image destinations.
@@ -353,13 +349,78 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
     writeStoredString(widthKey, widths[next].label);
   };
 
+  const setTray = (open: boolean) => {
+    photosOpenRef.current = open;
+    setPhotosOpen(open);
+    // Closing returns the keyboard to the caret.
+    if (!open) cmRef.current?.view?.focus();
+  };
+
   const setFocus = (on: boolean) => {
     setFocusMode(on);
     if (on) {
       setShowPreview(false);
+      photosOpenRef.current = false;
       setPhotosOpen(false);
     }
   };
+
+  // Removing an image takes its line out of the text now. The file goes
+  // after a few seconds, so undo has a file to bring back.
+  const pendingRemovals = useRef(
+    new Map<string, { name: string; from: number; text: string }>()
+  );
+  const removalTimers = useRef(
+    new Map<string, ReturnType<typeof setTimeout>>()
+  );
+  const deleteImageRef = useRef(images.handleDeleteImage);
+  useEffect(() => {
+    deleteImageRef.current = images.handleDeleteImage;
+  });
+  const commitRemoval = (url: string) => {
+    const pending = pendingRemovals.current.get(url);
+    clearTimeout(removalTimers.current.get(url));
+    removalTimers.current.delete(url);
+    pendingRemovals.current.delete(url);
+    setRemoved((current) => (current?.url === url ? null : current));
+    if (pending) void deleteImageRef.current(pending.name);
+  };
+  const removeImage = (image: { url: string; name: string }) => {
+    const view = cmRef.current?.view;
+    const range = view && imageRange(view.state.doc.toString(), image.url);
+    if (!view || !range) return commitRemoval(image.url);
+    pendingRemovals.current.set(image.url, {
+      name: image.name,
+      from: range.from,
+      text: view.state.sliceDoc(range.from, range.to),
+    });
+    view.dispatch({ changes: { from: range.from, to: range.to } });
+    removalTimers.current.set(
+      image.url,
+      setTimeout(() => commitRemoval(image.url), 5000)
+    );
+    setRemoved(image);
+  };
+  const undoRemoval = () => {
+    const view = cmRef.current?.view;
+    const pending = removed && pendingRemovals.current.get(removed.url);
+    if (!view || !removed || !pending) return;
+    clearTimeout(removalTimers.current.get(removed.url));
+    removalTimers.current.delete(removed.url);
+    pendingRemovals.current.delete(removed.url);
+    const at = Math.min(pending.from, view.state.doc.length);
+    view.dispatch({ changes: { from: at, insert: pending.text } });
+    setRemoved(null);
+  };
+  // Leaving the editor settles any removal still waiting on its toast.
+  useEffect(
+    () => () => {
+      for (const url of pendingRemovals.current.keys()) commitRemoval(url);
+    },
+    // commitRemoval only reads refs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
   // Day and month steps share the unsaved-changes guard with link clicks.
   const step = async (unit: "day" | "month", direction: -1 | 1) => {
@@ -390,13 +451,20 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
     onKeyRef.current = (event) => {
       if (document.querySelector("dialog[open], [role=dialog]")) return;
       if (event.key === "Escape") {
+        // An expanded definition handles its own Esc.
+        if (
+          (event.target as HTMLElement | null)?.closest(
+            "[aria-label^='Entries for']"
+          )
+        )
+          return;
         if (focusMode) {
           event.preventDefault();
           event.stopPropagation();
           setFocusMode(false);
           return;
         }
-        setPhotosOpen(false);
+        if (photosOpenRef.current) setTray(false);
         return;
       }
       if (event.key === "?" && !event.metaKey && !event.ctrlKey) {
@@ -419,6 +487,9 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
       } else if (key === "enter") {
         claim();
         if (!busy) runPrimary();
+      } else if (key === "i" && event.shiftKey) {
+        claim();
+        setTray(!photosOpenRef.current);
       } else if (key === "p" && event.shiftKey) {
         claim();
         setShowPreview((value) => !value);
@@ -485,21 +556,29 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   ) : (
     <span
       role="status"
-      className={`transition-opacity duration-700 ${status === "saved" && !draft.savedFlash ? "opacity-0" : "opacity-100"}`}
+      className={`transition-opacity ease-out ${status === "saved" && !draft.savedFlash ? "opacity-0 duration-700" : "opacity-100 duration-100"}`}
     >
       {status}
     </span>
   );
+  // Focus mode fades the chrome rather than removing it, so the text stays
+  // where it is; it fades out in 150ms and returns in 100.
+  const chrome = focusMode
+    ? "transition-opacity ease-out opacity-0 duration-150"
+    : "transition-opacity ease-out opacity-100 duration-100";
   const wordCount = <span className="tabular-nums">{bodyWords} words</span>;
 
   return (
-    <div className={`h-dvh bg-surface ${showPhotos ? "lg:pr-72" : ""}`}>
+    <div
+      className={`h-dvh bg-surface lg:transition-[padding] duration-200 ease-out motion-reduce:transition-none ${showTray ? "lg:pr-80" : ""}`}
+    >
       <div
-        className={`editor-column mx-auto w-full h-full min-w-0 flex flex-col relative ${widths[widthIndex].cls} sm:border-x border-line`}
+        className={`editor-column mx-auto w-full h-full min-w-0 flex flex-col relative ${widths[widthIndex].cls} sm:border-x border-line transition-[max-width] duration-200 ease-out motion-reduce:transition-none`}
       >
         {/* Top bar */}
         <div
-          className={`${focusMode ? "hidden" : "flex"} min-h-14 shrink-0 border-b border-line px-4 sm:px-6 py-2 flex-wrap gap-3 justify-between items-center`}
+          inert={focusMode}
+          className={`${chrome} min-h-14 shrink-0 border-b border-line px-4 sm:px-6 py-2 flex flex-wrap gap-3 justify-between items-center`}
         >
           <div className="flex items-center gap-4">
             <Link
@@ -530,141 +609,142 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
             )}
           </div>
 
-          <EditorPopover
-            plain
-            align="end"
-            label="⋯"
-            name={isEssay ? "More essay actions" : "More post actions"}
-          >
-            {(close) => (
-              <div className="text-xs">
-                <button
-                  type="button"
-                  onClick={() => {
-                    close();
-                    setShowPreview(!showPreview);
-                  }}
-                  className={menuItemCls}
-                >
-                  {showPreview ? "edit" : "preview"}{" "}
-                  <span className="float-right text-muted">⌘⇧P</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    close();
-                    setFocus(true);
-                    cmRef.current?.view?.focus();
-                  }}
-                  className={menuItemCls}
-                >
-                  focus mode <span className="float-right text-muted">⌘⇧↵</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    close();
-                    cycleWidth();
-                  }}
-                  className={menuItemCls}
-                >
-                  width: {widths[widthIndex].label}{" "}
-                  <span className="float-right text-muted">⌘\</span>
-                </button>
-                {mounted && (
+          <div className="flex items-center gap-1">
+            <IconButton
+              size="sm"
+              aria-label="Photos"
+              aria-pressed={photosOpen}
+              title="photos (⌘⇧I)"
+              onClick={() => setTray(!photosOpen)}
+            >
+              <Camera size={16} />
+            </IconButton>
+            <EditorPopover
+              plain
+              align="end"
+              label="⋯"
+              name={isEssay ? "More essay actions" : "More post actions"}
+            >
+              {(close) => (
+                <div className="text-xs">
                   <button
                     type="button"
                     onClick={() => {
                       close();
-                      setTheme(resolvedTheme === "dark" ? "light" : "dark");
+                      setShowPreview(!showPreview);
                     }}
                     className={menuItemCls}
                   >
-                    {resolvedTheme === "dark"
-                      ? "light appearance"
-                      : "dark appearance"}
+                    {showPreview ? "edit" : "preview"}{" "}
+                    <span className="float-right text-muted">⌘⇧P</span>
                   </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => {
-                    close();
-                    setShowShortcuts(true);
-                  }}
-                  className={menuItemCls}
-                >
-                  shortcuts <span className="float-right text-muted">⌘/</span>
-                </button>
-                {!isNew && !draft.isDraft && (
-                  <>
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => {
-                        close();
-                        void draft.handleUnpublish();
-                      }}
-                      className={menuItemCls}
-                    >
-                      move to drafts
-                    </button>
-                    <a
-                      href={`${isEssay ? "/essays" : "/posts"}/${slug}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      onClick={close}
-                      className={menuItemCls}
-                    >
-                      view on site <span aria-hidden="true">↗</span>
-                    </a>
-                  </>
-                )}
-                {!isNew && images.postImages.length > 0 && (
                   <button
                     type="button"
                     onClick={() => {
                       close();
-                      images.setShowImages(!images.showImages);
+                      setFocus(true);
+                      cmRef.current?.view?.focus();
                     }}
                     className={menuItemCls}
                   >
-                    images ({images.postImages.length})
+                    focus mode{" "}
+                    <span className="float-right text-muted">⌘⇧↵</span>
                   </button>
-                )}
-                {!isNew && (
-                  <div className="mt-1 pt-1 border-t border-line">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close();
+                      setTray(!photosOpen);
+                    }}
+                    className={menuItemCls}
+                  >
+                    photos <span className="float-right text-muted">⌘⇧I</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close();
+                      cycleWidth();
+                    }}
+                    className={menuItemCls}
+                  >
+                    width: {widths[widthIndex].label}{" "}
+                    <span className="float-right text-muted">⌘\</span>
+                  </button>
+                  {mounted && (
                     <button
                       type="button"
-                      disabled={draft.deleting}
                       onClick={() => {
                         close();
-                        draft.handleDelete();
+                        setTheme(resolvedTheme === "dark" ? "light" : "dark");
                       }}
-                      className={`focus-ring ${menuItemCls} text-muted hover:text-accent`}
+                      className={menuItemCls}
                     >
-                      {draft.deleting ? "deleting…" : "delete…"}
+                      {resolvedTheme === "dark"
+                        ? "light appearance"
+                        : "dark appearance"}
                     </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </EditorPopover>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      close();
+                      setShowShortcuts(true);
+                    }}
+                    className={menuItemCls}
+                  >
+                    shortcuts <span className="float-right text-muted">⌘/</span>
+                  </button>
+                  {!isNew && !draft.isDraft && (
+                    <>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => {
+                          close();
+                          void draft.handleUnpublish();
+                        }}
+                        className={menuItemCls}
+                      >
+                        move to drafts
+                      </button>
+                      <a
+                        href={`${isEssay ? "/essays" : "/posts"}/${slug}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={close}
+                        className={menuItemCls}
+                      >
+                        view on site <span aria-hidden="true">↗</span>
+                      </a>
+                    </>
+                  )}
+                  {!isNew && (
+                    <div className="mt-1 pt-1 border-t border-line">
+                      <button
+                        type="button"
+                        disabled={draft.deleting}
+                        onClick={() => {
+                          close();
+                          draft.handleDelete();
+                        }}
+                        className={`focus-ring ${menuItemCls} text-muted hover:text-accent`}
+                      >
+                        {draft.deleting ? "deleting…" : "delete…"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </EditorPopover>
+          </div>
         </div>
-
-        {images.showImages && !isNew && (
-          <ImageStrip
-            slug={slug}
-            images={images.postImages}
-            onClose={() => images.setShowImages(false)}
-            onDelete={images.handleDeleteImage}
-          />
-        )}
 
         {/* Editor / preview pane */}
         <div className="flex-1 min-h-0 relative">
           <div
             className="h-full overflow-y-auto [scrollbar-width:none]"
-            onScroll={() => setLookup(null)}
+            onScroll={() => setBubble(null)}
           >
             {showPreview ? (
               <div className="p-8">
@@ -767,7 +847,8 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
 
         {/* One footer: word count and save status, then the one primary action. */}
         <div
-          className={`${focusMode ? "hidden" : "flex"} shrink-0 min-h-14 border-t border-line px-4 sm:px-6 py-1.5 items-center justify-between gap-4 text-xs text-ink-soft dark:text-chalk-muted`}
+          inert={focusMode}
+          className={`${chrome} shrink-0 min-h-14 border-t border-line px-4 sm:px-6 py-1.5 flex items-center justify-between gap-4 text-xs text-ink-soft dark:text-chalk-muted`}
         >
           {!isEssay && !isNew ? (
             <DraftNavigation
@@ -821,21 +902,39 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         </div>
 
         {images.showImageNameModal && images.pendingImageFile && (
-          <ImageCropModal
+          <PhotoPreview
             file={images.pendingImageFile}
             name={images.imageNameInput}
+            origin={previewOrigin}
             onNameChange={images.setImageNameInput}
             onConfirm={images.confirmImageUpload}
-            onCancel={images.cancelImageUpload}
-            uploading={images.uploading}
-            error={images.uploadError}
+            onCancel={() => {
+              images.cancelImageUpload();
+              setPreviewOrigin(null);
+            }}
           />
         )}
 
-        {lookup && !showPreview && !focusMode && (
-          <WordLookup
-            key={`${lookup.word}:${lookup.x}:${lookup.y}`}
-            selection={lookup}
+        {bubble && !showPreview && !focusMode && (
+          <DefineBubble
+            selection={bubble}
+            expanded={bubble.expanded}
+            onSwap={(word) => {
+              const view = cmRef.current?.view;
+              view?.dispatch({
+                changes: { from: bubble.from, to: bubble.to, insert: word },
+                selection: {
+                  anchor: bubble.from,
+                  head: bubble.from + word.length,
+                },
+              });
+              view?.focus();
+              setBubble(null);
+            }}
+            onClose={() => {
+              setBubble(null);
+              cmRef.current?.view?.focus();
+            }}
           />
         )}
 
@@ -866,40 +965,35 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         </button>
       )}
 
-      {photoDate && !showPreview && !focusMode && !showPhotos && (
-        <button
-          type="button"
-          onClick={() => setPhotosOpen(true)}
-          className="focus-ring fixed right-0 top-24 z-20 inline-flex flex-col items-center gap-2 rounded-l-xs border border-r-0 border-line bg-surface px-1.5 py-3 text-ink-soft dark:text-chalk-muted hover:text-accent transition-colors"
-          title="photos from this day"
-          aria-label="Photos from this day"
-        >
-          <Camera size={16} />
-        </button>
-      )}
+      <PhotoTray
+        open={showTray}
+        date={photoDate}
+        images={postImages(draft.markdown)}
+        uploads={images.uploads}
+        onRetry={images.retryUpload}
+        onRemove={removeImage}
+        onInsert={images.quickInsert}
+        onPreview={(file, name, tile) => {
+          setPreviewOrigin(tile);
+          images.openCropModalWith(file, name);
+        }}
+      />
 
-      {photoDate && showPhotos && (
-        <>
-          {!desktop && (
-            // The drawer covers the text on narrow screens; tapping the rest
-            // of the page closes it.
-            <button
-              type="button"
-              aria-label="Close photos"
-              onClick={() => setPhotosOpen(false)}
-              className="focus-ring fixed inset-0 z-20 bg-night/20"
-            />
-          )}
-          <PhotoPanel
-            key={photoDate}
-            date={photoDate}
-            onPick={(file, name) => {
-              if (!desktop) setPhotosOpen(false);
-              images.openCropModalWith(file, name);
-            }}
-            onClose={() => setPhotosOpen(false)}
-          />
-        </>
+      {removed && (
+        <div
+          role="status"
+          ref={enterToast}
+          className="fixed bottom-4 left-4 z-40 flex items-center gap-3 rounded-xs bg-raised px-3 py-2 text-xs text-primary shadow-lg"
+        >
+          removed
+          <button
+            type="button"
+            onClick={undoRemoval}
+            className="focus-ring text-accent underline"
+          >
+            undo
+          </button>
+        </div>
       )}
     </div>
   );
