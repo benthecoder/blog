@@ -437,6 +437,7 @@ export default function KnowledgeMap3D({
 
   return (
     <main className="fixed inset-0 bg-surface text-primary">
+      <h1 className="sr-only">explore</h1>
       <canvas
         ref={canvasRef}
         role="img"

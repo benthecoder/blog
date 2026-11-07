@@ -4,6 +4,7 @@ import { pageMetadata } from "@/utils/pageMetadata";
 
 export const metadata: Metadata = pageMetadata({
   title: "uses",
+  description: "the hardware, software and gear i use",
   path: "/uses",
 });
 
@@ -64,7 +65,7 @@ const ProductCell = ({ item }: { item: Product }) => {
       <div className="w-full flex-1 relative mb-1">
         <Image
           src={`/images/uses/${item.image}`}
-          alt={item.name}
+          alt=""
           fill
           sizes="(max-width: 767px) 30vw, (max-width: 1279px) 120px, 160px"
           className="object-contain"

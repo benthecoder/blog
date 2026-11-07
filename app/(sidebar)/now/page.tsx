@@ -3,7 +3,11 @@ import SpotifyNowPlaying from "./SpotifyNowPlaying";
 import Clock from "@/components/ui/Clock";
 import { pageMetadata } from "@/utils/pageMetadata";
 
-export const metadata: Metadata = pageMetadata({ title: "now", path: "/now" });
+export const metadata: Metadata = pageMetadata({
+  title: "now",
+  description: "what i am doing right now",
+  path: "/now",
+});
 
 export default function NowPage() {
   return (

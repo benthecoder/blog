@@ -15,8 +15,13 @@ export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await props.params;
+  const tag = tryDecodeUrlComponent(slug) ?? slug;
+  const count = getPostMetadata().filter((post) =>
+    post.tags.includes(tag)
+  ).length;
   return pageMetadata({
-    title: `#${tryDecodeUrlComponent(slug) ?? slug}`,
+    title: `#${tag}`,
+    description: `${count} ${count === 1 ? "post" : "posts"} tagged ${tag}`,
     path: `/tags/${slug}`,
   });
 }
