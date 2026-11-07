@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
+import { animateIn } from "@/components/admin/enterAnimation";
 
 export function ShortcutsSheet({
   primary,
@@ -16,7 +17,10 @@ export function ShortcutsSheet({
   const titleId = useId();
   useEffect(() => {
     const dialog = dialogRef.current;
-    dialog?.showModal();
+    if (dialog) {
+      dialog.showModal();
+      animateIn(dialog, { from: 0.96, duration: 150, origin: "50% 50%" });
+    }
     return () => dialog?.close();
   }, []);
 
@@ -25,10 +29,16 @@ export function ShortcutsSheet({
     ["⌘S", "save"],
     ["⌘⇧P", "preview"],
     ["⌘⇧⏎", "focus mode"],
+    ["⌘⇧I", "photo tray"],
     ["⌘\\", "editor width"],
     ["⌘B", "bold"],
     ["⌘I", "italic"],
     ["⌘K", "link"],
+    ["⌘D or tab", "expand the definition of a selected word"],
+    ["arrows", "move through the tray"],
+    ["⏎  space", "insert, preview a tray photo"],
+    ["⌫", "remove a tray image from the post"],
+    ["R", "rotate in the preview"],
     ...(isEssay
       ? []
       : ([
@@ -51,7 +61,7 @@ export function ShortcutsSheet({
       onClick={(event) => {
         if (event.target === dialogRef.current) onClose();
       }}
-      className="m-auto bg-surface text-primary border border-line p-8 max-w-sm w-[calc(100vw-2rem)] backdrop:bg-night/40"
+      className="m-auto bg-raised text-primary rounded-xs shadow-lg p-8 max-w-sm w-[calc(100vw-2rem)] outline-none backdrop:bg-night/40"
     >
       <h2 id={titleId} className="text-lg font-light mb-6 text-accent">
         shortcuts

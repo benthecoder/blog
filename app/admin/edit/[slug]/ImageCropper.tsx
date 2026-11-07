@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useId } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { RotateCcw, RotateCw } from "lucide-react";
 import ReactCrop, {
   centerCrop,
@@ -53,14 +53,17 @@ function toSourceRect(
   };
 }
 
-export function ImageCropModal({
+/**
+ * Crop, rotate and name a photo before it is inserted. Rotation and crop are
+ * only described here; sharp applies them to the untouched original on upload.
+ * R rotates, Enter inserts.
+ */
+export function ImageCropper({
   file,
   name,
   onNameChange,
   onConfirm,
   onCancel,
-  uploading,
-  error,
 }: {
   file: File;
   name: string;
@@ -71,19 +74,7 @@ export function ImageCropModal({
     rotation: number
   ) => Promise<boolean | undefined>;
   onCancel: () => void;
-  uploading: boolean;
-  error: string;
 }) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const nameRef = useRef<HTMLInputElement>(null);
-  const titleId = useId();
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    dialog?.showModal();
-    // showModal() focuses the first button; the name is what you type next.
-    nameRef.current?.select();
-    return () => dialog?.close();
-  }, []);
   const [src, setSrc] = useState("");
   const [rotation, setRotation] = useState(0);
   const [original, setOriginal] = useState<{
@@ -215,30 +206,40 @@ export function ImageCropModal({
     }
   };
 
-  const disabled = busy || uploading;
+  const disabled = busy;
+  const rotate = (turn: number) => {
+    setRotation((angle) => (angle + turn) % 360);
+    setCompleted(undefined);
+  };
 
   return (
-    <dialog
-      ref={dialogRef}
-      aria-labelledby={titleId}
-      className="m-auto bg-surface border border-line p-6 w-[calc(100vw-2rem)] max-w-2xl max-h-[calc(100dvh-2rem)] overflow-y-auto admin-scrollbar rounded-xs backdrop:bg-night/40"
-      onCancel={(event) => {
-        event.preventDefault();
-        if (!disabled) onCancel();
+    <div
+      onKeyDown={(event) => {
+        if (event.metaKey || event.ctrlKey || event.altKey) return;
+        const typing = event.target instanceof HTMLInputElement;
+        if (event.key === "r" && !typing && original && !disabled) {
+          event.preventDefault();
+          rotate(event.shiftKey ? 270 : 90);
+        } else if (
+          event.key === "Enter" &&
+          !(event.target instanceof HTMLButtonElement)
+        ) {
+          event.preventDefault();
+          if (!disabled && previewReady && completed?.width) void confirm();
+        }
       }}
     >
-      <h2
-        id={titleId}
-        className="text-lg font-light mb-4 text-accent tracking-wide"
-      >
-        crop image
-      </h2>
-
       {/* Fixed height so the dialog doesn't jump when the image decodes. */}
-      <div className="h-[55vh] flex items-center justify-center bg-paper-sunken dark:bg-night-raised rounded-xs p-2 mb-4">
+      {/* Focusable so R can rotate without typing into the name. */}
+      <div
+        // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+        tabIndex={0}
+        aria-label="Crop area"
+        className="focus-ring h-[55vh] flex items-center justify-center bg-paper-sunken dark:bg-night-raised rounded-xs p-2 mb-4"
+      >
         {previewReady && (
           <ReactCrop
-            disabled={busy || uploading}
+            disabled={busy}
             crop={crop}
             onChange={(_, percentCrop) => setCrop(percentCrop)}
             onComplete={(c) => setCompleted(c)}
@@ -263,21 +264,15 @@ export function ImageCropModal({
             aria-label="Rotate left 90 degrees"
             title="Rotate left 90°"
             disabled={disabled || !original}
-            onClick={() => {
-              setRotation((angle) => (angle + 270) % 360);
-              setCompleted(undefined);
-            }}
+            onClick={() => rotate(270)}
           >
             <RotateCcw size={18} />
           </IconButton>
           <IconButton
             aria-label="Rotate right 90 degrees"
-            title="Rotate right 90°"
+            title="Rotate right 90° (R)"
             disabled={disabled || !original}
-            onClick={() => {
-              setRotation((angle) => (angle + 90) % 360);
-              setCompleted(undefined);
-            }}
+            onClick={() => rotate(90)}
           >
             <RotateCw size={18} />
           </IconButton>
@@ -306,33 +301,28 @@ export function ImageCropModal({
         type="text"
         value={name}
         onChange={(e) => onNameChange(e.target.value)}
-        onKeyDown={(e) => {
-          // Same as the button: upload failures show in the modal, not here.
-          if (e.key === "Enter" && !disabled) void confirm();
-        }}
         aria-label="Image name"
         placeholder="image-name"
-        ref={nameRef}
         className="w-full px-3 py-2 mb-6 border border-line bg-transparent text-accent focus:outline-hidden focus:border-accent rounded-xs"
       />
 
-      {(error || previewError) && (
+      {previewError && (
         <p role="alert" className="mb-4 text-sm text-accent">
-          {error || previewError}
+          {previewError}
         </p>
       )}
       <div className="flex gap-3 justify-end">
         <Button onClick={onCancel} disabled={disabled}>
-          cancel
+          back
         </Button>
         <Button
           variant="solid"
           onClick={confirm}
           disabled={disabled || !previewReady || !completed?.width}
         >
-          {disabled ? "uploading…" : "upload"}
+          insert
         </Button>
       </div>
-    </dialog>
+    </div>
   );
 }

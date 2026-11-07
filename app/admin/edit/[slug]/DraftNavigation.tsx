@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { nextDraft, type DraftSummary } from "@/utils/adminDraftQueue";
 
 const actionCls =
-  "min-h-10 px-3 border-l border-line text-accent hover:bg-paper-sunken dark:hover:bg-night-raised disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent";
+  "min-h-10 rounded-xs px-3 text-accent transition-[background-color,opacity,scale] duration-150 ease-out hover:bg-paper-sunken dark:hover:bg-night-raised motion-safe:active:scale-[0.97] disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent";
 
 export function DraftNavigation({
   slug,
