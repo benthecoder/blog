@@ -1,0 +1,26 @@
+{
+  "packets": {
+    "2024-01-15": {
+      "uploaded": true,
+      "built": "2024-01-15T09:00:00-05:00",
+      "files": {
+        "Chinese": "/tmp/synthetic/Chinese · Jan 15.pdf",
+        "AI Lab Math": "/tmp/synthetic/AI Lab Math · Jan 15.pdf"
+      }
+    },
+    "2024-01-16": {
+      "uploaded": true,
+      "built": "2024-01-16T09:00:00-05:00",
+      "files": {
+        "AI Lab Math": "/tmp/synthetic/AI Lab Math · Jan 16.pdf"
+      }
+    },
+    "2099-01-01": {
+      "uploaded": true,
+      "built": "2099-01-01T09:00:00-05:00",
+      "files": {
+        "Bible": "/tmp/synthetic/Bible · Jan 1.pdf"
+      }
+    }
+  }
+}

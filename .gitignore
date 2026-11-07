@@ -70,3 +70,7 @@ scripts/syncAppleNotes.mjs
 
 # Generated capture Shortcuts contain the private publishing token.
 *.shortcut
+
+# Python
+__pycache__/
+*.py[cod]

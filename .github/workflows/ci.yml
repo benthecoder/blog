@@ -18,6 +18,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Learning data tests
+        run: python3 -m unittest discover -s learn/tests -t .
+
       - uses: pnpm/action-setup@v6
         with:
           version: 11.1.2

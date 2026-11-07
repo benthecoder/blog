@@ -1,0 +1,44 @@
+{
+  "Hash": "synthetic-tree-hash-v2",
+  "Generation": 200,
+  "SchemaVersion": "4",
+  "CacheVersion": 3,
+  "Docs": [
+    {
+      "DocumentID": "synthetic-math-jan15",
+      "Metadata": {
+        "visibleName": "AI Lab Math · Jan 15",
+        "type": "DocumentType",
+        "parent": "abc",
+        "deleted": false
+      },
+      "Files": [
+        {"DocumentID": "page1.rm", "Size": "12000"}
+      ]
+    },
+    {
+      "DocumentID": "synthetic-zh-jan15",
+      "Metadata": {
+        "visibleName": "Chinese · Jan 15",
+        "type": "DocumentType",
+        "parent": "abc",
+        "deleted": false
+      },
+      "Files": [
+        {"DocumentID": "page1.rm", "Size": "15000"}
+      ]
+    },
+    {
+      "DocumentID": "synthetic-math-jan16",
+      "Metadata": {
+        "visibleName": "AI Lab Math · Jan 16",
+        "type": "DocumentType",
+        "parent": "abc",
+        "deleted": false
+      },
+      "Files": [
+        {"DocumentID": "page1.rm", "Size": "80"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "date": "2024-01-15",
+  "item_id": "math:skill:0:synthetic-bayes",
+  "correct": true,
+  "sequence": 1,
+  "provenance": {
+    "assessor": "fixture",
+    "method": "human",
+    "recorded_at": "2024-01-15T12:00:00-05:00",
+    "note": "SYNTHETIC FIXTURE — not a real assessment"
+  }
+}

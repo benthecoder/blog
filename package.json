@@ -10,6 +10,7 @@
     "lint": "oxlint",
     "lint:design": "tsx scripts/checkDesignTokens.ts",
     "test": "vitest run",
+    "test:learn": "python3 -m unittest discover -s learn/tests -t .",
     "test:browser": "playwright test",
     "test:watch": "vitest",
     "format": "prettier --write .",
