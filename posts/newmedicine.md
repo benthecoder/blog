@@ -87,7 +87,7 @@ The US Food and Drug Administration (FDA) has approved only ~[2000](https://www.
 
 That's why we need ML to accelerate drug discovery.
 
-With this model, researches can input various small molecules into the model, and predict their binding affinities to specific protein targets. This helps prioritize which small molecules are most promising for further testing and development as potential drug candidates.
+With this model, researchers can input various small molecules into the model, and predict their binding affinities to specific protein targets. This helps prioritize which small molecules are most promising for further testing and development as potential drug candidates.
 
 ###\*\*\*\* example use cases
 

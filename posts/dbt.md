@@ -89,7 +89,7 @@ So to summarize everything, here's why dbt is so [powerful](https://docs.getdbt.
 - build reusable, modular data models that can be referenced
 - reduce the time it takes for queries to run with metadata
 - Use Jinja in SQL for control structures, macros, hooks
-- Publish packages that can be referenced by otherse
+- Publish packages that can be referenced by others
 - Use source control processes like branching, PRs
 - Write data quality tests quickly and easily
 - [document](https://docs.getdbt.com/docs/collaborate/documentation) descriptions for each model and field

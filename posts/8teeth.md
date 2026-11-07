@@ -49,4 +49,4 @@ I hope I can sleep tonight. I just took another painkiller and I'm waiting for t
 
 I was thinking how there's no way I can give up now. My dad is supporting me financially in all of this.
 
-I have braces scheduled two weeks after, and fundoplication surger another two weeks after that. The first half of this year will be about healing and recovery, and the rest will be full of possibilities and growth. I'm optimistic.
+I have braces scheduled two weeks after, and fundoplication surgery another two weeks after that. The first half of this year will be about healing and recovery, and the rest will be full of possibilities and growth. I'm optimistic.

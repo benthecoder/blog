@@ -30,7 +30,7 @@ It was time for dim sum, we walked through Boston Common, and got to Winsor Dim 
 
 This spot was great. The food came fast. The dim sum was good. What more can you ask?
 
-Tt was time for the two popular museums.
+It was time for the two popular museums.
 
 We took the subway and I saw Northeaster University through the window.
 

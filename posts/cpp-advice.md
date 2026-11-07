@@ -6,7 +6,7 @@ date: Jul 9, 2023
 
 Chris looked through files on his computer, deciding what to backup, found his Cpp code from 15 years ago.
 
-It was his first every Cpp code that compiled for his college assignment.
+It was his first ever Cpp code that compiled for his college assignment.
 
 His [advice](https://www.youtube.com/watch?v=37VZu3b045k) for new programmers is to ignore the advice of not learning a certain language, because there's always going to be problems with any language.
 
