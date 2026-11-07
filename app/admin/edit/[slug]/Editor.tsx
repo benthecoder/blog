@@ -487,7 +487,12 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
       } else if (key === "enter") {
         claim();
         if (!busy) runPrimary();
-      } else if (key === "i" && event.shiftKey) {
+      } else if (
+        // ⌥ turns P into π, so match the physical key. ⌘⇧I stays as an
+        // alias, but some Chromium browsers (Helium) keep it for themselves.
+        (event.code === "KeyP" && event.altKey && !event.shiftKey) ||
+        (key === "i" && event.shiftKey)
+      ) {
         claim();
         setTray(!photosOpenRef.current);
       } else if (key === "p" && event.shiftKey) {
@@ -614,7 +619,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
               size="sm"
               aria-label="Photos"
               aria-pressed={photosOpen}
-              title="photos (⌘⇧I)"
+              title="photos (⌥⌘P)"
               onClick={() => setTray(!photosOpen)}
             >
               <Camera size={16} />
@@ -658,7 +663,7 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
                     }}
                     className={menuItemCls}
                   >
-                    photos <span className="float-right text-muted">⌘⇧I</span>
+                    photos <span className="float-right text-muted">⌥⌘P</span>
                   </button>
                   <button
                     type="button"

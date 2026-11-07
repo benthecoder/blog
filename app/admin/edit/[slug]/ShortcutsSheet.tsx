@@ -29,7 +29,7 @@ export function ShortcutsSheet({
     ["⌘S", "save"],
     ["⌘⇧P", "preview"],
     ["⌘⇧⏎", "focus mode"],
-    ["⌘⇧I", "photo tray"],
+    ["⌥⌘P", "photo tray"],
     ["⌘\\", "editor width"],
     ["⌘B", "bold"],
     ["⌘I", "italic"],
