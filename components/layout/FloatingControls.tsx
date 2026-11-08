@@ -11,7 +11,7 @@ export function FloatingControls({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   if (pathname?.startsWith("/admin")) return null;
   return (
-    <div className="floating-controls fixed top-4 right-4 z-50 flex items-center gap-3">
+    <div className="floating-controls fixed top-4 right-4 z-50 flex items-center gap-0.5 sm:gap-3">
       {children}
     </div>
   );
