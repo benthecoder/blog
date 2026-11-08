@@ -10,6 +10,7 @@ import {
   flip,
   shift,
   useHover,
+  safePolygon,
   useFocus,
   useDismiss,
   useRole,
@@ -100,6 +101,7 @@ const PostLinkPreview = ({
 
   const hover = useHover(context, {
     move: false,
+    handleClose: safePolygon(),
     delay: { open: 150, close: 0 },
   });
   const focus = useFocus(context);
@@ -144,9 +146,7 @@ const PostLinkPreview = ({
             ref={refs.setFloating}
             style={floatingStyles}
             {...getFloatingProps()}
-            // The card is read-only; letting it take the pointer kept it open
-            // whenever it covered the next link down the list.
-            className="z-50 pointer-events-none"
+            className="z-50"
             data-placement={placement}
           >
             <div

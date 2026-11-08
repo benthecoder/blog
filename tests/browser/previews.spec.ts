@@ -66,6 +66,25 @@ test("preview follows placement, stays hoverable and dismisses with Escape", asy
   await expect(tooltip).not.toBeVisible();
 });
 
+test("only one preview is open at a time", async ({ page, isMobile }) => {
+  test.skip(
+    isMobile,
+    "Touch links navigate; hover previews are a pointer interaction."
+  );
+  await page.goto("/posts");
+  const links = page.locator("main a[href^='/posts/']");
+  const tooltips = page.getByRole("tooltip");
+  // Skim up the list and back down, pausing on each title the way a reader
+  // does. Each pause outlasts the open delay and the previous card's exit.
+  const order = [7, 6, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 6, 7];
+  for (const index of order) {
+    const box = (await links.nth(index).boundingBox())!;
+    await page.mouse.move(box.x + 12, box.y + box.height / 2, { steps: 6 });
+    await page.waitForTimeout(400);
+    expect(await tooltips.count()).toBeLessThanOrEqual(1);
+  }
+});
+
 test("reduced motion removes preview scaling and respects live preference changes", async ({
   page,
 }) => {
