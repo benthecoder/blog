@@ -69,8 +69,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(next@16.4.3(@playwright/test@1.64.1)(@types/node@26.6.6)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
       cuelume:
-        specifier: 0.2.8
-        version: 0.2.8
+        specifier: 0.2.1
+        version: 0.2.1
       d3-scale:
         specifier: ^4.0.2
         version: 4.0.2
@@ -2026,8 +2026,8 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  cuelume@0.2.8:
-    resolution: {integrity: sha512-jnwAdMMUK4emaUWRd9l2RjpfixAMFOFrVkjoVK59FIfk7D3Vuvt+vBBJvU/J+2EiXrDlduialwDKJZorS5Nxqg==}
+  cuelume@0.2.1:
+    resolution: {integrity: sha512-UFN5GtPRhnkL55r5rz7oalgy72XTtV50QqOec3+wHer0O1hlwOteej99dlRxeFX2ViLUD/CpCu47v5XCTa2tEQ==}
 
   d3-array@3.2.4:
     resolution: {integrity: sha512-tdQAmyA18i4J7wprpYq8ClcxZy3SC31QMeByyCFyRt7BVHdREQZ5lpzoe5mFEYZUWe+oq8HBvk9JjpibyEV4Jg==}
@@ -4840,7 +4840,7 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  cuelume@0.2.8: {}
+  cuelume@0.2.1: {}
 
   d3-array@3.2.4:
     dependencies:
