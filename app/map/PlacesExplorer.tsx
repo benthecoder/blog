@@ -30,13 +30,7 @@ const formatDate = (date: string) =>
     timeZone: "UTC",
   });
 
-export default function PlacesExplorer({
-  data,
-  intro,
-}: {
-  data: PlacesData;
-  intro: string;
-}) {
+export default function PlacesExplorer({ data }: { data: PlacesData }) {
   const [collectionId, setCollectionId] = useState<string | null>(null);
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
   const [query, setQuery] = useState("");
@@ -199,7 +193,6 @@ export default function PlacesExplorer({
             {mounted && (dark ? <Sun size={15} /> : <Moon size={15} />)}
           </button>
         </header>
-        <p className="places-intro">{intro}</p>
 
         <section aria-labelledby="lists-label">
           <h2 className="places-label" id="lists-label">

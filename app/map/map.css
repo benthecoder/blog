@@ -108,10 +108,6 @@
   align-self: center;
   color: var(--map-muted);
 }
-.places-intro {
-  margin: 8px 0 0;
-  color: var(--map-muted);
-}
 @media (hover: hover) and (pointer: fine) {
   .places-byline:hover,
   .places-theme:hover {
@@ -179,23 +175,33 @@
   flex-wrap: wrap;
   gap: 4px 18px;
 }
+/* Read like a map legend: every kind is on until you pick some, then the
+   ones left out fade back, dot and all, as if switched off. */
 .places-categories button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 2px 0;
-  color: var(--map-muted);
   font-size: 15px;
+  transition: color 150ms ease-out;
 }
-.places-categories button[aria-pressed="true"] {
-  color: var(--map-ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
+.places-categories button .category-dot {
+  transition: opacity 150ms ease-out;
+}
+.places-categories:has([aria-pressed="true"]) button[aria-pressed="false"] {
+  color: var(--map-muted);
+}
+.places-categories:has([aria-pressed="true"])
+  button[aria-pressed="false"]
+  .category-dot {
+  opacity: 0.3;
 }
 @media (hover: hover) and (pointer: fine) {
   .places-categories button:hover {
     color: var(--map-ink);
+  }
+  .places-categories button:hover .category-dot {
+    opacity: 1;
   }
 }
 .places-search {
@@ -535,6 +541,8 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .places-categories button,
+  .places-categories button .category-dot,
   .place-detail:not(.is-preview) {
     transition: none;
   }
