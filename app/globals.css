@@ -745,7 +745,10 @@ body {
    any format sit level. Clicking the photo opens the whole picture,
    uncropped. */
 .photo-print {
-  --u: clamp(0.22rem, 0.8vw, 0.3rem);
+  /* About 70% of the reading column for a square print, held under the
+     screen's height so a portrait print still fits on a laptop, and
+     within the column on a phone. */
+  --u: clamp(0.22rem, min(1.25vw, 0.8vh), 0.44rem);
   /* The shadow is taken most of the way to neutral before it's faded out.
      Mixing straight from the ink made the print glow in the theme colour
      instead of casting a shadow; this keeps only a hint of the palette. */
@@ -831,8 +834,11 @@ body {
   text-align: center;
   font-family: var(--font-caption), var(--font-serif);
   font-style: italic;
-  font-size: 1.0625rem;
-  line-height: 1.2;
+  /* Written to the film's scale, like the borders, so a small print gets
+     small handwriting instead of a caption as big as its photo. Never
+     below 14px, where the italic stops being legible. */
+  font-size: clamp(0.875rem, calc(3 * var(--u)), 1.125rem);
+  line-height: 1.15;
   color: var(--color-ink-soft);
 }
 
@@ -876,6 +882,20 @@ body {
   flex-direction: column;
   gap: 2.5rem;
   margin-block: 3rem;
+}
+
+/* With room to spare, a row of prints reaches past the text into the
+   margins, the way a magazine lets a picture spread run wider than its
+   column. Three photos side by side are otherwise thumbnails. */
+@media (min-width: 64rem) {
+  .photo-group:has(.photo-row) {
+    margin-inline: -4rem;
+  }
+}
+@media (min-width: 80rem) {
+  .photo-group:has(.photo-row) {
+    margin-inline: -7rem;
+  }
 }
 
 .photo-row {
