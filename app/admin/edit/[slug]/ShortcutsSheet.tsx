@@ -36,11 +36,11 @@ export function ShortcutsSheet({
     ["⌘K", "link"],
     ["⌘D or tab", "expand the definition of a selected word"],
     ["arrows", "move through the tray"],
-    ["⏎  space", "insert, view a tray photo"],
-    ["⌫", "remove a tray image from the post"],
+    ["click  space  ⏎", "view a tray photo"],
     ["← →", "browse photos in the viewer"],
-    ["C", "crop the photo in the viewer"],
+    ["⏎  or C", "viewer: crop and rename"],
     ["R", "rotate while cropping"],
+    ["⏎", "crop mode: insert the photo"],
     ...(isEssay
       ? []
       : ([
@@ -48,7 +48,7 @@ export function ShortcutsSheet({
           ["⌘⇧[  ⌘⇧]", "previous, next month"],
         ] as [string, string][])),
     ["⌘.", isEssay ? "back to essays" : "back to calendar"],
-    ["esc", "leave the text, exit focus, or step back in the viewer"],
+    ["esc", "leave the text, exit focus, or step back one level in the viewer"],
     ["? or ⌘/", "this list"],
   ];
 

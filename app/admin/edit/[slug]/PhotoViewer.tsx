@@ -18,9 +18,9 @@ export type ViewerPhoto = {
 const EXIT_MS = 110;
 
 /**
- * The large photo viewer. It opens in view mode: browse with the arrows,
- * Enter inserts the photo as it is, Esc leaves. C (or "crop") switches the
- * same view to crop mode, where Esc steps back to view mode first.
+ * The large photo viewer, one linear flow. View mode: browse with the
+ * arrows, Enter (or C) goes to crop and rename, Esc leaves. Crop mode: Enter
+ * inserts, Esc steps back to view mode. View mode never inserts.
  * Opened from a tray tile it grows out of that tile.
  */
 export function PhotoViewer({
@@ -92,6 +92,11 @@ export function PhotoViewer({
     // Only the first placement matters.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Leaving the name field (back to view) would drop focus to the page.
+  useEffect(() => {
+    if (mode === "view") dialogRef.current?.focus();
+  }, [mode]);
 
   // The large version of the current photo. The thumbnail shows meanwhile.
   useEffect(() => {
@@ -176,14 +181,6 @@ export function PhotoViewer({
     onIndexChange?.(next);
   };
 
-  const insert = async () => {
-    if (!ready || closing.current) return;
-    closing.current = true;
-    const ok = await onInsert(ready.file, name, null, 0);
-    // A refused insert leaves the viewer open.
-    if (ok === false) closing.current = false;
-  };
-
   const confirmCrop = async (
     file: File,
     crop: CropRect | null,
@@ -211,15 +208,13 @@ export function PhotoViewer({
     if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       event.preventDefault();
       go(index + (event.key === "ArrowLeft" ? -1 : 1));
-    } else if (event.key === "c" || event.key === "C") {
-      event.preventDefault();
-      if (ready) setMode("crop");
     } else if (
-      event.key === "Enter" &&
-      !(event.target instanceof HTMLButtonElement)
+      event.key === "c" ||
+      event.key === "C" ||
+      (event.key === "Enter" && !(event.target instanceof HTMLButtonElement))
     ) {
       event.preventDefault();
-      void insert();
+      if (ready) setMode("crop");
     }
   };
 
@@ -310,12 +305,9 @@ export function PhotoViewer({
                   </>
                 )}
                 <ViewerButton disabled={!ready} onClick={() => setMode("crop")}>
-                  crop (c)
+                  crop &amp; rename ⏎
                 </ViewerButton>
-                <ViewerButton disabled={!ready} onClick={() => void insert()}>
-                  insert (⏎)
-                </ViewerButton>
-                <ViewerButton onClick={close}>back (esc)</ViewerButton>
+                <ViewerButton onClick={close}>back esc</ViewerButton>
               </div>
             </div>
           </>
