@@ -38,9 +38,8 @@ import {
 import { postEditorExtensions } from "@/components/admin/postEditorExtensions";
 import { Button } from "@/components/ui/Button";
 import { IconButton } from "@/components/ui/IconButton";
-import { animateIn } from "@/components/admin/enterAnimation";
 import { wordBubble, type WordSelection } from "@/components/admin/wordBubble";
-import { imageRange, postImages } from "@/utils/postImages";
+import { postImages } from "@/utils/postImages";
 import { dayHref, monthHref, monthOf } from "@/utils/adminDayNav";
 import { readStoredString, writeStoredString } from "@/utils/browserStorage";
 
@@ -50,10 +49,6 @@ const widths = [
   { label: "wide", cls: "max-w-[960px]" },
 ];
 const widthKey = "editor-width";
-
-const enterToast = (node: HTMLElement | null) => {
-  if (node) animateIn(node, { from: 0.96, duration: 125, origin: "0 100%" });
-};
 
 // Off the first load: the preview pulls in react-markdown, remark, rehype and
 // katex, and the tray and crop preview only matter once photos are in play.
@@ -78,9 +73,6 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
   const [showPreview, setShowPreview] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
   const [photosOpen, setPhotosOpen] = useState(false);
-  const [removed, setRemoved] = useState<{ url: string; name: string } | null>(
-    null
-  );
   const [modalConfig, setModalConfig] = useState<ConfirmConfig | null>(null);
   const [bubble, setBubble] = useState<
     (WordSelection & { expanded: boolean }) | null
@@ -363,63 +355,6 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
       setPhotosOpen(false);
     }
   };
-
-  // Removing an image takes its line out of the text now. The file goes
-  // after a few seconds, so undo has a file to bring back.
-  const pendingRemovals = useRef(
-    new Map<string, { name: string; from: number; text: string }>()
-  );
-  const removalTimers = useRef(
-    new Map<string, ReturnType<typeof setTimeout>>()
-  );
-  const deleteImageRef = useRef(images.handleDeleteImage);
-  useEffect(() => {
-    deleteImageRef.current = images.handleDeleteImage;
-  });
-  const commitRemoval = (url: string) => {
-    const pending = pendingRemovals.current.get(url);
-    clearTimeout(removalTimers.current.get(url));
-    removalTimers.current.delete(url);
-    pendingRemovals.current.delete(url);
-    setRemoved((current) => (current?.url === url ? null : current));
-    if (pending) void deleteImageRef.current(pending.name);
-  };
-  const removeImage = (image: { url: string; name: string }) => {
-    const view = cmRef.current?.view;
-    const range = view && imageRange(view.state.doc.toString(), image.url);
-    if (!view || !range) return commitRemoval(image.url);
-    pendingRemovals.current.set(image.url, {
-      name: image.name,
-      from: range.from,
-      text: view.state.sliceDoc(range.from, range.to),
-    });
-    view.dispatch({ changes: { from: range.from, to: range.to } });
-    removalTimers.current.set(
-      image.url,
-      setTimeout(() => commitRemoval(image.url), 5000)
-    );
-    setRemoved(image);
-  };
-  const undoRemoval = () => {
-    const view = cmRef.current?.view;
-    const pending = removed && pendingRemovals.current.get(removed.url);
-    if (!view || !removed || !pending) return;
-    clearTimeout(removalTimers.current.get(removed.url));
-    removalTimers.current.delete(removed.url);
-    pendingRemovals.current.delete(removed.url);
-    const at = Math.min(pending.from, view.state.doc.length);
-    view.dispatch({ changes: { from: at, insert: pending.text } });
-    setRemoved(null);
-  };
-  // Leaving the editor settles any removal still waiting on its toast.
-  useEffect(
-    () => () => {
-      for (const url of pendingRemovals.current.keys()) commitRemoval(url);
-    },
-    // commitRemoval only reads refs.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
 
   // Day and month steps share the unsaved-changes guard with link clicks.
   const step = async (unit: "day" | "month", direction: -1 | 1) => {
@@ -974,28 +909,8 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
         open={showTray}
         date={photoDate}
         images={postImages(draft.markdown)}
-        uploads={images.uploads}
-        onRetry={images.retryUpload}
-        onRemove={removeImage}
         onInsert={images.quickInsert}
       />
-
-      {removed && (
-        <div
-          role="status"
-          ref={enterToast}
-          className="fixed bottom-4 left-4 z-40 flex items-center gap-3 rounded-xs bg-raised px-3 py-2 text-xs text-primary shadow-lg"
-        >
-          removed
-          <button
-            type="button"
-            onClick={undoRemoval}
-            className="focus-ring text-accent underline"
-          >
-            undo
-          </button>
-        </div>
-      )}
     </div>
   );
 }

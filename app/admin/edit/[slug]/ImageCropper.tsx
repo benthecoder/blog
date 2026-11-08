@@ -53,7 +53,8 @@ function toSourceRect(
 /**
  * Crop mode of the photo viewer: crop, rotate and name a photo before it is
  * inserted. Rotation and crop are only described here; sharp applies them to
- * the untouched original on upload. R rotates, Enter inserts; leaving (Esc or
+ * the untouched original on upload. The name is selected on entry. R rotates
+ * (outside the name field), Enter inserts; leaving (Esc or
  * "back") is the viewer's call.
  */
 export function ImageCropper({
@@ -91,10 +92,13 @@ export function ImageCropper({
   const [aspect, setAspect] = useState<number | undefined>(1);
   const [busy, setBusy] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
-  const areaRef = useRef<HTMLDivElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
 
-  // R and Enter work from the crop area; the name is one Tab away.
-  useEffect(() => areaRef.current?.focus(), []);
+  // The name is prefilled and selected: type to replace it, or Enter to insert.
+  useEffect(() => {
+    nameRef.current?.focus();
+    nameRef.current?.select();
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -240,7 +244,6 @@ export function ImageCropper({
     >
       {/* Same box as the viewer's, so the photo doesn't move between modes. */}
       <div
-        ref={areaRef}
         // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex
         tabIndex={0}
         aria-label="Crop area"
@@ -286,7 +289,7 @@ export function ImageCropper({
             onClick={() => rotate(90)}
             title="Rotate right 90° (R), left with Shift"
           >
-            rotate (r)
+            rotate r
           </ViewerButton>
           {(
             [
@@ -308,6 +311,7 @@ export function ImageCropper({
         </div>
         <div className="flex items-center justify-center gap-2">
           <input
+            ref={nameRef}
             type="text"
             value={name}
             onChange={(e) => onNameChange(e.target.value)}
@@ -316,13 +320,13 @@ export function ImageCropper({
             className="w-44 border-b border-chalk/40 bg-transparent px-1 py-1 text-sm text-chalk-strong placeholder:text-chalk-muted focus:border-chalk focus:outline-hidden"
           />
           <ViewerButton onClick={onBack} disabled={disabled}>
-            back (esc)
+            back esc
           </ViewerButton>
           <ViewerButton
             onClick={confirm}
             disabled={disabled || !previewReady || !completed?.width}
           >
-            insert (⏎)
+            insert ⏎
           </ViewerButton>
         </div>
       </div>

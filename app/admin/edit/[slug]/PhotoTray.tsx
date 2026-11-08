@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { ImageOff, Loader2, X } from "lucide-react";
+import { ImageOff } from "lucide-react";
 import type { CropRect } from "./ImageCropper";
 
 import { PHOTO_TRANSFER_TYPE, photoFileUrl } from "@/utils/photoTransfer";
@@ -12,9 +12,6 @@ const PhotoViewer = dynamic(() =>
 );
 
 type Photo = { id: string; name: string; time: string };
-type Tile =
-  | { kind: "post"; key: string; url: string; name: string }
-  | { kind: "day"; key: string; photo: Photo };
 
 const COLUMNS = 3;
 
@@ -40,28 +37,22 @@ const statusCls = "text-xs text-center text-muted";
 const ease = "ease-[cubic-bezier(0.23,1,0.32,1)]";
 
 /**
- * The post's photos: images already in it first, then the day's photos from
- * the Photos app. It loads when the draft opens, so opening it is instant.
- * Arrows move, Enter inserts as is, Space (or a click) opens the viewer, and
- * Backspace removes an image from the post.
+ * The day's photos from the Photos app. It loads when the draft opens, so
+ * opening it is instant. Arrows move; a click, Space or Enter opens the
+ * viewer, where the photo is cropped, renamed and inserted. A photo already
+ * in the post carries a quiet "used" mark.
  */
 export function PhotoTray({
   open,
   date,
   images,
-  uploads,
-  onRetry,
-  onRemove,
   onInsert,
 }: {
   open: boolean;
   /** YYYY-MM-DD, when the Photos helper can list the day. */
   date: string | null;
+  /** Images the post's text already embeds. */
   images: { url: string; name: string }[];
-  uploads: Record<string, "uploading" | "failed">;
-  onRetry: (url: string) => void;
-  /** Called once the tile has collapsed. */
-  onRemove: (image: { url: string; name: string }) => void;
   onInsert: (
     file: File,
     name: string,
@@ -75,15 +66,11 @@ export function PhotoTray({
   const [error, setError] = useState("");
   const [reload, setReload] = useState(0);
   const [selected, setSelected] = useState(0);
-  const [picking, setPicking] = useState<string | null>(null);
-  const [leaving, setLeaving] = useState<string[]>([]);
   const [viewer, setViewer] = useState<{
     index: number;
     origin: DOMRect | null;
   } | null>(null);
   const tiles = useRef<(HTMLButtonElement | null)[]>([]);
-  const click = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const pickRequest = useRef<AbortController | null>(null);
 
   // Reset-and-load on date change: a fetch keyed to the prop is effect-driven.
   /* eslint-disable react-hooks/set-state-in-effect */
@@ -116,28 +103,13 @@ export function PhotoTray({
     return () => controller.abort();
   }, [date, reload]);
   /* eslint-enable react-hooks/set-state-in-effect */
-  useEffect(
-    () => () => {
-      clearTimeout(click.current);
-      pickRequest.current?.abort();
-    },
-    []
-  );
 
-  const all: Tile[] = [
-    ...images.map((image) => ({
-      kind: "post" as const,
-      key: image.url,
-      url: image.url,
-      name: image.name,
-    })),
-    ...photos.map((photo) => ({
-      kind: "day" as const,
-      key: photo.id,
-      photo,
-    })),
-  ];
-  const current = Math.min(selected, all.length - 1);
+  // Inserted images are named "<prefix>-<photo name>.jpg" unless renamed.
+  const isUsed = (photo: Photo) => {
+    const suffix = `-${slugifyName(photo.name)}.jpg`;
+    return images.some((image) => image.name.endsWith(suffix));
+  };
+  const current = Math.min(selected, photos.length - 1);
 
   // Opening puts the keyboard on the selected tile.
   useEffect(() => {
@@ -146,72 +118,31 @@ export function PhotoTray({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
-  const fetchFull = async (photo: Photo) => {
-    if (pickRequest.current) return null;
-    const controller = new AbortController();
-    pickRequest.current = controller;
-    setError("");
-    setPicking(photo.id);
-    try {
-      const res = await fetch(photoFileUrl(photo.id, "full"), {
-        signal: controller.signal,
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const blob = await res.blob();
-      if (controller.signal.aborted) return null;
-      const name = slugifyName(photo.name);
-      return {
-        file: new File([blob], `${name}.jpg`, { type: "image/jpeg" }),
-        name,
-      };
-    } catch (err) {
-      if (!controller.signal.aborted)
-        setError(`Couldn't fetch photo (${String(err)})`);
-      return null;
-    } finally {
-      if (pickRequest.current === controller) {
-        pickRequest.current = null;
-        setPicking(null);
-      }
-    }
-  };
-  const insert = async (photo: Photo) => {
-    const picked = await fetchFull(photo);
-    if (picked) onInsert(picked.file, picked.name);
-  };
   // Opens at once: the viewer loads the large version itself.
-  const view = (photo: Photo, index: number) =>
+  const view = (index: number) => {
+    setSelected(index);
     setViewer({
-      index: photos.indexOf(photo),
+      index,
       origin: tiles.current[index]?.getBoundingClientRect() ?? null,
     });
+  };
   const closeViewer = () => {
     if (!viewer) return;
     // The viewer may have browsed away from the tile it opened on.
-    const tile = images.length + viewer.index;
+    const tile = viewer.index;
     setViewer(null);
     setSelected(tile);
     requestAnimationFrame(() => tiles.current[tile]?.focus());
   };
-  const remove = (image: { url: string; name: string }) => {
-    if (leaving.includes(image.url)) return;
-    setLeaving((list) => [...list, image.url]);
-    // Let the tile collapse before the text and file follow.
-    setTimeout(() => {
-      setLeaving((list) => list.filter((url) => url !== image.url));
-      onRemove(image);
-    }, 160);
-  };
 
   const move = (to: number) => {
-    const next = Math.max(0, Math.min(all.length - 1, to));
+    const next = Math.max(0, Math.min(photos.length - 1, to));
     setSelected(next);
     tiles.current[next]?.focus();
   };
   const onKeyDown = (event: React.KeyboardEvent) => {
     if (event.metaKey || event.ctrlKey || event.altKey) return;
-    const tile = all[current];
-    if (!tile) return;
+    if (!photos[current]) return;
     const steps: Record<string, number> = {
       ArrowLeft: -1,
       ArrowRight: 1,
@@ -221,23 +152,13 @@ export function PhotoTray({
     if (event.key in steps) {
       event.preventDefault();
       move(current + steps[event.key]);
-    } else if (tile.kind === "day" && event.key === "Enter") {
+    } else if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      void insert(tile.photo);
-    } else if (tile.kind === "day" && event.key === " ") {
-      event.preventDefault();
-      view(tile.photo, current);
-    } else if (
-      tile.kind === "post" &&
-      (event.key === "Backspace" || event.key === "Delete")
-    ) {
-      event.preventDefault();
-      remove(tile);
-      move(current > 0 ? current - 1 : 0);
+      view(current);
     }
   };
 
-  const empty = !loading && !error && all.length === 0;
+  const empty = !loading && !error && photos.length === 0;
 
   return (
     <aside
@@ -257,7 +178,7 @@ export function PhotoTray({
         className={`flex-1 overflow-y-auto px-4 pb-4 admin-scrollbar ${empty ? "flex flex-col items-center justify-center gap-2" : ""}`}
         onKeyDown={onKeyDown}
       >
-        {loading && all.length === 0 && (
+        {loading && photos.length === 0 && (
           <div className="grid grid-cols-3 gap-1.5" aria-busy="true">
             {Array.from({ length: 6 }, (_, i) => (
               <div
@@ -297,126 +218,57 @@ export function PhotoTray({
               </p>
             ) : (
               <p className={statusCls}>
-                {date ? "No photos on this day." : "No images in this post."}
+                {date
+                  ? "No photos on this day."
+                  : "No date to list photos for."}
               </p>
             )}
           </>
         )}
 
         <div className="grid grid-cols-3 gap-1.5">
-          {all.map((tile, index) => {
-            const upload = tile.kind === "post" ? uploads[tile.url] : undefined;
-            const isLeaving =
-              tile.kind === "post" && leaving.includes(tile.url);
-            return (
-              <div
-                key={tile.key}
-                className={`relative aspect-square transition-[opacity,scale] duration-160 ease-out ${isLeaving ? "opacity-0 scale-75 motion-reduce:scale-100" : ""}`}
+          {photos.map((photo, index) => (
+            <div key={photo.id} className="relative aspect-square">
+              <button
+                type="button"
+                ref={(node) => {
+                  tiles.current[index] = node;
+                }}
+                tabIndex={index === current ? 0 : -1}
+                onFocus={() => setSelected(index)}
+                onClick={() => view(index)}
+                draggable
+                onDragStart={(event) => {
+                  event.dataTransfer.effectAllowed = "copy";
+                  const payload = JSON.stringify({
+                    kind: "blog-photo",
+                    id: photo.id,
+                    name: photo.name,
+                  });
+                  event.dataTransfer.setData(PHOTO_TRANSFER_TYPE, payload);
+                  event.dataTransfer.setData("text/plain", payload);
+                }}
+                aria-label={`${photo.name}, taken ${photo.time}${isUsed(photo) ? ", used in this post" : ""}`}
+                className={`block h-full w-full overflow-hidden rounded-sm bg-paper-sunken dark:bg-night-raised transition-[scale] duration-100 ease-out motion-safe:active:scale-[0.97] focus-visible:outline-none ${index === current ? "outline-2 outline-accent" : ""}`}
               >
-                <button
-                  type="button"
-                  ref={(node) => {
-                    tiles.current[index] = node;
-                  }}
-                  tabIndex={index === current ? 0 : -1}
-                  onFocus={() => setSelected(index)}
-                  onClick={() => {
-                    setSelected(index);
-                    if (tile.kind !== "day") return;
-                    clearTimeout(click.current);
-                    // A second click inserts instead.
-                    click.current = setTimeout(
-                      () => view(tile.photo, index),
-                      220
-                    );
-                  }}
-                  onDoubleClick={() => {
-                    if (tile.kind !== "day") return;
-                    clearTimeout(click.current);
-                    void insert(tile.photo);
-                  }}
-                  draggable={tile.kind === "day" && picking === null}
-                  onDragStart={(event) => {
-                    if (tile.kind !== "day") return;
-                    event.dataTransfer.effectAllowed = "copy";
-                    const payload = JSON.stringify({
-                      kind: "blog-photo",
-                      id: tile.photo.id,
-                      name: tile.photo.name,
-                    });
-                    event.dataTransfer.setData(PHOTO_TRANSFER_TYPE, payload);
-                    event.dataTransfer.setData("text/plain", payload);
-                  }}
-                  aria-label={
-                    tile.kind === "day"
-                      ? `${tile.photo.name}, taken ${tile.photo.time}`
-                      : `${tile.name}, in this post`
-                  }
-                  className={`block h-full w-full overflow-hidden rounded-sm bg-paper-sunken dark:bg-night-raised transition-[scale] duration-100 ease-out motion-safe:active:scale-[0.97] focus-visible:outline-none ${index === current ? "outline-2 outline-accent" : ""}`}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={photoFileUrl(photo.id, "thumb")}
+                  alt=""
+                  draggable={false}
+                  className="h-full w-full object-cover"
+                />
+              </button>
+              {isUsed(photo) && (
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute bottom-1 left-1 rounded-xs bg-surface/80 px-1 text-2xs lowercase text-muted"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    // Remount when an upload lands, so a 404 from before it is retried.
-                    key={upload ?? "ready"}
-                    src={
-                      tile.kind === "day"
-                        ? photoFileUrl(tile.photo.id, "thumb")
-                        : tile.url
-                    }
-                    alt=""
-                    draggable={false}
-                    className="h-full w-full object-cover"
-                  />
-                  {tile.kind === "day" && picking === tile.photo.id && (
-                    <span className="absolute inset-0 flex items-center justify-center bg-surface/60">
-                      <Loader2
-                        size={18}
-                        className="motion-safe:animate-spin text-accent"
-                        aria-hidden
-                      />
-                    </span>
-                  )}
-                </button>
-                {tile.kind === "post" && (
-                  <>
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute left-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => remove(tile)}
-                      aria-label={`Remove ${tile.name} from this post`}
-                      className="focus-ring absolute right-0.5 top-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-surface/80 text-primary"
-                    >
-                      <X size={12} aria-hidden />
-                    </button>
-                    {upload === "uploading" && (
-                      <span className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-sm bg-surface/60">
-                        <Loader2
-                          size={18}
-                          className="motion-safe:animate-spin text-accent"
-                          aria-label="Uploading"
-                        />
-                      </span>
-                    )}
-                    {upload === "failed" && (
-                      <span className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-1 rounded-b-sm bg-surface/90 px-1.5 py-0.5 text-2xs">
-                        <span className="text-danger">failed</span>
-                        <button
-                          type="button"
-                          onClick={() => onRetry(tile.url)}
-                          className="focus-ring text-accent underline"
-                        >
-                          retry
-                        </button>
-                      </span>
-                    )}
-                  </>
-                )}
-              </div>
-            );
-          })}
+                  used
+                </span>
+              )}
+            </div>
+          ))}
         </div>
       </div>
       {viewer && (

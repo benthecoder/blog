@@ -26,7 +26,7 @@ interface UseImageManagerArgs {
 
 /**
  * Owns the post's image workflow: upload (via drag-drop, paste, the photo
- * tray or the preview), and deletion. Uploads are optimistic: the Markdown
+ * tray or the preview). Uploads are optimistic: the Markdown
  * line goes in at once and the tile shows progress, or a retry on failure.
  */
 export function useImageManager({
@@ -50,23 +50,6 @@ export function useImageManager({
   const [showImageNameModal, setShowImageNameModal] = useState(false);
   const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
   const [imageNameInput, setImageNameInput] = useState("");
-
-  const handleDeleteImage = async (fileName: string) => {
-    try {
-      const response = await fetch(
-        `/api/admin/delete-image?fileName=${encodeURIComponent(fileName)}`,
-        { method: "DELETE" }
-      );
-
-      if (response.ok) {
-        notify(`✓ Deleted ${fileName}`);
-      } else {
-        notify(`✗ Failed to delete ${fileName}`);
-      }
-    } catch (error) {
-      notify(`✗ Error: ${String(error)}`);
-    }
-  };
 
   const send = async (url: string) => {
     const job = jobs.current.get(url);
@@ -256,13 +239,10 @@ export function useImageManager({
 
   return {
     uploading: Object.values(uploads).includes("uploading"),
-    uploads,
-    retryUpload: (url: string) => void send(url),
     isDragging,
     showImageNameModal,
     pendingImageFile,
     imageNameInput,
-    handleDeleteImage,
     handleDragOver,
     handleDragLeave,
     handleDrop,
