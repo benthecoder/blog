@@ -63,13 +63,13 @@ export const rehypePlugins = createRehypePlugins();
 // disk), so the server MarkdownContent passes it and the client admin
 // preview renders without dimensions or blur.
 export function createBaseComponents(
-  getImageMeta?: (src: string) => ImageMeta | null
+  getImageMeta?: (src: string) => ImageMeta | null,
+  onCaption?: (src: string, caption: string) => void
 ): Components {
   return {
     p({ node, children }) {
       const first = node?.children[0] as
-        | { tagName?: string; properties?: Record<string, unknown> }
-        | undefined;
+        { tagName?: string; properties?: Record<string, unknown> } | undefined;
       if (first?.tagName === "img") {
         const src = first.properties?.src as string;
         const alt = (first.properties?.alt as string) ?? "";
@@ -77,12 +77,16 @@ export function createBaseComponents(
         // rehype-raw re-parses the tree, which camel-cases data-* attributes.
         const priority = first.properties?.dataPriority === "true";
         return (
-          <PostImage src={src} alt={alt} meta={meta} priority={priority} />
+          <PostImage
+            src={src}
+            alt={alt}
+            meta={meta}
+            priority={priority}
+            onCaption={onCaption && ((caption) => onCaption(src, caption))}
+          />
         );
       }
       return <p>{children}</p>;
     },
   };
 }
-
-export const baseComponents: Components = createBaseComponents();

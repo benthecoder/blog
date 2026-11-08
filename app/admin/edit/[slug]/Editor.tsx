@@ -24,6 +24,7 @@ import { DefineBubble } from "./DefineBubble";
 import { TemplatePicker } from "./TemplatePicker";
 import { EditorPopover } from "@/components/admin/EditorPopover";
 import { suggestPeriods } from "@/utils/digest/schedule";
+import { setImageCaption } from "@/utils/content/imageCaption";
 import {
   asBlock,
   imageInsertionPoint,
@@ -745,7 +746,14 @@ export function Editor({ kind = "post" }: { kind?: ContentKind }) {
 
                   return (
                     <RenderPost post={post} prev={null} next={null} slug={null}>
-                      <MarkdownPreview content={post.content} />
+                      <MarkdownPreview
+                        content={post.content}
+                        onCaption={(src, caption) =>
+                          draft.setMarkdown(
+                            setImageCaption(draft.markdown, src, caption)
+                          )
+                        }
+                      />
                     </RenderPost>
                   );
                 })()}
