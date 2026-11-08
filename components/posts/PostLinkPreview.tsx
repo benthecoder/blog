@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PointerEvent, ReactNode } from "react";
 import Link from "next/link";
 import {
@@ -20,6 +20,10 @@ import {
 } from "@floating-ui/react";
 import type { PostPreviewData } from "@/utils/content/preview";
 
+// Only one card on screen: opening a preview closes whichever was open, so
+// sweeping the cursor down a list never leaves a trail of cards behind.
+const openPreview: { close: (() => void) | null } = { close: null };
+
 // Hover card for internal post links. Markdown links pass `preview` resolved
 // on the server; list contexts with too many posts to inline (e.g. the
 // archive) pass only `slug` and the data is fetched once on first hover.
@@ -38,6 +42,16 @@ const PostLinkPreview = ({
   const [preview, setPreview] = useState(initialPreview ?? null);
   const fetched = useRef(false);
   const pointerPos = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const close = () => setIsOpen(false);
+    openPreview.close?.();
+    openPreview.close = close;
+    return () => {
+      if (openPreview.close === close) openPreview.close = null;
+    };
+  }, [isOpen]);
 
   const { refs, floatingStyles, context, placement } = useFloating({
     open: isOpen,
