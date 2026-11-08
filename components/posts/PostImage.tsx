@@ -109,13 +109,22 @@ export default function PostImage({
 
   const close = useCallback(() => {
     const plate = imgRef.current;
+    // Send focus back to the plate, or the page loses its place. Quietly:
+    // closing with Esc would otherwise count as keyboard focus and ring the
+    // print the reader was just looking at. It has to wait until the dialog
+    // is closed: while a modal is open the page behind it is inert, and
+    // focus() there does nothing.
     const shut = () => {
-      setEntered(false);
-      setExpanded(false);
+      flushSync(() => {
+        setEntered(false);
+        setExpanded(false);
+      });
+      triggerRef.current?.setAttribute("data-quiet", "");
+      triggerRef.current?.focus({ preventScroll: true });
     };
     if (plate && viewImgRef.current && canLift()) {
       const lift = document.startViewTransition(() => {
-        flushSync(shut);
+        shut();
         plate.style.viewTransitionName = LIFT;
       });
       // A skipped transition rejects; clear the name either way.
@@ -126,11 +135,6 @@ export default function PostImage({
     } else {
       shut();
     }
-    // Send focus back to the plate, or the page loses its place. Quietly:
-    // closing with Esc would otherwise count as keyboard focus and ring the
-    // print the reader was just looking at.
-    triggerRef.current?.setAttribute("data-quiet", "");
-    triggerRef.current?.focus({ preventScroll: true });
   }, []);
 
   // Once the viewer is open, trade the on-screen photo for the full one.
