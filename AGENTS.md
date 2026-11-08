@@ -33,6 +33,20 @@ A task is done when the repo looks like you were never there, apart from the int
 - Remove git worktrees you created (`git worktree remove`), and after a merge: switch to `main`, `git pull`, delete the merged branch locally and on the remote.
 - End with `git status` showing only the intended change, then report what you left behind on purpose.
 
+## Working alongside other agents
+
+Claude and Codex both work in this repo, often in parallel.
+
+- `/Users/bneo/blog` is Benedict's checkout and runs his dev server. Check `git worktree list` before editing, and do parallel work in its own worktree; never edit on top of another agent's uncommitted changes. A new worktree needs `.env.local` copied in and `pnpm install`, and its dev server must start from the worktree (content is read from `process.cwd()`).
+- If `.claude/plans/handoff.md` exists, read it first: it is the previous session's handoff, from either tool.
+- Never commit images. Published images live in R2, and image history was purged from git.
+
+## What gets merged
+
+Benedict wants a careful maintainer, not a designer. Correctness, performance, SEO, accessibility, backend and security work, and quality-of-life fixes to the photos and maps sites land reliably. Features land when they quietly resurface his own writing, like the on-this-day footer. The main blog's look and homepage are his: propose, don't ship. No new icons (every one is hand-drawn), no stats, widgets, or new feeds, and no invented personal facts; list anything he must supply as a TODO in the PR. Build the smallest version of what he asked for, and grep for an existing feature before building one.
+
+Design and code he reads as slop: tags, italics, dividers, bordered containers, many shades and opacities, detailed diagrams, section numbering; god files, duplication, pass-through wrappers, layer-first folders, representable illegal states, validation away from the boundary.
+
 ## Commits and PRs
 
 Before any commit, push, or PR, load the `blog-pr` skill (`.agents/skills/blog-pr/SKILL.md`). Short version: lowercase, no AI attribution, screenshots for visible changes only, and a "what to learn from this" section.
@@ -48,6 +62,10 @@ Two content types, both markdown with gray-matter frontmatter:
 - **Posts** `posts/*.md` → `/posts/[slug]` — chronological journal entries
 - **Wiki** `wiki/*.md` → `/wiki/[slug]` — living reference pages (personal encyclopedia)
 
+Tag a post only with what it is about: a passing mention (one "went to church" line, one verse, one quote) never earns a tag, and journal days get 0–2 tags. A `locations` entry means Benedict was there on that date, not that the place is mentioned. `utils/content/tagVocabulary.test.ts` pins every tag used on fewer than 3 posts, so prefer an existing tag over a new one.
+
+When adding sources to post or wiki text, link the words themselves (`he brought in [kudzu](url)`), never a parenthetical `([source](url))`.
+
 See any existing file in those directories for the frontmatter shape. All directory and file path constants live in `config/paths.ts` — add new paths there, never hardcode them.
 
 ## Critical rule
@@ -60,27 +78,6 @@ All markdown file I/O goes through `utils/content/markdown.ts` (`readMarkdownFil
 
 ## Color
 
-All color lives in `app/globals.css`. Never hardcode a hex value in a component.
+All color lives in `app/globals.css`. Never hardcode a hex value in a component. `/map` keeps its own fixed palette (`--map-*`) and does not follow `data-palette`, including the basemap tile colors.
 
-Two tiers. **Surfaces** are fixed across themes: `paper`, `paper-raised/sunken/tint/warm`, `rule` for light; `night`, `night-raised`, `night-rule` for dark. **Ink** is the only tier a palette changes: `ink-muted → ink-soft → ink → ink-strong` on paper, `chalk-muted → chalk → chalk-soft → chalk-strong` on night, running quietest to highest-contrast.
-
-Pick tokens by mode: `ink-*` only in light, `chalk-*` only behind a `dark:` variant. Mixing them (`dark:text-ink-soft`) puts a light-mode tone on a dark surface.
-
-Six palettes — indigo, olive, gold, steel, vermillion, rose — set via `data-palette` on `<html>` by the provider in `app/providers.tsx`. Adding one means a block in the PALETTES section plus its id in that file's `PALETTES` array.
-
-Exception: `/map` keeps its own fixed palette (`--map-*`, MAP section of globals.css) and does not follow `data-palette`, including the basemap tile colors.
-
-Two things to know before editing:
-
-- Tailwind v4 strips `--tw-*` declarations from author CSS, so Typography's `--tw-prose-*` variables **cannot** be remapped. Themed prose elements are styled directly instead; follow that pattern.
-- Text on a themed fill must not use a neighbouring tone of the same tier — `text-ink` on `bg-chalk` collapses to ~2.5:1. Pair across tiers (`bg-ink text-paper`, `dark:bg-chalk dark:text-night`).
-
-## Verify changes
-
-```
-pnpm dev          # dev server (usually already running on :3000)
-pnpm lint         # oxlint, including type-aware rules
-pnpm typecheck    # tsc --noEmit
-pnpm test         # vitest
-pnpm build        # full build + RSS + sitemap generation
-```
+Before any color or theme change, load the `blog-design-system` skill: it holds the tokens, the role utilities (`text-primary` over raw `ink-*`/`chalk-*` pairs), palettes, and the contrast and Tailwind gotchas.
