@@ -88,7 +88,6 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
               alt={photoAlt(photo)}
               fill
               sizes="100vw"
-              quality={75}
             />
             <button
               className="focus-ring ph-prev"
