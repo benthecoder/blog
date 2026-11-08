@@ -1,24 +1,37 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import {
   Map as MapLibreMap,
   Marker,
   LngLatBounds,
   setWorkerUrl,
   getVersion,
+  type GeoJSONSource,
   type Map as MapInstance,
+  type ExpressionSpecification,
 } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { LocateFixed, Minus, Plus } from "lucide-react";
-import type { Visit } from "@/utils/places";
+import { LocateFixed, Maximize, Minus, Plus } from "lucide-react";
+import { categories, placesGeoJSON, type Visit } from "@/utils/places";
+import CategoryDot from "./CategoryDot";
 
 const styleUrl = (dark: boolean) =>
   `/map-styles/${dark ? "dark" : "positron"}.json`;
-
-// The basemap is a quiet backdrop for the numbered places, like the base of a
-// printed guide map: no shields, no small street names, no airports. The two
-// OpenFreeMap styles name their layers differently, so rules match by pattern.
+// Layers we add on top of the base style; kept when the theme swaps styles.
+const OUR_LAYERS = ["clusters", "points", "point-targets", "cluster-counts"];
+// The basemap is a quiet backdrop: no shields, no small street names, no
+// airports or borders, and everything repainted in the map's own palette
+// (the --map-base-* tokens). The two OpenFreeMap styles name their layers
+// differently, so the rules match by pattern.
 const HIDDEN =
   /shield|airport|oneway|highway-name-(minor|path)|label_(state|country)|place_(state|country)|boundary/;
 type PaintProperty = Parameters<MapInstance["setPaintProperty"]>[1];
@@ -49,12 +62,12 @@ const labelToken = (id: string): Token =>
     : /highway/.test(id)
       ? "--map-base-road-label"
       : "--map-base-place-label";
-
 const paintBasemap = (instance: MapInstance) => {
   const tokens = getComputedStyle(instance.getContainer());
   const token = (name: Token) => tokens.getPropertyValue(name).trim();
   for (const layer of instance.getStyle().layers) {
     const { id } = layer;
+    if (OUR_LAYERS.includes(id)) continue;
     if (HIDDEN.test(id)) {
       instance.setLayoutProperty(id, "visibility", "none");
       continue;
@@ -77,53 +90,21 @@ const paintBasemap = (instance: MapInstance) => {
     }
   }
 };
-
 const isMobile = () => window.matchMedia("(max-width: 760px)").matches;
-// The bottom clears the attribution line.
+// Keep pins off the edges; on a phone the bottom clears the attribution.
 const fitPadding = () =>
   isMobile()
-    ? { top: 36, right: 36, bottom: 48, left: 36 }
-    : { top: 72, right: 72, bottom: 72, left: 72 };
-const reducedMotion = () =>
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    ? { top: 36, bottom: 48, left: 36, right: 36 }
+    : { top: 80, bottom: 80, left: 80, right: 80 };
 
-// Marks closer than a mark's width would hide each other's numerals, so a
-// cluster fans out in a ring around its centre, numbered clockwise from the top.
-const MARK = 26;
-function declutter(instance: MapInstance, marks: Marker[]) {
-  // Plain dots on the index may pile up: a pile still reads as "here".
-  if (marks.some((mark) => mark.getElement().classList.contains("is-dot")))
-    return marks.forEach((mark) => mark.setOffset([0, 0]));
-  const points = marks.map((mark) => instance.project(mark.getLngLat()));
-  const group = marks.map(() => -1);
-  points.forEach((_, start) => {
-    if (group[start] !== -1) return;
-    group[start] = start;
-    const queue = [start];
-    while (queue.length) {
-      const i = queue.pop()!;
-      points.forEach((point, j) => {
-        if (group[j] === -1 && point.dist(points[i]) < MARK) {
-          group[j] = start;
-          queue.push(j);
-        }
-      });
-    }
-  });
-  marks.forEach((mark, i) => {
-    const members = marks.flatMap((_, j) => (group[j] === group[i] ? [j] : []));
-    if (members.length === 1) return mark.setOffset([0, 0]);
-    const x = members.reduce((sum, j) => sum + points[j].x, 0) / members.length;
-    const y = members.reduce((sum, j) => sum + points[j].y, 0) / members.length;
-    const radius = MARK / 2 / Math.sin(Math.PI / Math.max(members.length, 2));
-    const angle =
-      (2 * Math.PI * members.indexOf(i)) / members.length - Math.PI / 2;
-    mark.setOffset([
-      x + radius * Math.cos(angle) - points[i].x,
-      y + radius * Math.sin(angle) - points[i].y,
-    ]);
-  });
-}
+/** Map ink comes from the explorer's own CSS variables (map.css), which are
+ * always defined; see the note there. */
+const INK_VARS = {
+  accent: "--map-accent",
+  muted: "--map-muted",
+  primary: "--map-ink",
+  surface: "--map-paper",
+} as const;
 
 function hasWebGL2() {
   try {
@@ -135,27 +116,34 @@ function hasWebGL2() {
 
 export default function PlacesMap({
   places,
-  numbered,
-  selectedId,
-  litId,
+  selected,
+  highlightId,
   dark,
   onSelect,
   onHover,
+  popup,
 }: {
   places: Visit[];
-  /** Number the marks to match the list; the index shows plain dots. */
-  numbered: boolean;
-  selectedId: string | null;
-  litId: string | null;
+  selected: Visit | null;
+  highlightId: string | null;
   dark: boolean;
   onSelect: (id: string) => void;
   onHover: (id: string | null) => void;
+  /** Card pinned above a place's dot; it follows the dot as the map moves. */
+  popup: { coordinates: [number, number]; content: ReactNode } | null;
 }) {
   const container = useRef<HTMLDivElement>(null);
+  const categorySwatches = useRef<HTMLDivElement>(null);
+  const inkSwatches = useRef<HTMLDivElement>(null);
   const map = useRef<MapInstance | null>(null);
-  const marks = useRef(new Map<string, Marker>());
   const styleDark = useRef(dark);
-  const handlers = useRef({ onSelect, onHover });
+  const current = useRef({
+    places,
+    onSelect,
+    onHover,
+    selectedId: selected?.id ?? "",
+    highlightId,
+  });
   const [ready, setReady] = useState<MapInstance | null>(null);
   const [error, setError] = useState(false);
   const canLocate = useSyncExternalStore(
@@ -167,10 +155,43 @@ export default function PlacesMap({
     "idle"
   );
   const me = useRef<Marker | null>(null);
-
   useEffect(() => {
-    handlers.current = { onSelect, onHover };
-  }, [onSelect, onHover]);
+    return () => {
+      me.current?.remove();
+      me.current = null;
+    };
+  }, []);
+  const [anchor, setAnchor] = useState<{ x: number; y: number } | null>(null);
+  const [lng, lat] = popup?.coordinates ?? [];
+  useEffect(() => {
+    if (
+      !ready ||
+      map.current !== ready ||
+      lng === undefined ||
+      lat === undefined
+    )
+      return;
+    const place = () => {
+      const { x, y } = ready.project([lng, lat]);
+      setAnchor({ x, y });
+    };
+    place();
+    ready.on("move", place);
+    ready.on("resize", place);
+    return () => {
+      ready.off("move", place);
+      ready.off("resize", place);
+    };
+  }, [ready, lng, lat]);
+  useEffect(() => {
+    current.current = {
+      places,
+      onSelect,
+      onHover,
+      selectedId: selected?.id ?? "",
+      highlightId,
+    };
+  }, [places, onSelect, onHover, selected, highlightId]);
 
   useEffect(() => {
     if (!container.current) return;
@@ -197,9 +218,7 @@ export default function PlacesMap({
       return;
     }
     map.current = instance;
-    const placed = marks.current;
     instance.on("style.load", () => paintBasemap(instance));
-    instance.on("zoom", () => declutter(instance, [...placed.values()]));
     instance.on("load", () => {
       if (map.current === instance) setReady(instance);
     });
@@ -212,80 +231,224 @@ export default function PlacesMap({
     resize.observe(container.current);
     return () => {
       resize.disconnect();
-      placed.forEach((mark) => mark.remove());
-      placed.clear();
-      me.current?.remove();
-      me.current = null;
       instance.remove();
       map.current = null;
     };
   }, []);
 
-  // Marks are DOM, so the numerals set in the page's serif. The list is the
-  // keyboard and screen-reader route to the same places, so marks stay out of
-  // the tab order.
   useEffect(() => {
     const instance = map.current;
     if (!instance || instance !== ready) return;
-    marks.current.forEach((mark) => mark.remove());
-    marks.current.clear();
-    places.forEach((place, index) => {
-      const element = document.createElement("div");
-      element.className = numbered ? "map-mark" : "map-mark is-dot";
-      element.textContent = numbered ? String(index + 1) : "";
-      element.setAttribute("aria-hidden", "true");
-      element.addEventListener("click", (event) => {
-        event.stopPropagation();
-        handlers.current.onSelect(place.id);
+    const data = placesGeoJSON(places);
+    const source = instance.getSource("places") as GeoJSONSource | undefined;
+    if (source)
+      source.setData(data).catch((error: unknown) => {
+        console.error("Places map could not update its data", error);
       });
-      element.addEventListener("mouseenter", () =>
-        handlers.current.onHover(place.id)
+    else {
+      instance.addSource("places", {
+        type: "geojson",
+        data,
+        cluster: true,
+        clusterRadius: 24,
+        clusterMaxZoom: 16,
+      });
+      instance.addLayer({
+        id: "clusters",
+        type: "circle",
+        source: "places",
+        filter: ["has", "point_count"],
+        paint: {
+          "circle-radius": ["step", ["get", "point_count"], 11, 10, 13, 30, 15],
+          "circle-stroke-width": 2,
+        },
+      });
+      instance.addLayer({
+        id: "points",
+        type: "circle",
+        source: "places",
+        filter: ["!", ["has", "point_count"]],
+        paint: { "circle-radius": 5, "circle-stroke-width": 1.5 },
+      });
+      instance.addLayer({
+        id: "point-targets",
+        type: "circle",
+        source: "places",
+        filter: ["!", ["has", "point_count"]],
+        paint: { "circle-radius": 14, "circle-opacity": 0 },
+      });
+      instance.on("click", "clusters", async (event) => {
+        const feature = event.features?.[0];
+        if (!feature || feature.geometry.type !== "Point") return;
+        const clusterSource = instance.getSource("places") as GeoJSONSource;
+        try {
+          const zoom = await clusterSource.getClusterExpansionZoom(
+            Number(feature.properties.cluster_id)
+          );
+          if (map.current === instance)
+            instance.easeTo({
+              center: feature.geometry.coordinates as [number, number],
+              zoom,
+            });
+        } catch {
+          /* A collection can change while a cluster is expanding. */
+        }
+      });
+      instance.on("click", "point-targets", (event) => {
+        const id = event.features?.[0]?.properties.id;
+        if (id) current.current.onSelect(String(id));
+      });
+      instance.on("mousemove", "point-targets", (event) => {
+        const id = event.features?.[0]?.properties.id;
+        current.current.onHover(id ? String(id) : null);
+      });
+      instance.on("mouseleave", "point-targets", () =>
+        current.current.onHover(null)
       );
-      element.addEventListener("mouseleave", () =>
-        handlers.current.onHover(null)
-      );
-      marks.current.set(
-        place.id,
-        new Marker({ element }).setLngLat(place.coordinates).addTo(instance)
-      );
-    });
-    declutter(instance, [...marks.current.values()]);
+      for (const layer of ["clusters", "point-targets"]) {
+        instance.on("mouseenter", layer, () => {
+          instance.getCanvas().style.cursor = "pointer";
+        });
+        instance.on("mouseleave", layer, () => {
+          instance.getCanvas().style.cursor = "";
+        });
+      }
+      instance.addLayer({
+        id: "cluster-counts",
+        type: "symbol",
+        source: "places",
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": ["get", "point_count_abbreviated"],
+          "text-font": ["Noto Sans Bold"],
+          "text-size": 10,
+          "text-allow-overlap": true,
+          "text-ignore-placement": true,
+        },
+      });
+    }
     if (places.length) {
       const bounds = new LngLatBounds();
       places.forEach((place) => bounds.extend(place.coordinates));
       instance.fitBounds(bounds, {
         padding: fitPadding(),
         maxZoom: 16,
-        duration: reducedMotion() ? 0 : 500,
+        duration: 500,
       });
     }
-  }, [places, numbered, ready]);
+  }, [places, ready]);
+
+  // Themed colors come from CSS, like the category legend.
+  const paintMarks = useCallback((instance: MapInstance) => {
+    if (map.current !== instance || !instance.getLayer("points")) return;
+    const ink = Object.fromEntries(
+      Array.from(inkSwatches.current?.children ?? []).map((swatch) => [
+        swatch.getAttribute("data-ink")!,
+        getComputedStyle(swatch).color,
+      ])
+    );
+    const colors = Array.from(categorySwatches.current?.children ?? []).flatMap(
+      (swatch) => [
+        swatch.getAttribute("data-category")!,
+        getComputedStyle(swatch).backgroundColor,
+      ]
+    );
+    const { selectedId, highlightId } = current.current;
+    const isSelected: ExpressionSpecification = [
+      "==",
+      ["get", "id"],
+      selectedId,
+    ];
+    // Hollow, so a cluster of 2 can't be mistaken for stop 2.
+    instance.setPaintProperty("clusters", "circle-color", ink.surface);
+    instance.setPaintProperty("clusters", "circle-stroke-color", ink.primary);
+    instance.setPaintProperty("cluster-counts", "text-color", ink.primary);
+    const category: ExpressionSpecification = [
+      "match",
+      ["get", "category"],
+      colors[0],
+      colors[1],
+      ...colors.slice(2),
+      ink.primary,
+    ];
+    // Dots in their category's color. Hovering either side grows a dot; the
+    // selected one keeps its color and gets a red ring.
+    instance.setPaintProperty("points", "circle-color", category);
+    instance.setPaintProperty("points", "circle-stroke-color", [
+      "case",
+      isSelected,
+      ink.accent,
+      ink.surface,
+    ]);
+    instance.setPaintProperty("points", "circle-stroke-width", [
+      "case",
+      isSelected,
+      2.5,
+      1.5,
+    ]);
+    instance.setPaintProperty("points", "circle-radius", [
+      "case",
+      isSelected,
+      7,
+      ["==", ["get", "id"], highlightId ?? ""],
+      7,
+      5.5,
+    ]);
+  }, []);
 
   useEffect(() => {
-    marks.current.forEach((mark, id) => {
-      const element = mark.getElement();
-      element.classList.toggle("is-selected", id === selectedId);
-      element.classList.toggle("is-lit", id === litId);
-    });
-  }, [places, selectedId, litId, ready]);
+    if (!ready || map.current !== ready) return;
+    const frame = requestAnimationFrame(() => paintMarks(ready));
+    return () => cancelAnimationFrame(frame);
+  }, [ready, selected, highlightId, paintMarks]);
 
+  // Swap the base style in place so the camera and our layers survive.
   useEffect(() => {
     if (!ready || map.current !== ready || styleDark.current === dark) return;
     styleDark.current = dark;
-    ready.setStyle(styleUrl(dark));
-  }, [ready, dark]);
+    ready.setStyle(styleUrl(dark), {
+      transformStyle: (previous, next) =>
+        previous?.sources.places
+          ? {
+              ...next,
+              sources: { ...next.sources, places: previous.sources.places },
+              layers: [
+                ...next.layers,
+                ...previous.layers.filter((layer) =>
+                  OUR_LAYERS.includes(layer.id)
+                ),
+              ],
+            }
+          : next,
+    });
+    const repaint = () => paintMarks(ready);
+    ready.once("style.load", repaint);
+    return () => {
+      ready.off("style.load", repaint);
+    };
+  }, [ready, dark, paintMarks]);
 
   useEffect(() => {
-    const place = places.find((p) => p.id === selectedId);
-    if (!ready || map.current !== ready || !place) return;
-    const camera = {
-      center: place.coordinates,
-      zoom: Math.max(ready.getZoom(), 16),
-    };
-    if (reducedMotion()) ready.jumpTo(camera);
-    else ready.easeTo({ ...camera, duration: 600 });
-  }, [places, selectedId, ready]);
+    if (!ready || map.current !== ready || !selected) return;
+    const mobile = isMobile();
+    ready.flyTo({
+      center: selected.coordinates,
+      zoom: Math.max(ready.getZoom(), 17),
+      // Leave room for the card: above the pin on desktop; on a phone the
+      // card docks to the bottom of the map plate, so the pin goes up.
+      offset: mobile
+        ? [0, -Math.round(window.innerHeight * 0.12)]
+        : [0, Math.round(window.innerHeight * 0.18)],
+      duration: 600,
+    });
+  }, [selected, ready]);
 
+  const fit = () => {
+    if (!places.length || !map.current) return;
+    const bounds = new LngLatBounds();
+    places.forEach((place) => bounds.extend(place.coordinates));
+    map.current.fitBounds(bounds, { padding: fitPadding(), maxZoom: 16 });
+  };
   const locate = () => {
     const target = map.current;
     if (!target || locating !== "idle") return;
@@ -303,8 +466,11 @@ export default function PlacesMap({
           me.current.setLngLat(center);
         }
         const camera = { center, zoom: Math.max(target.getZoom(), 15) };
-        if (reducedMotion()) target.jumpTo(camera);
-        else target.flyTo(camera);
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          target.jumpTo(camera);
+        } else {
+          target.flyTo(camera);
+        }
         setLocating("idle");
       },
       // Only a denial is final; a timeout or lost signal can be retried.
@@ -313,10 +479,22 @@ export default function PlacesMap({
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
   };
-  const locateLabel =
-    locating === "failed" ? "Location unavailable" : "Show my location";
   return (
     <>
+      <div ref={categorySwatches} hidden aria-hidden="true">
+        {categories.map((category) => (
+          <CategoryDot key={category} category={category} />
+        ))}
+      </div>
+      <div ref={inkSwatches} hidden aria-hidden="true">
+        {Object.entries(INK_VARS).map(([name, cssVar]) => (
+          <span
+            key={name}
+            data-ink={name}
+            style={{ color: `var(${cssVar})` }}
+          />
+        ))}
+      </div>
       <div
         ref={container}
         className="map-canvas"
@@ -329,27 +507,52 @@ export default function PlacesMap({
           title="Zoom in"
           onClick={() => map.current?.zoomIn()}
         >
-          <Plus size={15} />
+          <Plus size={14} />
         </button>
         <button
           aria-label="Zoom out"
           title="Zoom out"
           onClick={() => map.current?.zoomOut()}
         >
-          <Minus size={15} />
+          <Minus size={14} />
+        </button>
+        <button
+          aria-label="Show all places"
+          title="Show all places"
+          onClick={fit}
+        >
+          <Maximize size={13} />
         </button>
         {canLocate && (
           <button
-            aria-label={locateLabel}
-            title={locateLabel}
+            aria-label={
+              locating === "failed"
+                ? "Location unavailable"
+                : "Show my location"
+            }
+            title={
+              locating === "failed"
+                ? "Location unavailable"
+                : "Show my location"
+            }
             aria-busy={locating === "pending"}
             disabled={locating !== "idle"}
             onClick={locate}
           >
-            <LocateFixed size={15} />
+            <LocateFixed size={14} />
           </button>
         )}
       </div>
+      {popup && anchor && (
+        <div
+          className="map-popup"
+          style={
+            { "--x": `${anchor.x}px`, "--y": `${anchor.y}px` } as CSSProperties
+          }
+        >
+          {popup.content}
+        </div>
+      )}
       {!ready && (
         <div className="map-status" role="status">
           {error

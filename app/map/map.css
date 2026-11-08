@@ -1,13 +1,14 @@
-/* A page beside a printed map. The list is set like the blog: one serif,
-   readable sizes, space instead of rules. The map is the key's other half:
-   numbered marks in sumi on a quiet basemap, red for the place you're on.
-   Colors are the --map-* tokens in the MAP section of app/globals.css. */
+/* The list reads as a page in the blog's serif: Places is the title, lists
+   and places sit under it, and space does the work rules used to. The
+   basemap stays quiet so only the places carry color, and red marks the
+   selected place and nothing else. Colors are the --map-* tokens in the MAP
+   section of app/globals.css. */
 .places-explorer {
   position: fixed;
   inset: 0;
   z-index: 60;
   display: grid;
-  grid-template-columns: minmax(340px, 30rem) minmax(0, 1fr);
+  grid-template-columns: minmax(320px, 26rem) minmax(0, 1fr);
   height: 100dvh;
   background: var(--map-paper);
   color: var(--map-ink);
@@ -16,20 +17,60 @@
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-.places-explorer button:not([data-ui]) {
+.places-explorer button,
+.places-explorer input {
   font: inherit;
   color: inherit;
+}
+.places-explorer button {
   cursor: pointer;
+}
+.places-explorer :is(button, a) {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 .places-explorer a {
   color: inherit;
-  -webkit-tap-highlight-color: transparent;
+  text-decoration: none;
 }
-.places-explorer :is(button, a):focus-visible {
+.places-explorer :is(.map-tools button, .detail-close) {
+  -webkit-user-select: none;
+  user-select: none;
+}
+.places-explorer :is(button, a, input):focus-visible {
   outline: 1.5px solid var(--map-ink);
-  outline-offset: 3px;
+  outline-offset: 2px;
+}
+.places-count {
+  color: var(--map-muted);
+  font-size: 14px;
+  font-weight: 400;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* -- Category colors and dots ------------------------------------------- */
+.places-explorer [data-category="food"] {
+  --cat: var(--map-cat-food);
+}
+.places-explorer [data-category="cafes"] {
+  --cat: var(--map-cat-cafes);
+}
+.places-explorer [data-category="art"] {
+  --cat: var(--map-cat-art);
+}
+.places-explorer [data-category="shop"] {
+  --cat: var(--map-cat-shop);
+}
+.places-explorer [data-category="outdoors"] {
+  --cat: var(--map-cat-outdoors);
+}
+.places-explorer .category-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: var(--cat, var(--map-ink));
 }
 
 /* -- The page ------------------------------------------------------------- */
@@ -37,26 +78,26 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: max(28px, env(safe-area-inset-top, 0px)) 40px
-    max(32px, env(safe-area-inset-bottom, 0px))
-    max(40px, env(safe-area-inset-left, 0px));
+  padding: max(28px, env(safe-area-inset-top, 0px)) 32px
+    max(40px, env(safe-area-inset-bottom, 0px))
+    max(32px, env(safe-area-inset-left, 0px));
   scrollbar-width: thin;
   scrollbar-color: var(--map-rule) transparent;
 }
-.places-nav {
+.places-masthead {
   display: flex;
-  flex-wrap: wrap;
   align-items: baseline;
-  column-gap: 18px;
-  row-gap: 4px;
-  color: var(--map-muted);
+  gap: 10px;
 }
-.places-nav a {
-  text-decoration: none;
-}
-.places-nav a[aria-current] {
-  color: var(--map-ink);
+.places-masthead h1 {
+  margin: 0;
+  font-size: 30px;
   font-weight: 700;
+  line-height: 1.1;
+}
+.places-byline {
+  color: var(--map-muted);
+  font-size: 15px;
 }
 .places-theme {
   display: grid;
@@ -67,147 +108,171 @@
   align-self: center;
   color: var(--map-muted);
 }
+.places-intro {
+  margin: 8px 0 0;
+  color: var(--map-muted);
+}
 @media (hover: hover) and (pointer: fine) {
-  .places-nav a:hover,
+  .places-byline:hover,
   .places-theme:hover {
     color: var(--map-ink);
   }
 }
-.places-page h1 {
-  margin: 56px 0 0;
-  font-size: 32px;
-  font-weight: 700;
-  line-height: 1.15;
-  text-wrap: balance;
-}
-.places-lede {
-  margin: 10px 0 0;
+
+/* Section labels: small, quiet, with the count set flush right. */
+.places-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 36px 0 8px;
   color: var(--map-muted);
+  font-size: 15px;
+  font-weight: 400;
 }
-.places-lede a,
-.places-colophon a,
-.entry-links a {
+
+/* Lists are rows of the page, not tabs: the open one is set in bold. */
+.places-lists {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.places-lists a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 0;
+  font-size: 18px;
+}
+.places-lists a[aria-current] {
+  font-weight: 700;
+}
+@media (hover: hover) and (pointer: fine) {
+  .places-lists a:not([aria-current]):hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+  }
+}
+.places-section {
+  margin-top: 32px;
+}
+.places-section > .places-label {
+  margin-top: 0;
+}
+.places-journal {
+  margin: 0 0 8px;
+}
+.places-journal a {
   text-decoration: underline;
   text-decoration-color: var(--map-rule);
-  text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
-@media (hover: hover) and (pointer: fine) {
-  :is(.places-lede, .places-colophon, .entry-links) a:hover {
-    text-decoration-color: currentColor;
-  }
-}
 
-/* The index of lists. */
-.places-index {
-  list-style: none;
-  margin: 40px 0 0;
-  padding: 0;
-  display: grid;
-  gap: 28px;
+/* Filters: kinds as plain words with their dot and count, then a search
+   field that is only an underline. */
+.places-filters {
+  margin-top: 4px;
 }
-.places-index a {
-  font-size: 22px;
-  font-weight: 700;
-  text-decoration: none;
-}
-.places-index p {
-  margin: 4px 0 0;
-  color: var(--map-muted);
-}
-@media (hover: hover) and (pointer: fine) {
-  .places-index a:hover {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    text-decoration-thickness: 1px;
-  }
-}
-
-/* The key: a numeral hung in the margin, the note, then whose place it is. */
-.places-key {
-  list-style: none;
-  margin: 40px 0 0;
-  padding: 0;
-  display: grid;
-  gap: 6px;
-}
-.entry {
-  display: grid;
-  grid-template-columns: 26px minmax(0, 1fr);
-  column-gap: 14px;
-  width: 100%;
-  margin: 0 -10px;
-  padding: 10px;
-  box-sizing: content-box;
-  text-align: left;
-}
-.entry-number,
-.map-mark {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--map-ink);
-  color: var(--map-paper);
-  font: 700 13px/1 var(--map-font);
-  font-variant-numeric: lining-nums tabular-nums;
-}
-.entry-number {
-  grid-row: 1 / 3;
-  margin-top: 1px;
-}
-.entry-note {
-  font-size: 18px;
-  line-height: 1.4;
-  text-wrap: pretty;
-}
-.entry-name {
-  margin-top: 3px;
-  color: var(--map-muted);
-  font-size: 15px;
-}
-.entry-detail {
-  margin: 0 0 8px 40px;
-  color: var(--map-muted);
-  font-size: 15px;
-}
-.entry-detail p {
-  margin: 0;
-}
-.entry-detail .entry-links {
+.places-categories {
   display: flex;
   flex-wrap: wrap;
-  gap: 18px;
-  margin-top: 6px;
-  color: var(--map-ink);
+  gap: 4px 18px;
 }
-.entry-links a {
+.places-categories button {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-}
-.entry-detail figure {
-  position: relative;
-  margin: 12px 0 0;
-  aspect-ratio: 3 / 2;
-  overflow: hidden;
-  background: var(--map-hover);
-}
-.entry-detail img {
-  object-fit: cover;
-}
-/* Lit from either side: the numeral turns red on the list and on the map. */
-.places-key li.is-lit .entry-number,
-.entry[aria-expanded="true"] .entry-number,
-.map-mark.is-lit,
-.map-mark.is-selected {
-  background: var(--map-accent);
-}
-.places-colophon {
-  margin: 64px 0 0;
+  gap: 6px;
+  padding: 2px 0;
   color: var(--map-muted);
   font-size: 15px;
+}
+.places-categories button[aria-pressed="true"] {
+  color: var(--map-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .places-categories button:hover {
+    color: var(--map-ink);
+  }
+}
+.places-search {
+  display: block;
+  width: 100%;
+  margin-top: 12px;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid var(--map-rule);
+  background: transparent;
+  font-size: 16px;
+}
+.places-search::placeholder {
+  color: var(--map-muted);
+}
+.places-search:focus-visible {
+  outline: none;
+  border-bottom-color: var(--map-ink);
+}
+
+/* Places: the name with its dot, then the note in full ink, since the notes
+   are the best part. No rules between rows. */
+.place-list {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+.place-group {
+  margin: 28px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.place-select {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr);
+  column-gap: 12px;
+  width: calc(100% + 24px);
+  margin: 0 -12px;
+  padding: 10px 12px;
+  text-align: left;
+}
+.place-select .category-dot {
+  align-self: center;
+}
+.place-name {
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.place-note,
+.visit-date {
+  grid-column: 2;
+  margin-top: 2px;
+  text-wrap: pretty;
+}
+.visit-date {
+  color: var(--map-muted);
+  font-size: 14px;
+  font-variant-numeric: lining-nums;
+}
+.place-list li.is-hovered .place-select,
+.place-list li.selected .place-select {
+  background: var(--map-hover);
+}
+@media (hover: hover) and (pointer: fine) {
+  .place-select:hover {
+    background: var(--map-hover);
+  }
+}
+.empty-places {
+  margin: 16px 0 0;
+  color: var(--map-muted);
+}
+.empty-places button {
+  color: var(--map-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* -- Map ------------------------------------------------------------------ */
@@ -222,21 +287,6 @@
 .places-explorer .map-canvas {
   position: absolute;
   inset: 0;
-}
-.map-mark {
-  box-shadow: 0 0 0 2px var(--map-paper);
-  cursor: pointer;
-  transition: background-color 120ms ease-out;
-}
-.map-mark.is-dot {
-  width: 10px;
-  height: 10px;
-}
-/* No scale here: MapLibre positions marks with an inline translate, and
-   scale would multiply that too, throwing the mark across the map. */
-.map-mark.is-lit,
-.map-mark.is-selected {
-  z-index: 1;
 }
 .map-tools {
   position: absolute;
@@ -281,6 +331,147 @@
   max-width: calc(100% - 40px);
   color: var(--map-muted);
 }
+
+/* -- Place card, pinned above its dot ------------------------------------- */
+.map-popup {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 280px;
+  transform: translate(-50%, calc(-100% - 14px));
+  z-index: 3;
+}
+/* The pointer down to the dot. */
+.map-popup::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 10px;
+  height: 10px;
+  background: var(--map-paper);
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: 2px 2px 3px -1px var(--map-shade);
+}
+.place-detail {
+  position: relative;
+  max-height: min(440px, 60dvh);
+  overflow-y: auto;
+  padding: 12px 16px 14px;
+  border-radius: 4px;
+  background: var(--map-paper);
+  box-shadow: 0 2px 12px var(--map-shade);
+}
+/* A selected place's card settles in rather than popping. Hover previews
+   stay instant: they come and go too often for motion. */
+.place-detail:not(.is-preview) {
+  transition:
+    opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@starting-style {
+  .place-detail:not(.is-preview) {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.place-detail.is-preview {
+  pointer-events: none;
+}
+.place-detail.is-preview :is(.detail-close, .detail-links) {
+  display: none;
+}
+.detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 24px;
+  color: var(--map-muted);
+  font-size: 14px;
+}
+.detail-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.detail-close {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin: -4px -8px 0 auto;
+  color: var(--map-muted);
+}
+@media (hover: hover) and (pointer: fine) {
+  .detail-close:hover {
+    color: var(--map-ink);
+  }
+}
+.place-detail h2 {
+  margin: 4px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+.detail-note {
+  margin: 4px 0 0;
+  text-wrap: pretty;
+}
+.detail-address {
+  margin: 6px 0 0;
+  color: var(--map-muted);
+  font-size: 14px;
+}
+/* Photos sit under the address. One fills the card; more scroll. */
+.detail-images {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  gap: 4px;
+  margin: 10px -16px 0;
+  padding: 0 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0 16px;
+  scrollbar-width: none;
+}
+.detail-images:not([data-count="1"]) {
+  grid-auto-columns: 86%;
+}
+.detail-images figure {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--map-hover);
+  scroll-snap-align: start;
+}
+.detail-images img {
+  object-fit: cover;
+}
+.detail-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 10px 0 0;
+  font-size: 15px;
+}
+.detail-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  text-decoration: underline;
+  text-decoration-color: var(--map-rule);
+  text-underline-offset: 3px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .detail-links a:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
 .places-explorer .maplibregl-ctrl.maplibregl-ctrl-attrib {
   background: color-mix(in srgb, var(--map-paper) 85%, transparent);
   color: var(--map-muted);
@@ -293,11 +484,11 @@
   color: var(--map-muted);
 }
 
-/* -- Phone: the map is a plate at the top, the page reads below it -------- */
+/* -- Phone: the map is a plate at the top, the page scrolls below it ------ */
 @media (max-width: 760px) {
   .places-explorer {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 42dvh minmax(0, 1fr);
+    grid-template-rows: 45dvh minmax(0, 1fr);
   }
   .map-area {
     grid-row: 1;
@@ -305,17 +496,27 @@
   .places-page {
     grid-row: 2;
     padding: 20px max(20px, env(safe-area-inset-right, 0px))
-      max(28px, env(safe-area-inset-bottom, 0px))
+      max(32px, env(safe-area-inset-bottom, 0px))
       max(20px, env(safe-area-inset-left, 0px));
     box-shadow: 0 -1px 0 var(--map-rule);
   }
-  .places-page h1 {
-    margin-top: 32px;
-    font-size: 28px;
-  }
-  .places-key,
-  .places-index {
+  .places-label {
     margin-top: 28px;
+  }
+  /* The card docks to the bottom of the map instead of following the dot. */
+  .map-popup {
+    left: 10px;
+    right: 10px;
+    top: auto;
+    bottom: 10px;
+    width: auto;
+    transform: none;
+  }
+  .map-popup::after {
+    display: none;
+  }
+  .place-detail {
+    max-height: calc(45dvh - 64px);
   }
   .places-explorer .maplibregl-ctrl.maplibregl-ctrl-attrib {
     font-size: 10px;
@@ -329,9 +530,12 @@
     bottom: auto;
     right: max(12px, env(safe-area-inset-right, 0px));
   }
+  .map-area:has(.map-popup) .map-tools {
+    display: none;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .map-mark {
+  .place-detail:not(.is-preview) {
     transition: none;
   }
 }

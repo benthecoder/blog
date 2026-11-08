@@ -260,8 +260,8 @@
 
    /map is drawn like an old Japanese printed map rather than a blog page, so
    it keeps its own fixed palette instead of following data-palette: washi
-   paper, sumi ink, the blog's serif, and red kept for one
-   thing only, the place you are on. The --map-base-* tokens repaint the
+   paper, sumi ink, muted pigments for the categories, and red kept for one
+   thing only, the selected place. The --map-base-* tokens repaint the
    MapLibre basemap in warm greys, so only the places carry color; PlacesMap
    reads them by name.
    ========================================================================== */
@@ -287,6 +287,11 @@
   --map-muted: #6a5e4b;
   --map-accent: #c0392b; /* the selected place, nothing else */
   --map-shade: #2b262024;
+  --map-cat-food: #b0683a; /* kaki, persimmon */
+  --map-cat-cafes: #7a5232; /* kuri, chestnut */
+  --map-cat-art: #7d6290; /* fuji, wisteria */
+  --map-cat-shop: #456684; /* ai, indigo */
+  --map-cat-outdoors: #5c7438; /* koke, moss */
   --map-base-land: #eee8da;
   --map-base-water: #d8d5cb;
   --map-base-waterway: #d2cfc5;
@@ -313,6 +318,11 @@
   --map-muted: #a89b83;
   --map-accent: #e06a4f;
   --map-shade: #00000066;
+  --map-cat-food: #d99a6c;
+  --map-cat-cafes: #c49a6c;
+  --map-cat-art: #b59cc9;
+  --map-cat-shop: #8fa9cc;
+  --map-cat-outdoors: #a3b56f;
   --map-base-land: #1c1a17;
   --map-base-water: #141413;
   --map-base-waterway: #141413;
