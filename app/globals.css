@@ -868,90 +868,115 @@ body {
   opacity: 0.6;
 }
 
-/* Back-to-back photos are held as a fan, like a hand of cards: equal-height
-   prints, each turned about one shared pivot well below its row, so the
-   tilts mirror and the tops sit on a single arc. The pivot is far enough
-   down that the prints don't overlap and no caption is covered. Hovering
-   with a mouse lays them flat. Every row fans on its own. */
+/* Back-to-back photos are laid out in rows (see remarkImageParagraphs).
+   Each print's width follows its photo's shape, so every photo in a row
+   stands the same height whatever its orientation, and a row reads as one
+   contact strip; the caption strips fill out to the same bottom edge.
+
+   A row is held as a fan, like a hand of cards: each print turned about
+   one shared pivot below the row, so the tilts mirror and the tops sit on
+   a single arc. Hovering with a mouse lays them flat. */
 .photo-group {
   --spread: 3deg;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: stretch;
-  gap: 2rem 2%;
+  flex-direction: column;
+  gap: 2.5rem;
   margin-block: 3rem;
 }
 
-.photo-group > .photo-print {
-  flex: none;
+.photo-row {
+  /* One border for every print in the row, so the photos come out level.
+     Each print is that border twice plus a share of the row in proportion
+     to its photo's shape, which makes every photo the same height. */
+  --row-edge: clamp(0.45rem, 1.4vw, 0.75rem);
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 3%;
+  /* Room for the tilted corners inside the text column. */
+  padding-inline: 3%;
+}
+
+.photo-row[data-n="2"] {
+  --n: 2;
+}
+.photo-row[data-n="3"] {
+  --n: 3;
+}
+
+.photo-row .photo-frame,
+.photo-row .photo-label {
+  --edge: var(--row-edge);
+}
+
+.photo-row > .photo-print {
+  flex: var(--plate-ar, 1) 1 calc(2 * var(--row-edge));
+  min-width: 0;
+  width: auto;
   margin: 0;
+  display: flex;
+  flex-direction: column;
   /* Each print's origin is the row's shared pivot, given relative to that
-     print: one print width per step from the middle of the row. */
+     print: about one print width per step from the middle of the row. */
   --step: calc(var(--i) - (var(--n) - 1) / 2);
-  transform-origin: calc(50% - var(--step) * 100%) 220%;
+  transform-origin: calc(50% - var(--step) * 103%) 220%;
   transform: rotate(calc(var(--step) * var(--spread)));
   transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Two a row by default, and always on a phone, where three would be
-   thumbnails. A lone last print hangs straight. */
-.photo-group > .photo-print {
-  --n: 2;
-  width: 45%;
-}
-.photo-group > .photo-print:nth-child(odd) {
+.photo-row > .photo-print:nth-child(1) {
   --i: 0;
 }
-.photo-group > .photo-print:nth-child(even) {
+.photo-row > .photo-print:nth-child(2) {
   --i: 1;
 }
-
-@media (max-width: 39.99rem) {
-  .photo-group > .photo-print:nth-child(odd):last-child {
-    --n: 1;
-  }
+.photo-row > .photo-print:nth-child(3) {
+  --i: 2;
 }
 
-/* Wider screens hold three a row for three, and for five and up. */
-@media (min-width: 40rem) {
-  .photo-group[data-cols="3"] > .photo-print {
-    --n: 3;
-    width: 31%;
-  }
-  .photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1) {
-    --i: 0;
-  }
-  .photo-group[data-cols="3"] > .photo-print:nth-child(3n + 2) {
-    --i: 1;
-  }
-  .photo-group[data-cols="3"] > .photo-print:nth-child(3n) {
-    --i: 2;
-  }
-
-  /* A last row of two: the pair fans on its own. */
-  .photo-group[data-cols="3"]
-    > .photo-print:nth-child(3n + 1):nth-last-child(2),
-  .photo-group[data-cols="3"] > .photo-print:nth-child(3n + 2):last-child {
-    --n: 2;
-  }
-
-  /* A last row of one hangs straight. */
-  .photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1):last-child {
-    --n: 1;
-  }
+/* The strip takes up whatever height the row leaves, so prints with a
+   shorter caption still end level with their neighbours. */
+.photo-row .photo-label {
+  flex: 1;
 }
 
 /* Only a real pointer lays the fan flat. On touch, the tap that opens a
    photo would trigger hover and leave the prints straightened. */
 @media (hover: hover) and (pointer: fine) {
-  .photo-group:hover > .photo-print {
+  .photo-row:hover > .photo-print {
+    transform: none;
+  }
+}
+
+/* On a phone, three across would be thumbnails: a row of three becomes a
+   strip of full-size prints you swipe through, each snapping to centre. */
+@media (max-width: 39.99rem) {
+  .photo-row[data-n="3"] {
+    justify-content: flex-start;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    /* Let the strip run to the screen edges, with room for the shadows. */
+    margin-inline: -1rem;
+    padding: 0.5rem 1rem 1rem;
+  }
+
+  .photo-row[data-n="3"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photo-row[data-n="3"] > .photo-print {
+    flex: none;
+    width: min(calc(15rem * var(--plate-ar, 1) + 2 * var(--row-edge)), 85%);
+    scroll-snap-align: center;
     transform: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .photo-group > .photo-print {
+  .photo-row > .photo-print {
     transition: none;
   }
 }

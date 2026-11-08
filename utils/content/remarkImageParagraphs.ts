@@ -42,28 +42,36 @@ export default function remarkImageParagraphs() {
       return [SKIP, index + paragraphs.length];
     });
 
-    // A run of back-to-back plates hangs as one print: wrap it so the
-    // stylesheet can lay the plates side by side in a shared mat.
+    // A run of back-to-back plates is laid out as rows of prints. Rows hold
+    // three, or two where a three would strand a lone print at the end.
     const isPlate = (node: RootContent) =>
       node.type === "paragraph" &&
       node.children.length === 1 &&
       isImage(node.children[0]);
+    const element = (
+      className: string,
+      children: RootContent[],
+      extra: Record<string, string> = {}
+    ) =>
+      ({
+        type: className,
+        children,
+        data: {
+          hName: "div",
+          hProperties: { className: [className], ...extra },
+        },
+      }) as unknown as RootContent;
     const grouped: RootContent[] = [];
     let run: RootContent[] = [];
     const flushRun = () => {
       if (run.length > 1) {
-        grouped.push({
-          type: "photoGroup",
-          children: run,
-          data: {
-            hName: "div",
-            hProperties: {
-              className: ["photo-group"],
-              // Two a row for a pair or four; three a row otherwise.
-              "data-cols": run.length === 2 || run.length === 4 ? "2" : "3",
-            },
-          },
-        } as unknown as RootContent);
+        const rows = rowSizes(run.length).map((size, i, sizes) => {
+          const start = sizes.slice(0, i).reduce((a, b) => a + b, 0);
+          return element("photo-row", run.slice(start, start + size), {
+            "data-n": String(size),
+          });
+        });
+        grouped.push(element("photo-group", rows));
       } else grouped.push(...run);
       run = [];
     };
@@ -77,4 +85,12 @@ export default function remarkImageParagraphs() {
     flushRun();
     tree.children = grouped;
   };
+}
+
+/** Splits `count` photos into rows of three, ending in pairs, never one. */
+export function rowSizes(count: number): number[] {
+  const remainder = count % 3;
+  const threes = Math.floor(count / 3) - (remainder === 1 ? 1 : 0);
+  const twos = remainder === 1 ? 2 : remainder === 2 ? 1 : 0;
+  return [...Array(threes).fill(3), ...Array(twos).fill(2)];
 }
