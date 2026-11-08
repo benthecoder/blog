@@ -43,5 +43,5 @@ export default function MapPage() {
   // The map style and tiles come from OpenFreeMap; warming the connection
   // here hides most of the wait behind the page render.
   preconnect("https://tiles.openfreemap.org");
-  return <PlacesExplorer data={placesSchema.parse(data)} intro={description} />;
+  return <PlacesExplorer data={placesSchema.parse(data)} />;
 }
