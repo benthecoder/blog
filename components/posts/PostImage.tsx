@@ -121,14 +121,14 @@ export default function PostImage({
             placeholder={meta?.blurDataURL ? "blur" : "empty"}
             blurDataURL={meta?.blurDataURL}
             onLoad={(e) => {
-              const img = e.currentTarget;
-              setSize(
-                (known) =>
-                  known ?? {
-                    width: img.naturalWidth,
-                    height: img.naturalHeight,
-                  }
-              );
+              const { naturalWidth: width, naturalHeight: height } =
+                e.currentTarget;
+              // iOS Safari can fire load while the image still reports 0×0.
+              // A 0/0 ratio is NaN, which invalidates the print's width and
+              // shape rules and collapses it to a one-letter column.
+              if (width > 0 && height > 0) {
+                setSize((known) => known ?? { width, height });
+              }
               setLoaded(true);
             }}
             className={`object-cover ${

@@ -57,7 +57,6 @@ export default async function PhotoPage({ params }: Props) {
           alt={photoAlt(photo)}
           fill
           sizes="100vw"
-          quality={80}
           preload
         />
         {previous && (

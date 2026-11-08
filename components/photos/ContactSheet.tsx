@@ -35,7 +35,6 @@ export function ContactSheet({ photos, offset = 0, onOpen }: Props) {
                 width={photo.width}
                 height={photo.height}
                 sizes="(max-width: 700px) 60vw, 400px"
-                quality={65}
                 preload={offset + index < 3}
                 placeholder={photo.blurDataURL ? "blur" : "empty"}
                 blurDataURL={photo.blurDataURL}
