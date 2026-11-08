@@ -106,6 +106,9 @@ export default function PostImage({
       >
         <div className="photo-plate relative w-full overflow-hidden">
           <Image
+            // Without this ref the mount check below never sees the image, so
+            // a photo that loaded before hydration stayed invisible.
+            ref={imgRef}
             src={src}
             alt={alt}
             fill
@@ -152,11 +155,8 @@ export default function PostImage({
             }}
           />
         </figcaption>
-      ) : alt ? (
-        <figcaption className="photo-label">{alt}</figcaption>
       ) : (
-        // Uncaptioned prints keep their blank strip.
-        <div className="photo-label" aria-hidden="true" />
+        alt && <figcaption className="photo-label">{alt}</figcaption>
       )}
 
       {expanded &&
