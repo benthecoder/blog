@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PointerEvent, ReactNode } from "react";
 import Link from "next/link";
 import {
@@ -10,7 +10,6 @@ import {
   flip,
   shift,
   useHover,
-  safePolygon,
   useFocus,
   useDismiss,
   useRole,
@@ -19,6 +18,10 @@ import {
   FloatingPortal,
 } from "@floating-ui/react";
 import type { PostPreviewData } from "@/utils/content/preview";
+
+// Only one card on screen: opening a preview closes whichever was open, so
+// sweeping the cursor down a list never leaves a trail of cards behind.
+const openPreview: { close: (() => void) | null } = { close: null };
 
 // Hover card for internal post links. Markdown links pass `preview` resolved
 // on the server; list contexts with too many posts to inline (e.g. the
@@ -38,6 +41,16 @@ const PostLinkPreview = ({
   const [preview, setPreview] = useState(initialPreview ?? null);
   const fetched = useRef(false);
   const pointerPos = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const close = () => setIsOpen(false);
+    openPreview.close?.();
+    openPreview.close = close;
+    return () => {
+      if (openPreview.close === close) openPreview.close = null;
+    };
+  }, [isOpen]);
 
   const { refs, floatingStyles, context, placement } = useFloating({
     open: isOpen,
@@ -87,7 +100,6 @@ const PostLinkPreview = ({
 
   const hover = useHover(context, {
     move: false,
-    handleClose: safePolygon(),
     delay: { open: 150, close: 0 },
   });
   const focus = useFocus(context);
@@ -132,7 +144,9 @@ const PostLinkPreview = ({
             ref={refs.setFloating}
             style={floatingStyles}
             {...getFloatingProps()}
-            className="z-50"
+            // The card is read-only; letting it take the pointer kept it open
+            // whenever it covered the next link down the list.
+            className="z-50 pointer-events-none"
             data-placement={placement}
           >
             <div
