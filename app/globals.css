@@ -738,18 +738,20 @@ body {
 }
 
 /* ---- Instant print ------------------------------------------------------
-   Every post photo is an instant print: the photo at its own shape, thin
-   even sides, and a wide bottom strip where the caption is written, as you
-   would on the real thing. Sized by height so a photo never takes over the
-   page: about 22rem of picture, wider for landscapes, narrower for
-   portraits. Near-square corners and a contact shadow, as if lying on the
-   table. Clicking the photo opens the whole picture. */
+   Every post photo is an instant print on real film proportions. The photo
+   is cropped to the nearest format (Mini 46×62, Square 62×62, Wide 99×62;
+   see PostImage), and the card keeps the film's borders: 4.5 at the sides,
+   6.5 on top and a 17.5 strip below, where the caption is written. --u is
+   one millimetre of film. Every format's window is 62 tall, so prints of
+   any format sit level. Clicking the photo opens the whole picture,
+   uncropped. */
 .photo-print {
+  --u: clamp(0.22rem, 0.8vw, 0.3rem);
   /* The shadow is taken most of the way to neutral before it's faded out.
      Mixing straight from the ink made the print glow in the theme colour
      instead of casting a shadow; this keeps only a hint of the palette. */
   --photo-shadow: color-mix(in oklab, var(--color-ink) 22%, #1b1b1b);
-  width: min(calc(25rem * var(--plate-ar, 1)), 30rem, 88%);
+  width: min(calc(62 * var(--u) * var(--plate-ar, 1) + 9 * var(--u)), 100%);
   margin: 2.5rem auto;
   /* Cream card stock, a shade darker than the page so the print reads as a
      separate object lying on it. The faint sheen from the top left is the
@@ -791,23 +793,13 @@ body {
   outline-offset: 4px;
 }
 
-/* Borders follow the picture's short side, as on a real print. Sized off
-   the width alone, a landscape got a strip a third as tall as its photo.
-   Padding percentages resolve against the print's width, so dividing by the
-   aspect ratio gives a share of the short side, with no container queries:
-   those collapsed prints to zero width on a phone. */
-.photo-frame,
-.photo-label {
-  --edge: calc(5% / max(var(--plate-ar, 1), 1));
-}
-
 .photo-frame {
-  padding: var(--edge) var(--edge) 0;
+  padding: calc(6.5 * var(--u)) calc(4.5 * var(--u)) 0;
 }
 
-/* No caption, no strip: just a slightly deeper bottom border. */
+/* No caption, no strip: a bottom border a little deeper than the top. */
 .photo-frame:last-child {
-  padding-bottom: calc(var(--edge) * 2.5);
+  padding-bottom: calc(10 * var(--u));
 }
 
 .photo-plate {
@@ -830,16 +822,19 @@ body {
     inset 0 2px 4px rgb(0 0 0 / 0.18);
 }
 
-/* The bottom strip, where the caption is written. It grows when a caption
+/* The bottom strip, written in a pen-like italic. It grows when a caption
    needs more than a line or two. */
 .photo-label {
-  padding: calc(var(--edge) * 1.6) calc(var(--edge) * 1.5);
+  min-height: calc(17.5 * var(--u));
+  padding: calc(2 * var(--u)) calc(4.5 * var(--u)) calc(3 * var(--u));
   display: grid;
   place-items: center;
   text-align: center;
-  font-size: 0.8125rem;
-  line-height: 1.35;
-  color: var(--color-ink-muted);
+  font-family: var(--font-caption), var(--font-serif);
+  font-style: italic;
+  font-size: 1.0625rem;
+  line-height: 1.2;
+  color: var(--color-ink-soft);
 }
 
 .dark .photo-label {
@@ -885,10 +880,6 @@ body {
 }
 
 .photo-row {
-  /* One border for every print in the row, so the photos come out level.
-     Each print is that border twice plus a share of the row in proportion
-     to its photo's shape, which makes every photo the same height. */
-  --row-edge: clamp(0.45rem, 1.4vw, 0.75rem);
   display: flex;
   justify-content: center;
   align-items: stretch;
@@ -904,13 +895,12 @@ body {
   --n: 3;
 }
 
-.photo-row .photo-frame,
-.photo-row .photo-label {
-  --edge: var(--row-edge);
-}
-
+/* Prints in a row are smaller film. Each is its side borders plus a share
+   of the row in proportion to its format, so every window stands the same
+   height and the borders match. */
 .photo-row > .photo-print {
-  flex: var(--plate-ar, 1) 1 calc(2 * var(--row-edge));
+  --u: clamp(0.16rem, 0.5vw, 0.21rem);
+  flex: var(--plate-ar, 1) 1 calc(9 * var(--u));
   min-width: 0;
   width: auto;
   margin: 0;
@@ -969,7 +959,8 @@ body {
 
   .photo-row[data-n="3"] > .photo-print {
     flex: none;
-    width: min(calc(15rem * var(--plate-ar, 1) + 2 * var(--row-edge)), 85%);
+    --u: 0.24rem;
+    width: min(calc(62 * var(--u) * var(--plate-ar, 1) + 9 * var(--u)), 85%);
     scroll-snap-align: center;
     transform: none;
   }
@@ -979,6 +970,27 @@ body {
   .photo-row > .photo-print {
     transition: none;
   }
+}
+
+/* Opening a photo lifts it out of its print and carries it to the viewer
+   (a view transition; see PostImage). The cropped print and the whole
+   picture each cover the moving box, so one grows into the other instead
+   of stretching. The rest of the page dims over the same stretch. */
+::view-transition-group(photo-lift) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+::view-transition-old(photo-lift),
+::view-transition-new(photo-lift) {
+  height: 100%;
+  object-fit: cover;
+  animation-duration: 420ms;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 300ms;
 }
 
 /* ==========================================================================
