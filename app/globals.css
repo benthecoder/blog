@@ -864,62 +864,70 @@ body {
 }
 
 /* Back-to-back photos are held as a fan, like a hand of cards: equal-height
-   prints, each turned about one shared pivot well below the group, so the
+   prints, each turned about one shared pivot well below its row, so the
    tilts mirror and the tops sit on a single arc. The pivot is far enough
    down that the prints don't overlap and no caption is covered. Hover lays
-   them flat. */
+   them flat.
+
+   Rows hold two prints (a pair, or four as two pairs) or three (three, or
+   five and up). Every row fans on its own; a short last row fans as a pair,
+   and a lone last print hangs straight in the middle. */
 .photo-group {
+  --spread: 3deg;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: stretch;
-  gap: 1.5rem 2%;
+  gap: 2rem 2%;
   margin-block: 3rem;
 }
 
 .photo-group > .photo-print {
-  width: 45%;
   flex: none;
   margin: 0;
-  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.photo-group[data-count="3"] > .photo-print {
-  width: 31%;
-}
-
-/* Each print's origin is the shared pivot, given relative to that print:
-   half a print plus half a gap per step from the middle. */
-.photo-group > .photo-print {
+  /* Each print's origin is the row's shared pivot, given relative to that
+     print: one print width per step from the middle of the row. */
   --step: calc(var(--i) - (var(--n) - 1) / 2);
   transform-origin: calc(50% - var(--step) * 100%) 220%;
   transform: rotate(calc(var(--step) * var(--spread)));
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.photo-group {
-  --spread: 3deg;
-}
-
-.photo-group[data-count="2"] {
+.photo-group[data-cols="2"] > .photo-print {
   --n: 2;
+  width: 45%;
 }
-.photo-group[data-count="3"] {
-  --n: 3;
-}
-.photo-group > .photo-print:nth-child(1) {
+.photo-group[data-cols="2"] > .photo-print:nth-child(odd) {
   --i: 0;
 }
-.photo-group > .photo-print:nth-child(2) {
+.photo-group[data-cols="2"] > .photo-print:nth-child(even) {
   --i: 1;
 }
-.photo-group > .photo-print:nth-child(3) {
+
+.photo-group[data-cols="3"] > .photo-print {
+  --n: 3;
+  width: 31%;
+}
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1) {
+  --i: 0;
+}
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 2) {
+  --i: 1;
+}
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n) {
   --i: 2;
 }
 
-/* Four or more wrap into rows, which don't fan: lay them flat. */
-.photo-group[data-count="4"] > .photo-print,
-.photo-group[data-count="5"] > .photo-print,
-.photo-group[data-count="6"] > .photo-print {
-  transform: none;
+/* A last row of two: the pair fans on its own. */
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1):nth-last-child(2),
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 2):last-child {
+  --n: 2;
+}
+
+/* A last row of one hangs straight. */
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1):last-child {
+  --n: 1;
+  --i: 0;
 }
 
 .photo-group:hover > .photo-print {
@@ -930,18 +938,6 @@ body {
   .photo-group > .photo-print {
     transition: none;
   }
-}
-
-/* Four: two rows of two. Five or six: rows of three. */
-.photo-group[data-count="4"],
-.photo-group[data-count="5"],
-.photo-group[data-count="6"] {
-  flex-wrap: wrap;
-}
-
-.photo-group[data-count="5"] > .photo-print,
-.photo-group[data-count="6"] > .photo-print {
-  width: 31%;
 }
 
 /* ==========================================================================

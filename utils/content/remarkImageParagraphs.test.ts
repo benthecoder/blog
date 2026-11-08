@@ -23,7 +23,7 @@ describe("image-led paragraphs", () => {
         "![First](/one.svg)\n![Second](/two.svg)\nKeep **this** and [the link](/posts)."
       )
     ).toBe(
-      '<div class="photo-group" data-count="2"><p><img src="/one.svg" alt="First"></p><p><img src="/two.svg" alt="Second"></p></div>\n<p>\nKeep <strong>this</strong> and <a href="/posts">the link</a>.</p>'
+      '<div class="photo-group" data-cols="2"><p><img src="/one.svg" alt="First"></p><p><img src="/two.svg" alt="Second"></p></div>\n<p>\nKeep <strong>this</strong> and <a href="/posts">the link</a>.</p>'
     );
   });
 
@@ -31,7 +31,7 @@ describe("image-led paragraphs", () => {
     expect(
       render("![A](/a.svg)\n\n![B](/b.svg)\n\nbetween\n\n![C](/c.svg)")
     ).toBe(
-      '<div class="photo-group" data-count="2"><p><img src="/a.svg" alt="A"></p><p><img src="/b.svg" alt="B"></p></div>\n<p>between</p>\n<p><img src="/c.svg" alt="C"></p>'
+      '<div class="photo-group" data-cols="2"><p><img src="/a.svg" alt="A"></p><p><img src="/b.svg" alt="B"></p></div>\n<p>between</p>\n<p><img src="/c.svg" alt="C"></p>'
     );
   });
 

@@ -59,7 +59,8 @@ export default function remarkImageParagraphs() {
             hName: "div",
             hProperties: {
               className: ["photo-group"],
-              "data-count": String(run.length),
+              // Two a row for a pair or four; three a row otherwise.
+              "data-cols": run.length === 2 || run.length === 4 ? "2" : "3",
             },
           },
         } as unknown as RootContent);
