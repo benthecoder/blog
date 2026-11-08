@@ -50,7 +50,15 @@ Each command prints a markdown image line. Paste them under `## screenshots`, be
 
 ## Verify before opening
 
-Run `pnpm lint`, `pnpm typecheck`, and `pnpm test`. Add `pnpm build` when routes, config, or content loading changed. Report the results in `## verify`.
+Run `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm check:unused`. CI runs knip too, and an exported-but-unimported symbol fails it while everything else passes locally. Chain the gate with `&&` in front of `git commit`/`gh pr create`, and never pipe vitest into `grep` or `tail`: the pipe exits 0 and lets failing tests through.
+
+When routes, config, or content loading changed, build with `pnpm exec next build`, not `pnpm build`. `pnpm build` runs `prebuild`, which queries Neon and calls Gemini over every post and rewrites `data/knowledge-map*.json`; never commit those regenerated files. Report the results in `## verify`.
+
+## Shape
+
+- Branch every PR off `main`. A PR stacked on another branch merges into the dead branch once its base is squashed, and never reaches `main`.
+- A change visible on the main blog goes up as a draft with screenshots so Benedict can choose; its look is his call. Changes to the photos and maps sites can open as normal PRs.
+- When squash-merging, pass `--body ""` so earlier commits' trailers are not concatenated into `main`.
 
 ## Journal backlog PRs
 

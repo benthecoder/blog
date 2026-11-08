@@ -76,6 +76,14 @@ Theme mode is controlled by `.dark`; palette by `html[data-palette]`. Reuse `Pro
 
 Global prose defaults to `ink` in light mode and `chalk-strong` in dark mode. Other components intentionally vary text emphasis. Check the component rather than applying one text color everywhere. Selected rows should use a restrained fill or text emphasis; avoid bright blue selection borders. Keyboard focus remains visibly distinct from selection.
 
+When raw tokens are needed, `ink-*` belongs only in light mode and `chalk-*` only behind a `dark:` variant; `dark:text-ink-soft` puts a light-mode tone on a dark surface. Text on a themed fill pairs across tiers (`bg-ink text-paper`, `dark:bg-chalk dark:text-night`); a neighbouring tone of the same tier (`text-ink` on `bg-chalk`) collapses to ~2.5:1.
+
+The admin post editor shows the raw markdown, frontmatter included: no designed title or tag fields, no inline image previews. When verifying any editor or input change, type into it and check the caret, text selection, and hover and popover states in both light and dark; CodeMirror draws its own caret and selection, and these have broken in dark mode before.
+
+Adding a palette means a block in the PALETTES section of `globals.css` plus its id in the `PALETTES` array in `app/providers.tsx`.
+
+Tailwind v4 strips `--tw-*` declarations from author CSS, so Typography's `--tw-prose-*` variables cannot be remapped. Themed prose elements are styled directly instead; follow that pattern.
+
 ### Typography
 
 The primary family is locally hosted **Averia Serif Libre**, exposed through `--font-averia`, `--font-serif`, and `font-serif`. Available font files cover 300, 400, and 700 with italic variants. Small technical labels may use the existing monospace treatment.
