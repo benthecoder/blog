@@ -750,7 +750,6 @@ body {
      instead of casting a shadow; this keeps only a hint of the palette. */
   --photo-shadow: color-mix(in oklab, var(--color-ink) 22%, #1b1b1b);
   width: min(calc(25rem * var(--plate-ar, 1)), 30rem, 88%);
-  container-type: inline-size;
   margin: 2.5rem auto;
   /* Cream card stock, a shade darker than the page so the print reads as a
      separate object lying on it. The faint sheen from the top left is the
@@ -793,21 +792,28 @@ body {
 }
 
 /* Borders follow the picture's short side, as on a real print. Sized off
-   the width alone, a landscape got a strip a third as tall as its photo. */
+   the width alone, a landscape got a strip a third as tall as its photo.
+   Padding percentages resolve against the print's width, so dividing by the
+   aspect ratio gives a share of the short side, with no container queries:
+   those collapsed prints to zero width on a phone. */
 .photo-frame,
 .photo-label {
-  --short: calc(100cqi / max(var(--plate-ar, 1), 1));
-  --edge: calc(var(--short) * 0.05);
+  --edge: calc(5% / max(var(--plate-ar, 1), 1));
 }
 
 .photo-frame {
   padding: var(--edge) var(--edge) 0;
 }
 
+/* No caption, no strip: just a slightly deeper bottom border. */
+.photo-frame:last-child {
+  padding-bottom: calc(var(--edge) * 2.5);
+}
+
 .photo-plate {
   aspect-ratio: var(--plate-ratio, 1);
   /* The window in instant film is cut with softened corners. */
-  border-radius: calc(var(--edge) * 0.35);
+  border-radius: 3px;
 }
 
 /* The picture sits a little below the frame's surface: a dark lip at the
@@ -824,11 +830,10 @@ body {
     inset 0 2px 4px rgb(0 0 0 / 0.18);
 }
 
-/* The bottom strip, where the caption is written. It keeps its height when
-   empty and grows when a caption needs more than a line or two. */
+/* The bottom strip, where the caption is written. It grows when a caption
+   needs more than a line or two. */
 .photo-label {
-  min-height: calc(var(--short) * 0.18);
-  padding: 0.5rem calc(var(--edge) * 1.5);
+  padding: calc(var(--edge) * 1.6) calc(var(--edge) * 1.5);
   display: grid;
   place-items: center;
   text-align: center;
@@ -866,12 +871,8 @@ body {
 /* Back-to-back photos are held as a fan, like a hand of cards: equal-height
    prints, each turned about one shared pivot well below its row, so the
    tilts mirror and the tops sit on a single arc. The pivot is far enough
-   down that the prints don't overlap and no caption is covered. Hover lays
-   them flat.
-
-   Rows hold two prints (a pair, or four as two pairs) or three (three, or
-   five and up). Every row fans on its own; a short last row fans as a pair,
-   and a lone last print hangs straight in the middle. */
+   down that the prints don't overlap and no caption is covered. Hovering
+   with a mouse lays them flat. Every row fans on its own. */
 .photo-group {
   --spread: 3deg;
   display: flex;
@@ -893,45 +894,60 @@ body {
   transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.photo-group[data-cols="2"] > .photo-print {
+/* Two a row by default, and always on a phone, where three would be
+   thumbnails. A lone last print hangs straight. */
+.photo-group > .photo-print {
   --n: 2;
   width: 45%;
 }
-.photo-group[data-cols="2"] > .photo-print:nth-child(odd) {
+.photo-group > .photo-print:nth-child(odd) {
   --i: 0;
 }
-.photo-group[data-cols="2"] > .photo-print:nth-child(even) {
+.photo-group > .photo-print:nth-child(even) {
   --i: 1;
 }
 
-.photo-group[data-cols="3"] > .photo-print {
-  --n: 3;
-  width: 31%;
-}
-.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1) {
-  --i: 0;
-}
-.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 2) {
-  --i: 1;
-}
-.photo-group[data-cols="3"] > .photo-print:nth-child(3n) {
-  --i: 2;
+@media (max-width: 39.99rem) {
+  .photo-group > .photo-print:nth-child(odd):last-child {
+    --n: 1;
+  }
 }
 
-/* A last row of two: the pair fans on its own. */
-.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1):nth-last-child(2),
-.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 2):last-child {
-  --n: 2;
+/* Wider screens hold three a row for three, and for five and up. */
+@media (min-width: 40rem) {
+  .photo-group[data-cols="3"] > .photo-print {
+    --n: 3;
+    width: 31%;
+  }
+  .photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1) {
+    --i: 0;
+  }
+  .photo-group[data-cols="3"] > .photo-print:nth-child(3n + 2) {
+    --i: 1;
+  }
+  .photo-group[data-cols="3"] > .photo-print:nth-child(3n) {
+    --i: 2;
+  }
+
+  /* A last row of two: the pair fans on its own. */
+  .photo-group[data-cols="3"]
+    > .photo-print:nth-child(3n + 1):nth-last-child(2),
+  .photo-group[data-cols="3"] > .photo-print:nth-child(3n + 2):last-child {
+    --n: 2;
+  }
+
+  /* A last row of one hangs straight. */
+  .photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1):last-child {
+    --n: 1;
+  }
 }
 
-/* A last row of one hangs straight. */
-.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1):last-child {
-  --n: 1;
-  --i: 0;
-}
-
-.photo-group:hover > .photo-print {
-  transform: none;
+/* Only a real pointer lays the fan flat. On touch, the tap that opens a
+   photo would trigger hover and leave the prints straightened. */
+@media (hover: hover) and (pointer: fine) {
+  .photo-group:hover > .photo-print {
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
