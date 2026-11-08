@@ -1,7 +1,6 @@
 import { z } from "zod";
 
-export const categories = ["food", "cafes", "art", "shop", "outdoors"] as const;
-export type Category = (typeof categories)[number];
+const categories = ["food", "cafes", "art", "shop", "outdoors"] as const;
 const id = z.string().regex(/^[a-z0-9-]+$/);
 const date = z.iso.date();
 const entrySchema = z.object({
@@ -80,22 +79,6 @@ export type Collection = z.infer<typeof collectionSchema>;
 type CollectionEntry = z.infer<typeof entrySchema>;
 export type Visit = Place & Pick<CollectionEntry, "visitedOn" | "post">;
 
-export function filterPlaces(
-  places: Visit[],
-  selectedCategories: Category[],
-  query: string
-): Visit[] {
-  const search = query.trim().toLowerCase();
-  return places.filter(
-    (place) =>
-      (!selectedCategories.length ||
-        selectedCategories.some((category) => place.tags.includes(category))) &&
-      `${place.name} ${place.note} ${place.address}`
-        .toLowerCase()
-        .includes(search)
-  );
-}
-
 export function readMapSelection(data: PlacesData, params: URLSearchParams) {
   const collection = data.collections.find((c) => c.id === params.get("list"));
   const placeId = params.get("place");
@@ -132,47 +115,7 @@ export function mapsUrl(place: Place) {
     url.searchParams.set("query_place_id", place.googlePlaceId);
   return url.toString();
 }
-/** Rows under the list they belong to. With no list picked, a place sits
- * under the first list that has it. */
-export function groupPlaces(
-  data: PlacesData,
-  collection: Collection | undefined,
-  places: Visit[]
-) {
-  if (collection) return [{ id: "", title: "", places }];
-  const claimed = new Set<string>();
-  return data.collections
-    .map((list) => {
-      const rows = places.filter(
-        (place) =>
-          !claimed.has(place.id) &&
-          list.entries.some((entry) => entry.placeId === place.id)
-      );
-      rows.forEach((place) => claimed.add(place.id));
-      return { id: list.id, title: list.title, places: rows };
-    })
-    .filter((group) => group.places.length);
-}
 
-export function placesGeoJSON(places: Visit[]) {
-  return {
-    type: "FeatureCollection" as const,
-    features: places.map((place) => ({
-      type: "Feature" as const,
-      geometry: { type: "Point" as const, coordinates: place.coordinates },
-      properties: {
-        id: place.id,
-        name: place.name,
-        note: place.note,
-        address: place.address,
-        tags: place.tags,
-        visitedOn: place.visitedOn ?? "",
-        post: place.post ?? "",
-        category: place.tags[0],
-      },
-    })),
-  };
-}
 const xml = (value: string) =>
   value.replace(
     /[<>&"']/g,

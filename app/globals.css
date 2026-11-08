@@ -260,14 +260,15 @@
 
    /map is drawn like an old Japanese printed map rather than a blog page, so
    it keeps its own fixed palette instead of following data-palette: washi
-   paper, sumi ink, muted pigments for the categories, and red kept for one
-   thing only, the selected place. The --map-base-* tokens repaint the
+   paper, sumi ink, the blog's serif, and red kept for one
+   thing only, the place you are on. The --map-base-* tokens repaint the
    MapLibre basemap in warm greys, so only the places carry color; PlacesMap
    reads them by name.
    ========================================================================== */
 .places-explorer {
   /* Shared role names (see ROLES), so role utilities work on this page.
      They reference --map-*, which already switch in .dark below. */
+  --map-font: var(--font-averia), Georgia, serif;
   --role-surface: var(--map-paper);
   --role-raised: var(--map-hover);
   --role-line: var(--map-rule);
@@ -276,7 +277,7 @@
   --role-secondary: var(--map-ink);
   --role-muted: var(--map-muted);
   --font-body: var(--map-font);
-  --font-display: var(--map-names);
+  --font-display: var(--map-font);
   --font-ui: var(--map-font);
 
   --map-paper: #f2e9d6; /* washi */
@@ -286,11 +287,6 @@
   --map-muted: #6a5e4b;
   --map-accent: #c0392b; /* the selected place, nothing else */
   --map-shade: #2b262024;
-  --map-cat-food: #b0683a; /* kaki, persimmon */
-  --map-cat-cafes: #7a5232; /* kuri, chestnut */
-  --map-cat-art: #7d6290; /* fuji, wisteria */
-  --map-cat-shop: #456684; /* ai, indigo */
-  --map-cat-outdoors: #5c7438; /* koke, moss */
   --map-base-land: #eee8da;
   --map-base-water: #d8d5cb;
   --map-base-waterway: #d2cfc5;
@@ -303,11 +299,10 @@
   --map-base-path: #e0d9c9;
   --map-base-road: #fbf8f1;
   --map-base-road-casing: #d6cfbe;
-  --map-base-highway: #f8f4ea;
-  --map-base-highway-casing: #bdb4a0;
-  --map-base-rail: #9a9384;
-  --map-base-road-label: #7a7364;
-  --map-base-place-label: #3a352e;
+  --map-base-highway: #f5f0e4;
+  --map-base-rail: #d3cab7;
+  --map-base-road-label: #958c7b;
+  --map-base-place-label: #7d725f;
   --map-base-halo: #eee8da;
 }
 .dark .places-explorer {
@@ -318,11 +313,6 @@
   --map-muted: #a89b83;
   --map-accent: #e06a4f;
   --map-shade: #00000066;
-  --map-cat-food: #d99a6c;
-  --map-cat-cafes: #c49a6c;
-  --map-cat-art: #b59cc9;
-  --map-cat-shop: #8fa9cc;
-  --map-cat-outdoors: #a3b56f;
   --map-base-land: #1c1a17;
   --map-base-water: #141413;
   --map-base-waterway: #141413;
@@ -336,10 +326,9 @@
   --map-base-road: #34312c;
   --map-base-road-casing: #3d3a34;
   --map-base-highway: #3a3731;
-  --map-base-highway-casing: #48443d;
   --map-base-rail: #3a3732;
   --map-base-road-label: #8f887b;
-  --map-base-place-label: #b5ad9d;
+  --map-base-place-label: #8f8778;
   --map-base-halo: #1c1a17;
 }
 

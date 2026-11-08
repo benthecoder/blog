@@ -1,361 +1,217 @@
-/* Minimal on purpose: hairline rules carry the structure, Mincho carries the
-   names, the basemap stays grey so only places have color, and red marks the
-   selected place and nothing else. Colors are the --map-* tokens in the MAP
-   section of app/globals.css. */
+/* A page beside a printed map. The list is set like the blog: one serif,
+   readable sizes, space instead of rules. The map is the key's other half:
+   numbered marks in sumi on a quiet basemap, red for the place you're on.
+   Colors are the --map-* tokens in the MAP section of app/globals.css. */
 .places-explorer {
-  --map-font: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
-  --map-names: var(--font-mincho), serif;
   position: fixed;
   inset: 0;
   z-index: 60;
   display: grid;
-  grid-template-columns: 320px minmax(0, 1fr);
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: minmax(340px, 30rem) minmax(0, 1fr);
   height: 100dvh;
   background: var(--map-paper);
   color: var(--map-ink);
   font-family: var(--map-font);
-  font-size: 13px;
-  line-height: 1.45;
+  font-size: 16px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-/* Chips (components/ui/Chip) set their own size and color with utilities,
-   which unlayered rules like this one would otherwise override. */
-.places-explorer button:not([data-ui]),
-.places-explorer input,
-.places-explorer select {
+.places-explorer button:not([data-ui]) {
   font: inherit;
   color: inherit;
-}
-.places-explorer button,
-.places-explorer summary {
   cursor: pointer;
-}
-.places-explorer button,
-.places-explorer a {
   -webkit-tap-highlight-color: transparent;
-}
-.places-explorer :is(button, a, summary, label) {
   touch-action: manipulation;
 }
-.places-explorer :is(.icon-button, .map-tools button, .sheet-toggle) {
-  -webkit-user-select: none;
-  user-select: none;
+.places-explorer a {
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
 }
-@media (pointer: coarse) {
-  .places-explorer :is(input, select, textarea) {
-    font-size: 16px;
-  }
-}
-.places-explorer :is(button, a, input, select, summary):focus-visible {
+.places-explorer :is(button, a):focus-visible {
   outline: 1.5px solid var(--map-ink);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
-/* -- Header -------------------------------------------------------------- */
-.map-header {
-  grid-column: 1;
-  grid-row: 1;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 10px 12px max(18px, env(safe-area-inset-left, 0px));
-  border-right: 1px solid var(--map-rule);
-  border-bottom: 1px solid var(--map-rule);
-  background: var(--map-paper);
-  z-index: 5;
-}
-.map-brand {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-  margin-right: auto;
-}
-.map-brand .map-wordmark {
-  margin: 0;
-  font-family: var(--map-names);
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1;
-}
-.map-brand a,
-.map-version {
-  color: var(--map-muted);
-  font-size: 11px;
-  white-space: nowrap;
-}
-.map-version {
-  font-variant-numeric: tabular-nums;
-}
-@media (hover: hover) and (pointer: fine) {
-  .map-brand a:hover {
-    color: var(--map-ink);
-    text-decoration: underline;
-  }
-}
-.icon-button {
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
-  display: grid;
-  place-items: center;
-  color: var(--map-muted);
-}
-@media (hover: hover) and (pointer: fine) {
-  .icon-button:hover {
-    background: var(--map-hover);
-    color: var(--map-ink);
-  }
-}
-
-/* -- Category colors and dots ------------------------------------------- */
-.places-explorer [data-category="food"] {
-  --cat: var(--map-cat-food);
-}
-.places-explorer [data-category="cafes"] {
-  --cat: var(--map-cat-cafes);
-}
-.places-explorer [data-category="art"] {
-  --cat: var(--map-cat-art);
-}
-.places-explorer [data-category="shop"] {
-  --cat: var(--map-cat-shop);
-}
-.places-explorer [data-category="outdoors"] {
-  --cat: var(--map-cat-outdoors);
-}
-.places-explorer .category-dot {
-  width: 7px;
-  height: 7px;
-  flex: 0 0 7px;
-  border-radius: 50%;
-  background: var(--cat, var(--map-ink));
-}
-/* -- Panel ---------------------------------------------------------------- */
-.places-panel {
-  grid-column: 1;
-  grid-row: 2;
+/* -- The page ------------------------------------------------------------- */
+.places-page {
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  border-right: 1px solid var(--map-rule);
-  background: var(--map-paper);
+  padding: max(28px, env(safe-area-inset-top, 0px)) 40px
+    max(32px, env(safe-area-inset-bottom, 0px))
+    max(40px, env(safe-area-inset-left, 0px));
   scrollbar-width: thin;
   scrollbar-color: var(--map-rule) transparent;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  padding-left: env(safe-area-inset-left, 0px);
-  z-index: 3;
 }
-/* Section labels stay small and quiet so list and place names lead. */
-.panel-section-heading {
+.places-nav {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  justify-content: space-between;
-  padding: 14px 18px 8px;
+  column-gap: 18px;
+  row-gap: 4px;
   color: var(--map-muted);
-  font-size: 11px;
 }
-.panel-section-heading h2 {
-  margin: 0;
-  font-size: inherit;
-  font-weight: 400;
+.places-nav a {
+  text-decoration: none;
 }
-.panel-section-heading > span {
-  font-variant-numeric: tabular-nums;
+.places-nav a[aria-current] {
+  color: var(--map-ink);
+  font-weight: 700;
 }
-.places-section-heading {
-  border-top: 1px solid var(--map-rule);
-}
-
-/* Lists: plain radio rows, no boxes. */
-.collection-list {
+.places-theme {
   display: grid;
-  padding: 0 18px 12px;
-}
-.collection-option {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  padding: 5px 0;
-  cursor: pointer;
-}
-.collection-option input {
-  appearance: none;
-  flex: 0 0 12px;
-  width: 12px;
-  height: 12px;
-  margin: 0;
-  border: 1px solid var(--map-muted);
-  border-radius: 50%;
-  transform: translateY(1px);
-  cursor: pointer;
-}
-.collection-option input:checked {
-  border-color: var(--map-ink);
-  background: radial-gradient(var(--map-ink) 0 3px, transparent 3.5px);
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin: -6px -8px -6px auto;
+  align-self: center;
+  color: var(--map-muted);
 }
 @media (hover: hover) and (pointer: fine) {
-  .collection-option:hover input {
-    border-color: var(--map-ink);
+  .places-nav a:hover,
+  .places-theme:hover {
+    color: var(--map-ink);
   }
 }
-.collection-title {
-  flex: 1;
-  min-width: 0;
-  font-family: var(--map-names);
-  font-size: 14px;
+.places-page h1 {
+  margin: 56px 0 0;
+  font-size: 32px;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 1.15;
+  text-wrap: balance;
 }
-.collection-count {
+.places-lede {
+  margin: 10px 0 0;
   color: var(--map-muted);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
 }
-.collection-heading {
-  padding: 0 18px 10px;
+.places-lede a,
+.places-colophon a,
+.entry-links a {
+  text-decoration: underline;
+  text-decoration-color: var(--map-rule);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
-.journal-link {
+@media (hover: hover) and (pointer: fine) {
+  :is(.places-lede, .places-colophon, .entry-links) a:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* The index of lists. */
+.places-index {
+  list-style: none;
+  margin: 40px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 28px;
+}
+.places-index a {
+  font-size: 22px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.places-index p {
+  margin: 4px 0 0;
+  color: var(--map-muted);
+}
+@media (hover: hover) and (pointer: fine) {
+  .places-index a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+}
+
+/* The key: a numeral hung in the margin, the note, then whose place it is. */
+.places-key {
+  list-style: none;
+  margin: 40px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.entry {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  column-gap: 14px;
+  width: 100%;
+  margin: 0 -10px;
+  padding: 10px;
+  box-sizing: content-box;
+  text-align: left;
+}
+.entry-number,
+.map-mark {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--map-ink);
+  color: var(--map-paper);
+  font: 700 13px/1 var(--map-font);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+.entry-number {
+  grid-row: 1 / 3;
+  margin-top: 1px;
+}
+.entry-note {
+  font-size: 18px;
+  line-height: 1.4;
+  text-wrap: pretty;
+}
+.entry-name {
+  margin-top: 3px;
+  color: var(--map-muted);
+  font-size: 15px;
+}
+.entry-detail {
+  margin: 0 0 8px 40px;
+  color: var(--map-muted);
+  font-size: 15px;
+}
+.entry-detail p {
+  margin: 0;
+}
+.entry-detail .entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 6px;
+  color: var(--map-ink);
+}
+.entry-links a {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  font-size: 12px;
 }
-@media (hover: hover) and (pointer: fine) {
-  .journal-link:hover {
-    text-decoration: underline;
-  }
-}
-
-/* Filters */
-.filters {
-  padding: 0 18px 12px;
-}
-.place-search {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--map-rule);
-  color: var(--map-muted);
-}
-.place-search:focus-within {
-  border-color: var(--map-ink);
-}
-.place-search input {
-  min-width: 0;
-  width: 100%;
-  height: 28px;
-  padding: 4px 8px;
-  background: transparent;
-  font-size: 12px;
-  color: var(--map-ink);
-}
-.place-search input::placeholder {
-  color: var(--map-muted);
-}
-.place-search input:focus-visible {
-  outline: none;
-}
-.place-search input::-webkit-search-cancel-button {
-  display: none;
-}
-.place-search button {
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
-  display: grid;
-  place-items: center;
-}
-.category-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin-top: 8px;
-}
-/* Places: full-width rows on hairlines; the selected one gets a bar in
-   its category color. */
-.place-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border-top: 1px solid var(--map-rule);
-}
-.place-list li {
-  border-bottom: 1px solid var(--map-rule);
-}
-.place-list li.is-hovered {
+.entry-detail figure {
+  position: relative;
+  margin: 12px 0 0;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
   background: var(--map-hover);
 }
-@media (hover: hover) and (pointer: fine) {
-  .place-list li:hover {
-    background: var(--map-hover);
-  }
+.entry-detail img {
+  object-fit: cover;
 }
-.place-list li.selected {
-  background: var(--map-hover);
-  box-shadow: inset 2px 0 0 var(--cat, var(--map-ink));
+/* Lit from either side: the numeral turns red on the list and on the map. */
+.places-key li.is-lit .entry-number,
+.entry[aria-expanded="true"] .entry-number,
+.map-mark.is-lit,
+.map-mark.is-selected {
+  background: var(--map-accent);
 }
-.place-group {
-  margin: 0;
-  padding: 14px 18px 6px;
-  border-top: 1px solid var(--map-rule);
-  font-family: var(--map-names);
-  font-size: 13px;
-  font-weight: 700;
-}
-.place-group + .place-list {
-  border-top: 0;
-}
-.place-select {
-  display: block;
-  width: 100%;
-  padding: 10px 18px;
-  text-align: left;
-}
-.place-copy {
-  display: block;
-  min-width: 0;
-  padding-top: 1px;
-}
-.place-name {
-  display: block;
-  font-family: var(--map-names);
+.places-colophon {
+  margin: 64px 0 0;
+  color: var(--map-muted);
   font-size: 15px;
-  font-weight: 700;
-  line-height: 1.3;
-  overflow-wrap: anywhere;
-}
-.place-name .category-dot {
-  display: inline-block;
-  margin: 0 7px 0 0;
-  vertical-align: 0.15em;
-}
-.place-note,
-.visit-date {
-  display: block;
-  margin-top: 2px;
-  color: var(--map-muted);
-  font-size: 12px;
-  line-height: 1.45;
-  text-wrap: pretty;
-}
-.visit-date {
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-.empty-places {
-  padding: 18px;
-  color: var(--map-muted);
-  font-size: 12px;
-}
-.empty-places p {
-  margin: 0 0 10px;
 }
 
 /* -- Map ------------------------------------------------------------------ */
 .map-area {
-  grid-column: 2;
-  grid-row: 1 / -1;
   position: relative;
   min-width: 0;
   min-height: 0;
@@ -367,29 +223,43 @@
   position: absolute;
   inset: 0;
 }
+.map-mark {
+  box-shadow: 0 0 0 2px var(--map-paper);
+  cursor: pointer;
+  transition: background-color 120ms ease-out;
+}
+.map-mark.is-dot {
+  width: 10px;
+  height: 10px;
+}
+/* No scale here: MapLibre positions marks with an inline translate, and
+   scale would multiply that too, throwing the mark across the map. */
+.map-mark.is-lit,
+.map-mark.is-selected {
+  z-index: 1;
+}
 .map-tools {
   position: absolute;
   bottom: 28px;
   right: max(14px, env(safe-area-inset-right, 0px));
   display: grid;
-  border: 1px solid var(--map-rule);
-  background: var(--map-paper);
+  gap: 6px;
   z-index: 2;
 }
 .map-tools button {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
+  border-radius: 50%;
+  background: var(--map-paper);
   color: var(--map-ink);
+  box-shadow: 0 1px 3px var(--map-shade);
 }
 @media (hover: hover) and (pointer: fine) {
   .map-tools button:hover {
     background: var(--map-hover);
   }
-}
-.map-tools button + button {
-  border-top: 1px solid var(--map-rule);
 }
 .map-tools button:disabled {
   opacity: 0.45;
@@ -409,155 +279,12 @@
   left: 50%;
   transform: translate(-50%, -50%);
   max-width: calc(100% - 40px);
-  padding: 10px 14px;
-  background: var(--map-paper);
-  font-size: 12px;
-}
-
-/* -- Place card, pinned above its dot ------------------------------------- */
-.map-popup {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-  width: 260px;
-  transform: translate(-50%, calc(-100% - 13px));
-  z-index: 3;
-}
-/* The pointer down to the dot. */
-.map-popup::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -5px;
-  width: 9px;
-  height: 9px;
-  background: var(--map-paper);
-  border-right: 1px solid var(--map-ink);
-  border-bottom: 1px solid var(--map-ink);
-  transform: translateX(-50%) rotate(45deg);
-}
-.place-detail {
-  max-height: min(420px, 60dvh);
-  overflow-y: auto;
-  padding: 10px 12px 10px;
-  border: 1px solid var(--map-ink);
-  background: var(--map-paper);
-  box-shadow: 0 4px 14px var(--map-shade);
-}
-/* A selected place's card settles in rather than popping. Hover previews
-   (desktop list) stay instant: they come and go too often for motion. */
-.place-detail:not(.is-preview) {
-  transition:
-    opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
-    transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
-}
-@starting-style {
-  .place-detail:not(.is-preview) {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-.place-detail.is-preview {
-  pointer-events: none;
-}
-.place-detail.is-preview .detail-close,
-.place-detail.is-preview .detail-links {
-  display: none;
-}
-.detail-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 22px;
   color: var(--map-muted);
-  font-size: 11px;
-}
-.detail-category {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
-.detail-close {
-  width: 22px;
-  height: 22px;
-  flex-basis: 22px;
-  margin: -2px -6px 0 auto;
-}
-.place-detail h2 {
-  margin: 4px 0 0;
-  font-family: var(--map-names);
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.25;
-  overflow-wrap: anywhere;
-  text-wrap: balance;
-}
-.detail-address {
-  margin: 2px 0 0;
-  color: var(--map-muted);
-  font-size: 12px;
-}
-/* Photos sit right under the address. One fills the card; more scroll. */
-.detail-images {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 100%;
-  gap: 4px;
-  margin: 10px -12px 0;
-  padding: 0 12px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-padding: 0 12px;
-  scrollbar-width: none;
-}
-.detail-images:not([data-count="1"]) {
-  grid-auto-columns: 86%;
-}
-.detail-images figure {
-  position: relative;
-  margin: 0;
-  aspect-ratio: 3 / 2;
-  overflow: hidden;
-  background: var(--map-hover);
-  scroll-snap-align: start;
-}
-.detail-images img {
-  object-fit: cover;
-}
-.detail-note {
-  margin: 8px 0 0;
-  font-size: 13px;
-  line-height: 1.5;
-  text-wrap: pretty;
-}
-.detail-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 10px;
-  padding-top: 8px;
-  border-top: 1px solid var(--map-rule);
-}
-.detail-links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 12px;
-  font-weight: 700;
-}
-@media (hover: hover) and (pointer: fine) {
-  .detail-links a:hover {
-    text-decoration: underline;
-  }
-}
-
-.sheet-toggle {
-  display: none;
 }
 .places-explorer .maplibregl-ctrl.maplibregl-ctrl-attrib {
   background: color-mix(in srgb, var(--map-paper) 85%, transparent);
   color: var(--map-muted);
-  font: 10px var(--map-font);
+  font: 11px var(--map-font);
 }
 .places-explorer .maplibregl-ctrl-bottom-right {
   margin-right: env(safe-area-inset-right, 0px);
@@ -566,102 +293,45 @@
   color: var(--map-muted);
 }
 
+/* -- Phone: the map is a plate at the top, the page reads below it -------- */
 @media (max-width: 760px) {
   .places-explorer {
-    display: block;
-  }
-  .map-header {
-    position: absolute;
-    inset: calc(10px + env(safe-area-inset-top, 0px))
-      max(10px, env(safe-area-inset-right, 0px)) auto
-      max(10px, env(safe-area-inset-left, 0px));
-    padding: 8px 6px 8px 12px;
-    border: 1px solid var(--map-rule);
-    z-index: 7;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 42dvh minmax(0, 1fr);
   }
   .map-area {
-    position: absolute;
-    inset: 0 0 calc(48px + env(safe-area-inset-bottom, 0px));
+    grid-row: 1;
   }
-  /* On a phone the card docks to the bottom instead of following the dot. */
-  .map-popup {
-    left: max(10px, env(safe-area-inset-left, 0px));
-    right: max(10px, env(safe-area-inset-right, 0px));
-    top: auto;
-    bottom: 10px;
-    width: auto;
-    transform: none;
+  .places-page {
+    grid-row: 2;
+    padding: 20px max(20px, env(safe-area-inset-right, 0px))
+      max(28px, env(safe-area-inset-bottom, 0px))
+      max(20px, env(safe-area-inset-left, 0px));
+    box-shadow: 0 -1px 0 var(--map-rule);
   }
-  .map-popup::after {
+  .places-page h1 {
+    margin-top: 32px;
+    font-size: 28px;
+  }
+  .places-key,
+  .places-index {
+    margin-top: 28px;
+  }
+  .places-explorer .maplibregl-ctrl.maplibregl-ctrl-attrib {
+    font-size: 10px;
+  }
+  /* Pinch zooms on a phone; only finding yourself needs a button. */
+  .map-tools button:not(:last-child) {
     display: none;
-  }
-  .place-detail {
-    max-height: 60dvh;
-  }
-  .places-panel {
-    position: absolute;
-    inset: 22% 0 calc(48px + env(safe-area-inset-bottom, 0px));
-    border-top: 1px solid var(--map-rule);
-    border-right: 0;
-    padding-right: env(safe-area-inset-right, 0px);
-    transform: translateY(calc(100% + 48px));
-    visibility: hidden;
-    transition:
-      transform 180ms ease-out,
-      visibility 180ms;
-    z-index: 6;
-  }
-  .places-panel.is-open {
-    transform: translateY(0);
-    visibility: visible;
-  }
-  .places-panel.is-open ~ .map-area .map-popup {
-    display: none;
-  }
-  /* The sheet owns the screen while open: no map chrome poking through it. */
-  .places-panel.is-open
-    ~ .map-area
-    :is(
-      .map-tools,
-      .maplibregl-ctrl-bottom-right,
-      .maplibregl-ctrl-bottom-left
-    ) {
-    visibility: hidden;
-  }
-  .places-explorer .sheet-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    position: absolute;
-    inset: auto 0 0;
-    height: calc(48px + env(safe-area-inset-bottom, 0px));
-    padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px)
-      env(safe-area-inset-left, 0px);
-    border-top: 1px solid var(--map-rule);
-    background: var(--map-paper);
-    font-size: 13px;
-    font-weight: 700;
-    z-index: 4;
-  }
-  .sheet-toggle > span {
-    color: var(--map-muted);
-    font-size: 11px;
-    font-weight: 400;
-    font-variant-numeric: tabular-nums;
   }
   .map-tools {
-    bottom: 24px;
-    right: max(10px, env(safe-area-inset-right, 0px));
-  }
-  .map-area:has(.map-popup) .map-tools {
-    top: calc(64px + env(safe-area-inset-top, 0px));
+    top: calc(12px + env(safe-area-inset-top, 0px));
     bottom: auto;
+    right: max(12px, env(safe-area-inset-right, 0px));
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .places-panel,
-  .place-detail:not(.is-preview) {
+  .map-mark {
     transition: none;
   }
 }
