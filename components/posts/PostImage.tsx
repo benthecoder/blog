@@ -10,13 +10,21 @@ export default function PostImage({
   alt,
   meta,
   priority = false,
+  onCaption,
 }: {
   src: string;
   alt: string;
   meta?: ImageMeta | null;
   priority?: boolean;
+  /** Editor preview only: makes the strip writable. */
+  onCaption?: (caption: string) => void;
 }) {
   const [loaded, setLoaded] = useState(false);
+  // Shape of the photo, for loose prints. The manifest knows it up front;
+  // drafts and freshly published images only learn it once they load.
+  const [size, setSize] = useState(
+    meta ? { width: meta.width, height: meta.height } : null
+  );
   const [expanded, setExpanded] = useState(false);
   // Drives the enter transition: the overlay mounts hidden, then animates in
   // on the next frame. Setting the final state immediately would skip it.
@@ -41,7 +49,10 @@ export default function PostImage({
     dialogRef.current?.close();
     setEntered(false);
     setExpanded(false);
-    // Send focus back to the plate, or the page loses its place.
+    // Send focus back to the plate, or the page loses its place. Quietly:
+    // closing with Esc would otherwise count as keyboard focus and ring the
+    // print the reader was just looking at.
+    triggerRef.current?.setAttribute("data-quiet", "");
     triggerRef.current?.focus({ preventScroll: true });
   }, []);
 
@@ -72,20 +83,28 @@ export default function PostImage({
   }, [expanded]);
 
   return (
-    <figure className="my-8 not-prose">
+    <figure
+      className="photo-print not-prose"
+      style={
+        size
+          ? ({
+              "--plate-ratio": `${size.width} / ${size.height}`,
+              "--plate-ar": size.width / size.height,
+            } as React.CSSProperties)
+          : undefined
+      }
+    >
       <button
         ref={triggerRef}
         type="button"
         onClick={() => setExpanded(true)}
+        onBlur={(e) => e.currentTarget.removeAttribute("data-quiet")}
         aria-label={alt ? `Expand image: ${alt}` : "Expand image"}
-        // outline-none kills the ring a mouse click would leave behind;
-        // focus-visible still shows one for keyboard users, who need it.
-        className="photo-frame block w-full cursor-zoom-in border-0 outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+        // The keyboard focus ring is drawn around the whole print; see
+        // .photo-print in globals.css.
+        className="photo-frame block w-full cursor-zoom-in border-0 outline-none"
       >
-        {/* Every plate is square regardless of the source aspect, so a run of
-            photos hangs on a consistent line. The full frame is one click
-            away, so nothing is actually lost. */}
-        <div className="photo-plate relative aspect-square w-full overflow-hidden rounded-[calc(var(--radius-image)-2px)]">
+        <div className="photo-plate relative w-full overflow-hidden">
           <Image
             src={src}
             alt={alt}
@@ -98,7 +117,17 @@ export default function PostImage({
             sizes="auto, (max-width: 800px) 100vw, 800px"
             placeholder={meta?.blurDataURL ? "blur" : "empty"}
             blurDataURL={meta?.blurDataURL}
-            onLoad={() => setLoaded(true)}
+            onLoad={(e) => {
+              const img = e.currentTarget;
+              setSize(
+                (known) =>
+                  known ?? {
+                    width: img.naturalWidth,
+                    height: img.naturalHeight,
+                  }
+              );
+              setLoaded(true);
+            }}
             className={`object-cover ${
               fadeIn
                 ? `transition-opacity duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${loaded ? "opacity-100" : "opacity-0"}`
@@ -108,8 +137,26 @@ export default function PostImage({
         </div>
       </button>
 
-      {alt && (
-        <figcaption className="photo-label mt-3 text-center">{alt}</figcaption>
+      {onCaption ? (
+        <figcaption className="photo-label">
+          <input
+            defaultValue={alt}
+            placeholder="write a caption"
+            aria-label="Caption"
+            onBlur={(e) => {
+              const caption = e.currentTarget.value.trim();
+              if (caption !== alt) onCaption(caption);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") e.currentTarget.blur();
+            }}
+          />
+        </figcaption>
+      ) : alt ? (
+        <figcaption className="photo-label">{alt}</figcaption>
+      ) : (
+        // Uncaptioned prints keep their blank strip.
+        <div className="photo-label" aria-hidden="true" />
       )}
 
       {expanded &&

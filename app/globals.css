@@ -737,55 +737,207 @@ body {
     0 10px 26px -8px rgba(0, 0, 0, 0.55);
 }
 
-/* ---- Framed photograph -------------------------------------------------
-   A print behind glass: a wide mat around the image, a hairline frame, and
-   a soft drop mixed from the active ink so the whole thing belongs to the
-   page rather than sitting on top of it. No hover motion — the plate hangs
-   still, and clicking it opens the full work. */
-.photo-frame {
+/* ---- Instant print ------------------------------------------------------
+   Every post photo is an instant print: the photo at its own shape, thin
+   even sides, and a wide bottom strip where the caption is written, as you
+   would on the real thing. Sized by height so a photo never takes over the
+   page: about 22rem of picture, wider for landscapes, narrower for
+   portraits. Near-square corners and a contact shadow, as if lying on the
+   table. Clicking the photo opens the whole picture. */
+.photo-print {
   /* The shadow is taken most of the way to neutral before it's faded out.
      Mixing straight from the ink made the print glow in the theme colour
      instead of casting a shadow; this keeps only a hint of the palette. */
   --photo-shadow: color-mix(in oklab, var(--color-ink) 22%, #1b1b1b);
-  padding: clamp(0.75rem, 2.5vw, 1.25rem);
-  background-color: var(--color-paper-raised);
-  border: 1px solid color-mix(in oklab, var(--color-ink) 8%, transparent);
-  border-radius: var(--radius-image);
+  width: min(calc(25rem * var(--plate-ar, 1)), 30rem, 88%);
+  container-type: inline-size;
+  margin: 2.5rem auto;
+  /* Cream card stock, a shade darker than the page so the print reads as a
+     separate object lying on it. The faint sheen from the top left is the
+     same light that casts the shadow down and to the right. */
+  --card: color-mix(in oklab, var(--color-paper) 72%, var(--color-paper-warm));
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, white 35%, transparent),
+      transparent 45%
+    ),
+    var(--card);
+  border-radius: 2px;
   box-shadow:
-    0 1px 2px color-mix(in oklab, var(--photo-shadow) 7%, transparent),
-    0 10px 24px -12px color-mix(in oklab, var(--photo-shadow) 16%, transparent);
+    0 0 0 1px color-mix(in oklab, var(--photo-shadow) 7%, transparent),
+    /* A print lies flat, so its shadow is short and crisp: a hard edge
+       just off the card, then a little falloff. A wide blur reads as
+       floating. */
+    1px 2px 0 color-mix(in oklab, var(--photo-shadow) 12%, transparent),
+    2px 4px 3px -1px color-mix(in oklab, var(--photo-shadow) 16%, transparent);
 }
 
-.dark .photo-frame {
-  background-color: var(--color-night-raised);
-  border-color: color-mix(in oklab, var(--color-chalk) 12%, transparent);
+.dark .photo-print {
+  --card: color-mix(
+    in oklab,
+    var(--color-night-raised) 88%,
+    var(--color-paper-warm)
+  );
+  background: var(--card);
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.35),
-    0 10px 24px -12px rgba(0, 0, 0, 0.5);
+    0 0 0 1px color-mix(in oklab, var(--color-chalk) 10%, transparent),
+    0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
-/* The plate itself, inset in the mat. A hairline inner edge reads as the
-   lip of the mat board where it meets the print. */
-.photo-plate {
-  box-shadow: inset 0 0 0 1px
-    color-mix(in oklab, var(--color-ink) 7%, transparent);
+/* Keyboard focus rings the whole print, card edge and all, not just the
+   photo button inside it. */
+.photo-print:has(> .photo-frame:focus-visible:not([data-quiet])) {
+  outline: 2px solid color-mix(in oklab, var(--color-accent) 45%, transparent);
+  outline-offset: 4px;
 }
 
-.dark .photo-plate {
-  box-shadow: inset 0 0 0 1px
-    color-mix(in oklab, var(--color-chalk) 9%, transparent);
-}
-
-/* Caption under a framed photo. Quieter than body text, but only just — the
-   0.08em tracking this had read as a gallery placard rather than a caption,
-   and made the words look stretched next to the post's own type. */
+/* Borders follow the picture's short side, as on a real print. Sized off
+   the width alone, a landscape got a strip a third as tall as its photo. */
+.photo-frame,
 .photo-label {
-  font-size: 0.75rem;
+  --short: calc(100cqi / max(var(--plate-ar, 1), 1));
+  --edge: calc(var(--short) * 0.05);
+}
+
+.photo-frame {
+  padding: var(--edge) var(--edge) 0;
+}
+
+.photo-plate {
+  aspect-ratio: var(--plate-ratio, 1);
+  /* The window in instant film is cut with softened corners. */
+  border-radius: calc(var(--edge) * 0.35);
+}
+
+/* The picture sits a little below the frame's surface: a dark lip at the
+   window's edge and a soft shade falling from the top, drawn over the photo
+   since an inset shadow on the plate would sit behind it. */
+.photo-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgb(0 0 0 / 0.22),
+    inset 0 2px 4px rgb(0 0 0 / 0.18);
+}
+
+/* The bottom strip, where the caption is written. It keeps its height when
+   empty and grows when a caption needs more than a line or two. */
+.photo-label {
+  min-height: calc(var(--short) * 0.18);
+  padding: 0.5rem calc(var(--edge) * 1.5);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 0.8125rem;
+  line-height: 1.35;
   color: var(--color-ink-muted);
 }
 
 .dark .photo-label {
   color: var(--color-chalk-muted);
+}
+
+/* The editor's preview: the strip is where you write. */
+.photo-label input {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  outline: none;
+}
+
+.photo-label input::placeholder {
+  color: inherit;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.photo-print:hover .photo-label input::placeholder,
+.photo-label input:focus::placeholder {
+  opacity: 0.6;
+}
+
+/* Back-to-back photos are held as a fan, like a hand of cards: equal-height
+   prints, each turned about one shared pivot well below its row, so the
+   tilts mirror and the tops sit on a single arc. The pivot is far enough
+   down that the prints don't overlap and no caption is covered. Hover lays
+   them flat.
+
+   Rows hold two prints (a pair, or four as two pairs) or three (three, or
+   five and up). Every row fans on its own; a short last row fans as a pair,
+   and a lone last print hangs straight in the middle. */
+.photo-group {
+  --spread: 3deg;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 2rem 2%;
+  margin-block: 3rem;
+}
+
+.photo-group > .photo-print {
+  flex: none;
+  margin: 0;
+  /* Each print's origin is the row's shared pivot, given relative to that
+     print: one print width per step from the middle of the row. */
+  --step: calc(var(--i) - (var(--n) - 1) / 2);
+  transform-origin: calc(50% - var(--step) * 100%) 220%;
+  transform: rotate(calc(var(--step) * var(--spread)));
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.photo-group[data-cols="2"] > .photo-print {
+  --n: 2;
+  width: 45%;
+}
+.photo-group[data-cols="2"] > .photo-print:nth-child(odd) {
+  --i: 0;
+}
+.photo-group[data-cols="2"] > .photo-print:nth-child(even) {
+  --i: 1;
+}
+
+.photo-group[data-cols="3"] > .photo-print {
+  --n: 3;
+  width: 31%;
+}
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1) {
+  --i: 0;
+}
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 2) {
+  --i: 1;
+}
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n) {
+  --i: 2;
+}
+
+/* A last row of two: the pair fans on its own. */
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1):nth-last-child(2),
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 2):last-child {
+  --n: 2;
+}
+
+/* A last row of one hangs straight. */
+.photo-group[data-cols="3"] > .photo-print:nth-child(3n + 1):last-child {
+  --n: 1;
+  --i: 0;
+}
+
+.photo-group:hover > .photo-print {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-group > .photo-print {
+    transition: none;
+  }
 }
 
 /* ==========================================================================
