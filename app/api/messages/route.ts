@@ -1,11 +1,13 @@
 import { neon } from "@neondatabase/serverless";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { checkRateLimit } from "@/utils/rateLimit";
 import { clientIp, hashViewer } from "@/utils/clientIp";
 import { messageInputSchema } from "@/utils/messages/input";
+import { notifyNewMessage } from "@/utils/messages/notify";
 
 /*
-  Private notes left on /contact, read at /admin/messages. Table:
+  Private notes left on /contact, read at /admin/messages and emailed when
+  Resend is configured (utils/messages/notify.ts). Table:
 
   CREATE TABLE IF NOT EXISTS messages (
     id serial PRIMARY KEY,
@@ -56,6 +58,13 @@ export async function POST(request: Request) {
       fetchOptions: { signal: AbortSignal.timeout(10_000) },
     });
     await sql`INSERT INTO messages (body, sender) VALUES (${body}, ${sender})`;
+    // Saved first, emailed after the response: a slow or failing email never
+    // holds up the visitor's "message received".
+    after(() =>
+      notifyNewMessage(body, sender).catch((error) =>
+        console.error("Message email failed:", error)
+      )
+    );
     return new Response(null, { status: 204 });
   } catch (error) {
     console.error("Error saving message:", error);
