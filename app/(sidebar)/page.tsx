@@ -154,19 +154,10 @@ export default async function HomePage() {
             <a href={MAPS_URL}>list of places</a>
           </li>
           <li>
-            <a href={PHOTOS_URL}>photos</a>
-          </li>
-          <li>
             <Link href="/sketch">sketches</Link>
           </li>
           <li>
-            <Link href="/library">my library</Link>
-          </li>
-          <li>
             <Link href="/syllabus">my curriculum</Link>
-          </li>
-          <li>
-            <Link href="/recipes">recipes</Link>
           </li>
           <li>
             <Link href="/uses">products i use</Link>
