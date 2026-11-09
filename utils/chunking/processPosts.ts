@@ -7,13 +7,10 @@ export async function processAllPosts() {
   const postFiles = getAllPosts();
   const processedPosts = [];
 
+  // A post that fails to parse stops the run: skipping it would rebuild the
+  // index without that post.
   for (const filePath of postFiles) {
-    try {
-      const processed = await processMarkdownFile(filePath);
-      processedPosts.push(processed);
-    } catch (error) {
-      console.error(`Error processing ${filePath}:`, error);
-    }
+    processedPosts.push(await processMarkdownFile(filePath));
   }
 
   return processedPosts;

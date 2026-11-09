@@ -63,7 +63,7 @@ const PapersPage = () => {
                         href={`/posts/${paper.slug}`}
                         className="group block"
                       >
-                        <h3 className="text-base font-bold lowercase text-ink-strong transition-colors group-hover:text-ink dark:text-chalk-strong dark:group-hover:text-chalk-soft">
+                        <h3 className="text-base font-bold lowercase text-primary transition-colors group-hover:text-ink dark:group-hover:text-chalk-soft">
                           {paper.title}
                         </h3>
                         {byline && (

@@ -25,7 +25,7 @@ export function QuoteFooter({ quotes }: { quotes: Quote[] }) {
   return (
     <footer className="mt-12 text-sm text-muted">
       <Link
-        href={`/posts/${quote.slug}`}
+        href={`/posts/${encodeURIComponent(quote.slug)}`}
         className="hover:text-accent transition-colors"
       >
         {quote.text}

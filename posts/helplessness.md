@@ -1,6 +1,6 @@
 ---
 title: Learned Helplessness
-tags: psychology, mental-health, health
+tags: psychology, health
 date: Jul 14, 2023
 ---
 

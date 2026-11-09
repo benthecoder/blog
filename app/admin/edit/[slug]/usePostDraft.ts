@@ -3,9 +3,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { useRouter, useSearchParams } from "next/navigation";
 import {
-  parseFrontmatter,
+  FrontmatterError,
+  parseMarkdown,
   stringifyFrontmatter,
 } from "@/utils/content/frontmatter";
+import { draftFrontmatterSchema } from "@/utils/content/schemas";
 import {
   draftRecoveryKey,
   readDraftBackup,
@@ -13,13 +15,14 @@ import {
   removeDraftBackup,
 } from "@/utils/content/draftRecovery";
 import type { ContentKind } from "@/utils/content/kind";
-import { toDateString } from "@/utils/content/essayDate";
+
 import {
   publishImagePaths,
   unpublishImagePaths,
 } from "@/utils/content/draftImages";
 import { DEFAULT_POST_TEMPLATE } from "../post-template";
 import { suggestPeriods, type PeriodKind } from "@/utils/digest/schedule";
+import { fetchPostOrder } from "./postOrder";
 
 interface UsePostDraftArgs {
   slug: string;
@@ -68,6 +71,7 @@ export function usePostDraft({
   const loading = loadedKey !== recoveryKey;
   const latestMarkdownRef = useRef("");
   const saveInFlight = useRef(false);
+  const saveSettledRef = useRef<Promise<void> | null>(null);
   const wasDirtyRef = useRef(false);
   const templateRequestRef = useRef<AbortController | null>(null);
   const formatRef = useRef(formatMarkdown);
@@ -130,7 +134,9 @@ export function usePostDraft({
       );
     } catch (err) {
       if (!controller.signal.aborted)
-        notify(`✗ Template: ${err instanceof Error ? err.message : err}`);
+        notify(
+          `✗ Template: ${err instanceof Error ? err.message : String(err)}`
+        );
     } finally {
       if (!controller.signal.aborted) setTemplateLoading(false);
     }
@@ -139,7 +145,8 @@ export function usePostDraft({
   const switchTemplate = (kind: PeriodKind | "blank") => {
     const dateParam = searchParams.get("date");
     if (!dateParam || kind === template) return;
-    const run = () => loadTemplate(kind, dateParam, date);
+    // loadTemplate catches its own failures and reports them through notify.
+    const run = () => void loadTemplate(kind, dateParam, date);
     if (hasUnsavedChanges) {
       confirmAction(
         "replace your writing?",
@@ -156,11 +163,11 @@ export function usePostDraft({
   useEffect(() => {
     if (isNew || isEssay) return;
 
-    const abortController = new AbortController();
+    let cancelled = false;
 
-    fetch("/api/admin/list-posts", { signal: abortController.signal })
-      .then((res) => res.json())
-      .then((sortedPosts: string[]) => {
+    fetchPostOrder()
+      .then((sortedPosts) => {
+        if (cancelled) return;
         const currentIndex = sortedPosts.indexOf(slug);
 
         setPrevSlug(currentIndex > 0 ? sortedPosts[currentIndex - 1] : null);
@@ -171,12 +178,12 @@ export function usePostDraft({
         );
       })
       .catch((err) => {
-        if (err.name !== "AbortError") {
-          console.error("Error loading posts:", err);
-        }
+        if (!cancelled) console.error("Error loading posts:", err);
       });
 
-    return () => abortController.abort();
+    return () => {
+      cancelled = true;
+    };
   }, [slug, isNew, isEssay]);
 
   // Prev/next dates for new posts: pure function of the date param
@@ -198,6 +205,7 @@ export function usePostDraft({
     setTemplateLoading(false);
     wasDirtyRef.current = false;
     deletingRef.current = false;
+    setDeleting(false);
     const offerRecovery = (formattedDate: string, baseline: string) => {
       const backup =
         readDraftBackup(draftKey) ??
@@ -237,11 +245,17 @@ export function usePostDraft({
               ? {
                   title: data.title,
                   subtitle: data.subtitle,
+                  ...(data.format ? { format: data.format } : {}),
                   date: data.date,
                   ...(data.updated ? { updated: data.updated } : {}),
                   ...(data.tags ? { tags: data.tags } : {}),
                 }
-              : { title: data.title, tags: data.tags, date: data.date }
+              : {
+                  title: data.title,
+                  ...(data.format ? { format: data.format } : {}),
+                  tags: data.tags,
+                  date: data.date,
+                }
           );
           setMarkdown(rawContent);
           setDate(data.date);
@@ -287,7 +301,9 @@ export function usePostDraft({
         const suggested = hasSavedDraft
           ? undefined
           : suggestPeriods(dateObj)[0];
-        if (suggested) loadTemplate(suggested, newDateParam, formattedDate);
+        // Fire and forget: loadTemplate reports its own failures via notify.
+        if (suggested)
+          void loadTemplate(suggested, newDateParam, formattedDate);
       } else {
         setMarkdown(DEFAULT_POST_TEMPLATE);
         initialContentRef.current = { markdown: DEFAULT_POST_TEMPLATE };
@@ -306,17 +322,24 @@ export function usePostDraft({
   const saveMarkdown = useCallback(
     async (toSave: string, auto: boolean) => {
       saveInFlight.current = true;
+      let settleSave: () => void = () => {};
+      saveSettledRef.current = new Promise<void>((resolve) => {
+        settleSave = resolve;
+      });
       setSaving(true);
       if (!auto) notify("");
 
       try {
-        const { data: frontmatter, content } = parseFrontmatter(toSave);
+        // Throws a FrontmatterError naming the bad field; caught below.
+        const { data: frontmatter, content } = parseMarkdown(
+          toSave,
+          draftFrontmatterSchema,
+          "frontmatter"
+        );
 
-        const parsedTitle = (frontmatter.title || "").toString().trim();
-        const parsedTags = (frontmatter.tags || "").toString().trim();
-        const parsedDate = isEssay
-          ? toDateString(frontmatter.date || date)
-          : (frontmatter.date || date).toString().trim();
+        const parsedTitle = (frontmatter.title ?? "").trim();
+        const parsedTags = (frontmatter.tags ?? "").trim();
+        const parsedDate = (frontmatter.date || date).trim();
 
         let slugToUse = slug;
 
@@ -338,14 +361,17 @@ export function usePostDraft({
             slug: slugToUse,
             title: parsedTitle,
             tags: parsedTags,
+            ...(frontmatter.format != null
+              ? { format: frontmatter.format }
+              : {}),
             date: parsedDate,
             content: content,
             isNew,
             ...(isEssay
               ? {
                   ...kindBody,
-                  subtitle: (frontmatter.subtitle || "").toString().trim(),
-                  updated: toDateString(frontmatter.updated),
+                  subtitle: (frontmatter.subtitle ?? "").trim(),
+                  updated: frontmatter.updated ?? "",
                 }
               : {}),
           }),
@@ -385,9 +411,15 @@ export function usePostDraft({
           notify(`✗ Error: ${data.error}`);
         }
       } catch (error) {
-        notify(`✗ Error: ${error}`);
+        notify(
+          error instanceof FrontmatterError
+            ? `✗ Frontmatter: ${error.detail}`
+            : `✗ Error: ${String(error)}`
+        );
       } finally {
         saveInFlight.current = false;
+        settleSave();
+        saveSettledRef.current = null;
         setSaving(false);
       }
       return false;
@@ -429,10 +461,10 @@ export function usePostDraft({
   };
 
   const handlePublish = async () => {
-    if (loading || saving || publishing || isNew) return;
+    if (loading || saving || publishing || isNew) return false;
     // Publishing must stop when the preceding save fails. Always saves so
     // the published file is formatted even when autosave already ran.
-    if (!(await handleSave())) return;
+    if (!(await handleSave())) return false;
 
     setPublishing(true);
     notify("");
@@ -460,14 +492,16 @@ export function usePostDraft({
         notify("✓ Published!", true);
         rewriteImagePaths(publishImagePaths);
         setIsDraft(false);
+        return true;
       } else {
         notify(`✗ Error: ${data.error}`);
       }
     } catch (error) {
-      notify(`✗ Error: ${error}`);
+      notify(`✗ Error: ${String(error)}`);
     } finally {
       setPublishing(false);
     }
+    return false;
   };
 
   const handleUnpublish = async () => {
@@ -491,13 +525,14 @@ export function usePostDraft({
         notify(`✗ Error: ${data.error}`);
       }
     } catch (error) {
-      notify(`✗ Error: ${error}`);
+      notify(`✗ Error: ${String(error)}`);
     } finally {
       setPublishing(false);
     }
   };
 
   const handleDelete = () => {
+    if (loading || publishing || templateLoading || deletingRef.current) return;
     confirmAction(
       isEssay ? "delete this essay?" : "delete this post?",
       "The file is removed and this can't be undone.",
@@ -507,7 +542,10 @@ export function usePostDraft({
         setDeleting(true);
         notify("");
 
+        let deleted = false;
         try {
+          // A request already on the wire must finish before deleting its file.
+          await saveSettledRef.current;
           const response = await fetch(
             `/api/admin/delete-post?slug=${encodeURIComponent(slug)}${kindQuery}`,
             { method: "DELETE" }
@@ -518,24 +556,25 @@ export function usePostDraft({
           if (response.ok) {
             removeDraftBackup(recoveryKey);
             notify(isEssay ? "✓ Essay deleted" : "✓ Post deleted");
-            setTimeout(() => {
-              router.push(
-                isEssay
-                  ? "/admin/essays"
-                  : searchParams.get("month")
-                    ? `/admin?month=${searchParams.get("month")}`
-                    : "/admin"
-              );
-            }, 1000);
+            deleted = true;
+            initialContentRef.current = { markdown: latestMarkdownRef.current };
+            wasDirtyRef.current = false;
+            setHasUnsavedChanges(false);
+            router.replace(
+              data.nextHref || (isEssay ? "/admin/essays" : "/admin")
+            );
           } else {
             deletingRef.current = false;
             notify(`✗ Error: ${data.error}`);
           }
         } catch (error) {
           deletingRef.current = false;
-          notify(`✗ Error: ${error}`);
+          notify(`✗ Error: ${String(error)}`);
         } finally {
-          setDeleting(false);
+          if (!deleted) {
+            deletingRef.current = false;
+            setDeleting(false);
+          }
         }
       }
     );
@@ -544,7 +583,7 @@ export function usePostDraft({
   // Track unsaved changes + back up the draft to localStorage
   useEffect(() => {
     latestMarkdownRef.current = markdown;
-    if (loading) return;
+    if (loading || deletingRef.current) return;
     const hasChanged = markdown !== initialContentRef.current.markdown;
     setHasUnsavedChanges(hasChanged);
 
@@ -610,6 +649,24 @@ export function usePostDraft({
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [hasUnsavedChanges]);
 
+  const confirmLeave = (href: string) =>
+    confirmAction(
+      "leave without saving?",
+      "Your unsaved changes stay in this browser's copy, not the file.",
+      ["stay", "leave"],
+      () => {
+        // Temporarily disable beforeunload warning before navigating
+        setHasUnsavedChanges(false);
+        setTimeout(() => {
+          window.location.href = href;
+        }, 0);
+      }
+    );
+
+  // Keyboard navigation goes through the same guard as link clicks.
+  const leaveTo = (href: string) =>
+    hasUnsavedChanges ? confirmLeave(href) : router.push(href);
+
   // Intercept in-app link clicks while there are unsaved changes
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -628,18 +685,7 @@ export function usePostDraft({
         e.preventDefault();
         e.stopPropagation();
 
-        confirmAction(
-          "leave without saving?",
-          "Your unsaved changes stay in this browser's copy, not the file.",
-          ["stay", "leave"],
-          () => {
-            // Temporarily disable beforeunload warning before navigating
-            setHasUnsavedChanges(false);
-            setTimeout(() => {
-              window.location.href = anchor.href;
-            }, 0);
-          }
-        );
+        confirmLeave(anchor.href);
       }
     };
 
@@ -656,7 +702,8 @@ export function usePostDraft({
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "s") {
         e.preventDefault();
-        handleSave();
+        // handleSave reports failures through notify and never rejects.
+        void handleSave();
       }
     };
 
@@ -678,6 +725,7 @@ export function usePostDraft({
     template,
     templateLoading,
     switchTemplate,
+    leaveTo,
     prevSlug,
     nextSlug,
     prevDate,

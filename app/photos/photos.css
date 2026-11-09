@@ -6,6 +6,19 @@
   --ph-muted: #8c8c8c;
   --ph-faint: #5c5c5c;
   --ph-accent: var(--color-chalk);
+  /* Shared role names (see ROLES in globals.css), so role utilities and
+     shared components render in the darkroom theme too. */
+  --role-surface: var(--ph-bg);
+  --role-raised: var(--ph-raised);
+  --role-line: var(--ph-line);
+  --role-primary: var(--ph-text);
+  --role-accent: var(--ph-accent);
+  --role-secondary: var(--ph-text);
+  --role-muted: var(--ph-muted);
+  --font-body: var(--font-photo-sans);
+  --font-display: var(--font-photo-sans);
+  --font-ui: var(--font-photo-sans);
+  --font-mono: var(--font-photo-mono);
   --ph-pad: clamp(20px, 4vw, 40px);
   --ph-side: max(var(--ph-pad), calc((100% - 1280px) / 2 + var(--ph-pad)));
   min-height: 100svh;
@@ -23,11 +36,11 @@
   -webkit-user-select: none;
   user-select: none;
 }
-.photo-site a {
+.photo-site a:not([data-ui]) {
   color: inherit;
   text-decoration: none;
 }
-.photo-site button {
+.photo-site button:not([data-ui]) {
   color: inherit;
   font: inherit;
   letter-spacing: inherit;

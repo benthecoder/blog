@@ -1,6 +1,6 @@
 ---
 title: YouTube Archive
-tags: film, relationships, faith, writing, startups
+tags: film, relationships, writing, startups
 date: Feb 8, 2024
 format: resource
 ---

@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { fetchThoughtPage } from "./thoughtsPage";
+import { thoughtJsonSchema } from "./thoughts";
 const signal = new AbortController().signal;
 const thought = (id: number) => ({
   id,
@@ -48,6 +49,27 @@ describe("thoughts pagination", () => {
       await expect(fetchThoughtPage(1000, signal, fetcher)).rejects.toThrow(
         "Invalid thoughts page"
       );
+    }
+  });
+  it("rejects exactly the entries thoughtJsonSchema rejects", async () => {
+    // The client guard stands in for the schema to keep zod off /thoughts.
+    for (const entry of [
+      thought(9),
+      { ...thought(9), id: 0 },
+      { ...thought(9), id: 1.5 },
+      { ...thought(9), id: "9" },
+      { ...thought(9), content: null },
+      { ...thought(9), created_at: "invalid" },
+      { id: 9, content: "hello" },
+    ]) {
+      const fetcher = vi
+        .fn<typeof fetch>()
+        .mockResolvedValue(Response.json([entry]));
+      const accepted = await fetchThoughtPage(10, signal, fetcher).then(
+        () => true,
+        () => false
+      );
+      expect(accepted).toBe(thoughtJsonSchema.safeParse(entry).success);
     }
   });
   it("rejects invalid cursors before sending requests", async () => {

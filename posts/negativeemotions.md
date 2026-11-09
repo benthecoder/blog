@@ -1,6 +1,6 @@
 ---
 title: Negative Triggers
-tags: psychology, mental-health, emotional-regulation, mindfulness
+tags: psychology, emotional-regulation, mindfulness
 date: Jan 24, 2024
 ---
 
@@ -82,7 +82,7 @@ Choose to feel something different.
 You can try these exercises to change your mood
 
 1. walking meditation: find a quiet place to walk slowly while letting go of the emotions attached to the trigger. focus on the sensations of standing and the movements that keep your balance
-2. conscious breathing: breath to relax your body and mind. focus on one word which represents how you want to feel.
+2. conscious breathing: breathe to relax your body and mind. focus on one word which represents how you want to feel.
 3. practice gratitude: think about three things you're grateful for
 
 There are many other exercises.

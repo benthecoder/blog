@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { animateIn } from "./enterAnimation";
 import {
   autoUpdate,
   flip,
@@ -33,6 +34,8 @@ export function EditorPopover({
   const [open, setOpen] = useState(false);
   const { refs, floatingStyles, context } = useFloating({
     open,
+    // Left and top, so the enter animation owns `transform`.
+    transform: false,
     onOpenChange: setOpen,
     placement: `bottom-${align}`,
     middleware: [offset(10), flip(), shift({ padding: 12 })],
@@ -44,6 +47,16 @@ export function EditorPopover({
     dismiss,
     role,
   ]);
+  // The panel mounts in a portal after `open` flips, so animate on mount. It
+  // grows out of the trigger's corner; leaving is instant.
+  const enterPanel = (node: HTMLElement | null) => {
+    if (node)
+      animateIn(node, {
+        from: 0.97,
+        duration: 125,
+        origin: align === "end" ? "100% 0" : "0 0",
+      });
+  };
   return (
     <>
       <button
@@ -66,7 +79,7 @@ export function EditorPopover({
           {label}
         </span>
         {!plain && (
-          <span aria-hidden="true" className="text-muted text-[10px]">
+          <span aria-hidden="true" className="text-muted text-2xs">
             ⌄
           </span>
         )}
@@ -79,9 +92,14 @@ export function EditorPopover({
               style={floatingStyles}
               {...getFloatingProps()}
               aria-label={name}
-              className={`z-110 max-w-[calc(100vw-24px)] bg-paper dark:bg-night-raised text-accent border border-line shadow-lg ${plain ? "w-44 p-1" : "w-60 p-3"}`}
+              className="z-110 max-w-[calc(100vw-24px)]"
             >
-              {children(() => setOpen(false))}
+              <div
+                ref={enterPanel}
+                className={`bg-raised text-accent rounded-xs shadow-lg ${plain ? "w-44 p-1" : "w-60 p-3"}`}
+              >
+                {children(() => setOpen(false))}
+              </div>
             </div>
           </FloatingFocusManager>
         </FloatingPortal>

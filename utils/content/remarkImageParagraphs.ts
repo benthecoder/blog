@@ -1,4 +1,4 @@
-import type { Paragraph, PhrasingContent, Root } from "mdast";
+import type { Paragraph, PhrasingContent, Root, RootContent } from "mdast";
 import { SKIP, visit } from "unist-util-visit";
 
 // Image-led paragraphs become photo plates. Isolate each image so the
@@ -41,5 +41,56 @@ export default function remarkImageParagraphs() {
       parent.children.splice(index, 1, ...paragraphs);
       return [SKIP, index + paragraphs.length];
     });
+
+    // A run of back-to-back plates is laid out as rows of prints. Rows hold
+    // three, or two where a three would strand a lone print at the end.
+    const isPlate = (node: RootContent) =>
+      node.type === "paragraph" &&
+      node.children.length === 1 &&
+      isImage(node.children[0]);
+    const element = (
+      className: string,
+      children: RootContent[],
+      extra: Record<string, string> = {}
+    ) =>
+      ({
+        type: className,
+        children,
+        data: {
+          hName: "div",
+          hProperties: { className: [className], ...extra },
+        },
+      }) as unknown as RootContent;
+    const grouped: RootContent[] = [];
+    let run: RootContent[] = [];
+    const flushRun = () => {
+      if (run.length > 1) {
+        const rows = rowSizes(run.length).map((size, i, sizes) => {
+          const start = sizes.slice(0, i).reduce((a, b) => a + b, 0);
+          return element("photo-row", run.slice(start, start + size), {
+            "data-n": String(size),
+          });
+        });
+        grouped.push(element("photo-group", rows));
+      } else grouped.push(...run);
+      run = [];
+    };
+    for (const node of tree.children) {
+      if (isPlate(node)) run.push(node);
+      else {
+        flushRun();
+        grouped.push(node);
+      }
+    }
+    flushRun();
+    tree.children = grouped;
   };
+}
+
+/** Splits `count` photos into rows of three, ending in pairs, never one. */
+export function rowSizes(count: number): number[] {
+  const remainder = count % 3;
+  const threes = Math.floor(count / 3) - (remainder === 1 ? 1 : 0);
+  const twos = remainder === 1 ? 2 : remainder === 2 ? 1 : 0;
+  return [...Array(threes).fill(3), ...Array(twos).fill(2)];
 }

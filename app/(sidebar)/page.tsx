@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import HomeConnections from "@/components/ui/HomeConnections";
@@ -11,6 +12,8 @@ import { photoAlt } from "@/utils/photoCaption";
 
 // Photos are live; refresh hourly so new uploads reach the homepage.
 export const revalidate = 3600;
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const FEATURED_SKETCHES = ["howl.png", "wave.png", "peony.png"].flatMap(
   (file) => SKETCHES.filter((sketch) => sketch.file === file)
@@ -129,13 +132,16 @@ export default async function HomePage() {
         <p>here are some places you can visit:</p>
         <ul>
           <li>
-            <Link href="/map">places i recommend</Link>
+            <Link href="/map">list of places</Link>
           </li>
           <li>
-            <Link href="/library">the bookshelf</Link>
+            <Link href="/library">my library</Link>
           </li>
           <li>
             <Link href="/recipes">recipes</Link>
+          </li>
+          <li>
+            <Link href="/uses">products i use</Link>
           </li>
         </ul>
       </article>

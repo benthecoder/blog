@@ -8,7 +8,7 @@ export function Sidebar() {
   return (
     <>
       {/* Name section */}
-      <div className="flex flex-col items-center mb-2 lg:fixed lg:top-10 lg:left-10 lg:mb-2">
+      <header className="flex flex-col items-center pt-14 mb-2 sm:pt-0 lg:fixed lg:top-10 lg:left-10 lg:mb-2">
         <div className="font-bold text-center lg:text-left mt-4 mb-2 lg:mt-0">
           <div className="flex flex-row lg:flex-col items-center justify-center lg:justify-start gap-2">
             <Link href="/">
@@ -29,7 +29,7 @@ export function Sidebar() {
             </Link>
           </div>
         </div>
-      </div>
+      </header>
 
       <SidebarNav />
     </>

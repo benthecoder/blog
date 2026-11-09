@@ -2,9 +2,17 @@ import fs from "fs";
 import path from "path";
 import sharp, { type Sharp, type Metadata } from "sharp";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { IMAGES_DRAFTS_DIR, isSafeSlug } from "@/config/paths";
 import { r2PutImage } from "@/utils/r2";
+
+const cropSchema = z.object({
+  x: z.number().finite(),
+  y: z.number().finite(),
+  width: z.number().finite().positive(),
+  height: z.number().finite().positive(),
+});
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
@@ -12,23 +20,34 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("file");
-    const customName = formData.get("name") as string | null;
+    const customName = formData.get("name");
     const published = formData.get("published") === "true";
+    const rotationRaw = formData.get("rotation");
+    if (
+      rotationRaw !== null &&
+      (typeof rotationRaw !== "string" ||
+        !["0", "90", "180", "270"].includes(rotationRaw))
+    ) {
+      return NextResponse.json({ error: "Invalid rotation" }, { status: 400 });
+    }
+    const rotation = Number(rotationRaw ?? 0);
 
     // Crop region in the source image's own pixels, sent by the crop modal.
     const cropRaw = formData.get("crop");
-    let crop: { x: number; y: number; width: number; height: number } | null =
-      null;
-    if (typeof cropRaw === "string") {
+    let crop: z.infer<typeof cropSchema> | null = null;
+    if (cropRaw !== null) {
+      if (typeof cropRaw !== "string") {
+        return NextResponse.json({ error: "Invalid crop" }, { status: 400 });
+      }
       try {
-        const parsed = JSON.parse(cropRaw);
-        const nums = [parsed?.x, parsed?.y, parsed?.width, parsed?.height];
-        if (nums.every((n) => typeof n === "number" && Number.isFinite(n))) {
-          crop = parsed;
+        const parsed: unknown = JSON.parse(cropRaw);
+        const result = cropSchema.safeParse(parsed);
+        if (!result.success) {
+          return NextResponse.json({ error: "Invalid crop" }, { status: 400 });
         }
+        crop = result.data;
       } catch {
-        // Malformed crop is ignored rather than failing the upload — the
-        // image still lands, just uncropped.
+        return NextResponse.json({ error: "Invalid crop" }, { status: 400 });
       }
     }
 
@@ -37,7 +56,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Security: prevent path traversal via custom name
-    if (customName && !isSafeSlug(customName)) {
+    if (
+      customName !== null &&
+      (typeof customName !== "string" ||
+        (customName !== "" && !isSafeSlug(customName)))
+    ) {
       return NextResponse.json({ error: "Invalid file name" }, { status: 400 });
     }
 
@@ -59,15 +82,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Auto-rotate based on EXIF orientation
-    let processor = image.rotate();
+    // Apply EXIF orientation first, then the manual rotation shown in the preview.
+    let processor = image.autoOrient().rotate(rotation);
 
-    // Orientations 5-8 are quarter turns, so .rotate() swaps the axes. The
+    // EXIF orientations 5-8 and manual quarter turns each swap the axes. The
     // crop arrived in the browser's coordinates, and browsers display the
     // already-oriented image — so compare against the post-rotation size.
     const turned = (metadata.orientation ?? 1) >= 5;
-    const srcW = (turned ? metadata.height : metadata.width) ?? 0;
-    const srcH = (turned ? metadata.width : metadata.height) ?? 0;
+    const swapped = turned !== (rotation === 90 || rotation === 270);
+    const srcW = (swapped ? metadata.height : metadata.width) ?? 0;
+    const srcH = (swapped ? metadata.width : metadata.height) ?? 0;
 
     // Cut the requested region straight out of the original: cropping in
     // the browser first would have meant a second lossy JPEG pass.

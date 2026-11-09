@@ -24,6 +24,7 @@
 @theme {
   --color-photo-viewer: #131413;
   --color-photo-caption: #f6f5ef;
+  --color-print: #f6f1e6; /* ivory print card stock, both modes */
   --color-photo-shade: #131413b3;
   /* -- Surfaces: light ---------------------------------------------------- */
   --color-paper: #fbfaf5; /* page + card background */
@@ -57,6 +58,18 @@
 
   /* -- Type & motion ------------------------------------------------------ */
   --font-serif: var(--font-averia);
+
+  /* Type roles. Plain @theme (not inline) so a scoped theme can reassign them
+     and every `font-body` / `font-display` / `font-ui` below it follows. */
+  --font-body: var(--font-serif);
+  --font-display: var(--font-serif);
+  --font-ui: var(--font-serif);
+
+  /* Sizes below Tailwind's text-xs (12px). Font-size only: no paired
+     line-height, so these inherit it exactly as text-[10px] used to. */
+  --text-3xs: 0.5625rem; /* 9px */
+  --text-2xs: 0.625rem; /* 10px */
+  --text-caption: 0.6875rem; /* 11px */
 
   --animate-typing: typing 1.5s infinite;
   --animate-typing-middle: typing 1.5s infinite 0.2s;
@@ -95,6 +108,21 @@
   --role-line: var(--color-rule);
 }
 
+/* Status roles. Muted, print-like pigments rather than screen primaries, so
+   an error reads like red ink on paper. Every light/dark value is >= 4.5:1
+   against its surface (paper / night). They do not follow data-palette. */
+:root {
+  --role-danger: #b23b2e;
+  --role-success: #4f7a3a;
+  --role-warning: #9e6510;
+}
+
+.dark {
+  --role-danger: #e0806f;
+  --role-success: #9cc283;
+  --role-warning: #e0b062;
+}
+
 .dark,
 .dark .colophon-swatch {
   --role-primary: var(--color-chalk-strong);
@@ -114,13 +142,23 @@
   --color-surface: var(--role-surface); /* page */
   --color-raised: var(--role-raised); /* cards, overlays */
   --color-line: var(--role-line); /* rules, borders */
+  --color-danger: var(--role-danger); /* errors, destructive actions */
+  --color-success: var(--role-success); /* published, saved, ok */
+  --color-warning: var(--role-warning); /* caution, drafts */
 }
 
 /* Small caps label above a list or section ("favorites", "linked from").
    60% keeps it quiet without dropping below readable contrast. */
 @layer components {
+  /* One keyboard focus treatment. Add the class; it only draws on
+     :focus-visible, so mouse clicks stay quiet. */
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--role-accent);
+    outline-offset: 2px;
+  }
+
   .eyebrow {
-    font-size: 10px;
+    font-size: var(--text-2xs);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: color-mix(in oklab, var(--color-primary) 60%, transparent);
@@ -229,11 +267,25 @@
    reads them by name.
    ========================================================================== */
 .places-explorer {
+  /* Shared role names (see ROLES), so role utilities work on this page.
+     They reference --map-*, which already switch in .dark below. */
+  --map-font: var(--font-averia), Georgia, serif;
+  --role-surface: var(--map-paper);
+  --role-raised: var(--map-hover);
+  --role-line: var(--map-rule);
+  --role-primary: var(--map-ink);
+  --role-accent: var(--map-accent);
+  --role-secondary: var(--map-ink);
+  --role-muted: var(--map-muted);
+  --font-body: var(--map-font);
+  --font-display: var(--map-font);
+  --font-ui: var(--map-font);
+
   --map-paper: #f2e9d6; /* washi */
   --map-hover: #e9dec6;
   --map-rule: #d8c9a8;
   --map-ink: #2b2620; /* sumi */
-  --map-muted: #6e624f;
+  --map-muted: #6a5e4b;
   --map-accent: #c0392b; /* the selected place, nothing else */
   --map-shade: #2b262024;
   --map-cat-food: #b0683a; /* kaki, persimmon */
@@ -253,11 +305,10 @@
   --map-base-path: #e0d9c9;
   --map-base-road: #fbf8f1;
   --map-base-road-casing: #d6cfbe;
-  --map-base-highway: #f8f4ea;
-  --map-base-highway-casing: #bdb4a0;
-  --map-base-rail: #9a9384;
-  --map-base-road-label: #7a7364;
-  --map-base-place-label: #3a352e;
+  --map-base-highway: #f5f0e4;
+  --map-base-rail: #d3cab7;
+  --map-base-road-label: #958c7b;
+  --map-base-place-label: #7d725f;
   --map-base-halo: #eee8da;
 }
 .dark .places-explorer {
@@ -286,10 +337,9 @@
   --map-base-road: #34312c;
   --map-base-road-casing: #3d3a34;
   --map-base-highway: #3a3731;
-  --map-base-highway-casing: #48443d;
   --map-base-rail: #3a3732;
   --map-base-road-label: #8f887b;
-  --map-base-place-label: #b5ad9d;
+  --map-base-place-label: #8f8778;
   --map-base-halo: #1c1a17;
 }
 
@@ -609,6 +659,17 @@ body {
   background-color: var(--color-paper-sunken) !important;
 }
 
+/* Keep the copy action above the text even when its touch target is 44px. */
+.prose .code-block pre.shiki {
+  padding-top: 3.75rem;
+}
+
+@media (min-width: 40rem) and (pointer: fine) {
+  .prose .code-block pre.shiki {
+    padding-top: 2.5rem;
+  }
+}
+
 .dark .prose pre {
   border: none !important;
   box-shadow: none !important;
@@ -676,55 +737,290 @@ body {
     0 10px 26px -8px rgba(0, 0, 0, 0.55);
 }
 
-/* ---- Framed photograph -------------------------------------------------
-   A print behind glass: a wide mat around the image, a hairline frame, and
-   a soft drop mixed from the active ink so the whole thing belongs to the
-   page rather than sitting on top of it. No hover motion — the plate hangs
-   still, and clicking it opens the full work. */
-.photo-frame {
+/* ---- Instant print ------------------------------------------------------
+   Every post photo is an instant print on real film proportions. The photo
+   is cropped to the nearest format (Mini 46×62, Square 62×62, Wide 99×62;
+   see PostImage), and the card keeps the film's borders: 4.5 at the sides,
+   6.5 on top and a 17.5 strip below, where the caption is written. --u is
+   one millimetre of film. Every format's window is 62 tall, so prints of
+   any format sit level. Clicking the photo opens the whole picture,
+   uncropped. */
+.photo-print {
+  /* About 70% of the reading column for a square print, held under the
+     screen's height so a portrait print still fits on a laptop, and
+     within the column on a phone. */
+  --u: clamp(0.22rem, min(1.25vw, 0.8vh), 0.44rem);
   /* The shadow is taken most of the way to neutral before it's faded out.
      Mixing straight from the ink made the print glow in the theme colour
      instead of casting a shadow; this keeps only a hint of the palette. */
   --photo-shadow: color-mix(in oklab, var(--color-ink) 22%, #1b1b1b);
-  padding: clamp(0.75rem, 2.5vw, 1.25rem);
-  background-color: var(--color-paper-raised);
-  border: 1px solid color-mix(in oklab, var(--color-ink) 8%, transparent);
-  border-radius: var(--radius-image);
+  width: min(calc(62 * var(--u) * var(--plate-ar, 1) + 9 * var(--u)), 100%);
+  margin: 3.5rem auto;
+  /* Ivory card stock, warmer than the page so the print reads as a separate
+     object lying on it. The faint sheen from the top left is the same light
+     that casts the shadow down and to the right. */
+  --card: var(--color-print);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in oklab, white 35%, transparent),
+      transparent 45%
+    ),
+    var(--card);
+  border-radius: 2px;
   box-shadow:
-    0 1px 2px color-mix(in oklab, var(--photo-shadow) 7%, transparent),
-    0 10px 24px -12px color-mix(in oklab, var(--photo-shadow) 16%, transparent);
+    0 0 0 1px color-mix(in oklab, var(--photo-shadow) 7%, transparent),
+    /* A print lies flat, so its shadow is short and crisp: a hard edge
+       just off the card, then a little falloff. A wide blur reads as
+       floating. */
+    1px 2px 0 color-mix(in oklab, var(--photo-shadow) 12%, transparent),
+    2px 4px 3px -1px color-mix(in oklab, var(--photo-shadow) 16%, transparent);
 }
 
-.dark .photo-frame {
-  background-color: var(--color-night-raised);
-  border-color: color-mix(in oklab, var(--color-chalk) 12%, transparent);
+/* A print is a physical object, so it stays ivory in the dark, like a
+   photo pinned to a dark wall: the card dimmed a little so it doesn't
+   glare, and a deeper shadow, since a light card on a dark ground needs
+   more of one to sit down. */
+.dark .photo-print {
+  --card: color-mix(in oklab, var(--color-print) 93%, var(--color-night));
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.35),
-    0 10px 24px -12px rgba(0, 0, 0, 0.5);
+    0 0 0 1px rgb(0 0 0 / 0.35),
+    1px 2px 0 rgb(0 0 0 / 0.35),
+    0 8px 22px -4px rgb(0 0 0 / 0.6);
 }
 
-/* The plate itself, inset in the mat. A hairline inner edge reads as the
-   lip of the mat board where it meets the print. */
+/* Keyboard focus rings the whole print, card edge and all, not just the
+   photo button inside it. */
+.photo-print:has(> .photo-frame:focus-visible:not([data-quiet])) {
+  outline: 2px solid color-mix(in oklab, var(--color-accent) 45%, transparent);
+  outline-offset: 4px;
+}
+
+.photo-frame {
+  padding: calc(6.5 * var(--u)) calc(4.5 * var(--u)) 0;
+}
+
+/* No caption, no strip: a bottom border a little deeper than the top. */
+.photo-frame:last-child {
+  padding-bottom: calc(10 * var(--u));
+}
+
 .photo-plate {
-  box-shadow: inset 0 0 0 1px
-    color-mix(in oklab, var(--color-ink) 7%, transparent);
+  aspect-ratio: var(--plate-ratio, 1);
+  /* The window in instant film is die-cut, nearly square at the corners. */
+  border-radius: 1px;
 }
 
-.dark .photo-plate {
-  box-shadow: inset 0 0 0 1px
-    color-mix(in oklab, var(--color-chalk) 9%, transparent);
+/* The picture sits a little below the frame's surface: a dark lip at the
+   window's edge and a soft shade falling from the top, drawn over the photo
+   since an inset shadow on the plate would sit behind it. */
+.photo-plate::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgb(0 0 0 / 0.22),
+    inset 0 2px 4px rgb(0 0 0 / 0.18);
+  /* Instant film is glossy under its clear layer: a soft diagonal sheen
+     from the same top-left light. */
+  background: linear-gradient(
+    125deg,
+    rgb(255 255 255 / 0.16) 0%,
+    rgb(255 255 255 / 0.04) 35%,
+    transparent 55%
+  );
 }
 
-/* Caption under a framed photo. Quieter than body text, but only just — the
-   0.08em tracking this had read as a gallery placard rather than a caption,
-   and made the words look stretched next to the post's own type. */
+/* The bottom strip, written in a pen-like italic. It grows when a caption
+   needs more than a line or two. */
 .photo-label {
-  font-size: 0.75rem;
-  color: var(--color-ink-muted);
+  min-height: calc(17.5 * var(--u));
+  padding: calc(2 * var(--u)) calc(4.5 * var(--u)) calc(3 * var(--u));
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-family: var(--font-caption), var(--font-serif);
+  font-style: italic;
+  /* Written to the film's scale, like the borders, so a small print gets
+     small handwriting instead of a caption as big as its photo. Never
+     below 14px, where the italic stops being legible. */
+  font-size: clamp(0.875rem, calc(3 * var(--u)), 1.125rem);
+  line-height: 1.15;
+  color: var(--color-ink-soft);
 }
 
-.dark .photo-label {
-  color: var(--color-chalk-muted);
+/* The card stays light in the dark, so the pen stays dark too. */
+.dark .photo-label,
+.dark .prose .photo-label {
+  color: var(--color-ink-soft);
+}
+
+/* The editor's preview: the strip is where you write. */
+.photo-label input {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: center;
+  outline: none;
+}
+
+.photo-label input::placeholder {
+  color: inherit;
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.photo-print:hover .photo-label input::placeholder,
+.photo-label input:focus::placeholder {
+  opacity: 0.6;
+}
+
+/* Back-to-back photos are laid out in rows (see remarkImageParagraphs).
+   Each print's width follows its photo's shape, so every photo in a row
+   stands the same height whatever its orientation, and a row reads as one
+   contact strip; the caption strips fill out to the same bottom edge.
+
+   A row is held as a fan, like a hand of cards: each print turned about
+   one shared pivot below the row, so the tilts mirror and the tops sit on
+   a single arc. Hovering with a mouse lays them flat. */
+.photo-group {
+  --spread: 3deg;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  margin-block: 4rem;
+}
+
+/* With room to spare, a row of prints reaches past the text into the
+   margins, the way a magazine lets a picture spread run wider than its
+   column. Three photos side by side are otherwise thumbnails. */
+@media (min-width: 64rem) {
+  .photo-group:has(.photo-row) {
+    margin-inline: -4rem;
+  }
+}
+@media (min-width: 80rem) {
+  .photo-group:has(.photo-row) {
+    margin-inline: -7rem;
+  }
+}
+
+.photo-row {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 3%;
+  /* Room for the tilted corners inside the text column. */
+  padding-inline: 3%;
+}
+
+.photo-row[data-n="2"] {
+  --n: 2;
+}
+.photo-row[data-n="3"] {
+  --n: 3;
+}
+
+/* Prints in a row are smaller film. Each is its side borders plus a share
+   of the row in proportion to its format, so every window stands the same
+   height and the borders match. */
+.photo-row > .photo-print {
+  --u: clamp(0.16rem, 0.5vw, 0.21rem);
+  flex: var(--plate-ar, 1) 1 calc(9 * var(--u));
+  min-width: 0;
+  width: auto;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  /* Each print's origin is the row's shared pivot, given relative to that
+     print: about one print width per step from the middle of the row. */
+  --step: calc(var(--i) - (var(--n) - 1) / 2);
+  transform-origin: calc(50% - var(--step) * 103%) 220%;
+  transform: rotate(calc(var(--step) * var(--spread)));
+  transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.photo-row > .photo-print:nth-child(1) {
+  --i: 0;
+}
+.photo-row > .photo-print:nth-child(2) {
+  --i: 1;
+}
+.photo-row > .photo-print:nth-child(3) {
+  --i: 2;
+}
+
+/* The strip takes up whatever height the row leaves, so prints with a
+   shorter caption still end level with their neighbours. */
+.photo-row .photo-label {
+  flex: 1;
+}
+
+/* Only a real pointer lays the fan flat. On touch, the tap that opens a
+   photo would trigger hover and leave the prints straightened. */
+@media (hover: hover) and (pointer: fine) {
+  .photo-row:hover > .photo-print {
+    transform: none;
+  }
+}
+
+/* On a phone, three across would be thumbnails: a row of three becomes a
+   strip of full-size prints you swipe through, each snapping to centre. */
+@media (max-width: 39.99rem) {
+  .photo-row[data-n="3"] {
+    justify-content: flex-start;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    /* Let the strip run to the screen edges, with room for the shadows. */
+    margin-inline: -1rem;
+    padding: 0.5rem 1rem 1rem;
+  }
+
+  .photo-row[data-n="3"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  .photo-row[data-n="3"] > .photo-print {
+    flex: none;
+    --u: 0.24rem;
+    width: min(calc(62 * var(--u) * var(--plate-ar, 1) + 9 * var(--u)), 85%);
+    scroll-snap-align: center;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-row > .photo-print {
+    transition: none;
+  }
+}
+
+/* Opening a photo lifts it out of its print and carries it to the viewer
+   (a view transition; see PostImage). The cropped print and the whole
+   picture each cover the moving box, so one grows into the other instead
+   of stretching. The rest of the page dims over the same stretch. */
+::view-transition-group(photo-lift) {
+  animation-duration: 420ms;
+  animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+::view-transition-old(photo-lift),
+::view-transition-new(photo-lift) {
+  height: 100%;
+  object-fit: cover;
+  animation-duration: 420ms;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 300ms;
 }
 
 /* ==========================================================================
@@ -839,6 +1135,48 @@ body {
 .dark .sketch-ink {
   filter: invert(1);
   mix-blend-mode: screen;
+}
+
+.post-link-preview {
+  opacity: 1;
+  transition: opacity 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.post-link-preview[data-status="initial"],
+.post-link-preview[data-status="close"] {
+  opacity: 0;
+}
+
+.post-link-preview[data-status="close"] {
+  transition-duration: 100ms;
+}
+
+[data-placement^="top"] > .post-link-preview {
+  transform-origin: bottom;
+}
+
+[data-placement^="bottom"] > .post-link-preview {
+  transform-origin: top;
+}
+
+[data-placement^="left"] > .post-link-preview {
+  transform-origin: right;
+}
+
+[data-placement^="right"] > .post-link-preview {
+  transform-origin: left;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .post-link-preview {
+    transform: scale(1);
+    transition-property: opacity, transform;
+  }
+
+  .post-link-preview[data-status="initial"],
+  .post-link-preview[data-status="close"] {
+    transform: scale(0.94);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1055,7 +1393,7 @@ body {
   color: var(--color-chalk-strong);
 }
 
-body:has(.photo-site) .floating-controls,
-body:has(.places-explorer) .floating-controls {
+body:has(.photo-site:not([data-specimen])) .floating-controls,
+body:has(.places-explorer:not([data-specimen])) .floating-controls {
   display: none;
 }

@@ -15,8 +15,13 @@ export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await props.params;
+  const tag = tryDecodeUrlComponent(slug) ?? slug;
+  const count = getPostMetadata().filter((post) =>
+    post.tags.includes(tag)
+  ).length;
   return pageMetadata({
-    title: `#${tryDecodeUrlComponent(slug) ?? slug}`,
+    title: `#${tag}`,
+    description: `${count} ${count === 1 ? "post" : "posts"} tagged ${tag}`,
     path: `/tags/${slug}`,
   });
 }
@@ -39,7 +44,7 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
   if (format) permanentRedirect(`/posts?view=${format}`);
   const destination = legacyTravelDestination(tag);
   if (destination)
-    permanentRedirect(`/posts?view=travels#${travelPlaceId(destination)}`);
+    permanentRedirect(`/posts?view=places#${travelPlaceId(destination)}`);
   const canonical = canonicalTopicTag(tag);
   if (
     canonical !== tag &&

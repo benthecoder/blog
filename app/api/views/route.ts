@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
+import { z } from "zod";
 import { upstashRequest, upstashPipeline } from "@/utils/upstash";
 import { COUNT_VIEW_SCRIPT } from "@/utils/viewCounter";
 import { isSafeSlug } from "@/config/paths";
@@ -114,11 +115,8 @@ export async function POST(request: NextRequest) {
     body = {};
   }
 
-  const slug = parseSlug(
-    body && typeof body === "object" && !Array.isArray(body)
-      ? (body as { slug?: unknown }).slug
-      : undefined
-  );
+  const parsed = z.object({ slug: z.unknown() }).safeParse(body);
+  const slug = parseSlug(parsed.success ? parsed.data.slug : undefined);
 
   if (!slug) {
     return NextResponse.json({ error: "Slug required" }, { status: 400 });

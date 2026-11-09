@@ -3,6 +3,7 @@ import { POSTS_DIR } from "@/config/paths";
 import { PAPER_TOPICS, PAPERS_CATEGORY } from "@/config/papers";
 import { scanMarkdownDir } from "./markdown";
 import { readPaperFields } from "./paperFields";
+import { postFrontmatterSchema } from "./schemas";
 import { parseTags } from "./tags";
 
 export interface PaperEntry {
@@ -38,19 +39,16 @@ function labelFor(slug: string): string {
 
 /** Every post with a `papers/` category, newest `read` first (undated last). */
 export const getPapers = cache(function getPapers(): PaperEntry[] {
-  return scanMarkdownDir(POSTS_DIR)
+  return scanMarkdownDir(POSTS_DIR, postFrontmatterSchema)
     .flatMap(({ slug, data }) => {
-      const topic = topicOf(
-        typeof data.category === "string" ? data.category : ""
-      );
+      const topic = topicOf(data.category ?? "");
       if (topic === null) return [];
       const fields = readPaperFields(data);
       return [
         {
           slug,
-          title: (data.title as string) || slug,
-          description:
-            typeof data.description === "string" ? data.description : "",
+          title: data.title || slug,
+          description: data.description ?? "",
           topic,
           authors: fields.authors,
           year: fields.year,

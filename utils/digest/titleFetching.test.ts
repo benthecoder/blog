@@ -146,13 +146,13 @@ describe("server source collection", () => {
         content: " take ",
         link: "https://example.test/one",
         link_title: null,
-        created_at: "2026-10-01",
+        created_at: new Date("2026-10-01"),
       },
       {
         content: "",
         link: "https://example.test/two",
         link_title: "stored",
-        created_at: "2026-10-02",
+        created_at: new Date("2026-10-02"),
       },
     ]);
     const { tweets } = await import("./sources/tweets");
@@ -175,7 +175,7 @@ describe("server source collection", () => {
         content: "take",
         link: "https://saved-link.example/private",
         link_title: null,
-        created_at: "2026-10-01",
+        created_at: new Date("2026-10-01"),
       },
     ]);
     const fetchMock = vi.fn(async (url: string) => {

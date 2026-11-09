@@ -1,6 +1,6 @@
 ---
 title: Heartbreak
-tags: relationships, mental-health, reading
+tags: relationships, reading
 date: Aug 20, 2023
 format: book
 ---

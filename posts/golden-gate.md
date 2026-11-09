@@ -1,6 +1,6 @@
 ---
 title: SF Trip w Parents
-tags: family, travel, nature, food, photography
+tags: family, travel, nature, photography
 date: Jun 4, 2023
 format: journal
 locations:

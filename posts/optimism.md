@@ -1,6 +1,6 @@
 ---
 title: Optimism
-tags: psychology, mental-health, emotional-regulation, resilience
+tags: psychology, emotional-regulation, resilience
 date: Dec 6, 2023
 ---
 

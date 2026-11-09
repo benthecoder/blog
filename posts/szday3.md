@@ -1,6 +1,6 @@
 ---
 title: Shenzhen Day 3
-tags: travel, art, drawing, food
+tags: travel, art, drawing
 date: Apr 24, 2024
 format: journal
 locations:
@@ -11,7 +11,7 @@ locations:
 
 - 酷狗 60s previews played and 因为爱请 is stuck in my head now
 - Zhou Yongjiu – China’s Van Gogh
-- There are so many similar shops and try oil panting places in Dafen, how do I decide which to go
+- There are so many similar shops and try oil painting places in Dafen, how do I decide which to go
 - Would be nice to operate your own mini cafe + jewelry store in a small town, refilling the water in the flower vase, meeting new people, playing Jay Chou in the background, pouring cat food in the bowl for when your cat comes back from exploring outside, recommending food and shops
 - I wonder why girls like to shop for jewelry, it’s like my interest for pretty book covers and artsy things
 - Install 大众点评 for food

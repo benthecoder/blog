@@ -2,8 +2,8 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import { POSTS_DIR } from "@/config/paths";
 import { extractQuotes } from "@/utils/chunking/extractors/quotes";
-import type { PostFrontmatter } from "@/types/post";
 import { scanMarkdownDir } from "./markdown";
+import { postFrontmatterSchema } from "./schemas";
 
 export interface Quote {
   text: string;
@@ -24,23 +24,24 @@ let quotes: Quote[] | undefined;
 export function getQuotes(): Quote[] {
   if (quotes) return quotes;
   const seen = new Set<string>();
-  quotes = scanMarkdownDir(POSTS_DIR).flatMap(({ slug, data, content }) =>
-    extractQuotes(parser.parse(content), {
-      frontmatter: data as PostFrontmatter,
-      slug,
-      fullContent: content,
-      currentSection: "",
-    }).flatMap(({ content: quote }) => {
-      const match = quote.match(ATTRIBUTED);
-      if (!match) return [];
-      const text = match[1]
-        .trim()
-        .replace(/^["“]|["”]$/g, "")
-        .replace(/,$/, ".");
-      if (EXCERPT.test(text) || seen.has(text.toLowerCase())) return [];
-      seen.add(text.toLowerCase());
-      return [{ text, author: match[2].trim(), slug }];
-    })
+  quotes = scanMarkdownDir(POSTS_DIR, postFrontmatterSchema).flatMap(
+    ({ slug, data, content }) =>
+      extractQuotes(parser.parse(content), {
+        frontmatter: data,
+        slug,
+        fullContent: content,
+        currentSection: "",
+      }).flatMap(({ content: quote }) => {
+        const match = quote.match(ATTRIBUTED);
+        if (!match) return [];
+        const text = match[1]
+          .trim()
+          .replace(/^["“]|["”]$/g, "")
+          .replace(/,$/, ".");
+        if (EXCERPT.test(text) || seen.has(text.toLowerCase())) return [];
+        seen.add(text.toLowerCase());
+        return [{ text, author: match[2].trim(), slug }];
+      })
   );
   return quotes;
 }

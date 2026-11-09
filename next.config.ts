@@ -35,10 +35,12 @@ const nextConfig: NextConfig = {
       },
     ],
     formats: ["image/avif", "image/webp"],
-    // Limit generated variants to the sizes and qualities the site uses.
+    // Limit generated variants to the sizes the site uses. One quality:
+    // every photo × width × quality is a transformation against the Hobby
+    // plan's 5K a month, and past it new photos fail to load.
     deviceSizes: [640, 828, 1200, 1920],
     imageSizes: [256, 384],
-    qualities: [65, 75],
+    qualities: [75],
     minimumCacheTTL: 31536000,
   },
 
@@ -132,6 +134,10 @@ const nextConfig: NextConfig = {
         { key: "X-Content-Type-Options", value: "nosniff" },
         { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         { key: "X-Frame-Options", value: "SAMEORIGIN" },
+        {
+          key: "Permissions-Policy",
+          value: "camera=(), microphone=(), geolocation=()",
+        },
         {
           key: "Content-Security-Policy",
           value: [

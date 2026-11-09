@@ -1,6 +1,6 @@
 ---
 title: Gratitude
-tags: psychology, mental-health, habits, relationships
+tags: psychology, habits, relationships
 date: Aug 14, 2023
 ---
 

@@ -22,7 +22,7 @@ Some notes & questions from reading [A Swift Tour](https://docs.swift.org/swift-
   - `..<` to make range of index
     - ex: `0..<4` is 0 to 3, and `0...<4` includes 4
 - `func`
-  - functions are first-class types, it can return another function as its value and cane take a function as an argument
+  - functions are first-class types, it can return another function as its value and can take a function as an argument
   - **closures**
     - functions are a special case of closures: blocks of code that can be called later
     - code in closure can access to variables and functions available in scope where closure was created, even if in a different scope when executed
@@ -88,7 +88,7 @@ Some notes & questions from reading [A Swift Tour](https://docs.swift.org/swift-
 - generics: `<myGeneric>`
   - there are generic forms of func and methods, as well as class, enum, and structs.
   - use `where` to specify list of requirements
-    - require type to implement a protocol, require to types to be equivalent, to require a class to have a particular superclass, etc.
+    - require type to implement a protocol, require two types to be equivalent, to require a class to have a particular superclass, etc.
 
 thoughts
 

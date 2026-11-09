@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 import { isSafeSlug } from "@/config/paths";
 import { formatOf } from "./formats";
+import type { PostFrontmatter } from "./schemas";
 import { parseTags } from "./tags";
 import { parseLocations } from "./travel";
 
@@ -31,7 +32,7 @@ export function postBodyHash(content: string): string {
 /** The audit may edit only formats, topic tags, and explicit destinations. */
 export function auditedMetadata(
   slug: string,
-  data: Record<string, unknown>,
+  data: PostFrontmatter,
   content: string,
   decision: PostAuditDecision
 ) {

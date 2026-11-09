@@ -1,4 +1,4 @@
-import type { PostFormat } from "@/types/post";
+import type { PostFormat, PostFrontmatter } from "@/types/post";
 import { formatOf, isPostFormat, POST_FORMATS } from "./formats";
 import { parseTags } from "./tags";
 
@@ -25,16 +25,27 @@ const removedTags = new Set<string>([
   "✰",
 ]);
 
-export function migrateFormat(slug: string, data: Record<string, unknown>) {
+/**
+ * Pre-migration frontmatter: `format` may hold a value the schema rejects,
+ * and other keys pass through untouched.
+ */
+interface LegacyPostData {
+  title?: string;
+  tags?: PostFrontmatter["tags"];
+  format?: unknown;
+  [key: string]: unknown;
+}
+
+export function migrateFormat(slug: string, data: LegacyPostData) {
   if (data.format != null && !isPostFormat(data.format)) {
     throw new Error(`${slug}: unknown format ${JSON.stringify(data.format)}`);
   }
   const tags = parseTags(data.tags);
-  let format: PostFormat | undefined = data.format as PostFormat | undefined;
+  let format: PostFormat | undefined = data.format ?? undefined;
   if (!format) {
     if (ESSAY_SLUGS.has(slug)) format = "essay";
     else if (
-      /^sunday links\b/i.test(String(data.title ?? "")) ||
+      /^sunday links\b/i.test(data.title ?? "") ||
       tags.includes("links")
     )
       format = "links";

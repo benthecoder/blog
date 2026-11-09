@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { play } from "cuelume";
+import { IconButton } from "@/components/ui/IconButton";
 
 export default function CopyButton({ code }: { code: string }) {
   const [status, setStatus] = useState<"idle" | "copied" | "error">("idle");
@@ -27,11 +28,12 @@ export default function CopyButton({ code }: { code: string }) {
   };
 
   return (
-    <button
+    <IconButton
+      size="sm"
       onClick={copy}
       aria-label={label}
       title={label}
-      className="absolute top-2 right-2 p-1.5 rounded-sm text-ink-soft hover:text-ink dark:text-chalk-muted dark:hover:text-chalk hover:bg-black/5 dark:hover:bg-white/10 transition-colors duration-150"
+      className="absolute top-2 right-2"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +45,7 @@ export default function CopyButton({ code }: { code: string }) {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className={`absolute transition-[opacity,transform,filter] duration-150 ${
+        className={`absolute transition-[opacity,transform,filter] duration-150 motion-reduce:transition-none ${
           copied
             ? "opacity-0 scale-[0.8] blur-xs"
             : "opacity-100 scale-100 blur-none"
@@ -63,7 +65,7 @@ export default function CopyButton({ code }: { code: string }) {
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className={`absolute transition-[opacity,transform,filter] duration-150 ${
+        className={`absolute transition-[opacity,transform,filter] duration-150 motion-reduce:transition-none ${
           copied
             ? "opacity-100 scale-100 blur-none"
             : "opacity-0 scale-[0.8] blur-xs"
@@ -74,6 +76,6 @@ export default function CopyButton({ code }: { code: string }) {
 
       {/* Spacer — sizes the button, both icons are absolute */}
       <svg width="14" height="14" aria-hidden="true" />
-    </button>
+    </IconButton>
   );
 }

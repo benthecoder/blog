@@ -126,3 +126,39 @@ it("cancels an upstream error body instead of retaining its connection", async (
   await expect(curius.fetch(since, until)).rejects.toThrow("curius 503");
   expect(cancel).toHaveBeenCalledOnce();
 });
+
+it("preserves the author's object-shaped comments without copying another user's reactions", async () => {
+  const fetcher = vi
+    .fn()
+    .mockResolvedValueOnce(
+      Response.json({
+        userSaved: [
+          {
+            ...savedLink,
+            highlights: [
+              {
+                highlight: "A complete thought. Another thought.",
+                comment: { text: "my own thought", userId: 2790 },
+              },
+              {
+                highlight: "",
+                comment: { text: "a note without a highlight", userId: 2790 },
+              },
+              {
+                highlight: "Another quote.",
+                comment: { text: "someone else's thought", userId: 1 },
+              },
+            ],
+          },
+        ],
+      })
+    )
+    .mockResolvedValueOnce(Response.json({ userSaved: [] }));
+  vi.stubGlobal("fetch", fetcher);
+  const [link] = await curius.fetch(since, until);
+  expect(link.take).toBe("my own thought a note without a highlight");
+  expect(link.highlights).toEqual([
+    "A complete thought. Another thought.",
+    "Another quote.",
+  ]);
+});

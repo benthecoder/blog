@@ -52,6 +52,10 @@ describe("checkRateLimit", () => {
     mocks.pipeline.mockRejectedValueOnce(new Error("down"));
     expect((await checkRateLimit(opts)).ok).toBe(true);
   });
+  it("fails closed for credential routes when Redis fails", async () => {
+    mocks.pipeline.mockRejectedValueOnce(new Error("down"));
+    expect((await checkRateLimit({ ...opts, failOpen: false })).ok).toBe(false);
+  });
   it("fails open when Upstash is slow", async () => {
     vi.useFakeTimers();
     mocks.pipeline.mockReturnValueOnce(new Promise(() => {}));

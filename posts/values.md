@@ -1,6 +1,6 @@
 ---
 title: what you value most
-tags: values, philosophy, christianity, self-reflection
+tags: values, philosophy, faith, self-reflection
 date: Jun 27, 2024
 ---
 
@@ -18,7 +18,7 @@ asking the questions:
 - What would the people I am closest with sacrifice their life for?
 - What is the most important thing for them?
 - How about for me?
-- Are my answers to the above questions honest or mere bullshit—dishonest balm to sooth my soul?
+- Are my answers to the above questions honest or mere bullshit—dishonest balm to soothe my soul?
 
 According to First Lady Eleanor Roosevelt’s, maturity is the ability to pin down and articulate your values.
 

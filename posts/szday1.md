@@ -1,6 +1,6 @@
 ---
 title: Shenzhen Day 1
-tags: travel, food, chinese-culture, health
+tags: travel, chinese-culture, health
 date: Apr 22, 2024
 format: journal
 locations:

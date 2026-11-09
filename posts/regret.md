@@ -1,6 +1,6 @@
 ---
 title: Top Five Regrets of the Dying
-tags: personal-growth, relationships, work, mental-health, happiness
+tags: personal-growth, relationships, work, happiness
 date: Jun 2, 2023
 ---
 

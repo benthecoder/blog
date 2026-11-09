@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { RECIPES_DIR, getRecipePath } from "@/config/paths";
 import { readMarkdownFile, scanMarkdownDir } from "./markdown";
-import { toDateString } from "./essayDate";
+import { recipeFrontmatterSchema } from "./schemas";
 
 export interface RecipeMetadata {
   slug: string;
@@ -15,18 +15,18 @@ export interface RecipeMetadata {
 
 export const getRecipeMetadata = cache(
   function getRecipeMetadata(): RecipeMetadata[] {
-    return scanMarkdownDir(RECIPES_DIR)
+    return scanMarkdownDir(RECIPES_DIR, recipeFrontmatterSchema)
       .map(({ slug, data }) => ({
         slug,
-        title: (data.title as string) || slug,
-        description: (data.description as string) || "",
-        image: (data.image as string) || "",
-        lastUpdated: toDateString(data.lastUpdated),
+        title: data.title || slug,
+        description: data.description || "",
+        image: data.image || "",
+        lastUpdated: data.lastUpdated ?? "",
       }))
       .sort((a, b) => b.lastUpdated.localeCompare(a.lastUpdated));
   }
 );
 
 export const getRecipeContent = cache(function getRecipeContent(slug: string) {
-  return readMarkdownFile(getRecipePath(slug));
+  return readMarkdownFile(getRecipePath(slug), recipeFrontmatterSchema);
 });

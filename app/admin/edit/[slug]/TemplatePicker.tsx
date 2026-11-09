@@ -31,7 +31,7 @@ export function TemplatePicker({
     >
       {(close) => (
         <>
-          <p className="px-2 pb-2 text-[11px] text-muted">start with</p>
+          <p className="px-2 pb-2 text-caption text-muted">start with</p>
           <div
             role="group"
             aria-label="Post template"
@@ -51,7 +51,7 @@ export function TemplatePicker({
                 <span className={value === choice ? "italic text-primary" : ""}>
                   {title(choice)}
                 </span>
-                <span className="text-[10px] text-muted">
+                <span className="text-2xs text-muted">
                   {choice !== "blank" && suggested.includes(choice)
                     ? "today · "
                     : ""}

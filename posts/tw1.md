@@ -1,6 +1,6 @@
 ---
 title: Taiwan Day 1
-tags: travel, energy, climate, food, family
+tags: travel, energy, climate, family
 date: Jun 1, 2024
 format: journal
 locations:
@@ -19,7 +19,7 @@ locations:
 - Build big turbines offshore to generate electricity, made me wish I studied engineering to build big and cool things
 - Lots of Koreans and Japanese around
 - I wanna own a pair of crocs and decorate it too
-- Rain forecast is not what I expected, HK rain was pouring and it gave me tramua
+- Rain forecast is not what I expected, HK rain was pouring and it gave me trauma
 - More motorcycles than electric ones that what I imagined
 - Rich and free hotel 503, i love the name
 - Free snacks and coffee in hotel

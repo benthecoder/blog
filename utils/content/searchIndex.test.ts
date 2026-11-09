@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { buildSearchDocuments } from "./searchIndex";
 import { scanMarkdownDir } from "./markdown";
 import { POSTS_DIR } from "@/config/paths";
+import { postFrontmatterSchema } from "./schemas";
 vi.mock("./markdown", () => ({
   scanMarkdownDir: vi.fn(() => [
     {
@@ -21,7 +22,10 @@ vi.mock("./markdown", () => ({
 describe("published search index", () => {
   it("uses the shared reader on the published directory only and whitelists fields", () => {
     const documents = buildSearchDocuments();
-    expect(scanMarkdownDir).toHaveBeenCalledExactlyOnceWith(POSTS_DIR);
+    expect(scanMarkdownDir).toHaveBeenCalledExactlyOnceWith(
+      POSTS_DIR,
+      postFrontmatterSchema
+    );
     expect(documents[0]).toMatchObject({
       post_slug: "public",
       post_title: "Public",

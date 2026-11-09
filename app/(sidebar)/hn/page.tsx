@@ -78,7 +78,7 @@ export default function HackerNewsPage() {
         {currentPage > 0 && (
           <button
             onClick={handleBackPage}
-            className="text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
+            className="focus-ring text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
           >
             back
           </button>
@@ -86,7 +86,7 @@ export default function HackerNewsPage() {
         {currentPage < MAX_PAGES - 1 && (
           <button
             onClick={handleNextPage}
-            className="text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
+            className="focus-ring text-accent hover:text-ink-soft dark:hover:text-chalk-muted transition-colors"
           >
             next
           </button>

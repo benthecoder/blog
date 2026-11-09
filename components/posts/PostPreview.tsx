@@ -15,7 +15,7 @@ const PostPreview = ({
       <span className="text-accent group-hover:underline">{title}</span>
       <span
         aria-hidden
-        className="flex-1 min-w-4 border-b border-dotted border-rule dark:border-night-rule translate-y-[-0.3em]"
+        className="flex-1 min-w-4 border-b border-dotted border-line translate-y-[-0.3em]"
       />
       <span className="text-muted shrink-0 text-xs md:text-sm tabular-nums">
         {showYear ? date : date.replace(/,? \d{4}$/, "")}

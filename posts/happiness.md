@@ -1,6 +1,6 @@
 ---
 title: Happiness Habits
-tags: psychology, mental-health, habits, relationships
+tags: psychology, habits, relationships
 date: May 3, 2023
 ---
 

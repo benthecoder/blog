@@ -139,11 +139,11 @@ function Legend() {
     <div className="flex items-center justify-between text-xs">
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1">
-          <span className="text-muted text-[9px] md:text-[10px]">short</span>
+          <span className="text-muted text-3xs md:text-2xs">short</span>
           <div className={`${cell} bg-accent/30`} />
           <div className={`${cell} bg-accent/60`} />
           <div className={`${cell} bg-accent/90`} />
-          <span className="text-muted text-[9px] md:text-[10px]">long</span>
+          <span className="text-muted text-3xs md:text-2xs">long</span>
         </div>
       </div>
     </div>
@@ -196,7 +196,7 @@ const Heatmap = ({
           {weeks.map((_, weekIndex) => (
             <div
               key={`month-${weekIndex}`}
-              className="text-[8px] md:text-[10px] text-muted/60 h-[12px] md:h-[14px] w-[9px] md:w-auto overflow-visible whitespace-nowrap"
+              className="text-[8px] md:text-2xs text-muted/60 h-[12px] md:h-[14px] w-[9px] md:w-auto overflow-visible whitespace-nowrap"
             >
               {monthLabels.get(weekIndex) || ""}
             </div>
@@ -205,7 +205,7 @@ const Heatmap = ({
           {/* Rows 1-7: Day labels + day cells */}
           {DAY_LABELS.map((label, dayOfWeek) => (
             <Fragment key={dayOfWeek}>
-              <div className="text-[8px] md:text-[10px] leading-none text-muted/60 flex items-center pr-0.5 md:pr-1 h-(--hm-cell)">
+              <div className="text-[8px] md:text-2xs leading-none text-muted/60 flex items-center pr-0.5 md:pr-1 h-(--hm-cell)">
                 {label}
               </div>
               {weeks.map((week, weekIndex) => {

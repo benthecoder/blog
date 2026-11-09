@@ -18,7 +18,7 @@ export default function ThoughtsError({
       <p className="text-sm text-accent/60">couldn&apos;t load thoughts</p>
       <button
         onClick={reset}
-        className="mt-4 text-xs text-accent opacity-60 hover:opacity-100 transition-opacity"
+        className="focus-ring mt-4 text-xs text-accent opacity-60 hover:opacity-100 transition-opacity"
       >
         try again
       </button>

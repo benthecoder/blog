@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { readMarkdownFile } from "@/utils/content/markdown";
+import { bodyOnlySchema } from "@/utils/content/schemas";
 import MarkdownContent from "@/components/posts/MarkdownContent";
 import { LIBRARY_MD } from "@/config/paths";
 import { pageMetadata } from "@/utils/pageMetadata";
@@ -13,7 +14,7 @@ export const metadata: Metadata = pageMetadata({
 export const dynamic = "force-static";
 
 const LibraryPage = () => {
-  const { content } = readMarkdownFile(LIBRARY_MD);
+  const { content } = readMarkdownFile(LIBRARY_MD, bodyOnlySchema);
 
   return (
     <div>

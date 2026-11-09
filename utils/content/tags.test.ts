@@ -11,10 +11,10 @@ describe("parseTags", () => {
     expect(parseTags("a, b ,c")).toEqual(["a", "b", "c"]);
   });
 
-  it("returns [] for missing or unknown shapes", () => {
+  // Other shapes (null, numbers) are rejected by the frontmatter schema.
+  it("returns [] for missing or empty tags", () => {
     expect(parseTags(undefined)).toEqual([]);
-    expect(parseTags(null)).toEqual([]);
-    expect(parseTags(42)).toEqual([]);
+    expect(parseTags("")).toEqual([]);
   });
 });
 

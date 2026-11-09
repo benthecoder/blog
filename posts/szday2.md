@@ -1,6 +1,6 @@
 ---
 title: Shenzhen Day 2
-tags: travel, food, chinese-culture, technology
+tags: travel, chinese-culture, technology
 date: Apr 23, 2024
 format: journal
 locations:

@@ -1,6 +1,6 @@
 ---
 title: Arts market and Museum
-tags: art, food, friendship
+tags: art, friendship
 date: Aug 5, 2023
 format: journal
 locations:

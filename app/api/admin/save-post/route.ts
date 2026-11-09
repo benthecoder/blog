@@ -1,27 +1,61 @@
 import fs from "fs";
-import { writeMarkdownFile } from "@/utils/content/markdown";
+import { z } from "zod";
+import { readMarkdownFile, writeMarkdownFile } from "@/utils/content/markdown";
 import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAuth } from "@/utils/adminAuth";
 import { isSafeSlug } from "@/config/paths";
 import { parseKind, contentPaths } from "@/utils/content/kind";
-import { toDateString } from "@/utils/content/essayDate";
+import {
+  essayFrontmatterSchema,
+  postFormatSchema,
+  postFrontmatterSchema,
+} from "@/utils/content/schemas";
+import { describeIssues, FrontmatterError } from "@/utils/content/frontmatter";
+
+// What usePostDraft sends. Title and slug presence get their own message.
+const saveBodySchema = z.object({
+  slug: z.string(),
+  title: z.string(),
+  tags: z.string().optional(),
+  format: postFormatSchema.optional(),
+  date: z.string(),
+  content: z.string(),
+  isNew: z.boolean().optional(),
+  subtitle: z.string().optional(),
+  updated: z.string().optional(),
+  kind: z.unknown().optional(),
+});
 
 export async function POST(request: NextRequest) {
   const authError = checkAdminAuth(request);
   if (authError) return authError;
   let kind: ReturnType<typeof parseKind> = "post";
   try {
+    const body = saveBodySchema.safeParse(await request.json());
+    if (!body.success) {
+      const field = body.error.issues[0]?.path[0];
+      return NextResponse.json(
+        {
+          error:
+            field === "format"
+              ? "Invalid format"
+              : `Invalid request: ${describeIssues(body.error)}`,
+        },
+        { status: 400 }
+      );
+    }
     const {
       slug,
       title,
       tags,
+      format,
       date,
       content,
       isNew,
       subtitle,
       updated,
       kind: rawKind,
-    } = await request.json();
+    } = body.data;
     kind = parseKind(rawKind);
     if (!kind) {
       return NextResponse.json({ error: "Invalid kind" }, { status: 400 });
@@ -69,22 +103,41 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Determine where to save: if already published, keep it published; otherwise save as draft
-    const isPublished = fs.existsSync(publishedPath);
+    // Save back to the same version opened by get-post, preferring a pending draft.
+    const isPublished =
+      !fs.existsSync(draftPath) && fs.existsSync(publishedPath);
     const filePath = isPublished ? publishedPath : draftPath;
 
+    // Check the merged frontmatter with the same schema the site build uses,
+    // so the editor can never save a file that would fail to render.
+    const schema =
+      kind === "essay" ? essayFrontmatterSchema : postFrontmatterSchema;
+    const existing = fs.existsSync(filePath)
+      ? readMarkdownFile(filePath, schema).data
+      : {};
     const frontmatter =
       kind === "essay"
         ? {
             title,
             subtitle: subtitle ?? "",
-            date: toDateString(date),
-            ...(updated ? { updated: toDateString(updated) } : {}),
+            date,
+            ...(updated ? { updated } : {}),
             ...(tags ? { tags } : {}),
           }
         : { title, tags, date };
+    const merged = schema.safeParse({
+      ...existing,
+      ...frontmatter,
+      ...(format !== undefined ? { format } : {}),
+    });
+    if (!merged.success) {
+      return NextResponse.json(
+        { error: describeIssues(merged.error) },
+        { status: 400 }
+      );
+    }
 
-    writeMarkdownFile(filePath, frontmatter, content, {
+    writeMarkdownFile(filePath, merged.data, content, {
       exclusive: Boolean(isNew),
     });
 
@@ -100,6 +153,9 @@ export async function POST(request: NextRequest) {
         },
         { status: 409 }
       );
+    }
+    if (error instanceof FrontmatterError) {
+      return NextResponse.json({ error: error.message }, { status: 422 });
     }
     console.error("Save error:", error);
     return NextResponse.json({ error: "Failed to save post" }, { status: 500 });

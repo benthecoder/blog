@@ -1,15 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useRef } from "react";
 import type { DragEvent } from "react";
 import type { useSearchParams } from "next/navigation";
-import type { PostImage } from "./ImageStrip";
 import {
   PHOTO_TRANSFER_TYPE,
   readPhotoTransfer,
   photoFileUrl,
 } from "@/utils/photoTransfer";
-import type { CropRect } from "./ImageCropModal";
+import type { CropRect } from "./ImageCropper";
 
 interface UseImageManagerArgs {
   slug: string;
@@ -26,8 +25,9 @@ interface UseImageManagerArgs {
 }
 
 /**
- * Owns the post's image workflow: listing, upload (via drag-drop, paste, or
- * the naming modal), and deletion.
+ * Owns the post's image workflow: upload (via drag-drop, paste, the photo
+ * tray or the preview). Uploads are optimistic: the Markdown
+ * line goes in at once and the tile shows progress, or a retry on failure.
  */
 export function useImageManager({
   slug,
@@ -39,124 +39,67 @@ export function useImageManager({
   clearInsertion,
   notify,
 }: UseImageManagerArgs) {
-  const draftDate = isNew ? searchParams.get("date") : null;
   const photoRequestRef = useRef<AbortController | null>(null);
-  const uploadRequestRef = useRef<AbortController | null>(null);
-  useEffect(
-    () => () => {
-      photoRequestRef.current?.abort();
-      uploadRequestRef.current?.abort();
-    },
-    [slug, draftDate]
+  const [uploads, setUploads] = useState<
+    Record<string, "uploading" | "failed">
+  >({});
+  const jobs = useRef(
+    new Map<string, { file: File; crop: CropRect | null; rotation: number }>()
   );
-  const [uploadError, setUploadError] = useState("");
-  const [uploading, setUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [postImages, setPostImages] = useState<PostImage[]>([]);
-  const [showImages, setShowImages] = useState(false);
   const [showImageNameModal, setShowImageNameModal] = useState(false);
   const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
   const [imageNameInput, setImageNameInput] = useState("");
 
-  // Refresh images list; stable identity so the effect below can depend on it
-  const refreshImages = useCallback(() => {
-    if (isNew) return;
-
-    fetch(`/api/admin/list-images?slug=${slug}`)
-      .then((res) => res.json())
-      .then((images: PostImage[]) => setPostImages(images))
-      .catch((err) => console.error("Error loading images:", err));
-  }, [slug, isNew]);
-
-  // Load images for this post on mount
-  useEffect(() => {
-    refreshImages();
-  }, [refreshImages]);
-
-  const handleDeleteImage = async (fileName: string) => {
-    try {
-      const response = await fetch(
-        `/api/admin/delete-image?fileName=${encodeURIComponent(fileName)}`,
-        { method: "DELETE" }
-      );
-
-      if (response.ok) {
-        notify(`✓ Deleted ${fileName}`);
-        refreshImages();
-      } else {
-        notify(`✗ Failed to delete ${fileName}`);
-      }
-    } catch (error) {
-      notify(`✗ Error: ${error}`);
-    }
-  };
-
-  const handleImageUpload = async (
-    file: File,
-    customName?: string,
-    crop?: CropRect | null
-  ) => {
-    if (uploadRequestRef.current) return false;
-    const controller = new AbortController();
-    uploadRequestRef.current = controller;
-    setUploadError("");
-    setUploading(true);
+  const send = async (url: string) => {
+    const job = jobs.current.get(url);
+    if (!job) return;
+    setUploads((current) => ({ ...current, [url]: "uploading" }));
+    const fileName = url.slice(url.lastIndexOf("/") + 1);
     try {
       const formData = new FormData();
-      formData.append("file", file);
-
-      // Prefix image name with slug (or date for new posts)
-      let prefix = slug;
-      if (isNew) {
-        const dateParam = searchParams.get("date");
-        if (dateParam) {
-          const [year, month, day] = dateParam.split("-");
-          prefix = `${day}${month}${year.slice(2)}`; // DDMMYY format
-        }
-      }
-      const finalName = customName ? `${prefix}-${customName}` : null;
-      if (finalName) {
-        formData.append("name", finalName);
-      }
+      formData.append("file", job.file);
+      formData.append("name", fileName.replace(/\.jpg$/, ""));
       // Published posts never run publish-post again, so their images must
       // go straight to R2 rather than staging in drafts.
       formData.append("published", String(isPublished));
       // The original file goes up untouched and sharp cuts the crop from it,
-      // so the image is only JPEG-encoded once. Cropping in the browser first
-      // meant two lossy passes, which showed as softness.
-      if (crop) formData.append("crop", JSON.stringify(crop));
-
+      // so the image is only JPEG-encoded once.
+      if (job.crop) formData.append("crop", JSON.stringify(job.crop));
+      formData.append("rotation", String(job.rotation));
       const response = await fetch("/api/admin/upload-image", {
         method: "POST",
         body: formData,
-        signal: controller.signal,
       });
-
-      const data = await response.json();
-      if (controller.signal.aborted) return false;
-
-      if (response.ok) {
-        insertMarkdown(`![](${data.url})`);
-        notify(`✓ Image uploaded: ${data.fileName}`);
-        refreshImages();
-        return true;
-      } else {
-        const message = `Upload failed: ${data.error}`;
-        setUploadError(message);
-        notify(`✗ ${message}`);
-      }
+      if (!response.ok) throw new Error((await response.json()).error);
+      jobs.current.delete(url);
+      setUploads(({ [url]: _done, ...rest }) => rest);
+      notify(`✓ Image uploaded: ${fileName}`);
     } catch (error) {
-      if (!controller.signal.aborted) {
-        const message = `Upload error: ${error}`;
-        setUploadError(message);
-        notify(`✗ ${message}`);
-      }
-    } finally {
-      if (uploadRequestRef.current === controller)
-        uploadRequestRef.current = null;
-      setUploading(false);
+      setUploads((current) => ({ ...current, [url]: "failed" }));
+      notify(`✗ Upload failed: ${String(error)}`);
     }
-    return false;
+  };
+
+  /** Puts the image line in the text now and uploads behind it. */
+  const startUpload = (
+    file: File,
+    name: string,
+    crop: CropRect | null = null,
+    rotation = 0
+  ) => {
+    // Prefix image name with slug (or date for new posts)
+    let prefix = slug;
+    const dateParam = isNew ? searchParams.get("date") : null;
+    if (dateParam) {
+      const [year, month, day] = dateParam.split("-");
+      prefix = `${day}${month}${year.slice(2)}`; // DDMMYY format
+    }
+    const fileName = `${prefix}-${name}.jpg`;
+    const url = `${isPublished ? "/images/" : "/images/drafts/"}${fileName}`;
+    jobs.current.set(url, { file, crop, rotation });
+    insertMarkdown(`![](${url})`);
+    void send(url);
   };
 
   const handleDragOver = (e: DragEvent) => {
@@ -187,7 +130,7 @@ export function useImageManager({
     e.stopPropagation();
     setIsDragging(false);
 
-    if (uploading || showImageNameModal || photoRequestRef.current) return;
+    if (showImageNameModal || photoRequestRef.current) return;
     const photo = readPhotoTransfer(
       e.dataTransfer.getData(PHOTO_TRANSFER_TYPE) ||
         e.dataTransfer.getData("text/plain")
@@ -240,27 +183,21 @@ export function useImageManager({
     }
   };
 
-  /** Routes an already-picked file (e.g. from the photo panel) through the same crop -> name -> upload flow as a drop. */
-  const openCropModalWith = (file: File, name: string) => {
-    markInsertion();
-    setPendingImageFile(file);
-    setImageNameInput(name);
-    setShowImageNameModal(true);
-  };
-
-  /** The modal hands back the original file plus the region to cut from it. */
+  /** The viewer hands back the original file plus the region to cut from it. */
   const confirmImageUpload = async (
-    original?: File,
-    crop?: CropRect | null
+    file: File,
+    name: string,
+    crop: CropRect | null,
+    rotation: number
   ) => {
-    const file = original ?? pendingImageFile;
-    if (!file) return;
-
-    const rawName = imageNameInput.trim() || file.name.replace(/\.[^/.]+$/, "");
+    const rawName = name.trim() || file.name.replace(/\.[^/.]+$/, "");
     // Standardize: lowercase and replace spaces with hyphens
-    const finalName = rawName.toLowerCase().replace(/\s+/g, "-");
-    const saved = await handleImageUpload(file, finalName, crop);
-    if (!saved) return false;
+    startUpload(
+      file,
+      rawName.toLowerCase().replace(/\s+/g, "-"),
+      crop,
+      rotation
+    );
 
     setShowImageNameModal(false);
     setPendingImageFile(null);
@@ -270,7 +207,6 @@ export function useImageManager({
 
   const cancelImageUpload = () => {
     clearInsertion();
-    setUploadError("");
     setShowImageNameModal(false);
     setPendingImageFile(null);
   };
@@ -278,7 +214,8 @@ export function useImageManager({
   // Structural rather than React's ClipboardEvent: the CodeMirror editor
   // hands this the native DOM event, and only these two members are used —
   // so both satisfy it without a cast at the call site.
-  const handlePaste = async (e: {
+  // Synchronous: it only opens the crop modal; the upload happens on confirm.
+  const handlePaste = (e: {
     clipboardData: DataTransfer | null;
     preventDefault: () => void;
   }) => {
@@ -301,22 +238,16 @@ export function useImageManager({
   };
 
   return {
-    uploading,
-    uploadError,
+    uploading: Object.values(uploads).includes("uploading"),
     isDragging,
-    postImages,
-    showImages,
-    setShowImages,
     showImageNameModal,
     pendingImageFile,
     imageNameInput,
-    setImageNameInput,
-    handleDeleteImage,
     handleDragOver,
     handleDragLeave,
     handleDrop,
     handlePaste,
-    openCropModalWith,
+    quickInsert: startUpload,
     confirmImageUpload,
     cancelImageUpload,
   };

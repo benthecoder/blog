@@ -1,6 +1,7 @@
 import type { PaperFields } from "@/types/wiki";
+import type { PostFrontmatter, WikiFrontmatter } from "./schemas";
 
-export const PAPER_FIELD_KEYS = [
+const PAPER_FIELD_KEYS = [
   "authors",
   "year",
   "url",
@@ -8,7 +9,7 @@ export const PAPER_FIELD_KEYS = [
   "source",
 ] as const satisfies readonly (keyof PaperFields)[];
 
-export const EMPTY_PAPER_FIELDS: PaperFields = {
+const EMPTY_PAPER_FIELDS: PaperFields = {
   authors: "",
   year: "",
   url: "",
@@ -16,21 +17,13 @@ export const EMPTY_PAPER_FIELDS: PaperFields = {
   source: "",
 };
 
-/** Paper notes live under `papers/<topic>`. */
-export function isPaperCategory(category: string): boolean {
-  return /^papers(\/|$)/.test(category.trim());
-}
-
-function asText(value: unknown): string {
-  if (value instanceof Date) return value.toISOString().slice(0, 10);
-  if (typeof value === "number") return String(value);
-  return typeof value === "string" ? value.trim() : "";
-}
-
-/** Read paper fields from frontmatter; missing or odd values become "". */
-export function readPaperFields(data: Record<string, unknown>): PaperFields {
+/** Read paper fields from validated frontmatter; missing fields become "". */
+export function readPaperFields(
+  data: Pick<PostFrontmatter | WikiFrontmatter, keyof PaperFields>
+): PaperFields {
   const fields = { ...EMPTY_PAPER_FIELDS };
-  for (const key of PAPER_FIELD_KEYS) fields[key] = asText(data[key]);
+  for (const key of PAPER_FIELD_KEYS)
+    fields[key] = String(data[key] ?? "").trim();
   return fields;
 }
 

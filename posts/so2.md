@@ -8,7 +8,7 @@ It's [scary times](https://www.youtube.com/watch?v=dk8pwE3IByg) here on Earth. T
 
 Geo-engineering is controversial. The idea is to intentionally change the climate of the planet.
 
-But it looks like we've been doing it this whole time time.
+But it looks like we've been doing it this whole time.
 
 We've been haphazardly geo-engineering the planet by dumping a lot of CO2 into the atmosphere, decreasing the amount of heat that we can radiate back into space.
 

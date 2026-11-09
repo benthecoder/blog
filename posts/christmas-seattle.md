@@ -1,6 +1,6 @@
 ---
 title: Christmas in Seattle
-tags: family, drawing, food
+tags: family, drawing
 date: Dec 25, 2023
 format: journal
 ---
@@ -63,7 +63,7 @@ My sister took out the French lamb rack from the oven, it smells good.
 
 It was finally time to eat. It's 8 p.m.
 
-There were baked vegetables and potatoes, stir-fried brocolli, steak, lamb, and salmon.
+There were baked vegetables and potatoes, stir-fried broccoli, steak, lamb, and salmon.
 
 We talked about plans for tomorrow, about the meal, about the trip, and about the future.
 

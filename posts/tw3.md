@@ -1,6 +1,6 @@
 ---
 title: Taiwan Day 3
-tags: travel, family, food, architecture
+tags: travel, family, architecture
 date: Jun 3, 2024
 format: journal
 locations:

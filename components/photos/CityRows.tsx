@@ -31,7 +31,6 @@ export function CityRows({ country }: { country: Country }) {
                   alt=""
                   fill
                   sizes="(max-width: 700px) 25vw, 200px"
-                  quality={60}
                 />
               </div>
             ))}

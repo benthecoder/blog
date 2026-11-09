@@ -1,6 +1,6 @@
 ---
 title: I got braces today
-tags: health, mental-health, relationships, reading, identity
+tags: health, relationships, reading, identity
 date: Feb 20, 2024
 format: journal
 ---

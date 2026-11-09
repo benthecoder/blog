@@ -20,7 +20,7 @@ export default function TagDirectory({ tags }: { tags: [string, number][] }) {
           <span className="min-w-0 text-xs text-accent [overflow-wrap:anywhere]">
             #{tag}
           </span>
-          <span className="text-[10px] text-accent/30 font-mono shrink-0">
+          <span className="text-2xs text-accent/30 font-mono shrink-0">
             {count}
           </span>
         </Link>

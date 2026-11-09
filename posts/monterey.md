@@ -1,13 +1,13 @@
 ---
 title: Monterey Trip
-tags: road-trips, family, food, nature, shopping
+tags: road-trips, family, nature, shopping
 date: Jun 3, 2023
 format: journal
 locations:
   - Monterey
 ---
 
-My parents picked me up at my airbnb to have have leftover Claypot rice from Koi Palace at their airbnb.
+My parents picked me up at my airbnb to have leftover Claypot rice from Koi Palace at their airbnb.
 
 I brought my MacBook along to plan the day.
 

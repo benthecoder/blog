@@ -1,6 +1,6 @@
 ---
 title: 'Boston Day 1: Quincy Market'
-tags: travel, food, chinese-culture
+tags: travel, chinese-culture
 date: Nov 20, 2023
 format: journal
 locations:

@@ -17,7 +17,7 @@ Inspired by Nix's piece on "[who do you admire?](https://www.startingfromnix.com
 
 This is a living document housing the list of the people who I admire.
 
-Here's a good limus test from Nix for curating your own source of inspiration:
+Here's a good litmus test from Nix for curating your own source of inspiration:
 
 > do your inspirations, online and offline, make you feel more **vital** (do they strive in a way that feels ambitious, dynamic and meaningful?), **conscious** (do they evoke reflection?), **free** (do they expand what you think is possible?)
 

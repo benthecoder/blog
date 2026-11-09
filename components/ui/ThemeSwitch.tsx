@@ -21,14 +21,14 @@ const ThemeSwitcher = () => {
   const icon = resolvedTheme === "light" ? "dark.svg" : "light.svg";
 
   if (!mounted)
-    return <div className="w-6 h-6 md:w-12 md:h-12" aria-hidden="true" />;
+    return <div className="size-11 md:size-12" aria-hidden="true" />;
 
   return (
     <button
       onClick={toggleTheme}
       data-cuelume-toggle="toggle"
       aria-label={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} mode`}
-      className="flex w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
+      className="focus-ring flex size-11 touch-manipulation items-center justify-center p-0 m-0 bg-transparent border-none cursor-pointer md:size-12"
     >
       <SketchIcon
         src={`/icons/${icon}`}

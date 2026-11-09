@@ -2,6 +2,7 @@ import { cache } from "react";
 import { WIKI_TEMPLATES_DIR } from "@/config/paths";
 import type { WikiTemplate } from "@/types/wiki";
 import { scanMarkdownDir } from "./markdown";
+import { wikiTemplateFrontmatterSchema } from "./schemas";
 import { parseTags } from "./tags";
 
 const BLANK: WikiTemplate = {
@@ -20,13 +21,16 @@ const BLANK: WikiTemplate = {
  */
 export const getWikiTemplates = cache(
   function getWikiTemplates(): WikiTemplate[] {
-    const templates = scanMarkdownDir(WIKI_TEMPLATES_DIR)
+    const templates = scanMarkdownDir(
+      WIKI_TEMPLATES_DIR,
+      wikiTemplateFrontmatterSchema
+    )
       .map(({ slug, data, content }) => ({
-        order: typeof data.order === "number" ? data.order : 100,
+        order: data.order ?? 100,
         template: {
           key: slug,
-          label: typeof data.label === "string" ? data.label : slug,
-          category: typeof data.category === "string" ? data.category : "",
+          label: data.label ?? slug,
+          category: data.category ?? "",
           tags: parseTags(data.tags).join(", "),
           paper: data.paper === true,
           content: content.replace(/^\n+/, ""),

@@ -205,8 +205,8 @@ export default function KnowledgeMap({
       transformRef.current,
       target,
       ({ k, x, y }) =>
-        select<Element, unknown>(canvas).call(
-          behavior.transform,
+        behavior.transform(
+          select<Element, unknown>(canvas),
           zoomIdentity.translate(x, y).scale(k)
         ),
       {
@@ -817,7 +817,7 @@ export default function KnowledgeMap({
             </div>
             {selectedConnections.length > 0 && (
               <div className="mt-3">
-                <p className="text-[0.625rem] uppercase tracking-[0.12em] text-muted">
+                <p className="text-2xs uppercase tracking-[0.12em] text-muted">
                   closest entries
                 </p>
                 <ul className="mt-1.5 space-y-1 text-xs">

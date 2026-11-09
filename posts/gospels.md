@@ -1,6 +1,6 @@
 ---
 title: The Four Gospels
-tags: christianity, faith, history, bible
+tags: faith, history, bible
 date: May 8, 2023
 ---
 

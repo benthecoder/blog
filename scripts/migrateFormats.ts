@@ -3,6 +3,7 @@ import path from "node:path";
 import { POSTS_DIR, DRAFTS_DIR } from "@/config/paths";
 import { scanMarkdownDir, writeMarkdownFile } from "@/utils/content/markdown";
 import { migrateFormat, ESSAY_SLUGS } from "@/utils/content/formatMigration";
+import { postFrontmatterSchema } from "@/utils/content/schemas";
 
 const args = process.argv.slice(2);
 if (args.some((arg) => arg !== "--write")) {
@@ -12,13 +13,15 @@ const write = args.includes("--write");
 // Plan and validate every change before writing any file. Include local drafts
 // when present, but never publish them or change their slugs, dates, or bodies.
 const plan = [POSTS_DIR, DRAFTS_DIR].flatMap((dir) =>
-  scanMarkdownDir(dir).map(({ slug, data, content }) => ({
-    file: path.join(dir, `${slug}.md`),
-    slug,
-    title: data.title,
-    content,
-    ...migrateFormat(slug, data),
-  }))
+  scanMarkdownDir(dir, postFrontmatterSchema).map(
+    ({ slug, data, content }) => ({
+      file: path.join(dir, `${slug}.md`),
+      slug,
+      title: data.title,
+      content,
+      ...migrateFormat(slug, data),
+    })
+  )
 );
 const changes = plan.filter(({ changed }) => changed);
 console.log(write ? "Applying formats" : "Preview only — no files changed");

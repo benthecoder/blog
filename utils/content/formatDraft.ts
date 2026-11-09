@@ -1,3 +1,8 @@
+import {
+  linksAtBottom,
+  sundayLinksBeforeDailyLog,
+  withoutSundayIssueHeading,
+} from "./linksAtBottom";
 import { parseFrontmatter } from "@/utils/content/frontmatter";
 
 // Normalizes a draft's markdown to the house style seen in published posts.
@@ -157,14 +162,17 @@ function formatBody(body: string): string {
   lines = spaced;
 
   while (lines.length && lines[lines.length - 1] === "") lines.pop();
-  return lines.join("\n");
+  return linksAtBottom(sundayLinksBeforeDailyLog(lines.join("\n"))).trimEnd();
 }
 
 export function formatDraft(markdown: string): string {
   const text = markdown.replace(/\r\n?/g, "\n");
   const m = text.match(FRONTMATTER_RE);
 
-  const body = formatBody(m ? text.slice(m[0].length) : text);
+  let body = formatBody(m ? text.slice(m[0].length) : text);
+  const title = m ? parseFrontmatter(text).data.title : undefined;
+  if (typeof title === "string" && /^sunday links\b/i.test(title))
+    body = withoutSundayIssueHeading(body);
   if (!m) return body ? body + "\n" : "";
 
   const fm = `---\n${formatFrontmatter(m[1], text)}\n---\n`;

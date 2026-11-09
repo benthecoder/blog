@@ -18,7 +18,8 @@ const published = [
     data: {
       title: "Newer",
       subtitle: "second",
-      date: new Date("2026-03-01"),
+      // The schema has already turned YAML's Date into its YYYY-MM-DD text.
+      date: "2026-03-01",
       updated: "2026-04-01",
       tags: "a, b",
     },

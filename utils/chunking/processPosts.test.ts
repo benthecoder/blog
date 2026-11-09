@@ -25,7 +25,7 @@ it("reads just the selected post and canonicalizes an optional .md suffix", asyn
   const filePath = path.join(directory, "posts", "selected.md");
   fs.writeFileSync(
     filePath,
-    "---\ntitle: Selected\n---\nA paragraph worth indexing."
+    "---\ntitle: Selected\ndate: May 27, 2023\n---\nA paragraph worth indexing."
   );
   fs.writeFileSync(path.join(directory, "posts", "unrelated.md"), "Other post");
   const { processPost } = await import("./processPosts");
@@ -55,18 +55,26 @@ it("rejects missing content before index replacement", async () => {
 });
 
 it("rejects an empty post before index replacement", async () => {
-  fs.writeFileSync(path.join(directory, "posts", "empty.md"), "");
+  fs.writeFileSync(
+    path.join(directory, "posts", "empty.md"),
+    "---\ntitle: Empty\ndate: May 27, 2023\n---\n"
+  );
   const { processPost } = await import("./processPosts");
   await expect(processPost("empty")).rejects.toThrow(
     "existing index preserved"
   );
 });
 
+it("rejects a post without frontmatter, naming the file and field", async () => {
+  fs.writeFileSync(path.join(directory, "posts", "bare.md"), "just text");
+  const { processPost } = await import("./processPosts");
+  await expect(processPost("bare")).rejects.toThrow(
+    /bare\.md: invalid frontmatter\ntitle: /
+  );
+});
+
 it("rejects unreadable content before index replacement", async () => {
   fs.mkdirSync(path.join(directory, "posts", "directory.md"));
   const { processPost } = await import("./processPosts");
-  vi.spyOn(console, "error").mockImplementation(() => {});
-  await expect(processPost("directory")).rejects.toThrow(
-    "existing index preserved"
-  );
+  await expect(processPost("directory")).rejects.toThrow("EISDIR");
 });

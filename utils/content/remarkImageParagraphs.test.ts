@@ -3,7 +3,7 @@ import { unified } from "unified";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
-import remarkImageParagraphs from "./remarkImageParagraphs";
+import remarkImageParagraphs, { rowSizes } from "./remarkImageParagraphs";
 import type { Paragraph, Root } from "mdast";
 
 const render = (markdown: string) =>
@@ -23,7 +23,15 @@ describe("image-led paragraphs", () => {
         "![First](/one.svg)\n![Second](/two.svg)\nKeep **this** and [the link](/posts)."
       )
     ).toBe(
-      '<p><img src="/one.svg" alt="First"></p>\n<p><img src="/two.svg" alt="Second"></p>\n<p>\nKeep <strong>this</strong> and <a href="/posts">the link</a>.</p>'
+      '<div class="photo-group"><div class="photo-row" data-n="2"><p><img src="/one.svg" alt="First"></p><p><img src="/two.svg" alt="Second"></p></div></div>\n<p>\nKeep <strong>this</strong> and <a href="/posts">the link</a>.</p>'
+    );
+  });
+
+  it("groups only back-to-back plates", () => {
+    expect(
+      render("![A](/a.svg)\n\n![B](/b.svg)\n\nbetween\n\n![C](/c.svg)")
+    ).toBe(
+      '<div class="photo-group"><div class="photo-row" data-n="2"><p><img src="/a.svg" alt="A"></p><p><img src="/b.svg" alt="B"></p></div></div>\n<p>between</p>\n<p><img src="/c.svg" alt="C"></p>'
     );
   });
 
@@ -80,5 +88,17 @@ describe("image-led paragraphs", () => {
     expect(render("> ![One](/one.svg)\n> ![Two](/two.svg)\n> kept")).toBe(
       '<blockquote>\n<p><img src="/one.svg" alt="One"></p>\n<p><img src="/two.svg" alt="Two"></p>\n<p>\nkept</p>\n</blockquote>'
     );
+  });
+
+  it("splits runs into rows of three ending in pairs", () => {
+    expect([2, 3, 4, 5, 6, 7, 10].map(rowSizes)).toEqual([
+      [2],
+      [3],
+      [2, 2],
+      [3, 2],
+      [3, 3],
+      [3, 2, 2],
+      [3, 3, 2, 2],
+    ]);
   });
 });

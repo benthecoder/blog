@@ -7,6 +7,7 @@ import type {
   Resolver,
 } from "@/types/links";
 import { scanMarkdownDir } from "./markdown";
+import { postFrontmatterSchema, wikiFrontmatterSchema } from "./schemas";
 import { hrefFor, refKey } from "@/utils/links/refs";
 import { createResolver } from "@/utils/links/resolve";
 import { buildLinkGraph } from "@/utils/links/graph";
@@ -50,24 +51,28 @@ function getDeployedSnapshot() {
 // scanMarkdownDir reads only top-level `.md`, so post drafts (in a subdir) and
 // the absence of a wiki/ dir are both handled gracefully.
 const scanEntries = cache(function scanEntries(): IndexedEntry[] {
-  const wiki = scanMarkdownDir(WIKI_DIR).map(({ slug, data, content }) => {
-    const ref: ContentRef = { kind: "wiki", slug };
-    return {
-      ref,
-      title: (data.title as string) || slug,
-      href: hrefFor(ref),
-      content,
-    };
-  });
-  const posts = scanMarkdownDir(POSTS_DIR).map(({ slug, data, content }) => {
-    const ref: ContentRef = { kind: "post", slug };
-    return {
-      ref,
-      title: (data.title as string) || slug,
-      href: hrefFor(ref),
-      content,
-    };
-  });
+  const wiki = scanMarkdownDir(WIKI_DIR, wikiFrontmatterSchema).map(
+    ({ slug, data, content }) => {
+      const ref: ContentRef = { kind: "wiki", slug };
+      return {
+        ref,
+        title: data.title || slug,
+        href: hrefFor(ref),
+        content,
+      };
+    }
+  );
+  const posts = scanMarkdownDir(POSTS_DIR, postFrontmatterSchema).map(
+    ({ slug, data, content }) => {
+      const ref: ContentRef = { kind: "post", slug };
+      return {
+        ref,
+        title: data.title || slug,
+        href: hrefFor(ref),
+        content,
+      };
+    }
+  );
   return [...wiki, ...posts];
 });
 

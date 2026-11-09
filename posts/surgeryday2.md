@@ -1,6 +1,6 @@
 ---
 title: The Day After
-tags: health, family, film, mental-health, identity
+tags: health, family, film, identity
 date: Mar 2, 2024
 format: journal
 ---

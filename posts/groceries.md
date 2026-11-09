@@ -2,7 +2,7 @@
 title: Grocery Stores
 date: Aug 21, 2023
 format: journal
-tags: travel, family, food, history, shopping
+tags: travel, family, history, shopping
 locations:
   - Des Moines
 ---

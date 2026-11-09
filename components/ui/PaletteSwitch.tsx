@@ -27,7 +27,7 @@ const PaletteSwitch = () => {
   const { palette, setPalette } = usePalette();
 
   if (!mounted)
-    return <div className="w-6 h-6 md:w-12 md:h-12" aria-hidden="true" />;
+    return <div className="size-11 md:size-12" aria-hidden="true" />;
 
   const next = PALETTES[(PALETTES.indexOf(palette) + 1) % PALETTES.length];
 
@@ -37,7 +37,7 @@ const PaletteSwitch = () => {
       data-cuelume-toggle="bloom"
       title={`${PALETTE_LABELS[palette]} → ${PALETTE_LABELS[next]}`}
       aria-label={`Change color palette to ${PALETTE_LABELS[next]}`}
-      className="flex w-fit h-fit p-0 m-0 bg-transparent border-none cursor-pointer"
+      className="focus-ring flex size-11 touch-manipulation items-center justify-center p-0 m-0 bg-transparent border-none cursor-pointer md:size-12"
     >
       {/* SketchIcon masks the black line art with bg-accent, so the
           drawing tints with the palette it switches to. */}

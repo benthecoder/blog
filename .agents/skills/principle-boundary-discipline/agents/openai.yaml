@@ -1,0 +1,5 @@
+interface:
+  display_name: "Boundary Discipline"
+  short_description: "Validate at boundaries, trust inside"
+policy:
+  allow_implicit_invocation: false

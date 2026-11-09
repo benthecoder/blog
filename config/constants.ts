@@ -52,3 +52,5 @@ export const SUMMARY_MAX_REQUESTS = 60;
 export const SUMMARY_MAX_CHARS = 900;
 // Reuse a previous cluster's label when post overlap (Jaccard) is at least this
 export const CLUSTER_LABEL_REUSE_MIN_OVERLAP = 0.6;
+
+export const THOUGHT_MAX_LENGTH = 5000;

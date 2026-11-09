@@ -91,7 +91,6 @@ export default function SearchExplorer({
     const fragment = textFragment(result.content, keywords, result.chunk_type);
     const href = `/posts/${encodeURIComponent(result.post_slug)}`;
     // Text fragments require a document navigation to highlight the passage.
-    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     if (fragment) window.location.assign(href + fragment);
     else router.push(href);
   };
@@ -124,7 +123,7 @@ export default function SearchExplorer({
   const error = local ? indexError : remote.error;
 
   return (
-    <div className="min-w-0 text-primary">
+    <div className="min-w-0 wrap-anywhere text-primary">
       <div className="flex items-center gap-3 border border-line bg-surface px-4 focus-within:border-accent">
         <input
           ref={inputRef}
@@ -160,7 +159,7 @@ export default function SearchExplorer({
               setActive(0);
               inputRef.current?.focus();
             }}
-            className="shrink-0 p-2 text-muted hover:text-accent focus-visible:outline-2 focus-visible:outline-accent"
+            className="focus-ring flex min-h-11 min-w-11 shrink-0 touch-manipulation items-center justify-center p-2 text-muted hover:text-accent"
           >
             <svg
               aria-hidden="true"
@@ -177,7 +176,7 @@ export default function SearchExplorer({
         <button
           onClick={onNavigate}
           aria-label="Close search"
-          className="text-xs text-muted hover:text-accent p-2"
+          className="focus-ring min-h-11 min-w-11 shrink-0 touch-manipulation p-2 text-xs text-muted hover:text-accent"
         >
           esc
         </button>
@@ -191,7 +190,7 @@ export default function SearchExplorer({
               : "search posts, ideas, or #tags"}
         </span>
         <details className="relative">
-          <summary className="cursor-pointer hover:text-accent">
+          <summary className="focus-ring min-h-11 cursor-pointer content-center touch-manipulation hover:text-accent sm:pointer-fine:min-h-6">
             {local ? "search options" : `${searchType} · options`}
           </summary>
           <div className="absolute right-0 top-full z-10 mt-2 w-72 border border-line bg-raised p-4 shadow-lg">
@@ -217,7 +216,7 @@ export default function SearchExplorer({
         <div role="alert" className="border border-line p-5 text-sm">
           Search unavailable.{" "}
           <button
-            className="text-accent underline"
+            className="focus-ring inline-flex min-h-11 items-center touch-manipulation text-accent underline"
             onClick={() => {
               if (local) {
                 setIndexError(false);
@@ -230,6 +229,9 @@ export default function SearchExplorer({
         </div>
       ) : results.length > 0 ? (
         <div className="grid h-[60vh] min-w-0 border border-line bg-surface md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.65fr)]">
+          {/* Combobox pattern: focus stays in the input, which points here via
+              aria-activedescendant, so the listbox itself is not focusable. */}
+          {/* oxlint-disable-next-line jsx-a11y/interactive-supports-focus */}
           <div
             ref={listRef}
             onKeyDown={onKeyDown}
@@ -239,6 +241,8 @@ export default function SearchExplorer({
             className="min-w-0 overflow-y-auto overscroll-contain md:border-r md:border-line"
           >
             {results.map((result, index) => (
+              // Each option is named by its button's text content.
+              // oxlint-disable-next-line jsx-a11y/control-has-associated-label
               <div
                 key={result.post_slug}
                 id={`${id}-${index}`}
@@ -300,7 +304,7 @@ export default function SearchExplorer({
               </div>
               <button
                 onClick={() => navigate()}
-                className="mt-6 text-sm text-accent hover:underline"
+                className="focus-ring mt-6 min-h-11 touch-manipulation text-sm text-accent hover:underline"
               >
                 read post →
               </button>
@@ -312,7 +316,7 @@ export default function SearchExplorer({
           no posts found for “{query}”
         </p>
       ) : null}
-      <p className="mt-3 text-[10px] text-muted">
+      <p className="mt-3 text-2xs text-muted">
         ↑↓ navigate · enter to open · esc to close
       </p>
     </div>

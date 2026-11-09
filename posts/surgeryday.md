@@ -2,7 +2,7 @@
 title: D-Day
 date: Mar 1, 2024
 format: journal
-tags: health, surgery, family, mental-health
+tags: health, surgery, family
 ---
 
 ![Sunflowers (F456), Vincent van Gogh](/images/sunflower.jpg)
@@ -19,7 +19,7 @@ I was admitted to Room 3, they named it Sunflower. I'm reminded of Van Gogh's pa
 
 I changed into the hospital gown and went outside to do an ultrasound to check if there's any complications for safety measures. While I was outside waiting, I noticed people were looking at me. Or maybe I was just being self-conscious, projecting my own ideas of insecurity about being young and sick. I wondered what goes through their mind when they see me. Could it be "What disease does he have at such a young age that poor thing". I took some measurements on this fancy machine. My weight increased a little to 52.9 kg. I'm going to lose more after this surgery. My target weight, according to the machine is 61 kg. Let's see if I can reach that by summer.
 
-The lady doing my ultrasound asked what was wrong with me, and whether I was getting acid reflux frequently. She talked about how how no one can really comprehend the pain I feel, it's like being stabbed right at your lower left rib, I felt understood.
+The lady doing my ultrasound asked what was wrong with me, and whether I was getting acid reflux frequently. She talked about how no one can really comprehend the pain I feel, it's like being stabbed right at your lower left rib, I felt understood.
 
 A nurse took some blood for some tests. Four needles went into my arms in total, one for blood. One failed, one came off because I was sleeping on my arm and the needle bent, And the last one on my right hand for the IV drips and pain medicine.
 

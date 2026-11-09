@@ -1,6 +1,6 @@
 ---
 title: A Better Way To Live
-tags: philosophy, relationships, psychology, mental-health
+tags: philosophy, relationships, psychology
 date: Feb 6, 2024
 ---
 

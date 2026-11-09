@@ -1,6 +1,6 @@
 ---
 title: Neuroticism
-tags: psychology, mental-health, creativity
+tags: psychology, creativity
 date: May 23, 2024
 ---
 

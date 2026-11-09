@@ -1,21 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import SearchExplorer from "@/components/search/SearchExplorer";
-import { loadLocalSearch } from "@/utils/loadLocalSearch";
+import dynamic from "next/dynamic";
+
+const SearchExplorer = dynamic(
+  () => import("@/components/search/SearchExplorer"),
+  {
+    loading: () => (
+      <p
+        role="status"
+        className="border border-line bg-surface p-6 text-sm text-muted"
+      >
+        loading search…
+      </p>
+    ),
+  }
+);
 
 export default function SearchModal() {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const openRef = useRef(false);
-
-  // Warm the shared index after the page settles, before the first query.
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      void loadLocalSearch().catch(() => {});
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Open on cmd+K / ctrl+K, or custom "openSearch" event (from sidebar button).
   // State resets happen when opening, so a fresh modal is shown each time.

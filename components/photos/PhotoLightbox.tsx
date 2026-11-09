@@ -88,10 +88,9 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
               alt={photoAlt(photo)}
               fill
               sizes="100vw"
-              quality={75}
             />
             <button
-              className="ph-prev"
+              className="focus-ring ph-prev"
               aria-label="Previous photo"
               disabled={index === 0}
               onClick={() => step(-1)}
@@ -99,7 +98,7 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
               <ArrowLeft size={20} />
             </button>
             <button
-              className="ph-next"
+              className="focus-ring ph-next"
               aria-label="Next photo"
               disabled={index === photos.length - 1}
               onClick={() => step(1)}

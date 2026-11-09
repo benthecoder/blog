@@ -33,12 +33,12 @@ describe("formatDraft frontmatter", () => {
 });
 
 describe("formatDraft body", () => {
-  it("moves a leading epigraph to the end under quote:", () => {
+  it("moves a leading epigraph under quote, keeping links last", () => {
     const out = formatDraft(
       fm("> a line\n> – someone\n\nbody text\n\nlinks:\n- x\n")
     );
     expect(
-      out.endsWith("links:\n- x\n\nquote:\n\n> a line\n> – someone\n")
+      out.endsWith("quote:\n\n> a line\n> – someone\n\nlinks:\n- x\n")
     ).toBe(true);
     expect(out).toContain("---\n\nbody text\n");
   });
@@ -136,13 +136,13 @@ meals:
 wake: 1030  
 sleep: 0430
 
-links:
-- [x](https://example.com/a:b)
-
 quote:
 
 > The only way out is through.
 > – Robert Frost
+
+links:
+- [x](https://example.com/a:b)
 `);
   });
 
@@ -154,4 +154,14 @@ quote:
   it("preserves the wake hard break", () => {
     expect(out).toContain("wake: 1030  \n");
   });
+});
+
+it("keeps Sunday Links numbering in the page title, not duplicated in the body", () => {
+  const markdown =
+    "---\ntitle: sunday links #19\nformat: links\ndate: Mar 15, 2026\n---\n\na short update.\n\n## sunday links #19\n\n- [source](https://example.com)\n\n---\n\nmeals:\n- dinner: noodles\n";
+  const result = formatDraft(markdown);
+  expect(result).toContain("sunday links #19");
+  expect(result).not.toContain("## sunday links");
+  expect(result.indexOf("[source]")).toBeLessThan(result.indexOf("meals:"));
+  expect(formatDraft(result)).toBe(result);
 });

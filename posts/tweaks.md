@@ -4,7 +4,7 @@ tags: communication, relationships, work
 date: Nov 30, 2023
 ---
 
-6 [wording tweaks](https://careercutler.substack.com/p/6-tiny-wording-tweaks-to-level-up) to level up your communication, can by applied to all situations.
+6 [wording tweaks](https://careercutler.substack.com/p/6-tiny-wording-tweaks-to-level-up) to level up your communication, can be applied to all situations.
 
 1. "Can you" -> "Would you be open to"
    - a connection to a sense of open-mindedness, people consider themselves "open-minded"

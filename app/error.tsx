@@ -18,7 +18,7 @@ export default function GlobalError({
       <p className="text-accent/60 text-sm">something went wrong</p>
       <button
         onClick={reset}
-        className="text-sm text-accent opacity-60 hover:opacity-100 transition-opacity"
+        className="focus-ring text-sm text-accent opacity-60 hover:opacity-100 transition-opacity"
       >
         try again
       </button>

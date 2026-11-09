@@ -3,6 +3,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { z } from "zod";
 import { generateStructured, RateLimitError } from "../llm";
+import { parseMarkdown } from "../content/frontmatter";
+import { postFrontmatterSchema } from "../content/schemas";
+import { parseTags } from "../content/tags";
 import { stripScaffolding } from "./postVectors";
 
 export interface SummaryInput {
@@ -42,16 +45,13 @@ export function cleanPostText(markdown: string, maxChars: number): string {
   return lines.join(" ").replace(/\s+/g, " ").slice(0, maxChars);
 }
 
-export function readFrontmatter(markdown: string): {
-  title: string;
-  tags: string;
-} {
-  const fm = markdown.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
-  const pick = (key: string) =>
-    fm
-      .match(new RegExp(`^${key}:\\s*['"]?(.*?)['"]?\\s*$`, "m"))?.[1]
-      ?.trim() ?? "";
-  return { title: pick("title"), tags: pick("tags") };
+/** Title and tags for the summary prompt, read with the site's post schema. */
+export function readFrontmatter(
+  markdown: string,
+  source: string
+): { title: string; tags: string } {
+  const { data } = parseMarkdown(markdown, postFrontmatterSchema, source);
+  return { title: data.title, tags: parseTags(data.tags).join(", ") };
 }
 
 export function buildSummaryPrompt(items: SummaryInput[]): string {
@@ -163,7 +163,7 @@ export async function summarizePending(
         return { requests, stoppedBy: "rate-limit" };
       }
       console.warn(
-        `  request ${requests} failed: ${error instanceof Error ? error.message.slice(0, 120) : error}`
+        `  request ${requests} failed: ${error instanceof Error ? error.message.slice(0, 120) : String(error)}`
       );
     }
     for (const item of batch) {

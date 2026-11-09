@@ -1,6 +1,6 @@
 ---
 title: If This Isn't Nice, I Don't Know What Is
-tags: mindfulness, mental-health, self-reflection
+tags: mindfulness, self-reflection
 date: May 30, 2023
 ---
 

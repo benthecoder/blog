@@ -1,4 +1,10 @@
-import plistlib, uuid
+import os
+import plistlib
+import uuid
+
+token = os.environ.get("TWEET_SECRET")
+if not token:
+    raise SystemExit("Set TWEET_SECRET before building the private Shortcut.")
 
 ASK = str(uuid.uuid4()).upper()
 POST = str(uuid.uuid4()).upper()
@@ -22,6 +28,11 @@ wf = {
              "UUID": POST,
              "WFURL": "https://bneo.xyz/api/tweet",
              "WFHTTPMethod": "POST",
+             "WFHTTPHeaders": {"Value": {"WFDictionaryFieldValueItems": [
+                 {"WFItemType": 0,
+                  "WFKey": {"Value": {"string": "Authorization"}, "WFSerializationType": "WFTextTokenString"},
+                  "WFValue": {"Value": {"string": "Bearer " + token}, "WFSerializationType": "WFTextTokenString"}},
+             ]}, "WFSerializationType": "WFDictionaryFieldValue"},
              "WFHTTPBodyType": "JSON",
              "WFJSONValues": {"Value": {"WFDictionaryFieldValueItems": [
                  {"WFItemType": 0,

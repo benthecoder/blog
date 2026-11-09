@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import "./scrollbars.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -94,12 +95,23 @@ const averia = localFont({
   preload: false,
 });
 
+// The hand on an instant print's caption strip. Not preloaded: only pages
+// with captioned photos fetch it.
+const caption = Cormorant_Garamond({
+  weight: "400",
+  style: "italic",
+  subsets: ["latin"],
+  variable: "--font-caption",
+  display: "swap",
+  preload: false,
+});
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       suppressHydrationWarning
       lang="en"
-      className={`${averia.variable} font-serif`}
+      className={`${averia.variable} ${caption.variable} font-serif`}
     >
       <head>
         {/* In <head> rather than metadata.alternates: pages that set their

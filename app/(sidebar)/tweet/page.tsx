@@ -1,36 +1,37 @@
-import { neon } from "@neondatabase/serverless";
-import Form from "./form";
-import RecentList from "./recent-list";
-import type { Thought } from "@/types/thoughts";
+import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import { ADMIN_COOKIE, verifyAdminSession } from "@/utils/adminAuth";
+import ThoughtComposer from "@/components/thoughts/ThoughtComposer";
 
-export const dynamic = "force-dynamic";
+export const metadata: Metadata = {
+  title: "write a thought",
+  robots: { index: false, follow: false },
+};
 
-const sql = neon(process.env.POSTGRES_URL!);
-
-export default async function Tweet() {
-  const isDev = process.env.NODE_ENV !== "production";
-  const recent = isDev
-    ? ((await sql`
-        SELECT id, content, link, link_title, created_at
-        FROM tweets
-        ORDER BY id DESC
-        LIMIT 20
-      `) as unknown as Thought[])
-    : [];
-
+export default async function PrivateTweetPage() {
+  if (process.env.NODE_ENV === "production") {
+    const secret = process.env.ADMIN_SECRET;
+    const token = (await cookies()).get(ADMIN_COOKIE)?.value;
+    if (!secret || !token || !verifyAdminSession(token, secret)) {
+      redirect("/admin/login?next=%2Ftweet");
+    }
+  }
   return (
-    <section>
-      <Form />
-      {isDev && (
-        <RecentList
-          items={recent.map((t) => ({
-            id: t.id,
-            content: t.content,
-            link: t.link ?? null,
-            title: t.link_title ?? null,
-          }))}
-        />
-      )}
+    <section className="py-8 sm:py-12">
+      <Link
+        href="/thoughts"
+        className="text-sm text-muted hover:text-accent underline underline-offset-4"
+      >
+        ← thoughts
+      </Link>
+      <h1 className="mt-8 text-3xl text-primary">write a thought</h1>
+      <p className="mt-3 mb-8 text-sm text-muted">
+        a passing thought, a link worth keeping, or something still taking
+        shape.
+      </p>
+      <ThoughtComposer />
     </section>
   );
 }
