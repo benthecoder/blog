@@ -1,0 +1,548 @@
+{
+  "as_of": "2026-11-08",
+  "counts": {
+    "activity_none_sheet_days": 0,
+    "activity_present_sheet_days": 0,
+    "activity_unknown_sheet_days": 0,
+    "assessments": 0,
+    "certified": 0,
+    "demonstrated": 0,
+    "issued_sheet_days": 0
+  },
+  "current_week": {
+    "issued_on": "2026-11-08",
+    "lessons": [
+      {
+        "course_id": "stat110",
+        "problems": [
+          {
+            "feedback": null,
+            "ref": "Homework 1, Problem 1",
+            "status": "issued"
+          },
+          {
+            "feedback": null,
+            "ref": "Homework 1, Problem 2",
+            "status": "issued"
+          }
+        ],
+        "short_title": "Stat 110",
+        "source_url": "https://stat110.hsites.harvard.edu/strategic-practice-problems",
+        "title": "Harvard Stat 110 \u2014 Probability"
+      },
+      {
+        "course_id": "mit-1801sc",
+        "problems": [
+          {
+            "feedback": null,
+            "ref": "Session 2, The Derivative of |x|",
+            "status": "issued"
+          }
+        ],
+        "short_title": "18.01SC",
+        "source_url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/resources/mit18_01scf10_ex02prb/",
+        "title": "MIT 18.01SC Single Variable Calculus"
+      },
+      {
+        "course_id": "mit-801sc",
+        "problems": [
+          {
+            "feedback": null,
+            "ref": "Problem Set 1, Problem 2: Elevator Trip",
+            "status": "issued"
+          }
+        ],
+        "short_title": "8.01SC",
+        "source_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/pages/week-1-kinematics/problem-set-1/",
+        "title": "MIT 8.01SC Classical Mechanics"
+      },
+      {
+        "course_id": "yale-rlst145",
+        "problems": [
+          {
+            "feedback": null,
+            "ref": "Lecture 1 \u2014 The Parts of the Whole, plus JSB Introduction to Genesis pp. 8\u201311 and Genesis 1\u20134",
+            "status": "issued"
+          }
+        ],
+        "short_title": "RLST 145",
+        "source_url": "https://oyc.yale.edu/religious-studies/rlst-145/lecture-1",
+        "title": "Yale RLST 145 Introduction to the Old Testament (Hebrew Bible)"
+      },
+      {
+        "course_id": "mit-6006",
+        "problems": [
+          {
+            "feedback": null,
+            "ref": "Problem Set 1, Problem 1-1(a)",
+            "status": "issued"
+          }
+        ],
+        "short_title": "6.006",
+        "source_url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/assignments/",
+        "title": "MIT 6.006 Introduction to Algorithms"
+      }
+    ],
+    "week": "2026-W46"
+  },
+  "curriculum": [
+    {
+      "area": "biology",
+      "assigned": 0,
+      "certified": 0,
+      "id": "mit-701sc",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "science",
+      "short_title": "7.01SC",
+      "title": "MIT 7.01SC Fundamentals of Biology",
+      "url": "https://ocw.mit.edu/courses/7-01sc-fundamentals-of-biology-fall-2011/"
+    },
+    {
+      "area": "chemistry",
+      "assigned": 0,
+      "certified": 0,
+      "id": "mit-5111sc",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "science",
+      "short_title": "5.111SC",
+      "title": "MIT 5.111SC Principles of Chemical Science",
+      "url": "https://ocw.mit.edu/courses/5-111sc-principles-of-chemical-science-fall-2014/"
+    },
+    {
+      "area": "computer-science",
+      "assigned": 1,
+      "certified": 0,
+      "id": "mit-6006",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "core",
+      "short_title": "6.006",
+      "title": "MIT 6.006 Introduction to Algorithms",
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/"
+    },
+    {
+      "area": "computer-science",
+      "assigned": 0,
+      "certified": 0,
+      "id": "stanford-cs146s",
+      "institution": "Stanford",
+      "kind": "artifact",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "elective",
+      "short_title": "CS146S",
+      "title": "Stanford CS146S The Modern Software Developer",
+      "url": "https://themodernsoftware.dev/"
+    },
+    {
+      "area": "economics",
+      "assigned": 0,
+      "certified": 0,
+      "id": "yale-econ159",
+      "institution": "Yale",
+      "kind": "problem-set",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "elective",
+      "short_title": "ECON 159",
+      "title": "Yale ECON 159 Game Theory",
+      "url": "https://oyc.yale.edu/economics/econ-159"
+    },
+    {
+      "area": "engineering",
+      "assigned": 0,
+      "certified": 0,
+      "id": "mit-6002",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "elective",
+      "short_title": "6.002",
+      "title": "MIT 6.002 Circuits and Electronics",
+      "url": "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/"
+    },
+    {
+      "area": "history",
+      "assigned": 0,
+      "certified": 0,
+      "id": "yale-hist119",
+      "institution": "Yale",
+      "kind": "humanities",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "humanities",
+      "short_title": "HIST 119",
+      "title": "Yale HIST 119 The Civil War and Reconstruction Era, 1845\u20131877",
+      "url": "https://oyc.yale.edu/history/hist-119"
+    },
+    {
+      "area": "literature",
+      "assigned": 0,
+      "certified": 0,
+      "id": "yale-engl220",
+      "institution": "Yale",
+      "kind": "humanities",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "humanities",
+      "short_title": "ENGL 220",
+      "title": "Yale ENGL 220 Milton",
+      "url": "https://oyc.yale.edu/english/engl-220"
+    },
+    {
+      "area": "mathematics",
+      "assigned": 1,
+      "certified": 0,
+      "id": "mit-1801sc",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "foundation",
+      "short_title": "18.01SC",
+      "title": "MIT 18.01SC Single Variable Calculus",
+      "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/"
+    },
+    {
+      "area": "philosophy",
+      "assigned": 0,
+      "certified": 0,
+      "id": "yale-phil176",
+      "institution": "Yale",
+      "kind": "humanities",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "humanities",
+      "short_title": "PHIL 176",
+      "title": "Yale PHIL 176 Death",
+      "url": "https://oyc.yale.edu/philosophy/phil-176"
+    },
+    {
+      "area": "physics",
+      "assigned": 1,
+      "certified": 0,
+      "id": "mit-801sc",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "science",
+      "short_title": "8.01SC",
+      "title": "MIT 8.01SC Classical Mechanics",
+      "url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/"
+    },
+    {
+      "area": "statistics",
+      "assigned": 2,
+      "certified": 0,
+      "id": "stat110",
+      "institution": "Harvard",
+      "kind": "problem-set",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "core",
+      "short_title": "Stat 110",
+      "title": "Harvard Stat 110 \u2014 Probability",
+      "url": "https://stat110.hsites.harvard.edu/"
+    },
+    {
+      "area": "theology",
+      "assigned": 0,
+      "certified": 0,
+      "id": "letters",
+      "institution": "Personal",
+      "kind": "reading-list",
+      "lane": "now",
+      "percent_certified": null,
+      "percent_self": null,
+      "phase": "humanities",
+      "short_title": "Letters",
+      "title": "Letters \u2014 Augustine, Lewis, and the ESV",
+      "url": "https://www.esv.org/"
+    },
+    {
+      "area": "theology",
+      "assigned": 1,
+      "certified": 0,
+      "id": "yale-rlst145",
+      "institution": "Yale",
+      "kind": "humanities",
+      "lane": "now",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "humanities",
+      "short_title": "RLST 145",
+      "title": "Yale RLST 145 Introduction to the Old Testament (Hebrew Bible)",
+      "url": "https://oyc.yale.edu/religious-studies/rlst-145"
+    },
+    {
+      "area": "economics",
+      "assigned": 0,
+      "certified": 0,
+      "id": "mit-1401",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "elective",
+      "short_title": "14.01",
+      "title": "MIT 14.01 Principles of Microeconomics",
+      "url": "https://ocw.mit.edu/courses/14-01-principles-of-microeconomics-fall-2018/"
+    },
+    {
+      "area": "engineering",
+      "assigned": 0,
+      "certified": 0,
+      "id": "mit-6004",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "elective",
+      "short_title": "6.004",
+      "title": "MIT 6.004 Computation Structures",
+      "url": "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/"
+    },
+    {
+      "area": "literature",
+      "assigned": 0,
+      "certified": 0,
+      "id": "yale-engl300",
+      "institution": "Yale",
+      "kind": "humanities",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "humanities",
+      "short_title": "ENGL 300",
+      "title": "Yale ENGL 300 Introduction to Theory of Literature",
+      "url": "https://oyc.yale.edu/english/engl-300"
+    },
+    {
+      "area": "machine-learning",
+      "assigned": 0,
+      "certified": 0,
+      "id": "stanford-cs312",
+      "institution": "Stanford",
+      "kind": "experiment",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "ml",
+      "short_title": "CS 312",
+      "title": "Stanford CS 312 Deep Learning Alchemy",
+      "url": "https://deep-learning-alchemy.github.io/"
+    },
+    {
+      "area": "machine-learning",
+      "assigned": 0,
+      "certified": 0,
+      "id": "stanford-cs224n",
+      "institution": "Stanford",
+      "kind": "problem-set",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "ml",
+      "short_title": "CS224N",
+      "title": "Stanford CS224N NLP with Deep Learning",
+      "url": "https://web.stanford.edu/class/cs224n/"
+    },
+    {
+      "area": "machine-learning",
+      "assigned": 0,
+      "certified": 0,
+      "id": "stanford-cs229",
+      "institution": "Stanford",
+      "kind": "problem-set",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "ml",
+      "short_title": "CS229",
+      "title": "Stanford CS229 Machine Learning",
+      "url": "https://cs229.stanford.edu/"
+    },
+    {
+      "area": "machine-learning",
+      "assigned": 0,
+      "certified": 0,
+      "id": "stanford-cs231n",
+      "institution": "Stanford",
+      "kind": "problem-set",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "elective",
+      "short_title": "CS231n",
+      "title": "Stanford CS231n Deep Learning for Computer Vision",
+      "url": "https://cs231n.stanford.edu/"
+    },
+    {
+      "area": "mathematics",
+      "assigned": 0,
+      "certified": 0,
+      "id": "mit-1802sc",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "foundation",
+      "short_title": "18.02SC",
+      "title": "MIT 18.02SC Multivariable Calculus",
+      "url": "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/"
+    },
+    {
+      "area": "mathematics",
+      "assigned": 0,
+      "certified": 0,
+      "id": "mit-1806",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "foundation",
+      "short_title": "18.06",
+      "title": "MIT 18.06 Linear Algebra",
+      "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/"
+    },
+    {
+      "area": "philosophy",
+      "assigned": 0,
+      "certified": 0,
+      "id": "harvard-justice",
+      "institution": "Harvard",
+      "kind": "humanities",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "humanities",
+      "short_title": "Justice",
+      "title": "Harvard Justice",
+      "url": "https://www.edx.org/learn/justice/harvard-university-justice"
+    },
+    {
+      "area": "physics",
+      "assigned": 0,
+      "certified": 0,
+      "id": "mit-802sc",
+      "institution": "MIT",
+      "kind": "problem-set",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "science",
+      "short_title": "8.02SC",
+      "title": "MIT 8.02SC Electricity and Magnetism",
+      "url": "https://ocw.mit.edu/courses/8-02sc-physics-ii-electricity-and-magnetism-fall-2010/"
+    },
+    {
+      "area": "theology",
+      "assigned": 0,
+      "certified": 0,
+      "id": "yale-rlst152",
+      "institution": "Yale",
+      "kind": "humanities",
+      "lane": "next",
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "humanities",
+      "short_title": "RLST 152",
+      "title": "Yale RLST 152 Introduction to the New Testament History and Literature",
+      "url": "https://oyc.yale.edu/religious-studies/rlst-152"
+    }
+  ],
+  "feedback": [],
+  "last_success_at": null,
+  "notes": "Percents are certified work only: an agent, script, or human graded the problem against official solutions. Self-grades are recorded separately and do not raise the headline number. Issued sheets and ink are not grades. Stream links are public recordings of work nights.",
+  "review": {
+    "as_of": "2026-11-08",
+    "due": [],
+    "weak": []
+  },
+  "schedule": [
+    {
+      "course_id": null,
+      "day": "Sunday",
+      "detail": "This week's pages land on the tablet",
+      "stream": false,
+      "title": "New sheets"
+    },
+    {
+      "course_id": "stat110",
+      "day": "Monday",
+      "detail": null,
+      "stream": false,
+      "title": "Stat 110"
+    },
+    {
+      "course_id": "mit-1801sc",
+      "day": "Tuesday",
+      "detail": null,
+      "stream": true,
+      "title": "18.01SC"
+    },
+    {
+      "course_id": "mit-801sc",
+      "day": "Wednesday",
+      "detail": null,
+      "stream": false,
+      "title": "8.01SC"
+    },
+    {
+      "course_id": "yale-rlst145",
+      "day": "Thursday",
+      "detail": null,
+      "stream": true,
+      "title": "RLST 145"
+    },
+    {
+      "course_id": "mit-6006",
+      "day": "Friday",
+      "detail": null,
+      "stream": false,
+      "title": "6.006"
+    },
+    {
+      "course_id": "letters",
+      "day": "Saturday",
+      "detail": null,
+      "stream": false,
+      "title": "Letters"
+    }
+  ],
+  "schema_version": 2,
+  "stale_after_hours": 36,
+  "streaks": {
+    "daily": 0,
+    "weekly": 0,
+    "work_nights": 0
+  },
+  "streams": [],
+  "visibility": "public"
+}
