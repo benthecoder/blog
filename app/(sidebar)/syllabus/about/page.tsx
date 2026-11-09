@@ -1,58 +1,64 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { pageMetadata } from "@/utils/pageMetadata";
 import { SYLLABUS_PATH } from "@/config/syllabus";
+import { Section } from "@/components/layout/Section";
 
 export const metadata: Metadata = pageMetadata({
   title: "about this syllabus",
   description:
-    "a self-directed open-course degree, and how I train how I think",
+    "a curriculum of the best free courses, shaped like a degree: my rl gym",
   path: `${SYLLABUS_PATH}/about`,
 });
 
+const body = "m-0 text-base leading-relaxed text-primary";
+
 export default function SyllabusAboutPage() {
   return (
-    <article className="prose">
-      <h1>about</h1>
-      <p>
-        This page is the record of a degree I am building for myself. There is
-        no admissions office, no tuition, and no finish line. It is a lifelong
-        path through courses anyone can open, chosen because they will still be
-        worth knowing when the tools have changed. I think of it as an RL gym. I
-        show up, put in the reps, read the reward signal, and train how I think.
-      </p>
-      <p>
-        I want a mind that can start from first principles. Probability before
-        machine learning, algorithms before systems, the shape of a
-        well-designed program before I ask a model to write one. Theology and
-        close reading belong here too. A life is more than a career, and I do
-        not want the inner part of mine outsourced. I pick work that should
-        outlast any one model. The ideas matter, not the certificates.
-      </p>
-      <p>
-        I do the work by hand, on paper. A screen makes it too easy to skim, and
-        too easy to let something else think for me.
-      </p>
-      <p>
-        Three rules keep the gym honest. I work through each sheet by hand and
-        stream the session, then link the recording here. If I get stuck, I may
-        ask a model questions. It should answer like a tutor, with Socratic
-        questions that make me reason, not with the worked solution. I never let
-        it do the problems, and the recording is there so I cannot cheat myself.
-        After I finish, an LLM grades the handwriting, names the weak concepts,
-        and brings them back for spaced review.
-      </p>
-      <p>
-        How I track understanding follows{" "}
-        <a href="https://github.com/janestreet/agent_skills/tree/master/socratic-tutor">
-          Jane Street&apos;s socratic-tutor
-        </a>
-        . Levels run from unaware to being able to teach, and they are earned
-        only after repeated independent checks.
-      </p>
-      <p>
-        <Link href={SYLLABUS_PATH}>syllabus</Link>
-      </p>
-    </article>
+    <>
+      <article className="prose">
+        <h1>about</h1>
+      </article>
+      <figure className="m-0 mt-6">
+        <blockquote className="m-0 text-lg italic leading-relaxed text-primary">
+          &ldquo;What I cannot create, I do not understand.&rdquo;
+        </blockquote>
+        <figcaption className="mt-1 text-sm text-muted">
+          – Richard Feynman
+        </figcaption>
+      </figure>
+
+      <div className="mt-12 space-y-12">
+        <Section id="why" title="why">
+          <p className={body}>
+            i&apos;ve always been curious. i want to keep learning, keep my
+            brain growing, and become a more whole person, not just better at my
+            job. so i&apos;m building my own curriculum out of the best free
+            courses from harvard, mit, stanford and yale, shaped like a degree.
+            there&apos;s never been a better time to do this, because ai can
+            find the best material, grade my work and show me where i&apos;m
+            weak. i want to think from first principles, write clearly, solve
+            hard problems, and understand god and the world. i call it my rl
+            gym. i do the reps, look at the reward signal, and get a little
+            better each time.
+          </p>
+        </Section>
+
+        <Section
+          id="how"
+          title="how"
+          more={[{ href: SYLLABUS_PATH, label: "syllabus" }]}
+        >
+          <p className={body}>
+            i work by hand on my remarkable and stream every session. i can ask
+            ai questions when i&apos;m stuck, but it never does the work for me,
+            and the stream keeps me honest. every assignment has a deadline.
+            late work gets marked late, and if it&apos;s still undone when the
+            next class comes around, it&apos;s marked missed. an llm grades my
+            handwriting, finds what i got wrong, and keeps bringing it back
+            until it sticks.
+          </p>
+        </Section>
+      </div>
+    </>
   );
 }
