@@ -4,7 +4,7 @@
   --ph-line: #262626;
   --ph-text: #ececec;
   --ph-muted: #8c8c8c;
-  --ph-faint: #5c5c5c;
+  --ph-faint: #7a7a7a;
   --ph-accent: var(--color-chalk);
   /* Shared role names (see ROLES in globals.css), so role utilities and
      shared components render in the darkroom theme too. */

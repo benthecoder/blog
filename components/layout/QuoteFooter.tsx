@@ -34,7 +34,7 @@ export function QuoteFooter({ quotes }: { quotes: Quote[] }) {
       <button
         type="button"
         onClick={next}
-        className="ml-1 underline underline-offset-4 decoration-accent/30 hover:text-accent focus-visible:outline-2 focus-visible:outline-accent"
+        className="underline underline-offset-4 decoration-accent/30 hover:text-accent focus-visible:outline-2 focus-visible:outline-accent"
       >
         view another
       </button>

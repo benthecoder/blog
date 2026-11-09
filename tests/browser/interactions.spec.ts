@@ -169,6 +169,23 @@ test("photo viewer supports keyboard stepping, focus containment and browser Bac
   await expect(trigger).toBeFocused();
 });
 
+test.describe("without JavaScript", () => {
+  test.use({ javaScriptEnabled: false });
+
+  // Frames with a blur placeholder must show from the server HTML. Gating
+  // them on hydration left the contact sheet blank for seconds on phones.
+  test("contact sheet frames are visible before hydration", async ({
+    page,
+  }) => {
+    await page.goto("/design");
+    const frame = page.locator(".photo-site .ph-frame img").first();
+    await expect(frame).toBeAttached();
+    expect(
+      await frame.evaluate((img) => Number(getComputedStyle(img).opacity))
+    ).toBeGreaterThan(0);
+  });
+});
+
 test("photo swipe has equivalent button controls", async ({ page }) => {
   await page.goto("/design");
   await page.getByRole("button", { name: "Open photo:" }).first().click();
@@ -251,4 +268,27 @@ test("shared controls meet target sizes in every theme without overlapping", asy
     })
   );
   expect(overlaps).toEqual([]);
+});
+
+test("archive filters take taps beyond their text without moving it", async ({
+  page,
+}) => {
+  await page.goto("/posts");
+  const filters = page.locator("button[aria-pressed]");
+  await expect(filters.first()).toBeVisible();
+  // The labels stay text-sized so the row keeps its rhythm; an ::after
+  // extends each tap target to at least 24px tall.
+  const misses = await filters.evaluateAll((elements) =>
+    elements.flatMap((element) => {
+      const { left, right, top, bottom } = element.getBoundingClientRect();
+      const x = (left + right) / 2;
+      const y = (top + bottom) / 2;
+      return [y - 12, y + 12]
+        .filter(
+          (probe) => !element.contains(document.elementFromPoint(x, probe))
+        )
+        .map((probe) => `${element.textContent} at y=${Math.round(probe)}`);
+    })
+  );
+  expect(misses).toEqual([]);
 });

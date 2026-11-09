@@ -111,7 +111,7 @@ export default function ArchiveClient({
               key={id}
               onClick={() => router.push(viewHref(id))}
               aria-pressed={view === id}
-              className={`focus-ring transition-[color] duration-150 ${
+              className={`focus-ring relative touch-manipulation transition-[color] duration-150 after:absolute after:-inset-x-2 after:-inset-y-1 ${
                 view === id
                   ? "text-accent"
                   : "text-accent/35 hover:text-accent/70"
