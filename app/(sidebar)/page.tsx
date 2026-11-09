@@ -46,7 +46,7 @@ function RecentWritings() {
         <Link href="/posts" className={`${entryLink} text-muted`}>
           all writings →
         </Link>
-        <Link href="/explore" className={`${entryLink} text-muted`}>
+        <Link href="/connections" className={`${entryLink} text-muted`}>
           connections →
         </Link>
       </p>

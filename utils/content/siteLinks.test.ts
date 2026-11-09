@@ -1,12 +1,17 @@
+import fs from "fs";
 import { describe, expect, it } from "vitest";
-import { getKnowledgeMap3d } from "./knowledgeMap3d";
+import { KNOWLEDGE_MAP_JSON } from "@/config/paths";
+import type { KnowledgeMapOutput } from "@/types/knowledgeMap";
 import { getPostContent, getPostMetadata, getPostSlugs } from "./posts";
 
 describe("site links", () => {
   it("links every knowledge map point to a published post", () => {
     const slugs = new Set(getPostMetadata().map((post) => post.slug));
-    const missing = getKnowledgeMap3d()
-      .points.map((point) => point.slug)
+    const map: KnowledgeMapOutput = JSON.parse(
+      fs.readFileSync(KNOWLEDGE_MAP_JSON, "utf8")
+    );
+    const missing = map.data
+      .map((node) => node.postSlug)
       .filter((slug) => !slugs.has(slug));
     expect(missing).toEqual([]);
   });

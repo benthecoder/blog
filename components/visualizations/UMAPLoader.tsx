@@ -1,0 +1,70 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+interface Dot {
+  x: number;
+  y: number;
+  opacity: number;
+}
+
+export default function UMAPLoader({ className = "" }: { className?: string }) {
+  const [dots, setDots] = useState<Dot[]>([]);
+
+  useEffect(() => {
+    const initialDots = Array.from({ length: 180 }, () => ({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      opacity: Math.random() * 0.7 + 0.15,
+    }));
+    setDots(initialDots);
+
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let interval: ReturnType<typeof setInterval> | undefined;
+    const updateMotion = () => {
+      clearInterval(interval);
+      if (motion.matches) return;
+      interval = setInterval(() => {
+        setDots((prev) =>
+          prev.map((dot) => ({
+            ...dot,
+            opacity: Math.random() * 0.7 + 0.15,
+          }))
+        );
+      }, 200);
+    };
+    updateMotion();
+    motion.addEventListener("change", updateMotion);
+
+    return () => {
+      clearInterval(interval);
+      motion.removeEventListener("change", updateMotion);
+    };
+  }, []);
+
+  return (
+    <div
+      className={`relative ${className} bg-surface`}
+      style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E")`,
+      }}
+    >
+      <svg className="w-full h-full absolute inset-0">
+        {dots.map((dot, i) => (
+          <circle
+            key={i}
+            cx={`${dot.x}%`}
+            cy={`${dot.y}%`}
+            r="3"
+            className="fill-accent transition-opacity duration-200"
+            style={{ opacity: dot.opacity }}
+          />
+        ))}
+      </svg>
+
+      <div className="absolute bottom-4 left-4 z-10 bg-surface/90 px-3 py-1 rounded-sm border border-line text-xs text-ink-soft dark:text-chalk-muted">
+        loading knowledge map...
+      </div>
+    </div>
+  );
+}
