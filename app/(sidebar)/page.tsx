@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import HomeConnections from "@/components/ui/HomeConnections";
 import { QuoteFooter } from "@/components/layout/QuoteFooter";
 import { getQuotes } from "@/utils/content/quotes";
 import { SKETCHES } from "@/config/sketches";
-import { getPostsByFormat } from "@/utils/content/posts";
-import { formatConfig } from "@/utils/content/formats";
+import { getPostMetadata } from "@/utils/content/posts";
 import { getPhotostream } from "@/utils/content/photostream";
-import { photoAlt } from "@/utils/photoCaption";
+import { photoAlt, photoTitle } from "@/utils/photoCaption";
+import { parsePlace } from "@/utils/photoPlaces";
+import { formatPhotoDate } from "@/utils/photoDate";
+import { filmFor } from "@/utils/photoFilm";
+import type { StreamPhoto } from "@/types/photostream";
 
 // Photos are live; refresh hourly so new uploads reach the homepage.
 export const revalidate = 3600;
@@ -21,27 +23,17 @@ const FEATURED_SKETCHES = ["howl.png", "wave.png", "peony.png"].flatMap(
 const entryLink =
   "text-accent hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent";
 
-type PostLink = { slug: string; title: string; date: string };
+const formatCount = (n: number) => n.toLocaleString("en-US");
 
-function PostSection({
-  id,
-  title,
-  posts,
-  more,
-}: {
-  id: string;
-  title: string;
-  posts: PostLink[];
-  more: { href: string; label: string };
-}) {
-  if (posts.length === 0) return null;
+function RecentWritings() {
+  const posts = getPostMetadata();
   return (
-    <section aria-labelledby={id} className="mt-10 first-of-type:mt-0">
-      <h2 id={id} className="mb-4 text-base font-bold text-primary">
-        {title}
+    <section aria-labelledby="writings">
+      <h2 id="writings" className="mb-4 text-base font-bold text-primary">
+        recent writings
       </h2>
       <ul className="space-y-4">
-        {posts.map((post) => (
+        {posts.slice(0, 5).map((post) => (
           <li key={post.slug}>
             <h3 className="text-base">
               <Link href={`/posts/${post.slug}`} className={entryLink}>
@@ -52,9 +44,12 @@ function PostSection({
           </li>
         ))}
       </ul>
-      <p className="mt-6 text-sm">
-        <Link href={more.href} className={`${entryLink} text-muted`}>
-          {more.label} →
+      <p className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        <Link href="/posts" className={`${entryLink} text-muted`}>
+          all writings →
+        </Link>
+        <Link href="/explore" className={`${entryLink} text-muted`}>
+          how all {formatCount(posts.length)} entries connect →
         </Link>
       </p>
     </section>
@@ -112,10 +107,75 @@ function Gallery({
   );
 }
 
+/** Written on the print's strip: its caption, else where it was taken. */
+function printLabel(photo: StreamPhoto) {
+  const place = parsePlace(photo.place);
+  return (
+    photoTitle(photo) ??
+    (place && (place.city ?? place.country)) ??
+    formatPhotoDate(photo.date)
+  );
+}
+
+/** The latest photos as a fanned row of instant prints, as in posts. */
+function Prints({ photos }: { photos: StreamPhoto[] }) {
+  return (
+    <section aria-labelledby="photos" className="mt-10">
+      <h2 id="photos" className="mb-4 text-base font-bold text-primary">
+        photos
+      </h2>
+      {/* Held to the column: in a post a row of prints spreads into the
+          margins, but here it sits beside the sketches at their width. */}
+      <div className="photo-group" style={{ margin: "1.5rem 0 0" }}>
+        <div className="photo-row" data-n={photos.length}>
+          {photos.map((photo) => {
+            const [width, height] = filmFor(photo);
+            return (
+              <figure
+                key={photo.id}
+                className="photo-print"
+                style={
+                  {
+                    "--plate-ratio": `${width} / ${height}`,
+                    "--plate-ar": width / height,
+                  } as React.CSSProperties
+                }
+              >
+                <Link
+                  href={`/photos/photo/${photo.id}`}
+                  className="photo-frame block w-full outline-none"
+                >
+                  <div className="photo-plate relative w-full overflow-hidden">
+                    <Image
+                      src={photo.src}
+                      alt={photoAlt(photo)}
+                      fill
+                      sizes="(max-width: 640px) 85vw, 260px"
+                      placeholder={photo.blurDataURL ? "blur" : "empty"}
+                      blurDataURL={photo.blurDataURL}
+                      className="object-cover"
+                    />
+                  </div>
+                </Link>
+                <figcaption className="photo-label">
+                  {printLabel(photo)}
+                </figcaption>
+              </figure>
+            );
+          })}
+        </div>
+      </div>
+      <p className="mt-10 text-sm">
+        <Link href="/photos" className={`${entryLink} text-muted`}>
+          all photos →
+        </Link>
+      </p>
+    </section>
+  );
+}
+
 export default async function HomePage() {
   const photos = (await getPhotostream()).slice(0, 3);
-  const writings = getPostsByFormat("essay").slice(0, 4);
-  const recent = getPostsByFormat("journal").slice(0, 3);
 
   return (
     <>
@@ -146,18 +206,7 @@ export default async function HomePage() {
         </ul>
       </article>
 
-      <PostSection
-        id="writings"
-        title={formatConfig("essay").homeHeading}
-        posts={writings}
-        more={{ href: "/posts?view=essay", label: "all writings" }}
-      />
-      <PostSection
-        id="journal"
-        title={formatConfig("journal").homeHeading}
-        posts={recent}
-        more={{ href: "/journal", label: "read the journal" }}
-      />
+      <RecentWritings />
       <Gallery
         id="sketches"
         title="sketches"
@@ -170,20 +219,7 @@ export default async function HomePage() {
         }))}
         more={{ href: "/sketch", label: "all sketches" }}
       />
-      {photos.length > 0 && (
-        <Gallery
-          id="photos"
-          title="photos"
-          tiles={photos.map((photo) => ({
-            key: photo.id,
-            href: `/photos/photo/${photo.id}`,
-            src: photo.src,
-            alt: photoAlt(photo),
-          }))}
-          more={{ href: "/photos", label: "all photos" }}
-        />
-      )}
-      <HomeConnections />
+      {photos.length > 0 && <Prints photos={photos} />}
       <QuoteFooter quotes={getQuotes()} />
     </>
   );

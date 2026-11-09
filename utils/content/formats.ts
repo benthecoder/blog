@@ -7,7 +7,6 @@ export const POST_FORMATS = [
     label: "journal",
     heading: "journal",
     description: "daily entries and reflections",
-    homeHeading: "recent journal entries",
     legacyTags: ["journal"],
   },
   {
@@ -15,7 +14,6 @@ export const POST_FORMATS = [
     label: "essays",
     heading: "essays",
     description: "longer reflections",
-    homeHeading: "recent writings",
     legacyTags: [],
   },
   {
@@ -23,7 +21,6 @@ export const POST_FORMATS = [
     label: "books",
     heading: "book notes",
     description: "notes on books",
-    homeHeading: "recent book notes",
     legacyTags: ["book"],
   },
   {
@@ -31,7 +28,6 @@ export const POST_FORMATS = [
     label: "links",
     heading: "sunday links",
     description: "things worth sharing",
-    homeHeading: "recent sunday links",
     legacyTags: ["links"],
   },
   {
@@ -39,7 +35,6 @@ export const POST_FORMATS = [
     label: "resources",
     heading: "resources",
     description: "lists to come back to",
-    homeHeading: "recent resources",
     legacyTags: ["resources", "listicles"],
   },
 ] as const satisfies readonly {
@@ -47,7 +42,6 @@ export const POST_FORMATS = [
   label: string;
   heading: string;
   description: string;
-  homeHeading: string;
   legacyTags: readonly string[];
 }[];
 
