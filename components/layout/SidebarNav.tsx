@@ -6,8 +6,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { hoverTick } from "@/utils/hoverTick";
 import { SketchIcon } from "../ui/SketchIcon";
-import { BookOpen } from "lucide-react";
-import { SYLLABUS_PATH } from "@/config/syllabus";
+import { MapPinned } from "lucide-react";
 
 const links = [
   { path: "/posts", text: "archive", icon: "archive.svg" },
@@ -18,7 +17,6 @@ const links = [
   { path: "/curius", text: "curius", icon: "bookmark.svg" },
   { path: "/projects", text: "projects", icon: "code.svg" },
   { path: "/library", text: "library", icon: "library.svg" },
-  { path: SYLLABUS_PATH, text: "syllabus" },
   { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
 ];
 
@@ -114,7 +112,7 @@ export function SidebarNav() {
                 className={`w-full h-full${path === "/random" && spinning ? " dice-spin" : ""}`}
               />
             ) : (
-              <BookOpen
+              <MapPinned
                 aria-label={text}
                 className="w-full h-full p-1.5"
                 strokeWidth={1.25}

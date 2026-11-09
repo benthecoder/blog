@@ -5,50 +5,17 @@ import learn from "@/data/learn.json";
 
 export const metadata: Metadata = pageMetadata({
   title: "syllabus",
-  description: "a running list of what I'm learning",
+  description: "my RL gym: a place to train how I think",
   path: SYLLABUS_PATH,
 });
 
-type Lesson = {
-  course_id: string;
-  title: string;
-  short_title?: string | null;
-  source_url?: string | null;
-  problems: { ref: string; status: string; feedback?: string | null }[];
-};
-
 type CurriculumItem = {
   id: string;
-  title: string;
-  short_title?: string | null;
-  institution?: string;
-  area?: string;
-  lane?: string;
-  url?: string;
   percent_certified?: number | null;
 };
 
-type ReviewItem = {
-  id: string;
-  title?: string;
-  course_id?: string;
-  due_on?: string | null;
-  status?: string;
-};
-
 const data = learn as {
-  streaks?: { daily: number; weekly: number; work_nights: number };
-  streams?: { date: string; url: string; title?: string | null }[];
-  schedule?: {
-    day: string;
-    title?: string;
-    detail?: string | null;
-    course_id?: string | null;
-    stream?: boolean;
-  }[];
-  current_week?: { week: string; issued_on?: string; lessons: Lesson[] };
   curriculum?: CurriculumItem[];
-  review?: { due: ReviewItem[]; weak: ReviewItem[] };
 };
 
 function plain(s: string) {
@@ -402,102 +369,18 @@ function CourseLink({ item }: { item: ListItem }) {
 }
 
 export default function SyllabusPage() {
-  const streaks = data.streaks;
-  const review = data.review || { due: [], weak: [] };
-  const streams = data.streams || [];
-  const schedule = data.schedule || [];
-  const workNights = streaks?.work_nights ?? 0;
-
-  const streakLine =
-    workNights === 0
-      ? "no work nights recorded yet."
-      : workNights === 1
-        ? "one work night recorded."
-        : `${workNights} work nights recorded.`;
-  const streakExtra = streaks?.daily
-    ? ` nightly streak: ${streaks.daily}.`
-    : "";
-
   return (
     <article className="prose">
       <h1>syllabus</h1>
-      <p className="text-sm text-accent/60 not-prose -mt-4 mb-6">
+      <p>
+        my RL gym: I put in the reps, read the reward signal, and train how I
+        think.
+      </p>
+      <p className="text-sm text-accent/60 not-prose -mt-2 mb-8">
         Last updated: Nov 8, 2026
       </p>
 
-      <p>
-        I have been trying to take my attention back from the short-form feed.
-        It is very good at scattering my mind and very bad at giving anything
-        back. I want those hours for the broad education I never received, one
-        that develops the whole person. I like to think of this as a return to
-        some Renaissance or golden age, when learning itself was what a life was
-        for. This page is a living list of what I am learning, and I will keep
-        it current as I go.
-      </p>
-
-      <h2>this week</h2>
-      <p>
-        {streakLine}
-        {streakExtra}
-      </p>
-      {schedule.length > 0 ? (
-        <div className="not-prose my-4 overflow-x-auto">
-          <table className="w-full text-sm text-left">
-            <thead>
-              <tr className="border-b border-rule text-ink-muted">
-                <th className="py-1.5 pr-4 font-normal">day</th>
-                <th className="py-1.5 font-normal">class</th>
-              </tr>
-            </thead>
-            <tbody>
-              {schedule.map((row) => (
-                <tr key={row.day} className="border-b border-rule/70">
-                  <td className="py-1.5 pr-4 align-top whitespace-nowrap">
-                    {row.day.toLowerCase()}
-                  </td>
-                  <td className="py-1.5 align-top">
-                    {row.title}
-                    {row.detail ? (
-                      <span className="block text-ink-muted">{row.detail}</span>
-                    ) : null}
-                    {row.stream ? (
-                      <span className="block text-ink-muted">stream</span>
-                    ) : null}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : null}
-      {review.due.length === 0 && review.weak.length === 0 ? (
-        <p>review: nothing due yet.</p>
-      ) : (
-        <ul>
-          {review.due.map((item) => (
-            <li key={`due-${item.id}`}>
-              review: {plain(item.title || "")}
-              {item.due_on ? ` · due ${item.due_on}` : ""}
-            </li>
-          ))}
-          {review.weak.map((item) => (
-            <li key={`weak-${item.id}`}>weak: {plain(item.title || "")}</li>
-          ))}
-        </ul>
-      )}
-      {streams.length === 0 ? (
-        <p>recordings: none yet.</p>
-      ) : (
-        <ul>
-          {streams.map((s) => (
-            <li key={s.url}>
-              <a href={s.url}>{s.title || s.date}</a>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <h2>rules</h2>
+      <h2>methodology</h2>
       <ul>
         <li>
           I work by hand and stream the session, then link the recording here.
