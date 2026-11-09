@@ -10,24 +10,7 @@ import {
 } from "react";
 import { createPortal, flushSync } from "react-dom";
 import type { ImageMeta } from "@/utils/content/imageMeta";
-
-// Instant film formats: the photo window in millimetres. All three are 62
-// tall, so prints of any format sit level beside each other.
-const FILMS = {
-  mini: [46, 62],
-  square: [62, 62],
-  wide: [99, 62],
-} as const;
-
-/** The format a photo of this shape would be printed on. */
-function filmFor(size: { width: number; height: number } | null) {
-  if (!size) return FILMS.square;
-  const ratio = size.width / size.height;
-  // Cut-offs sit halfway (geometrically) between neighbouring formats.
-  if (ratio < 0.86) return FILMS.mini;
-  if (ratio > 1.26) return FILMS.wide;
-  return FILMS.square;
-}
+import { filmFor } from "@/utils/photoFilm";
 
 // The name the photo carries from its print into the viewer and back.
 const LIFT = "photo-lift";

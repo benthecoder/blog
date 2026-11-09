@@ -52,6 +52,7 @@ const nextConfig: NextConfig = {
     { source: "/wave", destination: "/", permanent: true },
     { source: "/search", destination: "/posts", permanent: true },
     { source: "/gallery", destination: "/photos", permanent: true },
+    { source: "/explore", destination: "/connections", permanent: true },
     { source: "/photos/trips", destination: "/photos/places", permanent: true },
     // Photos live at the root of their own host: photos.bneo.xyz/places, not
     // /photos/places. Old /photos links on other hosts go through hostRedirects.
