@@ -78,10 +78,10 @@ export default function SketchPage() {
               autoFocus
               aria-label="Close sketch"
               onClick={close}
-              className="absolute top-5 right-5 px-2 py-1 text-xs text-chalk-soft hover:text-chalk-strong focus-visible:outline-2 focus-visible:outline-chalk focus-visible:outline-offset-2"
-            >
-              esc
-            </button>
+              // Esc or a tap anywhere closes the viewer; this is only for
+              // screen readers.
+              className="sr-only"
+            />
           </>
         )}
       </dialog>
