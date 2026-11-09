@@ -269,3 +269,26 @@ test("shared controls meet target sizes in every theme without overlapping", asy
   );
   expect(overlaps).toEqual([]);
 });
+
+test("archive filters take taps beyond their text without moving it", async ({
+  page,
+}) => {
+  await page.goto("/posts");
+  const filters = page.locator("button[aria-pressed]");
+  await expect(filters.first()).toBeVisible();
+  // The labels stay text-sized so the row keeps its rhythm; an ::after
+  // extends each tap target to at least 24px tall.
+  const misses = await filters.evaluateAll((elements) =>
+    elements.flatMap((element) => {
+      const { left, right, top, bottom } = element.getBoundingClientRect();
+      const x = (left + right) / 2;
+      const y = (top + bottom) / 2;
+      return [y - 12, y + 12]
+        .filter(
+          (probe) => !element.contains(document.elementFromPoint(x, probe))
+        )
+        .map((probe) => `${element.textContent} at y=${Math.round(probe)}`);
+    })
+  );
+  expect(misses).toEqual([]);
+});
