@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/utils/pageMetadata";
 import { SYLLABUS_PATH } from "@/config/syllabus";
 import ActivityHeatmap from "@/components/syllabus/ActivityHeatmap";
-import CourseCard from "@/components/syllabus/CourseCard";
-import KnowledgeMapSlot from "@/components/syllabus/KnowledgeMapSlot";
-import { data, isEnrolled, plain, trackOf, type Course } from "@/lib/syllabus";
+import CurriculumMap from "@/components/syllabus/CurriculumMap";
+import OptionalShelf from "@/components/syllabus/OptionalShelf";
+import RequiredTracks from "@/components/syllabus/RequiredTracks";
+import { formatDay, nodeStates, plain } from "@/lib/curriculum";
+import { data } from "@/lib/syllabus";
 
 export const metadata: Metadata = pageMetadata({
   title: "syllabus",
@@ -12,50 +14,13 @@ export const metadata: Metadata = pageMetadata({
   path: SYLLABUS_PATH,
 });
 
-const TRACK_LABEL: Record<string, string> = {
-  core: "Core",
-  major: "Major",
-  minor: "Minors",
-};
-
-function groupByTrack(courses: Course[]) {
-  const groups: { key: string; label: string; courses: Course[] }[] = [
-    { key: "core", label: TRACK_LABEL.core, courses: [] },
-    { key: "major", label: TRACK_LABEL.major, courses: [] },
-    { key: "minor", label: TRACK_LABEL.minor, courses: [] },
-  ];
-  for (const course of courses) {
-    const key = trackOf(course);
-    const group = groups.find((item) => item.key === key);
-    if (group) group.courses.push(course);
-  }
-  return groups.filter((group) => group.courses.length > 0);
-}
-
-function formatDay(iso?: string) {
-  if (!iso) return "";
-  const date = new Date(`${iso}T12:00:00`);
-  return date.toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    timeZone: "America/New_York",
-  });
-}
-
 export default function SyllabusPage() {
-  const courses = data.curriculum || [];
-  const current = courses.filter(isEnrolled);
-  const future = courses.filter((course) => !isEnrolled(course));
   const events = data.calendar?.events || [];
   const due = data.review?.due || [];
   const weak = data.review?.weak || [];
   const recent = data.feedback || [];
-  const totals = data.totals || {
-    hours: 0,
-    sessions: 0,
-    courses: current.length,
-  };
+  const totals = data.totals || { hours: 0, sessions: 0, courses: 0 };
+  const states = nodeStates();
 
   return (
     <article className="prose">
@@ -64,11 +29,9 @@ export default function SyllabusPage() {
         my RL gym: I put in the reps, read the reward signal, and train how I
         think.
       </p>
-      <p className="text-sm text-accent/60 not-prose -mt-2 mb-8">
-        Last updated: Nov 8, 2026
+      <p className="text-sm text-accent/60 not-prose -mt-2 mb-6">
+        Last updated: Nov 9, 2026
       </p>
-
-      <h2>methodology</h2>
       <ul>
         <li>
           I work by hand and stream the session, then link the recording here.
@@ -83,48 +46,9 @@ export default function SyllabusPage() {
         </li>
       </ul>
 
-      <section className="not-prose mt-10">
-        <h2 className="font-serif text-[1.5em] font-bold text-ink dark:text-chalk mt-0 mb-3">
-          activity
-        </h2>
-        <ActivityHeatmap />
-      </section>
-
       <section className="not-prose mt-12">
         <h2 className="font-serif text-[1.5em] font-bold text-ink dark:text-chalk mt-0 mb-4">
-          current classes
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {current.map((course) => (
-            <CourseCard key={course.id} course={course} />
-          ))}
-        </div>
-      </section>
-
-      <section className="not-prose mt-12">
-        <h2 className="font-serif text-[1.5em] font-bold text-ink dark:text-chalk mt-0 mb-2">
-          future classes
-        </h2>
-        <p className="text-[15px] text-ink-soft dark:text-chalk-soft mb-6">
-          Courses in the catalog that I have not enrolled in yet.
-        </p>
-        {groupByTrack(future).map((group) => (
-          <div key={group.key} className="mb-8">
-            <h3 className="font-mono text-2xs tracking-[0.14em] uppercase text-ink-muted mt-0 mb-3">
-              {group.label}
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {group.courses.map((course) => (
-                <CourseCard key={course.id} course={course} future />
-              ))}
-            </div>
-          </div>
-        ))}
-      </section>
-
-      <section className="not-prose mt-12">
-        <h2 className="font-serif text-[1.5em] font-bold text-ink dark:text-chalk mt-0 mb-4">
-          schedule
+          this week
         </h2>
         {events.length === 0 ? (
           <p className="text-[15px] text-ink-soft dark:text-chalk-soft">
@@ -139,9 +63,14 @@ export default function SyllabusPage() {
               >
                 <span className="font-mono text-[12px] text-ink-muted">
                   {formatDay(event.date)}
+                  {event.start ? (
+                    <>
+                      <br />
+                      {event.start}
+                    </>
+                  ) : null}
                 </span>
                 <span className="text-[15px] text-ink-strong dark:text-chalk-strong">
-                  {event.start ? `${event.start} · ` : ""}
                   {plain(event.title)}
                 </span>
               </li>
@@ -149,6 +78,8 @@ export default function SyllabusPage() {
           </ol>
         )}
       </section>
+
+      <RequiredTracks />
 
       <section className="not-prose mt-12">
         <h2 className="font-serif text-[1.5em] font-bold text-ink dark:text-chalk mt-0 mb-4">
@@ -185,7 +116,25 @@ export default function SyllabusPage() {
         )}
       </section>
 
-      <KnowledgeMapSlot />
+      <section className="not-prose mt-12">
+        <h2 className="font-serif text-[1.5em] font-bold text-ink dark:text-chalk mt-0 mb-3">
+          activity
+        </h2>
+        <ActivityHeatmap />
+      </section>
+
+      <section className="not-prose mt-12">
+        <h2 className="font-serif text-[1.5em] font-bold text-ink dark:text-chalk mt-0 mb-3">
+          knowledge map
+        </h2>
+        <p className="text-[15px] text-ink-soft dark:text-chalk-soft mb-5">
+          Concepts, not course codes. The required tracks sit in full color.
+          Everything else on the shelf can be opened with the whole map.
+        </p>
+        <CurriculumMap states={states} />
+      </section>
+
+      <OptionalShelf />
 
       <section className="not-prose mt-12">
         <h2 className="font-serif text-[1.5em] font-bold text-ink dark:text-chalk mt-0 mb-4">
@@ -216,7 +165,7 @@ export default function SyllabusPage() {
 
       <footer className="not-prose mt-16 pt-5 border-t border-rule dark:border-night-rule text-[13px] italic text-ink-muted">
         {totals.hours ?? 0} hours · {totals.sessions ?? 0} sessions ·{" "}
-        {totals.courses ?? current.length} courses
+        {totals.courses ?? 0} courses
       </footer>
     </article>
   );

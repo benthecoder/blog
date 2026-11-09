@@ -1,0 +1,720 @@
+{
+  "generated": "2026-11-09",
+  "note": "States are computed from live learn data, not from example_state.",
+  "required_areas": [
+    "math",
+    "statistics",
+    "cs-foundations",
+    "ai-ml",
+    "theology"
+  ],
+  "areas": [
+    {
+      "id": "math",
+      "title": "Mathematics"
+    },
+    {
+      "id": "statistics",
+      "title": "Statistics"
+    },
+    {
+      "id": "cs-foundations",
+      "title": "Computer science"
+    },
+    {
+      "id": "ai-ml",
+      "title": "AI / ML"
+    },
+    {
+      "id": "ai-safety",
+      "title": "AI safety"
+    },
+    {
+      "id": "ai-security",
+      "title": "AI security"
+    },
+    {
+      "id": "physics",
+      "title": "Physics"
+    },
+    {
+      "id": "chemistry",
+      "title": "Chemistry"
+    },
+    {
+      "id": "biology",
+      "title": "Biology"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "economics",
+      "title": "Economics"
+    },
+    {
+      "id": "history",
+      "title": "History"
+    },
+    {
+      "id": "philosophy",
+      "title": "Philosophy"
+    },
+    {
+      "id": "literature-western",
+      "title": "Literature (Western)"
+    },
+    {
+      "id": "literature-chinese",
+      "title": "Literature (Chinese)"
+    },
+    {
+      "id": "mandarin",
+      "title": "Mandarin"
+    },
+    {
+      "id": "theology",
+      "title": "Theology"
+    },
+    {
+      "id": "writing",
+      "title": "Writing"
+    },
+    {
+      "id": "music-art",
+      "title": "Music and art"
+    },
+    {
+      "id": "creativity",
+      "title": "Creativity"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "calc-limits-derivatives",
+      "area": "math",
+      "topic": "calculus",
+      "title": "Limits and derivatives",
+      "prereqs": [],
+      "items": ["mit-1801sc"]
+    },
+    {
+      "id": "calc-integrals",
+      "area": "math",
+      "topic": "calculus",
+      "title": "Integrals",
+      "prereqs": ["calc-limits-derivatives"],
+      "items": ["mit-1801sc"]
+    },
+    {
+      "id": "calc-series",
+      "area": "math",
+      "topic": "calculus",
+      "title": "Sequences and series",
+      "prereqs": ["calc-integrals"],
+      "items": ["mit-1801sc"]
+    },
+    {
+      "id": "calc-multivariable",
+      "area": "math",
+      "topic": "calculus",
+      "title": "Multivariable calculus",
+      "prereqs": ["calc-integrals"],
+      "items": ["mit-1802sc"]
+    },
+    {
+      "id": "linear-algebra",
+      "area": "math",
+      "topic": "linear-algebra",
+      "title": "Linear algebra",
+      "prereqs": ["calc-limits-derivatives"],
+      "items": ["mit-1806"]
+    },
+    {
+      "id": "proofs",
+      "area": "math",
+      "topic": "proofs",
+      "title": "Reading and writing proofs",
+      "prereqs": [],
+      "items": ["velleman-how-to-prove-it"]
+    },
+    {
+      "id": "real-analysis",
+      "area": "math",
+      "topic": "analysis",
+      "title": "Real analysis",
+      "prereqs": ["proofs", "calc-series"],
+      "items": ["abbott-understanding-analysis"]
+    },
+    {
+      "id": "probability",
+      "area": "statistics",
+      "topic": "probability",
+      "title": "Probability",
+      "prereqs": ["calc-integrals"],
+      "items": ["stat110"]
+    },
+    {
+      "id": "conditioning-bayes",
+      "area": "statistics",
+      "topic": "probability",
+      "title": "Conditioning and Bayes",
+      "prereqs": ["probability"],
+      "items": ["stat110"]
+    },
+    {
+      "id": "random-variables",
+      "area": "statistics",
+      "topic": "probability",
+      "title": "Random variables",
+      "prereqs": ["probability"],
+      "items": ["stat110"]
+    },
+    {
+      "id": "expectation",
+      "area": "statistics",
+      "topic": "probability",
+      "title": "Expectation",
+      "prereqs": ["random-variables"],
+      "items": ["stat110"]
+    },
+    {
+      "id": "limit-theorems",
+      "area": "statistics",
+      "topic": "probability",
+      "title": "LLN and CLT",
+      "prereqs": ["expectation"],
+      "items": ["stat110"]
+    },
+    {
+      "id": "programming-practice",
+      "area": "cs-foundations",
+      "topic": "programming",
+      "title": "Practical programming",
+      "prereqs": [],
+      "items": []
+    },
+    {
+      "id": "sicp-programming",
+      "area": "cs-foundations",
+      "topic": "programming",
+      "title": "SICP-style programming",
+      "prereqs": ["programming-practice"],
+      "items": ["sicp"]
+    },
+    {
+      "id": "discrete-math",
+      "area": "cs-foundations",
+      "topic": "discrete-math",
+      "title": "Discrete math for CS",
+      "prereqs": ["proofs"],
+      "items": ["mit-6042j"]
+    },
+    {
+      "id": "data-structures-algorithms",
+      "area": "cs-foundations",
+      "topic": "algorithms",
+      "title": "Data structures and algorithms",
+      "prereqs": ["programming-practice", "discrete-math"],
+      "items": ["mit-6006"]
+    },
+    {
+      "id": "computer-systems",
+      "area": "cs-foundations",
+      "topic": "computer-systems",
+      "title": "Computer systems",
+      "prereqs": ["programming-practice", "nand2tetris-machine"],
+      "items": ["csapp"]
+    },
+    {
+      "id": "operating-systems",
+      "area": "cs-foundations",
+      "topic": "operating-systems",
+      "title": "Operating systems",
+      "prereqs": ["computer-systems"],
+      "items": ["ostep"]
+    },
+    {
+      "id": "distributed-data-systems",
+      "area": "cs-foundations",
+      "topic": "distributed-systems",
+      "title": "Data-intensive systems",
+      "prereqs": [
+        "computer-systems",
+        "operating-systems",
+        "computer-networking"
+      ],
+      "items": ["ddia", "mit-65840"]
+    },
+    {
+      "id": "supervised-learning",
+      "area": "ai-ml",
+      "topic": "machine-learning",
+      "title": "Supervised learning",
+      "prereqs": [
+        "linear-algebra",
+        "probability",
+        "calc-multivariable",
+        "programming-practice"
+      ],
+      "items": ["stanford-cs229"]
+    },
+    {
+      "id": "neural-networks",
+      "area": "ai-ml",
+      "topic": "neural-networks",
+      "title": "Neural networks",
+      "prereqs": ["supervised-learning"],
+      "items": ["karpathy-zero-to-hero", "stanford-cs231n"]
+    },
+    {
+      "id": "computer-vision",
+      "area": "ai-ml",
+      "topic": "computer-vision",
+      "title": "Deep learning for vision",
+      "prereqs": ["neural-networks"],
+      "items": ["stanford-cs231n"]
+    },
+    {
+      "id": "nlp-transformers",
+      "area": "ai-ml",
+      "topic": "nlp",
+      "title": "NLP and transformers",
+      "prereqs": ["neural-networks"],
+      "items": ["stanford-cs224n"]
+    },
+    {
+      "id": "language-modeling",
+      "area": "ai-ml",
+      "topic": "language-modeling",
+      "title": "Language modeling from scratch",
+      "prereqs": ["nlp-transformers", "computer-systems"],
+      "items": ["stanford-cs336"]
+    },
+    {
+      "id": "alignment-foundations",
+      "area": "ai-safety",
+      "topic": "alignment",
+      "title": "Alignment foundations",
+      "prereqs": ["supervised-learning", "ethics"],
+      "items": ["bluedot-alignment"]
+    },
+    {
+      "id": "mech-interp",
+      "area": "ai-safety",
+      "topic": "mechanistic-interpretability",
+      "title": "Mechanistic interpretability",
+      "prereqs": ["nlp-transformers", "alignment-foundations"],
+      "items": ["nanda-olah-interp"]
+    },
+    {
+      "id": "ml-safety-robustness",
+      "area": "ai-safety",
+      "topic": "ml-safety",
+      "title": "ML safety and robustness",
+      "prereqs": ["neural-networks"],
+      "items": ["hendrycks-ml-safety"]
+    },
+    {
+      "id": "adversarial-examples",
+      "area": "ai-security",
+      "topic": "adversarial-robustness",
+      "title": "Adversarial examples",
+      "prereqs": ["neural-networks"],
+      "items": ["mlsafety-adversarial"]
+    },
+    {
+      "id": "llm-application-security",
+      "area": "ai-security",
+      "topic": "llm-application-security",
+      "title": "LLM application security",
+      "prereqs": ["nlp-transformers"],
+      "items": ["owasp-llm-top-10"]
+    },
+    {
+      "id": "classical-mechanics",
+      "area": "physics",
+      "topic": "mechanics",
+      "title": "Classical mechanics",
+      "prereqs": ["calc-integrals"],
+      "items": ["mit-801sc", "young-freedman"]
+    },
+    {
+      "id": "electricity-magnetism",
+      "area": "physics",
+      "topic": "electromagnetism",
+      "title": "Electricity and magnetism",
+      "prereqs": ["classical-mechanics", "calc-multivariable"],
+      "items": ["mit-802", "young-freedman", "feynman-lectures"]
+    },
+    {
+      "id": "general-chemistry",
+      "area": "chemistry",
+      "topic": "general-chemistry",
+      "title": "General chemistry",
+      "prereqs": [],
+      "items": ["mit-5111sc"]
+    },
+    {
+      "id": "intro-biology",
+      "area": "biology",
+      "topic": "intro-biology",
+      "title": "Introductory biology",
+      "prereqs": [],
+      "items": ["mit-701sc"]
+    },
+    {
+      "id": "biochemistry",
+      "area": "biology",
+      "topic": "biochemistry",
+      "title": "Biochemistry",
+      "prereqs": ["intro-biology", "general-chemistry"],
+      "items": ["mit-705"]
+    },
+    {
+      "id": "cell-molecular",
+      "area": "biology",
+      "topic": "cell-biology",
+      "title": "Cell and molecular biology",
+      "prereqs": ["intro-biology"],
+      "items": ["alberts-mboc"]
+    },
+    {
+      "id": "circuits",
+      "area": "engineering",
+      "topic": "circuits",
+      "title": "Circuits",
+      "prereqs": ["electricity-magnetism"],
+      "items": ["mit-6002"]
+    },
+    {
+      "id": "computation-structures",
+      "area": "engineering",
+      "topic": "computation-structures",
+      "title": "Computation structures",
+      "prereqs": ["circuits"],
+      "items": ["mit-6004"]
+    },
+    {
+      "id": "analog-electronics",
+      "area": "engineering",
+      "topic": "electronics",
+      "title": "Analog electronics",
+      "prereqs": ["circuits"],
+      "items": ["art-of-electronics"]
+    },
+    {
+      "id": "microeconomics",
+      "area": "economics",
+      "topic": "microeconomics",
+      "title": "Microeconomics",
+      "prereqs": [],
+      "items": ["mit-1401", "mru"]
+    },
+    {
+      "id": "game-theory",
+      "area": "economics",
+      "topic": "game-theory",
+      "title": "Game theory",
+      "prereqs": ["microeconomics"],
+      "items": ["yale-econ159"]
+    },
+    {
+      "id": "political-economy",
+      "area": "economics",
+      "topic": "political-economy",
+      "title": "Political economy",
+      "prereqs": ["microeconomics"],
+      "items": ["smith-wealth-of-nations"]
+    },
+    {
+      "id": "ancient-mediterranean",
+      "area": "history",
+      "topic": "ancient-mediterranean",
+      "title": "Ancient Mediterranean history",
+      "prereqs": [],
+      "items": ["herodotus", "thucydides"]
+    },
+    {
+      "id": "modern-europe",
+      "area": "history",
+      "topic": "modern-europe",
+      "title": "Modern European history",
+      "prereqs": [],
+      "items": ["yale-hist202"]
+    },
+    {
+      "id": "us-civil-war",
+      "area": "history",
+      "topic": "us-civil-war",
+      "title": "US Civil War and Reconstruction",
+      "prereqs": [],
+      "items": ["yale-hist119"]
+    },
+    {
+      "id": "chinese-historiography",
+      "area": "history",
+      "topic": "chinese-historiography",
+      "title": "Chinese historiography",
+      "prereqs": ["literary-chinese"],
+      "items": ["shiji"]
+    },
+    {
+      "id": "intro-philosophy",
+      "area": "philosophy",
+      "topic": "intro-philosophy",
+      "title": "Introduction to philosophy",
+      "prereqs": [],
+      "items": ["blackburn-think", "yale-phil176"]
+    },
+    {
+      "id": "ancient-philosophy",
+      "area": "philosophy",
+      "topic": "ancient-philosophy",
+      "title": "Ancient philosophy",
+      "prereqs": [],
+      "items": ["plato-republic"]
+    },
+    {
+      "id": "ethics",
+      "area": "philosophy",
+      "topic": "ethics",
+      "title": "Ethics",
+      "prereqs": ["ancient-philosophy"],
+      "items": ["harvard-justice", "aristotle-ethics"]
+    },
+    {
+      "id": "homeric-epic",
+      "area": "literature-western",
+      "topic": "epic",
+      "title": "Homeric epic",
+      "prereqs": [],
+      "items": ["homer-iliad"]
+    },
+    {
+      "id": "shakespeare",
+      "area": "literature-western",
+      "topic": "drama",
+      "title": "Shakespeare",
+      "prereqs": [],
+      "items": ["hamlet"]
+    },
+    {
+      "id": "milton",
+      "area": "literature-western",
+      "topic": "milton",
+      "title": "Milton",
+      "prereqs": ["hebrew-bible"],
+      "items": ["yale-engl220"]
+    },
+    {
+      "id": "victorian-novel",
+      "area": "literature-western",
+      "topic": "novel",
+      "title": "The Victorian novel",
+      "prereqs": [],
+      "items": ["middlemarch"]
+    },
+    {
+      "id": "mandarin-vernacular",
+      "area": "mandarin",
+      "topic": "vernacular",
+      "title": "Vernacular Mandarin",
+      "prereqs": [],
+      "items": []
+    },
+    {
+      "id": "literary-chinese",
+      "area": "mandarin",
+      "topic": "literary-chinese",
+      "title": "Literary Chinese (文言)",
+      "prereqs": ["mandarin-vernacular"],
+      "items": ["guwen-guanzhi"]
+    },
+    {
+      "id": "analects",
+      "area": "literature-chinese",
+      "topic": "confucian-classics",
+      "title": "Analects",
+      "prereqs": ["mandarin-vernacular"],
+      "items": ["analects"]
+    },
+    {
+      "id": "daodejing",
+      "area": "literature-chinese",
+      "topic": "daoist-classics",
+      "title": "Dao De Jing",
+      "prereqs": ["mandarin-vernacular"],
+      "items": ["daodejing"]
+    },
+    {
+      "id": "hongloumeng",
+      "area": "literature-chinese",
+      "topic": "novel",
+      "title": "Dream of the Red Chamber",
+      "prereqs": ["mandarin-vernacular"],
+      "items": ["hongloumeng"]
+    },
+    {
+      "id": "hebrew-bible",
+      "area": "theology",
+      "topic": "hebrew-bible",
+      "title": "Hebrew Bible",
+      "prereqs": [],
+      "items": ["esv-bible", "yale-rlst145"]
+    },
+    {
+      "id": "new-testament",
+      "area": "theology",
+      "topic": "new-testament",
+      "title": "New Testament",
+      "prereqs": ["hebrew-bible"],
+      "items": ["esv-bible", "yale-rlst152"]
+    },
+    {
+      "id": "augustine-confessions",
+      "area": "theology",
+      "topic": "christian-thought",
+      "title": "Augustine, Confessions",
+      "prereqs": ["new-testament", "ancient-philosophy"],
+      "items": ["augustine-confessions"]
+    },
+    {
+      "id": "christian-apologetics",
+      "area": "theology",
+      "topic": "christian-thought",
+      "title": "Christian apologetics",
+      "prereqs": ["new-testament"],
+      "items": ["lewis-mere-christianity", "keller-reason-for-god"]
+    },
+    {
+      "id": "how-to-read",
+      "area": "writing",
+      "topic": "reading",
+      "title": "How to read a book",
+      "prereqs": [],
+      "items": ["adler-how-to-read"]
+    },
+    {
+      "id": "essay-writing",
+      "area": "writing",
+      "topic": "essay",
+      "title": "Essay writing",
+      "prereqs": [],
+      "items": ["paul-graham-writing"]
+    },
+    {
+      "id": "listening-western-music",
+      "area": "music-art",
+      "topic": "music",
+      "title": "Listening to Western music",
+      "prereqs": [],
+      "items": ["yale-musi112"]
+    },
+    {
+      "id": "nand2tetris-machine",
+      "area": "cs-foundations",
+      "topic": "computer-systems",
+      "title": "Nand2Tetris machine",
+      "prereqs": ["programming-practice"],
+      "items": ["nand2tetris"]
+    },
+    {
+      "id": "algorithms-design",
+      "area": "cs-foundations",
+      "topic": "algorithms",
+      "title": "Algorithm design and analysis",
+      "prereqs": ["data-structures-algorithms"],
+      "items": ["mit-6046"]
+    },
+    {
+      "id": "os-engineering",
+      "area": "cs-foundations",
+      "topic": "operating-systems",
+      "title": "OS engineering",
+      "prereqs": ["operating-systems", "computer-systems"],
+      "items": ["mit-61810"]
+    },
+    {
+      "id": "computer-networking",
+      "area": "cs-foundations",
+      "topic": "networking",
+      "title": "Computer networking",
+      "prereqs": ["computer-systems"],
+      "items": ["stanford-cs144"]
+    },
+    {
+      "id": "databases",
+      "area": "cs-foundations",
+      "topic": "databases",
+      "title": "Database systems",
+      "prereqs": ["computer-systems", "data-structures-algorithms"],
+      "items": ["cmu-15445"]
+    },
+    {
+      "id": "compilers",
+      "area": "cs-foundations",
+      "topic": "compilers",
+      "title": "Languages and compilers",
+      "prereqs": ["programming-practice", "data-structures-algorithms"],
+      "items": ["crafting-interpreters", "stanford-cs143"]
+    },
+    {
+      "id": "ml-systems",
+      "area": "ai-ml",
+      "topic": "ml-systems",
+      "title": "ML systems",
+      "prereqs": ["neural-networks", "computer-systems"],
+      "items": ["stanford-cs336", "cmu-10414"]
+    },
+    {
+      "id": "systems-security",
+      "area": "cs-foundations",
+      "topic": "security",
+      "title": "Computer systems security",
+      "prereqs": ["operating-systems", "computer-networking"],
+      "items": ["mit-6858"]
+    },
+    {
+      "id": "problem-solving-heuristics",
+      "area": "creativity",
+      "topic": "problem-solving",
+      "title": "Problem-solving heuristics",
+      "prereqs": [],
+      "items": ["polya-how-to-solve-it"]
+    },
+    {
+      "id": "scientific-taste",
+      "area": "creativity",
+      "topic": "scientific-taste",
+      "title": "Taste in science and engineering",
+      "prereqs": [],
+      "items": ["hamming-art-of-doing"]
+    },
+    {
+      "id": "design-thinking",
+      "area": "creativity",
+      "topic": "design",
+      "title": "Design thinking",
+      "prereqs": [],
+      "items": ["stanford-dschool"]
+    },
+    {
+      "id": "invention-building",
+      "area": "creativity",
+      "topic": "invention",
+      "title": "Invention and building",
+      "prereqs": ["programming-practice"],
+      "items": ["mit-2009"]
+    },
+    {
+      "id": "puzzle-proof-practice",
+      "area": "creativity",
+      "topic": "puzzles",
+      "title": "Inventive puzzles",
+      "prereqs": ["proofs"],
+      "items": ["aops-puzzles"]
+    }
+  ]
+}

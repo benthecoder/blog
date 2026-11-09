@@ -4,21 +4,26 @@ import { notFound } from "next/navigation";
 import { pageMetadata } from "@/utils/pageMetadata";
 import { SYLLABUS_PATH } from "@/config/syllabus";
 import {
-  courseById,
-  data,
+  allCourseIds,
+  catalogItem,
+  courseUrl,
   displayTitle,
+  formatDay,
+  hoursLabel,
   lastScore,
-  lessonFor,
+  mergedCourse,
   plain,
-  progressLabel,
-  progressRatio,
-  type Course,
-} from "@/lib/syllabus";
+  progressText,
+  schoolOf,
+  weekEvent,
+  weekSessionLabel,
+} from "@/lib/curriculum";
+import { data, progressRatio, type Course } from "@/lib/syllabus";
 
 type Params = Promise<{ course: string }>;
 
 export function generateStaticParams() {
-  return (data.curriculum || []).map((course) => ({ course: course.id }));
+  return allCourseIds().map((id) => ({ course: id }));
 }
 
 export async function generateMetadata({
@@ -27,17 +32,19 @@ export async function generateMetadata({
   params: Params;
 }): Promise<Metadata> {
   const { course: id } = await params;
-  const course = courseById(id);
+  const course = mergedCourse(id);
   if (!course) return pageMetadata({ title: "syllabus", path: SYLLABUS_PATH });
   return pageMetadata({
     title: displayTitle(course),
     description: plain(course.title || displayTitle(course)),
-    path: `${SYLLABUS_PATH}/${course.id}`,
+    path: `${SYLLABUS_PATH}/${id}`,
   });
 }
 
 function assignmentsFor(course: Course) {
-  const lesson = lessonFor(course.id);
+  const lesson = (data.current_week?.lessons || []).find(
+    (item) => item.course_id === course.id
+  );
   const fromLesson = (lesson?.problems || []).map((problem) => ({
     ref: problem.ref || "problem",
     status: problem.status || "issued",
@@ -60,9 +67,10 @@ function assignmentsFor(course: Course) {
 
 export default async function CoursePage({ params }: { params: Params }) {
   const { course: id } = await params;
-  const course = courseById(id);
+  const course = mergedCourse(id);
   if (!course) notFound();
 
+  const catalog = catalogItem(id);
   const assignments = assignmentsFor(course);
   const feedback = (data.feedback || []).filter(
     (row) => row.course_id === course.id && row.summary
@@ -75,7 +83,11 @@ export default async function CoursePage({ params }: { params: Params }) {
   );
   const ratio = progressRatio(course);
   const units = course.units || [];
-  const doneIds = new Set<string>();
+  const url = courseUrl(id);
+  const session = weekSessionLabel(id);
+  const event = weekEvent(id);
+  const hours = hoursLabel(id);
+  const recommenders = catalog?.recommended_by || [];
 
   return (
     <article className="prose">
@@ -83,19 +95,34 @@ export default async function CoursePage({ params }: { params: Params }) {
         <Link href={SYLLABUS_PATH}>syllabus</Link>
       </p>
       <p className="font-mono text-2xs tracking-[0.14em] uppercase text-ink-muted not-prose m-0">
-        {plain(course.institution || "")}
+        {schoolOf(id)}
+        {hours ? ` · ${hours}` : ""}
       </p>
-      <h1>{displayTitle(course)}</h1>
-      <p>{plain(course.title || "")}</p>
-      {course.url ? (
+      <h1>{catalog?.title || displayTitle(course)}</h1>
+      {course.title &&
+      plain(course.title)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "") !==
+        plain(catalog?.title || displayTitle(course))
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "") ? (
+        <p>{plain(course.title)}</p>
+      ) : null}
+      {url ? (
         <p>
-          <a href={course.url}>source</a>
+          <a href={url}>source</a>
+        </p>
+      ) : null}
+      {session ? (
+        <p>
+          This week
+          {event?.date ? ` (${formatDay(event.date)})` : ""}: {session}
         </p>
       ) : null}
 
       <section className="not-prose mt-8">
         <p className="font-mono text-2xs tracking-[0.08em] uppercase text-ink-muted m-0 mb-2">
-          {progressLabel(course)} certified · {lastScore(course.id)}
+          {progressText(course)} · {lastScore(course.id)}
         </p>
         <div className="h-0.5 bg-paper-sunken dark:bg-night-raised">
           <i
@@ -105,6 +132,26 @@ export default async function CoursePage({ params }: { params: Params }) {
         </div>
       </section>
 
+      {catalog?.why_canonical ? (
+        <>
+          <h2>why this</h2>
+          <p>{plain(catalog.why_canonical)}</p>
+        </>
+      ) : null}
+
+      {recommenders.length > 0 ? (
+        <>
+          <h2>recommended by</h2>
+          <ul>
+            {recommenders.map((row) => (
+              <li key={row.name}>
+                {row.url ? <a href={row.url}>{row.name}</a> : row.name}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+
       <h2>units</h2>
       {units.length === 0 ? (
         <p>No units listed yet.</p>
@@ -113,7 +160,6 @@ export default async function CoursePage({ params }: { params: Params }) {
           {units.map((unit) => (
             <li key={unit.id || unit.title}>
               {plain(unit.title || unit.id || "unit")}
-              {unit.id && doneIds.has(unit.id) ? " · done" : ""}
             </li>
           ))}
         </ul>
