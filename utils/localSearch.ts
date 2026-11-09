@@ -1,4 +1,5 @@
 import type { SearchResultItem } from "@/types/search";
+import { isStopword, searchTerms, termMatchers } from "./searchTerms";
 
 export type SearchDocument = Pick<
   SearchResultItem,
@@ -17,16 +18,15 @@ export function createLocalSearch(documents: SearchDocument[]) {
   return (query: string, limit = 30): SearchResultItem[] => {
     const phrase = query.trim().toLocaleLowerCase().slice(0, 500);
     const tagsOnly = phrase.startsWith("#");
-    const terms = [
-      ...new Set(phrase.replace(/^#/, "").split(/\s+/).filter(Boolean)),
-    ];
+    const terms = searchTerms(query);
     if (!terms.length) return [];
+    const matchers = termMatchers(terms);
     const matches: { document: SearchDocument; score: number }[] = [];
     for (const entry of entries) {
       let score = 0;
       let matched = true;
-      for (const term of terms) {
-        const inTags = entry.tags.includes(term);
+      for (const [index, matcher] of matchers.entries()) {
+        const inTags = matcher.test(entry.tags);
         if (tagsOnly) {
           if (!inTags) {
             matched = false;
@@ -34,20 +34,25 @@ export function createLocalSearch(documents: SearchDocument[]) {
           }
           score += 15;
         } else {
-          const inTitle = entry.title.includes(term);
-          const inSlug = entry.slug.includes(term);
-          if (!inTitle && !inTags && !inSlug && !entry.body.includes(term)) {
+          const inTitle = matcher.test(entry.title);
+          const inSlug = matcher.test(entry.slug);
+          if (!inTitle && !inTags && !inSlug && !matcher.test(entry.body)) {
             matched = false;
             break;
           }
-          score +=
-            (inTitle ? 30 : 0) + (inTags ? 15 : 0) + (inSlug ? 10 : 0) + 1;
+          // Function words must appear but say nothing about relevance.
+          if (!isStopword(terms[index]))
+            score += (inTitle ? 30 : 0) + (inTags ? 15 : 0) + (inSlug ? 10 : 0);
+          score += 1;
         }
       }
       if (matched)
         matches.push({
           document: entry.document,
-          score: score + (entry.title === phrase ? 100 : 0),
+          score:
+            score +
+            (entry.title === phrase ? 100 : 0) +
+            (terms.length > 1 && entry.body.includes(phrase) ? 50 : 0),
         });
     }
     return matches
