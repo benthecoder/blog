@@ -1,6 +1,6 @@
 ---
 name: blog-design-system
-description: Apply the bneo.xyz design system to new pages, components, and visual changes across the blog and its companion sites. Covers design principles, color tokens, typography, spacing, layout, imagery, reusable UI patterns, and interaction states. Use for UI implementation or design review in the blog repository, not unrelated sites or content-only edits.
+description: Apply the bneo.xyz design system to new pages, components, and visual changes across the blog and its companion sites, including the places map and photo prints. Covers design principles, color tokens, typography, spacing, layout, imagery, motion, reusable UI patterns, and interaction states. Use for UI implementation or design review in the blog repository, not unrelated sites or content-only edits.
 ---
 
 # Blog design system
@@ -15,6 +15,7 @@ Read the relevant component and its rendered context before extending it. Reuse 
 
 ## Principles
 
+- **A page, not an app.** Every surface, the places map and photos included, reads like a page someone made by hand: warm paper, one serif voice, a narrow column, generous space, and the author's own sentences doing the work. [dutilh.net](https://dutilh.net/) is the reference Benedict points to. Interface earns its place only when the content would be unusable without it; for a collection of a few dozen items or fewer, that means plain text links instead of counters, filter chips, radio buttons, search fields, version strings, and dividers. A reviewer calls the dashboard version "AI slop", and they are right.
 - **Content leads.** Give the reading, browsing, or viewing task the largest share of attention. Use progressive disclosure for secondary details.
 - **Personal character.** Keep the serif typography, bilingual drawn wordmarks, sketches, and illustrated navigation. Prefer these existing assets to generic brand replacements.
 - **Quiet hierarchy.** Establish importance through position, type size, weight, and spacing. Use rules and surface changes sparingly; avoid wrapping ordinary content in repeated cards.
@@ -86,7 +87,7 @@ Tailwind v4 strips `--tw-*` declarations from author CSS, so Typography's `--tw-
 
 ### Typography
 
-The primary family is locally hosted **Averia Serif Libre**, exposed through `--font-averia`, `--font-serif`, and `font-serif`. Available font files cover 300, 400, and 700 with italic variants. Small technical labels may use the existing monospace treatment.
+The primary family is locally hosted **Averia Serif Libre**, exposed through `--font-averia`, `--font-serif`, and `font-serif`. Available font files cover 300, 400, and 700 with italic variants. Small technical labels may use the existing monospace treatment. **Cormorant Garamond Italic** (`--font-caption`, loaded unpreloaded in `app/layout.tsx`) is the hand written on a print's caption strip and nowhere else. A page sets one voice: when a surface mixes a system sans, a serif and tiny grey labels, reduce it to the serif at readable sizes.
 
 | Text role | Existing implementation | Usage |
 | --- | --- | --- |
@@ -117,15 +118,23 @@ The reading shell uses `max-w-xl`, expanding to `xl:max-w-3xl`; posts and essays
 
 ### Shape, elevation, and imagery
 
-Use 1px rules for separation. Keep ordinary text sections on the page surface; add a raised surface when it communicates a distinct object or overlay. Existing article photographs use `--radius-image: 0.5rem`, a mat, a hairline edge, and a soft shadow. Reuse `.photo-frame`, `.photo-plate`, and `.photo-label` through `PostImage` rather than rebuilding their styling. Other media layouts may have local corner sizes.
+Use 1px rules for separation. Keep ordinary text sections on the page surface; add a raised surface when it communicates a distinct object or overlay. Other media layouts may have local corner sizes.
+
+**Photographs are instant prints**, modelled on the physical object rather than styled freehand. `PostImage` crops each photo to the nearest real film format (Mini 46×62, Square 62×62, Wide 99×62, all 62 tall) and `.photo-print` draws the card with the film's borders in `--u` (one millimetre of film): 4.5 sides, 6.5 top, a 17.5 caption strip. Cream card stock, near-square corners, and a short crisp shadow from one top-left light, because a print lies flat; a wide blur reads as floating. Back-to-back photos become rows (`rowSizes` in `utils/content/remarkImageParagraphs.ts`: threes ending in pairs), fanned about one shared pivot, and a row of three swipes on phones. Reuse `PostImage` and these classes. Rejected along the way, so leave them out: generated paper noise, dimple patterns, seam ridges, and frames shaped by the photo.
+
+Print sizes come from the server: `public/data/image-meta.json` holds each image's dimensions and blur placeholder, and `utils/content/imageManifest.test.ts` fails when a published photo is missing. Run `pnpm generate:image-meta` after publishing images. Layout that waits on the browser to report a size breaks on iOS Safari, which can report 0×0.
 
 Reuse `SketchIcon` and the drawn assets in `public/icons`. It uses SVG masks tinted with the active ink. Utility icons can use existing stroke icons; keep their size and stroke consistent within a control group. Give icon-only actions accessible names.
 
-Preserve an image’s aspect ratio in full viewing contexts. Deliberate preview crops are allowed: `PostImage` uses a square plate that opens the full photograph. Captions should remain subordinate to the image. Do not invent image metadata.
+Preserve an image’s aspect ratio in full viewing contexts. Deliberate preview crops are allowed: a print shows the film crop and opens the full photograph. Captions should remain subordinate to the image. Do not invent image metadata.
 
 ### Motion
 
 Use motion to communicate interaction or loading. Existing examples include image previews, artwork rotation, the random-navigation dice, and short color transitions. Prefer the existing durations and easing in the relevant component. Respect reduced-motion preferences when adding transitions; keep movement from shifting the reading layout.
+
+Opening a photo lifts it out of its print into the viewer with a view transition (`view-transition-name: photo-lift`, 420ms, `cubic-bezier(0.32, 0.72, 0, 1)`); reach for the browser's view transitions before adding an animation library. Put hover-only effects inside `@media (hover: hover) and (pointer: fine)`, since a tap on a phone triggers `:hover` and leaves it stuck.
+
+UI sounds come from `cuelume`, pinned at 0.2.1 and ignored by Dependabot: the cues (`tick`, `sparkle`, `bloom`, `toggle`, `success`) were chosen by ear, and 0.2.8 replaced every one while the API stayed the same. Upgrade it only when Benedict asks to hear the new set.
 
 ## Components and reusable treatments
 
@@ -136,7 +145,7 @@ Use motion to communicate interaction or loading. Existing examples include imag
 | Article layout | Dated posts with metadata and navigation | `RenderPost`; aligned title, metadata, optional contents, body, and footer |
 | Index row | Archives and other textual collections | `PostPreview` / `PostLinkPreview`; title with quieter date, predictable hover treatment |
 | Related content | Connections between entries | `RelatedPosts`, `Backlinks`, `WikiLink`; small links and fine separators rather than large promotional cards |
-| Image and caption | Photographs within writing | `PostImage`; framed preview, caption, full-image overlay |
+| Image and caption | Photographs within writing | `PostImage`; instant print on a film format, caption strip, lift into the full-image viewer |
 | Appearance controls | Mode and palette selection | `ThemeSwitch`, `PaletteSwitch`, `FloatingControls`; respect the active page shell’s placement |
 | Search | Finding existing content | `SearchModal` and search-page components; preserve keyboard navigation, result hierarchy, and loading/empty/error handling |
 | `Button` / `ButtonLink` | Any action (`Button`) or link that should look like one (`ButtonLink`) | `components/ui/Button.tsx`. `variant` `quiet` (default, text only), `outline`, `solid`; `size` `sm`/`md`; `tone="danger"` for destructive actions. Defaults to `type="button"`; pass `type="submit"` in forms |
@@ -166,9 +175,10 @@ Hover details must also be reachable by keyboard or tap. Dialogs need an accessi
 
 - **Landing:** drawn identity and artwork with a clear entry into the site; keep the composition spacious.
 - **Reading:** title, supporting metadata, constrained prose, and related navigation. Reuse article/essay/wiki structures according to content type.
-- **Collection:** compact entries, quiet counts or dates, and filtering or grouping only when it helps browse the content. Use rows for textual collections and image-led layouts for visual collections.
+- **Collection:** compact entries with dates where they matter; reserve counts, filters and grouping for collections too large to read through. Use rows for textual collections and image-led layouts for visual collections. When entries carry the author's notes, the note is the entry and the name is its label.
 - **Detail:** make the selected content primary and disclose secondary information on demand. Keep a clear route back to its collection.
 - **Explorer:** give the canvas or visualization ample space with a compact control area. On narrow screens, reorganize controls without hiding the core task.
+- **Places (`/map`, maps.bneo.xyz):** a printed map with a key, the way a cartographer would make it. The basemap is a quiet backdrop: muted roads, few labels, no highway shields. The places are the loudest marks, numbered to match the list beside them, and hovering either one lights the other. The list reads as a page in the blog's serif, with Benedict's note for each place as the main line. Ask him for list intros and photos rather than writing them.
 
 These patterns apply across archives, wiki, library, projects, galleries, photographs, and interactive pages. A new page inherits the foundations; its layout follows its task.
 
@@ -177,6 +187,8 @@ These patterns apply across archives, wiki, library, projects, galleries, photog
 Use concise, direct UI labels and the blog’s personal voice. Preserve authored titles and descriptions. Show only meaningful metadata; avoid empty placeholders for optional fields.
 
 For a visual change, compare the page with an existing page of the same type. Check narrow and wide layouts, long titles, sparse and dense content, applicable interaction states, and both color modes. Verify the active palette and the composition as a whole. Update only the affected component or pattern; introduce a shared token or component when a repeated need justifies it.
+
+Measure layout instead of eyeballing it: run Playwright in both Chromium and WebKit with an iPhone device profile, and read `offsetWidth`/`offsetHeight` (a rotated element's `getBoundingClientRect` grows with its tilt). Desktop Chromium alone passed changes that collapsed on Benedict's iPhone.
 
 ## Checking your work
 
