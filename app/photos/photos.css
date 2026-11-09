@@ -190,11 +190,13 @@
 }
 
 /* contact sheet */
+/* Air between frames, so each photo reads on its own rather than as one
+   tiled wall. */
 .ph-sheet {
   --row-h: 240px;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 28px 20px;
 }
 .ph-cell {
   margin: 0;
@@ -273,7 +275,7 @@
 }
 .ph-strip {
   display: flex;
-  gap: 6px;
+  gap: 12px;
   height: 120px;
   overflow: hidden;
 }
