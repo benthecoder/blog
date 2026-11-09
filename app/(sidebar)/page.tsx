@@ -23,8 +23,6 @@ const FEATURED_SKETCHES = ["howl.png", "wave.png", "peony.png"].flatMap(
 const entryLink =
   "text-accent hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent";
 
-const formatCount = (n: number) => n.toLocaleString("en-US");
-
 function RecentWritings() {
   const posts = getPostMetadata();
   return (
@@ -49,7 +47,7 @@ function RecentWritings() {
           all writings →
         </Link>
         <Link href="/explore" className={`${entryLink} text-muted`}>
-          how all {formatCount(posts.length)} entries connect →
+          connections →
         </Link>
       </p>
     </section>
