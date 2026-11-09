@@ -294,10 +294,10 @@ export default function PostImage({
               type="button"
               onClick={close}
               aria-label="Close expanded image"
-              className="absolute top-5 right-5 min-h-11 min-w-11 touch-manipulation text-xs tracking-widest text-chalk-muted hover:text-chalk-strong transition-colors outline-none focus-visible:ring-2 focus-visible:ring-chalk/40 rounded-xs px-2 py-1"
-            >
-              esc
-            </button>
+              // Esc or a tap anywhere outside the photo closes the viewer,
+              // so the button is only for screen readers, not drawn.
+              className="sr-only"
+            />
           </dialog>,
           document.body
         )}
