@@ -52,7 +52,8 @@ export default function HomePage() {
           Lumpur, Malaysia.
         </p>
         <p>
-          see what i&apos;m up to <Link href="/now">now</Link>.
+          see what i&apos;m up to <Link href="/now">now</Link>, or{" "}
+          <Link href="/contact#message">send me a message</Link>.
         </p>
         <p>some pages to explore:</p>
         <ul>
