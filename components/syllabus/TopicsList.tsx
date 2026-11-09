@@ -20,14 +20,14 @@ export default function TopicsList({
           <li key={item.id} className="break-inside-avoid py-1.5">
             <Link
               href={`${SYLLABUS_PATH}/${item.id}`}
-              className="text-[14px] text-ink-strong dark:text-chalk-strong no-underline hover:underline"
+              className="text-[14px] text-ink-strong dark:text-chalk-strong"
             >
               {item.title}
             </Link>
-            {item.school ? (
+            {item.citation ? (
               <span className="text-[12px] text-ink-muted">
                 {" "}
-                · {item.school}
+                {item.citation}
               </span>
             ) : null}
           </li>

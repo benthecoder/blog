@@ -93,8 +93,36 @@ export function courseLevel(course?: Course | null): MasteryLevel {
   return clampLevel(level);
 }
 
-const CODE_PREFIX =
-  /^(?:[A-Z]{2,6}\s*\d+[A-Z]*|\d+\.\d+[A-Z]*|Stat\s+\d+|Letters)\s*[—–-]?\s*/i;
+const HUMAN_NAMES: Record<string, string> = {
+  stat110: "Probability",
+  "mit-1801sc": "Calculus",
+  "stanford-cs234": "Reinforcement Learning",
+  "yale-rlst145": "The Hebrew Bible",
+  "mit-6006": "Algorithms",
+};
+
+const CODE_TOKEN =
+  /^(?:[A-Z]{2,8}\s*\d+[A-Z]*(?:\/\d+[A-Z]*)?|\d+\.\d+[A-Z]*|\d+-\d+|Stat\s+\d+)/i;
+
+function looksLikeCode(value: string): boolean {
+  return (
+    CODE_TOKEN.test(value.trim()) &&
+    CODE_TOKEN.exec(value.trim())?.[0] === value.trim()
+  );
+}
+
+function stripSchoolPrefix(name: string, school: string): string {
+  if (school && name.toLowerCase().startsWith(`${school.toLowerCase()} `)) {
+    return name.slice(school.length).trim();
+  }
+  return name;
+}
+
+function stripCodePrefix(name: string): string {
+  return name
+    .replace(new RegExp(`${CODE_TOKEN.source}\\s*[.:—–/-]?\\s*`, "i"), "")
+    .trim();
+}
 
 export function descriptiveName(course: {
   id: string;
@@ -103,20 +131,43 @@ export function descriptiveName(course: {
 }): string {
   const school = schoolOf(course.id);
   let name = plain(course.title || course.short_title || course.id);
-  if (school && name.toLowerCase().startsWith(`${school.toLowerCase()} `)) {
-    name = name.slice(school.length).trim();
-  }
-  name = name.replace(CODE_PREFIX, "").trim();
+  name = stripSchoolPrefix(name, school);
+  name = stripCodePrefix(name);
   return name || plain(course.short_title || course.title || course.id);
 }
 
+export function humanName(course: {
+  id: string;
+  title?: string;
+  short_title?: string;
+}): string {
+  return HUMAN_NAMES[course.id] || descriptiveName(course);
+}
+
+export function courseCode(id: string): string {
+  const live = learnById.get(id);
+  const cat = catalogById.get(id);
+  const short = plain(live?.short_title || "");
+  if (short && looksLikeCode(short)) return short;
+  const school = schoolOf(id);
+  let title = plain(live?.title || cat?.title || "");
+  title = stripSchoolPrefix(title, school);
+  const match = title.match(CODE_TOKEN);
+  return match ? match[0].trim() : "";
+}
+
+export function courseCitation(id: string): string {
+  const school = schoolOf(id);
+  if (school.toLowerCase() === "personal") return "";
+  const code = courseCode(id);
+  if (school && code) return `${school} ${code}`;
+  return school || code;
+}
+
 export function courseListLabel(course: Course): string {
-  const name = descriptiveName(course);
-  const school = schoolOf(course.id);
-  if (school && school.toLowerCase() !== "personal") {
-    return `${name} · ${school}`;
-  }
-  return name;
+  const name = humanName(course);
+  const citation = courseCitation(course.id);
+  return citation ? `${name} (${citation})` : name;
 }
 
 export type TrackId = "cs-se" | "math-stats" | "ai" | "theology";
@@ -256,7 +307,19 @@ export function weekSessionLabel(courseId: string): string {
   if (!event) return "";
   const lesson = lessonFor(courseId);
   const problem = lesson?.problems?.[0]?.ref;
-  return plain(problem || event.title || "");
+  const raw = plain(problem || event.title || "");
+  if (!raw) return "";
+  const course = mergedCourse(courseId);
+  if (!course) return raw;
+  const code = courseCode(courseId);
+  if (!code) return raw;
+  const escaped = code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const leading = new RegExp("^" + escaped + "\\s*[·.:—–-]?\\s*", "i");
+  if (leading.test(raw)) {
+    const rest = raw.replace(leading, "").trim();
+    return rest ? `${humanName(course)} · ${rest}` : humanName(course);
+  }
+  return raw;
 }
 
 export function formatDay(iso?: string): string {
@@ -284,21 +347,18 @@ export function optionalSubscribed(): Course[] {
 export function topicsAndInterests(): {
   id: string;
   title: string;
-  school: string;
+  citation: string;
 }[] {
   const taking = enrolledNightIds();
   const seen = new Set<string>(taking);
-  const items: { id: string; title: string; school: string }[] = [];
+  const items: { id: string; title: string; citation: string }[] = [];
   for (const course of data.curriculum || []) {
     if (!isEnrolled(course) || seen.has(course.id)) continue;
     seen.add(course.id);
     items.push({
       id: course.id,
-      title: descriptiveName(course),
-      school:
-        schoolOf(course.id).toLowerCase() === "personal"
-          ? ""
-          : schoolOf(course.id),
+      title: humanName(course),
+      citation: courseCitation(course.id),
     });
   }
   for (const item of catalogItems) {
@@ -306,8 +366,8 @@ export function topicsAndInterests(): {
     seen.add(item.id);
     items.push({
       id: item.id,
-      title: descriptiveName({ id: item.id, title: item.title }),
-      school: plain(item.institution || ""),
+      title: humanName({ id: item.id, title: item.title }),
+      citation: courseCitation(item.id),
     });
   }
   return items;

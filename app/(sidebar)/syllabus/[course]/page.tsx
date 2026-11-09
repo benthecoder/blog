@@ -6,15 +6,15 @@ import { SYLLABUS_PATH } from "@/config/syllabus";
 import {
   allCourseIds,
   catalogItem,
+  courseCitation,
   courseUrl,
-  displayTitle,
   formatDay,
   hoursLabel,
+  humanName,
   lastScore,
   mergedCourse,
   plain,
   progressText,
-  schoolOf,
   weekEvent,
   weekSessionLabel,
 } from "@/lib/curriculum";
@@ -35,8 +35,8 @@ export async function generateMetadata({
   const course = mergedCourse(id);
   if (!course) return pageMetadata({ title: "syllabus", path: SYLLABUS_PATH });
   return pageMetadata({
-    title: displayTitle(course),
-    description: plain(course.title || displayTitle(course)),
+    title: humanName(course),
+    description: plain(course.title || humanName(course)),
     path: `${SYLLABUS_PATH}/${id}`,
   });
 }
@@ -94,20 +94,11 @@ export default async function CoursePage({ params }: { params: Params }) {
       <p className="not-prose text-sm mb-6">
         <Link href={SYLLABUS_PATH}>syllabus</Link>
       </p>
-      <p className="font-mono text-2xs tracking-[0.14em] uppercase text-ink-muted not-prose m-0">
-        {schoolOf(id)}
-        {hours ? ` · ${hours}` : ""}
+      <p className="text-[13px] text-ink-muted not-prose m-0">
+        {courseCitation(id)}
+        {hours ? `${courseCitation(id) ? " · " : ""}${hours}` : ""}
       </p>
-      <h1>{catalog?.title || displayTitle(course)}</h1>
-      {course.title &&
-      plain(course.title)
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "") !==
-        plain(catalog?.title || displayTitle(course))
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "") ? (
-        <p>{plain(course.title)}</p>
-      ) : null}
+      <h1>{humanName(course)}</h1>
       {url ? (
         <p>
           <a href={url}>source</a>

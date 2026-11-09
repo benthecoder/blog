@@ -1,10 +1,14 @@
 "use client";
 
 import { useMemo, useState, type ReactNode } from "react";
+import Link from "next/link";
+import { SYLLABUS_PATH } from "@/config/syllabus";
 import {
   REQUIRED_AREA_IDS,
+  humanName,
   mapAreas,
   mapNodes,
+  mergedCourse,
   type MapNode,
   type MasteryLevel,
 } from "@/lib/curriculum";
@@ -278,6 +282,19 @@ export default function CurriculumMap({
           <span className="text-ink-strong dark:text-chalk-strong">
             {selectedNode.title}
           </span>
+          {selectedNode.items.length
+            ? selectedNode.items.map((id, index) => {
+                const course = mergedCourse(id);
+                return (
+                  <span key={id}>
+                    {index === 0 ? " · " : ", "}
+                    <Link href={`${SYLLABUS_PATH}/${id}`}>
+                      {course ? humanName(course) : id}
+                    </Link>
+                  </span>
+                );
+              })
+            : null}
           {` · ${levels[selectedNode.id] ?? 0}/5`}
           {selectedNode.prereqs.length
             ? ` · rests on ${selectedNode.prereqs
