@@ -57,7 +57,7 @@ Fiction
 - [The Brutalist Report](https://brutalist.report/)
 - [DAILY ROTATION](https://www.dailyrotation.com/)
 - [LessWrong](https://www.lesswrong.com/)
-- [HackerNews](https://news.ycombinator.com/)
+- [HackerNews](/hn)
 - [Slashdot](https://slashdot.org/)
 - [Lobsters](https://lobste.rs/)
 - [Bear Blog](https://bearblog.dev/discover/)
