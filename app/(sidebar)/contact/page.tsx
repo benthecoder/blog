@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { pageMetadata } from "@/utils/pageMetadata";
+import { MessageForm } from "./MessageForm";
 
 export const metadata: Metadata = pageMetadata({
   title: "findme",
@@ -67,6 +68,16 @@ const ContactPage = () => (
         ))}
       </div>
     </article>
+
+    <section id="message" aria-labelledby="message-heading" className="mt-12">
+      <h2
+        id="message-heading"
+        className="mb-4 text-base font-bold text-primary"
+      >
+        send me a message
+      </h2>
+      <MessageForm />
+    </section>
   </div>
 );
 

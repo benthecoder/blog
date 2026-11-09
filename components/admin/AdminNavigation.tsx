@@ -3,14 +3,19 @@ import Link from "next/link";
 export default function AdminNavigation({
   section,
 }: {
-  section: "posts" | "wiki" | "essays";
+  section: "posts" | "wiki" | "essays" | "messages";
 }) {
   return (
     <nav
       aria-label="Admin sections"
       className="mb-6 flex gap-6 border-b border-line pb-3 text-sm"
     >
-      {([["posts", "/admin", "Posts"]] as const).map(([id, href, label]) => (
+      {(
+        [
+          ["posts", "/admin", "Posts"],
+          ["messages", "/admin/messages", "Messages"],
+        ] as const
+      ).map(([id, href, label]) => (
         <Link
           key={id}
           href={href}
