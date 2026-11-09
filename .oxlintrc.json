@@ -18,6 +18,7 @@
     "react/set-state-in-effect": "warn",
     "react/refs": "warn",
     "react/purity": "warn",
+    "react/immutability": "warn",
     "react/unsupported-syntax": "warn",
     "react/display-name": "error",
     "react/jsx-no-comment-textnodes": "error",
