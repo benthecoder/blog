@@ -9,18 +9,16 @@ import {
   courseCitation,
   courseLevel,
   courseUrl,
-  formatDay,
+  dueParts,
   hoursLabel,
   humanName,
   lastScore,
   mergedCourse,
+  paceProgress,
   plain,
-  progressText,
   skillBar,
-  weekEvent,
-  weekSessionLabel,
 } from "@/lib/curriculum";
-import { data, progressRatio, type Course } from "@/lib/syllabus";
+import { data, type Course } from "@/lib/syllabus";
 
 type Params = Promise<{ course: string }>;
 
@@ -83,11 +81,10 @@ export default async function CoursePage({ params }: { params: Params }) {
   const streams = (data.streams || []).filter(
     (item) => !item.course_id || item.course_id === course.id
   );
-  const ratio = progressRatio(course);
+  const late = course.late ?? 0;
+  const missed = course.missed ?? 0;
   const units = course.units || [];
   const url = courseUrl(id);
-  const session = weekSessionLabel(id);
-  const event = weekEvent(id);
   const hours = hoursLabel(id);
   const recommenders = catalog?.recommended_by || [];
 
@@ -96,7 +93,7 @@ export default async function CoursePage({ params }: { params: Params }) {
       <p className="not-prose text-sm mb-6">
         <Link href={SYLLABUS_PATH}>syllabus</Link>
       </p>
-      <p className="text-[13px] text-ink-muted not-prose m-0">
+      <p className="not-prose m-0 text-sm text-muted">
         {courseCitation(id)}
         {hours ? `${courseCitation(id) ? " · " : ""}${hours}` : ""}
       </p>
@@ -106,26 +103,22 @@ export default async function CoursePage({ params }: { params: Params }) {
           <a href={url}>source</a>
         </p>
       ) : null}
-      {session ? (
-        <p>
-          This week
-          {event?.date ? ` (${formatDay(event.date)})` : ""}: {session}
-        </p>
-      ) : null}
 
       <section className="not-prose mt-8">
-        <p className="font-mono text-2xs tracking-[0.08em] uppercase text-ink-muted m-0 mb-2">
-          {progressText(course)} · {lastScore(course.id)}
+        <p className="m-0 mb-1 text-sm text-muted">
+          {[paceProgress(id), ...dueParts(course), lastScore(course.id)].join(
+            " · "
+          )}
+          {late > 0 ? (
+            <span className="text-danger"> · {late} late</span>
+          ) : null}
+          {missed > 0 ? (
+            <span className="text-danger"> · {missed} missed</span>
+          ) : null}
         </p>
-        <p className="font-mono text-[12px] text-ink-muted m-0 mb-2">
+        <p className="m-0 font-mono text-xs text-muted">
           mastery {skillBar(courseLevel(course))}
         </p>
-        <div className="h-0.5 bg-paper-sunken dark:bg-night-raised">
-          <i
-            className="block h-full bg-ink dark:bg-chalk"
-            style={{ width: `${Math.round(ratio * 100)}%` }}
-          />
-        </div>
       </section>
 
       {catalog?.why_canonical ? (

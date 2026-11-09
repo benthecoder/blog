@@ -1,6 +1,10 @@
 import { data, type ActivityDay } from "@/lib/syllabus";
 
-const HEAT = ["#eef2f4", "#c5d6e6", "#8aafcc", "#4d7fa8", "#2b5278"];
+// Accent mixed into the page: empty, then four levels of work.
+const HEAT = [8, 30, 55, 80, 100].map(
+  (pct) =>
+    `color-mix(in oklab, var(--color-accent) ${pct}%, var(--color-surface))`
+);
 const DOW = ["S", "M", "T", "W", "T", "F", "S"];
 
 function emptyDays(weeks = 16): ActivityDay[] {
@@ -28,7 +32,7 @@ export default function ActivityHeatmap() {
   }
   const cell = 10;
   const gap = 3;
-  const label = 14;
+  const label = 16;
   const width = label + weeks.length * (cell + gap);
   const height = 7 * (cell + gap) - gap;
 
@@ -46,9 +50,9 @@ export default function ActivityHeatmap() {
             key={name + row}
             x={0}
             y={row * (cell + gap) + cell - 1}
-            fontSize="9"
+            fontSize="11"
             fill="currentColor"
-            className="fill-ink-muted/70"
+            className="fill-muted"
           >
             {row % 2 === 0 ? name : ""}
           </text>
@@ -64,7 +68,7 @@ export default function ActivityHeatmap() {
                 width={cell}
                 height={cell}
                 rx={2}
-                fill={HEAT[level]}
+                style={{ fill: HEAT[level] }}
               >
                 <title>{day.date}</title>
               </rect>

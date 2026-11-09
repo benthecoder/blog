@@ -2,13 +2,9 @@ import catalogDoc from "@/data/curriculum-catalog.json";
 import mapDoc from "@/data/curriculum-map.json";
 import {
   data,
-  displayTitle,
   isEnrolled,
   lastScore,
-  lessonFor,
   plain,
-  progressLabel,
-  type CalendarEvent,
   type Course,
 } from "@/lib/syllabus";
 
@@ -45,20 +41,9 @@ export type MapNode = {
 
 export type MapArea = { id: string; title: string };
 
-export type NodeState = "mastered" | "in-progress" | "weak" | "not-started";
-
 export type MasteryLevel = 0 | 1 | 2 | 3 | 4 | 5;
 
-export const MASTERY_LABELS = [
-  "unaware",
-  "heard of it",
-  "can follow",
-  "can do with help",
-  "independent",
-  "can teach",
-] as const;
-
-export function clampLevel(value: number): MasteryLevel {
+function clampLevel(value: number): MasteryLevel {
   if (value <= 0) return 0;
   if (value >= 5) return 5;
   return value as MasteryLevel;
@@ -125,7 +110,7 @@ function stripCodePrefix(name: string): string {
     .trim();
 }
 
-export function descriptiveName(course: {
+function descriptiveName(course: {
   id: string;
   title?: string;
   short_title?: string;
@@ -145,7 +130,7 @@ export function humanName(course: {
   return HUMAN_NAMES[course.id] || descriptiveName(course);
 }
 
-export function courseCode(id: string): string {
+function courseCode(id: string): string {
   const live = learnById.get(id);
   const cat = catalogById.get(id);
   const short = plain(live?.short_title || "");
@@ -165,15 +150,9 @@ export function courseCitation(id: string): string {
   return school || code;
 }
 
-export function courseListLabel(course: Course): string {
-  const name = humanName(course);
-  const citation = courseCitation(course.id);
-  return citation ? `${name} (${citation})` : name;
-}
+type TrackId = "cs-se" | "math-stats" | "ai" | "theology";
 
-export type TrackId = "cs-se" | "math-stats" | "ai" | "theology";
-
-export type TrackDef = {
+type TrackDef = {
   id: TrackId;
   title: string;
   blurb: string;
@@ -181,7 +160,7 @@ export type TrackDef = {
   nextId: string;
 };
 
-export const REQUIRED_TRACKS: TrackDef[] = [
+const REQUIRED_TRACKS: TrackDef[] = [
   {
     id: "cs-se",
     title: "CS / software engineering",
@@ -237,7 +216,7 @@ export const UP_NEXT = [
 
 // Totals taken from the official course pages, not guessed.
 // Numerator stays 0 until a full lecture or problem set is graded.
-export const COURSE_PACE: Record<
+const COURSE_PACE: Record<
   string,
   { total: number; unit: string; source: string }
 > = {
@@ -277,7 +256,7 @@ export function paceProgress(courseId: string): string {
   return `${done} of ${pace.total} ${pace.unit}`;
 }
 
-export function formatDueDay(iso: string): string {
+function formatDueDay(iso: string): string {
   const [year, month, day] = iso.split("-").map(Number);
   return new Date(year, month - 1, day)
     .toLocaleDateString("en-US", {
@@ -288,28 +267,24 @@ export function formatDueDay(iso: string): string {
     .replace(",", "");
 }
 
-export function dueLine(
+/** The next due item as separate facts, e.g. ["due Mon Nov 9", "HW1 problems 1–2"]. */
+export function dueParts(
   course?: { next_due?: { date?: string; title?: string } | null } | null
-): string {
+): string[] {
   const next = course?.next_due;
-  if (!next?.date) return "";
-  const day = formatDueDay(next.date);
-  return next.title ? `due ${day} · ${next.title}` : `due ${day}`;
+  if (!next?.date) return [];
+  const day = `due ${formatDueDay(next.date)}`;
+  return next.title ? [day, next.title] : [day];
 }
 
-export function enrolledNightIds(): Set<string> {
+function enrolledNightIds(): Set<string> {
   return new Set(ENROLLED_NIGHTS.map((row) => row.courseId));
 }
 
 export const REQUIRED_AREA_IDS = (mapDoc as { required_areas: string[] })
   .required_areas;
 
-export const catalogItems = (catalogDoc as { items: CatalogItem[] }).items;
-export const catalogAreas = (
-  catalogDoc as {
-    areas: { id: string; title: string; why_this_outlasts_ai: string }[];
-  }
-).areas;
+const catalogItems = (catalogDoc as { items: CatalogItem[] }).items;
 export const mapNodes = (mapDoc as { nodes: MapNode[] }).nodes;
 export const mapAreas = (mapDoc as { areas: MapArea[] }).areas;
 
@@ -369,58 +344,10 @@ export function hoursLabel(id: string): string {
   return `${hours}h core`;
 }
 
-export function schoolOf(id: string): string {
+function schoolOf(id: string): string {
   const live = learnById.get(id);
   const cat = catalogById.get(id);
   return plain(live?.institution || cat?.institution || cat?.instructor || "");
-}
-
-export function weekEvent(courseId: string): CalendarEvent | undefined {
-  return (data.calendar?.events || []).find(
-    (event) => event.course_id === courseId
-  );
-}
-
-export function weekSessionLabel(courseId: string): string {
-  const event = weekEvent(courseId);
-  if (!event) return "";
-  const lesson = lessonFor(courseId);
-  const problem = lesson?.problems?.[0]?.ref;
-  const raw = plain(problem || event.title || "");
-  if (!raw) return "";
-  const course = mergedCourse(courseId);
-  if (!course) return raw;
-  const code = courseCode(courseId);
-  if (!code) return raw;
-  const escaped = code.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const leading = new RegExp("^" + escaped + "\\s*[·.:—–-]?\\s*", "i");
-  if (leading.test(raw)) {
-    const rest = raw.replace(leading, "").trim();
-    return rest ? `${humanName(course)} · ${rest}` : humanName(course);
-  }
-  return raw;
-}
-
-export function formatDay(iso?: string): string {
-  if (!iso) return "";
-  const date = new Date(`${iso}T12:00:00`);
-  return date.toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    timeZone: "America/New_York",
-  });
-}
-
-export function optionalSubscribed(): Course[] {
-  const taking = enrolledNightIds();
-  return (data.curriculum || []).filter(
-    (course) =>
-      isEnrolled(course) &&
-      !taking.has(course.id) &&
-      course.id !== "letters" &&
-      course.kind !== "reading-list"
-  );
 }
 
 export function topicsAndInterests(): {
@@ -452,7 +379,7 @@ export function topicsAndInterests(): {
   return items;
 }
 
-export function nodeLevel(node: MapNode): MasteryLevel {
+function nodeLevel(node: MapNode): MasteryLevel {
   const weak = (data.review?.weak || []).some(
     (item) =>
       item.concept_id === node.id ||
@@ -473,35 +400,4 @@ export function nodeLevels(): Record<string, MasteryLevel> {
   return levels;
 }
 
-export function nodeState(node: MapNode): NodeState {
-  const level = nodeLevel(node);
-  const weak = (data.review?.weak || []).some(
-    (item) =>
-      item.concept_id === node.id ||
-      (item.course_id && node.items.includes(item.course_id))
-  );
-  if (weak) return "weak";
-  if (level >= 4) return "mastered";
-  if (level >= 2) return "in-progress";
-  return "not-started";
-}
-
-export function nodeStates(): Record<string, NodeState> {
-  const states: Record<string, NodeState> = {};
-  for (const node of mapNodes) states[node.id] = nodeState(node);
-  return states;
-}
-
-export function progressText(course: Course): string {
-  const assigned = course.assigned ?? 0;
-  const certified = course.certified ?? 0;
-  if (assigned <= 0 && certified <= 0) return "no sessions yet";
-  return `${progressLabel(course)} sheets done`;
-}
-
-export function unitText(course: Course): string {
-  const first = course.units?.[0]?.title;
-  return first ? plain(first) : "";
-}
-
-export { displayTitle, lastScore, plain };
+export { lastScore, plain };

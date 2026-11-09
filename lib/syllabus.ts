@@ -1,6 +1,6 @@
 import learn from "@/data/learn.json";
 
-export type Unit = {
+type Unit = {
   id?: string;
   title?: string;
 };
@@ -29,13 +29,13 @@ export type Course = {
   next_due?: { date: string; title: string } | null;
 };
 
-export type LessonProblem = {
+type LessonProblem = {
   ref?: string;
   status?: string;
   feedback?: string | null;
 };
 
-export type Lesson = {
+type Lesson = {
   course_id?: string;
   title?: string;
   short_title?: string;
@@ -43,7 +43,7 @@ export type Lesson = {
   problems?: LessonProblem[];
 };
 
-export type Feedback = {
+type Feedback = {
   course_id?: string;
   week?: string | null;
   problem_ref?: string;
@@ -51,7 +51,7 @@ export type Feedback = {
   summary?: string | null;
 };
 
-export type Stream = {
+type Stream = {
   date?: string;
   url?: string;
   title?: string | null;
@@ -59,14 +59,14 @@ export type Stream = {
   course_id?: string;
 };
 
-export type ReviewItem = {
+type ReviewItem = {
   concept_id?: string;
   title?: string;
   course_id?: string;
   due?: string;
 };
 
-export type CalendarEvent = {
+type CalendarEvent = {
   id?: string;
   date?: string;
   start?: string;
@@ -112,60 +112,9 @@ export function plain(s: string | null | undefined): string {
   return (s || "").replaceAll("\u2014", " - ").replaceAll("\u2013", "-");
 }
 
-export function displayTitle(course: Course): string {
-  return plain(course.short_title || course.title || course.id);
-}
-
-export function trackOf(course: Course): "core" | "major" | "minor" {
-  if (
-    course.track === "core" ||
-    course.track === "major" ||
-    course.track === "minor"
-  ) {
-    return course.track;
-  }
-  if (course.phase === "foundation" || course.phase === "core") return "core";
-  if (
-    course.phase === "ml" ||
-    course.area === "machine-learning" ||
-    (course.area === "computer-science" && course.phase !== "core")
-  ) {
-    return "major";
-  }
-  return "minor";
-}
-
 export function isEnrolled(course: Course): boolean {
   if (typeof course.enrolled === "boolean") return course.enrolled;
   return course.lane === "now";
-}
-
-export function progressLabel(course: Course): string {
-  const assigned = course.assigned ?? 0;
-  const certified = course.certified ?? 0;
-  return `${certified}/${assigned}`;
-}
-
-export function progressRatio(course: Course): number {
-  const assigned = course.assigned ?? 0;
-  if (assigned <= 0) return 0;
-  return Math.max(0, Math.min(1, (course.certified ?? 0) / assigned));
-}
-
-export function lessonFor(courseId: string): Lesson | undefined {
-  return (data.current_week?.lessons || []).find(
-    (lesson) => lesson.course_id === courseId
-  );
-}
-
-export function currentUnit(course: Course): string {
-  const lesson = lessonFor(course.id);
-  if (lesson?.problems?.length) {
-    const first = course.units?.[0]?.title;
-    return first ? plain(first) : "this week's sheet";
-  }
-  const first = course.units?.[0]?.title;
-  return first ? plain(first) : "no units listed yet";
 }
 
 export function lastScore(courseId: string): string {
@@ -176,8 +125,4 @@ export function lastScore(courseId: string): string {
   const latest = notes[notes.length - 1];
   const bit = [latest.status, latest.problem_ref].filter(Boolean).join(" · ");
   return plain(bit || "no score yet");
-}
-
-export function courseById(id: string): Course | undefined {
-  return (data.curriculum || []).find((course) => course.id === id);
 }

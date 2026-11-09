@@ -13,22 +13,24 @@ import {
   type MasteryLevel,
 } from "@/lib/curriculum";
 
+// Mastery shades are the accent role mixed into the page, so they follow
+// the palette and dark mode instead of fixed hex values.
 const LEVEL_CLASS: Record<MasteryLevel, string> = {
-  0: "bg-paper text-ink-strong border-[#c5d0da] dark:bg-night dark:text-chalk-strong dark:border-night-rule",
-  1: "bg-[#eef2f4] text-ink-strong border-[#c5d0da] dark:bg-[#1c2833] dark:text-chalk-strong dark:border-night-rule",
-  2: "bg-[#c5d6e6] text-ink border-[#8aafcc] dark:bg-[#243646] dark:text-chalk-strong dark:border-[#4d7fa8]",
-  3: "bg-[#8aafcc] text-ink border-ink dark:bg-[#2a3f52] dark:text-chalk-strong dark:border-chalk",
-  4: "bg-[#4d7fa8] text-paper border-ink dark:bg-[#4d7fa8] dark:text-paper dark:border-chalk",
-  5: "bg-ink text-paper border-ink dark:bg-chalk dark:text-night dark:border-chalk",
+  0: "bg-surface text-primary border-line",
+  1: "bg-accent/10 text-primary border-accent/25",
+  2: "bg-accent/25 text-primary border-accent/40",
+  3: "bg-accent/45 text-primary border-accent/60",
+  4: "bg-accent/80 text-surface border-accent",
+  5: "bg-accent text-surface border-accent",
 };
 
 const LEVEL_SWATCH = [
-  "bg-paper border-[#c5d0da]",
-  "bg-[#eef2f4] border-[#c5d0da]",
-  "bg-[#c5d6e6] border-[#8aafcc]",
-  "bg-[#8aafcc] border-ink",
-  "bg-[#4d7fa8] border-ink",
-  "bg-ink border-ink",
+  "bg-surface border-line",
+  "bg-accent/10 border-accent/25",
+  "bg-accent/25 border-accent/40",
+  "bg-accent/45 border-accent/60",
+  "bg-accent/80 border-accent",
+  "bg-accent border-accent",
 ];
 
 const NODE_W = 120;
@@ -133,8 +135,8 @@ export default function CurriculumMap({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[13px] text-ink-soft dark:text-chalk-soft mb-4">
-        <span>mastery</span>
+      <div className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-2 text-xs text-muted">
+        <span>0</span>
         <span className="inline-flex items-center gap-1">
           {LEVEL_SWATCH.map((swatch, level) => (
             <i
@@ -144,7 +146,7 @@ export default function CurriculumMap({
             />
           ))}
         </span>
-        <span className="font-mono text-[12px] text-ink-muted">0–5</span>
+        <span>5</span>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-2">
@@ -167,7 +169,7 @@ export default function CurriculumMap({
           whole map
         </FilterChip>
       </div>
-      <div className="flex flex-wrap gap-2 mb-5">
+      <div className="flex flex-wrap gap-2 mb-6">
         {requiredAreaList.map((area) => (
           <FilterChip
             key={area.id}
@@ -179,22 +181,18 @@ export default function CurriculumMap({
         ))}
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         {visibleAreas.map((area) => {
           const nodes = mapNodes.filter((node) => node.area === area.id);
           const layout = layoutArea(nodes);
           const required = REQUIRED_AREA_IDS.includes(area.id);
           return (
-            <section
-              key={area.id}
-              className={`p-3.5 border ${
-                required
-                  ? "border-ink/25 dark:border-chalk/25"
-                  : "border-rule dark:border-night-rule opacity-80"
-              }`}
-            >
-              <h3 className="font-mono text-2xs tracking-[0.14em] uppercase text-ink-muted mt-0 mb-3">
+            <section key={area.id}>
+              <h3 className="m-0 mb-2 text-base font-bold text-primary">
                 {area.title}
+                {required ? null : (
+                  <span className="font-normal text-muted"> · optional</span>
+                )}
               </h3>
               <div className="overflow-x-auto">
                 <div
@@ -221,9 +219,9 @@ export default function CurriculumMap({
                           key={`${edge.from}-${edge.to}`}
                           d={edgePath(from, to)}
                           fill="none"
-                          stroke={dim ? "#c5d0da" : "#8aafcc"}
+                          className="stroke-accent"
                           strokeWidth={lit ? 1.75 : 1.15}
-                          strokeOpacity={dim ? 0.35 : 0.9}
+                          strokeOpacity={dim ? 0.15 : lit ? 0.9 : 0.45}
                         />
                       );
                     })}
@@ -240,11 +238,11 @@ export default function CurriculumMap({
                         ? "opacity-35"
                         : "";
                     const ring = isSel
-                      ? "ring-2 ring-ink dark:ring-chalk"
+                      ? "ring-2 ring-accent"
                       : isPre
-                        ? "ring-2 ring-[#8aafcc]"
+                        ? "ring-2 ring-accent/50"
                         : isDep
-                          ? "ring-2 ring-[#b0693d]"
+                          ? "ring-2 ring-warning"
                           : "";
                     return (
                       <button
@@ -256,7 +254,7 @@ export default function CurriculumMap({
                             cur === node.id ? null : node.id
                           )
                         }
-                        className={`absolute text-left text-[11px] leading-tight px-2 border ${LEVEL_CLASS[level]} ${ring} ${dim}`}
+                        className={`absolute text-left text-xs leading-tight px-2 border ${LEVEL_CLASS[level]} ${ring} ${dim}`}
                         style={{
                           left: pos.x,
                           top: pos.y,
@@ -278,10 +276,8 @@ export default function CurriculumMap({
       </div>
 
       {selectedNode ? (
-        <p className="text-[13px] text-ink-soft dark:text-chalk-soft mt-4 mb-0">
-          <span className="text-ink-strong dark:text-chalk-strong">
-            {selectedNode.title}
-          </span>
+        <p className="mt-4 mb-0 text-sm text-muted">
+          <span className="text-primary">{selectedNode.title}</span>
           {selectedNode.items.length
             ? selectedNode.items.map((id, index) => {
                 const course = mergedCourse(id);
@@ -329,10 +325,10 @@ function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={`text-[13px] px-2.5 py-1 border rounded-full ${
+      className={`text-sm px-2.5 py-1 border rounded-full ${
         active
-          ? "border-ink bg-ink text-paper dark:border-chalk dark:bg-chalk dark:text-night"
-          : "border-rule dark:border-night-rule text-ink-soft dark:text-chalk-soft"
+          ? "border-accent bg-accent text-surface"
+          : "border-line text-secondary"
       }`}
     >
       {children}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { pageMetadata } from "@/utils/pageMetadata";
 import { SYLLABUS_PATH } from "@/config/syllabus";
+import { Section } from "@/components/layout/Section";
 import CurriculumMap from "@/components/syllabus/CurriculumMap";
 import TopicsList from "@/components/syllabus/TopicsList";
 import { nodeLevels } from "@/lib/curriculum";
@@ -14,18 +15,26 @@ export const metadata: Metadata = pageMetadata({
 
 export default function SyllabusAllPage() {
   return (
-    <article className="prose">
-      <h1>topics and interests</h1>
-      <p>
-        <Link href={SYLLABUS_PATH}>syllabus</Link>
-      </p>
-      <TopicsList heading={null} />
-      <section className="not-prose mt-12">
-        <h2 className="font-serif text-[1.5em] font-bold text-ink dark:text-chalk mt-0 mb-4">
-          knowledge map
-        </h2>
-        <CurriculumMap levels={nodeLevels()} />
-      </section>
-    </article>
+    <>
+      <article className="prose">
+        <h1>topics and interests</h1>
+        <p>
+          <Link href={SYLLABUS_PATH}>syllabus</Link>
+        </p>
+      </article>
+
+      <div className="mt-12 space-y-12">
+        <Section id="courses" title="courses">
+          <TopicsList />
+        </Section>
+        <Section
+          id="map"
+          title="knowledge map"
+          note="mastery 0–5, earned only by graded work"
+        >
+          <CurriculumMap levels={nodeLevels()} />
+        </Section>
+      </div>
+    </>
   );
 }
