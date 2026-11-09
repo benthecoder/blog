@@ -31,6 +31,8 @@ export function CityRows({ country }: { country: Country }) {
                   alt=""
                   fill
                   sizes="(max-width: 700px) 25vw, 200px"
+                  placeholder={photo.blurDataURL ? "blur" : "empty"}
+                  blurDataURL={photo.blurDataURL}
                 />
               </div>
             ))}

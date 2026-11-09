@@ -1027,31 +1027,7 @@ body {
    COMPONENTS
    ========================================================================== */
 
-/* Hover image previews on wiki/post links */
-.hover-container {
-  display: inline-block;
-  position: relative;
-}
-
-.image-container {
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 12px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  pointer-events: none;
-  z-index: 50;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateX(-50%) scale(0.96);
-  transform-origin: bottom center;
-  transition:
-    opacity 200ms ease-out,
-    transform 200ms ease-out,
-    visibility 0ms 200ms;
-}
-
+/* Hover image previews on the about timeline */
 .image-hover {
   max-width: min(400px, 90vw);
   max-height: min(600px, 80vh);
@@ -1067,22 +1043,6 @@ body {
 
 .dark .image-hover {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-
-.group:hover .image-container {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(-50%) scale(1);
-  transition:
-    opacity 200ms ease-out,
-    transform 200ms ease-out,
-    visibility 0ms 0ms;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .group {
-    transition: none;
-  }
 }
 
 /* ==========================================================================
@@ -1180,14 +1140,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .image-container,
-  .group:hover .image-container {
-    transition:
-      opacity 150ms ease-out,
-      visibility 0ms;
-    transform: translateX(-50%) scale(1);
-  }
-
   .animate-loading-bar {
     animation-duration: 2.5s;
   }

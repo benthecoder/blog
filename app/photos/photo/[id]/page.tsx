@@ -58,6 +58,8 @@ export default async function PhotoPage({ params }: Props) {
           fill
           sizes="100vw"
           preload
+          placeholder={photo.blurDataURL ? "blur" : "empty"}
+          blurDataURL={photo.blurDataURL}
         />
         {previous && (
           <Link
