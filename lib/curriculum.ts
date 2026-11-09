@@ -99,6 +99,7 @@ const HUMAN_NAMES: Record<string, string> = {
   "stanford-cs234": "Reinforcement Learning",
   "yale-rlst145": "The Hebrew Bible",
   "mit-6006": "Algorithms",
+  "yale-rlst152": "The New Testament",
 };
 
 const CODE_TOKEN =
@@ -194,7 +195,7 @@ export const REQUIRED_TRACKS: TrackDef[] = [
     title: "Math / statistics",
     blurb: "Probability first, then the calculus that holds it up.",
     nowId: "stat110",
-    nextId: "mit-1801sc",
+    nextId: "mit-1806",
   },
   {
     id: "ai",
@@ -222,6 +223,79 @@ export const ENROLLED_NIGHTS = [
 ] as const;
 
 export const SESSION_HOURS = "9–10pm ET";
+
+export const UP_NEXT = [
+  {
+    courseId: "mit-1806",
+    track: "math / statistics",
+    citationExtra: "Strang",
+  },
+  { courseId: "berkeley-cs285", track: "AI" },
+  { courseId: "mit-65840", track: "CS / software engineering" },
+  { courseId: "yale-rlst152", track: "theology" },
+] as const;
+
+// Totals taken from the official course pages, not guessed.
+// Numerator stays 0 until a full lecture or problem set is graded.
+export const COURSE_PACE: Record<
+  string,
+  { total: number; unit: string; source: string }
+> = {
+  stat110: {
+    total: 11,
+    unit: "problem sets",
+    source: "https://stat110.hsites.harvard.edu/strategic-practice-problems",
+  },
+  "mit-1801sc": {
+    total: 101,
+    unit: "sessions",
+    source:
+      "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/",
+  },
+  "stanford-cs234": {
+    total: 15,
+    unit: "lectures",
+    source: "https://web.stanford.edu/class/cs234/",
+  },
+  "yale-rlst145": {
+    total: 24,
+    unit: "lectures",
+    source: "https://oyc.yale.edu/religious-studies/rlst-145",
+  },
+  "mit-6006": {
+    total: 9,
+    unit: "problem sets",
+    source:
+      "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/pages/assignments/",
+  },
+};
+
+export function paceProgress(courseId: string): string {
+  const pace = COURSE_PACE[courseId];
+  const done = 0;
+  if (!pace) return `${done} sessions`;
+  return `${done} of ${pace.total} ${pace.unit}`;
+}
+
+export function formatDueDay(iso: string): string {
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year, month - 1, day)
+    .toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    })
+    .replace(",", "");
+}
+
+export function dueLine(
+  course?: { next_due?: { date?: string; title?: string } | null } | null
+): string {
+  const next = course?.next_due;
+  if (!next?.date) return "";
+  const day = formatDueDay(next.date);
+  return next.title ? `due ${day} · ${next.title}` : `due ${day}`;
+}
 
 export function enrolledNightIds(): Set<string> {
   return new Set(ENROLLED_NIGHTS.map((row) => row.courseId));
@@ -277,6 +351,11 @@ export function mergedCourse(id: string): Course | undefined {
     certified: live?.certified,
     percent_certified: live?.percent_certified,
     units: live?.units,
+    on_time: live?.on_time,
+    late: live?.late,
+    missed: live?.missed,
+    streak: live?.streak,
+    next_due: live?.next_due,
   };
 }
 

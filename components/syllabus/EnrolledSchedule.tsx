@@ -4,10 +4,10 @@ import {
   ENROLLED_NIGHTS,
   SESSION_HOURS,
   courseCitation,
-  courseLevel,
+  dueLine,
   humanName,
   mergedCourse,
-  skillBar,
+  paceProgress,
 } from "@/lib/curriculum";
 
 export default function EnrolledSchedule() {
@@ -21,7 +21,9 @@ export default function EnrolledSchedule() {
           const course = mergedCourse(night.courseId);
           const title = course ? humanName(course) : night.courseId;
           const citation = courseCitation(night.courseId);
-          const level = courseLevel(course);
+          const due = dueLine(course);
+          const late = course?.late ?? 0;
+          const missed = course?.missed ?? 0;
           return (
             <li key={night.courseId}>
               <Link
@@ -45,9 +47,27 @@ export default function EnrolledSchedule() {
                   <span className="sm:hidden block text-[12px] text-ink-muted mt-0.5">
                     {SESSION_HOURS} · {night.track}
                   </span>
-                  <span className="block font-mono text-[12px] text-ink-muted mt-1 whitespace-nowrap">
-                    {skillBar(level)}
+                  <span className="block text-[12px] text-ink-muted mt-1">
+                    {paceProgress(night.courseId)}
                   </span>
+                  {due ? (
+                    <span className="block text-[12px] text-ink-muted mt-0.5">
+                      {due}
+                    </span>
+                  ) : null}
+                  {late > 0 || missed > 0 ? (
+                    <span className="block text-[12px] mt-0.5">
+                      {late > 0 ? (
+                        <span className="text-danger">{late} late</span>
+                      ) : null}
+                      {late > 0 && missed > 0 ? (
+                        <span className="text-ink-muted"> · </span>
+                      ) : null}
+                      {missed > 0 ? (
+                        <span className="text-danger">{missed} missed</span>
+                      ) : null}
+                    </span>
+                  ) : null}
                 </span>
                 <span className="hidden sm:block text-[12px] text-ink-muted self-start pt-0.5">
                   {night.track}

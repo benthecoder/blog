@@ -22,6 +22,11 @@ export type Course = {
   level?: number;
   percent_certified?: number | null;
   units?: Unit[];
+  on_time?: number;
+  late?: number;
+  missed?: number;
+  streak?: number;
+  next_due?: { date: string; title: string } | null;
 };
 
 export type LessonProblem = {
@@ -85,7 +90,14 @@ export type LearnData = {
   review?: { due?: ReviewItem[]; weak?: ReviewItem[] };
   calendar?: { timezone?: string; events?: CalendarEvent[] };
   activity?: ActivityDay[];
-  totals?: { hours?: number; sessions?: number; courses?: number };
+  totals?: {
+    hours?: number;
+    sessions?: number;
+    courses?: number;
+    late?: number;
+    missed?: number;
+    streak?: number;
+  };
   schedule?: {
     day?: string;
     title?: string;

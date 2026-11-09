@@ -7,6 +7,7 @@ import {
   allCourseIds,
   catalogItem,
   courseCitation,
+  courseLevel,
   courseUrl,
   formatDay,
   hoursLabel,
@@ -15,6 +16,7 @@ import {
   mergedCourse,
   plain,
   progressText,
+  skillBar,
   weekEvent,
   weekSessionLabel,
 } from "@/lib/curriculum";
@@ -114,6 +116,9 @@ export default async function CoursePage({ params }: { params: Params }) {
       <section className="not-prose mt-8">
         <p className="font-mono text-2xs tracking-[0.08em] uppercase text-ink-muted m-0 mb-2">
           {progressText(course)} · {lastScore(course.id)}
+        </p>
+        <p className="font-mono text-[12px] text-ink-muted m-0 mb-2">
+          mastery {skillBar(courseLevel(course))}
         </p>
         <div className="h-0.5 bg-paper-sunken dark:bg-night-raised">
           <i
