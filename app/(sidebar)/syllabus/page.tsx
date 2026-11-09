@@ -426,13 +426,13 @@ export default function SyllabusPage() {
       </p>
 
       <p>
-        I want to spend less time on brainrot and more time becoming someone,
-        not just getting good at one thing for work, but developing myself
-        holistically. Math, science, literature, philosophy, faith, a language.
-        I like to think of it as time-traveling back to the Renaissance, or
-        whatever golden age that was, when learning and working on yourself was
-        the pinnacle. This is a running list of what I&apos;ve thought of so
-        far. I&apos;ll keep updating it.
+        I have been trying to take my attention back from the short-form feed.
+        It is very good at scattering my mind and very bad at giving anything
+        back. I want those hours for the broad education I never received, one
+        that develops the whole person. I like to think of this as a return to
+        some Renaissance or golden age, when learning itself was what a life was
+        for. This page is a living list of what I am learning, and I will keep
+        it current as I go.
       </p>
 
       <h2>this week</h2>
@@ -499,14 +499,16 @@ export default function SyllabusPage() {
 
       <h2>rules</h2>
       <ul>
-        <li>I stream myself working and link the recordings here.</li>
         <li>
-          AI is only for questions, never to solve the problem for me. The
-          stream is how I catch myself if I start cheating.
+          I work by hand and stream the session, then link the recording here.
         </li>
         <li>
-          An LLM grades my handwritten work, finds the concepts I&apos;m weak
-          on, and brings them back as spaced review.
+          I may ask a model questions. I never let it do the work for me, and
+          the recording keeps me honest.
+        </li>
+        <li>
+          After I finish a sheet, an LLM grades the handwriting, finds the weak
+          concepts, and brings them back for spaced review.
         </li>
       </ul>
 
