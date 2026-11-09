@@ -483,7 +483,7 @@
         "date": "2026-11-11",
         "end": "22:00",
         "id": "learn-2026-11-11-stanford-cs234",
-        "source_url": "https://web.stanford.edu/class/cs234/",
+        "source_url": "https://web.stanford.edu/class/cs234/slides/lecture1post.pdf",
         "start": "21:00",
         "title": "CS234 \u00b7 Lecture 1 plus Assignment 1"
       },
@@ -512,7 +512,7 @@
         "id": "learn-2026-11-14-letters",
         "source_url": "https://www.esv.org/",
         "start": "21:00",
-        "title": "Letters"
+        "title": "Augustine, Lewis, and the ESV"
       },
       {
         "course_id": null,
@@ -521,7 +521,7 @@
         "id": "learn-2026-11-15-sheets",
         "source_url": null,
         "start": "21:00",
-        "title": "New sheets"
+        "title": "Upload this week's sheets to the tablet"
       }
     ],
     "timezone": "America/New_York"
@@ -659,7 +659,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "now",
-      "level": 1,
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "core",
@@ -778,7 +778,7 @@
       "institution": "Stanford",
       "kind": "problem-set",
       "lane": "now",
-      "level": 1,
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "ml",
@@ -802,7 +802,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "now",
-      "level": 1,
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "foundation",
@@ -845,7 +845,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "now",
-      "level": 1,
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "science",
@@ -869,7 +869,7 @@
       "institution": "Harvard",
       "kind": "problem-set",
       "lane": "now",
-      "level": 1,
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "core",
@@ -897,8 +897,8 @@
       "percent_certified": null,
       "percent_self": null,
       "phase": "humanities",
-      "short_title": "Letters",
-      "title": "Letters \u2014 Augustine, Lewis, and the ESV",
+      "short_title": "Augustine, Lewis, and the ESV",
+      "title": "Augustine, Lewis, and the ESV",
       "track": "minor",
       "units": [],
       "url": "https://www.esv.org/"
@@ -912,7 +912,7 @@
       "institution": "Yale",
       "kind": "humanities",
       "lane": "now",
-      "level": 1,
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "humanities",
@@ -1168,9 +1168,9 @@
     {
       "course_id": null,
       "day": "Sunday",
-      "detail": "This week's pages land on the tablet",
+      "detail": "Prep: render and upload this week's course sheets. Not a class session.",
       "stream": false,
-      "title": "New sheets"
+      "title": "Upload this week's sheets to the tablet"
     },
     {
       "course_id": "stat110",
@@ -1212,7 +1212,7 @@
       "day": "Saturday",
       "detail": null,
       "stream": false,
-      "title": "Letters"
+      "title": "Augustine, Lewis, and the ESV"
     }
   ],
   "schema_version": 2,

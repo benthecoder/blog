@@ -71,25 +71,52 @@ export function skillBar(level: number): string {
 
 export function courseLevel(course?: Course | null): MasteryLevel {
   if (!course) return 0;
-  if (
-    typeof course.level === "number" &&
-    course.level >= 0 &&
-    course.level <= 5
-  ) {
-    return clampLevel(course.level);
-  }
   const assigned = course.assigned ?? 0;
   const certified = course.certified ?? 0;
   const weak = (data.review?.weak || []).some(
     (item) => item.course_id === course.id
   );
   let level = 0;
-  if (assigned <= 0 && certified <= 0) level = 0;
-  else if (certified <= 0) level = 1;
+  // Issuing a sheet does not raise the level. Graded work does.
+  if (certified <= 0) level = 0;
   else if (assigned > 0 && certified >= assigned) level = 4;
   else level = 3;
   if (weak) level = Math.max(0, level - 1);
+  if (
+    typeof course.level === "number" &&
+    course.level >= 0 &&
+    course.level <= 5 &&
+    certified > 0
+  ) {
+    return clampLevel(course.level);
+  }
   return clampLevel(level);
+}
+
+const CODE_PREFIX =
+  /^(?:[A-Z]{2,6}\s*\d+[A-Z]*|\d+\.\d+[A-Z]*|Stat\s+\d+|Letters)\s*[—–-]?\s*/i;
+
+export function descriptiveName(course: {
+  id: string;
+  title?: string;
+  short_title?: string;
+}): string {
+  const school = schoolOf(course.id);
+  let name = plain(course.title || course.short_title || course.id);
+  if (school && name.toLowerCase().startsWith(`${school.toLowerCase()} `)) {
+    name = name.slice(school.length).trim();
+  }
+  name = name.replace(CODE_PREFIX, "").trim();
+  return name || plain(course.short_title || course.title || course.id);
+}
+
+export function courseListLabel(course: Course): string {
+  const name = descriptiveName(course);
+  const school = schoolOf(course.id);
+  if (school && school.toLowerCase() !== "personal") {
+    return `${name} · ${school}`;
+  }
+  return name;
 }
 
 export type TrackId = "cs-se" | "math-stats" | "ai" | "theology";
@@ -206,15 +233,6 @@ export function courseUrl(id: string): string | undefined {
   return learnById.get(id)?.url || catalogById.get(id)?.url;
 }
 
-export function oneLiner(id: string): string {
-  const cat = catalogById.get(id);
-  if (cat?.one_liner) return plain(cat.one_liner);
-  if (cat?.why_canonical)
-    return plain(cat.why_canonical.split(/(?<=[.!?])\s/)[0] || "");
-  const course = learnById.get(id);
-  return plain(course?.title || "");
-}
-
 export function hoursLabel(id: string): string {
   const hours = catalogById.get(id)?.hours_core;
   if (hours == null) return "";
@@ -252,19 +270,14 @@ export function formatDay(iso?: string): string {
   });
 }
 
-export function requiredIds(): Set<string> {
-  const ids = new Set<string>();
-  for (const track of REQUIRED_TRACKS) {
-    ids.add(track.nowId);
-    ids.add(track.nextId);
-  }
-  return ids;
-}
-
 export function optionalSubscribed(): Course[] {
   const taking = enrolledNightIds();
   return (data.curriculum || []).filter(
-    (course) => isEnrolled(course) && !taking.has(course.id)
+    (course) =>
+      isEnrolled(course) &&
+      !taking.has(course.id) &&
+      course.id !== "letters" &&
+      course.kind !== "reading-list"
   );
 }
 
@@ -281,8 +294,11 @@ export function topicsAndInterests(): {
     seen.add(course.id);
     items.push({
       id: course.id,
-      title: displayTitle(course),
-      school: schoolOf(course.id),
+      title: descriptiveName(course),
+      school:
+        schoolOf(course.id).toLowerCase() === "personal"
+          ? ""
+          : schoolOf(course.id),
     });
   }
   for (const item of catalogItems) {
@@ -290,21 +306,11 @@ export function topicsAndInterests(): {
     seen.add(item.id);
     items.push({
       id: item.id,
-      title: plain(item.title),
+      title: descriptiveName({ id: item.id, title: item.title }),
       school: plain(item.institution || ""),
     });
   }
   return items;
-}
-
-export function shelfItems(): CatalogItem[] {
-  const required = requiredIds();
-  const subscribed = new Set(
-    (data.curriculum || []).filter(isEnrolled).map((course) => course.id)
-  );
-  return catalogItems.filter(
-    (item) => !required.has(item.id) && !subscribed.has(item.id)
-  );
 }
 
 export function nodeLevel(node: MapNode): MasteryLevel {

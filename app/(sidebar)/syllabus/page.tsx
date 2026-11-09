@@ -4,7 +4,7 @@ import { pageMetadata } from "@/utils/pageMetadata";
 import { SYLLABUS_PATH } from "@/config/syllabus";
 import ActivityHeatmap from "@/components/syllabus/ActivityHeatmap";
 import EnrolledSchedule from "@/components/syllabus/EnrolledSchedule";
-import { displayTitle, optionalSubscribed, plain } from "@/lib/curriculum";
+import { courseListLabel, optionalSubscribed, plain } from "@/lib/curriculum";
 import { data } from "@/lib/syllabus";
 
 export const metadata: Metadata = pageMetadata({
@@ -61,7 +61,7 @@ export default function SyllabusPage() {
                 href={`${SYLLABUS_PATH}/${course.id}`}
                 className="text-[14px] text-ink-strong dark:text-chalk-strong no-underline hover:underline"
               >
-                {displayTitle(course)}
+                {courseListLabel(course)}
               </Link>
             </li>
           ))}

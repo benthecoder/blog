@@ -17,7 +17,7 @@ export default function SyllabusAllPage() {
     <article className="prose">
       <h1>topics and interests</h1>
       <p>
-        <Link href={SYLLABUS_PATH}>← syllabus</Link>
+        <Link href={SYLLABUS_PATH}>syllabus</Link>
       </p>
       <TopicsList heading={null} />
       <section className="not-prose mt-12">
