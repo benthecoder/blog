@@ -451,9 +451,13 @@
     {
       "date": "2026-11-08",
       "level": 0
+    },
+    {
+      "date": "2026-11-09",
+      "level": 0
     }
   ],
-  "as_of": "2026-11-08",
+  "as_of": "2026-11-09",
   "calendar": {
     "events": [
       {
@@ -475,13 +479,13 @@
         "title": "18.01SC \u00b7 Session 2, The Derivative of |x|"
       },
       {
-        "course_id": "mit-801sc",
+        "course_id": "stanford-cs234",
         "date": "2026-11-11",
         "end": "22:00",
-        "id": "learn-2026-11-11-mit-801sc",
-        "source_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/pages/week-1-kinematics/problem-set-1/",
+        "id": "learn-2026-11-11-stanford-cs234",
+        "source_url": "https://web.stanford.edu/class/cs234/",
         "start": "21:00",
-        "title": "8.01SC \u00b7 Problem Set 1, Problem 2: Elevator Trip"
+        "title": "CS234 \u00b7 Lecture 1 plus Assignment 1"
       },
       {
         "course_id": "yale-rlst145",
@@ -566,17 +570,17 @@
         "title": "MIT 18.01SC Single Variable Calculus"
       },
       {
-        "course_id": "mit-801sc",
+        "course_id": "stanford-cs234",
         "problems": [
           {
             "feedback": null,
-            "ref": "Problem Set 1, Problem 2: Elevator Trip",
+            "ref": "Lecture 1 plus Assignment 1",
             "status": "issued"
           }
         ],
-        "short_title": "8.01SC",
-        "source_url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/pages/week-1-kinematics/problem-set-1/",
-        "title": "MIT 8.01SC Classical Mechanics"
+        "short_title": "CS234",
+        "source_url": "https://web.stanford.edu/class/cs234/slides/lecture1post.pdf",
+        "title": "Stanford CS234 Reinforcement Learning"
       },
       {
         "course_id": "yale-rlst145",
@@ -617,6 +621,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "now",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "science",
@@ -635,6 +640,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "now",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "science",
@@ -653,6 +659,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "now",
+      "level": 1,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "core",
@@ -676,6 +683,7 @@
       "institution": "Stanford",
       "kind": "artifact",
       "lane": "now",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "elective",
@@ -694,6 +702,7 @@
       "institution": "Yale",
       "kind": "problem-set",
       "lane": "now",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "elective",
@@ -712,6 +721,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "now",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "elective",
@@ -730,6 +740,7 @@
       "institution": "Yale",
       "kind": "humanities",
       "lane": "now",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "humanities",
@@ -748,6 +759,7 @@
       "institution": "Yale",
       "kind": "humanities",
       "lane": "now",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "humanities",
@@ -758,6 +770,30 @@
       "url": "https://oyc.yale.edu/english/engl-220"
     },
     {
+      "area": "machine-learning",
+      "assigned": 1,
+      "certified": 0,
+      "enrolled": true,
+      "id": "stanford-cs234",
+      "institution": "Stanford",
+      "kind": "problem-set",
+      "lane": "now",
+      "level": 1,
+      "percent_certified": 0.0,
+      "percent_self": 0.0,
+      "phase": "ml",
+      "short_title": "CS234",
+      "title": "Stanford CS234 Reinforcement Learning",
+      "track": "major",
+      "units": [
+        {
+          "id": "lecture-1",
+          "title": "Introduction to Reinforcement Learning"
+        }
+      ],
+      "url": "https://web.stanford.edu/class/cs234/"
+    },
+    {
       "area": "mathematics",
       "assigned": 1,
       "certified": 0,
@@ -766,6 +802,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "now",
+      "level": 1,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "foundation",
@@ -789,6 +826,7 @@
       "institution": "Yale",
       "kind": "humanities",
       "lane": "now",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "humanities",
@@ -807,6 +845,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "now",
+      "level": 1,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "science",
@@ -830,6 +869,7 @@
       "institution": "Harvard",
       "kind": "problem-set",
       "lane": "now",
+      "level": 1,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "core",
@@ -853,6 +893,7 @@
       "institution": "Personal",
       "kind": "reading-list",
       "lane": "now",
+      "level": 0,
       "percent_certified": null,
       "percent_self": null,
       "phase": "humanities",
@@ -871,6 +912,7 @@
       "institution": "Yale",
       "kind": "humanities",
       "lane": "now",
+      "level": 1,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "humanities",
@@ -894,6 +936,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "elective",
@@ -912,6 +955,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "elective",
@@ -930,6 +974,7 @@
       "institution": "Yale",
       "kind": "humanities",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "humanities",
@@ -948,6 +993,7 @@
       "institution": "Stanford",
       "kind": "experiment",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "ml",
@@ -966,6 +1012,7 @@
       "institution": "Stanford",
       "kind": "problem-set",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "ml",
@@ -984,6 +1031,7 @@
       "institution": "Stanford",
       "kind": "problem-set",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "ml",
@@ -1002,6 +1050,7 @@
       "institution": "Stanford",
       "kind": "problem-set",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "elective",
@@ -1020,6 +1069,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "foundation",
@@ -1038,6 +1088,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "foundation",
@@ -1056,6 +1107,7 @@
       "institution": "Harvard",
       "kind": "humanities",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "humanities",
@@ -1074,6 +1126,7 @@
       "institution": "MIT",
       "kind": "problem-set",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "science",
@@ -1092,6 +1145,7 @@
       "institution": "Yale",
       "kind": "humanities",
       "lane": "next",
+      "level": 0,
       "percent_certified": 0.0,
       "percent_self": 0.0,
       "phase": "humanities",
@@ -1106,7 +1160,7 @@
   "last_success_at": null,
   "notes": "Percents are certified work only: an agent, script, or human graded the problem against official solutions. Self-grades are recorded separately and do not raise the headline number. Issued sheets and ink are not grades. Stream links are public recordings of work nights.",
   "review": {
-    "as_of": "2026-11-08",
+    "as_of": "2026-11-09",
     "due": [],
     "weak": []
   },
@@ -1133,11 +1187,11 @@
       "title": "18.01SC"
     },
     {
-      "course_id": "mit-801sc",
+      "course_id": "stanford-cs234",
       "day": "Wednesday",
       "detail": null,
       "stream": false,
-      "title": "8.01SC"
+      "title": "CS234"
     },
     {
       "course_id": "yale-rlst145",
@@ -1170,7 +1224,7 @@
   },
   "streams": [],
   "totals": {
-    "courses": 14,
+    "courses": 15,
     "hours": 0,
     "sessions": 0
   },

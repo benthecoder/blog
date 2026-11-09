@@ -47,6 +47,51 @@ export type MapArea = { id: string; title: string };
 
 export type NodeState = "mastered" | "in-progress" | "weak" | "not-started";
 
+export type MasteryLevel = 0 | 1 | 2 | 3 | 4 | 5;
+
+export const MASTERY_LABELS = [
+  "unaware",
+  "heard of it",
+  "can follow",
+  "can do with help",
+  "independent",
+  "can teach",
+] as const;
+
+export function clampLevel(value: number): MasteryLevel {
+  if (value <= 0) return 0;
+  if (value >= 5) return 5;
+  return value as MasteryLevel;
+}
+
+export function skillBar(level: number): string {
+  const n = clampLevel(level);
+  return `[${"#".repeat(n * 2)}${".".repeat((5 - n) * 2)}] ${n}/5`;
+}
+
+export function courseLevel(course?: Course | null): MasteryLevel {
+  if (!course) return 0;
+  if (
+    typeof course.level === "number" &&
+    course.level >= 0 &&
+    course.level <= 5
+  ) {
+    return clampLevel(course.level);
+  }
+  const assigned = course.assigned ?? 0;
+  const certified = course.certified ?? 0;
+  const weak = (data.review?.weak || []).some(
+    (item) => item.course_id === course.id
+  );
+  let level = 0;
+  if (assigned <= 0 && certified <= 0) level = 0;
+  else if (certified <= 0) level = 1;
+  else if (assigned > 0 && certified >= assigned) level = 4;
+  else level = 3;
+  if (weak) level = Math.max(0, level - 1);
+  return clampLevel(level);
+}
+
 export type TrackId = "cs-se" | "math-stats" | "ai" | "theology";
 
 export type TrackDef = {
@@ -89,6 +134,20 @@ export const REQUIRED_TRACKS: TrackDef[] = [
     nextId: "yale-rlst152",
   },
 ];
+
+export const ENROLLED_NIGHTS = [
+  { day: "Mon", courseId: "stat110", track: "math / statistics" },
+  { day: "Tue", courseId: "mit-1801sc", track: "math / statistics" },
+  { day: "Wed", courseId: "stanford-cs234", track: "AI" },
+  { day: "Thu", courseId: "yale-rlst145", track: "theology" },
+  { day: "Fri", courseId: "mit-6006", track: "CS / software engineering" },
+] as const;
+
+export const SESSION_HOURS = "9–10pm ET";
+
+export function enrolledNightIds(): Set<string> {
+  return new Set(ENROLLED_NIGHTS.map((row) => row.courseId));
+}
 
 export const REQUIRED_AREA_IDS = (mapDoc as { required_areas: string[] })
   .required_areas;
@@ -203,10 +262,39 @@ export function requiredIds(): Set<string> {
 }
 
 export function optionalSubscribed(): Course[] {
-  const required = requiredIds();
+  const taking = enrolledNightIds();
   return (data.curriculum || []).filter(
-    (course) => isEnrolled(course) && !required.has(course.id)
+    (course) => isEnrolled(course) && !taking.has(course.id)
   );
+}
+
+export function topicsAndInterests(): {
+  id: string;
+  title: string;
+  school: string;
+}[] {
+  const taking = enrolledNightIds();
+  const seen = new Set<string>(taking);
+  const items: { id: string; title: string; school: string }[] = [];
+  for (const course of data.curriculum || []) {
+    if (!isEnrolled(course) || seen.has(course.id)) continue;
+    seen.add(course.id);
+    items.push({
+      id: course.id,
+      title: displayTitle(course),
+      school: schoolOf(course.id),
+    });
+  }
+  for (const item of catalogItems) {
+    if (seen.has(item.id)) continue;
+    seen.add(item.id);
+    items.push({
+      id: item.id,
+      title: plain(item.title),
+      school: plain(item.institution || ""),
+    });
+  }
+  return items;
 }
 
 export function shelfItems(): CatalogItem[] {
@@ -219,37 +307,38 @@ export function shelfItems(): CatalogItem[] {
   );
 }
 
-export function nodeState(node: MapNode): NodeState {
-  const weak = data.review?.weak || [];
-  if (
-    weak.some(
-      (item) =>
-        item.concept_id === node.id ||
-        (item.course_id && node.items.includes(item.course_id))
-    )
-  ) {
-    return "weak";
-  }
-
+export function nodeLevel(node: MapNode): MasteryLevel {
+  const weak = (data.review?.weak || []).some(
+    (item) =>
+      item.concept_id === node.id ||
+      (item.course_id && node.items.includes(item.course_id))
+  );
   const linked = node.items
     .map((id) => learnById.get(id))
     .filter((course): course is Course => Boolean(course));
-  if (!linked.length) return "not-started";
+  if (!linked.length) return weak ? 1 : 0;
+  let level = Math.max(...linked.map((course) => courseLevel(course)));
+  if (weak) level = Math.max(0, level - 1);
+  return clampLevel(level);
+}
 
-  const notes = data.feedback || [];
-  const hasWork = linked.some(
-    (course) =>
-      (course.certified ?? 0) > 0 ||
-      notes.some((row) => row.course_id === course.id)
-  );
-  if (!hasWork) return "not-started";
+export function nodeLevels(): Record<string, MasteryLevel> {
+  const levels: Record<string, MasteryLevel> = {};
+  for (const node of mapNodes) levels[node.id] = nodeLevel(node);
+  return levels;
+}
 
-  const complete = linked.every(
-    (course) =>
-      (course.assigned ?? 0) > 0 &&
-      (course.certified ?? 0) >= (course.assigned ?? 0)
+export function nodeState(node: MapNode): NodeState {
+  const level = nodeLevel(node);
+  const weak = (data.review?.weak || []).some(
+    (item) =>
+      item.concept_id === node.id ||
+      (item.course_id && node.items.includes(item.course_id))
   );
-  return complete ? "mastered" : "in-progress";
+  if (weak) return "weak";
+  if (level >= 4) return "mastered";
+  if (level >= 2) return "in-progress";
+  return "not-started";
 }
 
 export function nodeStates(): Record<string, NodeState> {

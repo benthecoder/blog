@@ -528,7 +528,7 @@
       "id": "literary-chinese",
       "area": "mandarin",
       "topic": "literary-chinese",
-      "title": "Literary Chinese (文言)",
+      "title": "Literary Chinese (\u6587\u8a00)",
       "prereqs": ["mandarin-vernacular"],
       "items": ["guwen-guanzhi"]
     },
@@ -715,6 +715,54 @@
       "title": "Inventive puzzles",
       "prereqs": ["proofs"],
       "items": ["aops-puzzles"]
+    },
+    {
+      "id": "system-design",
+      "area": "cs-foundations",
+      "topic": "systems",
+      "title": "System design",
+      "prereqs": ["data-structures-algorithms"],
+      "items": []
+    },
+    {
+      "id": "rl-foundations",
+      "area": "ai-ml",
+      "topic": "reinforcement-learning",
+      "title": "RL foundations",
+      "prereqs": ["probability"],
+      "items": ["stanford-cs234"]
+    },
+    {
+      "id": "deep-rl",
+      "area": "ai-ml",
+      "topic": "reinforcement-learning",
+      "title": "Deep RL",
+      "prereqs": ["rl-foundations", "neural-networks"],
+      "items": ["berkeley-cs285", "stanford-cs234"]
+    },
+    {
+      "id": "rlhf-post-training",
+      "area": "ai-ml",
+      "topic": "reinforcement-learning",
+      "title": "RLHF and post-training",
+      "prereqs": ["deep-rl", "nlp-transformers"],
+      "items": []
+    },
+    {
+      "id": "agents-infrastructure",
+      "area": "ai-ml",
+      "topic": "agents",
+      "title": "Agents and infrastructure",
+      "prereqs": ["nlp-transformers"],
+      "items": []
+    },
+    {
+      "id": "robotics",
+      "area": "ai-ml",
+      "topic": "robotics",
+      "title": "Robotics",
+      "prereqs": ["rl-foundations"],
+      "items": []
     }
   ]
 }

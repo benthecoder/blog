@@ -19,6 +19,7 @@ export type Course = {
   url?: string;
   assigned?: number;
   certified?: number;
+  level?: number;
   percent_certified?: number | null;
   units?: Unit[];
 };
