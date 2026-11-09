@@ -33,4 +33,18 @@ describe("local search", () => {
     expect(search("progr", 1)).toHaveLength(1);
     expect(search("#")).toEqual([]);
   });
+  it("matches whole words, so short words do not hit inside longer ones", () => {
+    const songs = createLocalSearch([
+      document("writing", "Small Writing Habits", "it is a way of writing"),
+      document("hemingway", "Ernest Hemingway", "I want it that badly"),
+      document("song", "Karaoke", "we sang I want it that way all night"),
+      document("journal", "Tuesday", "I want it done, that is the way"),
+    ]);
+    expect(songs("i want it that way").map((r) => r.post_slug)).toEqual([
+      "song",
+      "journal",
+    ]);
+    expect(songs("wri").map((r) => r.post_slug)).toEqual(["writing"]);
+    expect(songs("it way").map((r) => r.post_slug)).toContain("writing");
+  });
 });

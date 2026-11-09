@@ -8,11 +8,8 @@ import { loadLocalSearch } from "@/utils/loadLocalSearch";
 import type { LocalSearch } from "@/utils/localSearch";
 import type { SearchType } from "@/types/search";
 import type { ChunkType } from "@/types/chunks";
-import {
-  extractKeywords,
-  getSnippet,
-  highlightText,
-} from "@/components/search/searchHelpers";
+import { getSnippet, highlightText } from "@/components/search/searchHelpers";
+import { highlightMatcher, searchTerms } from "@/utils/searchTerms";
 import SearchFilters from "@/components/search/SearchFilters";
 import { textFragment } from "@/utils/searchTextFragment";
 
@@ -36,7 +33,8 @@ export default function SearchExplorer({
   const router = useRouter();
   const id = useId();
   const local = searchType === "keyword" && !chunkType;
-  const keywords = extractKeywords(query.replace(/^#/, ""));
+  const keywords = searchTerms(query);
+  const matcher = highlightMatcher(keywords);
 
   useEffect(() => {
     let disposed = false;
@@ -257,12 +255,12 @@ export default function SearchExplorer({
                   onClick={() => navigate(result)}
                 >
                   <h2 className="text-base font-bold leading-snug break-words">
-                    {highlightText(result.post_title, keywords)}
+                    {highlightText(result.post_title, matcher)}
                   </h2>
                   <p className="mt-2 text-xs text-muted leading-relaxed line-clamp-2">
                     {highlightText(
-                      getSnippet(result.content, keywords, 120),
-                      keywords
+                      getSnippet(result.content, matcher, 120),
+                      matcher
                     )}
                   </p>
                 </button>
@@ -276,7 +274,7 @@ export default function SearchExplorer({
               className="hidden min-w-0 overflow-y-auto overscroll-contain p-6 md:block lg:p-8"
             >
               <h2 className="text-3xl font-bold leading-tight break-words">
-                {highlightText(selected.post_title, keywords)}
+                {highlightText(selected.post_title, matcher)}
               </h2>
               {selected.published_date && (
                 <p className="mt-2 text-xs text-muted">
@@ -298,8 +296,8 @@ export default function SearchExplorer({
               </div>
               <div className="mt-6 whitespace-pre-wrap break-words text-sm leading-relaxed">
                 {highlightText(
-                  getSnippet(selected.content, keywords, 5000),
-                  keywords
+                  getSnippet(selected.content, matcher, 5000),
+                  matcher
                 )}
               </div>
               <button
