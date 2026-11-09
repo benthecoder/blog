@@ -27,91 +27,74 @@ import CategoryDot from "./CategoryDot";
 const styleUrl = (dark: boolean) =>
   `/map-styles/${dark ? "dark" : "positron"}.json`;
 // Layers we add on top of the base style; kept when the theme swaps styles.
-const OUR_LAYERS = [
-  "clusters",
-  "points",
-  "point-labels",
-  "selected-label",
-  "point-targets",
-  "cluster-counts",
-];
-// Repaint OpenFreeMap's base layers in the map's own washi/sumi palette so
-// the tiles match the panel. Values are token names from the MAP section of
-// app/globals.css, resolved per theme. Keyed by base layer id.
+const OUR_LAYERS = ["clusters", "points", "point-targets", "cluster-counts"];
+// The basemap is a quiet backdrop: no shields, no small street names, no
+// airports or borders, and everything repainted in the map's own palette
+// (the --map-base-* tokens). The two OpenFreeMap styles name their layers
+// differently, so the rules match by pattern.
+const HIDDEN =
+  /shield|airport|oneway|highway-name-(minor|path)|label_(state|country)|place_(state|country)|boundary/;
 type PaintProperty = Parameters<MapInstance["setPaintProperty"]>[1];
-const PLACE_LABELS = [
-  "place_other",
-  "place_suburb",
-  "place_village",
-  "place_town",
-  "place_city",
-  "place_city_large",
-  "place_state",
-  "place_country_other",
-  "place_country_minor",
-  "place_country_major",
+type Token = `--map-base-${string}`;
+const FILLS: [RegExp, Partial<Record<PaintProperty, Token>>][] = [
+  [/^background$/, { "background-color": "--map-base-land" }],
+  [/^water$/, { "fill-color": "--map-base-water" }],
+  [/^waterway$/, { "line-color": "--map-base-waterway" }],
+  [/^landuse_residential$/, { "fill-color": "--map-base-residential" }],
+  [/park$/, { "fill-color": "--map-base-park" }],
+  [/^landcover_wood$/, { "fill-color": "--map-base-wood" }],
+  [
+    /^building$/,
+    {
+      "fill-color": "--map-base-building",
+      "fill-outline-color": "--map-base-building-line",
+    },
+  ],
+  [/^highway_path$/, { "line-color": "--map-base-path" }],
+  [/^highway_minor$/, { "line-color": "--map-base-road" }],
+  [/casing$/, { "line-color": "--map-base-road-casing" }],
+  [/(major|motorway).*(inner|subtle)$/, { "line-color": "--map-base-highway" }],
+  [/^railway/, { "line-color": "--map-base-rail" }],
 ];
-const BASEMAP_PAINT: Record<
-  string,
-  Partial<Record<PaintProperty, `--map-base-${string}`>>
-> = {
-  background: { "background-color": "--map-base-land" },
-  water: { "fill-color": "--map-base-water" },
-  waterway: { "line-color": "--map-base-waterway" },
-  landuse_residential: { "fill-color": "--map-base-residential" },
-  landuse_park: { "fill-color": "--map-base-park" },
-  landcover_wood: { "fill-color": "--map-base-wood" },
-  building: {
-    "fill-color": "--map-base-building",
-    "fill-outline-color": "--map-base-building-line",
-  },
-  highway_path: { "line-color": "--map-base-path" },
-  highway_minor: { "line-color": "--map-base-road" },
-  highway_major_casing: { "line-color": "--map-base-road-casing" },
-  highway_major_inner: { "line-color": "--map-base-highway" },
-  highway_major_subtle: { "line-color": "--map-base-highway" },
-  highway_motorway_casing: { "line-color": "--map-base-highway-casing" },
-  highway_motorway_subtle: { "line-color": "--map-base-highway" },
-  railway: { "line-color": "--map-base-rail" },
-  railway_transit: { "line-color": "--map-base-rail" },
-  railway_minor: { "line-color": "--map-base-rail" },
-  water_name: {
-    "text-color": "--map-base-water-label",
-    "text-halo-color": "--map-base-water",
-  },
-  highway_name_other: {
-    "text-color": "--map-base-road-label",
-    "text-halo-color": "--map-base-halo",
-  },
-  highway_name_motorway: {
-    "text-color": "--map-base-road-label",
-    "text-halo-color": "--map-base-halo",
-  },
-  ...Object.fromEntries(
-    PLACE_LABELS.map((id) => [
-      id,
-      {
-        "text-color": "--map-base-place-label",
-        "text-halo-color": "--map-base-halo",
-      },
-    ])
-  ),
-};
+const labelToken = (id: string): Token =>
+  /water/.test(id)
+    ? "--map-base-water-label"
+    : /highway/.test(id)
+      ? "--map-base-road-label"
+      : "--map-base-place-label";
 const paintBasemap = (instance: MapInstance) => {
   const tokens = getComputedStyle(instance.getContainer());
-  for (const [id, paint] of Object.entries(BASEMAP_PAINT))
-    if (instance.getLayer(id))
-      for (const [property, token] of Object.entries(paint)) {
-        const value = tokens.getPropertyValue(token).trim();
-        if (value)
-          instance.setPaintProperty(id, property as PaintProperty, value);
-      }
+  const token = (name: Token) => tokens.getPropertyValue(name).trim();
+  for (const layer of instance.getStyle().layers) {
+    const { id } = layer;
+    if (OUR_LAYERS.includes(id)) continue;
+    if (HIDDEN.test(id)) {
+      instance.setLayoutProperty(id, "visibility", "none");
+      continue;
+    }
+    if (layer.type === "symbol") {
+      instance.setPaintProperty(id, "text-color", token(labelToken(id)));
+      instance.setPaintProperty(
+        id,
+        "text-halo-color",
+        token("--map-base-halo")
+      );
+      instance.setPaintProperty(id, "text-halo-blur", 0);
+      continue;
+    }
+    const paint = FILLS.find(([pattern]) => pattern.test(id))?.[1];
+    for (const [property, name] of Object.entries(paint ?? {})) {
+      const value = token(name);
+      if (value)
+        instance.setPaintProperty(id, property as PaintProperty, value);
+    }
+  }
 };
 const isMobile = () => window.matchMedia("(max-width: 760px)").matches;
-// Leave room for the floating header (mobile) and keep pins off the edges.
+// Keep pins off the edges; on a phone the bottom clears the attribution.
 const fitPadding = () =>
   isMobile()
-    ? { top: 90, bottom: 40, left: 40, right: 40 }
+    ? { top: 36, bottom: 48, left: 36, right: 36 }
     : { top: 80, bottom: 80, left: 80, right: 80 };
 
 /** Map ink comes from the explorer's own CSS variables (map.css), which are
@@ -287,40 +270,6 @@ export default function PlacesMap({
         filter: ["!", ["has", "point_count"]],
         paint: { "circle-radius": 5, "circle-stroke-width": 1.5 },
       });
-      // Labels sit below point-targets so clicks still hit the targets.
-      instance.addLayer({
-        id: "point-labels",
-        type: "symbol",
-        source: "places",
-        minzoom: 15,
-        filter: ["!", ["has", "point_count"]],
-        layout: {
-          "text-field": ["get", "name"],
-          "text-font": ["Noto Sans Regular"],
-          "text-size": 11,
-          "text-offset": [0, 0.8],
-          "text-anchor": "top",
-          "text-optional": true,
-          "text-max-width": 9,
-        },
-        paint: { "text-halo-width": 1.5 },
-      });
-      instance.addLayer({
-        id: "selected-label",
-        type: "symbol",
-        source: "places",
-        filter: ["==", ["get", "id"], ""],
-        layout: {
-          "text-field": ["get", "name"],
-          "text-font": ["Noto Sans Bold"],
-          "text-size": 11,
-          "text-offset": [0, 0.8],
-          "text-anchor": "top",
-          "text-max-width": 9,
-          "text-allow-overlap": true,
-        },
-        paint: { "text-halo-width": 1.5 },
-      });
       instance.addLayer({
         id: "point-targets",
         type: "circle",
@@ -422,28 +371,29 @@ export default function PlacesMap({
       ...colors.slice(2),
       ink.primary,
     ];
-    // Small dots in their category's color; the selected one is red.
-    instance.setPaintProperty("points", "circle-color", [
+    // Dots in their category's color. Hovering either side grows a dot; the
+    // selected one keeps its color and gets a red ring.
+    instance.setPaintProperty("points", "circle-color", category);
+    instance.setPaintProperty("points", "circle-stroke-color", [
       "case",
       isSelected,
       ink.accent,
-      category,
+      ink.surface,
     ]);
-    instance.setPaintProperty("points", "circle-stroke-color", ink.surface);
-    instance.setPaintProperty("points", "circle-stroke-width", 1.5);
+    instance.setPaintProperty("points", "circle-stroke-width", [
+      "case",
+      isSelected,
+      2.5,
+      1.5,
+    ]);
     instance.setPaintProperty("points", "circle-radius", [
       "case",
       isSelected,
       7,
       ["==", ["get", "id"], highlightId ?? ""],
-      6.5,
-      5,
+      7,
+      5.5,
     ]);
-    instance.setPaintProperty("point-labels", "text-color", ink.primary);
-    instance.setPaintProperty("point-labels", "text-halo-color", ink.surface);
-    instance.setPaintProperty("selected-label", "text-color", ink.primary);
-    instance.setPaintProperty("selected-label", "text-halo-color", ink.surface);
-    instance.setFilter("selected-label", ["==", ["get", "id"], selectedId]);
   }, []);
 
   useEffect(() => {
@@ -484,10 +434,10 @@ export default function PlacesMap({
     ready.flyTo({
       center: selected.coordinates,
       zoom: Math.max(ready.getZoom(), 17),
-      // Leave room for the card: above the pin on desktop, and on mobile
-      // the card sits at the bottom, so the pin goes up.
+      // Leave room for the card: above the pin on desktop; on a phone the
+      // card docks to the bottom of the map plate, so the pin goes up.
       offset: mobile
-        ? [0, -Math.round(window.innerHeight * 0.24)]
+        ? [0, -Math.round(window.innerHeight * 0.12)]
         : [0, Math.round(window.innerHeight * 0.18)],
       duration: 600,
     });

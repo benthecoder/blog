@@ -24,6 +24,7 @@
 @theme {
   --color-photo-viewer: #131413;
   --color-photo-caption: #f6f5ef;
+  --color-print: #f6f1e6; /* ivory print card stock, both modes */
   --color-photo-shade: #131413b3;
   /* -- Surfaces: light ---------------------------------------------------- */
   --color-paper: #fbfaf5; /* page + card background */
@@ -268,6 +269,7 @@
 .places-explorer {
   /* Shared role names (see ROLES), so role utilities work on this page.
      They reference --map-*, which already switch in .dark below. */
+  --map-font: var(--font-averia), Georgia, serif;
   --role-surface: var(--map-paper);
   --role-raised: var(--map-hover);
   --role-line: var(--map-rule);
@@ -276,7 +278,7 @@
   --role-secondary: var(--map-ink);
   --role-muted: var(--map-muted);
   --font-body: var(--map-font);
-  --font-display: var(--map-names);
+  --font-display: var(--map-font);
   --font-ui: var(--map-font);
 
   --map-paper: #f2e9d6; /* washi */
@@ -303,11 +305,10 @@
   --map-base-path: #e0d9c9;
   --map-base-road: #fbf8f1;
   --map-base-road-casing: #d6cfbe;
-  --map-base-highway: #f8f4ea;
-  --map-base-highway-casing: #bdb4a0;
-  --map-base-rail: #9a9384;
-  --map-base-road-label: #7a7364;
-  --map-base-place-label: #3a352e;
+  --map-base-highway: #f5f0e4;
+  --map-base-rail: #d3cab7;
+  --map-base-road-label: #958c7b;
+  --map-base-place-label: #7d725f;
   --map-base-halo: #eee8da;
 }
 .dark .places-explorer {
@@ -336,10 +337,9 @@
   --map-base-road: #34312c;
   --map-base-road-casing: #3d3a34;
   --map-base-highway: #3a3731;
-  --map-base-highway-casing: #48443d;
   --map-base-rail: #3a3732;
   --map-base-road-label: #8f887b;
-  --map-base-place-label: #b5ad9d;
+  --map-base-place-label: #8f8778;
   --map-base-halo: #1c1a17;
 }
 
@@ -746,17 +746,20 @@ body {
    any format sit level. Clicking the photo opens the whole picture,
    uncropped. */
 .photo-print {
-  --u: clamp(0.22rem, 0.8vw, 0.3rem);
+  /* About 70% of the reading column for a square print, held under the
+     screen's height so a portrait print still fits on a laptop, and
+     within the column on a phone. */
+  --u: clamp(0.22rem, min(1.25vw, 0.8vh), 0.44rem);
   /* The shadow is taken most of the way to neutral before it's faded out.
      Mixing straight from the ink made the print glow in the theme colour
      instead of casting a shadow; this keeps only a hint of the palette. */
   --photo-shadow: color-mix(in oklab, var(--color-ink) 22%, #1b1b1b);
   width: min(calc(62 * var(--u) * var(--plate-ar, 1) + 9 * var(--u)), 100%);
-  margin: 2.5rem auto;
-  /* Cream card stock, a shade darker than the page so the print reads as a
-     separate object lying on it. The faint sheen from the top left is the
-     same light that casts the shadow down and to the right. */
-  --card: color-mix(in oklab, var(--color-paper) 72%, var(--color-paper-warm));
+  margin: 3.5rem auto;
+  /* Ivory card stock, warmer than the page so the print reads as a separate
+     object lying on it. The faint sheen from the top left is the same light
+     that casts the shadow down and to the right. */
+  --card: var(--color-print);
   background:
     linear-gradient(
       135deg,
@@ -774,16 +777,16 @@ body {
     2px 4px 3px -1px color-mix(in oklab, var(--photo-shadow) 16%, transparent);
 }
 
+/* A print is a physical object, so it stays ivory in the dark, like a
+   photo pinned to a dark wall: the card dimmed a little so it doesn't
+   glare, and a deeper shadow, since a light card on a dark ground needs
+   more of one to sit down. */
 .dark .photo-print {
-  --card: color-mix(
-    in oklab,
-    var(--color-night-raised) 88%,
-    var(--color-paper-warm)
-  );
-  background: var(--card);
+  --card: color-mix(in oklab, var(--color-print) 93%, var(--color-night));
   box-shadow:
-    0 0 0 1px color-mix(in oklab, var(--color-chalk) 10%, transparent),
-    0 1px 3px rgba(0, 0, 0, 0.4);
+    0 0 0 1px rgb(0 0 0 / 0.35),
+    1px 2px 0 rgb(0 0 0 / 0.35),
+    0 8px 22px -4px rgb(0 0 0 / 0.6);
 }
 
 /* Keyboard focus rings the whole print, card edge and all, not just the
@@ -804,8 +807,8 @@ body {
 
 .photo-plate {
   aspect-ratio: var(--plate-ratio, 1);
-  /* The window in instant film is cut with softened corners. */
-  border-radius: 3px;
+  /* The window in instant film is die-cut, nearly square at the corners. */
+  border-radius: 1px;
 }
 
 /* The picture sits a little below the frame's surface: a dark lip at the
@@ -820,6 +823,14 @@ body {
   box-shadow:
     inset 0 0 0 1px rgb(0 0 0 / 0.22),
     inset 0 2px 4px rgb(0 0 0 / 0.18);
+  /* Instant film is glossy under its clear layer: a soft diagonal sheen
+     from the same top-left light. */
+  background: linear-gradient(
+    125deg,
+    rgb(255 255 255 / 0.16) 0%,
+    rgb(255 255 255 / 0.04) 35%,
+    transparent 55%
+  );
 }
 
 /* The bottom strip, written in a pen-like italic. It grows when a caption
@@ -832,13 +843,18 @@ body {
   text-align: center;
   font-family: var(--font-caption), var(--font-serif);
   font-style: italic;
-  font-size: 1.0625rem;
-  line-height: 1.2;
+  /* Written to the film's scale, like the borders, so a small print gets
+     small handwriting instead of a caption as big as its photo. Never
+     below 14px, where the italic stops being legible. */
+  font-size: clamp(0.875rem, calc(3 * var(--u)), 1.125rem);
+  line-height: 1.15;
   color: var(--color-ink-soft);
 }
 
-.dark .photo-label {
-  color: var(--color-chalk-muted);
+/* The card stays light in the dark, so the pen stays dark too. */
+.dark .photo-label,
+.dark .prose .photo-label {
+  color: var(--color-ink-soft);
 }
 
 /* The editor's preview: the strip is where you write. */
@@ -876,7 +892,21 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  margin-block: 3rem;
+  margin-block: 4rem;
+}
+
+/* With room to spare, a row of prints reaches past the text into the
+   margins, the way a magazine lets a picture spread run wider than its
+   column. Three photos side by side are otherwise thumbnails. */
+@media (min-width: 64rem) {
+  .photo-group:has(.photo-row) {
+    margin-inline: -4rem;
+  }
+}
+@media (min-width: 80rem) {
+  .photo-group:has(.photo-row) {
+    margin-inline: -7rem;
+  }
 }
 
 .photo-row {
