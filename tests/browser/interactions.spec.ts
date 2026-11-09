@@ -169,6 +169,23 @@ test("photo viewer supports keyboard stepping, focus containment and browser Bac
   await expect(trigger).toBeFocused();
 });
 
+test.describe("without JavaScript", () => {
+  test.use({ javaScriptEnabled: false });
+
+  // Frames with a blur placeholder must show from the server HTML. Gating
+  // them on hydration left the contact sheet blank for seconds on phones.
+  test("contact sheet frames are visible before hydration", async ({
+    page,
+  }) => {
+    await page.goto("/design");
+    const frame = page.locator(".photo-site .ph-frame img").first();
+    await expect(frame).toBeAttached();
+    expect(
+      await frame.evaluate((img) => Number(getComputedStyle(img).opacity))
+    ).toBeGreaterThan(0);
+  });
+});
+
 test("photo swipe has equivalent button controls", async ({ page }) => {
   await page.goto("/design");
   await page.getByRole("button", { name: "Open photo:" }).first().click();

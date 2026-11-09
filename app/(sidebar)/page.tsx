@@ -11,6 +11,7 @@ import { parsePlace } from "@/utils/photoPlaces";
 import { formatPhotoDate } from "@/utils/photoDate";
 import { filmFor } from "@/utils/photoFilm";
 import type { StreamPhoto } from "@/types/photostream";
+import { MAPS_URL, PHOTOS_URL } from "@/config/site";
 
 // Photos are live; refresh hourly so new uploads reach the homepage.
 export const revalidate = 3600;
@@ -139,8 +140,8 @@ function Prints({ photos }: { photos: StreamPhoto[] }) {
                   } as React.CSSProperties
                 }
               >
-                <Link
-                  href={`/photos/photo/${photo.id}`}
+                <a
+                  href={`${PHOTOS_URL}/photo/${photo.id}`}
                   className="photo-frame block w-full outline-none"
                 >
                   <div className="photo-plate relative w-full overflow-hidden">
@@ -154,7 +155,7 @@ function Prints({ photos }: { photos: StreamPhoto[] }) {
                       className="object-cover"
                     />
                   </div>
-                </Link>
+                </a>
                 <figcaption className="photo-label">
                   {printLabel(photo)}
                 </figcaption>
@@ -164,9 +165,9 @@ function Prints({ photos }: { photos: StreamPhoto[] }) {
         </div>
       </div>
       <p className="mt-10 text-sm">
-        <Link href="/photos" className={`${entryLink} text-muted`}>
+        <a href={PHOTOS_URL} className={`${entryLink} text-muted`}>
           all photos →
-        </Link>
+        </a>
       </p>
     </section>
   );
@@ -190,7 +191,7 @@ export default async function HomePage() {
         <p>here are some places you can visit:</p>
         <ul>
           <li>
-            <Link href="/map">list of places</Link>
+            <a href={MAPS_URL}>list of places</a>
           </li>
           <li>
             <Link href="/library">my library</Link>
