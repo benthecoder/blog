@@ -5,11 +5,16 @@ import MarkdownContent from "@/components/posts/MarkdownContent";
 import { PROJECTS_MD } from "@/config/paths";
 import { pageMetadata } from "@/utils/pageMetadata";
 
-export const metadata: Metadata = pageMetadata({
-  title: "projects",
-  description: "things i've built",
-  path: "/projects",
-});
+// Hidden for now: out of the nav and search, but the page and its markdown
+// stay so it can come back by restoring the nav entry.
+export const metadata: Metadata = {
+  ...pageMetadata({
+    title: "projects",
+    description: "things i've built",
+    path: "/projects",
+  }),
+  robots: { index: false, follow: true },
+};
 
 export const dynamic = "force-static";
 
