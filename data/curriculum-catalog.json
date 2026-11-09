@@ -1,0 +1,2451 @@
+{
+  "generated": "2026-11-09",
+  "areas": [
+    {
+      "id": "math",
+      "title": "Mathematics",
+      "why_this_outlasts_ai": "Proof is thinking made visible. A model can algebra-crunch; it cannot replace the habit of inventing a definition, seeing a structure, or knowing when an argument is wrong.",
+      "track": "core"
+    },
+    {
+      "id": "statistics",
+      "title": "Statistics",
+      "why_this_outlasts_ai": "The scarce skill is asking the right question under uncertainty, not plugging numbers into a library.",
+      "track": "core"
+    },
+    {
+      "id": "cs-foundations",
+      "title": "Computer science foundations",
+      "why_this_outlasts_ai": "Mental models of what computation is — abstraction, systems, algorithms as ideas — outlast any particular API. Trivia that a model can spit out is deprioritized.",
+      "track": "core"
+    },
+    {
+      "id": "ai-ml",
+      "title": "AI / ML / LLMs",
+      "why_this_outlasts_ai": "The point is to understand these systems well enough to steer and evaluate them, not to collect framework tutorials a model already writes.",
+      "track": "major"
+    },
+    {
+      "id": "ai-safety",
+      "title": "AI safety and alignment",
+      "why_this_outlasts_ai": "Judgment about what we should build, and how to tell that a safety claim is real, will not be automated away.",
+      "track": "major"
+    },
+    {
+      "id": "ai-security",
+      "title": "AI security",
+      "why_this_outlasts_ai": "Adversarial thinking about systems that change quickly. Prefer recent university material and living checklists over stale slide decks.",
+      "track": "major"
+    },
+    {
+      "id": "physics",
+      "title": "Physics",
+      "why_this_outlasts_ai": "First-principles models of the world. Deriving a conservation law by hand is a kind of intelligence no autocomplete substitutes for.",
+      "track": "minor"
+    },
+    {
+      "id": "chemistry",
+      "title": "Chemistry",
+      "why_this_outlasts_ai": "A feel for matter, equilibrium, and mechanism — the physical vocabulary underneath biology and materials.",
+      "track": "minor"
+    },
+    {
+      "id": "biology",
+      "title": "Biology",
+      "why_this_outlasts_ai": "What a living system actually is. Summaries are cheap; the ability to reason about information flow in a cell is not.",
+      "track": "minor"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering",
+      "why_this_outlasts_ai": "Making something work in the world, with models you can defend when the artifact misbehaves.",
+      "track": "minor"
+    },
+    {
+      "id": "economics",
+      "title": "Economics",
+      "why_this_outlasts_ai": "Models of choice, constraint, and interaction. Useful as thinking tools, not as forecast trivia.",
+      "track": "minor"
+    },
+    {
+      "id": "history",
+      "title": "History",
+      "why_this_outlasts_ai": "Judgment from particular cases. A model can summarize a century; it cannot remember it for you or decide what the analogy is allowed to prove.",
+      "track": "minor"
+    },
+    {
+      "id": "philosophy",
+      "title": "Philosophy",
+      "why_this_outlasts_ai": "Examining premises and making arguments precise. That is the opposite of accepting a fluent paragraph.",
+      "track": "minor"
+    },
+    {
+      "id": "literature-western",
+      "title": "Literature (Western)",
+      "why_this_outlasts_ai": "Attention, moral imagination, and a language larger than the present. Great books train taste that autocomplete cannot borrow.",
+      "track": "minor"
+    },
+    {
+      "id": "literature-chinese",
+      "title": "Literature (Chinese)",
+      "why_this_outlasts_ai": "Another civilization's thought, in its own sentences. Reading 論語 or 紅樓夢 slowly is not a task to delegate.",
+      "track": "minor"
+    },
+    {
+      "id": "mandarin",
+      "title": "Mandarin (Traditional, advanced)",
+      "why_this_outlasts_ai": "Advanced literacy in Traditional Chinese, especially 文言, is a long human skill. It is a way into texts, not a streak.",
+      "track": "minor"
+    },
+    {
+      "id": "theology",
+      "title": "Theology and Bible",
+      "why_this_outlasts_ai": "Ultimate questions and close reading of scripture. The work is formation and argument, not trivia.",
+      "track": "minor"
+    },
+    {
+      "id": "writing",
+      "title": "Writing and rhetoric",
+      "why_this_outlasts_ai": "Writing is how thought becomes checkable. An essay you wrestle onto the page is not the same as a generated draft.",
+      "track": "minor"
+    },
+    {
+      "id": "music-art",
+      "title": "Music and art",
+      "why_this_outlasts_ai": "Perception and taste. Learning to hear form in a Bach movement is not a summarization task.",
+      "track": "minor"
+    },
+    {
+      "id": "creativity",
+      "title": "Creativity and invention",
+      "why_this_outlasts_ai": "Posing problems, inventing, noticing, and building. That is upstream of any tool: heuristics (Polya), taste (Hamming), design, puzzles, and making things.",
+      "track": "minor"
+    }
+  ],
+  "items": [
+    {
+      "id": "mit-1801sc",
+      "title": "MIT 18.01SC Single Variable Calculus",
+      "kind": "course",
+      "instructor": "David Jerison",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/",
+      "area": "math",
+      "area_title": "Mathematics",
+      "topic": "calculus",
+      "topic_title": "Calculus",
+      "track": "core",
+      "era": "years-1-2",
+      "hours_core": 50,
+      "hours_full": 120,
+      "why_canonical": "Standard first-year calculus at MIT, with recitation problems and exams. Rigetti treats a full calculus sequence as the start of an undergraduate math education. Karpathy named calculus (with linear algebra) as a baseline.",
+      "one_liner": "Standard first-year calculus at MIT, with recitation problems and exams.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/math"
+        },
+        {
+          "name": "Andrej Karpathy",
+          "url": "https://x.com/karpathy/status/1127794789355622405"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "mit-1802sc",
+      "title": "MIT 18.02SC Multivariable Calculus",
+      "kind": "course",
+      "instructor": "Denis Auroux",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/",
+      "area": "math",
+      "area_title": "Mathematics",
+      "topic": "calculus",
+      "topic_title": "Calculus",
+      "track": "core",
+      "era": "years-3-5",
+      "hours_core": 50,
+      "hours_full": 120,
+      "why_canonical": "The natural second semester after 18.01 in MIT sequence; needed for electricity and magnetism and for machine learning gradients.",
+      "one_liner": "The natural second semester after 18.01 in MIT sequence; needed for electricity and magnetism and for machine learning gradients.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/math"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mit-1806",
+      "title": "MIT 18.06 Linear Algebra",
+      "kind": "course",
+      "instructor": "Gilbert Strang",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",
+      "area": "math",
+      "area_title": "Mathematics",
+      "topic": "linear-algebra",
+      "topic_title": "Linear algebra",
+      "track": "core",
+      "era": "years-1-2",
+      "hours_core": 45,
+      "hours_full": 100,
+      "why_canonical": "Rigetti calls Strang essential and especially good for independent study. Teach Yourself CS also points to Strang for linear algebra.",
+      "one_liner": "Rigetti calls Strang essential and especially good for independent study.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/math"
+        },
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "Andrej Karpathy",
+          "url": "https://x.com/karpathy/status/1127794789355622405"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "velleman-how-to-prove-it",
+      "title": "How to Prove It",
+      "kind": "book",
+      "instructor": "Daniel J. Velleman",
+      "institution": "Daniel J. Velleman",
+      "url": "",
+      "area": "math",
+      "area_title": "Mathematics",
+      "topic": "proofs",
+      "topic_title": "Proofs",
+      "track": "core",
+      "era": "years-1-2",
+      "hours_core": 30,
+      "hours_full": 60,
+      "why_canonical": "Rigetti essential introduction-to-proofs text. She also supplements with Polya How to Solve It, which Teach Yourself CS independently recommends.",
+      "one_liner": "Rigetti essential introduction-to-proofs text.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/math"
+        },
+        {
+          "name": "Terence Tao",
+          "url": "https://terrytao.wordpress.com/career-advice/solving-mathematical-problems/"
+        }
+      ],
+      "free": false,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "abbott-understanding-analysis",
+      "title": "Understanding Analysis",
+      "kind": "book",
+      "instructor": "Stephen Abbott",
+      "institution": "Stephen Abbott",
+      "url": "",
+      "area": "math",
+      "area_title": "Mathematics",
+      "topic": "analysis",
+      "topic_title": "Real analysis",
+      "track": "core",
+      "era": "years-3-5",
+      "hours_core": 40,
+      "hours_full": 100,
+      "why_canonical": "Rigetti essential real-analysis pairing: Abbott plus Rudin Principles of Mathematical Analysis.",
+      "one_liner": "Rigetti essential real-analysis pairing: Abbott plus Rudin Principles of Mathematical Analysis.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/math"
+        }
+      ],
+      "free": false,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "stat110",
+      "title": "Harvard Stat 110: Probability",
+      "kind": "course",
+      "instructor": "Joseph Blitzstein",
+      "institution": "Harvard",
+      "url": "https://stat110.hsites.harvard.edu/",
+      "area": "statistics",
+      "area_title": "Statistics",
+      "topic": "probability",
+      "topic_title": "Probability",
+      "track": "core",
+      "era": "years-1-2",
+      "hours_core": 50,
+      "hours_full": 110,
+      "why_canonical": "Harvard flagship undergraduate probability course, with lecture videos and a large practice bank. The usual gateway before CS229-style machine learning.",
+      "one_liner": "Harvard flagship undergraduate probability course, with lecture videos and a large practice bank.",
+      "recommended_by": [
+        {
+          "name": "Harvard Stat 110 course site",
+          "url": "https://stat110.hsites.harvard.edu/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "sicp",
+      "title": "Structure and Interpretation of Computer Programs + Berkeley CS 61A (Harvey)",
+      "kind": "book-and-course",
+      "instructor": "Abelson, Sussman, and Sussman; videos by Brian Harvey",
+      "institution": "Berkeley",
+      "url": "https://sarabander.github.io/sicp/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "programming",
+      "topic_title": "Programming",
+      "track": "core",
+      "era": "years-1-2",
+      "hours_core": 50,
+      "hours_full": 120,
+      "why_canonical": "Teach Yourself CS programming pick. They say SICP can change how you think about programs, and they recommend at least the first three chapters and the exercises — already a core-versus-optional split.",
+      "one_liner": "Teach Yourself CS programming pick.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "OSSU Computer Science",
+          "url": "https://github.com/ossu/computer-science"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "csapp",
+      "title": "CMU 15-213 / Computer Systems: A Programmer's Perspective",
+      "kind": "book",
+      "instructor": "Randal Bryant and David O'Hallaron",
+      "institution": "CMU",
+      "url": "https://csapp.cs.cmu.edu/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "computer-systems",
+      "topic_title": "Computer systems",
+      "track": "core",
+      "era": "years-3-5",
+      "hours_core": 50,
+      "hours_full": 150,
+      "why_canonical": "Teach Yourself CS's favorite intro systems book, and one of the two books they would keep if they could only keep two. They say a typical course covers most of chapters 1-6. OSSU lists Nand2Tetris in core systems and points at intro-computer-systems labs (CSAPP-style) in extras.",
+      "one_liner": "Teach Yourself CS's favorite intro systems book, and one of the two books they would keep if they could only keep two.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "OSSU extras",
+          "url": "https://github.com/ossu/computer-science/blob/master/extras/courses.md"
+        }
+      ],
+      "free": false,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mit-6006",
+      "title": "MIT 6.006 Introduction to Algorithms",
+      "kind": "course",
+      "instructor": "MIT OCW, Spring 2020",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "algorithms",
+      "topic_title": "Algorithms",
+      "track": "core",
+      "era": "years-3-5",
+      "hours_core": 45,
+      "hours_full": 120,
+      "why_canonical": "MIT standard algorithms course with open problem sets. TYCS prefers Skiena Algorithm Design Manual as a book; 6.006 is the free course that can be written by hand.",
+      "one_liner": "MIT standard algorithms course with open problem sets.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "mit-6042j",
+      "title": "MIT 6.042J Mathematics for Computer Science",
+      "kind": "course",
+      "instructor": "Tom Leighton and Marten van Dijk",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-fall-2010/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "discrete-math",
+      "topic_title": "Mathematics for CS",
+      "track": "core",
+      "era": "years-1-2",
+      "hours_core": 40,
+      "hours_full": 100,
+      "why_canonical": "TYCS pick for Math for CS: logic, combinatorics, discrete probability, graphs, some number theory.",
+      "one_liner": "TYCS pick for Math for CS: logic, combinatorics, discrete probability, graphs, some number theory.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "OSSU Computer Science",
+          "url": "https://github.com/ossu/computer-science"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "ostep",
+      "title": "Operating Systems: Three Easy Pieces",
+      "kind": "book",
+      "instructor": "Remzi and Andrea Arpaci-Dusseau",
+      "institution": "Remzi and Andrea Arpaci-Dusseau",
+      "url": "https://pages.cs.wisc.edu/~remzi/OSTEP/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "operating-systems",
+      "topic_title": "Operating systems",
+      "track": "core",
+      "era": "years-3-5",
+      "hours_core": 40,
+      "hours_full": 80,
+      "why_canonical": "TYCS OS book, preferred over the dinosaur book for clarity and self-study.",
+      "one_liner": "TYCS OS book, preferred over the dinosaur book for clarity and self-study.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "OSSU Computer Science",
+          "url": "https://github.com/ossu/computer-science"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "ddia",
+      "title": "Designing Data-Intensive Applications",
+      "kind": "book",
+      "instructor": "Martin Kleppmann",
+      "institution": "Martin Kleppmann",
+      "url": "https://teachyourselfcs.com/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "distributed-systems",
+      "topic_title": "Distributed systems",
+      "track": "core",
+      "era": "years-5-plus",
+      "hours_core": 30,
+      "hours_full": 50,
+      "why_canonical": "TYCS distributed-systems pick and the other book in their if-only-two-books pair with CSAPP.",
+      "one_liner": "TYCS distributed-systems pick and the other book in their if-only-two-books pair with CSAPP.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        }
+      ],
+      "free": false,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "stanford-cs229",
+      "title": "Stanford CS229 Machine Learning",
+      "kind": "course",
+      "instructor": "Historically Andrew Ng; current staff on the course site",
+      "institution": "Stanford",
+      "url": "https://cs229.stanford.edu/",
+      "area": "ai-ml",
+      "area_title": "AI / ML / LLMs",
+      "topic": "machine-learning",
+      "topic_title": "Machine learning",
+      "track": "major",
+      "era": "years-3-5",
+      "hours_core": 50,
+      "hours_full": 130,
+      "why_canonical": "Stanford standard ML course. TYCS names Ng and this style of course as the ML starting point. CS336 lists CS229 or equivalent among prerequisites.",
+      "one_liner": "Stanford standard ML course.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "Stanford CS336 staff",
+          "url": "https://cs336.stanford.edu/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "stanford-cs224n",
+      "title": "Stanford CS224N NLP with Deep Learning",
+      "kind": "course",
+      "instructor": "Christopher Manning and staff",
+      "institution": "Stanford",
+      "url": "https://web.stanford.edu/class/cs224n/",
+      "area": "ai-ml",
+      "area_title": "AI / ML / LLMs",
+      "topic": "nlp",
+      "topic_title": "NLP with deep learning",
+      "track": "major",
+      "era": "years-5-plus",
+      "hours_core": 50,
+      "hours_full": 130,
+      "why_canonical": "Stanford standard deep-learning NLP course; usual next step toward transformers after CS229. CS336 lists it among ML prerequisites.",
+      "one_liner": "Stanford standard deep-learning NLP course; usual next step toward transformers after CS229.",
+      "recommended_by": [
+        {
+          "name": "Stanford CS336 staff",
+          "url": "https://cs336.stanford.edu/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "stanford-cs336",
+      "title": "Stanford CS336 Language Modeling from Scratch",
+      "kind": "course",
+      "instructor": "Tatsunori Hashimoto and Percy Liang",
+      "institution": "Stanford",
+      "url": "https://cs336.stanford.edu/",
+      "area": "ai-ml",
+      "area_title": "AI / ML / LLMs",
+      "topic": "language-modeling",
+      "topic_title": "Language modeling",
+      "track": "major",
+      "era": "years-5-plus",
+      "hours_core": 60,
+      "hours_full": 150,
+      "why_canonical": "Current Stanford course that walks through building a language model end-to-end: data, tokenizer, transformer, training, scaling, alignment/RL. Directly relevant to lab work.",
+      "one_liner": "Current Stanford course that walks through building a language model end-to-end: data, tokenizer, transformer, training, scaling, alignment/RL.",
+      "recommended_by": [
+        {
+          "name": "Course staff (Hashimoto and Liang)",
+          "url": "https://cs336.stanford.edu/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "stanford-cs231n",
+      "title": "Stanford CS231n Deep Learning for Computer Vision",
+      "kind": "course",
+      "instructor": "Originally Fei-Fei Li, Andrej Karpathy, Justin Johnson",
+      "institution": "Stanford",
+      "url": "https://cs231n.stanford.edu/",
+      "area": "ai-ml",
+      "area_title": "AI / ML / LLMs",
+      "topic": "computer-vision",
+      "topic_title": "Deep learning for vision",
+      "track": "major",
+      "era": "years-5-plus",
+      "hours_core": 45,
+      "hours_full": 120,
+      "why_canonical": "Karpathy taught it and later told someone to take EECS 498 and/or CS231n and complete all of the programming assignments. That advice is stricter than the completion rule; both facts stay visible.",
+      "one_liner": "Karpathy taught it and later told someone to take EECS 498 and/or CS231n and complete all of the programming assignments.",
+      "recommended_by": [
+        {
+          "name": "Andrej Karpathy",
+          "url": "https://x.com/karpathy/status/1441508572383219714"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "karpathy-zero-to-hero",
+      "title": "Neural Networks: Zero to Hero",
+      "kind": "course",
+      "instructor": "Andrej Karpathy",
+      "institution": "Andrej Karpathy",
+      "url": "https://karpathy.ai/zero-to-hero.html",
+      "area": "ai-ml",
+      "area_title": "AI / ML / LLMs",
+      "topic": "neural-networks",
+      "topic_title": "Neural networks from scratch",
+      "track": "major",
+      "era": "years-3-5",
+      "hours_core": 20,
+      "hours_full": 40,
+      "why_canonical": "Karpathy own series, announced on X; he later said beginners should watch the playlist from the start, in order.",
+      "one_liner": "Karpathy own series, announced on X; he later said beginners should watch the playlist from the start, in order.",
+      "recommended_by": [
+        {
+          "name": "Andrej Karpathy",
+          "url": "https://x.com/karpathy/status/1613254286733082626"
+        },
+        {
+          "name": "Andrej Karpathy",
+          "url": "https://x.com/karpathy/status/1799972032622493910"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "bluedot-alignment",
+      "title": "BlueDot Impact: AI Alignment",
+      "kind": "course",
+      "instructor": "BlueDot Impact; 2022 curriculum originally designed by Richard Ngo",
+      "institution": "BlueDot",
+      "url": "https://bluedot.org/courses/alignment",
+      "area": "ai-safety",
+      "area_title": "AI safety and alignment",
+      "topic": "alignment",
+      "topic_title": "Alignment foundations",
+      "track": "major",
+      "era": "years-3-5",
+      "hours_core": 25,
+      "hours_full": 50,
+      "why_canonical": "Living version of the field standard intro sequence. Ngo designed the 2022 AGI Safety Fundamentals alignment curriculum that BlueDot ran, and pointed at oversight, interpretability, and this curriculum.",
+      "one_liner": "Living version of the field standard intro sequence.",
+      "recommended_by": [
+        {
+          "name": "Richard Ngo",
+          "url": "https://x.com/RichardMCNgo/status/1559991268146524160"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "hendrycks-ml-safety",
+      "title": "Intro to ML Safety",
+      "kind": "course",
+      "instructor": "Dan Hendrycks / Center for AI Safety",
+      "institution": "Dan Hendrycks / Center for AI Safety",
+      "url": "https://course.mlsafety.org/",
+      "area": "ai-safety",
+      "area_title": "AI safety and alignment",
+      "topic": "ml-safety",
+      "topic_title": "ML safety",
+      "track": "major",
+      "era": "years-5-plus",
+      "hours_core": 20,
+      "hours_full": 40,
+      "why_canonical": "A full technical safety course covering robustness, monitoring, control, systemic safety, and x-risk arguments. Requires prior ML/deep learning.",
+      "one_liner": "A full technical safety course covering robustness, monitoring, control, systemic safety, and x-risk arguments.",
+      "recommended_by": [
+        {
+          "name": "Dan Hendrycks / CAIS",
+          "url": "https://course.mlsafety.org/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "nanda-olah-interp",
+      "title": "Mechanistic interpretability (Nanda, Olah, ARENA)",
+      "kind": "tutorial",
+      "instructor": "Neel Nanda; Chris Olah / Anthropic Circuits",
+      "institution": "Neel Nanda",
+      "url": "https://www.neelnanda.io/mechanistic-interpretability",
+      "area": "ai-safety",
+      "area_title": "AI safety and alignment",
+      "topic": "mechanistic-interpretability",
+      "topic_title": "Mechanistic interpretability",
+      "track": "major",
+      "era": "years-5-plus",
+      "hours_core": 15,
+      "hours_full": 30,
+      "why_canonical": "Olah pointed people at Nanda annotated reading list. Nanda published 200 Concrete Open Problems. Distill Circuits is the earlier Olah-style manifesto.",
+      "one_liner": "Olah pointed people at Nanda annotated reading list.",
+      "recommended_by": [
+        {
+          "name": "Chris Olah",
+          "url": "https://x.com/ch402/status/1633342338440527872"
+        },
+        {
+          "name": "Neel Nanda",
+          "url": "https://x.com/NeelNanda5/status/1608209599844478976"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mlsafety-adversarial",
+      "title": "Adversarial robustness and trojans (from Intro to ML Safety)",
+      "kind": "course-slice",
+      "instructor": "Dan Hendrycks / CAIS",
+      "institution": "Dan Hendrycks / CAIS",
+      "url": "https://course.mlsafety.org/",
+      "area": "ai-security",
+      "area_title": "AI security",
+      "topic": "adversarial-robustness",
+      "topic_title": "Adversarial robustness",
+      "track": "major",
+      "era": "years-5-plus",
+      "hours_core": 10,
+      "hours_full": 20,
+      "why_canonical": "Free technical treatment of attacks (PGD, transferability, text attacks) and hidden functionality (trojans/poisoning). Open university AI-security courses with problem sets are otherwise thin.",
+      "one_liner": "Free technical treatment of attacks (PGD, transferability, text attacks) and hidden functionality (trojans/poisoning).",
+      "recommended_by": [
+        {
+          "name": "Dan Hendrycks / CAIS",
+          "url": "https://course.mlsafety.org/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "owasp-llm-top-10",
+      "title": "OWASP Top 10 for LLM Applications",
+      "kind": "reference",
+      "instructor": "OWASP GenAI project",
+      "institution": "OWASP GenAI project",
+      "url": "https://genai.owasp.org/llm-top-10/",
+      "area": "ai-security",
+      "area_title": "AI security",
+      "topic": "llm-application-security",
+      "topic_title": "LLM application security",
+      "track": "major",
+      "era": "years-5-plus",
+      "hours_core": 4,
+      "hours_full": 8,
+      "why_canonical": "Industry-standard enumeration of LLM application failures (prompt injection, insecure output handling, data poisoning, supply chain, etc.). Not a university course and not attributed to a researcher tweet; included because it is the document security teams point at.",
+      "one_liner": "Industry-standard enumeration of LLM application failures (prompt injection, insecure output handling, data poisoning, supply chain, etc.).",
+      "recommended_by": [
+        {
+          "name": "OWASP GenAI",
+          "url": "https://genai.owasp.org/llm-top-10/"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "stanford-xacs134",
+      "title": "Stanford XACS134 AI Security",
+      "kind": "course",
+      "instructor": "Stanford School of Engineering (Stanford Online)",
+      "institution": "Stanford",
+      "url": "https://online.stanford.edu/courses/xacs134-ai-security",
+      "area": "ai-security",
+      "area_title": "AI security",
+      "topic": "llm-application-security",
+      "topic_title": "LLM application security",
+      "track": "major",
+      "era": "years-5-plus",
+      "hours_core": null,
+      "hours_full": null,
+      "why_canonical": "Named Stanford course on prompt injection, poisoning, extraction, RAG/agent risks, and defenses.",
+      "one_liner": "Named Stanford course on prompt injection, poisoning, extraction, RAG/agent risks, and defenses.",
+      "recommended_by": [
+        {
+          "name": "Stanford Online",
+          "url": "https://online.stanford.edu/courses/xacs134-ai-security"
+        }
+      ],
+      "free": false,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mit-801sc",
+      "title": "MIT 8.01SC Classical Mechanics",
+      "kind": "course",
+      "instructor": "Peter Dourmashkin",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/",
+      "area": "physics",
+      "area_title": "Physics",
+      "topic": "mechanics",
+      "topic_title": "Classical mechanics",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 45,
+      "hours_full": 120,
+      "why_canonical": "MIT first physics course. Rigetti undergraduate sequence starts with intro mechanics and names Young and Freedman University Physics as the essential accompanying text.",
+      "one_liner": "MIT first physics course.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/physics"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "mit-802",
+      "title": "MIT 8.02 Physics II: Electricity and Magnetism",
+      "kind": "course",
+      "instructor": "MIT OCW, Spring 2019",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2019/",
+      "area": "physics",
+      "area_title": "Physics",
+      "topic": "electromagnetism",
+      "topic_title": "Electricity and magnetism",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 45,
+      "hours_full": 120,
+      "why_canonical": "Second semester of MIT physics; Rigetti electrostatics/electrodynamics arc. Needed before serious circuits.",
+      "one_liner": "Second semester of MIT physics; Rigetti electrostatics/electrodynamics arc.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/physics"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "young-freedman",
+      "title": "University Physics with Modern Physics",
+      "kind": "book",
+      "instructor": "Young and Freedman",
+      "institution": "Young and Freedman",
+      "url": "",
+      "area": "physics",
+      "area_title": "Physics",
+      "topic": "mechanics",
+      "topic_title": "Classical mechanics",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 20,
+      "hours_full": 40,
+      "why_canonical": "Rigetti essential intro text for mechanics, electrostatics, and modern physics.",
+      "one_liner": "Rigetti essential intro text for mechanics, electrostatics, and modern physics.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/physics"
+        }
+      ],
+      "free": false,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "feynman-lectures",
+      "title": "The Feynman Lectures on Physics",
+      "kind": "book",
+      "instructor": "Richard Feynman",
+      "institution": "Richard Feynman",
+      "url": "https://www.feynmanlectures.caltech.edu/",
+      "area": "physics",
+      "area_title": "Physics",
+      "topic": "overview",
+      "topic_title": "Companion reading",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 20,
+      "hours_full": 80,
+      "why_canonical": "Rigetti: essential reading, on every amateur and professional physicist shelf, and the book that pulled her into physics.",
+      "one_liner": "Rigetti: essential reading, on every amateur and professional physicist shelf, and the book that pulled her into physics.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/physics"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "mit-5111sc",
+      "title": "MIT 5.111SC Principles of Chemical Science",
+      "kind": "course",
+      "instructor": "MIT OCW Scholar, Fall 2014",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/5-111sc-principles-of-chemical-science-fall-2014/",
+      "area": "chemistry",
+      "area_title": "Chemistry",
+      "topic": "general-chemistry",
+      "topic_title": "General chemistry",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 40,
+      "hours_full": 110,
+      "why_canonical": "MIT introductory chemistry OCW Scholar course. Rigetti does not name 5.111; she points at Khan Academy only as a high-school science refresher. This course is here as the open university course.",
+      "one_liner": "MIT introductory chemistry OCW Scholar course.",
+      "recommended_by": [
+        {
+          "name": "MIT OpenCourseWare",
+          "url": "https://ocw.mit.edu/courses/5-111sc-principles-of-chemical-science-fall-2014/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "mit-701sc",
+      "title": "MIT 7.01SC Fundamentals of Biology",
+      "kind": "course",
+      "instructor": "MIT OCW Scholar, Fall 2011",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/7-01sc-fundamentals-of-biology-fall-2011/",
+      "area": "biology",
+      "area_title": "Biology",
+      "topic": "intro-biology",
+      "topic_title": "Introductory biology",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 40,
+      "hours_full": 110,
+      "why_canonical": "MIT introductory biology OCW Scholar course covering biochemistry, genetics, and molecular biology.",
+      "one_liner": "MIT introductory biology OCW Scholar course covering biochemistry, genetics, and molecular biology.",
+      "recommended_by": [
+        {
+          "name": "MIT OpenCourseWare",
+          "url": "https://ocw.mit.edu/courses/7-01sc-fundamentals-of-biology-fall-2011/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "mit-705",
+      "title": "MIT 7.05 General Biochemistry",
+      "kind": "course",
+      "instructor": "MIT OCW, Spring 2020",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/7-05-general-biochemistry-spring-2020/",
+      "area": "biology",
+      "area_title": "Biology",
+      "topic": "biochemistry",
+      "topic_title": "Biochemistry",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 45,
+      "hours_full": 120,
+      "why_canonical": "Natural MIT follow-on once 7.01SC has introduced the molecules.",
+      "one_liner": "Natural MIT follow-on once 7.01SC has introduced the molecules.",
+      "recommended_by": [
+        {
+          "name": "MIT OpenCourseWare",
+          "url": "https://ocw.mit.edu/courses/7-05-general-biochemistry-spring-2020/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "alberts-mboc",
+      "title": "Molecular Biology of the Cell",
+      "kind": "book",
+      "instructor": "Alberts et al.",
+      "institution": "Alberts et al.",
+      "url": "https://www.ncbi.nlm.nih.gov/books/NBK21054/",
+      "area": "biology",
+      "area_title": "Biology",
+      "topic": "cell-biology",
+      "topic_title": "Cell and molecular biology",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 25,
+      "hours_full": 80,
+      "why_canonical": "Standard cell-biology reference in university courses. Not attributed to a tweet; it is the book those courses assign.",
+      "one_liner": "Standard cell-biology reference in university courses.",
+      "recommended_by": [
+        {
+          "name": "NCBI Bookshelf edition",
+          "url": "https://www.ncbi.nlm.nih.gov/books/NBK21054/"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "mit-6002",
+      "title": "MIT 6.002 Circuits and Electronics",
+      "kind": "course",
+      "instructor": "MIT OCW, Spring 2007",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/",
+      "area": "engineering",
+      "area_title": "Engineering",
+      "topic": "circuits",
+      "topic_title": "Circuits",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 40,
+      "hours_full": 110,
+      "why_canonical": "MIT intro circuits course. Makes more sense after a first pass at 8.02.",
+      "one_liner": "MIT intro circuits course.",
+      "recommended_by": [
+        {
+          "name": "MIT OpenCourseWare",
+          "url": "https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "mit-6004",
+      "title": "MIT 6.004 Computation Structures",
+      "kind": "course",
+      "instructor": "MIT OCW, Spring 2017",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/",
+      "area": "engineering",
+      "area_title": "Engineering",
+      "topic": "computation-structures",
+      "topic_title": "Computation structures",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 40,
+      "hours_full": 110,
+      "why_canonical": "MIT path from gates to processors — the hardware twin of CSAPP/Nand2Tetris.",
+      "one_liner": "MIT path from gates to processors — the hardware twin of CSAPP/Nand2Tetris.",
+      "recommended_by": [
+        {
+          "name": "MIT OpenCourseWare",
+          "url": "https://ocw.mit.edu/courses/6-004-computation-structures-spring-2017/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "art-of-electronics",
+      "title": "The Art of Electronics",
+      "kind": "book",
+      "instructor": "Horowitz and Hill",
+      "institution": "Horowitz and Hill",
+      "url": "https://artofelectronics.net/",
+      "area": "engineering",
+      "area_title": "Engineering",
+      "topic": "electronics",
+      "topic_title": "Electronics",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 30,
+      "hours_full": 80,
+      "why_canonical": "Rigetti, in the graduate-electives section of the physics guide: the best electronics textbook there is, period.",
+      "one_liner": "Rigetti, in the graduate-electives section of the physics guide: the best electronics textbook there is, period.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/physics"
+        }
+      ],
+      "free": false,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mit-1401",
+      "title": "MIT 14.01 Principles of Microeconomics",
+      "kind": "course",
+      "instructor": "MIT OCW, Fall 2023",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/14-01-principles-of-microeconomics-fall-2023/",
+      "area": "economics",
+      "area_title": "Economics",
+      "topic": "microeconomics",
+      "topic_title": "Microeconomics",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 35,
+      "hours_full": 90,
+      "why_canonical": "MIT intro micro course, open, with problem sets.",
+      "one_liner": "MIT intro micro course, open, with problem sets.",
+      "recommended_by": [
+        {
+          "name": "MIT OpenCourseWare",
+          "url": "https://ocw.mit.edu/courses/14-01-principles-of-microeconomics-fall-2023/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "yale-econ159",
+      "title": "Yale ECON 159 Game Theory",
+      "kind": "course",
+      "instructor": "Ben Polak",
+      "institution": "Yale",
+      "url": "https://oyc.yale.edu/economics/econ-159",
+      "area": "economics",
+      "area_title": "Economics",
+      "topic": "game-theory",
+      "topic_title": "Game theory",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 20,
+      "hours_full": 50,
+      "why_canonical": "A complete, well-taught open course in game theory — useful on its own and as vocabulary for alignment and multi-agent talk.",
+      "one_liner": "A complete, well-taught open course in game theory — useful on its own and as vocabulary for alignment and multi-agent talk.",
+      "recommended_by": [
+        {
+          "name": "Open Yale Courses",
+          "url": "https://oyc.yale.edu/economics/econ-159"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mru",
+      "title": "Marginal Revolution University",
+      "kind": "course",
+      "instructor": "Tyler Cowen and Alex Tabarrok",
+      "institution": "Tyler Cowen and Alex Tabarrok",
+      "url": "https://mru.org/",
+      "area": "economics",
+      "area_title": "Economics",
+      "topic": "microeconomics",
+      "topic_title": "Microeconomics",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 15,
+      "hours_full": 40,
+      "why_canonical": "Tyler Cowen own free economics teaching project with Alex Tabarrok, not a third-party Cowen-recommends-X guess.",
+      "one_liner": "Tyler Cowen own free economics teaching project with Alex Tabarrok, not a third-party Cowen-recommends-X guess.",
+      "recommended_by": [
+        {
+          "name": "Tyler Cowen and Alex Tabarrok",
+          "url": "https://mru.org/"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "smith-wealth-of-nations",
+      "title": "The Wealth of Nations",
+      "kind": "book",
+      "instructor": "Adam Smith",
+      "institution": "Adam Smith",
+      "url": "https://www.gutenberg.org/ebooks/3300",
+      "area": "economics",
+      "area_title": "Economics",
+      "topic": "political-economy",
+      "topic_title": "Political economy",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 20,
+      "hours_full": 80,
+      "why_canonical": "On the St. John reading list and in the Columbia Core / Contemporary Civilization orbit.",
+      "one_liner": "On the St.",
+      "recommended_by": [
+        {
+          "name": "St. John's College",
+          "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list"
+        },
+        {
+          "name": "Columbia College Core",
+          "url": "https://www.college.columbia.edu/core-curriculum"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "yale-hist202",
+      "title": "Yale HIST 202: European Civilization, 1648-1945",
+      "kind": "course",
+      "instructor": "John Merriman",
+      "institution": "Yale",
+      "url": "https://oyc.yale.edu/history/hist-202",
+      "area": "history",
+      "area_title": "History",
+      "topic": "modern-europe",
+      "topic_title": "Modern Europe",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 20,
+      "hours_full": 45,
+      "why_canonical": "One of the best-known Open Yale history courses: a single-narrator pass through modern Europe.",
+      "one_liner": "One of the best-known Open Yale history courses: a single-narrator pass through modern Europe.",
+      "recommended_by": [
+        {
+          "name": "Open Yale Courses",
+          "url": "https://oyc.yale.edu/history/hist-202"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "herodotus",
+      "title": "Histories (Herodotus)",
+      "kind": "book",
+      "instructor": "Herodotus",
+      "institution": "Herodotus",
+      "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list",
+      "area": "history",
+      "area_title": "History",
+      "topic": "ancient-mediterranean",
+      "topic_title": "Ancient Mediterranean",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 20,
+      "hours_full": 40,
+      "why_canonical": "St. John freshman seminar reads Herodotus early, beside Homer and Plato.",
+      "one_liner": "St.",
+      "recommended_by": [
+        {
+          "name": "St. John's College",
+          "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "thucydides",
+      "title": "History of the Peloponnesian War",
+      "kind": "book",
+      "instructor": "Thucydides",
+      "institution": "Thucydides",
+      "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list",
+      "area": "history",
+      "area_title": "History",
+      "topic": "ancient-mediterranean",
+      "topic_title": "Ancient Mediterranean",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 20,
+      "hours_full": 45,
+      "why_canonical": "St. John and the broader great-books tradition; also in the Columbia Core classical orbit. The usual companion to Herodotus.",
+      "one_liner": "St.",
+      "recommended_by": [
+        {
+          "name": "St. John's College",
+          "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list"
+        },
+        {
+          "name": "Columbia College Core",
+          "url": "https://www.college.columbia.edu/core-curriculum"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "yale-hist119",
+      "title": "Yale HIST 119: The Civil War and Reconstruction Era, 1845-1877",
+      "kind": "course",
+      "instructor": "David Blight",
+      "institution": "Yale",
+      "url": "https://oyc.yale.edu/history/hist-119",
+      "area": "history",
+      "area_title": "History",
+      "topic": "us-civil-war",
+      "topic_title": "United States",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 20,
+      "hours_full": 45,
+      "why_canonical": "A complete, highly regarded open course on the central American crisis.",
+      "one_liner": "A complete, highly regarded open course on the central American crisis.",
+      "recommended_by": [
+        {
+          "name": "Open Yale Courses",
+          "url": "https://oyc.yale.edu/history/hist-119"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "shiji",
+      "title": "史記 (Records of the Grand Historian)",
+      "kind": "book",
+      "instructor": "Sima Qian",
+      "institution": "Sima Qian",
+      "url": "https://ctext.org/shiji",
+      "area": "history",
+      "area_title": "History",
+      "topic": "chinese-historiography",
+      "topic_title": "Chinese historiography",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 25,
+      "hours_full": 120,
+      "why_canonical": "The foundational work of Chinese historiography, not because a Silicon Valley thread said so.",
+      "one_liner": "The foundational work of Chinese historiography, not because a Silicon Valley thread said so.",
+      "recommended_by": [
+        {
+          "name": "Chinese Text Project",
+          "url": "https://ctext.org/shiji"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "plato-republic",
+      "title": "Republic (Plato)",
+      "kind": "book",
+      "instructor": "Plato",
+      "institution": "Plato",
+      "url": "https://www.gutenberg.org/ebooks/1497",
+      "area": "philosophy",
+      "area_title": "Philosophy",
+      "topic": "ancient-philosophy",
+      "topic_title": "Ancient philosophy",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 20,
+      "hours_full": 40,
+      "why_canonical": "Rigetti political-philosophy unit says to read the Republic in its entirety. St. John freshman seminar spends multiple sessions on it. Columbia Core also assigns it.",
+      "one_liner": "Rigetti political-philosophy unit says to read the Republic in its entirety.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/philosophy"
+        },
+        {
+          "name": "St. John's College",
+          "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list"
+        },
+        {
+          "name": "Columbia College Core",
+          "url": "https://www.college.columbia.edu/core-curriculum"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": "top"
+    },
+    {
+      "id": "yale-phil176",
+      "title": "Yale PHIL 176: Death",
+      "kind": "course",
+      "instructor": "Shelly Kagan",
+      "institution": "Yale",
+      "url": "https://oyc.yale.edu/philosophy/phil-176",
+      "area": "philosophy",
+      "area_title": "Philosophy",
+      "topic": "intro-philosophy",
+      "topic_title": "Introductory philosophy",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 18,
+      "hours_full": 40,
+      "why_canonical": "A complete analytic-philosophy open course that forces careful arguments about value, identity, and mortality.",
+      "one_liner": "A complete analytic-philosophy open course that forces careful arguments about value, identity, and mortality.",
+      "recommended_by": [
+        {
+          "name": "Open Yale Courses",
+          "url": "https://oyc.yale.edu/philosophy/phil-176"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "harvard-justice",
+      "title": "Harvard Justice (Michael Sandel)",
+      "kind": "course",
+      "instructor": "Michael Sandel",
+      "institution": "Harvard",
+      "url": "https://justiceharvard.org/",
+      "area": "philosophy",
+      "area_title": "Philosophy",
+      "topic": "ethics",
+      "topic_title": "Ethics and political philosophy",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 15,
+      "hours_full": 35,
+      "why_canonical": "Rigetti lists the Sandel book among the few accessible philosophy books she sends people. Use the Harvard course site and the book, not a MOOC platform.",
+      "one_liner": "Rigetti lists the Sandel book among the few accessible philosophy books she sends people.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/philosophy"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "aristotle-ethics",
+      "title": "Nicomachean Ethics",
+      "kind": "book",
+      "instructor": "Aristotle",
+      "institution": "Aristotle",
+      "url": "https://www.susanrigetti.com/philosophy",
+      "area": "philosophy",
+      "area_title": "Philosophy",
+      "topic": "ethics",
+      "topic_title": "Ethics and political philosophy",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 18,
+      "hours_full": 35,
+      "why_canonical": "Rigetti assigns it inside her normative-ethics unit; St. John reads it.",
+      "one_liner": "Rigetti assigns it inside her normative-ethics unit; St.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/philosophy"
+        },
+        {
+          "name": "St. John's College",
+          "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "blackburn-think",
+      "title": "Think",
+      "kind": "book",
+      "instructor": "Simon Blackburn",
+      "institution": "Simon Blackburn",
+      "url": "https://www.susanrigetti.com/philosophy",
+      "area": "philosophy",
+      "area_title": "Philosophy",
+      "topic": "intro-philosophy",
+      "topic_title": "Introductory philosophy",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 8,
+      "hours_full": 15,
+      "why_canonical": "Rigetti essential introduction-to-philosophy book: a tour of the big questions before slower primary texts. She also tells readers to use the Stanford Encyclopedia of Philosophy constantly (https://plato.stanford.edu/) as infrastructure, not as a course.",
+      "one_liner": "Rigetti essential introduction-to-philosophy book: a tour of the big questions before slower primary texts.",
+      "recommended_by": [
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/philosophy"
+        }
+      ],
+      "free": false,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "homer-iliad",
+      "title": "Iliad (Homer)",
+      "kind": "book",
+      "instructor": "Homer",
+      "institution": "Homer",
+      "url": "https://www.gutenberg.org/ebooks/6130",
+      "area": "literature-western",
+      "area_title": "Literature (Western)",
+      "topic": "epic",
+      "topic_title": "Epic",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 20,
+      "hours_full": 35,
+      "why_canonical": "First book on the St. John seminar schedule. Recent Annapolis schedules open with the Iliad. Adler How to Read a Book tradition starts from the same epic world.",
+      "one_liner": "First book on the St.",
+      "recommended_by": [
+        {
+          "name": "St. John's College",
+          "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": "top"
+    },
+    {
+      "id": "yale-engl220",
+      "title": "Yale ENGL 220: Milton",
+      "kind": "course",
+      "instructor": "John Rogers",
+      "institution": "Yale",
+      "url": "https://oyc.yale.edu/english/engl-220",
+      "area": "literature-western",
+      "area_title": "Literature (Western)",
+      "topic": "milton",
+      "topic_title": "Milton",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 25,
+      "hours_full": 50,
+      "why_canonical": "A complete open course through Paradise Lost, which St. John also reads. Crosses to theology and the Hebrew Bible.",
+      "one_liner": "A complete open course through Paradise Lost, which St.",
+      "recommended_by": [
+        {
+          "name": "Open Yale Courses",
+          "url": "https://oyc.yale.edu/english/engl-220"
+        },
+        {
+          "name": "St. John's College",
+          "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "middlemarch",
+      "title": "Middlemarch",
+      "kind": "book",
+      "instructor": "George Eliot",
+      "institution": "George Eliot",
+      "url": "https://www.gutenberg.org/ebooks/145",
+      "area": "literature-western",
+      "area_title": "Literature (Western)",
+      "topic": "novel",
+      "topic_title": "The novel",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 25,
+      "hours_full": 40,
+      "why_canonical": "Collison Ten novels essay names Middlemarch as the book he would most enthusiastically reread, ahead of Bleak House, Anna Karenina, and Life and Fate.",
+      "one_liner": "Collison Ten novels essay names Middlemarch as the book he would most enthusiastically reread, ahead of Bleak House, Anna Karenina, and Life and Fate.",
+      "recommended_by": [
+        {
+          "name": "Patrick Collison",
+          "url": "https://patrickcollison.com/dispatches/ten-novels"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "hamlet",
+      "title": "Hamlet",
+      "kind": "book",
+      "instructor": "William Shakespeare",
+      "institution": "William Shakespeare",
+      "url": "https://www.gutenberg.org/ebooks/1524",
+      "area": "literature-western",
+      "area_title": "Literature (Western)",
+      "topic": "drama",
+      "topic_title": "Drama",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 8,
+      "hours_full": 15,
+      "why_canonical": "St. John reading list includes Hamlet among the core Shakespeare plays.",
+      "one_liner": "St.",
+      "recommended_by": [
+        {
+          "name": "St. John's College",
+          "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "analects",
+      "title": "論語 (Analects)",
+      "kind": "book",
+      "instructor": "Confucius and disciples",
+      "institution": "Confucius and disciples",
+      "url": "https://ctext.org/analects",
+      "area": "literature-chinese",
+      "area_title": "Literature (Chinese)",
+      "topic": "confucian-classics",
+      "topic_title": "Confucian classics",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 12,
+      "hours_full": 25,
+      "why_canonical": "The central Confucian text; standard in a Chinese literary education, including Malaysian Chinese and Taiwanese 国文, not because a Western tech thread named it.",
+      "one_liner": "The central Confucian text; standard in a Chinese literary education, including Malaysian Chinese and Taiwanese 国文, not because a Western tech thread named it.",
+      "recommended_by": [
+        {
+          "name": "Chinese Text Project",
+          "url": "https://ctext.org/analects"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": "top"
+    },
+    {
+      "id": "daodejing",
+      "title": "道德經 (Dao De Jing)",
+      "kind": "book",
+      "instructor": "Laozi (attributed)",
+      "institution": "Laozi (attributed)",
+      "url": "https://ctext.org/dao-de-jing",
+      "area": "literature-chinese",
+      "area_title": "Literature (Chinese)",
+      "topic": "daoist-classics",
+      "topic_title": "Daoist classics",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 6,
+      "hours_full": 12,
+      "why_canonical": "The other pole of early Chinese thought, paired with the Confucian corpus on any serious Chinese humanities shelf.",
+      "one_liner": "The other pole of early Chinese thought, paired with the Confucian corpus on any serious Chinese humanities shelf.",
+      "recommended_by": [
+        {
+          "name": "Chinese Text Project",
+          "url": "https://ctext.org/dao-de-jing"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "hongloumeng",
+      "title": "紅樓夢 (Dream of the Red Chamber)",
+      "kind": "book",
+      "instructor": "Cao Xueqin",
+      "institution": "Cao Xueqin",
+      "url": "https://ctext.org/dream-of-the-red-chamber",
+      "area": "literature-chinese",
+      "area_title": "Literature (Chinese)",
+      "topic": "novel",
+      "topic_title": "Vernacular novel",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 40,
+      "hours_full": 80,
+      "why_canonical": "The novel at the top of the Chinese vernacular canon.",
+      "one_liner": "The novel at the top of the Chinese vernacular canon.",
+      "recommended_by": [
+        {
+          "name": "Chinese Text Project",
+          "url": "https://ctext.org/dream-of-the-red-chamber"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "guwen-guanzhi",
+      "title": "古文觀止",
+      "kind": "book",
+      "instructor": "Traditional anthology (Wu Chucai and Wu Diaohou)",
+      "institution": "Traditional anthology (Wu Chucai and Wu Diaohou)",
+      "url": "https://ctext.org/guwen-guanzhi",
+      "area": "mandarin",
+      "area_title": "Mandarin (Traditional, advanced)",
+      "topic": "literary-chinese",
+      "topic_title": "Literary Chinese",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 30,
+      "hours_full": 80,
+      "why_canonical": "The standard advanced classical-prose anthology in Taiwan, Hong Kong, and overseas Chinese schooling.",
+      "one_liner": "The standard advanced classical-prose anthology in Taiwan, Hong Kong, and overseas Chinese schooling.",
+      "recommended_by": [
+        {
+          "name": "Chinese Text Project",
+          "url": "https://ctext.org/guwen-guanzhi"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "esv-bible",
+      "title": "The Bible (ESV)",
+      "kind": "book",
+      "instructor": "Various; ESV translation",
+      "institution": "Various",
+      "url": "https://www.esv.org/",
+      "area": "theology",
+      "area_title": "Theology and Bible",
+      "topic": "scripture",
+      "topic_title": "Scripture",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 30,
+      "hours_full": 80,
+      "why_canonical": "The translation already chosen for this shelf. St. John sophomore seminar reads large parts of the Hebrew Bible and the New Testament.",
+      "one_liner": "The translation already chosen for this shelf.",
+      "recommended_by": [
+        {
+          "name": "ESV",
+          "url": "https://www.esv.org/"
+        },
+        {
+          "name": "St. John's College",
+          "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": "top"
+    },
+    {
+      "id": "yale-rlst145",
+      "title": "Yale RLST 145: Introduction to the Old Testament (Hebrew Bible)",
+      "kind": "course",
+      "instructor": "Christine Hayes",
+      "institution": "Yale",
+      "url": "https://oyc.yale.edu/religious-studies/rlst-145",
+      "area": "theology",
+      "area_title": "Theology and Bible",
+      "topic": "hebrew-bible",
+      "topic_title": "Hebrew Bible",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 20,
+      "hours_full": 45,
+      "why_canonical": "The standard open-university introduction to the Hebrew Bible as history and literature.",
+      "one_liner": "The standard open-university introduction to the Hebrew Bible as history and literature.",
+      "recommended_by": [
+        {
+          "name": "Open Yale Courses",
+          "url": "https://oyc.yale.edu/religious-studies/rlst-145"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "yale-rlst152",
+      "title": "Yale RLST 152: Introduction to the New Testament History and Literature",
+      "kind": "course",
+      "instructor": "Dale B. Martin",
+      "institution": "Yale",
+      "url": "https://oyc.yale.edu/religious-studies/rlst-152",
+      "area": "theology",
+      "area_title": "Theology and Bible",
+      "topic": "new-testament",
+      "topic_title": "New Testament",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 20,
+      "hours_full": 45,
+      "why_canonical": "The New Testament counterpart to RLST 145.",
+      "one_liner": "The New Testament counterpart to RLST 145.",
+      "recommended_by": [
+        {
+          "name": "Open Yale Courses",
+          "url": "https://oyc.yale.edu/religious-studies/rlst-152"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "augustine-confessions",
+      "title": "Confessions (Augustine)",
+      "kind": "book",
+      "instructor": "Augustine of Hippo",
+      "institution": "Augustine of Hippo",
+      "url": "https://www.gutenberg.org/ebooks/3296",
+      "area": "theology",
+      "area_title": "Theology and Bible",
+      "topic": "christian-thought",
+      "topic_title": "Christian thought",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 12,
+      "hours_full": 25,
+      "why_canonical": "St. John sophomore seminar reads Confessions; it sits at the joint of philosophy, theology, and autobiography. Greek philosophy, especially Plato, is the real prerequisite in that tradition.",
+      "one_liner": "St.",
+      "recommended_by": [
+        {
+          "name": "St. John's College",
+          "url": "https://www.sjc.edu/academic-programs/undergraduate/great-books-reading-list"
+        }
+      ],
+      "free": true,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "lewis-mere-christianity",
+      "title": "Mere Christianity",
+      "kind": "book",
+      "instructor": "C. S. Lewis",
+      "institution": "C. S. Lewis",
+      "url": "",
+      "area": "theology",
+      "area_title": "Theology and Bible",
+      "topic": "christian-thought",
+      "topic_title": "Christian thought",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 6,
+      "hours_full": 12,
+      "why_canonical": "The standard modern introduction to Christian belief in the Anglican/evangelical world requested here. Not found as a St. John assignment; included because Lewis was named, not because a tweet did.",
+      "one_liner": "The standard modern introduction to Christian belief in the Anglican/evangelical world requested here.",
+      "recommended_by": [
+        {
+          "name": "Requested modern companion",
+          "url": ""
+        }
+      ],
+      "free": false,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "keller-reason-for-god",
+      "title": "The Reason for God",
+      "kind": "book",
+      "instructor": "Timothy Keller",
+      "institution": "Timothy Keller",
+      "url": "https://www.thegospelcoalition.org/blogs/justin-taylor/tim-kellers-the-reason-for-god/",
+      "area": "theology",
+      "area_title": "Theology and Bible",
+      "topic": "christian-thought",
+      "topic_title": "Christian thought",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 6,
+      "hours_full": 12,
+      "why_canonical": "The widely used contemporary apologetics companion to Lewis, included because Keller was named.",
+      "one_liner": "The widely used contemporary apologetics companion to Lewis, included because Keller was named.",
+      "recommended_by": [
+        {
+          "name": "Discussion pointer",
+          "url": "https://www.thegospelcoalition.org/blogs/justin-taylor/tim-kellers-the-reason-for-god/"
+        }
+      ],
+      "free": false,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "adler-how-to-read",
+      "title": "How to Read a Book",
+      "kind": "book",
+      "instructor": "Mortimer Adler and Charles Van Doren",
+      "institution": "Mortimer Adler and Charles Van Doren",
+      "url": "",
+      "area": "writing",
+      "area_title": "Writing and rhetoric",
+      "topic": "reading",
+      "topic_title": "How to read",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 10,
+      "hours_full": 20,
+      "why_canonical": "The standard modern guide to inspectional, analytical, and syntopical reading — the skill this shelf is for.",
+      "one_liner": "The standard modern guide to inspectional, analytical, and syntopical reading — the skill this shelf is for.",
+      "recommended_by": [
+        {
+          "name": "Adler and Van Doren",
+          "url": ""
+        }
+      ],
+      "free": false,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "paul-graham-writing",
+      "title": "The Age of the Essay; Write Simply; How to Write Usefully",
+      "kind": "essays",
+      "instructor": "Paul Graham",
+      "institution": "Paul Graham",
+      "url": "https://www.paulgraham.com/essay.html",
+      "area": "writing",
+      "area_title": "Writing and rhetoric",
+      "topic": "essay",
+      "topic_title": "The essay",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 3,
+      "hours_full": 6,
+      "why_canonical": "Graham own essays on what an essay is, how to write plainly, and how to write something true. Direct primary sources.",
+      "one_liner": "Graham own essays on what an essay is, how to write plainly, and how to write something true.",
+      "recommended_by": [
+        {
+          "name": "Paul Graham",
+          "url": "https://www.paulgraham.com/essay.html"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "yale-musi112",
+      "title": "Yale MUSI 112: Listening to Music",
+      "kind": "course",
+      "instructor": "Craig Wright",
+      "institution": "Yale",
+      "url": "https://oyc.yale.edu/music/musi-112/lecture-1",
+      "area": "music-art",
+      "area_title": "Music and art",
+      "topic": "music",
+      "topic_title": "Listening",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 15,
+      "hours_full": 35,
+      "why_canonical": "The standard open course in hearing how Western music is put together: rhythm, melody, harmony, form; Bach and Mozart through later styles.",
+      "one_liner": "The standard open course in hearing how Western music is put together: rhythm, melody, harmony, form; Bach and Mozart through later styles.",
+      "recommended_by": [
+        {
+          "name": "Open Yale Courses",
+          "url": "https://oyc.yale.edu/music/musi-112/lecture-1"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "nand2tetris",
+      "title": "Nand2Tetris (The Elements of Computing Systems)",
+      "kind": "book-and-course",
+      "instructor": "Noam Nisan and Shimon Schocken",
+      "institution": "Noam Nisan and Shimon Schocken",
+      "url": "https://www.nand2tetris.org/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "computer-systems",
+      "topic_title": "Computer systems",
+      "track": "core",
+      "era": "years-3-5",
+      "hours_core": 40,
+      "hours_full": 80,
+      "why_canonical": "Teach Yourself CS names Nand2Tetris as the gentler, cohesive intro to how a computer is built, recommending the first six chapters and projects. OSSU places From Nand to Tetris in core systems and links this site as the alternative to a platform course.",
+      "one_liner": "Teach Yourself CS names Nand2Tetris as the gentler, cohesive intro to how a computer is built, recommending the first six chapters and projects.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "OSSU Computer Science",
+          "url": "https://github.com/ossu/computer-science"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mit-6046",
+      "title": "MIT 6.046J Design and Analysis of Algorithms",
+      "kind": "course",
+      "instructor": "Erik Demaine, Srini Devadas, and Nancy Lynch",
+      "institution": "MIT",
+      "url": "https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "algorithms",
+      "topic_title": "Algorithms",
+      "track": "core",
+      "era": "years-5-plus",
+      "hours_core": 45,
+      "hours_full": 110,
+      "why_canonical": "MIT's intermediate algorithms course: divide-and-conquer, randomization, DP, greedy methods, complexity. Teach Yourself CS emphasizes algorithms as essential; 6.046 is the deeper MIT course after 6.006.",
+      "one_liner": "MIT's intermediate algorithms course: divide-and-conquer, randomization, DP, greedy methods, complexity.",
+      "recommended_by": [
+        {
+          "name": "MIT OpenCourseWare",
+          "url": "https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/"
+        },
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mit-61810",
+      "title": "MIT 6.1810 Operating System Engineering",
+      "kind": "course",
+      "instructor": "MIT PDOS (xv6)",
+      "institution": "MIT",
+      "url": "https://pdos.csail.mit.edu/6.1810/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "operating-systems",
+      "topic_title": "Operating systems",
+      "track": "core",
+      "era": "years-5-plus",
+      "hours_core": 50,
+      "hours_full": 120,
+      "why_canonical": "MIT's undergraduate OS engineering course: you extend a small Unix-like kernel. OSSU extras list Operating System Engineering. Teach Yourself CS recommends xv6-style work after OSTEP.",
+      "one_liner": "MIT's undergraduate OS engineering course: you extend a small Unix-like kernel.",
+      "recommended_by": [
+        {
+          "name": "MIT PDOS",
+          "url": "https://pdos.csail.mit.edu/6.1810/"
+        },
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "OSSU extras",
+          "url": "https://github.com/ossu/computer-science/blob/master/extras/courses.md"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "stanford-cs144",
+      "title": "Stanford CS144 / Kurose and Ross, Computer Networking",
+      "kind": "course",
+      "instructor": "Stanford CS144 staff; Kurose and Ross (book)",
+      "institution": "Stanford",
+      "url": "https://cs144.github.io/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "networking",
+      "topic_title": "Computer networking",
+      "track": "core",
+      "era": "years-5-plus",
+      "hours_core": 40,
+      "hours_full": 100,
+      "why_canonical": "Teach Yourself CS names Computer Networking: A Top-Down Approach as their favorite networking book and Stanford CS144 as the lecture series. OSSU core systems assigns the same book with the authors' lectures and Wireshark labs.",
+      "one_liner": "Teach Yourself CS names Computer Networking: A Top-Down Approach as their favorite networking book and Stanford CS144 as the lecture series.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "OSSU Computer Science",
+          "url": "https://github.com/ossu/computer-science"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "cmu-15445",
+      "title": "CMU 15-445/645 Database Systems",
+      "kind": "course",
+      "instructor": "CMU Database Group",
+      "institution": "CMU",
+      "url": "https://15445.courses.cs.cmu.edu/fall2025/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "databases",
+      "topic_title": "Databases",
+      "track": "core",
+      "era": "years-5-plus",
+      "hours_core": 50,
+      "hours_full": 130,
+      "why_canonical": "CMU's well-known systems course in which you build pieces of a database. Public notes and projects (BusTub) are posted on the course site.",
+      "one_liner": "CMU's well-known systems course in which you build pieces of a database.",
+      "recommended_by": [
+        {
+          "name": "CMU Database Group",
+          "url": "https://15445.courses.cs.cmu.edu/fall2025/"
+        },
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "crafting-interpreters",
+      "title": "Crafting Interpreters",
+      "kind": "book",
+      "instructor": "Robert Nystrom",
+      "institution": "Robert Nystrom",
+      "url": "https://craftinginterpreters.com/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "compilers",
+      "topic_title": "Languages and compilers",
+      "track": "core",
+      "era": "years-5-plus",
+      "hours_core": 40,
+      "hours_full": 80,
+      "why_canonical": "Teach Yourself CS's suggested introductory compilers text: free online, written for self-study, with challenges throughout.",
+      "one_liner": "Teach Yourself CS's suggested introductory compilers text: free online, written for self-study, with challenges throughout.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "stanford-cs143",
+      "title": "Stanford CS143 Compilers",
+      "kind": "course",
+      "instructor": "Stanford CS143 staff",
+      "institution": "Stanford",
+      "url": "https://web.stanford.edu/class/cs143/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "compilers",
+      "topic_title": "Languages and compilers",
+      "track": "core",
+      "era": "years-5-plus",
+      "hours_core": 40,
+      "hours_full": 100,
+      "why_canonical": "Stanford's undergraduate compilers course on its own site, with the usual lexer-parser-semantic-codegen arc.",
+      "one_liner": "Stanford's undergraduate compilers course on its own site, with the usual lexer-parser-semantic-codegen arc.",
+      "recommended_by": [
+        {
+          "name": "Stanford CS143",
+          "url": "https://web.stanford.edu/class/cs143/"
+        },
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mit-65840",
+      "title": "MIT 6.5840 Distributed Systems",
+      "kind": "course",
+      "instructor": "MIT PDOS (formerly 6.824)",
+      "institution": "MIT",
+      "url": "https://pdos.csail.mit.edu/6.5840/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "distributed-systems",
+      "topic_title": "Distributed systems",
+      "track": "core",
+      "era": "years-5-plus",
+      "hours_core": 50,
+      "hours_full": 130,
+      "why_canonical": "Teach Yourself CS recommends MIT 6.824 as the video/graduate course in distributed systems, alongside Kleppmann's book. 6.5840 is the current number for that course. OSSU extras point at 6.824.",
+      "one_liner": "Teach Yourself CS recommends MIT 6.824 as the video/graduate course in distributed systems, alongside Kleppmann's book.",
+      "recommended_by": [
+        {
+          "name": "MIT PDOS",
+          "url": "https://pdos.csail.mit.edu/6.5840/"
+        },
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "OSSU extras",
+          "url": "https://github.com/ossu/computer-science/blob/master/extras/courses.md"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "cmu-10414",
+      "title": "CMU 10-414/714 Deep Learning Systems",
+      "kind": "course",
+      "instructor": "CMU / dlsyscourse.org staff",
+      "institution": "CMU",
+      "url": "https://dlsyscourse.org/",
+      "area": "ai-ml",
+      "area_title": "AI / ML / LLMs",
+      "topic": "ml-systems",
+      "topic_title": "ML systems",
+      "track": "major",
+      "era": "years-5-plus",
+      "hours_core": 50,
+      "hours_full": 130,
+      "why_canonical": "A university systems course on how deep learning frameworks actually work: automatic differentiation, efficient kernels, parallelism. Complements CS336's language-modeling-from-scratch path.",
+      "one_liner": "A university systems course on how deep learning frameworks actually work: automatic differentiation, efficient kernels, parallelism.",
+      "recommended_by": [
+        {
+          "name": "Course site",
+          "url": "https://dlsyscourse.org/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mit-6858",
+      "title": "MIT 6.858 Computer Systems Security",
+      "kind": "course",
+      "instructor": "MIT CSAIL (Nickolai Zeldovich and staff in recent offerings)",
+      "institution": "MIT",
+      "url": "https://css.csail.mit.edu/6.858/",
+      "area": "cs-foundations",
+      "area_title": "Computer science foundations",
+      "topic": "security",
+      "topic_title": "Computer systems security",
+      "track": "core",
+      "era": "years-5-plus",
+      "hours_core": 40,
+      "hours_full": 110,
+      "why_canonical": "MIT's course on designing and attacking secure systems: OS security, isolation, web security, labs that build and break a system. Requested as the security backbone of the CS track.",
+      "one_liner": "MIT's course on designing and attacking secure systems: OS security, isolation, web security, labs that build and break a system.",
+      "recommended_by": [
+        {
+          "name": "MIT CSAIL",
+          "url": "https://css.csail.mit.edu/6.858/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "polya-how-to-solve-it",
+      "title": "How to Solve It",
+      "kind": "book",
+      "instructor": "George Polya",
+      "institution": "George Polya",
+      "url": "",
+      "area": "creativity",
+      "area_title": "Creativity and invention",
+      "topic": "problem-solving",
+      "topic_title": "Problem solving",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 12,
+      "hours_full": 25,
+      "why_canonical": "The classic book on heuristic problem solving. Teach Yourself CS recommends it as a unique guide to general problem solving, as applicable to CS as to mathematics. Rigetti also names it as a supplement to How to Prove It.",
+      "one_liner": "The classic book on heuristic problem solving.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "Susan Rigetti",
+          "url": "https://www.susanrigetti.com/math"
+        }
+      ],
+      "free": false,
+      "has_assignments": true,
+      "priority": "top"
+    },
+    {
+      "id": "hamming-art-of-doing",
+      "title": "The Art of Doing Science and Engineering",
+      "kind": "book",
+      "instructor": "Richard Hamming",
+      "institution": "Richard Hamming",
+      "url": "https://press.stripe.com/the-art-of-doing-science-and-engineering",
+      "area": "creativity",
+      "area_title": "Creativity and invention",
+      "topic": "scientific-taste",
+      "topic_title": "Taste in research and engineering",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 15,
+      "hours_full": 30,
+      "why_canonical": "Hamming's lectures on how to do important work, how to think, and how to style a life around problems. Teach Yourself CS quotes Hamming ('think before you write'); this book is the full treatment of that ethos.",
+      "one_liner": "Hamming's lectures on how to do important work, how to think, and how to style a life around problems.",
+      "recommended_by": [
+        {
+          "name": "Teach Yourself CS",
+          "url": "https://teachyourselfcs.com/"
+        },
+        {
+          "name": "Stripe Press edition",
+          "url": "https://press.stripe.com/the-art-of-doing-science-and-engineering"
+        }
+      ],
+      "free": false,
+      "has_assignments": false,
+      "priority": null
+    },
+    {
+      "id": "stanford-dschool",
+      "title": "Stanford d.school open design tools",
+      "kind": "studio",
+      "instructor": "Stanford d.school",
+      "institution": "Stanford",
+      "url": "https://dschool.stanford.edu/innovate/tools",
+      "area": "creativity",
+      "area_title": "Creativity and invention",
+      "topic": "design",
+      "topic_title": "Design thinking",
+      "track": "minor",
+      "era": "years-3-5",
+      "hours_core": 10,
+      "hours_full": 25,
+      "why_canonical": "Stanford d.school's own published methods for need-finding, framing, prototyping, and testing. Included as the open design-thinking materials, not because a third party ranked a MOOC.",
+      "one_liner": "Stanford d.school's own published methods for need-finding, framing, prototyping, and testing.",
+      "recommended_by": [
+        {
+          "name": "Stanford d.school",
+          "url": "https://dschool.stanford.edu/innovate/tools"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "mit-2009",
+      "title": "MIT 2.009 Product Engineering Process",
+      "kind": "course",
+      "instructor": "MIT 2.009 staff",
+      "institution": "MIT",
+      "url": "https://web.mit.edu/2.009/",
+      "area": "creativity",
+      "area_title": "Creativity and invention",
+      "topic": "invention",
+      "topic_title": "Invention and building",
+      "track": "minor",
+      "era": "years-5-plus",
+      "hours_core": 20,
+      "hours_full": 60,
+      "why_canonical": "MIT's famous invention and product-engineering course: go from a vague need to a working artifact. The process, not the final contest, is the point.",
+      "one_liner": "MIT's famous invention and product-engineering course: go from a vague need to a working artifact.",
+      "recommended_by": [
+        {
+          "name": "MIT 2.009",
+          "url": "https://web.mit.edu/2.009/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "aops-puzzles",
+      "title": "Art of Problem Solving style puzzles",
+      "kind": "practice",
+      "instructor": "Art of Problem Solving tradition",
+      "institution": "Art of Problem Solving tradition",
+      "url": "https://artofproblemsolving.com/",
+      "area": "creativity",
+      "area_title": "Creativity and invention",
+      "topic": "puzzles",
+      "topic_title": "Puzzle and contest-style problem solving",
+      "track": "minor",
+      "era": "years-1-2",
+      "hours_core": 20,
+      "hours_full": 80,
+      "why_canonical": "The named style of hard, inventive math puzzles requested for the creativity thread. It trains posing and turning a problem, which is what calculation software does not do for you.",
+      "one_liner": "The named style of hard, inventive math puzzles requested for the creativity thread.",
+      "recommended_by": [
+        {
+          "name": "Art of Problem Solving",
+          "url": "https://artofproblemsolving.com/"
+        }
+      ],
+      "free": true,
+      "has_assignments": true,
+      "priority": null
+    },
+    {
+      "id": "stanford-cs234",
+      "title": "Stanford CS234 Reinforcement Learning",
+      "kind": "course",
+      "instructor": "Emma Brunskill",
+      "institution": "Stanford",
+      "url": "https://web.stanford.edu/class/cs234/",
+      "area": "ai-ml",
+      "area_title": "AI / ML / LLMs",
+      "topic": "reinforcement-learning",
+      "topic_title": "Reinforcement learning",
+      "track": "major",
+      "era": null,
+      "hours_core": null,
+      "hours_full": null,
+      "why_canonical": "A current introduction to reinforcement learning, with public lecture slides and written and coding assignments that include deep RL and a first look at RLHF.",
+      "one_liner": "A current introduction to reinforcement learning, with public lecture slides and written and coding assignments that include deep RL and a first look at RLHF.",
+      "recommended_by": [],
+      "free": true,
+      "has_assignments": true,
+      "priority": null,
+      "verified": "2026-11-09",
+      "verification_notes": "Winter 2026 site. Lecture slides and assignment PDFs plus starter code are publicly downloadable. Lecture videos are on Canvas for enrolled students. Sutton and Barto textbook PDF is free."
+    },
+    {
+      "id": "berkeley-cs285",
+      "title": "Berkeley CS 185/285 Deep Reinforcement Learning",
+      "kind": "course",
+      "instructor": "Sergey Levine",
+      "institution": "Berkeley",
+      "url": "https://rail.eecs.berkeley.edu/deeprlcourse/",
+      "area": "ai-ml",
+      "area_title": "AI / ML / LLMs",
+      "topic": "reinforcement-learning",
+      "topic_title": "Reinforcement learning",
+      "track": "major",
+      "era": null,
+      "hours_core": null,
+      "hours_full": null,
+      "why_canonical": "Berkeley's deep RL course, with public lecture slides, homework PDFs, starter code, and Fall 2023 lecture recordings. Homeworks run from imitation learning through LLM RL and offline RL.",
+      "one_liner": "Berkeley's deep RL course, with public lecture slides, homework PDFs, starter code, and Fall 2023 lecture recordings.",
+      "recommended_by": [],
+      "free": true,
+      "has_assignments": true,
+      "priority": null,
+      "verified": "2026-11-09",
+      "verification_notes": "Spring 2026 materials. Slides and homework PDFs return public 200s. Starter code is in the public berkeleydeeprlcourse/homework_spring2026 repo. Current-term lecture video is on bCourses; Fall 2023 recordings are linked as public."
+    }
+  ]
+}

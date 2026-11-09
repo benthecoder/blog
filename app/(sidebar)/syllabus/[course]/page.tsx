@@ -1,0 +1,193 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { pageMetadata } from "@/utils/pageMetadata";
+import {
+  allCourseIds,
+  catalogItem,
+  courseCitation,
+  courseLevel,
+  courseUrl,
+  dueParts,
+  hoursLabel,
+  humanName,
+  mergedCourse,
+  paceProgress,
+  skillBar,
+} from "@/lib/curriculum";
+import { data, lastScore, plain, type Course } from "@/lib/syllabus";
+
+type Params = Promise<{ course: string }>;
+
+export function generateStaticParams() {
+  return allCourseIds().map((id) => ({ course: id }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { course: id } = await params;
+  const course = mergedCourse(id);
+  if (!course) return pageMetadata({ title: "syllabus", path: "/syllabus" });
+  return pageMetadata({
+    title: humanName(course),
+    description: plain(course.title || humanName(course)),
+    path: `/syllabus/${id}`,
+  });
+}
+
+function assignmentsFor(course: Course) {
+  const lesson = (data.current_week?.lessons || []).find(
+    (item) => item.course_id === course.id
+  );
+  return (lesson?.problems || []).map((problem) => ({
+    ref: problem.ref || "problem",
+    status: problem.status || "issued",
+  }));
+}
+
+export default async function CoursePage({ params }: { params: Params }) {
+  const { course: id } = await params;
+  const course = mergedCourse(id);
+  if (!course) notFound();
+
+  const catalog = catalogItem(id);
+  const assignments = assignmentsFor(course);
+  const feedback = (data.feedback || []).filter(
+    (row) => row.course_id === course.id && row.summary
+  );
+  const weak = (data.review?.weak || []).filter(
+    (item) => !item.course_id || item.course_id === course.id
+  );
+  const streams = (data.streams || []).filter(
+    (item) => !item.course_id || item.course_id === course.id
+  );
+  const late = course.late ?? 0;
+  const missed = course.missed ?? 0;
+  const units = course.units || [];
+  const url = courseUrl(id);
+  const hours = hoursLabel(id);
+  const recommenders = catalog?.recommended_by || [];
+
+  return (
+    <article className="prose">
+      <p className="not-prose text-sm mb-6">
+        <Link href="/syllabus">syllabus</Link>
+      </p>
+      <p className="not-prose m-0 text-sm text-muted">
+        {courseCitation(id)}
+        {hours ? `${courseCitation(id) ? " · " : ""}${hours}` : ""}
+      </p>
+      <h1>{humanName(course)}</h1>
+      {url ? (
+        <p>
+          <a href={url}>source</a>
+        </p>
+      ) : null}
+
+      <section className="not-prose mt-8">
+        <p className="m-0 mb-1 text-sm text-muted">
+          {[paceProgress(id), ...dueParts(course), lastScore(course.id)].join(
+            " · "
+          )}
+          {late > 0 ? (
+            <span className="text-danger"> · {late} late</span>
+          ) : null}
+          {missed > 0 ? (
+            <span className="text-danger"> · {missed} missed</span>
+          ) : null}
+        </p>
+        <p className="m-0 font-mono text-xs text-muted">
+          mastery {skillBar(courseLevel(course))}
+        </p>
+      </section>
+
+      {catalog?.why_canonical ? (
+        <>
+          <h2>why this</h2>
+          <p>{plain(catalog.why_canonical)}</p>
+        </>
+      ) : null}
+
+      {recommenders.length > 0 ? (
+        <>
+          <h2>recommended by</h2>
+          <ul>
+            {recommenders.map((row) => (
+              <li key={row.name}>
+                {row.url ? <a href={row.url}>{row.name}</a> : row.name}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+
+      <h2>units</h2>
+      {units.length === 0 ? (
+        <p>No units listed yet.</p>
+      ) : (
+        <ul>
+          {units.map((unit) => (
+            <li key={unit.id || unit.title}>
+              {plain(unit.title || unit.id || "unit")}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h2>assignments</h2>
+      {assignments.length === 0 ? (
+        <p>No assignments issued yet.</p>
+      ) : (
+        <ul>
+          {assignments.map((item) => (
+            <li key={item.ref}>
+              {plain(item.ref)} · {plain(item.status)}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h2>feedback</h2>
+      {feedback.length === 0 ? (
+        <p>No grader notes yet.</p>
+      ) : (
+        <ul>
+          {feedback.map((row, index) => (
+            <li key={`${row.problem_ref}-${index}`}>
+              {plain(row.problem_ref || "problem")}: {plain(row.summary)}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h2>weak concepts</h2>
+      {weak.length === 0 ? (
+        <p>No weak concepts yet.</p>
+      ) : (
+        <ul>
+          {weak.map((item) => (
+            <li key={item.concept_id || item.title}>
+              {plain(item.title || item.concept_id)}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h2>streams</h2>
+      {streams.length === 0 ? (
+        <p>No recordings linked yet.</p>
+      ) : (
+        <ul>
+          {streams.map((item) => (
+            <li key={item.url}>
+              <a href={item.url}>{plain(item.title || item.url)}</a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </article>
+  );
+}

@@ -70,6 +70,9 @@ export default function HomePage() {
             <Link href="/library">my library</Link>
           </li>
           <li>
+            <Link href="/syllabus">my curriculum</Link>
+          </li>
+          <li>
             <Link href="/recipes">recipes</Link>
           </li>
           <li>
