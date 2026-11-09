@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { pageMetadata } from "@/utils/pageMetadata";
-import { SYLLABUS_PATH } from "@/config/syllabus";
 import {
   allCourseIds,
   catalogItem,
@@ -12,13 +11,11 @@ import {
   dueParts,
   hoursLabel,
   humanName,
-  lastScore,
   mergedCourse,
   paceProgress,
-  plain,
   skillBar,
 } from "@/lib/curriculum";
-import { data, type Course } from "@/lib/syllabus";
+import { data, lastScore, plain, type Course } from "@/lib/syllabus";
 
 type Params = Promise<{ course: string }>;
 
@@ -33,11 +30,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { course: id } = await params;
   const course = mergedCourse(id);
-  if (!course) return pageMetadata({ title: "syllabus", path: SYLLABUS_PATH });
+  if (!course) return pageMetadata({ title: "syllabus", path: "/syllabus" });
   return pageMetadata({
     title: humanName(course),
     description: plain(course.title || humanName(course)),
-    path: `${SYLLABUS_PATH}/${id}`,
+    path: `/syllabus/${id}`,
   });
 }
 
@@ -45,24 +42,10 @@ function assignmentsFor(course: Course) {
   const lesson = (data.current_week?.lessons || []).find(
     (item) => item.course_id === course.id
   );
-  const fromLesson = (lesson?.problems || []).map((problem) => ({
+  return (lesson?.problems || []).map((problem) => ({
     ref: problem.ref || "problem",
     status: problem.status || "issued",
-    score:
-      problem.status === "certified" || problem.status === "correct"
-        ? problem.status
-        : null,
-    feedback: problem.feedback,
   }));
-  if (fromLesson.length) return fromLesson;
-  return (data.feedback || [])
-    .filter((row) => row.course_id === course.id)
-    .map((row) => ({
-      ref: row.problem_ref || "problem",
-      status: row.status || "issued",
-      score: row.status,
-      feedback: row.summary,
-    }));
 }
 
 export default async function CoursePage({ params }: { params: Params }) {
@@ -91,7 +74,7 @@ export default async function CoursePage({ params }: { params: Params }) {
   return (
     <article className="prose">
       <p className="not-prose text-sm mb-6">
-        <Link href={SYLLABUS_PATH}>syllabus</Link>
+        <Link href="/syllabus">syllabus</Link>
       </p>
       <p className="not-prose m-0 text-sm text-muted">
         {courseCitation(id)}
@@ -162,7 +145,6 @@ export default async function CoursePage({ params }: { params: Params }) {
           {assignments.map((item) => (
             <li key={item.ref}>
               {plain(item.ref)} · {plain(item.status)}
-              {item.score ? ` · ${plain(item.score)}` : ""}
             </li>
           ))}
         </ul>

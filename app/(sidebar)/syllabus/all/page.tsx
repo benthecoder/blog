@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { pageMetadata } from "@/utils/pageMetadata";
-import { SYLLABUS_PATH } from "@/config/syllabus";
 import { Section } from "@/components/layout/Section";
 import CurriculumMap from "@/components/syllabus/CurriculumMap";
 import TopicsList from "@/components/syllabus/TopicsList";
@@ -10,7 +9,7 @@ import { nodeLevels } from "@/lib/curriculum";
 export const metadata: Metadata = pageMetadata({
   title: "topics and interests",
   description: "the rest of the shelf, and a map of the concepts",
-  path: `${SYLLABUS_PATH}/all`,
+  path: `/syllabus/all`,
 });
 
 export default function SyllabusAllPage() {
@@ -19,7 +18,7 @@ export default function SyllabusAllPage() {
       <article className="prose">
         <h1>topics and interests</h1>
         <p>
-          <Link href={SYLLABUS_PATH}>syllabus</Link>
+          <Link href="/syllabus">syllabus</Link>
         </p>
       </article>
 

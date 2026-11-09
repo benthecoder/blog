@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/utils/pageMetadata";
-import { SYLLABUS_PATH } from "@/config/syllabus";
 import { Section } from "@/components/layout/Section";
 
 export const metadata: Metadata = pageMetadata({
   title: "about this syllabus",
   description:
     "a curriculum of the best free courses, shaped like a degree: my rl gym",
-  path: `${SYLLABUS_PATH}/about`,
+  path: `/syllabus/about`,
 });
 
 const body = "m-0 text-base leading-relaxed text-primary";
@@ -46,7 +45,7 @@ export default function SyllabusAboutPage() {
         <Section
           id="how"
           title="how"
-          more={[{ href: SYLLABUS_PATH, label: "syllabus" }]}
+          more={[{ href: "/syllabus", label: "syllabus" }]}
         >
           <p className={body}>
             i work by hand on my remarkable and stream every session. i can ask

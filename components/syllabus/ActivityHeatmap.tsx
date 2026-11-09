@@ -7,25 +7,9 @@ const HEAT = [8, 30, 55, 80, 100].map(
 );
 const DOW = ["S", "M", "T", "W", "T", "F", "S"];
 
-function emptyDays(weeks = 16): ActivityDay[] {
-  const today = new Date(`${data.as_of || "2026-11-08"}T12:00:00`);
-  const start = new Date(today);
-  start.setDate(start.getDate() - (weeks * 7 - 1));
-  start.setDate(start.getDate() - ((start.getDay() + 7) % 7));
-  const days: ActivityDay[] = [];
-  for (
-    const cursor = new Date(start);
-    cursor <= today;
-    cursor.setDate(cursor.getDate() + 1)
-  ) {
-    const iso = cursor.toISOString().slice(0, 10);
-    days.push({ date: iso, level: 0 });
-  }
-  return days;
-}
-
 export default function ActivityHeatmap() {
-  const days = data.activity?.length ? data.activity : emptyDays();
+  const days: ActivityDay[] = data.activity || [];
+  const worked = days.filter((day) => day.level > 0).length;
   const weeks: ActivityDay[][] = [];
   for (let i = 0; i < days.length; i += 7) {
     weeks.push(days.slice(i, i + 7));
@@ -40,7 +24,7 @@ export default function ActivityHeatmap() {
     <div className="overflow-x-auto">
       <svg
         role="img"
-        aria-label="Activity over the last several weeks. No work nights yet."
+        aria-label={`Work nights over the last ${weeks.length} weeks: ${worked} so far.`}
         width={width}
         height={height}
         className="block"

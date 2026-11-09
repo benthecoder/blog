@@ -1,12 +1,6 @@
 import catalogDoc from "@/data/curriculum-catalog.json";
 import mapDoc from "@/data/curriculum-map.json";
-import {
-  data,
-  isEnrolled,
-  lastScore,
-  plain,
-  type Course,
-} from "@/lib/syllabus";
+import { data, plain, type Course } from "@/lib/syllabus";
 
 export type CatalogItem = {
   id: string;
@@ -54,28 +48,10 @@ export function skillBar(level: number): string {
   return `[${"#".repeat(n * 2)}${".".repeat((5 - n) * 2)}] ${n}/5`;
 }
 
+// The learn export already scores mastery from graded work only, so an
+// issued sheet stays at 0. Catalog-only courses have no level.
 export function courseLevel(course?: Course | null): MasteryLevel {
-  if (!course) return 0;
-  const assigned = course.assigned ?? 0;
-  const certified = course.certified ?? 0;
-  const weak = (data.review?.weak || []).some(
-    (item) => item.course_id === course.id
-  );
-  let level = 0;
-  // Issuing a sheet does not raise the level. Graded work does.
-  if (certified <= 0) level = 0;
-  else if (assigned > 0 && certified >= assigned) level = 4;
-  else level = 3;
-  if (weak) level = Math.max(0, level - 1);
-  if (
-    typeof course.level === "number" &&
-    course.level >= 0 &&
-    course.level <= 5 &&
-    certified > 0
-  ) {
-    return clampLevel(course.level);
-  }
-  return clampLevel(level);
+  return clampLevel(course?.level ?? 0);
 }
 
 const HUMAN_NAMES: Record<string, string> = {
@@ -149,49 +125,6 @@ export function courseCitation(id: string): string {
   if (school && code) return `${school} ${code}`;
   return school || code;
 }
-
-type TrackId = "cs-se" | "math-stats" | "ai" | "theology";
-
-type TrackDef = {
-  id: TrackId;
-  title: string;
-  blurb: string;
-  nowId: string;
-  nextId: string;
-};
-
-const REQUIRED_TRACKS: TrackDef[] = [
-  {
-    id: "cs-se",
-    title: "CS / software engineering",
-    blurb:
-      "Think like a software engineer when designing solutions and instructing AI.",
-    nowId: "mit-6006",
-    nextId: "mit-65840",
-  },
-  {
-    id: "math-stats",
-    title: "Math / statistics",
-    blurb: "Probability first, then the calculus that holds it up.",
-    nowId: "stat110",
-    nextId: "mit-1806",
-  },
-  {
-    id: "ai",
-    title: "AI",
-    blurb:
-      "Reinforcement learning first, then a deeper pass at modern deep RL.",
-    nowId: "stanford-cs234",
-    nextId: "berkeley-cs285",
-  },
-  {
-    id: "theology",
-    title: "Theology",
-    blurb: "Close reading of scripture, starting with the Hebrew Bible.",
-    nowId: "yale-rlst145",
-    nextId: "yale-rlst152",
-  },
-];
 
 export const ENROLLED_NIGHTS = [
   { day: "Mon", courseId: "stat110", track: "math / statistics" },
@@ -301,10 +234,8 @@ export function allCourseIds(): string[] {
   const ids = new Set<string>();
   for (const course of data.curriculum || []) ids.add(course.id);
   for (const item of catalogItems) ids.add(item.id);
-  for (const track of REQUIRED_TRACKS) {
-    ids.add(track.nowId);
-    ids.add(track.nextId);
-  }
+  for (const night of ENROLLED_NIGHTS) ids.add(night.courseId);
+  for (const next of UP_NEXT) ids.add(next.courseId);
   return [...ids];
 }
 
@@ -317,19 +248,11 @@ export function mergedCourse(id: string): Course | undefined {
     title: live?.title || cat?.title,
     short_title: live?.short_title,
     institution: live?.institution || cat?.institution,
-    area: live?.area || cat?.area,
-    track: live?.track || cat?.track,
-    kind: live?.kind || cat?.kind,
-    enrolled: live?.enrolled,
     url: live?.url || cat?.url,
-    assigned: live?.assigned,
-    certified: live?.certified,
-    percent_certified: live?.percent_certified,
+    level: live?.level,
     units: live?.units,
-    on_time: live?.on_time,
     late: live?.late,
     missed: live?.missed,
-    streak: live?.streak,
     next_due: live?.next_due,
   };
 }
@@ -356,27 +279,13 @@ export function topicsAndInterests(): {
   citation: string;
 }[] {
   const taking = enrolledNightIds();
-  const seen = new Set<string>(taking);
-  const items: { id: string; title: string; citation: string }[] = [];
-  for (const course of data.curriculum || []) {
-    if (!isEnrolled(course) || seen.has(course.id)) continue;
-    seen.add(course.id);
-    items.push({
-      id: course.id,
-      title: humanName(course),
-      citation: courseCitation(course.id),
-    });
-  }
-  for (const item of catalogItems) {
-    if (seen.has(item.id)) continue;
-    seen.add(item.id);
-    items.push({
+  return catalogItems
+    .filter((item) => !taking.has(item.id))
+    .map((item) => ({
       id: item.id,
       title: humanName({ id: item.id, title: item.title }),
       citation: courseCitation(item.id),
-    });
-  }
-  return items;
+    }));
 }
 
 function nodeLevel(node: MapNode): MasteryLevel {
@@ -399,5 +308,3 @@ export function nodeLevels(): Record<string, MasteryLevel> {
   for (const node of mapNodes) levels[node.id] = nodeLevel(node);
   return levels;
 }
-
-export { lastScore, plain };

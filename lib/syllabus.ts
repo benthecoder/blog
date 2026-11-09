@@ -10,22 +10,11 @@ export type Course = {
   title?: string;
   short_title?: string;
   institution?: string;
-  area?: string;
-  phase?: string;
-  track?: string;
-  kind?: string;
-  lane?: string;
-  enrolled?: boolean;
   url?: string;
-  assigned?: number;
-  certified?: number;
   level?: number;
-  percent_certified?: number | null;
   units?: Unit[];
-  on_time?: number;
   late?: number;
   missed?: number;
-  streak?: number;
   next_due?: { date: string; title: string } | null;
 };
 
@@ -66,16 +55,6 @@ type ReviewItem = {
   due?: string;
 };
 
-type CalendarEvent = {
-  id?: string;
-  date?: string;
-  start?: string;
-  end?: string;
-  title?: string;
-  course_id?: string | null;
-  source_url?: string | null;
-};
-
 export type ActivityDay = {
   date: string;
   level: number;
@@ -88,7 +67,6 @@ export type LearnData = {
   feedback?: Feedback[];
   streams?: Stream[];
   review?: { due?: ReviewItem[]; weak?: ReviewItem[] };
-  calendar?: { timezone?: string; events?: CalendarEvent[] };
   activity?: ActivityDay[];
   totals?: {
     hours?: number;
@@ -98,23 +76,12 @@ export type LearnData = {
     missed?: number;
     streak?: number;
   };
-  schedule?: {
-    day?: string;
-    title?: string;
-    detail?: string | null;
-    course_id?: string | null;
-  }[];
 };
 
 export const data = learn as unknown as LearnData;
 
 export function plain(s: string | null | undefined): string {
   return (s || "").replaceAll("\u2014", " - ").replaceAll("\u2013", "-");
-}
-
-export function isEnrolled(course: Course): boolean {
-  if (typeof course.enrolled === "boolean") return course.enrolled;
-  return course.lane === "now";
 }
 
 export function lastScore(courseId: string): string {

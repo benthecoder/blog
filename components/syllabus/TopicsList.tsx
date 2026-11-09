@@ -1,4 +1,3 @@
-import { SYLLABUS_PATH } from "@/config/syllabus";
 import CourseRow from "@/components/syllabus/CourseRow";
 import { topicsAndInterests } from "@/lib/curriculum";
 
@@ -9,7 +8,7 @@ export default function TopicsList() {
       {items.map((item) => (
         <li key={item.id} className="break-inside-avoid pb-4">
           <CourseRow
-            href={`${SYLLABUS_PATH}/${item.id}`}
+            href={`/syllabus/${item.id}`}
             title={item.title}
             meta={item.citation}
           />

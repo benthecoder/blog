@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { pageMetadata } from "@/utils/pageMetadata";
-import { SYLLABUS_PATH } from "@/config/syllabus";
 import { Section } from "@/components/layout/Section";
 import ActivityHeatmap from "@/components/syllabus/ActivityHeatmap";
 import CourseRow from "@/components/syllabus/CourseRow";
@@ -12,14 +11,13 @@ import {
   courseCitation,
   humanName,
   mergedCourse,
-  plain,
 } from "@/lib/curriculum";
-import { data } from "@/lib/syllabus";
+import { data, plain } from "@/lib/syllabus";
 
 export const metadata: Metadata = pageMetadata({
   title: "syllabus",
   description: "my RL gym: a place to train how I think",
-  path: SYLLABUS_PATH,
+  path: "/syllabus",
 });
 
 function countClass(n: number) {
@@ -48,7 +46,7 @@ export default function SyllabusPage() {
         <h1>syllabus</h1>
         <p>
           my RL gym: I put in the reps, read the reward signal, and train how I
-          think. <Link href={`${SYLLABUS_PATH}/about`}>learn more</Link>
+          think. <Link href={`/syllabus/about`}>learn more</Link>
         </p>
       </article>
 
@@ -56,7 +54,7 @@ export default function SyllabusPage() {
         <Section
           id="progress"
           title="progress"
-          more={[{ href: `${SYLLABUS_PATH}/all#map`, label: "knowledge map" }]}
+          more={[{ href: `/syllabus/all#map`, label: "knowledge map" }]}
         >
           <ActivityHeatmap />
           <div className="mt-4 space-y-1 text-sm text-muted">
@@ -87,7 +85,7 @@ export default function SyllabusPage() {
         <Section
           id="up-next"
           title="up next"
-          more={[{ href: `${SYLLABUS_PATH}/all`, label: "all courses" }]}
+          more={[{ href: `/syllabus/all`, label: "all courses" }]}
         >
           <ul className="m-0 list-none space-y-4 p-0">
             {UP_NEXT.map((item) => {
@@ -101,7 +99,7 @@ export default function SyllabusPage() {
               return (
                 <li key={item.courseId}>
                   <CourseRow
-                    href={`${SYLLABUS_PATH}/${item.courseId}`}
+                    href={`/syllabus/${item.courseId}`}
                     title={course ? humanName(course) : item.courseId}
                     track={item.track}
                     meta={citation}

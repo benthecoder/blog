@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-import { SYLLABUS_PATH } from "@/config/syllabus";
 import CourseRow from "@/components/syllabus/CourseRow";
 import {
   ENROLLED_NIGHTS,
@@ -30,7 +29,7 @@ export default function EnrolledSchedule() {
         return (
           <li key={night.courseId}>
             <CourseRow
-              href={`${SYLLABUS_PATH}/${night.courseId}`}
+              href={`/syllabus/${night.courseId}`}
               day={night.day}
               title={course ? humanName(course) : night.courseId}
               track={night.track}

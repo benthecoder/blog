@@ -12,7 +12,6 @@ import { formatPhotoDate } from "@/utils/photoDate";
 import { filmFor } from "@/utils/photoFilm";
 import type { StreamPhoto } from "@/types/photostream";
 import { MAPS_URL, PHOTOS_URL } from "@/config/site";
-import { SYLLABUS_PATH } from "@/config/syllabus";
 
 // Photos are live; refresh hourly so new uploads reach the homepage.
 export const revalidate = 3600;
@@ -219,7 +218,7 @@ export default async function HomePage() {
             <Link href="/library">my library</Link>
           </li>
           <li>
-            <Link href={SYLLABUS_PATH}>my curriculum</Link>
+            <Link href="/syllabus">my curriculum</Link>
           </li>
           <li>
             <Link href="/recipes">recipes</Link>

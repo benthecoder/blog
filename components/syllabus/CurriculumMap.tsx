@@ -2,7 +2,6 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { SYLLABUS_PATH } from "@/config/syllabus";
 import {
   REQUIRED_AREA_IDS,
   humanName,
@@ -103,7 +102,6 @@ export default function CurriculumMap({
   levels?: Record<string, MasteryLevel>;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
-  const [showOptional, setShowOptional] = useState(false);
   const [areaFilter, setAreaFilter] = useState<string>("required");
 
   const dependents = useMemo(() => {
@@ -123,8 +121,7 @@ export default function CurriculumMap({
   const dependentSet = new Set(selected ? dependents[selected] || [] : []);
 
   const visibleAreas = mapAreas.filter((area) => {
-    if (areaFilter === "all")
-      return showOptional || REQUIRED_AREA_IDS.includes(area.id);
+    if (areaFilter === "all") return true;
     if (areaFilter === "required") return REQUIRED_AREA_IDS.includes(area.id);
     return area.id === areaFilter;
   });
@@ -152,19 +149,13 @@ export default function CurriculumMap({
       <div className="flex flex-wrap gap-2 mb-2">
         <FilterChip
           active={areaFilter === "required"}
-          onClick={() => {
-            setAreaFilter("required");
-            setShowOptional(false);
-          }}
+          onClick={() => setAreaFilter("required")}
         >
           required
         </FilterChip>
         <FilterChip
-          active={areaFilter === "all" || showOptional}
-          onClick={() => {
-            setAreaFilter("all");
-            setShowOptional(true);
-          }}
+          active={areaFilter === "all"}
+          onClick={() => setAreaFilter("all")}
         >
           whole map
         </FilterChip>
@@ -284,7 +275,7 @@ export default function CurriculumMap({
                 return (
                   <span key={id}>
                     {index === 0 ? " · " : ", "}
-                    <Link href={`${SYLLABUS_PATH}/${id}`}>
+                    <Link href={`/syllabus/${id}`}>
                       {course ? humanName(course) : id}
                     </Link>
                   </span>
