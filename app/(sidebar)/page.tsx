@@ -15,12 +15,12 @@ import { MAPS_URL, PHOTOS_URL } from "@/config/site";
 // Photos are live; refresh hourly so a removed pick drops out.
 export const revalidate = 3600;
 
-/** Hand-picked from the photostream, left to right: Forest Books, the F-line
-    streetcars, a Chinatown roast-duck window. */
-const FEATURED_PHOTOS = [
-  "068a3aab4c2e3ea33243",
-  "79ab3b5c74b433c6aee2",
-  "59a00e718dd8ab74d508",
+/** Benedict's picks, left to right, each with the name for its print. A
+    missing name falls back to the photo's caption or place. */
+const FEATURED_PHOTOS: { id: string; label?: string }[] = [
+  { id: "56982e040dbabb6b4a9d", label: "Transamerica" },
+  { id: "052e2aa1829fba771e9f" },
+  { id: "db5bda77f58c0df3bbd2", label: "Hyatt Regency" },
 ];
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
@@ -59,8 +59,9 @@ function RecentWritings() {
   );
 }
 
-/** Written on the print's strip: its caption, else where it was taken. */
-function printLabel(photo: StreamPhoto) {
+/** Written on the print's strip: its picked name, else its caption, else where it was taken. */
+function printLabel(photo: StreamPhoto, label?: string) {
+  if (label) return label;
   const place = parsePlace(photo.place);
   return (
     photoTitle(photo) ??
@@ -69,8 +70,10 @@ function printLabel(photo: StreamPhoto) {
   );
 }
 
+type FeaturedPhoto = { photo: StreamPhoto; label?: string };
+
 /** The featured photos as a fanned row of instant prints, as in posts. */
-function Prints({ photos }: { photos: StreamPhoto[] }) {
+function Prints({ photos }: { photos: FeaturedPhoto[] }) {
   return (
     <section aria-labelledby="photos" className="mt-12">
       <h2 id="photos" className="mb-4 text-base font-bold text-primary">
@@ -83,7 +86,7 @@ function Prints({ photos }: { photos: StreamPhoto[] }) {
       <div className="pb-4 max-sm:-mt-2 max-sm:-mb-4 max-sm:pb-0">
         <div className="photo-group" style={{ margin: 0 }}>
           <div className="photo-row" data-n={photos.length}>
-            {photos.map((photo) => {
+            {photos.map(({ photo, label }) => {
               const [width, height] = filmFor(photo);
               return (
                 <figure
@@ -103,7 +106,7 @@ function Prints({ photos }: { photos: StreamPhoto[] }) {
                     <div className="photo-plate relative w-full overflow-hidden">
                       <Image
                         src={photo.src}
-                        alt={photoAlt(photo)}
+                        alt={label ?? photoAlt(photo)}
                         fill
                         sizes="(max-width: 640px) 85vw, 260px"
                         placeholder={photo.blurDataURL ? "blur" : "empty"}
@@ -113,7 +116,7 @@ function Prints({ photos }: { photos: StreamPhoto[] }) {
                     </div>
                   </a>
                   <figcaption className="photo-label">
-                    {printLabel(photo)}
+                    {printLabel(photo, label)}
                   </figcaption>
                 </figure>
               );
@@ -132,9 +135,10 @@ function Prints({ photos }: { photos: StreamPhoto[] }) {
 
 export default async function HomePage() {
   const stream = await getPhotostream();
-  const photos = FEATURED_PHOTOS.flatMap(
-    (id) => stream.find((photo) => photo.id === id) ?? []
-  );
+  const photos = FEATURED_PHOTOS.flatMap(({ id, label }) => {
+    const photo = stream.find((p) => p.id === id);
+    return photo ? [{ photo, label }] : [];
+  });
   return (
     <>
       <h1 className="sr-only">Benedict Neo</h1>
