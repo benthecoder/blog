@@ -111,6 +111,23 @@ describe("admin session access", () => {
     ).toBe("https://example.test/");
   });
 
+  it("opens the messages inbox in production behind the session", () => {
+    production();
+    expect(
+      proxy(request("/admin/messages", sessionToken(SECRET))).headers.get(
+        "x-middleware-next"
+      )
+    ).toBe("1");
+    expect(proxy(request("/admin/messages")).headers.get("location")).toBe(
+      "https://example.test/admin/login?next=%2Fadmin%2Fmessages"
+    );
+    expect(
+      proxy(request("/admin/messages/x", sessionToken(SECRET))).headers.get(
+        "location"
+      )
+    ).toBe("https://example.test/");
+  });
+
   it.each(["/admin/login", "/api/admin/login"])(
     "allows the login endpoint %s",
     (path) => {

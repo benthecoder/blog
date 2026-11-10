@@ -3,6 +3,8 @@ import type { NextRequest } from "next/server";
 
 import { ADMIN_COOKIE, verifyAdminSession } from "@/utils/adminAuth";
 
+const PUBLIC_ADMIN_PAGE = "/admin/messages";
+
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
@@ -16,7 +18,10 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname.startsWith("/admin")) {
+  // The messages inbox is the one admin page readable on the live site, so
+  // the link in each notification email opens on a phone. It still needs the
+  // admin session below.
+  if (pathname.startsWith("/admin") && pathname !== PUBLIC_ADMIN_PAGE) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
