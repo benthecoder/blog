@@ -1,6 +1,6 @@
 - Everyone should have their own little blog on the internet.
 - Doubt is an essential part of faith.
-- You can’t create meaning for yourself.
+- You can’t create meaning for yourself; you have to discover it.
 - I have an obligation to do great things.
 - It all comes down to hard work, curiosity, and luck.
 - You can help people improve without making them feel bad about themselves.

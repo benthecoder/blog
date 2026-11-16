@@ -7,6 +7,7 @@ import type { TocEntry } from "@/utils/content/toc";
 import { extractTags } from "@/utils/content/tags";
 import { parsePostDate } from "@/utils/dateUtils";
 import OnThisDay from "./OnThisDay";
+import { FooterGroup, footerLink } from "./FooterGroup";
 import PostArrowKeys from "./PostArrowKeys";
 import PostViewTracker from "./PostViewTracker";
 import RelatedPosts from "./RelatedPosts";
@@ -94,9 +95,9 @@ const RenderPost = ({
 
       {backlinks}
 
-      <footer className="mt-12 pt-5 border-t border-line text-xs">
+      <footer className="mt-16 space-y-10 text-sm leading-relaxed">
         {(tags.length > 0 || slug) && (
-          <div className="flex items-center gap-x-3 gap-y-1 flex-wrap text-ink-soft dark:text-chalk-muted">
+          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-muted">
             {tags.map((tag) => (
               <Link
                 href={`/tags/${tag}`}
@@ -118,34 +119,28 @@ const RenderPost = ({
 
         {onThisDay && <OnThisDay posts={onThisDay} />}
 
-        <div className="mt-8 flex justify-between gap-4">
-          {prev ? (
-            <div className="flex flex-col flex-1">
-              <p className="text-muted mb-1">Previous</p>
-              <Link
-                href={`/posts/${prev.slug}`}
-                className="text-primary hover:text-ink dark:hover:text-chalk-soft transition-colors"
-              >
-                {prev.title}
-              </Link>
-            </div>
-          ) : (
-            <div className="flex-1" />
-          )}
-          {next ? (
-            <div className="flex flex-col flex-1 text-right">
-              <p className="text-muted mb-1">Next</p>
-              <Link
-                href={`/posts/${next.slug}`}
-                className="text-primary hover:text-ink dark:hover:text-chalk-soft transition-colors"
-              >
-                {next.title}
-              </Link>
-            </div>
-          ) : (
-            <div className="flex-1" />
-          )}
-        </div>
+        {(prev || next) && (
+          <nav aria-label="More posts" className="flex justify-between gap-6">
+            {prev ? (
+              <FooterGroup label="Previous" className="flex-1">
+                <Link href={`/posts/${prev.slug}`} className={footerLink}>
+                  {prev.title}
+                </Link>
+              </FooterGroup>
+            ) : (
+              <div className="flex-1" />
+            )}
+            {next ? (
+              <FooterGroup label="Next" className="flex-1 text-right">
+                <Link href={`/posts/${next.slug}`} className={footerLink}>
+                  {next.title}
+                </Link>
+              </FooterGroup>
+            ) : (
+              <div className="flex-1" />
+            )}
+          </nav>
+        )}
       </footer>
     </div>
   );
