@@ -3,7 +3,6 @@ import { BELIEVE_MD, VERSES_MD, WORDS_MD } from "@/config/paths";
 import { readMarkdownFile } from "./markdown";
 import { bodyOnlySchema } from "./schemas";
 import { parseSayings } from "./sayings";
-import { parseBeliefs } from "./beliefs";
 
 describe("parseSayings", () => {
   it("reads topics and cited entries", () => {
@@ -56,21 +55,9 @@ How we spend our days is how we spend our lives.
     expect(parseSayings(content).length).toBeGreaterThan(0);
   });
 
-  it("believe.md parses", () => {
+  it("believe.md is a flat list of beliefs", () => {
     const { content } = readMarkdownFile(BELIEVE_MD, bodyOnlySchema);
-    expect(parseBeliefs(content).length).toBeGreaterThan(0);
-  });
-});
-
-describe("parseBeliefs", () => {
-  it("reads beliefs with their reasons", () => {
-    expect(parseBeliefs("- a\n  - why a\n- b")).toEqual([
-      { text: "a", reasons: ["why a"] },
-      { text: "b", reasons: [] },
-    ]);
-  });
-
-  it.each(["  - a reason first", "a loose line"])("rejects %s", (md) => {
-    expect(() => parseBeliefs(md)).toThrow();
+    const lines = content.trim().split("\n");
+    expect(lines.every((line) => /^- \S/.test(line))).toBe(true);
   });
 });

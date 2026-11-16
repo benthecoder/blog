@@ -1,4 +1,4 @@
-## On Meaning
+## Meaning
 
 The purpose of life is to be defeated by greater and greater things.
 — Rainer Maria Rilke
@@ -30,7 +30,7 @@ Just like our life — we appear and we disappear, and we are so important to so
 Life swings like a pendulum backward and forward between pain and boredom.
 — Arthur Schopenhauer
 
-## On Paying Attention
+## Attention
 
 I urge you to please notice when you are happy, and exclaim or murmur or think at some point, “If this isn’t nice, I don’t know what is.”
 — Kurt Vonnegut Jr., A Man Without a Country
@@ -59,7 +59,7 @@ Finish each day and be done with it. You have done what you could. Some blunders
 Silence, I discover, is something you can actually hear.
 — Haruki Murakami, Kafka on the Shore
 
-## On Making Things
+## Craft
 
 The programmer, like the poet, works only slightly removed from pure thought-stuff. He builds his castles in the air, from air, creating by exertion of the imagination. Few media of creation are so flexible, so easy to polish and rework, so readily capable of realizing grand conceptual structures… Yet the program construct, unlike the poet’s words, is real in the sense that it moves and works, producing visible outputs separate from the construct itself.
 — Fred Brooks, The Mythical Man-Month
@@ -91,7 +91,7 @@ What the hell is good design? Is it something that gives satisfaction to your ow
 Everyone discusses my art and pretends to understand, as if it were necessary to understand, when it is simply necessary to love.
 — Claude Monet
 
-## On Writing and Reading
+## Writing and Reading
 
 Write hard and clear about what hurts.
 — Ernest Hemingway
@@ -108,7 +108,7 @@ If possible, I would like my readers to savor that same emotion when they read m
 The man who does not read has no advantage over the man who cannot read.
 — Mark Twain
 
-## On Learning
+## Learning
 
 The highest activity a human being can attain is learning for understanding, because to understand is to be free.
 — Baruch Spinoza
@@ -122,7 +122,7 @@ People change in four seasons: when they hurt enough they have to, when they see
 The visions we offer our children shape the future. It matters what those visions are. Often they become self-fulfilling prophecies. Dreams are maps.
 — Carl Sagan
 
-## On Friendship and Home
+## Friendship and Home
 
 Friendship is unnecessary, like philosophy, like art, like the universe itself (for God did not need to create). It has no survival value; rather it is one of those things which give value to survival.
 — C. S. Lewis, The Four Loves
@@ -139,7 +139,7 @@ The things we admire in men, kindness and generosity, openness, honesty, underst
 You talk when you cease to be at peace with your thoughts.
 — Kahlil Gibran, The Prophet
 
-## On Wisdom
+## Wisdom
 
 The surest sign of wisdom is a constant cheerfulness.
 — Michel de Montaigne
