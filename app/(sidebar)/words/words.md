@@ -1,12 +1,12 @@
-## things i believe
+## todo: a topic
 
-- todo: a belief
-  - todo: why, or what it looks like in practice
+todo: a quote that stayed with you
+— todo: who said it
 
-## bible
+todo: another quote
+— todo: who said it
 
-- todo: a verse, with its reference
+## todo: another topic
 
-## reminders
-
-- todo: something to tell myself
+todo: a quote
+— todo: who said it

@@ -1,0 +1,5 @@
+- todo: a belief, in one line
+  - todo: why, or what it looks like in practice
+  - todo: another sub-point
+- todo: another belief
+  - todo: a sub-point
