@@ -1,14 +1,13 @@
-- everyone should have their own little blog on the internet
-  - personal and raw writing, with little to no edits, straight from the heart
-- doubt is an essential part of faith
-  - doubt is the beginning of true faith
-- you can't create meaning for yourself
-  - you have to discover meaning in some reality higher than yourself
-- i have an obligation to do great things
-  - given my background, and the opportunities given to me through the hard work and sacrifice of my father
-- it all comes down to hard work, curiosity, and luck
-- you can help people improve without making them feel bad about themselves
-- the neurotic obsession to spend every minute productively is the thief of joy
-- there's always something to take out of everything
-- some things are worth keeping unknown
-- the culture of building, creating, and collaborating is missing in Malaysia
+- Everyone should have their own little blog on the internet.
+  - Personal and raw writing, with little to no edits, straight from the heart.
+- Doubt is an essential part of faith.
+  - Doubt is the beginning of true faith.
+- You can’t create meaning for yourself.
+  - You have to discover meaning in some reality higher than yourself.
+- I have an obligation to do great things.
+  - Given my background, and the opportunities given to me through the hard work and sacrifice of my father.
+- It all comes down to hard work, curiosity, and luck.
+- You can help people improve without making them feel bad about themselves.
+- The neurotic obsession to spend every minute productively is the thief of joy.
+- There’s always something to take out of everything.
+- Some things are worth keeping unknown.

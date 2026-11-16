@@ -7,7 +7,7 @@ import { pageMetadata } from "@/utils/pageMetadata";
 import { Sayings } from "../words/Sayings";
 
 export const metadata: Metadata = pageMetadata({
-  title: "verses",
+  title: "Bible Verses",
   description: "bible verses i hold onto, by topic",
   path: "/verses",
 });
@@ -16,5 +16,5 @@ export const dynamic = "force-static";
 
 export default function VersesPage() {
   const { content } = readMarkdownFile(VERSES_MD, bodyOnlySchema);
-  return <Sayings title="verses" topics={parseSayings(content)} />;
+  return <Sayings title="Bible Verses" topics={parseSayings(content)} />;
 }

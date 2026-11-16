@@ -7,7 +7,7 @@ import { pageMetadata } from "@/utils/pageMetadata";
 import { Sayings } from "./Sayings";
 
 export const metadata: Metadata = pageMetadata({
-  title: "words",
+  title: "Quotes",
   description: "words from other people that stayed with me, by topic",
   path: "/words",
 });
@@ -16,5 +16,5 @@ export const dynamic = "force-static";
 
 export default function WordsPage() {
   const { content } = readMarkdownFile(WORDS_MD, bodyOnlySchema);
-  return <Sayings title="words" topics={parseSayings(content)} />;
+  return <Sayings title="Quotes" topics={parseSayings(content)} />;
 }

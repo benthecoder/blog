@@ -1,6 +1,8 @@
 import GithubSlugger from "github-slugger";
 
-type Saying = { text: string; cite: string };
+/** `cite` is who said it or the verse reference; `work` is the book, film,
+    or letter it comes from, written after the first comma. */
+type Saying = { text: string; cite: string; work?: string };
 export type Topic = { id: string; title: string; sayings: Saying[] };
 
 const CITE = /^(?:—|--)\s*(.+)$/;
@@ -26,7 +28,9 @@ export function parseSayings(markdown: string): Topic[] {
     const text = lines.slice(0, -1).join(" ").trim();
     if (!cite || !text)
       throw new Error(`entry needs text and a "— cite" line: ${lines[0]}`);
-    topic.sayings.push({ text, cite });
+    const [who, ...rest] = cite.split(", ");
+    const work = rest.join(", ");
+    topic.sayings.push(work ? { text, cite: who, work } : { text, cite: who });
   }
   const empty = topics.find((topic) => topic.sayings.length === 0);
   if (empty) throw new Error(`topic "${empty.title}" has no entries`);
