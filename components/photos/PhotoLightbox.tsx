@@ -18,11 +18,16 @@ type Props = {
 
 export function PhotoLightbox({ photos, index, onIndex }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
   const isOpen = index !== null;
   const photo = index === null ? null : photos[index];
 
   useEffect(() => {
     if (!isOpen) return;
+    triggerRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     const element = dialog.current;
     element?.showModal();
     const previous = document.body.style.overflow;
@@ -30,6 +35,10 @@ export function PhotoLightbox({ photos, index, onIndex }: Props) {
     return () => {
       element?.close();
       document.body.style.overflow = previous;
+      if (triggerRef.current?.isConnected) {
+        triggerRef.current?.focus({ preventScroll: true });
+      }
+      triggerRef.current = null;
     };
   }, [isOpen]);
 

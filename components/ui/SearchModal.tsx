@@ -21,6 +21,7 @@ export default function SearchModal() {
   const [open, setOpen] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const openRef = useRef(false);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
   // Open on cmd+K / ctrl+K, or custom "openSearch" event (from sidebar button).
   // State resets happen when opening, so a fresh modal is shown each time.
@@ -51,6 +52,10 @@ export default function SearchModal() {
     openRef.current = open;
     if (!open) return;
 
+    triggerRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     const dialog = dialogRef.current;
     dialog?.showModal();
 
@@ -66,6 +71,10 @@ export default function SearchModal() {
       if (dialog) dialog.style.paddingRight = "";
       document.body.style.overflow = overflow;
       document.body.style.paddingRight = paddingRight;
+      if (triggerRef.current?.isConnected) {
+        triggerRef.current?.focus({ preventScroll: true });
+      }
+      triggerRef.current = null;
     };
   }, [open]);
 

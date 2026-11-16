@@ -10,6 +10,7 @@ export default function SketchPage() {
   );
 
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
   const close = () => {
     dialogRef.current?.close();
     setSelected(null);
@@ -17,6 +18,10 @@ export default function SketchPage() {
 
   useEffect(() => {
     if (!selected) return;
+    triggerRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
     const dialog = dialogRef.current;
     dialog?.showModal();
     const { overflow, paddingRight } = document.body.style;
@@ -28,6 +33,10 @@ export default function SketchPage() {
       dialog?.close();
       document.body.style.overflow = overflow;
       document.body.style.paddingRight = paddingRight;
+      if (triggerRef.current?.isConnected) {
+        triggerRef.current?.focus({ preventScroll: true });
+      }
+      triggerRef.current = null;
     };
   }, [selected]);
 
