@@ -37,6 +37,8 @@ export function getQuotes(): Quote[] {
         const text = match[1]
           .trim()
           .replace(/^["“]|["”]$/g, "")
+          // The footer adds its own marks, so drop a wrapping pair of single quotes too.
+          .replace(/^['‘](.*)['’]$/, "$1")
           .replace(/,$/, ".");
         if (EXCERPT.test(text) || seen.has(text.toLowerCase())) return [];
         seen.add(text.toLowerCase());

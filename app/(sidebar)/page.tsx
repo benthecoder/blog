@@ -35,15 +35,18 @@ function RecentWritings() {
       <h2 id="writings" className="mb-4 text-base font-bold text-primary">
         recent writings
       </h2>
-      <ul className="space-y-4">
+      <ul className="space-y-2">
         {posts.slice(0, 5).map((post) => (
-          <li key={post.slug}>
+          <li key={post.slug} className="flex items-baseline gap-x-4">
+            {/* Recent entries share a year, so the column carries month and day only. */}
+            <span className="w-14 shrink-0 text-sm text-muted tabular-nums">
+              {post.date.replace(/,\s*\d{4}$/, "")}
+            </span>
             <h3 className="text-base">
               <Link href={`/posts/${post.slug}`} className={entryLink}>
                 {post.title}
               </Link>
             </h3>
-            <p className="mt-1 text-xs text-muted">{post.date}</p>
           </li>
         ))}
       </ul>
