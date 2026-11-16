@@ -10,6 +10,7 @@ import {
 } from "@/utils/content/kind";
 import { acquirePostTransition } from "@/utils/content/postTransition";
 import { writeAtomicFile } from "@/utils/content/atomicFile";
+import { unpublishImagePaths } from "@/utils/content/draftImages";
 import { r2ListImages, r2GetImage, r2DeleteImage } from "@/utils/r2";
 
 export async function POST(request: NextRequest) {
@@ -70,19 +71,7 @@ export async function POST(request: NextRequest) {
 
     // Read the published content to update image paths
     const original = fs.readFileSync(publishedPath, "utf8");
-    let postContent = original;
-
-    // Update image paths from /images/ to /images/drafts/
-    postContent = postContent.replace(
-      /\/images\/([^/\s)"']+)/g,
-      (match, filename) => {
-        // Only replace if it's a slug-prefixed image
-        if (filename.startsWith(`${slug}-`)) {
-          return `/images/drafts/${filename}`;
-        }
-        return match;
-      }
-    );
+    const postContent = unpublishImagePaths(original, slug);
 
     const postImages = await r2ListImages(`${slug}-`);
     if (

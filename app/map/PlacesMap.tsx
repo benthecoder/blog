@@ -145,7 +145,9 @@ export default function PlacesMap({
     highlightId,
   });
   const [ready, setReady] = useState<MapInstance | null>(null);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(
+    () => typeof document !== "undefined" && !hasWebGL2()
+  );
   const canLocate = useSyncExternalStore(
     () => () => {},
     () => "geolocation" in navigator,
@@ -194,13 +196,7 @@ export default function PlacesMap({
   }, [places, onSelect, onHover, selected, highlightId]);
 
   useEffect(() => {
-    if (!container.current) return;
-    // MapLibre builds half an instance before it notices there is no WebGL,
-    // and its teardown then throws past our catch. Ask the browser first.
-    if (!hasWebGL2()) {
-      setError(true);
-      return;
-    }
+    if (!container.current || !hasWebGL2()) return;
     let instance: MapInstance;
     try {
       setWorkerUrl(`/vendor/maplibre/${getVersion()}/maplibre-gl-worker.mjs`);
@@ -214,7 +210,7 @@ export default function PlacesMap({
         maxZoom: 19,
       });
     } catch {
-      setError(true);
+      queueMicrotask(() => setError(true));
       return;
     }
     map.current = instance;

@@ -32,11 +32,11 @@ export default function PlacesOverviewMap({
     return out;
   }, [groups]);
   useEffect(() => {
-    let disposed = false;
+    const controller = new AbortController();
     let map: import("maplibre-gl").Map | undefined;
     import("maplibre-gl")
       .then((lib) => {
-        if (disposed || !container.current) return;
+        if (controller.signal.aborted || !container.current) return;
         lib.setWorkerUrl(
           `/vendor/maplibre/${lib.getVersion()}/maplibre-gl-worker.mjs`
         );
@@ -72,10 +72,10 @@ export default function PlacesOverviewMap({
         });
       })
       .catch(() => {
-        if (!disposed) setFailed(true);
+        if (!controller.signal.aborted) setFailed(true);
       });
     return () => {
-      disposed = true;
+      controller.abort();
       map?.remove();
     };
   }, [points, resolvedTheme]);

@@ -93,6 +93,8 @@ export function DefineBubble({
 
   return (
     <div
+      // floating-ui's refs object exposes callback refs by design
+      // eslint-disable-next-line react-hooks/refs
       ref={refs.setFloating}
       style={floatingStyles}
       className="z-40 max-w-[calc(100vw-24px)]"

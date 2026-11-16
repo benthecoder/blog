@@ -40,9 +40,9 @@ export default function CuriusPage() {
     <div>
       <h1 className="sr-only">curius</h1>
       {isLoading ? (
-        <p className="text-accent/50">discombobulating...</p>
+        <p className="text-muted">discombobulating...</p>
       ) : error ? (
-        <p className="text-accent/50">couldn&apos;t load links</p>
+        <p className="text-muted">couldn&apos;t load links</p>
       ) : (
         <>
           <p className="mb-5">
@@ -68,7 +68,7 @@ export default function CuriusPage() {
                 >
                   {link.title.toLowerCase()}
                 </a>
-                <span className="text-accent/50 text-sm whitespace-nowrap">
+                <span className="text-muted text-sm whitespace-nowrap">
                   {formatTime(link.createdDate)}
                 </span>
               </li>
