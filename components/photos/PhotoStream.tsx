@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
 import type { StreamPhoto } from "@/types/photostream";
 import { shortCamera } from "@/utils/photoCamera";
 import { ContactSheet } from "./ContactSheet";
@@ -9,6 +15,7 @@ import { PhotoLightbox } from "./PhotoLightbox";
 import { useLightboxHistory } from "./useLightboxHistory";
 
 const PAGE = 36;
+const noop = () => () => {};
 
 // Every collection page (all photos, a city, a trip) is this same stream
 // under its own header, so they all browse the same way.
@@ -23,14 +30,18 @@ export function PhotoStream({
   groupBy?: "month" | "day";
   initialCamera?: string;
 }) {
-  const [camera, setCamera] = useState(initialCamera);
   // Pages no longer read ?camera= on the server (that forced a dynamic
-  // render); adopt it here instead. choose() keeps it in sync afterwards.
-  useEffect(() => {
-    if (initialCamera) return;
-    const fromUrl = new URLSearchParams(window.location.search).get("camera");
-    if (fromUrl) setCamera(fromUrl);
-  }, [initialCamera]);
+  // render); adopt it after hydration via useSyncExternalStore. choose()
+  // keeps pickedCamera in sync afterwards.
+  const urlCamera = useSyncExternalStore(
+    noop,
+    () => new URLSearchParams(window.location.search).get("camera") ?? "",
+    () => ""
+  );
+  const [pickedCamera, setPickedCamera] = useState<string | null>(
+    initialCamera || null
+  );
+  const camera = pickedCamera ?? urlCamera;
   const [limit, setLimit] = useState(PAGE);
   const end = useRef<HTMLDivElement>(null);
   const counts = new Map<string, number>();
@@ -56,7 +67,7 @@ export function PhotoStream({
   const [selected, onIndex] = useLightboxHistory(filtered);
 
   const choose = (name: string) => {
-    setCamera(name);
+    setPickedCamera(name);
     setLimit(PAGE);
     const url = name
       ? `?camera=${encodeURIComponent(name)}`

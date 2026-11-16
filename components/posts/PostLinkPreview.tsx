@@ -131,6 +131,8 @@ const PostLinkPreview = ({
       <Link
         href={`/posts/${slug}`}
         prefetch={isOpen ? null : false}
+        // floating-ui's refs object exposes callback refs by design
+        // eslint-disable-next-line react-hooks/refs
         ref={refs.setReference}
         onPointerMove={handlePointerMove}
         className={className}

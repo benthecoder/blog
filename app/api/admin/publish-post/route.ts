@@ -10,6 +10,7 @@ import {
 } from "@/utils/content/kind";
 import { acquirePostTransition } from "@/utils/content/postTransition";
 import { writeAtomicFile } from "@/utils/content/atomicFile";
+import { publishImagePaths } from "@/utils/content/draftImages";
 import { r2PutImage } from "@/utils/r2";
 
 export async function POST(request: NextRequest) {
@@ -64,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     const original = fs.readFileSync(draftPath, "utf8");
-    const postContent = original.replace(/\/images\/drafts\//g, "/images/");
+    const postContent = publishImagePaths(original);
     const postImages = fs.existsSync(IMAGES_DRAFTS_DIR)
       ? fs
           .readdirSync(IMAGES_DRAFTS_DIR)

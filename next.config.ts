@@ -48,6 +48,9 @@ const nextConfig: NextConfig = {
     "*": ["public/**/*", ".git/**/*"],
     "/api/**": ["app/og/*.jpg"],
   },
+  outputFileTracingIncludes: {
+    "/**": ["public/data/image-meta.json"],
+  },
   redirects: async () => [
     { source: "/wave", destination: "/", permanent: true },
     { source: "/search", destination: "/posts", permanent: true },

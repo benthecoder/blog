@@ -167,15 +167,16 @@ const Heatmap = ({
   navigationPath = "/calendar",
 }: HeatmapProps) => {
   const [hoveredDay, setHoveredDay] = useState<DayData | null>(null);
+  const [now] = useState(() => new Date());
 
   const postYears = posts.map((post) => new Date(post.date).getFullYear());
   const minYear = Math.min(...postYears);
   // Use maxYear or current year, whichever is greater (for future posts)
-  const maxYear = Math.max(...postYears, new Date().getFullYear());
+  const maxYear = Math.max(...postYears, now.getFullYear());
 
   const weeks = buildWeeks(year, groupPostsByDate(posts));
   const monthLabels = getMonthLabels(weeks, year);
-  const todayKey = dateKey(new Date());
+  const todayKey = dateKey(now);
 
   return (
     // The cell size is computed from the container width so the grid spans

@@ -50,7 +50,7 @@ export default function SpotifyNowPlaying() {
       className={`mt-8 text-sm text-muted leading-relaxed transition-opacity duration-700 ${isVisible ? "opacity-100" : "opacity-0"}`}
     >
       <div className="border-t border-line pt-6">
-        <p className="mb-3 text-xs opacity-60">♫ recent</p>
+        <p className="mb-3 text-xs">♫ recent</p>
         <div className="flex flex-col gap-2.5">
           {recentlyPlayed.tracks.slice(0, 10).map((track, i) => (
             <a
@@ -62,7 +62,7 @@ export default function SpotifyNowPlaying() {
               rel="noopener noreferrer"
               className="flex items-center gap-3 no-underline text-inherit hover:opacity-70 transition-opacity"
             >
-              <span className="text-caption opacity-35 w-4 text-right shrink-0">
+              <span className="text-caption w-4 text-right shrink-0">
                 {i + 1}
               </span>
               {track.albumImageUrl && (
@@ -76,12 +76,10 @@ export default function SpotifyNowPlaying() {
                 />
               )}
               <div className="min-w-0">
-                <p className="text-[13px] font-medium truncate">
+                <p className="text-[13px] font-medium text-primary truncate">
                   {track.title}
                 </p>
-                <p className="text-caption opacity-55 truncate">
-                  {track.artist}
-                </p>
+                <p className="text-caption truncate">{track.artist}</p>
               </div>
             </a>
           ))}

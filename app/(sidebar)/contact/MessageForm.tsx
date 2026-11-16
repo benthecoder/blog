@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { MESSAGE_MAX_LENGTH, SENDER_MAX_LENGTH } from "@/utils/messages/input";
 
 const fieldClass =
-  "w-full rounded-sm border border-line bg-transparent px-3 py-3 text-base text-primary placeholder:text-muted/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
+  "w-full rounded-sm border border-line bg-transparent px-3 py-3 text-base text-primary placeholder:text-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";
 
 type Status =
   | { kind: "idle" }

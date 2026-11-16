@@ -91,7 +91,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
     setCurrentDate(new Date(year, month + 1));
   };
 
-  const today = new Date();
+  const [today] = useState(() => new Date());
   const isToday = (day: number) => {
     return (
       day === today.getDate() &&
