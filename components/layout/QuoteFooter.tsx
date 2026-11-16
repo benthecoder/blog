@@ -27,14 +27,23 @@ export function QuoteFooter({ quotes }: { quotes: Quote[] }) {
 
   return (
     <footer className="mt-20 text-sm text-muted">
-      <Link
-        href={`/posts/${encodeURIComponent(quote.slug)}`}
-        className="hover:text-accent transition-colors"
-      >
-        {quote.text}
-      </Link>{" "}
-      &mdash; {quote.author}{" "}
-      <span className="mt-2 flex gap-x-6">
+      <figure>
+        <blockquote>
+          <Link
+            href={`/posts/${encodeURIComponent(quote.slug)}`}
+            className="hover:text-accent transition-colors"
+          >
+            {/* Hang the opening mark so the words, not the punctuation, align with the column. */}
+            <span aria-hidden className="-ml-[0.4em]">
+              &ldquo;
+            </span>
+            {quote.text}
+            <span aria-hidden>&rdquo;</span>
+          </Link>
+        </blockquote>
+        <figcaption className="mt-1">&mdash; {quote.author}</figcaption>
+      </figure>
+      <span className="mt-4 flex gap-x-6">
         <button type="button" onClick={next} className={action}>
           another quote
         </button>
