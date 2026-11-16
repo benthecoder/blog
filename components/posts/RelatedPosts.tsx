@@ -1,25 +1,22 @@
 import Link from "next/link";
 import type { RelatedPost } from "@/utils/content/related";
+import { FooterGroup, footerLink } from "./FooterGroup";
 
 const RelatedPosts = ({ posts }: { posts: RelatedPost[] }) => {
   if (posts.length === 0) return null;
 
   return (
-    <div className="mt-8 text-xs">
-      <p className="text-muted mb-1">Similar</p>
+    <FooterGroup label="Similar">
       <ul className="space-y-1">
         {posts.map((post) => (
           <li key={post.slug}>
-            <Link
-              href={`/posts/${post.slug}`}
-              className="text-primary hover:text-ink dark:hover:text-chalk-soft transition-colors"
-            >
+            <Link href={`/posts/${post.slug}`} className={footerLink}>
               {post.title}
             </Link>
           </li>
         ))}
       </ul>
-    </div>
+    </FooterGroup>
   );
 };
 

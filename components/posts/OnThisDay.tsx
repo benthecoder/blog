@@ -1,26 +1,25 @@
 import Link from "next/link";
 import type { SameDayPost } from "@/utils/content/onThisDay";
+import { FooterGroup, footerLink } from "./FooterGroup";
 
 const OnThisDay = ({ posts }: { posts: SameDayPost[] }) => {
   if (posts.length === 0) return null;
 
   return (
-    <div className="mt-8 text-xs">
-      <p className="text-muted mb-1">On this day</p>
+    <FooterGroup label="On this day">
       <ul className="space-y-1">
         {posts.map((post) => (
-          <li key={post.slug}>
-            <span className="text-muted tabular-nums mr-2">{post.year}</span>
-            <Link
-              href={`/posts/${post.slug}`}
-              className="text-primary hover:text-ink dark:hover:text-chalk-soft transition-colors"
-            >
+          <li key={post.slug} className="flex gap-3">
+            <span className="shrink-0 text-muted tabular-nums">
+              {post.year}
+            </span>
+            <Link href={`/posts/${post.slug}`} className={footerLink}>
               {post.title}
             </Link>
           </li>
         ))}
       </ul>
-    </div>
+    </FooterGroup>
   );
 };
 
