@@ -1,18 +1,36 @@
+import { z } from "zod";
 import type { LinkSource } from "../types";
 
 const USER_ID = 2790;
 const MAX_PAGES = 20;
 
-interface CuriusLink {
-  link: string;
-  title: string;
-  createdDate: string;
-  highlights: {
-    highlight: string;
-    createdDate: string;
-    comment?: string | { text?: string; userId?: number } | null;
-  }[];
-}
+const curiusHighlightSchema = z.object({
+  highlight: z.string().nullable().optional(),
+  comment: z
+    .union([
+      z.string(),
+      z.object({
+        text: z.string().nullable().optional(),
+        userId: z.number().nullable().optional(),
+      }),
+    ])
+    .nullable()
+    .optional(),
+});
+
+const curiusResponseSchema = z.object({
+  userSaved: z
+    .array(
+      z.object({
+        link: z.string(),
+        title: z.string(),
+        createdDate: z.string(),
+        highlights: z.array(curiusHighlightSchema).nullable().optional(),
+      })
+    )
+    .nullable()
+    .optional(),
+});
 
 // `/links` is paginated newest-first and, unlike `/searchLinks`, includes
 // highlights.
@@ -35,14 +53,15 @@ export const curius: LinkSource = {
         await res.body?.cancel();
         throw new Error(`curius ${res.status}`);
       }
-      const { userSaved }: { userSaved: CuriusLink[] } = await res.json();
+      const { userSaved } = curiusResponseSchema.parse(await res.json());
       if (!userSaved?.length) break;
 
       for (const l of userSaved) {
         const saved = new Date(l.createdDate);
         if (saved < since || saved >= until) continue;
         const marks = (l.highlights ?? []).filter(
-          (h) => typeof h.highlight === "string" && h.highlight.trim()
+          (h): h is typeof h & { highlight: string } =>
+            typeof h.highlight === "string" && Boolean(h.highlight.trim())
         );
         out.push({
           url: l.link,
