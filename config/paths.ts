@@ -54,6 +54,12 @@ export const LIBRARY_MD = path.join(
   ROOT_DIR,
   "app/(sidebar)/library/library.md"
 );
+export const WORDS_MD = path.join(ROOT_DIR, "app/(sidebar)/words/words.md");
+export const VERSES_MD = path.join(ROOT_DIR, "app/(sidebar)/verses/verses.md");
+export const BELIEVE_MD = path.join(
+  ROOT_DIR,
+  "app/(sidebar)/believe/believe.md"
+);
 export const PROJECTS_MD = path.join(
   ROOT_DIR,
   "app/(sidebar)/projects/projects.md"

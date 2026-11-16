@@ -9,6 +9,8 @@ import type { Quote } from "@/utils/content/quotes";
 // always matches.
 const startRoll = typeof window === "undefined" ? 0 : Math.random();
 const noop = () => () => {};
+const action =
+  "underline underline-offset-4 decoration-accent/30 hover:text-accent focus-visible:outline-2 focus-visible:outline-accent";
 
 export function QuoteFooter({ quotes }: { quotes: Quote[] }) {
   const start = useSyncExternalStore(
@@ -31,13 +33,14 @@ export function QuoteFooter({ quotes }: { quotes: Quote[] }) {
         {quote.text}
       </Link>{" "}
       &mdash; {quote.author}{" "}
-      <button
-        type="button"
-        onClick={next}
-        className="underline underline-offset-4 decoration-accent/30 hover:text-accent focus-visible:outline-2 focus-visible:outline-accent"
-      >
-        view another
-      </button>
+      <span className="inline-flex gap-x-4">
+        <button type="button" onClick={next} className={action}>
+          view another
+        </button>
+        <Link href="/words" className={action}>
+          all words
+        </Link>
+      </span>
     </footer>
   );
 }
