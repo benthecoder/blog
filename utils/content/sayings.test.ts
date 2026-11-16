@@ -3,6 +3,7 @@ import { BELIEVE_MD, VERSES_MD, WORDS_MD } from "@/config/paths";
 import { readMarkdownFile } from "./markdown";
 import { bodyOnlySchema } from "./schemas";
 import { parseSayings } from "./sayings";
+import { parseBeliefs } from "./beliefs";
 
 describe("parseSayings", () => {
   it("reads topics and cited entries", () => {
@@ -15,7 +16,7 @@ and I will give you rest.
 
 ## on time
 How we spend our days is how we spend our lives.
--- Annie Dillard`)
+-- Annie Dillard, The Writing Life`)
     ).toEqual([
       {
         id: "on-rest",
@@ -34,6 +35,7 @@ How we spend our days is how we spend our lives.
           {
             text: "How we spend our days is how we spend our lives.",
             cite: "Annie Dillard",
+            work: "The Writing Life",
           },
         ],
       },
@@ -54,8 +56,21 @@ How we spend our days is how we spend our lives.
     expect(parseSayings(content).length).toBeGreaterThan(0);
   });
 
-  it("believe.md is a nested list", () => {
+  it("believe.md parses", () => {
     const { content } = readMarkdownFile(BELIEVE_MD, bodyOnlySchema);
-    expect(content.trim()).toMatch(/^- /);
+    expect(parseBeliefs(content).length).toBeGreaterThan(0);
+  });
+});
+
+describe("parseBeliefs", () => {
+  it("reads beliefs with their reasons", () => {
+    expect(parseBeliefs("- a\n  - why a\n- b")).toEqual([
+      { text: "a", reasons: ["why a"] },
+      { text: "b", reasons: [] },
+    ]);
+  });
+
+  it.each(["  - a reason first", "a loose line"])("rejects %s", (md) => {
+    expect(() => parseBeliefs(md)).toThrow();
   });
 });

@@ -38,7 +38,7 @@ export function QuoteFooter({ quotes }: { quotes: Quote[] }) {
           view another
         </button>
         <Link href="/words" className={action}>
-          all words
+          all quotes
         </Link>
       </span>
     </footer>
