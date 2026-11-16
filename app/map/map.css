@@ -17,8 +17,8 @@
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
-.places-explorer button,
-.places-explorer input {
+.places-explorer button:not([data-ui]),
+.places-explorer input:not([data-ui]) {
   font: inherit;
   color: inherit;
 }
@@ -29,7 +29,7 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
-.places-explorer a {
+.places-explorer a:not([data-ui]) {
   color: inherit;
   text-decoration: none;
 }

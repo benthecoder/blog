@@ -87,6 +87,34 @@ describe("published view counters", () => {
     });
     expect(redis).toHaveBeenCalledTimes(1);
   });
+  it("deduplicates by IP even when User-Agent or Accept-Language rotates", async () => {
+    redis.mockResolvedValue(1);
+    await POST(
+      new NextRequest("https://example.test/api/views", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-forwarded-for": "192.0.2.1",
+          "user-agent": "Agent-A",
+          "accept-language": "en-US",
+        },
+        body: '{"slug":"journal"}',
+      })
+    );
+    await POST(
+      new NextRequest("https://example.test/api/views", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-forwarded-for": "192.0.2.1",
+          "user-agent": "Agent-B",
+          "accept-language": "fr-FR",
+        },
+        body: '{"slug":"journal"}',
+      })
+    );
+    expect(redis.mock.calls[0][0][4]).toBe(redis.mock.calls[1][0][4]);
+  });
   it("bounds the leaderboard by published posts rather than Redis keyspace", async () => {
     const published = Array.from({ length: 401 }, (_, i) => `post-${i}`);
     slugs.mockReturnValue(published);

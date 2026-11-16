@@ -22,15 +22,8 @@ const parseSlug = (value: unknown): string | null => {
   return trimmed.length <= 255 && isSafeSlug(trimmed) ? trimmed : null;
 };
 
-const getViewerHash = (request: NextRequest) => {
-  const ip = clientIp(request);
-  const userAgent = request.headers.get("user-agent") || "unknown";
-  const acceptLanguage = request.headers.get("accept-language") || "";
-
-  return createHash("sha256")
-    .update(`${ip}|${userAgent}|${acceptLanguage}`)
-    .digest("hex");
-};
+const getViewerHash = (request: NextRequest) =>
+  createHash("sha256").update(clientIp(request)).digest("hex");
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

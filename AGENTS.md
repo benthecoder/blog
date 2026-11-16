@@ -57,20 +57,20 @@ Project skills live in `.agents/skills/` (Codex reads it directly; Claude reads 
 
 ## Content model
 
-Two content types, both markdown with gray-matter frontmatter:
+Markdown content with gray-matter frontmatter:
 
-- **Posts** `posts/*.md` → `/posts/[slug]` — chronological journal entries
-- **Wiki** `wiki/*.md` → `/wiki/[slug]` — living reference pages (personal encyclopedia)
+- **Posts** `posts/*.md` → `/posts/[slug]` — chronological journal entries, essays, book notes, link roundups, and resources (typed by `format` in `utils/content/formats.ts`)
+- **Recipes** `recipes/*.md` → `/recipes/[slug]` — kitchen recipes
 
 Tag a post only with what it is about: a passing mention (one "went to church" line, one verse, one quote) never earns a tag, and journal days get 0–2 tags. A `locations` entry means Benedict was there on that date, not that the place is mentioned. `utils/content/tagVocabulary.test.ts` pins every tag used on fewer than 3 posts, so prefer an existing tag over a new one.
 
-When adding sources to post or wiki text, link the words themselves (`he brought in [kudzu](url)`), never a parenthetical `([source](url))`.
+When adding sources to post text, link the words themselves (`he brought in [kudzu](url)`), never a parenthetical `([source](url))`.
 
 See any existing file in those directories for the frontmatter shape. All directory and file path constants live in `config/paths.ts` — add new paths there, never hardcode them.
 
 ## Critical rule
 
-All markdown file I/O goes through `utils/content/markdown.ts` (`readMarkdownFile`, `scanMarkdownDir`). Do not add raw `fs.readFileSync + matter()` calls anywhere else. Higher-level content access goes through `utils/content/posts.ts`, `utils/content/wiki.ts`, or `utils/content/gallery.ts`.
+All markdown file I/O goes through `utils/content/markdown.ts` (`readMarkdownFile`, `scanMarkdownDir`). Do not add raw `fs.readFileSync + matter()` calls anywhere else. Higher-level content access goes through `utils/content/posts.ts`, `utils/content/links.ts`, `utils/content/recipes.ts`, or `utils/content/photostream.ts`.
 
 ## Not markdown
 

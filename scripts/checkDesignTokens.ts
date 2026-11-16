@@ -39,6 +39,16 @@ const RULES: Rule[] = [
     re: /(?<![\w-])text-\[\d*\.?\d+(?:px|rem)\]/g,
     hint: "use text-3xs / text-2xs / text-caption / text-xs",
   },
+  {
+    name: "rgb",
+    re: /\brgba?\s*\(/g,
+    hint: "use a role or token from app/globals.css instead of raw rgb/rgba",
+  },
+  {
+    name: "mode-token",
+    re: /(?<![:\w-])bg-chalk(?:-[a-z]+)?(?![\w-])|\bdark:(?:text|bg|border|ring|outline|fill|stroke)-ink(?:-[a-z]+)?(?![\w-])/g,
+    hint: "pair ink-* in light mode and chalk-* behind dark:, or use a role token",
+  },
 ];
 
 /**
@@ -104,7 +114,11 @@ function walk(dir: string, out: string[] = []) {
     if (entry.isDirectory()) {
       if (entry.name === "node_modules" || entry.name.startsWith(".")) continue;
       walk(full, out);
-    } else if (full.endsWith(".tsx") && !full.endsWith(".test.tsx")) {
+    } else if (
+      (full.endsWith(".tsx") || full.endsWith(".ts")) &&
+      !full.endsWith(".test.tsx") &&
+      !full.endsWith(".test.ts")
+    ) {
       out.push(full);
     }
   }

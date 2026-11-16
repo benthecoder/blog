@@ -43,7 +43,7 @@ const YearLink = ({
   <Link
     href={href}
     scroll={false}
-    className="text-accent/35 hover:text-accent/70 transition-[color] duration-150"
+    className="text-muted hover:text-accent transition-[color] duration-150"
   >
     {children}
   </Link>
@@ -112,9 +112,7 @@ export default function ArchiveClient({
               onClick={() => router.push(viewHref(id))}
               aria-pressed={view === id}
               className={`focus-ring relative touch-manipulation transition-[color] duration-150 after:absolute after:-inset-x-2 after:-inset-y-1 ${
-                view === id
-                  ? "text-accent"
-                  : "text-accent/35 hover:text-accent/70"
+                view === id ? "text-accent" : "text-muted hover:text-accent"
               }`}
             >
               {label}
@@ -126,7 +124,7 @@ export default function ArchiveClient({
             href="/tags"
             aria-label="browse tags"
             title="tags"
-            className="inline-flex h-6 w-6 items-center justify-center text-accent/35 hover:text-accent/70 transition-[color] duration-150"
+            className="focus-ring inline-flex h-6 w-6 pointer-coarse:min-h-11 pointer-coarse:min-w-11 items-center justify-center text-muted hover:text-accent transition-[color] duration-150"
           >
             <svg
               aria-hidden="true"
@@ -143,7 +141,7 @@ export default function ArchiveClient({
           <button
             type="button"
             onClick={() => document.dispatchEvent(new Event("openSearch"))}
-            className="focus-ring inline-flex h-6 w-6 items-center justify-center text-accent/35 hover:text-accent/70 transition-[color] duration-150"
+            className="focus-ring inline-flex h-6 w-6 pointer-coarse:min-h-11 pointer-coarse:min-w-11 items-center justify-center text-muted hover:text-accent transition-[color] duration-150"
             aria-label="search"
           >
             <svg
@@ -184,7 +182,7 @@ export default function ArchiveClient({
                 <YearLink href={viewHref(view, newer)}>{newer} →</YearLink>
               )}
             </div>
-            <span className="text-xs text-accent/40">
+            <span className="text-xs text-muted">
               {yearPosts.length} posts · {words(yearPosts)} words
             </span>
           </div>

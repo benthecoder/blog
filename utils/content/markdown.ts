@@ -51,16 +51,50 @@ export function scanMarkdownSlugs(dir: string): string[] {
     .map((f) => f.slice(0, -".md".length));
 }
 
+// Deployed files on Vercel are immutable; cache directory scans per schema
+// across modules (posts, links, quotes, papers, searchIndex) so a worker reads
+// and parses the 1,085 markdown files once instead of five times.
+const deployedDirCache = new Map<
+  string,
+  Map<z.ZodType, (MarkdownFile<unknown> & { slug: string })[]>
+>();
+
+const isImmutableDeployment = () =>
+  process.env.NODE_ENV === "production" && process.env.VERCEL === "1";
+
+const cloneEntries = <S extends z.ZodType>(
+  entries: (MarkdownFile<unknown> & { slug: string })[]
+): (MarkdownFile<z.output<S>> & { slug: string })[] =>
+  entries.map((item) => ({
+    ...item,
+    data: { ...(item.data as Record<string, unknown>) } as z.output<S>,
+  }));
+
 export function scanMarkdownDir<S extends z.ZodType>(
   dir: string,
   schema: S
 ): (MarkdownFile<z.output<S>> & { slug: string })[] {
   if (!fs.existsSync(dir)) return [];
-  return fs
+  const cacheable = isImmutableDeployment() && !dir.endsWith("drafts");
+  if (cacheable) {
+    const cached = deployedDirCache.get(dir)?.get(schema);
+    if (cached) return cloneEntries(cached);
+  }
+  const entries = fs
     .readdirSync(dir)
     .filter((f) => f.endsWith(".md"))
     .map((fileName) => ({
       slug: fileName.replace(".md", ""),
       ...readMarkdownFile(path.join(dir, fileName), schema),
     }));
+  if (cacheable) {
+    let bySchema = deployedDirCache.get(dir);
+    if (!bySchema) {
+      bySchema = new Map();
+      deployedDirCache.set(dir, bySchema);
+    }
+    bySchema.set(schema, entries);
+    return cloneEntries(entries);
+  }
+  return entries;
 }

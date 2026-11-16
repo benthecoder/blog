@@ -1,8 +1,6 @@
 ---
 title: 10 Rules of Reliable Data Science
-tags: >-
-  data-science, software-design, data-engineering, machine-learning,
-  reproducibility
+tags: data-science, software-design, data-engineering, machine-learning, reproducibility
 date: Jun 14, 2024
 ---
 

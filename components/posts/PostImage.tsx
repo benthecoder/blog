@@ -196,7 +196,11 @@ export default function PostImage({
             // The flagged first image preloads instead (see markdownConfig).
             loading={priority ? "eager" : "lazy"}
             preload={priority || undefined}
-            sizes="auto, (max-width: 800px) 100vw, 800px"
+            sizes={
+              priority
+                ? "(max-width: 640px) 92vw, 560px"
+                : "auto, (max-width: 640px) 92vw, 560px"
+            }
             placeholder={meta?.blurDataURL ? "blur" : "empty"}
             blurDataURL={meta?.blurDataURL}
             onLoad={(e) => {

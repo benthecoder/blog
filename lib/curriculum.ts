@@ -38,9 +38,10 @@ export type MapArea = { id: string; title: string };
 export type MasteryLevel = 0 | 1 | 2 | 3 | 4 | 5;
 
 function clampLevel(value: number): MasteryLevel {
-  if (value <= 0) return 0;
-  if (value >= 5) return 5;
-  return value as MasteryLevel;
+  const rounded = Math.round(value);
+  if (rounded <= 0) return 0;
+  if (rounded >= 5) return 5;
+  return rounded as MasteryLevel;
 }
 
 export function skillBar(level: number): string {
@@ -214,12 +215,8 @@ function enrolledNightIds(): Set<string> {
   return new Set(ENROLLED_NIGHTS.map((row) => row.courseId));
 }
 
-export const REQUIRED_AREA_IDS = (mapDoc as { required_areas: string[] })
-  .required_areas;
-
 const catalogItems = (catalogDoc as { items: CatalogItem[] }).items;
-export const mapNodes = (mapDoc as { nodes: MapNode[] }).nodes;
-export const mapAreas = (mapDoc as { areas: MapArea[] }).areas;
+const mapNodes = (mapDoc as { nodes: MapNode[] }).nodes;
 
 const catalogById = new Map(catalogItems.map((item) => [item.id, item]));
 const learnById = new Map(
@@ -307,4 +304,16 @@ export function nodeLevels(): Record<string, MasteryLevel> {
   const levels: Record<string, MasteryLevel> = {};
   for (const node of mapNodes) levels[node.id] = nodeLevel(node);
   return levels;
+}
+
+export function nodeCourseTitles(): Record<string, string> {
+  const titles: Record<string, string> = {};
+  for (const node of mapNodes) {
+    for (const id of node.items) {
+      if (titles[id]) continue;
+      const course = mergedCourse(id);
+      titles[id] = course ? humanName(course) : id;
+    }
+  }
+  return titles;
 }

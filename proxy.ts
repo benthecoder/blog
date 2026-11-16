@@ -7,6 +7,18 @@ const PUBLIC_ADMIN_PAGE = "/admin/messages";
 
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+  const origin = request.headers.get("origin");
+  if (
+    origin &&
+    origin !== request.nextUrl.origin &&
+    request.method !== "GET" &&
+    request.method !== "HEAD"
+  ) {
+    return NextResponse.json(
+      { error: "Same-origin requests required" },
+      { status: 403 }
+    );
+  }
 
   // Admin is a local authoring tool; dev runs unauthenticated, same as
   // checkAdminAuth().

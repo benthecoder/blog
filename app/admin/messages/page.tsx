@@ -1,14 +1,16 @@
 import { neon } from "@neondatabase/serverless";
+import { z } from "zod";
 import AdminNavigation from "@/components/admin/AdminNavigation";
+import { parseRows } from "@/utils/thoughts";
 
 export const dynamic = "force-dynamic";
 
-type Message = {
-  id: number;
-  body: string;
-  sender: string | null;
-  created_at: string;
-};
+const messageRowSchema = z.object({
+  id: z.number(),
+  body: z.string(),
+  sender: z.string().nullable(),
+  created_at: z.union([z.string(), z.date()]),
+});
 
 const when = new Intl.DateTimeFormat("en-US", {
   dateStyle: "medium",
@@ -20,10 +22,11 @@ export default async function MessagesPage() {
   const sql = neon(process.env.POSTGRES_URL!, {
     fetchOptions: { signal: AbortSignal.timeout(10_000) },
   });
-  const messages = (await sql`
+  const rows = await sql`
     SELECT id, body, sender, created_at FROM messages
     ORDER BY created_at DESC LIMIT 500
-  `) as Message[];
+  `;
+  const messages = parseRows(messageRowSchema, rows, "messages");
 
   return (
     <div className="mx-auto max-w-2xl p-8">

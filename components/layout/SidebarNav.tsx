@@ -1,12 +1,10 @@
 "use client";
 
-import type { MouseEvent } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { hoverTick } from "@/utils/hoverTick";
 import { SketchIcon } from "../ui/SketchIcon";
-import { MapPinned } from "lucide-react";
 
 const links = [
   { path: "/posts", text: "archive", icon: "archive.svg" },
@@ -45,11 +43,15 @@ export function SidebarNav() {
     isMobile: boolean;
   } | null>(null);
 
-  const handleMouseEnter = (e: MouseEvent<HTMLAnchorElement>, text: string) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+  const showTooltip = (
+    el: HTMLAnchorElement,
+    text: string,
+    playSound: boolean
+  ) => {
+    const rect = el.getBoundingClientRect();
     const isMobile = window.innerWidth < 1024;
 
-    hoverTick();
+    if (playSound) hoverTick();
 
     if (isMobile) {
       // Position below and centered on mobile
@@ -83,18 +85,23 @@ export function SidebarNav() {
           <Link
             key={path}
             href={path}
+            aria-current={pathname === path ? "page" : undefined}
             prefetch={
               path !== "/random" && prefetchPath === path ? null : false
             }
-            className={`inline-flex w-8 h-8 lg:w-9 lg:h-9 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+            className={`inline-flex items-center justify-center w-8 h-8 lg:w-9 lg:h-9 pointer-coarse:min-h-11 pointer-coarse:min-w-11 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
               pathname === path ? "opacity-50" : "hover:opacity-70"
             }`}
             onMouseEnter={(e) => {
               setPrefetchPath(path);
-              handleMouseEnter(e, text);
+              showTooltip(e.currentTarget, text, true);
             }}
-            onFocus={() => setPrefetchPath(path)}
+            onFocus={(e) => {
+              setPrefetchPath(path);
+              showTooltip(e.currentTarget, text, false);
+            }}
             onMouseLeave={() => setHoveredLink(null)}
+            onBlur={() => setHoveredLink(null)}
             onClick={
               path === "/random"
                 ? (e) => {
@@ -104,19 +111,11 @@ export function SidebarNav() {
                 : undefined
             }
           >
-            {icon ? (
-              <SketchIcon
-                src={`/icons/${icon}`}
-                label={text}
-                className={`w-full h-full${path === "/random" && spinning ? " dice-spin" : ""}`}
-              />
-            ) : (
-              <MapPinned
-                aria-label={text}
-                className="w-full h-full p-1.5"
-                strokeWidth={1.25}
-              />
-            )}
+            <SketchIcon
+              src={`/icons/${icon}`}
+              label={text}
+              className={`w-8 h-8 lg:w-9 lg:h-9${path === "/random" && spinning ? " dice-spin" : ""}`}
+            />
           </Link>
         ))}
       </nav>
