@@ -212,7 +212,7 @@ export default function CalendarView({ posts }: CalendarViewProps) {
               className={`focus-ring 
                 min-h-20 sm:aspect-square border rounded-xs p-1 sm:p-3 flex flex-col items-start justify-between relative
                 hover:border-accent hover:shadow-xs transition-[border-color,box-shadow]
-                ${isTodayDate ? "border-accent bg-chalk-soft dark:bg-night-raised shadow-xs" : "border-line"}
+                ${isTodayDate ? "border-accent bg-paper-sunken dark:bg-night-raised shadow-xs" : "border-line"}
                 ${isDraft ? "border-dashed border-accent bg-accent/5" : ""}
                 ${post && !isTodayDate && !isDraft ? "bg-paper dark:bg-night-raised/50" : ""}
                 ${!post && !isTodayDate ? "bg-paper-raised dark:bg-night" : ""}

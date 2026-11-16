@@ -9,6 +9,7 @@ export const ADMIN_SESSION_SECONDS = 60 * 60 * 24 * 30;
 function safeEqual(a: string, b: string): boolean {
   const supplied = Buffer.from(a);
   const expected = Buffer.from(b);
+  if (expected.length === 0) return false;
   const padded = Buffer.alloc(expected.length);
   supplied.copy(padded);
   const equal = crypto.timingSafeEqual(padded, expected);
@@ -42,6 +43,18 @@ export function verifyAdminSession(
 }
 
 export function checkAdminAuth(request: NextRequest): NextResponse | null {
+  const origin = request.headers.get("origin");
+  if (
+    origin &&
+    origin !== request.nextUrl.origin &&
+    request.method !== "GET" &&
+    request.method !== "HEAD"
+  ) {
+    return NextResponse.json(
+      { error: "Same-origin requests required" },
+      { status: 403 }
+    );
+  }
   if (process.env.NODE_ENV !== "production") return null;
 
   const adminSecret = process.env.ADMIN_SECRET;

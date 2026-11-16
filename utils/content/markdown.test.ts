@@ -1,7 +1,7 @@
 import fs from "fs";
 import os from "os";
 import path from "path";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import {
   readMarkdownFile,
   scanMarkdownDir,
@@ -16,6 +16,7 @@ fs.writeFileSync(
 );
 fs.writeFileSync(path.join(dir, "notes.txt"), "not markdown");
 
+afterEach(() => vi.unstubAllEnvs());
 afterAll(() => fs.rmSync(dir, { recursive: true, force: true }));
 
 describe("readMarkdownFile", () => {
@@ -66,5 +67,20 @@ describe("scanMarkdownDir", () => {
     expect(
       scanMarkdownDir(path.join(dir, "nope"), wikiFrontmatterSchema)
     ).toEqual([]);
+  });
+
+  it("caches immutable Vercel directory scans across callers without sharing mutable frontmatter", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("VERCEL", "1");
+    const spy = vi.spyOn(fs, "readdirSync");
+    try {
+      const first = scanMarkdownDir(dir, wikiFrontmatterSchema);
+      first[0].data.title = "mutated";
+      const second = scanMarkdownDir(dir, wikiFrontmatterSchema);
+      expect(second[0].data.title).toBe("hello");
+      expect(spy).toHaveBeenCalledTimes(1);
+    } finally {
+      spy.mockRestore();
+    }
   });
 });

@@ -143,6 +143,25 @@ describe("admin session access", () => {
     expect(proxy(req).headers.get("x-middleware-next")).toBe("1");
     expect(checkAdminAuth(req)).toBeNull();
   });
+
+  it("rejects cross-origin state-mutating requests in both dev and production", () => {
+    for (const env of ["development", "production"]) {
+      vi.stubEnv("NODE_ENV", env);
+      vi.stubEnv("ADMIN_SECRET", SECRET);
+      const crossOrigin = new NextRequest(
+        "https://example.test/api/admin/upload-image",
+        {
+          method: "POST",
+          headers: {
+            Origin: "https://evil.example",
+            Cookie: `${ADMIN_COOKIE}=${sessionToken(SECRET)}`,
+          },
+        }
+      );
+      expect(proxy(crossOrigin).status).toBe(403);
+      expect(checkAdminAuth(crossOrigin)?.status).toBe(403);
+    }
+  });
 });
 
 describe("session lifetime", () => {

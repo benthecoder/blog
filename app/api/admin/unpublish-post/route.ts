@@ -20,7 +20,8 @@ export async function POST(request: NextRequest) {
   const createdImages: string[] = [];
   let draftCreated = false;
   try {
-    const body = postTransitionBodySchema.safeParse(await request.json());
+    const rawBody = await request.json().catch(() => null);
+    const body = postTransitionBodySchema.safeParse(rawBody);
     if (!body.success) {
       return NextResponse.json({ error: "Invalid slug" }, { status: 400 });
     }

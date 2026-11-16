@@ -27,7 +27,7 @@ interface RenderPostProps {
 }
 
 const proseClasses =
-  "prose dark:prose-invert dark:text-chalk text-base leading-relaxed max-w-none prose-headings:scroll-mt-8 selection:bg-paper-tint/30 dark:selection:bg-chalk-soft/20 prose-a:text-ink prose-a:decoration-paper-warm/50 prose-a:hover:text-ink/70 prose-a:hover:decoration-ink prose-headings:text-ink dark:prose-headings:text-chalk-soft";
+  "prose dark:prose-invert text-base leading-relaxed max-w-none prose-headings:scroll-mt-8";
 
 const RenderPost = ({
   post,
@@ -121,7 +121,7 @@ const RenderPost = ({
         <div className="mt-8 flex justify-between gap-4">
           {prev ? (
             <div className="flex flex-col flex-1">
-              <p className="text-primary/60 mb-1">Previous</p>
+              <p className="text-muted mb-1">Previous</p>
               <Link
                 href={`/posts/${prev.slug}`}
                 className="text-primary hover:text-ink dark:hover:text-chalk-soft transition-colors"
@@ -134,7 +134,7 @@ const RenderPost = ({
           )}
           {next ? (
             <div className="flex flex-col flex-1 text-right">
-              <p className="text-primary/60 mb-1">Next</p>
+              <p className="text-muted mb-1">Next</p>
               <Link
                 href={`/posts/${next.slug}`}
                 className="text-primary hover:text-ink dark:hover:text-chalk-soft transition-colors"

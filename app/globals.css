@@ -22,10 +22,7 @@
    ink tier in the PALETTES block; nothing else needs to change.
    ========================================================================== */
 @theme {
-  --color-photo-viewer: #131413;
-  --color-photo-caption: #f6f5ef;
   --color-print: #f6f1e6; /* ivory print card stock, both modes */
-  --color-photo-shade: #131413b3;
   /* -- Surfaces: light ---------------------------------------------------- */
   --color-paper: #fbfaf5; /* page + card background */
   --color-paper-raised: #f8fbfb; /* raised card */
@@ -41,7 +38,7 @@
 
   /* -- Ink on paper (palette-driven) -------------------------------------- */
   --color-ink-muted: #49749e; /* quietest: quotes, markers */
-  --color-ink-soft: #3f6d99; /* secondary: hover, selection */
+  --color-ink-soft: #44719c; /* secondary: hover, selection */
   --color-ink: #3f6d99; /* primary: links, headings */
   --color-ink-strong: #365d82; /* highest contrast: body copy */
 
@@ -161,7 +158,7 @@
     font-size: var(--text-2xs);
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: color-mix(in oklab, var(--color-primary) 60%, transparent);
+    color: var(--color-muted);
   }
 }
 
@@ -203,7 +200,7 @@
 :root[data-palette="gold"],
 .colophon-swatch[data-palette="gold"] {
   --color-ink-muted: #8d6d1f;
-  --color-ink-soft: #896818;
+  --color-ink-soft: #85651a;
   --color-ink: #896818;
   --color-ink-strong: #745814;
   --color-chalk: #d9b65a;
@@ -217,7 +214,7 @@
 :root[data-palette="steel"],
 .colophon-swatch[data-palette="steel"] {
   --color-ink-muted: #49749e;
-  --color-ink-soft: #3f6d99;
+  --color-ink-soft: #44719c;
   --color-ink: #3f6d99;
   --color-ink-strong: #365d82;
   --color-chalk: #9dbedb;
@@ -361,7 +358,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--color-line, currentcolor);
   }
 }
 
@@ -380,12 +377,21 @@ body {
   background: var(--color-night);
 }
 
+/* Highlight and text must contrast against each other, not just the page —
+   so each mode pairs a wash from one end of the ink ramp with text from the
+   other, rather than two neighbouring tones of the same hue. */
 ::selection {
-  background-color: var(--color-chalk);
+  background-color: color-mix(
+    in oklab,
+    var(--color-ink) 22%,
+    var(--color-paper)
+  );
+  color: var(--color-ink-strong);
 }
 
 .dark ::selection {
   background-color: var(--color-ink);
+  color: var(--color-paper);
 }
 
 /* ==========================================================================
@@ -401,7 +407,7 @@ body {
    any inset here would indent the body relative to the title. The page
    gutter comes from the layout container instead. */
 .prose {
-  color: var(--color-ink);
+  color: var(--color-ink-strong);
   width: 100%;
   min-width: 100%;
   position: relative;
@@ -792,7 +798,7 @@ body {
 /* Keyboard focus rings the whole print, card edge and all, not just the
    photo button inside it. */
 .photo-print:has(> .photo-frame:focus-visible:not([data-quiet])) {
-  outline: 2px solid color-mix(in oklab, var(--color-accent) 45%, transparent);
+  outline: 2px solid var(--color-accent);
   outline-offset: 4px;
 }
 
@@ -898,7 +904,7 @@ body {
 /* With room to spare, a row of prints reaches past the text into the
    margins, the way a magazine lets a picture spread run wider than its
    column. Three photos side by side are otherwise thumbnails. */
-@media (min-width: 64rem) {
+@media (min-width: 72rem) {
   .photo-group:has(.photo-row) {
     margin-inline: -4rem;
   }
@@ -958,6 +964,7 @@ body {
    shorter caption still end level with their neighbours. */
 .photo-row .photo-label {
   flex: 1;
+  font-size: clamp(0.75rem, calc(3 * var(--u)), 1rem);
 }
 
 /* Only a real pointer lays the fan flat. On touch, the tap that opens a
@@ -1278,6 +1285,16 @@ body {
 @media (min-width: 1280px) {
   .editor-column:has(aside.sidenote) {
     max-width: calc(760px + 2 * 280px);
+  }
+
+  /* When a post has sidenotes in the right margin, keep the table of contents
+     inline instead of floating both in the same margin. */
+  div:has(aside.sidenote) > nav[aria-label="Table of contents"] {
+    display: none;
+  }
+
+  div:has(aside.sidenote) > details[data-toc] {
+    display: block;
   }
 
   .prose aside.sidenote,

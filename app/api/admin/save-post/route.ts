@@ -31,7 +31,8 @@ export async function POST(request: NextRequest) {
   if (authError) return authError;
   let kind: ReturnType<typeof parseKind> = "post";
   try {
-    const body = saveBodySchema.safeParse(await request.json());
+    const rawBody = await request.json().catch(() => null);
+    const body = saveBodySchema.safeParse(rawBody);
     if (!body.success) {
       const field = body.error.issues[0]?.path[0];
       return NextResponse.json(

@@ -70,23 +70,20 @@ function DayCell({
   day,
   isToday,
   onHover,
-  onLeave,
 }: {
   day: DayData;
   isToday: boolean;
   onHover: (day: DayData) => void;
-  onLeave: () => void;
 }) {
   const className = `w-(--hm-cell) h-(--hm-cell) rounded-xs ${wordCountColor(day.posts)} ${
     day.posts.length > 0 ? "cursor-pointer hover:ring-1 hover:ring-accent" : ""
-  } ${isToday ? "shadow-[inset_0_0_0_1.5px_rgba(0,0,0,0.6)] dark:shadow-[inset_0_0_0_1.5px_rgba(255,255,255,0.6)]" : ""} transition-[box-shadow] duration-150`;
+  } ${isToday ? "ring-1 ring-inset ring-primary/60" : ""} transition-[box-shadow] duration-150`;
   const events = {
     onMouseEnter: () => {
       if (day.posts.length === 0) return;
       hoverTick();
       onHover(day);
     },
-    onMouseLeave: onLeave,
   };
   const title = day.date.toDateString();
   if (day.posts.length === 1) {
@@ -99,12 +96,25 @@ function DayCell({
         title={title}
         aria-label={`${title}: ${post.title}`}
         onFocus={() => onHover(day)}
-        onBlur={onLeave}
         {...events}
       />
     );
   }
-  return <div className={className} title={title} {...events} />;
+  if (day.posts.length > 1) {
+    return (
+      <div
+        tabIndex={0}
+        role="button"
+        aria-label={`${title}: ${day.posts.map((p) => p.title).join(", ")}`}
+        className={`${className} focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2`}
+        title={title}
+        onFocus={() => onHover(day)}
+        onClick={() => onHover(day)}
+        {...events}
+      />
+    );
+  }
+  return <div className={className} title={title} />;
 }
 
 function HoverInfo({ day }: { day: DayData }) {
@@ -184,50 +194,58 @@ const Heatmap = ({
         />
       )}
 
-      <div className="overflow-x-auto md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        <div
-          className="grid gap-px"
-          style={{
-            gridTemplateColumns: `15px repeat(${weeks.length}, var(--hm-cell))`,
-          }}
-        >
-          {/* Row 0: Empty corner + month labels */}
-          <div />
-          {weeks.map((_, weekIndex) => (
-            <div
-              key={`month-${weekIndex}`}
-              className="text-[8px] md:text-2xs text-muted/60 h-[12px] md:h-[14px] w-[9px] md:w-auto overflow-visible whitespace-nowrap"
-            >
-              {monthLabels.get(weekIndex) || ""}
-            </div>
-          ))}
-
-          {/* Rows 1-7: Day labels + day cells */}
-          {DAY_LABELS.map((label, dayOfWeek) => (
-            <Fragment key={dayOfWeek}>
-              <div className="text-[8px] md:text-2xs leading-none text-muted/60 flex items-center pr-0.5 md:pr-1 h-(--hm-cell)">
-                {label}
+      <div
+        onMouseLeave={() => setHoveredDay(null)}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            setHoveredDay(null);
+          }
+        }}
+      >
+        <div className="overflow-x-auto md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <div
+            className="grid gap-px"
+            style={{
+              gridTemplateColumns: `15px repeat(${weeks.length}, var(--hm-cell))`,
+            }}
+          >
+            {/* Row 0: Empty corner + month labels */}
+            <div />
+            {weeks.map((_, weekIndex) => (
+              <div
+                key={`month-${weekIndex}`}
+                className="text-[8px] md:text-2xs text-muted h-[12px] md:h-[14px] w-[9px] md:w-auto overflow-visible whitespace-nowrap"
+              >
+                {monthLabels.get(weekIndex) || ""}
               </div>
-              {weeks.map((week, weekIndex) => {
-                const day = week[dayOfWeek];
-                return (
-                  <DayCell
-                    key={`${weekIndex}-${dayOfWeek}`}
-                    day={day}
-                    isToday={day.dateKey === todayKey}
-                    onHover={setHoveredDay}
-                    onLeave={() => setHoveredDay(null)}
-                  />
-                );
-              })}
-            </Fragment>
-          ))}
-        </div>
-      </div>
+            ))}
 
-      {/* Info bar below: one fixed line, so hovering never shifts the page */}
-      <div className="pt-2 h-6">
-        {hoveredDay ? <HoverInfo day={hoveredDay} /> : <Legend />}
+            {/* Rows 1-7: Day labels + day cells */}
+            {DAY_LABELS.map((label, dayOfWeek) => (
+              <Fragment key={dayOfWeek}>
+                <div className="text-[8px] md:text-2xs leading-none text-muted flex items-center pr-0.5 md:pr-1 h-(--hm-cell)">
+                  {label}
+                </div>
+                {weeks.map((week, weekIndex) => {
+                  const day = week[dayOfWeek];
+                  return (
+                    <DayCell
+                      key={`${weekIndex}-${dayOfWeek}`}
+                      day={day}
+                      isToday={day.dateKey === todayKey}
+                      onHover={setHoveredDay}
+                    />
+                  );
+                })}
+              </Fragment>
+            ))}
+          </div>
+        </div>
+
+        {/* Info bar below: one fixed line, so hovering never shifts the page */}
+        <div className="pt-2 h-6">
+          {hoveredDay ? <HoverInfo day={hoveredDay} /> : <Legend />}
+        </div>
       </div>
     </div>
   );

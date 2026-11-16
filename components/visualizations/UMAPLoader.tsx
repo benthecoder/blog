@@ -1,47 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-interface Dot {
-  x: number;
-  y: number;
-  opacity: number;
-}
+const DOTS = Array.from({ length: 180 }, (_, i) => ({
+  x: ((i * 61 + 17) % 97) + 1.5,
+  y: ((i * 37 + 29) % 95) + 2.5,
+  opacity: 0.15 + ((i * 23) % 70) / 100,
+  delay: `${(i % 7) * 0.2}s`,
+}));
 
 export default function UMAPLoader({ className = "" }: { className?: string }) {
-  const [dots, setDots] = useState<Dot[]>([]);
-
-  useEffect(() => {
-    const initialDots = Array.from({ length: 180 }, () => ({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      opacity: Math.random() * 0.7 + 0.15,
-    }));
-    setDots(initialDots);
-
-    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let interval: ReturnType<typeof setInterval> | undefined;
-    const updateMotion = () => {
-      clearInterval(interval);
-      if (motion.matches) return;
-      interval = setInterval(() => {
-        setDots((prev) =>
-          prev.map((dot) => ({
-            ...dot,
-            opacity: Math.random() * 0.7 + 0.15,
-          }))
-        );
-      }, 200);
-    };
-    updateMotion();
-    motion.addEventListener("change", updateMotion);
-
-    return () => {
-      clearInterval(interval);
-      motion.removeEventListener("change", updateMotion);
-    };
-  }, []);
-
   return (
     <div
       className={`relative ${className} bg-surface`}
@@ -50,14 +16,17 @@ export default function UMAPLoader({ className = "" }: { className?: string }) {
       }}
     >
       <svg className="w-full h-full absolute inset-0">
-        {dots.map((dot, i) => (
+        {DOTS.map((dot, i) => (
           <circle
             key={i}
             cx={`${dot.x}%`}
             cy={`${dot.y}%`}
             r="3"
-            className="fill-accent transition-opacity duration-200"
-            style={{ opacity: dot.opacity }}
+            className="fill-accent animate-pulse motion-reduce:animate-none"
+            style={{
+              opacity: dot.opacity,
+              animationDelay: dot.delay,
+            }}
           />
         ))}
       </svg>

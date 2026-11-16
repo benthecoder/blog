@@ -71,7 +71,10 @@ const TableOfContents = ({ items }: { items: TocEntry[] }) => {
       </nav>
 
       {/* Mobile/tablet: collapsed block between title and body. */}
-      <details className="xl:hidden mb-8 text-sm text-ink-soft dark:text-chalk-muted">
+      <details
+        data-toc
+        className="xl:hidden mb-8 text-sm text-ink-soft dark:text-chalk-muted"
+      >
         <summary className="cursor-pointer select-none w-fit hover:text-accent transition-colors duration-150">
           Contents
         </summary>

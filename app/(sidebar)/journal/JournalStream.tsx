@@ -36,7 +36,7 @@ export function JournalStream({ page }: { page: number }) {
   const pages = journalPageCount();
 
   return (
-    <>
+    <div className="max-w-[65ch] mx-auto">
       <h1 className="sr-only">journal</h1>
       <div>
         {posts.map((post, index) => (
@@ -100,6 +100,6 @@ export function JournalStream({ page }: { page: number }) {
           <span />
         )}
       </nav>
-    </>
+    </div>
   );
 }

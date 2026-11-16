@@ -6,6 +6,8 @@ import { getPhotostream } from "@/utils/content/photostream";
 import { photoShareMetadata } from "@/utils/photoShare";
 import { placeTree } from "@/utils/photoPlaces";
 
+export const revalidate = 60;
+
 type Props = { params: Promise<{ country: string }> };
 
 const count = (n: number, one: string, many = `${one}s`) =>

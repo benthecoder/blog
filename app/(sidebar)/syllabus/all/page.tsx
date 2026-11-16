@@ -4,7 +4,7 @@ import { pageMetadata } from "@/utils/pageMetadata";
 import { Section } from "@/components/layout/Section";
 import CurriculumMap from "@/components/syllabus/CurriculumMap";
 import TopicsList from "@/components/syllabus/TopicsList";
-import { nodeLevels } from "@/lib/curriculum";
+import { nodeCourseTitles, nodeLevels } from "@/lib/curriculum";
 
 export const metadata: Metadata = pageMetadata({
   title: "topics and interests",
@@ -31,7 +31,10 @@ export default function SyllabusAllPage() {
           title="knowledge map"
           note="mastery 0–5, earned only by graded work"
         >
-          <CurriculumMap levels={nodeLevels()} />
+          <CurriculumMap
+            levels={nodeLevels()}
+            courseTitles={nodeCourseTitles()}
+          />
         </Section>
       </div>
     </>

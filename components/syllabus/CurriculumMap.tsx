@@ -2,23 +2,21 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
-import {
-  REQUIRED_AREA_IDS,
-  humanName,
-  mapAreas,
-  mapNodes,
-  mergedCourse,
-  type MapNode,
-  type MasteryLevel,
-} from "@/lib/curriculum";
+import mapDoc from "@/data/curriculum-map.json";
+import type { MapArea, MapNode, MasteryLevel } from "@/lib/curriculum";
+
+const REQUIRED_AREA_IDS = (mapDoc as { required_areas: string[] })
+  .required_areas;
+const mapNodes = (mapDoc as { nodes: MapNode[] }).nodes;
+const mapAreas = (mapDoc as { areas: MapArea[] }).areas;
 
 // Mastery shades are the accent role mixed into the page, so they follow
 // the palette and dark mode instead of fixed hex values.
 const LEVEL_CLASS: Record<MasteryLevel, string> = {
   0: "bg-surface text-primary border-line",
   1: "bg-accent/10 text-primary border-accent/25",
-  2: "bg-accent/25 text-primary border-accent/40",
-  3: "bg-accent/45 text-primary border-accent/60",
+  2: "bg-accent/20 text-primary border-accent/35",
+  3: "bg-accent/35 text-primary border-accent/55",
   4: "bg-accent/80 text-surface border-accent",
   5: "bg-accent text-surface border-accent",
 };
@@ -26,8 +24,8 @@ const LEVEL_CLASS: Record<MasteryLevel, string> = {
 const LEVEL_SWATCH = [
   "bg-surface border-line",
   "bg-accent/10 border-accent/25",
-  "bg-accent/25 border-accent/40",
-  "bg-accent/45 border-accent/60",
+  "bg-accent/20 border-accent/35",
+  "bg-accent/35 border-accent/55",
   "bg-accent/80 border-accent",
   "bg-accent border-accent",
 ];
@@ -98,8 +96,10 @@ function edgePath(from: Pos, to: Pos) {
 
 export default function CurriculumMap({
   levels = {},
+  courseTitles = {},
 }: {
   levels?: Record<string, MasteryLevel>;
+  courseTitles?: Record<string, string>;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [areaFilter, setAreaFilter] = useState<string>("required");
@@ -270,17 +270,12 @@ export default function CurriculumMap({
         <p className="mt-4 mb-0 text-sm text-muted">
           <span className="text-primary">{selectedNode.title}</span>
           {selectedNode.items.length
-            ? selectedNode.items.map((id, index) => {
-                const course = mergedCourse(id);
-                return (
-                  <span key={id}>
-                    {index === 0 ? " · " : ", "}
-                    <Link href={`/syllabus/${id}`}>
-                      {course ? humanName(course) : id}
-                    </Link>
-                  </span>
-                );
-              })
+            ? selectedNode.items.map((id, index) => (
+                <span key={id}>
+                  {index === 0 ? " · " : ", "}
+                  <Link href={`/syllabus/${id}`}>{courseTitles[id] || id}</Link>
+                </span>
+              ))
             : null}
           {` · ${levels[selectedNode.id] ?? 0}/5`}
           {selectedNode.prereqs.length

@@ -19,7 +19,7 @@ const TagPage = () => {
     <div>
       <h1 className="sr-only">tags</h1>
       <div className="mb-4">
-        <p className="text-2xs text-primary/40 tracking-widest font-mono">
+        <p className="text-2xs text-muted tracking-widest font-mono">
           {sortedTags.length} tags
         </p>
       </div>
