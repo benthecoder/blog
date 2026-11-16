@@ -9,8 +9,9 @@ import type { Quote } from "@/utils/content/quotes";
 // always matches.
 const startRoll = typeof window === "undefined" ? 0 : Math.random();
 const noop = () => () => {};
+// Same treatment as "all writings →" and "all photos →" above it.
 const action =
-  "underline underline-offset-4 decoration-accent/30 hover:text-accent focus-visible:outline-2 focus-visible:outline-accent";
+  "hover:text-accent hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent";
 
 export function QuoteFooter({ quotes }: { quotes: Quote[] }) {
   const start = useSyncExternalStore(
@@ -33,12 +34,12 @@ export function QuoteFooter({ quotes }: { quotes: Quote[] }) {
         {quote.text}
       </Link>{" "}
       &mdash; {quote.author}{" "}
-      <span className="inline-flex gap-x-4">
+      <span className="mt-2 flex gap-x-6">
         <button type="button" onClick={next} className={action}>
-          view another
+          another quote
         </button>
         <Link href="/words" className={action}>
-          all quotes
+          all quotes →
         </Link>
       </span>
     </footer>
