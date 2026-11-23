@@ -46,7 +46,9 @@ export default function SyllabusPage() {
         <h1>syllabus</h1>
         <p>
           my RL gym: I put in the reps, read the reward signal, and train how I
-          think. <Link href={`/syllabus/about`}>learn more</Link>
+          think. <Link href={`/syllabus/about`}>learn more</Link>. the weekly
+          record for Stat 110 and Alchemy is on{" "}
+          <Link href="/learning">learning</Link>
         </p>
       </article>
 
