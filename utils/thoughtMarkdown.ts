@@ -123,3 +123,37 @@ export function notesWithoutFeaturedLink(
   if (!featured || !note) return note;
   return removeBareUrl(note, featured);
 }
+
+/** Visible text of a thought, with markup dropped and blocks separated by spaces. */
+export function markdownToPlainText(content: string): string {
+  const tree = parser.parse(content) as Root;
+  return plainText(tree).replace(/\s+/g, " ").trim();
+}
+
+function plainText(node: unknown): string {
+  if (!node || typeof node !== "object") return "";
+  const type =
+    "type" in node && typeof (node as { type: unknown }).type === "string"
+      ? (node as { type: string }).type
+      : "";
+  if (type === "break" || type === "thematicBreak") return " ";
+  if (
+    "value" in node &&
+    typeof (node as { value: unknown }).value === "string"
+  ) {
+    return (node as { value: string }).value;
+  }
+  if (
+    "children" in node &&
+    Array.isArray((node as { children: unknown }).children)
+  ) {
+    const parts = (node as { children: unknown[] }).children
+      .map(plainText)
+      .filter((part) => part.length > 0);
+    if (type === "root" || type === "list" || type === "blockquote") {
+      return parts.join(" ");
+    }
+    return parts.join("");
+  }
+  return "";
+}

@@ -4,6 +4,7 @@ import {
   contentHasUrl,
   featuredThoughtLink,
   markdownLinks,
+  markdownToPlainText,
   notesWithoutFeaturedLink,
 } from "./thoughtMarkdown";
 
@@ -63,5 +64,17 @@ describe("notesWithoutFeaturedLink", () => {
   it("leaves a labeled markdown link in the notes", () => {
     const content = `Read [the paper](${url}) today.`;
     expect(notesWithoutFeaturedLink(content, url)).toBe(content);
+  });
+});
+
+describe("markdownToPlainText", () => {
+  it("drops markup and joins lists and paragraphs with spaces", () => {
+    expect(
+      markdownToPlainText(
+        "- a **point**\n- another, see [the paper](https://example.com/paper)"
+      )
+    ).toBe("a point another, see the paper");
+    expect(markdownToPlainText("  hello   world  ")).toBe("hello world");
+    expect(markdownToPlainText("")).toBe("");
   });
 });

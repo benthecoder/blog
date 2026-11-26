@@ -56,6 +56,8 @@ describe("thought publishing access", () => {
       ).status
     ).toBe(200);
     expect(mocks.sql).toHaveBeenCalledTimes(2);
+    expect(mocks.revalidate).toHaveBeenCalledWith("/thoughts");
+    expect(mocks.revalidate).toHaveBeenCalledWith("/thoughts/1");
   });
   it("rejects expired browser cookies and wrong capture tokens", async () => {
     const expired = sessionToken(
