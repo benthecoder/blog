@@ -57,3 +57,69 @@ export function bareContentUrls(content: string): string[] {
   }
   return urls;
 }
+
+function uniqueStrings(values: string[]): string[] {
+  return [...new Set(values.filter(Boolean))];
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function urlVariants(url: string): string[] {
+  const parsed = parsePublicUrl(url);
+  const base = parsed ?? url.trim();
+  const stripped = base.replace(/\/$/, "");
+  return uniqueStrings([base, stripped, stripped + "/"]);
+}
+
+/** True when this occurrence of the URL is a markdown destination, like `](url)`. */
+function isMarkdownDestination(source: string, index: number): boolean {
+  const open = source.lastIndexOf("](", index);
+  if (open === -1) return false;
+  const close = source.indexOf(")", open + 2);
+  if (close === -1 || close < index) return false;
+  return index >= open + 2;
+}
+
+/**
+ * Drop bare occurrences of `url` from a thought, leaving labeled markdown
+ * links like `[the paper](url)` in place.
+ */
+function removeBareUrl(content: string, url: string): string {
+  let result = content;
+  for (const variant of urlVariants(url)) {
+    const escaped = escapeRegExp(variant);
+    result = result.replace(new RegExp("<" + escaped + ">", "g"), "");
+    result = result.replace(
+      new RegExp(escaped, "g"),
+      (match, offset: number) =>
+        isMarkdownDestination(result, offset) ? match : ""
+    );
+  }
+  return result
+    .replace(/[ \t]+$/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+/** The link shown above the note: the stored `link`, else the first bare URL. */
+export function featuredThoughtLink(
+  content: string,
+  link: string | null
+): string | null {
+  if (link) {
+    const parsed = parsePublicUrl(link);
+    if (parsed) return parsed;
+  }
+  return bareContentUrls(content)[0] ?? null;
+}
+
+export function notesWithoutFeaturedLink(
+  content: string,
+  featured: string | null
+): string {
+  const note = content.trim();
+  if (!featured || !note) return note;
+  return removeBareUrl(note, featured);
+}

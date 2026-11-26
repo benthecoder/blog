@@ -7,7 +7,10 @@ import {
   parsePublicUrl,
   untitledLinkLabel,
 } from "@/utils/tweets/link";
-import { contentHasUrl } from "@/utils/thoughtMarkdown";
+import {
+  featuredThoughtLink,
+  notesWithoutFeaturedLink,
+} from "@/utils/thoughtMarkdown";
 
 function textOf(node: ReactNode): string {
   if (node == null || typeof node === "boolean") return "";
@@ -74,13 +77,17 @@ export default function ThoughtBody({
   link: string | null;
   titles: Record<string, string>;
 }) {
-  const note = content.trim();
-  const attached =
-    link && parsePublicUrl(link) && !contentHasUrl(note, link) ? link : null;
+  const featured = featuredThoughtLink(content, link);
+  const notes = notesWithoutFeaturedLink(content, featured);
 
   return (
     <div className="thought-md text-sm text-accent leading-relaxed wrap-break-word flex-1">
-      {note ? (
+      {featured ? (
+        <p className={notes ? "mb-2" : undefined}>
+          <ThoughtLink href={featured} titles={titles} />
+        </p>
+      ) : null}
+      {notes ? (
         <ReactMarkdown
           remarkPlugins={[remarkGfm]}
           urlTransform={defaultUrlTransform}
@@ -97,13 +104,8 @@ export default function ThoughtBody({
             },
           }}
         >
-          {note}
+          {notes}
         </ReactMarkdown>
-      ) : null}
-      {attached ? (
-        <p className={note ? "mt-2" : undefined}>
-          <ThoughtLink href={attached} titles={titles} />
-        </p>
       ) : null}
     </div>
   );
