@@ -1,24 +1,18 @@
 "use client";
 
 import { useState, useEffect, useRef, useEffectEvent } from "react";
+import Link from "next/link";
 import { fetchThoughtPage } from "@/utils/thoughtsPage";
 import type { Thought } from "@/utils/thoughts";
 import ThoughtBody from "@/components/thoughts/ThoughtBody";
+import {
+  parseThoughtHash,
+  thoughtAnchorId,
+  thoughtDateFormatter,
+  thoughtTimeFormatter,
+} from "@/utils/thoughtShare";
 
-const TZ = "America/New_York";
 const PAGE_SIZE = 100;
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  timeZone: TZ,
-  year: "2-digit",
-  month: "2-digit",
-  day: "2-digit",
-});
-const timeFormatter = new Intl.DateTimeFormat("en-GB", {
-  timeZone: TZ,
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: false,
-});
 
 interface ThoughtsClientProps {
   initialThoughts: Thought[];
@@ -35,7 +29,7 @@ export default function ThoughtsClient({
 
   const groupedByDate = thoughts.reduce(
     (acc, entry) => {
-      const dateStr = dateFormatter.format(new Date(entry.created_at));
+      const dateStr = thoughtDateFormatter.format(new Date(entry.created_at));
       (acc[dateStr] ??= []).push(entry);
       return acc;
     },
@@ -97,6 +91,24 @@ export default function ThoughtsClient({
     return () => observer.disconnect();
   }, [hasMore, thoughts.length]);
 
+  // /thoughts#t-<id> jumps to the note when it's on this page; otherwise
+  // the shareable /thoughts/<id> page is the right place to land.
+  useEffect(() => {
+    const reveal = () => {
+      const id = parseThoughtHash(window.location.hash);
+      if (id == null) return;
+      const el = document.getElementById(thoughtAnchorId(id));
+      if (el) {
+        el.scrollIntoView({ block: "center", behavior: "smooth" });
+        return;
+      }
+      window.location.replace(`/thoughts/${id}`);
+    };
+    reveal();
+    window.addEventListener("hashchange", reveal);
+    return () => window.removeEventListener("hashchange", reveal);
+  }, []);
+
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
       <h1 className="sr-only">thoughts</h1>
@@ -111,13 +123,23 @@ export default function ThoughtsClient({
 
             <div className="space-y-6">
               {groupedByDate[date].map((entry) => {
-                const time = timeFormatter.format(new Date(entry.created_at));
+                const time = thoughtTimeFormatter.format(
+                  new Date(entry.created_at)
+                );
 
                 return (
-                  <div key={entry.id} className="flex gap-4 items-baseline">
-                    <span className="text-xs text-muted shrink-0 select-none w-10">
+                  <div
+                    key={entry.id}
+                    id={thoughtAnchorId(entry.id)}
+                    className="thought-entry flex gap-4 items-baseline"
+                  >
+                    <Link
+                      href={`/thoughts/${entry.id}`}
+                      className="text-xs text-muted shrink-0 w-10 hover:text-accent transition-colors"
+                      title="permalink"
+                    >
                       {time}
-                    </span>
+                    </Link>
                     <ThoughtBody
                       content={entry.content}
                       link={entry.link}

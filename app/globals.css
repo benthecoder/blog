@@ -1479,3 +1479,49 @@ body:has(.places-explorer:not([data-specimen])) .floating-controls {
 .dark .thought-md blockquote {
   border-color: var(--color-night-rule);
 }
+
+.thought-entry {
+  scroll-margin-top: 4rem;
+  border-radius: 0.25em;
+  margin-inline: -0.5rem;
+  padding-inline: 0.5em;
+}
+
+.thought-entry:target {
+  animation: thought-target 1.8s ease;
+}
+
+@keyframes thought-target {
+  0%,
+  30% {
+    background-color: var(--color-paper-sunken);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.dark .thought-entry:target {
+  animation-name: thought-target-dark;
+}
+
+@keyframes thought-target-dark {
+  0%,
+  30% {
+    background-color: var(--color-night-raised);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thought-entry:target {
+    animation: none;
+    background-color: var(--color-paper-sunken);
+  }
+
+  .dark .thought-entry:target {
+    background-color: var(--color-night-raised);
+  }
+}
