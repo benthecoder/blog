@@ -2,8 +2,13 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type CSSProperties } from "react";
 import { hoverTick } from "@/utils/hoverTick";
+import {
+  NAV_TOOLTIP_HIDE_MS,
+  navAnchorName,
+  supportsCssAnchorPositioning,
+} from "@/utils/cssAnchor";
 import { SketchIcon } from "../ui/SketchIcon";
 
 const links = [
@@ -17,11 +22,22 @@ const links = [
   { path: "/thoughts", text: "thoughts", icon: "thoughts.svg" },
 ];
 
+type TooltipState = {
+  text: string;
+  x: number;
+  y: number;
+  isMobile: boolean;
+};
+
 export function SidebarNav() {
   const pathname = usePathname();
   const [spinning, setSpinning] = useState(false);
   const [prefetchPath, setPrefetchPath] = useState<string | null>(null);
   const spinTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const anchorModeRef = useRef<"css" | "js" | null>(null);
+  const [anchorMode, setAnchorMode] = useState<"css" | "js" | null>(null);
+  const [hoveredLink, setHoveredLink] = useState<TooltipState | null>(null);
 
   useEffect(() => {
     function onSpin() {
@@ -36,22 +52,43 @@ export function SidebarNav() {
     };
   }, []);
 
-  const [hoveredLink, setHoveredLink] = useState<{
-    text: string;
-    x: number;
-    y: number;
-    isMobile: boolean;
-  } | null>(null);
+  useEffect(
+    () => () => {
+      if (hideTimer.current) clearTimeout(hideTimer.current);
+    },
+    []
+  );
+
+  const resolveMode = (): "css" | "js" => {
+    if (anchorModeRef.current) return anchorModeRef.current;
+    const mode = supportsCssAnchorPositioning() ? "css" : "js";
+    anchorModeRef.current = mode;
+    setAnchorMode(mode);
+    return mode;
+  };
+
+  const cancelHide = () => {
+    if (hideTimer.current) {
+      clearTimeout(hideTimer.current);
+      hideTimer.current = null;
+    }
+  };
 
   const showTooltip = (
     el: HTMLAnchorElement,
     text: string,
     playSound: boolean
   ) => {
+    cancelHide();
+    if (playSound) hoverTick();
+
+    if (resolveMode() === "css") {
+      setHoveredLink({ text, x: 0, y: 0, isMobile: false });
+      return;
+    }
+
     const rect = el.getBoundingClientRect();
     const isMobile = window.innerWidth < 1024;
-
-    if (playSound) hoverTick();
 
     if (isMobile) {
       // Position below and centered on mobile
@@ -71,6 +108,31 @@ export function SidebarNav() {
       });
     }
   };
+
+  const hideTooltip = () => {
+    cancelHide();
+    hideTimer.current = setTimeout(
+      () => setHoveredLink(null),
+      NAV_TOOLTIP_HIDE_MS
+    );
+  };
+
+  const tooltipStyle: CSSProperties | undefined = !hoveredLink
+    ? undefined
+    : anchorMode === "css"
+      ? ({
+          "--site-nav-anchor": navAnchorName(hoveredLink.text),
+        } as CSSProperties)
+      : hoveredLink.isMobile
+        ? {
+            left: hoveredLink.x,
+            top: hoveredLink.y + 8,
+            transform: "translateX(-50%)",
+          }
+        : {
+            left: hoveredLink.x + 8,
+            top: hoveredLink.y,
+          };
 
   return (
     <>
@@ -93,9 +155,14 @@ export function SidebarNav() {
             prefetch={
               path !== "/random" && prefetchPath === path ? null : false
             }
-            className={`inline-flex items-center justify-center w-8 h-8 shrink-0 sm:pointer-coarse:min-h-11 sm:pointer-coarse:min-w-11 lg:w-9 lg:h-9 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
+            className={`site-nav-link inline-flex items-center justify-center w-8 h-8 shrink-0 sm:pointer-coarse:min-h-11 sm:pointer-coarse:min-w-11 lg:w-9 lg:h-9 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent ${
               pathname === path ? "opacity-50" : "hover:opacity-70"
             }`}
+            style={
+              {
+                "--site-nav-name": navAnchorName(text),
+              } as CSSProperties
+            }
             onMouseEnter={(e) => {
               setPrefetchPath(path);
               showTooltip(e.currentTarget, text, true);
@@ -104,8 +171,8 @@ export function SidebarNav() {
               setPrefetchPath(path);
               showTooltip(e.currentTarget, text, false);
             }}
-            onMouseLeave={() => setHoveredLink(null)}
-            onBlur={() => setHoveredLink(null)}
+            onMouseLeave={hideTooltip}
+            onBlur={hideTooltip}
             onClick={
               path === "/random"
                 ? (e) => {
@@ -124,21 +191,12 @@ export function SidebarNav() {
         ))}
       </nav>
 
-      {hoveredLink && (
+      {hoveredLink && anchorMode && (
         <div
-          className="fixed z-50 pointer-events-none px-2 py-1 bg-accent/90 text-surface backdrop-blur-xs rounded-sm text-xs font-medium whitespace-nowrap"
-          style={
-            hoveredLink.isMobile
-              ? {
-                  left: hoveredLink.x,
-                  top: hoveredLink.y + 8,
-                  transform: "translateX(-50%)",
-                }
-              : {
-                  left: hoveredLink.x + 8,
-                  top: hoveredLink.y,
-                }
-          }
+          className="site-nav-tooltip fixed z-50 pointer-events-none px-2 py-1 bg-accent/90 text-surface backdrop-blur-xs rounded-sm text-xs font-medium whitespace-nowrap"
+          style={tooltipStyle}
+          role="tooltip"
+          aria-hidden="true"
         >
           {hoveredLink.text}
         </div>
