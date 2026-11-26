@@ -46,6 +46,7 @@ export function getPostPreviewData(slug: string): PostPreviewData | null {
   // Read just this published file. A cold preview must not parse the entire
   // archive merely to find its title and date.
   const post = getPostContent(slug);
+  if (!post) return null;
   const words = stripMarkdown(post.content).split(" ");
   const excerpt =
     words.slice(0, EXCERPT_WORDS).join(" ") +
@@ -59,4 +60,14 @@ export function getPostPreviewData(slug: string): PostPreviewData | null {
   };
   if (immutableDeployment) deployedPreviews.set(slug, preview);
   return preview;
+}
+
+/** Attach hover-card data so list rows can open without a per-title fetch. */
+export function withPostPreviews<T extends { slug: string }>(
+  posts: T[]
+): (T & { preview: PostPreviewData | undefined })[] {
+  return posts.map((post) => ({
+    ...post,
+    preview: getPostPreviewData(post.slug) ?? undefined,
+  }));
 }

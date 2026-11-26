@@ -1,8 +1,8 @@
 import { ANCHOR_TOOLTIP_HIDE_MS } from "./cssAnchor";
 import type { PostPreviewData } from "@/utils/content/preview";
 
-/** Matches the previous Floating UI open delay so skimming a list does not flash cards. */
-export const PREVIEW_OPEN_DELAY_MS = 150;
+/** Brief pause so a fast skim across titles does not flash the card. Keep this at or under 60ms. */
+export const PREVIEW_OPEN_DELAY_MS = 50;
 
 /** Matches the CSS close fade on `.post-link-preview`. */
 export const PREVIEW_CLOSE_MS = 100;

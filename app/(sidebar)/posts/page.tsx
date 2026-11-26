@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getPostMetadata } from "@/utils/content/posts";
+import { withPostPreviews } from "@/utils/content/preview";
 import ArchiveClient from "./ArchiveClient";
 import { pageMetadata } from "@/utils/pageMetadata";
 
@@ -14,11 +15,13 @@ export const dynamic = "force-static";
 
 const ArchivePage = () => {
   // The archive needs individual entries, not each entry's linked navigation graph.
-  const postMetadata = getPostMetadata().map((post) => ({
-    ...post,
-    prev: null,
-    next: null,
-  }));
+  const postMetadata = withPostPreviews(
+    getPostMetadata().map((post) => ({
+      ...post,
+      prev: null,
+      next: null,
+    }))
+  );
 
   return (
     <Suspense fallback={null}>

@@ -1,12 +1,17 @@
 import type { PostMetadata } from "@/types/post";
+import type { PostPreviewData } from "@/utils/content/preview";
 import PostPreview from "./PostPreview";
+
+export type PostListEntry = Pick<PostMetadata, "title" | "slug" | "date"> & {
+  preview?: PostPreviewData;
+};
 
 /** One row layout and rhythm for archive formats, destinations, and topics. */
 export default function PostList({
   posts,
   showYear = true,
 }: {
-  posts: Pick<PostMetadata, "title" | "slug" | "date">[];
+  posts: PostListEntry[];
   showYear?: boolean;
 }) {
   return (

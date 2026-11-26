@@ -90,6 +90,10 @@ describe("previewPlacementFromGeometry", () => {
 });
 
 describe("showPostPreview", () => {
+  it("keeps the first-open delay short enough to feel instant", () => {
+    expect(PREVIEW_OPEN_DELAY_MS).toBeLessThanOrEqual(60);
+  });
+
   it("waits to open on a delayed first show, then retargets immediately", () => {
     vi.useFakeTimers();
     showPostPreview(target, true);

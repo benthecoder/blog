@@ -1,15 +1,21 @@
 import type { PostMetadata } from "@/types/post";
+import type { PostPreviewData } from "@/utils/content/preview";
 import PostLinkPreview from "./PostLinkPreview";
 
 const PostPreview = ({
   title,
   slug,
   date,
+  preview,
   showYear = true,
-}: Pick<PostMetadata, "title" | "slug" | "date"> & { showYear?: boolean }) => {
+}: Pick<PostMetadata, "title" | "slug" | "date"> & {
+  preview?: PostPreviewData;
+  showYear?: boolean;
+}) => {
   return (
     <PostLinkPreview
       slug={slug}
+      preview={preview}
       className="group flex items-baseline gap-3 cursor-crosshair text-sm md:text-base"
     >
       <span className="text-accent group-hover:underline">{title}</span>

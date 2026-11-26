@@ -59,11 +59,11 @@ function isStillTargeted(el: HTMLAnchorElement | null) {
   return Boolean(el && (el.matches(":hover") || el === document.activeElement));
 }
 
-// Hover card for internal post links. Markdown links pass `preview` resolved
-// on the server; list contexts with too many posts to inline (e.g. the
-// archive) pass only `slug` and the data is fetched once on first hover.
-// One shared card (PostPreviewHost) stays mounted so moving between titles
-// can glide, the same way the site-nav label does.
+// Hover card for internal post links. List rows and markdown links pass
+// `preview` resolved on the server so the card can open without a fetch.
+// A slug-only trigger (the design-page specimen) still fetches once on first
+// hover and caches the result. One shared card (PostPreviewHost) stays mounted
+// so moving between titles can glide, the same way the site-nav label does.
 const PostLinkPreview = ({
   slug,
   preview: initialPreview,
@@ -77,9 +77,18 @@ const PostLinkPreview = ({
 }) => {
   const anchorName = postPreviewAnchorName(useId());
   const ref = useRef<HTMLAnchorElement>(null);
-  const snapshot = usePostPreviewSnapshot();
-  const described =
-    snapshot.kind === "visible" && snapshot.target.anchorName === anchorName;
+  // Subscribe to a boolean, not the whole snapshot, so the other titles in a
+  // long archive do not re-render when the card moves.
+  const described = useSyncExternalStore(
+    subscribePostPreview,
+    () => {
+      const snapshot = getPostPreviewSnapshot();
+      return (
+        snapshot.kind === "visible" && snapshot.target.anchorName === anchorName
+      );
+    },
+    () => false
+  );
 
   const loadAndShow = (delay: boolean) => {
     const el = ref.current;
