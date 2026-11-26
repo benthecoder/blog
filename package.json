@@ -89,6 +89,7 @@
     "@ai-sdk/google": "^4.0.112",
     "@huggingface/transformers": "^4.3.2",
     "@playwright/test": "^1.65.0",
+    "@shadcn/lint": "^0.2.5",
     "@tailwindcss/postcss": "^4.3.4",
     "@tailwindcss/typography": "^0.5.20",
     "@types/d3-scale": "^4.0.9",
