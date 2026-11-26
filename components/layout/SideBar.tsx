@@ -28,6 +28,14 @@ export function Sidebar() {
               />
             </Link>
           </div>
+          <p className="mt-2 text-center text-sm font-normal lg:text-left">
+            <Link
+              href="/thoughts"
+              className="text-accent hover:underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+            >
+              thoughts
+            </Link>
+          </p>
         </div>
       </header>
 

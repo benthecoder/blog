@@ -123,7 +123,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href="https://bneo.xyz/rss.xml"
         />
       </head>
-      <body className="antialiased text-primary">
+      <body className="relative antialiased text-primary">
         <Providers>
           <SearchModal />
           <RandomPostListener />
