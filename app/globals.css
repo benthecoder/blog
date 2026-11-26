@@ -256,12 +256,11 @@
 /* ==========================================================================
    MAP
 
-   /map is drawn like an old Japanese printed map rather than a blog page, so
-   it keeps its own fixed palette instead of following data-palette: washi
-   paper, sumi ink, muted pigments for the categories, and red kept for one
-   thing only, the selected place. The --map-base-* tokens repaint the
-   MapLibre basemap in warm greys, so only the places carry color; PlacesMap
-   reads them by name.
+   The sidebar follows the blog's paper and ink so this feels like the same
+   site, not a separate cream notebook. Category colors stay on the pins
+   only. The --map-base-* tokens keep the basemap readable: water looks like
+   water, parks like parks, and labels dark enough to read. PlacesMap
+   reads the tokens by name.
    ========================================================================== */
 .places-explorer {
   /* Shared role names (see ROLES), so role utilities work on this page.
@@ -278,66 +277,66 @@
   --font-display: var(--map-font);
   --font-ui: var(--map-font);
 
-  --map-paper: #f2e9d6; /* washi */
-  --map-hover: #e9dec6;
-  --map-rule: #d8c9a8;
-  --map-ink: #2b2620; /* sumi */
-  --map-muted: #6a5e4b;
-  --map-accent: #c0392b; /* the selected place, nothing else */
-  --map-shade: #2b262024;
+  --map-paper: var(--color-paper);
+  --map-hover: var(--color-paper-sunken);
+  --map-rule: var(--color-rule);
+  --map-ink: var(--color-ink-strong);
+  --map-muted: var(--color-ink-muted);
+  --map-accent: var(--color-ink);
+  --map-shade: color-mix(in oklab, var(--color-ink-strong) 18%, transparent);
   --map-cat-food: #b0683a; /* kaki, persimmon */
   --map-cat-cafes: #7a5232; /* kuri, chestnut */
   --map-cat-art: #7d6290; /* fuji, wisteria */
   --map-cat-shop: #456684; /* ai, indigo */
   --map-cat-outdoors: #5c7438; /* koke, moss */
-  --map-base-land: #eee8da;
-  --map-base-water: #d8d5cb;
-  --map-base-waterway: #d2cfc5;
-  --map-base-water-label: #7a756a;
-  --map-base-residential: #ece6d8;
-  --map-base-park: #e5e0d1;
-  --map-base-wood: #e1dccd;
-  --map-base-building: #e3ddcf;
-  --map-base-building-line: #d5cebd;
-  --map-base-path: #e0d9c9;
-  --map-base-road: #fbf8f1;
-  --map-base-road-casing: #d6cfbe;
-  --map-base-highway: #f5f0e4;
-  --map-base-rail: #d3cab7;
-  --map-base-road-label: #958c7b;
-  --map-base-place-label: #7d725f;
-  --map-base-halo: #eee8da;
+  --map-base-land: #f7f4ee;
+  --map-base-water: #c9d9e6;
+  --map-base-waterway: #b7c9d8;
+  --map-base-water-label: #4a6578;
+  --map-base-residential: #f3efe8;
+  --map-base-park: #d7e3cf;
+  --map-base-wood: #cfe0c4;
+  --map-base-building: #e8e2d7;
+  --map-base-building-line: #c4bdb0;
+  --map-base-path: #efe8dc;
+  --map-base-road: #ffffff;
+  --map-base-road-casing: #c9c2b4;
+  --map-base-highway: #f3eee4;
+  --map-base-rail: #c8c0b2;
+  --map-base-road-label: #3f3a32;
+  --map-base-place-label: #2f2b24;
+  --map-base-halo: #f7f4ee;
 }
 .dark .places-explorer {
-  --map-paper: #1c1a17; /* sumi paper */
-  --map-hover: #2b2722;
-  --map-rule: #3b362e;
-  --map-ink: #ece3cf;
-  --map-muted: #a89b83;
-  --map-accent: #e06a4f;
-  --map-shade: #00000066;
+  --map-paper: var(--color-night);
+  --map-hover: var(--color-night-raised);
+  --map-rule: var(--color-night-rule);
+  --map-ink: var(--color-chalk-strong);
+  --map-muted: var(--color-chalk-muted);
+  --map-accent: var(--color-chalk);
+  --map-shade: color-mix(in oklab, black 55%, transparent);
   --map-cat-food: #d99a6c;
   --map-cat-cafes: #c49a6c;
   --map-cat-art: #b59cc9;
   --map-cat-shop: #8fa9cc;
   --map-cat-outdoors: #a3b56f;
-  --map-base-land: #1c1a17;
-  --map-base-water: #141413;
-  --map-base-waterway: #141413;
-  --map-base-water-label: #6d675d;
-  --map-base-residential: #1f1d1a;
-  --map-base-park: #201e1a;
-  --map-base-wood: #201e1a;
-  --map-base-building: #262420;
-  --map-base-building-line: #2e2b27;
-  --map-base-path: #2c2a26;
-  --map-base-road: #34312c;
-  --map-base-road-casing: #3d3a34;
-  --map-base-highway: #3a3731;
-  --map-base-rail: #3a3732;
-  --map-base-road-label: #8f887b;
-  --map-base-place-label: #8f8778;
-  --map-base-halo: #1c1a17;
+  --map-base-land: #1a1a1a;
+  --map-base-water: #1a2833;
+  --map-base-waterway: #1a2833;
+  --map-base-water-label: #8aa3b5;
+  --map-base-residential: #1d1d1d;
+  --map-base-park: #1c2619;
+  --map-base-wood: #1c2619;
+  --map-base-building: #242424;
+  --map-base-building-line: #3a3a3a;
+  --map-base-path: #2a2a2a;
+  --map-base-road: #2e2e2e;
+  --map-base-road-casing: #444444;
+  --map-base-highway: #333333;
+  --map-base-rail: #3a3a3a;
+  --map-base-road-label: #c8c4bc;
+  --map-base-place-label: #ddd8ce;
+  --map-base-halo: #1a1a1a;
 }
 
 /* ==========================================================================

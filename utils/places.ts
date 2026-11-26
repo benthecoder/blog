@@ -96,6 +96,16 @@ export function filterPlaces(
   );
 }
 
+const DEFAULT_MAP_LIST_ID = "sf-chinatown";
+
+export function defaultMapCollectionId(data: PlacesData): string | null {
+  return (
+    data.collections.find((c) => c.id === DEFAULT_MAP_LIST_ID)?.id ??
+    data.collections[0]?.id ??
+    null
+  );
+}
+
 export function readMapSelection(data: PlacesData, params: URLSearchParams) {
   const collection = data.collections.find((c) => c.id === params.get("list"));
   const placeId = params.get("place");
@@ -105,6 +115,18 @@ export function readMapSelection(data: PlacesData, params: URLSearchParams) {
       ? placeId
       : null,
   };
+}
+
+/** Landing view: a named list at street scale. Bare URLs open the default
+    list; an explicit `list` (or `place`) param still wins. */
+export function initialMapSelection(
+  data: PlacesData,
+  params: URLSearchParams
+): { collectionId: string | null; placeId: string | null } {
+  if (params.has("list") || params.has("place")) {
+    return readMapSelection(data, params);
+  }
+  return { collectionId: defaultMapCollectionId(data), placeId: null };
 }
 
 export function collectionPlaces(

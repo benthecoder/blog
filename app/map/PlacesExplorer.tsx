@@ -5,17 +5,17 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { ArrowUpRight, Moon, Sun, X } from "lucide-react";
+import { ArrowUpRight, X } from "lucide-react";
 import { useMounted } from "@/components/ui/ThemeSwitch";
-import CategoryDot from "./CategoryDot";
+import ThemeSwitch from "@/components/ui/ThemeSwitch";
+import PaletteSwitch from "@/components/ui/PaletteSwitch";
+import { SketchIcon, ENAME_RATIO } from "@/components/ui/SketchIcon";
 import {
-  categories,
   collectionPlaces,
   filterPlaces,
   groupPlaces,
+  initialMapSelection,
   mapsUrl,
-  readMapSelection,
-  type Category,
   type Visit,
   type PlacesData,
 } from "@/utils/places";
@@ -30,14 +30,23 @@ const formatDate = (date: string) =>
     timeZone: "UTC",
   });
 
-export default function PlacesExplorer({ data }: { data: PlacesData }) {
-  const [collectionId, setCollectionId] = useState<string | null>(null);
-  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+export default function PlacesExplorer({
+  data,
+  initialSelection,
+}: {
+  data: PlacesData;
+  initialSelection: { collectionId: string | null; placeId: string | null };
+}) {
+  const [collectionId, setCollectionId] = useState<string | null>(
+    initialSelection.collectionId
+  );
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(
+    initialSelection.placeId
+  );
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [listHoverId, setListHoverId] = useState<string | null>(null);
-  const { resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const mounted = useMounted();
   const collection = data.collections.find((c) => c.id === collectionId);
   const allPlaces = useMemo<Visit[]>(
@@ -52,8 +61,8 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
     [data, collection]
   );
   const places = useMemo(
-    () => filterPlaces(allPlaces, selectedCategories, query),
-    [allPlaces, selectedCategories, query]
+    () => filterPlaces(allPlaces, [], query),
+    [allPlaces, query]
   );
   const selected = places.find((p) => p.id === selectedId) ?? null;
   const groups = useMemo(
@@ -62,10 +71,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
   );
   const dark = mounted && resolvedTheme === "dark";
   const detail = places.find((p) => p.id === hoveredId) ?? selected;
-  const usedCategories = categories.filter((tag) =>
-    allPlaces.some((p) => p.tags.includes(tag))
-  );
-
   useEffect(() => {
     const onEscape = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
@@ -93,10 +98,9 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
   useEffect(() => {
     const readUrl = () => {
       const params = new URLSearchParams(window.location.search);
-      const current = readMapSelection(data, params);
+      const current = initialMapSelection(data, params);
       setCollectionId(current.collectionId);
       setSelectedId(current.placeId);
-      setSelectedCategories([]);
       setHoveredId(null);
       setQuery("");
       if (
@@ -131,7 +135,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
   }
   function selectCollection(id: string | null) {
     setCollectionId(id);
-    setSelectedCategories([]);
     setHoveredId(null);
     setQuery("");
     setSelectedId(null);
@@ -154,14 +157,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
         ?.scrollIntoView({ block: "nearest", behavior: "smooth" })
     );
   }
-  function toggleCategory(tag: Category) {
-    setSelectedCategories((current) =>
-      current.includes(tag)
-        ? current.filter((category) => category !== tag)
-        : [...current, tag]
-    );
-    clearSelection();
-  }
   // Plain links still work without JS and with a modifier key.
   const listLink = (id: string | null) => ({
     href: id ? `?list=${id}` : "?",
@@ -179,19 +174,19 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
       <aside className="places-page" aria-label="Lists and places">
         <header className="places-masthead">
           <h1>
-            <a {...listLink(null)}>Places</a>
+            <a href="https://bneo.xyz" className="places-wordmark">
+              <SketchIcon
+                src="/icons/ename.svg"
+                label="Benedict Neo"
+                className="places-wordmark-mark"
+                style={{ aspectRatio: ENAME_RATIO }}
+              />
+            </a>
           </h1>
-          <a className="places-byline" href="https://bneo.xyz">
-            by ben
-          </a>
-          <button
-            className="places-theme"
-            onClick={() => setTheme(dark ? "light" : "dark")}
-            aria-label={dark ? "Switch to light map" : "Switch to dark map"}
-            title={dark ? "Light map" : "Dark map"}
-          >
-            {mounted && (dark ? <Sun size={15} /> : <Moon size={15} />)}
-          </button>
+          <div className="places-toggles">
+            <PaletteSwitch />
+            <ThemeSwitch />
+          </div>
         </header>
 
         <section aria-labelledby="lists-label">
@@ -201,27 +196,19 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
           <ul className="places-lists">
             {data.collections.map((list) => (
               <li key={list.id}>
-                <a {...listLink(list.id)}>
-                  {list.title}
-                  <span className="places-count">{list.entries.length}</span>
-                </a>
+                <a {...listLink(list.id)}>{list.title}</a>
               </li>
             ))}
           </ul>
         </section>
 
-        {/* An open list is already named, bold, with its count, just above;
+        {/* An open list is already named and bold just above;
             only the unfiltered view needs its own heading. */}
         <section
           className="places-section"
           aria-label={collection?.title ?? "All places"}
         >
-          {!collection && (
-            <h2 className="places-label">
-              All places
-              <span className="places-count">{allPlaces.length}</span>
-            </h2>
-          )}
+          {!collection && <h2 className="places-label">All places</h2>}
           {collection?.post && (
             <p className="places-journal">
               <Link href={`https://bneo.xyz/posts/${collection.post}`}>
@@ -230,35 +217,11 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
             </p>
           )}
           <div className="places-filters">
-            {usedCategories.length > 1 && (
-              <div
-                className="places-categories"
-                role="group"
-                aria-label="Filter by kind"
-              >
-                {usedCategories.map((tag) => (
-                  <button
-                    key={tag}
-                    aria-pressed={selectedCategories.includes(tag)}
-                    onClick={() => toggleCategory(tag)}
-                  >
-                    <CategoryDot category={tag} />
-                    {tag}
-                    <span className="places-count">
-                      {
-                        allPlaces.filter((place) => place.tags.includes(tag))
-                          .length
-                      }
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
             <input
               className="places-search"
               type="search"
-              aria-label="Filter places"
-              placeholder="Filter"
+              aria-label="Search places"
+              placeholder="Search places"
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
@@ -293,7 +256,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                       onBlur={() => setListHoverId(null)}
                       aria-pressed={place.id === selectedId}
                     >
-                      <CategoryDot category={place.tags[0]} />
                       <span className="place-name">{place.name}</span>
                       {place.note && (
                         <span className="place-note">{place.note}</span>
@@ -315,7 +277,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
               <button
                 onClick={() => {
                   setQuery("");
-                  setSelectedCategories([]);
                 }}
               >
                 Show all
@@ -340,12 +301,6 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                   className={`place-detail${hoveredId && hoveredId !== selectedId ? " is-preview" : ""}`}
                 >
                   <div className="detail-meta">
-                    {detail.tags.map((tag) => (
-                      <span className="detail-category" key={tag}>
-                        <CategoryDot category={tag} />
-                        {tag}
-                      </span>
-                    ))}
                     {detail.visitedOn && (
                       <span>{formatDate(detail.visitedOn)}</span>
                     )}
@@ -362,9 +317,8 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                       <X size={15} />
                     </button>
                   </div>
-                  <h2>{detail.name}</h2>
                   {detail.note && <p className="detail-note">{detail.note}</p>}
-                  <p className="detail-address">{detail.address}</p>
+                  <h2>{detail.name}</h2>
                   {detail.images?.length ? (
                     <div
                       className="detail-images"
@@ -382,7 +336,12 @@ export default function PlacesExplorer({ data }: { data: PlacesData }) {
                         </figure>
                       ))}
                     </div>
-                  ) : null}
+                  ) : (
+                    <div className="detail-photo-slot">
+                      Photo or sketch - add one when you have it
+                    </div>
+                  )}
+                  <p className="detail-address">{detail.address}</p>
                   <p className="detail-links">
                     <a href={mapsUrl(detail)} target="_blank" rel="noreferrer">
                       Google Maps <ArrowUpRight size={13} />

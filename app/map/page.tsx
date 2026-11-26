@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { preconnect } from "react-dom";
 import data from "@/config/places.json";
-import { placesSchema } from "@/utils/places";
+import { initialMapSelection, placesSchema } from "@/utils/places";
 import {
   OG_IMAGE_HEIGHT,
   OG_IMAGE_WIDTH,
@@ -39,9 +39,23 @@ export const metadata: Metadata = {
 // Draw under the notch and home indicator; map.css pads with env(safe-area-*).
 export const viewport: Viewport = { viewportFit: "cover" };
 
-export default function MapPage() {
+export default async function MapPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ list?: string; place?: string }>;
+}) {
   // The map style and tiles come from OpenFreeMap; warming the connection
   // here hides most of the wait behind the page render.
   preconnect("https://tiles.openfreemap.org");
-  return <PlacesExplorer data={placesSchema.parse(data)} />;
+  const places = placesSchema.parse(data);
+  const params = await searchParams;
+  const query = new URLSearchParams();
+  if (params.list) query.set("list", params.list);
+  if (params.place) query.set("place", params.place);
+  return (
+    <PlacesExplorer
+      data={places}
+      initialSelection={initialMapSelection(places, query)}
+    />
+  );
 }
