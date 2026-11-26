@@ -13,9 +13,7 @@ const row = {
 describe("tweets rows", () => {
   it("accepts rows as the Neon driver returns them", () => {
     expect(parseRows(tweetRowSchema, [row], "tweets")).toEqual([row]);
-    expect(
-      parseRows(thoughtRowSchema, [row], "thoughts")[0]
-    ).not.toHaveProperty("link");
+    expect(parseRows(thoughtRowSchema, [row], "thoughts")[0]).toEqual(row);
   });
 
   it("names the query and the field when the shape drifts", () => {
