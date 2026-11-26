@@ -15,5 +15,14 @@ export function navAnchorName(id: string): `--${string}` {
   return `--site-nav-${id}`;
 }
 
-/** Pause before hiding so a move to the next icon can keep the same label mounted and glide. */
-export const NAV_TOOLTIP_HIDE_MS = 120;
+/**
+ * Dashed ident for a post-preview trigger. `id` is sanitized because React
+ * `useId()` may include characters that are illegal in a CSS ident (`:`).
+ */
+export function postPreviewAnchorName(id: string): `--${string}` {
+  const safe = id.replace(/[^a-zA-Z0-9_-]+/g, "") || "x";
+  return `--post-preview-${safe}`;
+}
+
+/** Pause before hiding so a move to the next target can keep the same element mounted and glide. */
+export const ANCHOR_TOOLTIP_HIDE_MS = 120;

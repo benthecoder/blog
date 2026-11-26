@@ -85,6 +85,28 @@ test("only one preview is open at a time", async ({ page, isMobile }) => {
   }
 });
 
+test("the same preview card stays mounted when moving between titles", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(
+    isMobile,
+    "Touch links navigate; hover previews are a pointer interaction."
+  );
+  await page.goto("/posts");
+  const links = page.locator("main a[href^='/posts/']");
+  const tooltip = page.getByRole("tooltip");
+  await links.nth(2).hover();
+  await expect(tooltip).toBeVisible();
+  const handle = await tooltip.elementHandle();
+  const firstTitle = await tooltip.locator("p").first().textContent();
+  expect(handle).toBeTruthy();
+  await links.nth(3).hover();
+  await expect(tooltip).toBeVisible();
+  expect(await handle!.evaluate((element) => element.isConnected)).toBe(true);
+  await expect(tooltip.locator("p").first()).not.toHaveText(firstTitle ?? "");
+});
+
 test("reduced motion removes preview scaling and respects live preference changes", async ({
   page,
 }) => {

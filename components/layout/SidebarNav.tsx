@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef, type CSSProperties } from "react";
 import { hoverTick } from "@/utils/hoverTick";
 import {
-  NAV_TOOLTIP_HIDE_MS,
+  ANCHOR_TOOLTIP_HIDE_MS,
   navAnchorName,
   supportsCssAnchorPositioning,
 } from "@/utils/cssAnchor";
@@ -113,7 +113,7 @@ export function SidebarNav() {
     cancelHide();
     hideTimer.current = setTimeout(
       () => setHoveredLink(null),
-      NAV_TOOLTIP_HIDE_MS
+      ANCHOR_TOOLTIP_HIDE_MS
     );
   };
 

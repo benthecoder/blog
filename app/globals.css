@@ -1152,6 +1152,53 @@ body {
   mix-blend-mode: screen;
 }
 
+/* Post preview hover card. One shared card is pinned to whichever link is
+   the current --post-preview-anchor; changing that variable glides the same
+   element between titles. The JS path (left/top) remains for browsers that
+   fail `CSS.supports("anchor-name", "--a")`.
+   @see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning */
+@supports (anchor-name: --a) {
+  .post-preview-link {
+    anchor-name: var(--post-preview-name);
+  }
+
+  .post-preview-tooltip {
+    position: fixed;
+    position-anchor: var(--post-preview-anchor);
+    /* position-area chooses the side; the matching anchor() insets are what
+       actually move, so changing --post-preview-anchor can interpolate. */
+    position-area: top;
+    inset: auto;
+    top: auto;
+    right: auto;
+    bottom: calc(anchor(top) + 0.875rem);
+    left: anchor(left);
+    margin: 0;
+    width: max-content;
+    position-try-fallbacks: --post-preview-below;
+  }
+
+  @position-try --post-preview-below {
+    position-area: bottom;
+    top: calc(anchor(bottom) + 0.875rem);
+    bottom: auto;
+    left: anchor(left);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .post-preview-tooltip {
+      transition:
+        top 180ms cubic-bezier(0.23, 1, 0.32, 1),
+        left 180ms cubic-bezier(0.23, 1, 0.32, 1),
+        bottom 180ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+  }
+}
+
+.post-preview-tooltip--js {
+  position: fixed;
+}
+
 .post-link-preview {
   opacity: 1;
   transition: opacity 150ms cubic-bezier(0.23, 1, 0.32, 1);
