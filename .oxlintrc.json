@@ -57,7 +57,8 @@
     "jsx-a11y/no-noninteractive-element-interactions": "off",
     "jsx-a11y/prefer-tag-over-role": "off",
     "jsx-a11y/label-has-associated-control": "off",
-    "jsx-a11y/no-autofocus": "off"
+    "jsx-a11y/no-autofocus": "off",
+    "shadcn/no-raw-colors": "error"
   },
   "overrides": [
     {
@@ -76,5 +77,12 @@
     "public",
     "next-env.d.ts",
     "next-sitemap.config.js"
-  ]
+  ],
+  "jsPlugins": ["@shadcn/lint"],
+  "settings": {
+    "shadcn": {
+      "componentImports": ["^@/components/"],
+      "note": "Use role tokens from app/globals.css (text-primary, bg-surface, border-line)."
+    }
+  }
 }

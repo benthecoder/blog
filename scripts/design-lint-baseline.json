@@ -1,0 +1,31 @@
+{
+  "raw-html": {
+    "app/(sidebar)/hn/page.tsx": 2,
+    "app/(sidebar)/posts/ArchiveClient.tsx": 2,
+    "app/(sidebar)/sketch/page.tsx": 2,
+    "app/(sidebar)/thoughts/error.tsx": 1,
+    "app/admin/CalendarView.tsx": 1,
+    "app/admin/edit/[slug]/DefineBubble.tsx": 1,
+    "app/admin/edit/[slug]/DraftNavigation.tsx": 3,
+    "app/admin/edit/[slug]/Editor.tsx": 9,
+    "app/admin/edit/[slug]/PhotoTray.tsx": 2,
+    "app/admin/edit/[slug]/TemplatePicker.tsx": 1,
+    "app/admin/edit/[slug]/ViewerButton.tsx": 1,
+    "app/error.tsx": 1,
+    "app/map/PlacesExplorer.tsx": 5,
+    "app/map/PlacesMap.tsx": 4,
+    "components/admin/EditorPopover.tsx": 1,
+    "components/layout/QuoteFooter.tsx": 1,
+    "components/photos/ContactSheet.tsx": 1,
+    "components/photos/PhotoLightbox.tsx": 3,
+    "components/photos/PhotoNav.tsx": 1,
+    "components/photos/PhotoStream.tsx": 1,
+    "components/posts/PostImage.tsx": 2,
+    "components/search/SearchExplorer.tsx": 5,
+    "components/search/SearchFilters.tsx": 4,
+    "components/syllabus/CurriculumMap.tsx": 2,
+    "components/thoughts/ThoughtComposer.tsx": 3,
+    "components/visualizations/KnowledgeMap.tsx": 7,
+    "components/visualizations/Timeline.tsx": 1
+  }
+}

@@ -1,61 +1,26 @@
 /**
  * Design drift check. Fails (exit 1, file:line) when a component reaches
- * around the design system:
+ * around the design system. See `scripts/lib/designLint.ts` for the rules.
  *
- *   hex     a hex color in a string (colors live in app/globals.css)
- *   palette a Tailwind default palette class (red-500, gray-200, black, white)
- *   size    an arbitrary font size, text-[10px] / text-[0.6875rem]
- *
- * Use a role (text-accent, border-line, bg-danger) or a size token
- * (text-3xs, text-2xs, text-caption) instead. If a hit is genuinely
- * intentional, add it to ALLOW below with the reason.
+ * If a hit is genuinely intentional, add it to ALLOW below with the reason.
+ * Leftover <button> counts live in scripts/design-lint-baseline.json: shrink
+ * the number when you migrate a file, never raise it.
  */
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-
-type Rule = { name: string; re: RegExp; hint: string };
-
-const PALETTE =
-  "red|green|blue|gray|zinc|slate|neutral|stone|amber|yellow|orange|sky|indigo|purple|pink|rose|emerald|teal";
-const PREFIX = "text|bg|border|ring|outline|fill|stroke|from|to|via";
-
-const RULES: Rule[] = [
-  {
-    name: "hex",
-    // quoted or css-ish context, so `href="#top"` style anchors are skipped
-    re: /(?<=["'`(\s[:])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])/g,
-    hint: "use a role or token from app/globals.css",
-  },
-  {
-    name: "palette",
-    re: new RegExp(
-      `(?<![\\w-])(?:${PREFIX})-(?:(?:${PALETTE})-\\d{2,3}|black|white)(?![\\w-])`,
-      "g"
-    ),
-    hint: "use a role (accent, danger, line...) or night/NN for an overlay",
-  },
-  {
-    name: "size",
-    re: /(?<![\w-])text-\[\d*\.?\d+(?:px|rem)\]/g,
-    hint: "use text-3xs / text-2xs / text-caption / text-xs",
-  },
-  {
-    name: "rgb",
-    re: /\brgba?\s*\(/g,
-    hint: "use a role or token from app/globals.css instead of raw rgb/rgba",
-  },
-  {
-    name: "mode-token",
-    re: /(?<![:\w-])bg-chalk(?:-[a-z]+)?(?![\w-])|\bdark:(?:text|bg|border|ring|outline|fill|stroke)-ink(?:-[a-z]+)?(?![\w-])/g,
-    hint: "pair ink-* in light mode and chalk-* behind dark:, or use a role token",
-  },
-];
+import {
+  countByRule,
+  lintDesign,
+  type AllowEntry,
+  type Baseline,
+  type Finding,
+} from "./lib/designLint";
 
 /**
  * Intentional exceptions. `match` is the exact text the rule found.
  * An entry covers every occurrence in that file, so keep these narrow.
  */
-const ALLOW: Array<{ file: string; match: string; reason: string }> = [
+const ALLOW: AllowEntry[] = [
   {
     file: "app/(sidebar)/colophon/page.tsx",
     match: "#4d5f9e",
@@ -104,6 +69,119 @@ const ALLOW: Array<{ file: string; match: string; reason: string }> = [
     reason:
       "month and weekday labels on a 12px cell grid; smaller than the 9px text-3xs floor on purpose",
   },
+  {
+    file: "components/visualizations/Heatmap.tsx",
+    match: "h-[12px]",
+    reason: "row height of the 12px cell grid on small screens",
+  },
+  {
+    file: "components/visualizations/Heatmap.tsx",
+    match: "md:h-[14px]",
+    reason: "row height of the 14px cell grid from md and up",
+  },
+  {
+    file: "components/visualizations/Heatmap.tsx",
+    match: "w-[9px]",
+    reason: "weekday gutter sized to a single character on the 12px cell grid",
+  },
+  {
+    file: "components/ui/Loader.tsx",
+    match: "w-[6px]",
+    reason: "typing-dot sizes; smaller than the 4px spacing scale steps",
+  },
+  {
+    file: "components/ui/Loader.tsx",
+    match: "h-[6px]",
+    reason: "typing-dot sizes; smaller than the 4px spacing scale steps",
+  },
+  {
+    file: "components/ui/Loader.tsx",
+    match: "w-[7px]",
+    reason: "typing-dot sizes; smaller than the 4px spacing scale steps",
+  },
+  {
+    file: "components/ui/Loader.tsx",
+    match: "h-[7px]",
+    reason: "typing-dot sizes; smaller than the 4px spacing scale steps",
+  },
+  {
+    file: "components/ui/Loader.tsx",
+    match: "w-[8px]",
+    reason: "typing-dot sizes; smaller than the 4px spacing scale steps",
+  },
+  {
+    file: "components/ui/Loader.tsx",
+    match: "h-[8px]",
+    reason: "typing-dot sizes; smaller than the 4px spacing scale steps",
+  },
+  {
+    file: "components/ui/Loader.tsx",
+    match: "rounded-[1px]",
+    reason: "almost-square dots; rounded-xs is larger than this mark",
+  },
+  {
+    file: "components/visualizations/Timeline.tsx",
+    match: "min-w-[60px]",
+    reason: "year column sized to the date labels on a small screen",
+  },
+  {
+    file: "components/visualizations/Timeline.tsx",
+    match: "sm:min-w-[70px]",
+    reason: "year column sized to the date labels from sm and up",
+  },
+  {
+    file: "components/visualizations/Timeline.tsx",
+    match: "min-w-[80px]",
+    reason: "event date column sized to the date labels on a small screen",
+  },
+  {
+    file: "components/visualizations/Timeline.tsx",
+    match: "sm:min-w-[90px]",
+    reason: "event date column sized to the date labels from sm and up",
+  },
+  {
+    file: "app/admin/edit/[slug]/Editor.tsx",
+    match: "max-w-[620px]",
+    reason:
+      "narrow editor preview width, a named preset rather than a scale step",
+  },
+  {
+    file: "app/admin/edit/[slug]/Editor.tsx",
+    match: "max-w-[760px]",
+    reason:
+      "default editor preview width, a named preset rather than a scale step",
+  },
+  {
+    file: "app/admin/edit/[slug]/Editor.tsx",
+    match: "max-w-[960px]",
+    reason:
+      "wide editor preview width, a named preset rather than a scale step",
+  },
+  {
+    file: "app/admin/edit/[slug]/DefineBubble.tsx",
+    match: "w-[36rem]",
+    reason: "two-column definition + thesaurus popover; wider than the scale",
+  },
+  {
+    file: "app/(sidebar)/connections/page.tsx",
+    match: "min-h-[27rem]",
+    reason: "reserved height for the knowledge map canvas on a small screen",
+  },
+  {
+    file: "app/(sidebar)/connections/page.tsx",
+    match: "sm:min-h-[33rem]",
+    reason: "reserved height for the knowledge map canvas from sm and up",
+  },
+  {
+    file: "components/visualizations/KnowledgeMap.tsx",
+    match: "h-[22rem]",
+    reason: "map canvas height on a small screen; not a spacing-scale token",
+  },
+  {
+    file: "components/visualizations/KnowledgeMap.tsx",
+    match: "sm:h-[28rem]",
+    reason: "map canvas height from sm and up; not a spacing-scale token",
+  },
 ];
 
 const ROOTS = ["app", "components"];
@@ -125,31 +203,61 @@ function walk(dir: string, out: string[] = []) {
   return out;
 }
 
-const allowed = (file: string, match: string) =>
-  ALLOW.some((a) => a.file === file && a.match === match);
-
-let failures = 0;
-for (const file of ROOTS.flatMap((root) => walk(root)).sort()) {
-  readFileSync(file, "utf8")
-    .split("\n")
-    .forEach((line, i) => {
-      if (/^\s*(\/\/|\*|\/\*)/.test(line)) return;
-      for (const rule of RULES) {
-        for (const m of line.matchAll(rule.re)) {
-          if (allowed(file, m[0])) continue;
-          failures++;
-          console.log(
-            `${file}:${i + 1}:${(m.index ?? 0) + 1} ${rule.name} ${m[0]} (${rule.hint})`
-          );
-        }
-      }
-    });
+function formatFinding(finding: Finding): string {
+  const tag = finding.level === "warn" ? "warning " : "";
+  return `${finding.file}:${finding.line}:${finding.column} ${tag}${finding.rule} ${finding.match} (${finding.hint})`;
 }
 
-if (failures > 0) {
+const baseline = JSON.parse(
+  readFileSync(path.join("scripts", "design-lint-baseline.json"), "utf8")
+) as Baseline;
+
+const files = ROOTS.flatMap((root) => walk(root))
+  .sort()
+  .map((file) => ({
+    file: file.split(path.sep).join("/"),
+    source: readFileSync(file, "utf8"),
+  }));
+
+const findings = lintDesign(files, { allow: ALLOW, baseline });
+const errors = findings.filter((finding) => finding.level === "error");
+const warnings = findings.filter((finding) => finding.level === "warn");
+
+for (const finding of errors) {
+  console.log(formatFinding(finding));
+}
+
+const errorCounts = countByRule(errors, "error");
+const warnCounts = countByRule(warnings, "warn");
+const parts = Object.entries(errorCounts).map(([rule, n]) => `${n} ${rule}`);
+if (errors.length > 0) {
   console.error(
-    `\n${failures} design drift ${failures === 1 ? "hit" : "hits"}`
+    `\n${errors.length} design drift ${errors.length === 1 ? "error" : "errors"}${
+      parts.length ? ` (${parts.join(", ")})` : ""
+    }`
   );
-  process.exit(1);
 }
-console.log("design tokens: no drift");
+if (warnings.length > 0) {
+  const warnParts = Object.entries(warnCounts)
+    .map(([rule, n]) => `${n} ${rule}`)
+    .join(", ");
+  const byFile = new Map<string, number>();
+  for (const finding of warnings) {
+    byFile.set(finding.file, (byFile.get(finding.file) ?? 0) + 1);
+  }
+  const top = [...byFile.entries()].sort(
+    (a, b) => b[1] - a[1] || a[0].localeCompare(b[0])
+  );
+  console.log(
+    `${warnings.length} baselined ${
+      warnings.length === 1 ? "warning" : "warnings"
+    }${warnParts ? ` (${warnParts})` : ""} in ${top.length} ${
+      top.length === 1 ? "file" : "files"
+    }; shrink scripts/design-lint-baseline.json when you migrate one`
+  );
+  for (const [file, count] of top) {
+    console.log(`  ${String(count).padStart(3)}  ${file}`);
+  }
+}
+if (errors.length > 0) process.exit(1);
+if (warnings.length === 0) console.log("design lint: no drift");
