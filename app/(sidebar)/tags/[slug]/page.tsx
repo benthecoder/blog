@@ -4,6 +4,7 @@ import { legacyTravelDestination, travelPlaceId } from "@/utils/content/travel";
 import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
 import { getPostMetadata } from "@/utils/content/posts";
+import { withPostPreviews } from "@/utils/content/preview";
 import PostList from "@/components/posts/PostList";
 import Link from "next/link";
 import { tryDecodeUrlComponent } from "@/utils/links/url";
@@ -79,7 +80,7 @@ const TagPage = async (props: { params: Promise<{ slug: string }> }) => {
           </span>
         </h1>
       </header>
-      <PostList posts={filteredPosts} />
+      <PostList posts={withPostPreviews(filteredPosts)} />
     </div>
   );
 };

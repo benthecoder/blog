@@ -10,6 +10,7 @@ import {
 import { ThemeProvider } from "next-themes";
 import { bind, setEnabled, setVolume } from "cuelume";
 import { readStoredString } from "@/utils/browserStorage";
+import { PostPreviewHost } from "@/components/posts/PostLinkPreview";
 
 export const PALETTES = [
   "indigo",
@@ -105,7 +106,10 @@ export function Providers({ children }: { children: ReactNode }) {
       disableTransitionOnChange
     >
       <PaletteProvider>
-        <SoundProvider>{children}</SoundProvider>
+        <SoundProvider>
+          {children}
+          <PostPreviewHost />
+        </SoundProvider>
       </PaletteProvider>
     </ThemeProvider>
   );
