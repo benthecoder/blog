@@ -8,6 +8,8 @@ import {
   placesGeoJSON,
   placesKML,
   placesSchema,
+  defaultMapCollectionId,
+  initialMapSelection,
   readMapSelection,
 } from "./places";
 
@@ -31,7 +33,12 @@ describe("place collections", () => {
     ).toEqual(["capital"]);
     expect(filterPlaces(places, ["outdoors"], "")).toEqual([]);
   });
-  it("opens the directory by default and validates deep links", () => {
+  it("opens the Chinatown list by default and validates deep links", () => {
+    expect(defaultMapCollectionId(data)).toBe("sf-chinatown");
+    expect(initialMapSelection(data, new URLSearchParams())).toEqual({
+      collectionId: "sf-chinatown",
+      placeId: null,
+    });
     expect(readMapSelection(data, new URLSearchParams())).toEqual({
       collectionId: null,
       placeId: null,
