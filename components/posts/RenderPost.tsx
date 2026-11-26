@@ -5,6 +5,7 @@ import type { RelatedPost } from "@/utils/content/related";
 import type { SameDayPost } from "@/utils/content/onThisDay";
 import type { TocEntry } from "@/utils/content/toc";
 import { extractTags } from "@/utils/content/tags";
+import { formatOf } from "@/utils/content/formats";
 import { parsePostDate } from "@/utils/dateUtils";
 import OnThisDay from "./OnThisDay";
 import { FooterGroup, footerLink } from "./FooterGroup";
@@ -45,6 +46,9 @@ const RenderPost = ({
 }: RenderPostProps) => {
   const { title, date } = post.data;
   const tags = extractTags(post.data);
+  const format = formatOf(slug ?? "", post.data);
+  const longForm =
+    format === "essay" || format === "book" || (wordcount ?? 0) >= 800;
   const readingTime =
     wordcount && wordcount > 0
       ? Math.max(1, Math.round(wordcount / 200))
@@ -63,7 +67,13 @@ const RenderPost = ({
     .join(" · ");
 
   const heading = (
-    <h1 className="font-bold text-2xl md:text-4xl leading-tight tracking-tight text-balance text-ink dark:text-chalk-strong">
+    <h1
+      className={
+        longForm
+          ? "font-bold text-3xl md:text-4xl leading-tight tracking-tight text-balance text-ink dark:text-chalk-strong"
+          : "font-bold text-2xl leading-snug tracking-normal text-balance text-ink dark:text-chalk-strong"
+      }
+    >
       {title}
     </h1>
   );
@@ -91,7 +101,13 @@ const RenderPost = ({
 
       {toc && <TableOfContents items={toc} />}
 
-      <article className={proseClasses}>{children}</article>
+      <article
+        className={
+          longForm ? `${proseClasses} text-lg leading-7` : proseClasses
+        }
+      >
+        {children}
+      </article>
 
       {backlinks}
 
