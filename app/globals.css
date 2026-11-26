@@ -1059,6 +1059,47 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
+/* Site nav hover label. Browsers with CSS anchor positioning pin one shared
+   label to whichever icon is the current --site-nav-anchor; changing that
+   variable glides the same element between icons. The JS path (left/top)
+   remains for browsers that fail `CSS.supports("anchor-name", "--a")`.
+   @see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning */
+@supports (anchor-name: --a) {
+  .site-nav-link {
+    anchor-name: var(--site-nav-name);
+  }
+
+  .site-nav-tooltip {
+    position: fixed;
+    position-anchor: var(--site-nav-anchor);
+    /* position-area chooses the side; the matching anchor() insets are what
+       actually move, so changing --site-nav-anchor can interpolate. */
+    position-area: bottom;
+    inset: auto;
+    top: calc(anchor(bottom) + 0.5rem);
+    left: anchor(center);
+    translate: -50% 0;
+    margin: 0;
+  }
+
+  @media (min-width: 1024px) {
+    .site-nav-tooltip {
+      position-area: right;
+      top: anchor(center);
+      left: calc(anchor(right) + 0.5rem);
+      translate: 0 -50%;
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .site-nav-tooltip {
+      transition:
+        top 180ms cubic-bezier(0.23, 1, 0.32, 1),
+        left 180ms cubic-bezier(0.23, 1, 0.32, 1);
+    }
+  }
+}
+
 /* ==========================================================================
    ANIMATIONS
    ========================================================================== */
