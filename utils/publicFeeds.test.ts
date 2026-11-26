@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 
 const { sql } = vi.hoisted(() => ({ sql: vi.fn() }));
+vi.mock("server-only", () => ({}));
 vi.mock("@neondatabase/serverless", () => ({ neon: () => sql }));
 import { GET as thoughts } from "@/app/api/thoughts/route";
 import { GET as bookmarks } from "@/app/api/curius/route";
@@ -12,13 +13,31 @@ const readThoughts = (query = "") =>
   thoughts(new NextRequest(`https://example.test/api/thoughts${query}`));
 
 describe("public feed cache boundaries", () => {
-  it("returns the same thought rows with shared caching and bounded SQL pagination", async () => {
-    const rows = [{ id: 9, content: "hello", created_at: "2026-10-07" }];
+  it("returns thought rows with shared caching and bounded SQL pagination", async () => {
+    const created = new Date("2026-10-07T00:00:00Z");
+    const rows = [
+      {
+        id: 9,
+        content: "hello",
+        link: null,
+        link_title: null,
+        created_at: created,
+      },
+    ];
     sql.mockResolvedValue(rows);
     const response = await readThoughts("?cursor=10&limit=999");
-    expect(await response.json()).toEqual(rows);
+    expect(await response.json()).toEqual([
+      {
+        id: 9,
+        content: "hello",
+        link: null,
+        created_at: created.toISOString(),
+        titles: {},
+      },
+    ]);
     expect(sql.mock.calls[0].slice(1)).toEqual([10, 200]);
     expect(sql.mock.calls[0][0].join("")).toContain("WHERE id <");
+    expect(sql.mock.calls[0][0].join("")).toContain("link_title");
     expect(response.headers.get("cache-control")).toBe(
       "public, max-age=0, s-maxage=60, stale-while-revalidate=60"
     );

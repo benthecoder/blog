@@ -6,6 +6,8 @@ const thought = (id: number) => ({
   id,
   content: "hello",
   created_at: "2026-10-07T00:00:00Z",
+  link: null,
+  titles: {},
 });
 
 describe("thoughts pagination", () => {

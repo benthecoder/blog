@@ -36,14 +36,14 @@ describe("local draft title fetching", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
     const links = Array.from({ length: 6 }, (_, i) =>
-      item(`https://example.test/${i}`)
+      item(`https://example.com/${i}`)
     );
     links.push({ ...links[0], take: "another take" });
     links.push({
-      ...item("https://example.test/stored"),
+      ...item("https://example.com/stored"),
       title: "stored title",
     });
-    links.push({ ...item("https://example.test/curius"), sources: ["curius"] });
+    links.push({ ...item("https://example.com/curius"), sources: ["curius"] });
     const operation = resolveLinkTitles(links);
     expect(pending.size).toBe(4);
     pending.get(links[0].url)!();
@@ -83,14 +83,14 @@ describe("local draft title fetching", () => {
           )
       )
     );
-    const link = item("https://example.test/large");
+    const link = item("https://example.com/large");
     expect((await resolveLinkTitles([link]))[0].title).toBe(link.url);
     expect(cancel).toHaveBeenCalledTimes(1);
   });
 
   it("decodes split UTF-8 and cancels after finding the title", async () => {
     const cancel = vi.fn();
-    const bytes = new TextEncoder().encode("<title>café</title>");
+    const bytes = new TextEncoder().encode("<title>café</title></head>");
     vi.stubGlobal(
       "fetch",
       vi.fn(
@@ -107,7 +107,7 @@ describe("local draft title fetching", () => {
       )
     );
     expect(
-      (await resolveLinkTitles([item("https://example.test/unicode")]))[0].title
+      (await resolveLinkTitles([item("https://example.com/unicode")]))[0].title
     ).toBe("café");
     expect(cancel).toHaveBeenCalledTimes(1);
   });
@@ -125,8 +125,8 @@ describe("local draft title fetching", () => {
       .mockRejectedValueOnce(new DOMException("timed out", "TimeoutError"));
     vi.stubGlobal("fetch", fetchMock);
     const links = [
-      item("https://example.test/redirect"),
-      item("https://example.test/timeout"),
+      item("https://example.com/redirect"),
+      item("https://example.com/timeout"),
     ];
     expect((await resolveLinkTitles(links)).map((link) => link.title)).toEqual(
       links.map((link) => link.url)
@@ -144,13 +144,13 @@ describe("server source collection", () => {
     sql.mockResolvedValue([
       {
         content: " take ",
-        link: "https://example.test/one",
+        link: "https://example.com/one",
         link_title: null,
         created_at: new Date("2026-10-01"),
       },
       {
         content: "",
-        link: "https://example.test/two",
+        link: "https://example.com/two",
         link_title: "stored",
         created_at: new Date("2026-10-02"),
       },
@@ -161,7 +161,7 @@ describe("server source collection", () => {
       new Date("2026-10-04")
     );
     expect(result.map((link) => link.title)).toEqual([
-      "https://example.test/one",
+      "https://example.com/one",
       "stored",
     ]);
     expect(result[0].take).toBe("take");

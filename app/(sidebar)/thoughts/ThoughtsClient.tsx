@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef, useEffectEvent } from "react";
-import type { ReactNode } from "react";
 import { fetchThoughtPage } from "@/utils/thoughtsPage";
 import type { Thought } from "@/utils/thoughts";
+import ThoughtBody from "@/components/thoughts/ThoughtBody";
 
 const TZ = "America/New_York";
 const PAGE_SIZE = 100;
@@ -19,28 +19,6 @@ const timeFormatter = new Intl.DateTimeFormat("en-GB", {
   minute: "2-digit",
   hour12: false,
 });
-
-function parseContent(content: string): ReactNode[] {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  const parts = content.split(urlRegex);
-
-  return parts.map((part, index) => {
-    if (part.startsWith("http://") || part.startsWith("https://")) {
-      return (
-        <a
-          key={index}
-          href={part}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline underline-offset-2 hover:text-accent/70 transition-colors break-all"
-        >
-          {part}
-        </a>
-      );
-    }
-    return part;
-  });
-}
 
 interface ThoughtsClientProps {
   initialThoughts: Thought[];
@@ -140,9 +118,11 @@ export default function ThoughtsClient({
                     <span className="text-xs text-muted shrink-0 select-none w-10">
                       {time}
                     </span>
-                    <p className="text-sm text-accent leading-relaxed wrap-break-word whitespace-pre-wrap flex-1">
-                      {parseContent(entry.content)}
-                    </p>
+                    <ThoughtBody
+                      content={entry.content}
+                      link={entry.link}
+                      titles={entry.titles}
+                    />
                   </div>
                 );
               })}

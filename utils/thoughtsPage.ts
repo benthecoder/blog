@@ -6,6 +6,13 @@ import type { ThoughtJson } from "@/utils/thoughts";
  * zod would add ~23 kB gzipped. utils/thoughtsPage.test.ts pins it to the
  * same cases the schema rejects.
  */
+function isStringRecord(value: unknown): value is Record<string, string> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  return Object.entries(value).every(
+    ([key, title]) => typeof key === "string" && typeof title === "string"
+  );
+}
+
 function isThoughtJson(entry: unknown): entry is ThoughtJson {
   if (
     !entry ||
@@ -15,15 +22,36 @@ function isThoughtJson(entry: unknown): entry is ThoughtJson {
     !("created_at" in entry)
   )
     return false;
-  const { id, content, created_at } = entry;
-  return (
-    typeof id === "number" &&
-    Number.isSafeInteger(id) &&
-    id >= 1 &&
-    typeof content === "string" &&
-    typeof created_at === "string" &&
-    Number.isFinite(Date.parse(created_at))
-  );
+  const { id, content, created_at, link, titles } = entry as {
+    id: unknown;
+    content: unknown;
+    created_at: unknown;
+    link?: unknown;
+    titles?: unknown;
+  };
+  if (
+    typeof id !== "number" ||
+    !Number.isSafeInteger(id) ||
+    id < 1 ||
+    typeof content !== "string" ||
+    typeof created_at !== "string" ||
+    !Number.isFinite(Date.parse(created_at))
+  )
+    return false;
+  if (link !== undefined && link !== null && typeof link !== "string")
+    return false;
+  if (titles !== undefined && !isStringRecord(titles)) return false;
+  return true;
+}
+
+function normalizeThought(entry: ThoughtJson): ThoughtJson {
+  return {
+    id: entry.id,
+    content: entry.content,
+    link: entry.link ?? null,
+    created_at: entry.created_at,
+    titles: entry.titles ?? {},
+  };
 }
 
 export async function fetchThoughtPage(
@@ -48,7 +76,7 @@ export async function fetchThoughtPage(
   for (const entry of entries) {
     if (!isThoughtJson(entry) || entry.id >= previousId)
       throw new Error("Invalid thoughts page");
-    page.push(entry);
+    page.push(normalizeThought(entry));
     previousId = entry.id;
   }
   return page;
