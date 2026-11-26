@@ -12,7 +12,70 @@ const PREVIEW_VIEWPORT_PAD_PX = 8;
 
 export const POST_PREVIEW_TOOLTIP_ID = "post-preview-tooltip";
 
-export type PreviewPlacement = "top" | "bottom";
+export const PREVIEW_LAYOUTS = ["rail", "leaders", "float"] as const;
+export type PreviewLayout = (typeof PREVIEW_LAYOUTS)[number];
+export type PreviewPlacement = "top" | "bottom" | "right";
+
+/** Matches the sidenote column at xl. */
+const PREVIEW_RAIL_WIDTH_PX = 240;
+const PREVIEW_RAIL_GAP_PX = 8;
+
+export function isPreviewLayout(value: string | null): value is PreviewLayout {
+  return value === "rail" || value === "leaders" || value === "float";
+}
+
+export function canPlacePreviewRail({
+  contentRight,
+  viewportWidth,
+  railWidth = PREVIEW_RAIL_WIDTH_PX,
+  gap = PREVIEW_RAIL_GAP_PX,
+  padding = PREVIEW_VIEWPORT_PAD_PX,
+}: {
+  contentRight: number;
+  viewportWidth: number;
+  railWidth?: number;
+  gap?: number;
+  padding?: number;
+}): boolean {
+  return contentRight + gap + railWidth + padding <= viewportWidth;
+}
+
+/** Leaders need a wide row so the card sits on the dots, not over titles. */
+const PREVIEW_LEADERS_MIN_WIDTH_PX = 768;
+
+function canPlacePreviewLeaders({
+  viewportWidth,
+  minWidth = PREVIEW_LEADERS_MIN_WIDTH_PX,
+}: {
+  viewportWidth: number;
+  minWidth?: number;
+}): boolean {
+  return viewportWidth >= minWidth;
+}
+
+function rowFallback(viewportWidth: number): PreviewLayout {
+  return canPlacePreviewLeaders({ viewportWidth }) ? "leaders" : "float";
+}
+
+export function resolvePreviewLayout({
+  requested,
+  isRow,
+  contentRight,
+  viewportWidth,
+}: {
+  requested: PreviewLayout | "auto";
+  isRow: boolean;
+  contentRight: number;
+  viewportWidth: number;
+}): PreviewLayout {
+  const room = canPlacePreviewRail({ contentRight, viewportWidth });
+  if (requested === "rail") {
+    return room ? "rail" : isRow ? rowFallback(viewportWidth) : "float";
+  }
+  if (requested === "leaders" || requested === "float") return requested;
+  if (isRow) return room ? "rail" : rowFallback(viewportWidth);
+  return "float";
+}
 
 export type PreviewAnchor = {
   slug: string;
@@ -75,19 +138,59 @@ export function fetchPostPreview(
   return request;
 }
 
+function clampTop(
+  top: number,
+  cardHeight: number,
+  viewportHeight: number,
+  padding: number
+): number {
+  return Math.min(
+    Math.max(top, padding),
+    Math.max(padding, viewportHeight - cardHeight - padding)
+  );
+}
+
 export function placePostPreview({
+  layout = "float",
   anchor,
   card,
   viewport,
+  contentRight,
   gap = PREVIEW_GAP_PX,
   padding = PREVIEW_VIEWPORT_PAD_PX,
 }: {
-  anchor: Pick<DOMRect, "top" | "bottom" | "left">;
+  layout?: PreviewLayout;
+  anchor: Pick<DOMRect, "top" | "bottom" | "left"> &
+    Partial<Pick<DOMRect, "right">>;
   card: Pick<DOMRect, "width" | "height">;
   viewport: { width: number; height: number };
+  contentRight?: number;
   gap?: number;
   padding?: number;
 }): { top: number; left: number; placement: PreviewPlacement } {
+  if (layout === "rail" && contentRight != null) {
+    return {
+      top: clampTop(anchor.top, card.height, viewport.height, padding),
+      left: contentRight + PREVIEW_RAIL_GAP_PX,
+      placement: "right",
+    };
+  }
+
+  if (layout === "leaders") {
+    const width = Math.min(card.width, 320);
+    const rowRight = anchor.right ?? anchor.left + width;
+    const left = Math.min(
+      Math.max(rowRight - width, padding),
+      Math.max(padding, viewport.width - width - padding)
+    );
+    const mid = anchor.top + (anchor.bottom - anchor.top) / 2 - card.height / 2;
+    return {
+      top: clampTop(mid, card.height, viewport.height, padding),
+      left,
+      placement: "right",
+    };
+  }
+
   const above = anchor.top - gap - card.height;
   const placement: PreviewPlacement = above < padding ? "bottom" : "top";
   const top = placement === "top" ? above : anchor.bottom + gap;

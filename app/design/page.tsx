@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import Link from "next/link";
 import { Copy, X } from "lucide-react";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
@@ -288,6 +289,23 @@ export default function DesignPage() {
             fetched preview
           </PostLinkPreview>
         </div>
+        <p className="mt-4 text-caption text-muted">
+          archive placements:{" "}
+          <Link href="/posts?preview-place=rail" className="hover:text-accent">
+            rail
+          </Link>
+          {" · "}
+          <Link
+            href="/posts?preview-place=leaders"
+            className="hover:text-accent"
+          >
+            leaders
+          </Link>
+          {" · "}
+          <Link href="/posts?preview-place=float" className="hover:text-accent">
+            float
+          </Link>
+        </p>
       </Section>
 
       <Section title="photo viewer">

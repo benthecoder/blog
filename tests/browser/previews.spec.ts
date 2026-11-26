@@ -8,7 +8,7 @@ test("preview follows placement, stays hoverable and dismisses with Escape", asy
     isMobile,
     "Touch links navigate; hover previews are a pointer interaction."
   );
-  await page.goto("/design");
+  await page.goto("/design?preview-place=float");
   const trigger = page.getByRole("link", {
     name: "inline preview",
     exact: true,
@@ -107,11 +107,31 @@ test("the same preview card stays mounted when moving between titles", async ({
   await expect(tooltip.locator("p").first()).not.toHaveText(firstTitle ?? "");
 });
 
+test("the rail preview sits in the gutter, not over the titles", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(
+    isMobile,
+    "The rail needs a wide gutter; phones fall back to another layout."
+  );
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/posts?preview-place=rail");
+  const link = page.locator("main a[href^='/posts/']").nth(3);
+  await link.hover({ position: { x: 16, y: 8 } });
+  const tooltip = page.getByRole("tooltip");
+  await expect(tooltip).toBeVisible();
+  await expect(tooltip).toHaveAttribute("data-layout", "rail");
+  const linkBox = (await link.boundingBox())!;
+  const tipBox = (await tooltip.boundingBox())!;
+  expect(tipBox.x).toBeGreaterThanOrEqual(linkBox.x + linkBox.width - 1);
+});
+
 test("reduced motion removes preview scaling and respects live preference changes", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/design");
+  await page.goto("/design?preview-place=float");
   await page.getByRole("link", { name: "inline preview", exact: true }).focus();
   const card = page.getByRole("tooltip").locator(".post-link-preview");
   await expect(card).toBeVisible();
@@ -140,7 +160,7 @@ test("a failed lazy preview retries on the next focus without blocking its link"
         },
       });
   });
-  await page.goto("/design");
+  await page.goto("/design?preview-place=float");
   const trigger = page.getByRole("link", {
     name: "fetched preview",
     exact: true,
@@ -173,7 +193,7 @@ for (const theme of ["light", "dark"]) {
       (mode) => localStorage.setItem("theme", mode),
       theme
     );
-    await page.goto("/design");
+    await page.goto("/design?preview-place=float");
     await page
       .getByRole("link", { name: "inline preview", exact: true })
       .focus();

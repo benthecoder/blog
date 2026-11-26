@@ -15,6 +15,8 @@ import {
   resetPostPreviewCard,
   showPostPreview,
   cachedPostPreview,
+  canPlacePreviewRail,
+  resolvePreviewLayout,
 } from "./postPreviewCard";
 
 const preview = {
@@ -41,6 +43,81 @@ describe("parsePostPreviewData", () => {
     expect(parsePostPreviewData(preview)).toEqual(preview);
     expect(parsePostPreviewData({ ...preview, excerpt: 1 })).toBeNull();
     expect(parsePostPreviewData(null)).toBeNull();
+  });
+});
+
+describe("resolvePreviewLayout", () => {
+  it("uses the rail when there is a gutter, and leaders on a tight row list", () => {
+    expect(
+      resolvePreviewLayout({
+        requested: "auto",
+        isRow: true,
+        contentRight: 1024,
+        viewportWidth: 1280,
+      })
+    ).toBe("rail");
+    expect(
+      resolvePreviewLayout({
+        requested: "auto",
+        isRow: true,
+        contentRight: 900,
+        viewportWidth: 1024,
+      })
+    ).toBe("leaders");
+    expect(
+      resolvePreviewLayout({
+        requested: "auto",
+        isRow: false,
+        contentRight: 1024,
+        viewportWidth: 1280,
+      })
+    ).toBe("float");
+    expect(
+      resolvePreviewLayout({
+        requested: "auto",
+        isRow: true,
+        contentRight: 360,
+        viewportWidth: 390,
+      })
+    ).toBe("float");
+  });
+
+  it("honors an explicit layout, falling back when the rail would overflow", () => {
+    expect(
+      resolvePreviewLayout({
+        requested: "leaders",
+        isRow: true,
+        contentRight: 1024,
+        viewportWidth: 1280,
+      })
+    ).toBe("leaders");
+    expect(
+      resolvePreviewLayout({
+        requested: "rail",
+        isRow: true,
+        contentRight: 900,
+        viewportWidth: 1024,
+      })
+    ).toBe("leaders");
+    expect(
+      resolvePreviewLayout({
+        requested: "rail",
+        isRow: true,
+        contentRight: 360,
+        viewportWidth: 390,
+      })
+    ).toBe("float");
+  });
+});
+
+describe("canPlacePreviewRail", () => {
+  it("is true when a 240px sidenote column fits after the content", () => {
+    expect(
+      canPlacePreviewRail({ contentRight: 1024, viewportWidth: 1280 })
+    ).toBe(true);
+    expect(
+      canPlacePreviewRail({ contentRight: 1100, viewportWidth: 1280 })
+    ).toBe(false);
   });
 });
 
@@ -75,6 +152,29 @@ describe("placePostPreview", () => {
         viewport: { width: 800, height: 600 },
       })
     ).toEqual({ top: 66, left: 472, placement: "top" });
+  });
+
+  it("pins a rail card to the content edge and the row top", () => {
+    expect(
+      placePostPreview({
+        layout: "rail",
+        anchor: { top: 200, bottom: 220, left: 40, right: 800 },
+        card,
+        viewport: { width: 1280, height: 600 },
+        contentRight: 1024,
+      })
+    ).toEqual({ top: 200, left: 1032, placement: "right" });
+  });
+
+  it("sits a leaders card over the end of the row, vertically centered", () => {
+    expect(
+      placePostPreview({
+        layout: "leaders",
+        anchor: { top: 200, bottom: 230, left: 40, right: 800 },
+        card,
+        viewport: { width: 1280, height: 600 },
+      })
+    ).toEqual({ top: 155, left: 480, placement: "right" });
   });
 });
 

@@ -16,6 +16,7 @@ const PostPreview = ({
     <PostLinkPreview
       slug={slug}
       preview={preview}
+      context="row"
       className="group flex items-baseline gap-3 cursor-crosshair text-sm md:text-base"
     >
       <span className="text-accent group-hover:underline">{title}</span>

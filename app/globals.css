@@ -1156,8 +1156,14 @@ body {
    the current --post-preview-anchor; changing that variable glides the same
    element between titles. The JS path (left/top) remains for browsers that
    fail `CSS.supports("anchor-name", "--a")`.
+   `rail` hangs in the right margin like a sidenote. `leaders` sits over the
+   dotted part of an archive row. `float` is the usual above/below popup.
    @see https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning */
 @supports (anchor-name: --a) {
+  #content {
+    anchor-name: --preview-content;
+  }
+
   .post-preview-link {
     anchor-name: var(--post-preview-name);
   }
@@ -1171,18 +1177,48 @@ body {
     inset: auto;
     top: auto;
     right: auto;
-    bottom: calc(anchor(top) + 0.875rem);
+    bottom: calc(anchor(top) + 1rem);
     left: anchor(left);
     margin: 0;
     width: max-content;
     position-try-fallbacks: --post-preview-below;
   }
 
+  .post-preview-tooltip[data-layout="rail"] {
+    position-area: right;
+    top: anchor(start);
+    left: calc(anchor(--preview-content right) + 0.5rem);
+    right: auto;
+    bottom: auto;
+    width: 15rem;
+    translate: none;
+    position-try-fallbacks: --post-preview-rail-up;
+  }
+
+  .post-preview-tooltip[data-layout="leaders"] {
+    position-area: right;
+    top: anchor(center);
+    right: anchor(right);
+    left: auto;
+    bottom: auto;
+    width: max-content;
+    max-width: 20rem;
+    translate: 0 -50%;
+    position-try-fallbacks: none;
+  }
+
   @position-try --post-preview-below {
     position-area: bottom;
-    top: calc(anchor(bottom) + 0.875rem);
+    top: calc(anchor(bottom) + 1rem);
     bottom: auto;
     left: anchor(left);
+  }
+
+  @position-try --post-preview-rail-up {
+    position-area: right;
+    top: auto;
+    bottom: 0.5rem;
+    left: calc(anchor(--preview-content right) + 0.5rem);
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -1190,6 +1226,7 @@ body {
       transition:
         top 150ms cubic-bezier(0.23, 1, 0.32, 1),
         left 150ms cubic-bezier(0.23, 1, 0.32, 1),
+        right 150ms cubic-bezier(0.23, 1, 0.32, 1),
         bottom 150ms cubic-bezier(0.23, 1, 0.32, 1);
     }
   }
@@ -1197,6 +1234,29 @@ body {
 
 .post-preview-tooltip--js {
   position: fixed;
+}
+
+.post-preview-tooltip[data-layout="rail"] {
+  pointer-events: none;
+}
+
+.post-preview-tooltip[data-layout="rail"] .post-link-preview {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  max-width: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .post-preview-tooltip[data-layout="rail"] .post-link-preview,
+  .post-preview-tooltip[data-layout="rail"]
+    .post-link-preview[data-status="initial"],
+  .post-preview-tooltip[data-layout="rail"]
+    .post-link-preview[data-status="close"] {
+    transform: none;
+  }
 }
 
 .post-link-preview {
